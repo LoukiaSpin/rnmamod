@@ -1,0 +1,145 @@
+################################################################################
+#                                                                              #
+#                                                                              #
+#                 rnmamod: Run the package through the library                 #
+#                                                                              #
+#                                                                              #
+################################################################################
+
+
+
+## Load libraries
+list.of.packages <- c("devtools", "R2jags", "ggplot2", "dplyr", "mcmcplots", "reshape2", "ggfittext", "gemtc", "netmeta",
+                      "BUGSnet", "pcnetmeta", "gridExtra", "stringr", "ggpubr", "ggrepel", "testit")
+lapply(list.of.packages, require, character.only = T); rm(list.of.packages)
+
+
+
+## Load all package material
+devtools::load_all()
+
+
+
+## Write/update the documentation of the edited function
+#devtools::document()
+
+
+
+## Load 'rnmamod' library :-) (Only ONCE after running 'load_all()' for the first time in that day)
+library(rnmamod)
+
+
+
+## They will be loaded from the 'data' folder of the project
+#load("./data/NMA Dataset Continuous.RData")
+load("./data/NMA Dataset Binary.RData")
+(data1 <- as.data.frame(one.stage.dataset.NMA[[3]]))
+
+
+
+## Network plots and summary (use BUGSnet for network characteristics)
+?rnmamod::netplot
+rnmamod::netplot(data1[, -17], drug.names = c("A", "B", "C", "D", "E", "F", "G", "H"), show.bias = T) # data[, -17] excludes the column on the number of arms; it is data[, -21] for continuous
+
+
+
+## Heatmap of trials to interventions with the risk of bias due to MOD
+?rnmamod::heatmap.mod
+rnmamod::heatmap.mod(data = data1[, -17], trial.names = as.factor(1:21), drug.names = c("A", "B", "C", "D", "E", "F", "G", "H"))
+
+
+
+## Perform NMA-PMM
+?rnmamod::run.model
+(res1 <- rnmamod::run.model(data = data1[, -17], measure = "OR", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1))
+
+
+
+## Perform NMA-PMM using optional arguments only
+?rnmamod::run.model
+(res1 <- rnmamod::run.model(data = data1[, -17], measure = "OR",  heter.prior = list("uniform", 0, 5), D = 1))
+
+
+
+## Check MCMC diagnostics
+?rnmamod::mcmc.diagnostics
+rnmamod::mcmc.diagnostics(par = c("tau", "EM[2,1]", "EM[3,1]"), data = data1[, -17], measure = "OR", assumption = "IDE-ARM", heter.prior = list("uniform", 0, 2), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 1000, n.burnin = 100, n.thin = 1)
+
+
+
+
+## Obtain the league heatmap (upper level CrI and lower Predictive Interval?)
+?rnmamod::league.heatmap
+rnmamod::league.heatmap(res1, drug.names = c("A", "B", "C", "D", "E", "F", "G", "H"))
+
+
+
+## Obtain the league heatmap for predictions & estimations (lower triangle) and effect estimates (upper triangle)
+rnmamod::league.heatmap.pred(res1, drug.names = c("A", "B", "C", "D", "E", "F", "G", "H"))
+
+
+
+## Obtain ranking measures
+?rnmamod::rankosucra.plot
+rnmamod::rankosucra.plot(res1, drug.names = c("A", "B", "C", "D", "E", "F", "G", "H"))
+
+
+
+## Run the node-splitting approach (it will run as many times as the number of split nodes)
+?rnmamod::run.nodesplit
+(node1 <- rnmamod::run.nodesplit(data = data1[, -17], measure = "OR", assumption = "IDE-ARM", heter.prior = list("uniform", 0, 2), mean.misspar = 0, var.misspar = 1, n.chains = 2, n.iter = 1000, n.burnin = 100, n.thin = 1))
+
+
+
+## Present results from the node-splitting approach
+?rnmamod::nodesplit.plot
+rnmamod::nodesplit.plot(node1, drug.names = c("A", "B", "C", "D", "E", "F", "G", "H"), tau.values = c(0.15, 0.02, 0.34)) # tau.values refer to posterior median and 95% CrI in full NMA
+
+
+
+## Run the unrelated mean effects model
+?rnmamod::run.UME
+(ume1 <- rnmamod::run.UME(data = data1[, -17], measure = "OR", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, n.chains = 2, n.iter = 10000, n.burnin = 1000, n.thin = 1))
+
+
+
+## Present results from the unrelated mean effects model
+?rnmamod::UME.plot
+rnmamod::UME.plot(res1, ume1, drug.names = c("A", "B", "C", "D", "E", "F", "G", "H"))
+
+
+
+## Sensitivity analysis MOD
+?rnmamod::run.sensitivity
+(res.sens <- rnmamod::run.sensitivity(data = data1, measure = "OR", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), var.misspar = 1, D = 1, n.chains = 2, n.iter = 1000, n.burnin = 100, n.thin = 1))
+
+
+
+## Enhanced balloon plot on effect measure - MOD
+?rnmamod::balloon.plot.mod
+# Use the function 'drug.names.alloc(drug.names)' to define the argument 'compar'
+?drug.names.alloc
+drug.names.alloc(drug.names = c("A", "B", "C", "D", "E", "F", "G", "H"))
+rnmamod::balloon.plot.mod(sens = res.sens, compar = 1, outcome = "binary", D = 1, drug.names = c("A", "B", "C", "D", "E", "F", "G", "H"))
+
+
+
+## Robustness index
+?rnmamod::robustness.index
+(robust <- rnmamod::robustness.index(sens = res.sens, primary.scenar = 13, threshold = 0.28, nt = length(c("A", "B", "C", "D", "E", "F", "G", "H"))))
+
+
+
+## Heatmap of robustness (NMA)
+?rnmamod::heatmap.robustness
+rnmamod::heatmap.robustness(robust = robust, drug.names = c("A", "B", "C", "D", "E", "F", "G", "H"), threshold = 0.28)
+
+
+
+## Barplot on Kullback-Leibler divergence measure for all MOD scenarios (x-axis is sorted by KLD in descending order)
+?rnmamod::barplot.KLD
+# Use the function 'drug.names.alloc(drug.names)' to define the argument 'compar'
+rnmamod::barplot.KLD(robust = robust, compar = 1, outcome = "binary", drug.names = c("A", "B", "C", "D", "E", "F", "G", "H"))
+
+
+
