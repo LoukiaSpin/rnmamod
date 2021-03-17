@@ -1,4 +1,4 @@
 *** 
 
-# rnmamod: package to perform Bayesian network meta-analysis methods (in development)
+# rnmamod: package to perform Bayesian network meta-analysis methods
 
