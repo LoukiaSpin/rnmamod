@@ -1,0 +1,93 @@
+###############################################################################################
+#                                                                                             #
+#        Random-effects Node-splitting approach and accommodation of multi-arm trials         #
+#                             (Dias et al., 2010 – PMID: 20213715)                            #
+#                     <Normal likelihood, identity link, Random Effects>                      #
+#                      (Dias et al., 2013 in Appendix  - PMID: 23104435)                      #
+#                               One-stage pattern-mixture model                               #
+#                           (Spineli et al., 2019 - PMID: 31018836)                           #
+#      Odds ratio (OR) and Informative Missingness Odds ratio (IMOR) in logarithmic scale     #
+#                           <Hierarchical, trial-specific log IMOR>                           #
+#                           (Turner et al., 2015 - PMID: 25809313)                            #
+#                                                                                             #
+###############################################################################################
+
+
+model{
+    for(i in 1:ns){
+      w[i, 1] <- 0
+      j[i, 1] <- 0
+      delta[i, bi[i]] <- 0
+
+      ## Baseline log odds of event
+      mu[i] ~ dnorm(0,.0001)
+                                     
+      for(k in 1:na[i]){
+        ## Observed events and likelihood per arm
+        obs[i, k] <- N[i, k] - mod[i, k]
+        r[i, k] ~ dbin(p_o[i, k], obs[i, k])
+        p_o[i, k] <- max(0, min(1, ((-((q[i, k] - p[i, k])*(1 - theta[i, k]) - 1) - sqrt((pow(((q[i, k] - p[i, k])*(1 - theta[i, k]) - 1), 2)) - 
+                                   ((4*p[i, k])*(1 - q[i, k])*(1 - theta[i, k]))))/(2*(1 - q[i, k])*(1 - theta[i, k]))))) 
+
+        ## Missing participants and likelihood per arm
+        mod[i, k] ~ dbin(q[i, k], N[i, k])
+        q[i, k] ~ dunif(0, 1)
+
+        ## Hierarchical, trial-specific logIMOR  
+        log(theta[i, k]) <- phi[i, k]     
+        phi[i, k] ~ dnorm(mean.phi[i], prec.phi[i]) 
+     
+        logit(p[i, k]) <- mu[i] + delta[i, t[i, k]]  
+        index[i, k] <- split[i]*(equals(t[i, k], pair[1]) + equals(t[i, k], pair[2]))
+                     }
+
+    for(k in 2:na[i]){
+      delta[i, si[i, k]] ~ dnorm(md[i, si[i, k]], precd[i, si[i, k]])
+      md[i, si[i, k]] <- (d[si[i, k]] - d[bi[i]] + sw[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]  # True mean LOR  split into direct and indirect via NMA                     
+      j[i, k] <- k - (equals(1, split[i])*step(k - 3))                                                           # Adjusting for the correlated LORs for arms removed to split node
+      precd[i, si[i, k]] <- prec *2*(j[i,k] - 1)/j[i, k]                                                         # Precision of LOR distributions
+      w[i, k] <- (delta[i, si[i, k]] - d[si[i, k]] + d[bi[i]])*(1 - index[i, k])                                 # Adjustment, multi-arm RCTs
+      sw[i, k] <- sum(w[i, 1:(k-1)])/(j[i, k] - 1)                                                               # Cumulative adjustment for multi-arm trials
+                  }          
+              }
+
+    ## Prior consideration on hyperparameters of hierarchical, trial-specific logIMOR
+    for(i in 1:ns){
+      mean.phi[i] ~ dnorm(meand.phi, precd.phi)
+      prec.phi[i] <- pow(sd.phi[i], -2)
+      sd.phi[i] ~ dunif(0, psi.phi)
+                  }
+    psi.phi <- pow(precd.phi, -2)
+
+    ## Basic parameters - prior distributions 
+    d[ref] <- 0 
+    for(k in 1:(ref - 1)){
+      d[k] ~ dnorm(0, .0001)   
+                         } 
+  
+    for(k in (ref + 1):nt){
+      d[k] ~ dnorm(0, .0001)   
+                           } 
+
+    ## Collect all pairwise results
+    for(c in 1:nt){
+      for(k in 1:nt){
+        EM[k, c] <- d[k] - d[c]
+                     }
+                   }   
+
+    ## Calculate the difference between 'direct' and 'LOR'
+    direct ~ dnorm(0, .0001) 
+    diff <- direct - EM[pair[2], pair[1]] 
+
+    ## Calculate p-value
+    prob <- step(diff)
+
+    ## Weakly-informative (or empirically-based) prior distribution on between-trial standard deviation (variance)
+    prec <- pow(tau, -2)                                                                  
+    tau.a ~ dnorm(0, heter.prior[2])I(0, ) 
+    tau.b ~ dunif(0, heter.prior[2])
+    logtau2 ~ dlnorm(heter.prior[1], heter.prior[2])
+    tau <- pow(exp(logtau2), 0.5)*(1 - equals(heter.prior[3], 1))*(1 - equals(heter.prior[3], 2)) + 
+           tau.a*equals(heter.prior[3], 1) + tau.b*equals(heter.prior[3], 2)
+    } # END OF THE MODEL

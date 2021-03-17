@@ -1,0 +1,121 @@
+########################################################################################################
+#                                                                                                      #
+#           Random-effects NMA model with consistency and accommodation of multi-arm trials            #
+#                          <Normal likelihood, identity link, Random Effects>                          #
+#                    (Extension of Dias et al., 2013 in Appendix - PMID: 23104435)                     #
+#                                   One-stage pattern-mixture model                                    #
+#                               (Spineli et al., 2021 - PMID: 33406990)                                #
+#      Standardised Mean Difference (SMD) and Informative Missingness Difference of Means (IMDOM)      #
+#                               (Mavridis et al., 2015 - PMID: 25393541)                               #
+#                               <Identical, common-within-network IMDOM>                               #
+#                                                                                                      #
+########################################################################################################
+
+
+model{
+    for(i in 1:ns){                                                       # loop through trials
+      w[i, 1] <- 0
+
+      ## Baseline mean value
+      theta[i, 1] <- u[i]
+      u[i] ~ dnorm(0, 0.0001)
+
+      ## Pooled standard deviation under the missing at random assumption
+      a[i] <- sum(N[i, 1:na[i]] - 1)/2
+      b[i] <- sum(N[i, 1:na[i]] - 1)/(2*sigma[i]*sigma[i])
+      var.pooled[i] ~ dgamma(a[i], b[i])                                  # Gamma likelihood for the pooled variance in trial i (PMID: 21394888)
+      sd.pooled[i] <- sqrt(var.pooled[i])
+
+      for(k in 1:na[i]){                                                  # loop through all arms in trial i
+        ## Observed mean value and precision per arm & linking equation
+        prec.o[i, k] <- pow(se.o[i, k], -2)                               # observed precision of the outcome
+        y.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])                    # normal likelihood for the oberved mean of the outcome
+        theta.o[i, k] <- theta[i, k] - phi*q[i, k]                        # linking equation for Informative Missingness Difference of Means (IMDoM)
+
+        ## Missing participants and likelihood per arm
+        m[i, k] ~ dbin(q[i, k], N[i, k])                                  # binomial likelihood for missing outcome data (MOD)
+        q[i, k] ~ dunif(0, 1)                                             # uniform likelihood for the probability of MOD
+
+        ## Deviance contribution for observed and missing data
+        hat.par[i, k] <- theta.o[i, k]
+        dev.o[i, k] <- (y.o[i, k] - theta.o[i, k])*(y.o[i, k] -           # Deviance contribution (observed data; PMID: 23104435)
+                        theta.o[i, k])*prec.o[i, k]
+        m0[i, k] <- m[i, k] + 0.01*equals(m[i, k], 0)                     # Correction for zero MOD in arm k od trial i (PMID: 25809313) 
+        hat.m[i, k] <- q[i, k]*N[i, k]                                    # Expected value of numerators (missing data; PMID: 25809313)
+        dev.m[i, k] <- 2*(m0[i, k]*(log(m0[i, k]) - log(hat.m[i, k])) +   # Deviance contribution (MOD; PMID: 25809313)
+                       (N[i, k] - m0[i, k])*(log(N[i, k] - m0[i, k]) - 
+                       log(N[i, k] - hat.m[i, k])))
+                       }
+
+      resdev.o[i] <- sum(dev.o[i, 1:na[i]])                               # Summed residual deviance contribution for this trial (observed data; PMID: 23104435)
+      resdev.m[i] <- sum(dev.m[i, 1:na[i]])                               # Summed residual deviance contribution for this trial (MOD; PMID: 25809313)
+      
+      for(k in 2:na[i]){                                       
+        theta[i, k] <- u[i] + sd.pooled[i]*delta[i, k]                    # link function for standardized mean difference (SMD)
+        delta[i, k] ~ dnorm(md[i, k], precd[i, k])                        # within-trial true SMD (random-effect)
+        md[i, k] <- d[t[i, k]] - d[t[i, 1]] + sw[i, k]                    # mean of SMD distributions (with multi-arm trial correction)
+        precd[i, k] <- 2*prec*(k - 1)/k                                   # precision of SMD distributions (with multi-arm trial correction)
+        w[i, k] <- delta[i, k] - (d[t[i, k]] - d[t[i, 1]])                # adjustment for multi-arm trials
+        sw[i, k] <- sum(w[i, 1:(k - 1)])/(k - 1)                          # cumulative adjustment for multi-arm trials
+                       }
+                     }
+
+    totresdev.o <- sum(resdev.o[])                                        # Total Residual Deviance (observed data; PMID: 23104435)
+    totresdev.m <- sum(resdev.m[])                                        # Total Residual Deviance (MOD; PMID: 25809313)
+
+    ## Basic parameters - prior distributions
+    d[ref] <- 0                                                           # reference intervention in the network
+    for(t in 1:(ref - 1)){
+      d[t] ~ dnorm(0, 0.0001)                                             # normal distribution for basic parameters
+                         }
+ 
+    for(t in (ref + 1):nt){
+      d[t] ~ dnorm(0, 0.0001)                                             # normal distribution for basic parameters
+                          }
+
+    ## Prior consideration on identical, common-within-network IMDOM
+    phi ~ dnorm(meand.phi, precd.phi)                                     
+   
+    ## Ranking probabilities and SUCRA values
+    sorted <- rank(d[])
+    for(t in 1:nt){
+      order[t] <- (nt + 1 - sorted[t])*equals(D, 1) + sorted[t]*(1 - equals(D, 1))
+      most.effective[t] <- equals(order[t], 1)
+
+      for(l in 1:nt){
+        effectiveness[t, l] <- equals(order[t], l)
+        cumeffectiveness[t, l] <- sum(effectiveness[t, 1:l])
+                    }
+
+      SUCRA[t] <- sum(cumeffectiveness[t, 1:(nt - 1)])/(nt - 1)
+                  }  
+
+    ## Obtain reference-specific effect measure (EM) and its prediction  
+    for(t in 1:(ref - 1)){
+      EM.ref[t] <- d[t] - d[ref]
+      pred.ref[t] ~ dnorm(EM.ref[t], prec)
+                         }
+
+    for(t in (ref + 1):nt){
+      EM.ref[t] <- d[t] - d[ref]
+      pred.ref[t] ~ dnorm(EM.ref[t], prec)
+                          }
+
+    ## Obtain all possible (unique) pairwise comparisons and their prediction
+    for(c in 1:(nt - 1)){
+      for(k in (c + 1):nt){
+        EM[k, c] <- d[k] - d[c]
+        EM.pred[k, c] ~ dnorm(EM[k, c], prec)
+                          }
+                         }
+
+   ## Weakly-informative (or empirically-based) prior distribution on between-trial standard deviation (variance)
+   prec <- pow(tau, -2)                                                                  
+   tau.a ~ dnorm(0, heter.prior[2])I(0, ) 
+   tau.b ~ dunif(0, heter.prior[2])
+   logtau2 ~ dt(heter.prior[1], heter.prior[2], 5)
+   tau <- pow(exp(logtau2), 0.5)*(1 - equals(heter.prior[3], 1))*(1 - equals(heter.prior[3], 2)) + 
+          tau.a*equals(heter.prior[3], 1) + tau.b*equals(heter.prior[3], 2)  
+    } # END OF MODEL  
+
+                              
