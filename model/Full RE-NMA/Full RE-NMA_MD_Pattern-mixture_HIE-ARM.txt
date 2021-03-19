@@ -67,7 +67,7 @@ model{
 
     ## Basic parameters - prior distributions
     d[ref] <- 0                                                           # reference intervention in the network
-    beta[ref] <- 0
+    beta[ref] <- 0    
     for(t in 1:(ref - 1)){
       d[t] ~ dnorm(0, 0.0001)                                             # normal distribution for basic parameters
       beta[t] ~ dnorm(mean.B, prec.B)

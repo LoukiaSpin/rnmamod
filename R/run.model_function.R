@@ -294,7 +294,7 @@ run.model <- function(data, measure, assumption, heter.prior, net.ref, mean.miss
   SUCRA <- t(getResults %>% dplyr::select(starts_with("SUCRA")))
 
   # Within-trial effects size (multi-arm trials with T interventions provide T-1 such effect sizes)
-  delta <- t(getResults %>% dplyr::select(starts_with("delta")))
+  delta <- t(getResults %>% dplyr::select(starts_with("delta") & !ends_with(",1]")))
 
   # Ranking probability of each intervention for every rank
   effectiveness <- t(getResults %>% dplyr::select(starts_with("effectiveness")))

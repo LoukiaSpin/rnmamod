@@ -313,13 +313,13 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, net.r
   tau <- t(getResults %>% dplyr::select(starts_with("tau")))
 
   # Regression coefficient for comparisons with the reference intervention
-  beta <- t(getResults %>% dplyr::select(starts_with("beta")))
+  beta <- t(getResults %>% dplyr::select(starts_with("beta") & !ends_with("1]")))
 
   # SUrface under the Cumulative RAnking curve values
   SUCRA <- t(getResults %>% dplyr::select(starts_with("SUCRA")))
 
   # Within-trial effects size (multi-arm trials with T interventions provide T-1 such effect sizes)
-  delta <- t(getResults %>% dplyr::select(starts_with("delta")))
+  delta <- t(getResults %>% dplyr::select(starts_with("delta") & !ends_with(",1]")))
 
   # Ranking probability of each intervention for every rank
   effectiveness <- t(getResults %>% dplyr::select(starts_with("effectiveness")))

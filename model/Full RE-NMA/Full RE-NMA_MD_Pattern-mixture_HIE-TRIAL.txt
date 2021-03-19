@@ -121,8 +121,7 @@ model{
                          }
 
     ## Weakly-informative prior distribution on between-trial standard deviation 
-    prec <- pow(tau, -2)                                                                  
-    prec <- pow(tau, -2)                                                                  
+    prec <- pow(tau, -2)                                                                                                                               
     tau.a ~ dnorm(0, heter.prior[2])I(0, ) 
     tau.b ~ dunif(0, heter.prior[2])
     tau <- tau.a*equals(heter.prior[3], 1) + tau.b*equals(heter.prior[3], 2)  
