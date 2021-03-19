@@ -249,19 +249,31 @@ run.UME <- function(data, measure, assumption, heter.prior, net.ref, mean.misspa
     }
 
 
+
+    ## Unique comparisons with the baseline intervention
+    ## A function to extract numbers from a character. Source: http://stla.github.io/stlapblog/posts/Numextract.html
+    Numextract <- function(string){
+      unlist(regmatches(string,gregexpr("[[:digit:]]+\\.*[[:digit:]]*",string)))
+    }
+
+
+    ## Observed comparisons in the network
+    observed.comp0 <- improved.UME(t, m, N)$obs.comp
+    observed.comp <- matrix(Numextract(observed.comp0[, 1]), nrow = length(observed.comp0[, 1]), ncol = 2, byrow = T)
+    t1.obs.com <- as.numeric(as.character(observed.comp[, 1]))
+    t2.obs.com <- as.numeric(as.character(observed.comp[, 2]))
+    obs.comp <- paste0(t2.obs.com, "vs", t1.obs.com)
+
+
     ## Keep only comparisons with the baseline intervention
     indic0 <- list()
     for(i in 1:ns) {
       indic0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(na[i] - 1)]
     }
-
-
-    ## Unique comparisons with the baseline intervention
     (indic <- unique(t(do.call(cbind, indic0))))
     t1.indic <- indic[, 1]
     t2.indic <- indic[, 2]
     N.obs <- length(t1.indic)
-
 
 
     ## Condition regarding the specification of the prior mean ('mean.misspar') for the missingness parameter
@@ -401,31 +413,42 @@ run.UME <- function(data, measure, assumption, heter.prior, net.ref, mean.misspa
 
   ## Calculate the deviance at posterior mean of fitted values
   # Turn 'number of observed' and 'm' into a vector (first column, followed by second column, and so on)
-  m.new <- as.vector(na.omit(melt(m[order(na), ])[, 2])); N.new <- as.vector(na.omit(melt(N[order(na), ])[, 2])); obs <- N.new - m.new
+  m.new <- suppressMessages({as.vector(na.omit(melt(m)[, 2]))})
+  N.new <- suppressMessages({as.vector(na.omit(melt(N)[, 2]))})
+  obs <- N.new - m.new
+
   # Correction for zero MOD in trial-arm
   m0 <- ifelse(m.new == 0, m.new + 0.01, m.new)
+
   # Deviance at the posterior mean of the fitted MOD
   dev.post.m <- 2*(m0*(log(m0) - log(as.vector(hat.m[, 1]))) + (N.new - m0)*(log(N.new - m0) - log(N.new - as.vector(hat.m[, 1]))))
+
   # Sign of the difference between observed and fitted MOD
   sign.dev.m <- sign(m0 - as.vector(hat.m[, 1]))
 
   if(measure == "MD" || measure == "SMD"|| measure == "ROM") {
 
     # Turn 'y0', 'se0'into a vector (first column, followed by second column, and so on)
-    y0.new <- as.vector(na.omit(melt(y0[order(na), ])[, 2])); se0.new <- as.vector(na.omit(melt(se0[order(na), ])[, 2]))
+    y0.new <- suppressMessages({as.vector(na.omit(melt(y0)[, 2]))})
+    se0.new <- suppressMessages({as.vector(na.omit(melt(se0)[, 2]))})
+
     # Deviance at the posterior mean of the fitted mean outcome
     dev.post.o <- (y0.new - as.vector(hat.par[, 1]))*(y0.new - as.vector(hat.par[, 1]))*(1/se0.new^2)
+
     # Sign of the difference between observed and fitted mean outcome
     sign.dev.o <- sign(y0.new - as.vector(hat.par[, 1]))
 
   } else {
 
     # Turn 'r' and number of observed into a vector (first column, followed by second column, and so on)
-    r.new <- as.vector(na.omit(melt(r[order(na), ])[, 2]))
+    r.new <- suppressMessages({as.vector(na.omit(melt(r)[, 2]))})
+
     # Correction for zero events in trial-arm
     r0 <- ifelse(r.new == 0, r.new + 0.01, ifelse(r.new == obs, r.new - 0.01, r.new))
+
     # Deviance at the posterior mean of the fitted response
     dev.post.o <- 2*(r0*(log(r0) - log(as.vector(hat.par[, 1]))) + (obs - r0)*(log(obs - r0) - log(obs - as.vector(hat.par[, 1]))))
+
     # Sign of the difference between observed and fitted response
     sign.dev.o <- sign(r0 - as.vector(hat.par[, 1]))
 
@@ -437,7 +460,7 @@ run.UME <- function(data, measure, assumption, heter.prior, net.ref, mean.misspa
   leverage.m <- as.vector(dev.m[, 1]) - dev.post.m
 
 
-  return(list(EM = EM, dev.m = dev.m, dev.o = dev.o, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, tau = tau, model.assessment = model.assessment, obs.comp = paste(t2.indic, "vs", t1.indic)))
+  return(list(EM = EM, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, tau = tau, model.assessment = model.assessment, obs.comp = obs.comp))
 
 }
 

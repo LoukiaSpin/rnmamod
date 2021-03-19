@@ -42,7 +42,7 @@ UME.plot <- function(full, ume, drug.names) {
   colnames(poss.pair.comp) <- c("treat1", "treat2")
 
 
-  poss.pair.comp$comp <- paste(poss.pair.comp[, 1], "vs", poss.pair.comp[, 2])
+  poss.pair.comp$comp <- paste0(poss.pair.comp[, 1], "vs", poss.pair.comp[, 2])
   poss.pair.comp.clean <- poss.pair.comp[is.element(poss.pair.comp$comp, ume$obs.comp), ]
 
 

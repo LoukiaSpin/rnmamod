@@ -149,19 +149,19 @@ run.model <- function(data, measure, assumption, heter.prior, net.ref, mean.miss
     # Under the Independent structure with or without SMD as effect measure
     if (measure == "SMD" & assumption != "IND-CORR") {
 
-      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "sigma" = sigma, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior)
+      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "sigma" = sigma, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
 
     } else if (measure == "SMD" & assumption == "IND-CORR"){
 
-      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "sigma" = sigma, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior)
+      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "sigma" = sigma, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
 
     } else if (measure != "SMD" & assumption == "IND-CORR") {
 
-      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior)
+      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
 
     } else {
 
-      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior)
+      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
 
     }
 
@@ -191,7 +191,6 @@ run.model <- function(data, measure, assumption, heter.prior, net.ref, mean.miss
       N[i, ] <- rand[i, order(t0[i, ], na.last = T)]
       t[i, ] <- sort(treat[i, ], na.last = T)
     }
-
 
 
     ## Condition regarding the specification of the prior mean ('mean.misspar') for the missingness parameter
@@ -243,11 +242,11 @@ run.model <- function(data, measure, assumption, heter.prior, net.ref, mean.miss
     ## Condition for the Independent structure
     if (assumption != "IND-CORR") {
 
-      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior)
+      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
 
     } else {
 
-      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior)
+      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
 
     }
 
@@ -301,7 +300,23 @@ run.model <- function(data, measure, assumption, heter.prior, net.ref, mean.miss
   effectiveness <- t(getResults %>% dplyr::select(starts_with("effectiveness")))
 
   # Estimated missingness parameter
-  phi <- t(getResults %>% dplyr::select(starts_with("mean.phi")))
+  if (assumption == "IDE-COMMON") {
+
+    phi <- t(getResults %>% dplyr::select(starts_with("phi")))
+
+  } else if (assumption == "HIE-COMMON"){
+
+    phi <- t(getResults %>% dplyr::select(starts_with("mean.phi")))
+
+  } else if (assumption == "HIE-TRIAL" || assumption == "HIE-ARM") {
+
+    phi <- t(getResults %>% dplyr::select(starts_with("mean.phi[")))
+
+  } else {
+
+    phi <- t(getResults %>% dplyr::select(starts_with("phi[")))
+
+  }
 
   # Trial-arm deviance contribution for observed outcome
   dev.o <- t(getResults %>% dplyr::select(starts_with("dev.o")))
@@ -331,7 +346,9 @@ run.model <- function(data, measure, assumption, heter.prior, net.ref, mean.miss
 
   ## Calculate the deviance at posterior mean of fitted values
   # Turn 'number of observed' and 'm' into a vector (first column, followed by second column, and so on)
-  m.new <- as.vector(na.omit(melt(m[order(na), ])[, 2])); N.new <- as.vector(na.omit(melt(N[order(na), ])[, 2])); obs <- N.new - m.new
+  m.new <- suppressMessages({as.vector(na.omit(melt(m)[, 2]))})
+  N.new <- suppressMessages({as.vector(na.omit(melt(N)[, 2]))})
+  obs <- N.new - m.new
 
   # Correction for zero MOD in trial-arm
   m0 <- ifelse(m.new == 0, m.new + 0.01, m.new)
@@ -345,20 +362,26 @@ run.model <- function(data, measure, assumption, heter.prior, net.ref, mean.miss
   if(measure == "MD" || measure == "SMD"|| measure == "ROM") {
 
     # Turn 'y0', 'se0'into a vector (first column, followed by second column, and so on)
-    y0.new <- as.vector(na.omit(melt(y0[order(na), ])[, 2])); se0.new <- as.vector(na.omit(melt(se0[order(na), ])[, 2]))
+    y0.new <- suppressMessages({as.vector(na.omit(melt(y0)[, 2]))})
+    se0.new <- suppressMessages({as.vector(na.omit(melt(se0)[, 2]))})
+
     # Deviance at the posterior mean of the fitted mean outcome
     dev.post.o <- (y0.new - as.vector(hat.par[, 1]))*(y0.new - as.vector(hat.par[, 1]))*(1/se0.new^2)
+
     # Sign of the difference between observed and fitted mean outcome
     sign.dev.o <- sign(y0.new - as.vector(hat.par[, 1]))
 
   } else {
 
     # Turn 'r' and number of observed into a vector (first column, followed by second column, and so on)
-    r.new <- as.vector(na.omit(melt(r[order(na), ])[, 2]))
+    r.new <- suppressMessages({as.vector(na.omit(melt(r)[, 2]))})
+
     # Correction for zero events in trial-arm
     r0 <- ifelse(r.new == 0, r.new + 0.01, ifelse(r.new == obs, r.new - 0.01, r.new))
+
     # Deviance at the posterior mean of the fitted response
     dev.post.o <- 2*(r0*(log(r0) - log(as.vector(hat.par[, 1]))) + (obs - r0)*(log(obs - r0) - log(obs - as.vector(hat.par[, 1]))))
+
     # Sign of the difference between observed and fitted response
     sign.dev.o <- sign(r0 - as.vector(hat.par[, 1]))
 
@@ -370,44 +393,15 @@ run.model <- function(data, measure, assumption, heter.prior, net.ref, mean.miss
   leverage.m <- as.vector(dev.m[, 1]) - dev.post.m
 
 
-  ## Conditions to obtain the posterior distribution of the missingness parameter
-  if (assumption == "IDE-COMMON") {
 
-    phi <- jagsfit$BUGSoutput$summary["phi", c("50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]
-
-  } else if (assumption == "HIE-COMMON"){
-
-    phi <- jagsfit$BUGSoutput$summary["mean.phi", c("50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]
-
-  } else if (assumption == "IDE-TRIAL") {
-
-    phi <- jagsfit$BUGSoutput$summary[paste0("phi[", seq(1:ns), "]"), c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]
-
-  } else if (assumption == "HIE-TRIAL") {
-
-    phi <- jagsfit$BUGSoutput$summary[paste0("mean.phi[", seq(1:ns), "]"), c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]
-
-  } else if (assumption == "IDE-ARM") {
-
-    phi <- jagsfit$BUGSoutput$summary[paste0("phi[", seq(1:nt), "]"), c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]
-
-  } else if (assumption == "HIE-ARM") {
-
-    phi <- jagsfit$BUGSoutput$summary[paste0("mean.phi[", seq(1:nt), "]"), c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]
-
-  } else {
-
-    phi <- jagsfit$BUGSoutput$summary[(2*nt*(nt - 1)*0.5 + (nt - 1) + nt + sum(na - 1) + sum(na)*2 + 1 + nt*nt + sum(na) - 1 + 2):(2*nt*(nt - 1)*0.5 + (nt - 1) + nt + sum(na - 1) + sum(na)*2 + 1 + nt*nt + (sum(na) - 1)*2 + 2), c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]
-
-  }
-
+  ## Return a list of results
   if(nt > 2) {
 
-    suppressMessages(return(list(EM = EM, EM.ref = EM.ref, EM.pred = EM.pred, pred.ref = pred.ref, tau = tau, SUCRA = SUCRA, delta = delta, dev.m = dev.m, dev.o = dev.o, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, effectiveness = effectiveness, phi = phi, model.assessment = model.assessment, ref = ref)))
+    return(list(EM = EM, EM.ref = EM.ref, EM.pred = EM.pred, pred.ref = pred.ref, tau = tau, SUCRA = SUCRA, delta = delta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, effectiveness = effectiveness, phi = phi, model.assessment = model.assessment, ref = ref))
 
   } else {
 
-    suppressMessages(return(list(EM = EM, EM.pred = EM.pred, tau = tau, delta = delta, dev.m = dev.m, dev.o = dev.o, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, phi = phi, model.assessment = model.assessment)))
+    return(list(EM = EM, EM.pred = EM.pred, tau = tau, delta = delta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, phi = phi, model.assessment = model.assessment))
 
   }
 

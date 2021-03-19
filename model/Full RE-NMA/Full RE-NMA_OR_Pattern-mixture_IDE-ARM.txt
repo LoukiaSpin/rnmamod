@@ -10,12 +10,16 @@
 #                           (Turner et al., 2015 - PMID: 25809313)                            #
 #              <<Transitive assumed missingness mechanism across interventions>>              #
 #                                (Spineli 2019 - PMID: 30223064)                              #
+#*********************************************************************************************#
+#        Meta-regression with exchangeable regression coefficients of basic parameters        #
+#                            Cooper et al., 2009 - PMID: 19399825)                            #
 #                                                                                             #
 ###############################################################################################
 
 
 model{
     for(i in 1:ns){
+      delta[i, 1] <- 0
       w[i, 1] <- 0
 
       ## Baseline log odds of event
@@ -53,7 +57,8 @@ model{
      resdev.m[i] <- sum(dev.m[i, 1:2])                                    # Summed residual deviance contribution for this trial (MOD; PMID: 25809313)
 
     for(k in 2:na[i]){
-      logit(p[i, k]) <- u[i] + delta[i, k]
+      logit(p[i, k]) <- u[i] + delta.star[i, k]
+      delta.star[i, k] <- delta[i, k] + (beta[t[i, k]] - beta[t[i, 1]])*eff.mod[i]*(1 - equals(eff.mod[i], 0))
       delta[i, k] ~ dnorm(md[i, k], precd[i, k])
       md[i, k] <- d[t[i, k]] - d[t[i, 1]] + sw[i, k]
       w[i, k] <- delta[i, k] - (d[t[i, k]] - d[t[i, 1]])
@@ -81,13 +86,20 @@ model{
 
     ## Basic parameters - prior distributions
     d[ref] <- 0
+    beta[ref] <- 0
     for(t in 1:(ref - 1)){
       d[t] ~ dnorm(0, .0001)
+      beta[t] ~ dnorm(mean.B, prec.B)
                          }
 
     for(t in (ref + 1):nt){
       d[t] ~ dnorm(0, .0001)
+      beta[t] ~ dnorm(mean.B, prec.B)
                            }
+    mean.B ~ dnorm(0, .0001)
+    prec.B <- 1/pow(beta.SD,2)
+    beta.SD ~ dnorm(0, 1)I(0, )   
+
 
     ## Ranking probabilities and SUCRA values
     sorted <- rank(d[])

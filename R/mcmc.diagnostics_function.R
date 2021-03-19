@@ -272,11 +272,27 @@ mcmc.diagnostics <- function(par, data, measure, assumption, heter.prior, net.re
   # Ranking probability of each intervention for every rank
   (effectiveness <- t(getResults %>% dplyr::select(starts_with("effectiveness"))))
 
-  # Estimated missingness parameter
-  (phi <- t(getResults %>% dplyr::select(starts_with("mean.phi"))))
-
   # Between-trial standard deviation
   (tau <- t(getResults %>% dplyr::select(starts_with("tau"))))
+
+  # Estimated missingness parameter
+  if (assumption == "IDE-COMMON") {
+
+    phi <- t(getResults %>% dplyr::select(starts_with("phi")))
+
+  } else if (assumption == "HIE-COMMON"){
+
+    phi <- t(getResults %>% dplyr::select(starts_with("mean.phi")))
+
+  } else if (assumption == "HIE-TRIAL" || assumption == "HIE-ARM") {
+
+    phi <- t(getResults %>% dplyr::select(starts_with("mean.phi[")))
+
+  } else {
+
+    phi <- t(getResults %>% dplyr::select(starts_with("phi[")))
+
+  }
 
 
 

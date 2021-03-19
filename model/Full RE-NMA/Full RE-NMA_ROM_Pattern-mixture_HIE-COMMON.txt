@@ -8,6 +8,9 @@
 #           Ratio of Means (ROM) and Informative Missingness Ratio of Means (IMROM)           #
 #                           (Mavridis et al., 2015 - PMID: 25393541)                          #
 #                         <Hierarchical, common-within-network IMROM>                         #
+#*********************************************************************************************#
+#        Meta-regression with exchangeable regression coefficients of basic parameters        #
+#                            Cooper et al., 2009 - PMID: 19399825)                            #
 #                                                                                             #
 ###############################################################################################
 
@@ -17,6 +20,7 @@ model{
    for(i in 1:ns){                                                                                           # loop through trials
      theta[i, 1] <- u[i]
      u[i] ~ dnorm(0, 0.0001)
+     delta[i, 1] <- 0
      w[i, 1] <- 0
 
      for(k in 1:na[i]){                                                                                      # loop through all arms in trial i
@@ -43,7 +47,8 @@ model{
      resdev.m[i] <- sum(dev.m[i, 1:na[i]])                                                                   # Summed residual deviance contribution for this trial (MOD; PMID: 25809313)
       
      for(k in 2:na[i]){                                       
-       theta[i, k] <- u[i]*exp(delta[i, k])                                                                  # link function for ratio of means (RoM) in logarithmic scale
+       theta[i, k] <- u[i]*exp(delta.star[i, k])                                                             # link function for ratio of means (RoM) in logarithmic scale
+       delta.star[i, k] <- delta[i, k] + (beta[t[i, k]] - beta[t[i, 1]])*eff.mod[i]*(1 - equals(eff.mod[i], 0))
        delta[i, k] ~ dnorm(md[i, k], taud[i, k])                                                             # within-trial true log RoM (random-effect)
        md[i, k] <- d[t[i, k]] - d[t[i, 1]] + sw[i, k]                                                        # mean of log RoM distributions (with multi-arm trial correction)
        taud[i, k] <- 2*tau*(k - 1)/k                                                                         # precision of log RoM distributions (with multi-arm trial correction)
@@ -56,13 +61,19 @@ model{
    totresdev.m <- sum(resdev.m[])                                                                            # Total Residual Deviance (MOD; PMID: 25809313)
 
    d[ref] <- 0                                                                                               # reference intervention in the network
+   beta[ref] <- 0
    for(t in 1:(ref - 1)){
      d[t] ~ dnorm(0, 0.0001)                                                                                 # normal distribution for basic parameters
+     beta[t] ~ dnorm(mean.B, prec.B)
                         }
 
    for(t in (ref + 1):nt){
      d[t] ~ dnorm(0, 0.0001)                                                                                 # normal distribution for basic parameters
+     beta[t] ~ dnorm(mean.B, prec.B)
                         }
+   mean.B ~ dnorm(0, .0001)
+   prec.B <- 1/pow(beta.SD,2)
+   beta.SD ~ dnorm(0, 1)I(0, ) 
 
 
    ## Ranking probabilities and SUCRA values
