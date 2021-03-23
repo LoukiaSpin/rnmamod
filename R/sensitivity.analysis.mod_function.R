@@ -119,13 +119,13 @@ run.sensitivity <- function(data, measure, assumption, heter.prior, var.misspar,
       if (measure == "SMD") {
 
         data.jag[[i]] <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "sigma" = sigma, "meand.phi" = mean.misspar[i, ], "precd.phi" = prec.misspar,
-                              "D" = D, "heter.prior" = heter.prior)
+                              "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
 
 
       } else {
 
         data.jag[[i]] <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar[i, ], "precd.phi" = prec.misspar,
-                              "D" = D, "heter.prior" = heter.prior)
+                              "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
 
       }
 
@@ -193,7 +193,8 @@ run.sensitivity <- function(data, measure, assumption, heter.prior, var.misspar,
     memory.limit(size = 40000)
     for(i in 1:length(mean.misspar[, 1])){
 
-      data.jag[[i]] <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar[i, ], "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior)
+      data.jag[[i]] <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar[i, ], "precd.phi" = prec.misspar, "D" = D,
+                            "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
 
 
       jagsfit[[i]] <- jags(data = data.jag[[i]], parameters.to.save = param.jags, model.file = paste0("./model/Full RE-NMA/Full RE-NMA_", measure, "_Pattern-mixture_", assumption, ".txt"),
