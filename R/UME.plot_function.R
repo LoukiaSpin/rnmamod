@@ -1,7 +1,7 @@
 #' Plot the results from the unrelated mean effects model
 #'
 #' @export
-UME.plot <- function(full, ume, drug.names) {
+UME.plot <- function(full, ume, drug.names, path) {
 
 
   ## The results on the following parameters will be used:
@@ -65,7 +65,7 @@ UME.plot <- function(full, ume, drug.names) {
 
 
   ## Keep only the effect estimates according to the 'poss.pair.comp.clean' - Consistency model
-  EM.full.clean <- format(round(EM.full[is.element(poss.pair.comp$comp, ume$obs.comp), 1:4], 2), nsmall = 2)
+  EM.full.clean <- format(round(EM.full[is.element(poss.pair.comp$comp, ume$obs.comp), c(1:3, 7)], 2), nsmall = 2)
 
 
 
@@ -136,6 +136,9 @@ UME.plot <- function(full, ume, drug.names) {
   ## Bring together all four leverage plots
   lev.plots <- ggarrange(lever.full.o, lever.ume.o, lever.full.m, lever.ume.m, nrow = 2, ncol = 2, labels = c("A)", "", "B)", ""))
 
+
+  ## Write the table with the EMs from both models as .xlsx
+  write_xlsx(EM.both.models, paste0(path,"Table NMA vs UME.xlsx"))
 
 
   return(list(EM.both.models = EM.both.models, model.assessment = model.assessment, between.trial.SD = between.trial.SD,

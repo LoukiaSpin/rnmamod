@@ -37,6 +37,7 @@ Imports:
     pcnetmeta,
     ggthemes,
     stringr,
-    testit
+    testit,
+    writexl
 SystemRequirements: JAGS (http://mcmc-jags.sourceforge.net)
 RoxygenNote: 7.1.1

@@ -1,12 +1,14 @@
 #' Plot the results from the node-splitting approach
 #'
 #' @export
-nodesplit.plot <- function(net, drug.names, tau.values) {
+nodesplit.plot <- function(node, full, drug.names) {
 
+
+  tau.values <- full$tau[c(3, 5, 7)]
 
   ## Keep results on 'direct evidence', 'indirect evidence', 'inconsistency factor', 'between-trial standard deviation',
   ## and model assessment measures (i.e., DIC, posterior mean of refisual deviance, and pD)
-  direct0 <-net$direct; indirect0 <-net$EM; IF0 <-net$diff; tau0 <- net$tau; model.assess <- net$model.assessment
+  direct0 <- node$direct; indirect0 <- node$EM; IF0 <- node$diff; tau0 <- node$tau; model.assess <- node$model.assessment
 
 
   ## Sort 'direct evidence', 'indirect evidence', 'inconsistency factor', and 'between-trial standard deviation' by DIC in ascending order
