@@ -9,7 +9,6 @@ run.nodesplit(
   measure,
   assumption,
   heter.prior,
-  net.ref,
   mean.misspar,
   var.misspar,
   n.chains,

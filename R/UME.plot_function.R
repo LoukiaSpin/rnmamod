@@ -1,7 +1,7 @@
 #' Plot the results from the unrelated mean effects model
 #'
 #' @export
-UME.plot <- function(full, ume, drug.names, path) {
+UME.plot <- function(full, ume, drug.names) {
 
 
   ## The results on the following parameters will be used:
@@ -75,12 +75,12 @@ UME.plot <- function(full, ume, drug.names, path) {
 
 
   ## Keep only the 95% credible intervals (CrI) according to the 'poss.pair.comp.clean' - Consistency model
-  CrI.full.clean <- paste0("c(", EM.full.clean[, 3], ",", " ", EM.full.clean[, 4], ")", ifelse(as.numeric(EM.full.clean[, 3]) > 0 | as.numeric(EM.full.clean[, 4]) < 0, "*", " "))
+  CrI.full.clean <- paste0("(", EM.full.clean[, 3], ",", " ", EM.full.clean[, 4], ")", ifelse(as.numeric(EM.full.clean[, 3]) > 0 | as.numeric(EM.full.clean[, 4]) < 0, "*", " "))
 
 
 
   ## Keep only the 95% credible intervals (CrI) according to the 'poss.pair.comp.clean' - UME model
-  CrI.ume.clean <- paste0("c(", EM.ume.clean[, 3], ",", " ", EM.ume.clean[, 4], ")", ifelse(as.numeric(EM.ume.clean[, 3]) > 0 | as.numeric(EM.ume.clean[, 4]) < 0, "*", " "))
+  CrI.ume.clean <- paste0("(", EM.ume.clean[, 3], ",", " ", EM.ume.clean[, 4], ")", ifelse(as.numeric(EM.ume.clean[, 3]) > 0 | as.numeric(EM.ume.clean[, 4]) < 0, "*", " "))
 
 
 
@@ -138,7 +138,7 @@ UME.plot <- function(full, ume, drug.names, path) {
 
 
   ## Write the table with the EMs from both models as .xlsx
-  write_xlsx(EM.both.models, paste0(path,"Table NMA vs UME.xlsx"))
+  write_xlsx(EM.both.models, paste0(getwd(),"Table NMA vs UME.xlsx"))
 
 
   return(list(EM.both.models = EM.both.models, model.assessment = model.assessment, between.trial.SD = between.trial.SD,

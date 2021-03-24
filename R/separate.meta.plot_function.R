@@ -1,7 +1,7 @@
 #' Plot the results from the unrelated mean effects model
 #'
 #' @export
-separate.meta.plot <- function(full, meta, drug.names, path) {
+separate.meta.plot <- function(full, meta, drug.names) {
 
 
 
@@ -66,17 +66,17 @@ separate.meta.plot <- function(full, meta, drug.names, path) {
 
 
   ## Keep only the 95% credible intervals (CrI) according to the 'poss.pair.comp.clean' - Consistency model
-  CrI.full.clean <- paste0("c(", EM.full.clean[, 3], ",", " ", EM.full.clean[, 4], ")", ifelse(as.numeric(EM.full.clean[, 3]) > 0 | as.numeric(EM.full.clean[, 4]) < 0, "*", " "))
+  CrI.full.clean <- paste0("(", EM.full.clean[, 3], ",", " ", EM.full.clean[, 4], ")", ifelse(as.numeric(EM.full.clean[, 3]) > 0 | as.numeric(EM.full.clean[, 4]) < 0, "*", " "))
 
 
 
   ## The 95% CrIs of the effect estimate of separate RE-MAs
-  CrI.meta.clean <- paste0("c(", EM.meta.clean[, 3], ",", " ", EM.meta.clean[, 4], ")", ifelse(as.numeric(EM.meta.clean[, 3]) > 0 | as.numeric(EM.meta.clean[, 4]) < 0, "*", " "))
+  CrI.meta.clean <- paste0("(", EM.meta.clean[, 3], ",", " ", EM.meta.clean[, 4], ")", ifelse(as.numeric(EM.meta.clean[, 3]) > 0 | as.numeric(EM.meta.clean[, 4]) < 0, "*", " "))
 
 
 
   ## The 95% CrIs of the between-trial standard deviation of separate RE-MAs
-  CrI.tau.meta <- paste0("c(", tau.meta.clean[, 3], ",", " ", tau.meta.clean[, 4], ")")
+  CrI.tau.meta <- paste0("(", tau.meta.clean[, 3], ",", " ", tau.meta.clean[, 4], ")")
 
 
 
@@ -141,7 +141,7 @@ separate.meta.plot <- function(full, meta, drug.names, path) {
 
 
   ## Write the table as .xlsx
-  write_xlsx(EM.both.models, paste0(path,"Table NMA vs MA.xlsx"))
+  write_xlsx(EM.both.models, paste0(getwd(),"Table NMA vs MA.xlsx"))
 
 
   return(list(EM.both.models = EM.both.models, forest.plots = forest.plots))

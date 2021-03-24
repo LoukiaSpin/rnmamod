@@ -6,7 +6,6 @@
 #' @param heter.prior A vector of length equal to two with the following values: \code{rep(1, 2)}, \code{rep(2, 2)}, and \code{rep(3, 2)} refers to half-normal distribution with variance 1 or 0.5, and uniform distribution with interval [0, 5], respectively,
 #' for the between-trial standard deviation. To indicate an empirically-based prior distribution for the between-trial variance, the first and second values of the vector should be the mean and precision
 #' of the selected prior distribution. The empirically-based prior distribution for the between-trial variance is applicable only when \code{"OR"} or \code{"SMD"} is considered.
-#' @param net.ref Integer specifying the reference intervention of the network. The default is the most frequently appeared intervention in the network.
 #' @param mean.misspar A positive non-zero number for the mean of the normal distribution of the informative missingness parameter.
 #' @param var.misspar A positive non-zero number for the variance of the normal distribution of the informative missingness parameter.
 #' @param D A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.
@@ -31,7 +30,7 @@
 #' mcmc.diagnostics(par = c("tau2", "EM[3,1]", "EM[3,2]"), net = res1)
 #'
 #' @export
-mcmc.diagnostics <- function(par, data, measure, assumption, heter.prior, net.ref, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
+mcmc.diagnostics <- function(par, data, measure, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
 
 
 
@@ -59,7 +58,7 @@ mcmc.diagnostics <- function(par, data, measure, assumption, heter.prior, net.re
     na <- apply(treat, 1, function(x) length(which(!is.na(x))))                     # Number of interventions investigated in every trial per network
     nt <- length(table(as.matrix(treat)))                                           # Total number of interventions per network
     ns <- length(y.obs[, 1])                                                        # Total number of included trials per network
-    ref <- ifelse(missing(net.ref), which.max(table(as.matrix(treat))), net.ref)    # Reference intervention per network. If not specify, the most frequently appeared intervention in the network is selected
+    ref <- 1                                                                        # The first intervention (t1 = 1) is the reference of the network
     # Trial-specific observed pooled standard deviation
     (sigma <- sqrt(apply((sd.obs^2)*(c - 1), 1, sum, na.rm = T)/(apply(c, 1, sum, na.rm = T) - na)))
 
@@ -160,7 +159,7 @@ mcmc.diagnostics <- function(par, data, measure, assumption, heter.prior, net.re
     na <- apply(treat, 1, function(x) length(which(!is.na(x))))                     # Number of interventions investigated in every trial per network
     nt <- length(table(as.matrix(treat)))                                           # Total number of interventions per network
     ns <- length(event[, 1])                                                        # Total number of included trials per network
-    ref <- ifelse(missing(net.ref), which.max(table(as.matrix(treat))), net.ref)    # Reference intervention per network. If not specify, the most frequently appeared intervention in the network is selected
+    ref <- 1                                                                        # The first intervention (t1 = 1) is the reference of the network
 
 
     ## Order by 'id of t1' < 'id of t1'

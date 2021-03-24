@@ -6,7 +6,6 @@
 #' @param heter.prior A vector of length equal to two with the following values: \code{rep(1, 2)}, \code{rep(2, 2)}, and \code{rep(3, 2)} refers to half-normal distribution with variance 1 or 0.5, and uniform distribution with interval [0, 5], respectively,
 #' for the between-trial standard deviation. To indicate an empirically-based prior distribution for the between-trial variance, the first and second values of the vector should be the mean and precision
 #' of the selected prior distribution. The empirically-based prior distribution for the between-trial variance is applicable only when \code{"OR"} or \code{"SMD"} is considered.
-#' @param net.ref Integer specifying the reference intervention of the network. The default is the most frequently appeared intervention in the network.
 #' @param mean.misspar A positive non-zero number for the mean of the normal distribution of the informative missingness parameter.
 #' @param var.misspar A positive non-zero number for the variance of the normal distribution of the informative missingness parameter.
 #' @param D A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.
@@ -50,7 +49,7 @@
 #' run.model(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, D = 0, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.model <- function(data, measure, assumption, heter.prior, net.ref, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
+run.model <- function(data, measure, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
 
 
   ## Default arguments
@@ -77,7 +76,7 @@ run.model <- function(data, measure, assumption, heter.prior, net.ref, mean.miss
     na <- apply(treat, 1, function(x) length(which(!is.na(x))))                     # Number of interventions investigated in every trial per network
     nt <- length(table(as.matrix(treat)))                                           # Total number of interventions per network
     ns <- length(y.obs[, 1])                                                        # Total number of included trials per network
-    ref <- ifelse(missing(net.ref), which.max(table(as.matrix(treat))), net.ref)    # Reference intervention per network. If not specify, the most frequently appeared intervention in the network is selected
+    ref <- 1                                                                        # The first intervention (t1 = 1) is the reference of the network
     # Trial-specific observed pooled standard deviation
     sigma <- sqrt(apply((sd.obs^2)*(c - 1), 1, sum, na.rm = T)/(apply(c, 1, sum, na.rm = T) - na))
 
@@ -178,7 +177,7 @@ run.model <- function(data, measure, assumption, heter.prior, net.ref, mean.miss
     na <- apply(treat, 1, function(x) length(which(!is.na(x))))                     # Number of interventions investigated in every trial per network
     nt <- length(table(as.matrix(treat)))                                           # Total number of interventions per network
     ns <- length(event[, 1])                                                        # Total number of included trials per network
-    ref <- ifelse(missing(net.ref), which.max(table(as.matrix(treat))), net.ref)    # Reference intervention per network. If not specify, the most frequently appeared intervention in the network is selected
+    ref <- 1                                                                        # The first intervention (t1 = 1) is the reference of the network
 
 
     ## Order by 'id of t1' < 'id of t1'
@@ -397,11 +396,11 @@ run.model <- function(data, measure, assumption, heter.prior, net.ref, mean.miss
   ## Return a list of results
   if(nt > 2) {
 
-    return(list(EM = EM, EM.ref = EM.ref, EM.pred = EM.pred, pred.ref = pred.ref, tau = tau, SUCRA = SUCRA, delta = delta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, effectiveness = effectiveness, phi = phi, model.assessment = model.assessment, ref = ref))
+    return(list(EM = EM, EM.ref = EM.ref, EM.pred = EM.pred, pred.ref = pred.ref, tau = tau, SUCRA = SUCRA, delta = delta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, effectiveness = effectiveness, phi = phi, model.assessment = model.assessment, jagsfit = jagsfit))
 
   } else {
 
-    return(list(EM = EM, EM.pred = EM.pred, tau = tau, delta = delta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, phi = phi, model.assessment = model.assessment))
+    return(list(EM = EM, EM.pred = EM.pred, tau = tau, delta = delta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, phi = phi, model.assessment = model.assessment, jagsfit = jagsfit))
 
   }
 

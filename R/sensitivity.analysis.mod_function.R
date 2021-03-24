@@ -63,7 +63,7 @@ run.sensitivity <- function(data, measure, assumption, heter.prior, var.misspar,
     na <- apply(t, 1, function(x) length(which(!is.na(x))))     # Number of interventions investigated in every trial per network
     nt <- length(table(as.matrix(t)))                           # Total number of interventions per network
     ns <- length(y0[, 1])                                       # Total number of included trials per network
-    ref <- ifelse(nt > 2, which.max(table(as.matrix(t))), 1)    # Reference intervention per network: the most frequently appeared intervention in the network
+    ref <- 1                                                                        # The first intervention (t1 = 1) is the reference of the network
     # Trial-specific observed pooled standard deviation
     (sigma <- sqrt(apply((sd0^2)*(c - 1), 1, sum, na.rm = T)/(apply(c, 1, sum, na.rm = T) - na)))
 
@@ -149,7 +149,7 @@ run.sensitivity <- function(data, measure, assumption, heter.prior, var.misspar,
     na <- apply(t, 1, function(x) length(which(!is.na(x))))     # Number of interventions investigated in every trial per network
     nt <- length(table(as.matrix(t)))                           # Total number of interventions per network
     ns <- length(r[, 1])                                        # Total number of included trials per network
-    ref <- ifelse(nt > 2, which.max(table(as.matrix(t))), 1)    # Reference intervention per network: the most frequently appeared intervention in the network
+    ref <- 1                                                                        # The first intervention (t1 = 1) is the reference of the network
 
 
 

@@ -51,7 +51,7 @@
 #' run.UME(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.UME <- function(data, measure, assumption, heter.prior, net.ref, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin){
+run.UME <- function(data, measure, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin){
 
 
   ## Default arguments
@@ -78,7 +78,7 @@ run.UME <- function(data, measure, assumption, heter.prior, net.ref, mean.misspa
     na <- apply(treat, 1, function(x) length(which(!is.na(x))))                     # Number of interventions investigated in every trial per network
     nt <- length(table(as.matrix(treat)))                                           # Total number of interventions per network
     ns <- length(y.obs[, 1])                                                        # Total number of included trials per network
-    ref <- ifelse(missing(net.ref), which.max(table(as.matrix(treat))), net.ref)    # Reference intervention per network. If not specify, the most frequently appeared intervention in the network is selected
+    ref <- 1                                                                        # The first intervention (t1 = 1) is the reference of the network
     # Trial-specific observed pooled standard deviation
     (sigma <- sqrt(apply((sd.obs^2)*(c - 1), 1, sum, na.rm = T)/(apply(c, 1, sum, na.rm = T) - na)))
 
@@ -234,7 +234,7 @@ run.UME <- function(data, measure, assumption, heter.prior, net.ref, mean.misspa
     na <- apply(treat, 1, function(x) length(which(!is.na(x))))                     # Number of interventions investigated in every trial per network
     nt <- length(table(as.matrix(treat)))                                           # Total number of interventions per network
     ns <- length(event[, 1])                                                        # Total number of included trials per network
-    ref <- ifelse(missing(net.ref), which.max(table(as.matrix(treat))), net.ref)    # Reference intervention per network. If not specify, the most frequently appeared intervention in the network is selected
+    ref <- 1                                                                        # The first intervention (t1 = 1) is the reference of the network
 
 
     ## Order by 'id of t1' < 'id of t1'

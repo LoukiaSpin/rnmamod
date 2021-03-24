@@ -4,7 +4,7 @@
 \alias{nodesplit.plot}
 \title{Plot the results from the node-splitting approach}
 \usage{
-nodesplit.plot(net, drug.names, tau.values)
+nodesplit.plot(node, full, drug.names)
 }
 \description{
 Plot the results from the node-splitting approach

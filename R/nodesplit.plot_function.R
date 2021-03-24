@@ -4,7 +4,10 @@
 nodesplit.plot <- function(node, full, drug.names) {
 
 
-  tau.values <- full$tau[c(3, 5, 7)]
+  ## Keep tau and model assessment measures from NMA model
+  tau.values <- full$tau[c(5, 2, 3, 7)]
+  model.assess.NMA <- full$model.assessment
+
 
   ## Keep results on 'direct evidence', 'indirect evidence', 'inconsistency factor', 'between-trial standard deviation',
   ## and model assessment measures (i.e., DIC, posterior mean of refisual deviance, and pD)
@@ -16,6 +19,7 @@ nodesplit.plot <- function(node, full, drug.names) {
   indirect <- indirect0[order(model.assess$DIC), ]
   IF <- IF0[order(model.assess$DIC), ]
   tau <- tau0[order(model.assess$DIC), ]
+  model.assess.sort <- model.assess[order(model.assess$DIC), ]
 
 
   ## Interventions' name: Replace code with original names
@@ -52,7 +56,7 @@ nodesplit.plot <- function(node, full, drug.names) {
             facet_wrap(vars(factor(node, levels = unique(prepare$node))), scales = "free_x") +
             coord_flip() +
             labs(x = "", y = "", colour = "") +
-            scale_color_manual(breaks = c("statistically significant", "statistically non-significant"), values = c("green4", "red"), na.value = "black") +
+            scale_color_manual(breaks = c("statistically significant", "statistically non-significant"), values = c("#009E73", "#D55E00"), na.value = "black") +
             theme_classic() +
             theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), legend.position = "none",
                   strip.text = element_text(size = 11))
@@ -75,13 +79,40 @@ nodesplit.plot <- function(node, full, drug.names) {
             geom_label(aes(x = 3.5, y = -Inf, hjust = 0, vjust = 1, label = round(DIC, 0)), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
             facet_wrap(vars(factor(node, levels = unique(prepare$node))), scales = "free_x") +
             coord_flip() +
-            labs(x = "", y = "", colour = "") +
-            scale_color_manual(breaks = c("statistically significant", "statistically non-significant"), values = c("green4", "red"), na.value = "black") +
+            labs(x = "", y = "", colour = "Evidence on inconsistency") +
+            scale_color_manual(breaks = c("statistically significant", "statistically non-significant"), values = c("#009E73", "#D55E00"), na.value = "black") +
             theme_classic() +
-            theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), legend.position = "none",
+            theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), legend.position = "bottom",
                   strip.text = element_text(size = 11))
 
   }
+
+
+
+  ## Create a table on the direct, indirect and IF per split node
+  CrI.direct <- paste0("(", round(direct[, 5], 2), ",", " ", round(direct[, 6], 2), ")", ifelse(direct[, 5] > 0 | direct[, 6] < 0, "*", " "))
+  CrI.indirect <- paste0("(", round(indirect[, 5], 2), ",", " ", round(indirect[, 6], 2), ")", ifelse(indirect[, 5] > 0 | indirect[, 6] < 0, "*", " "))
+  CrI.IF <- paste0("(", round(IF[, 5], 2), ",", " ", round(IF[, 6], 2), ")", ifelse(IF[, 5] > 0 | IF[, 6] < 0, "*", " "))
+  table.EM <- data.frame(comp, round(direct[, 3:4], 2), CrI.direct, round(indirect[, 3:4], 2), CrI.indirect, round(IF[, 3:4], 2), CrI.IF)
+  colnames(table.EM) <- c("Split node", "Post. mean dir.", "Post. SD dir.", "95% CrI dir.", "Post. mean indir", "Post. SD indir.", "95% CrI indir.",
+                         "Post. mean IF", "Post. SD IF", "95% CrI IF")
+
+
+
+  ## Find whether at least one split node improve the fit of the model
+  model.selection <- data.frame(comp, model.assess.sort[, 3] - rep(model.assess.NMA$DIC, length(model.assess.sort[, 3])))
+  colnames(model.selection) <- c("Comparison", "DIC.diff")
+  Better.fit <- c(ifelse(model.selection$DIC.diff > 5, "Consistency model", ifelse(model.selection$DIC.diff < -5, "After split node", "Little to choose")))
+
+
+
+  ## Create a table on the model assessment measures and between-trial standard deviation per split node
+  CrI.tau <- paste0("(", round(tau[, 5], 2), ",", " ", round(tau[, 6], 2), ")")
+  table.assess0 <- data.frame(comp, round(model.assess.sort[, -c(1:2)], 2), Better.fit, round(tau[, 3:4], 2), CrI.tau)
+  colnames(table.assess0) <- c("Approach", "DIC", "Post. mean dev.", "pD", "DIC-based better fit", "Post. median tau", "Post. SD tau", "95% CrI tau")
+  add <- data.frame("NMA", round(model.assess.NMA[c(1, 3, 2)], 2), "-", round(tau.values[1], 2), round(tau.values[2], 2), paste0("(", round(tau.values[3], 2), ",", " ", round(tau.values[4], 2), ")"))
+  colnames(add) <- colnames(table.assess0)
+  table.assess <- rbind(add, table.assess0)
 
 
 
@@ -94,18 +125,23 @@ nodesplit.plot <- function(node, full, drug.names) {
   p2 <- ggplot(data = prepare.tau, aes(x = factor(node, levels = unique(prepare$node)), y = median, ymin = lower, ymax = upper) ) +
           geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
           geom_hline(yintercept = tau.values[1], lty = 2, size = 1.2, col = "red") +
-          geom_hline(yintercept = tau.values[2], lty = 2, size = 1.2, col = "red") +
           geom_hline(yintercept = tau.values[3], lty = 2, size = 1.2, col = "red") +
+          geom_hline(yintercept = tau.values[4], lty = 2, size = 1.2, col = "red") +
           geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
           geom_text(aes(x = factor(node, levels = unique(prepare$node)), y = round(median, 2), label = round(median, 2)), color = "black", hjust = -0.2, vjust = -0.3, size = 4.0,
                     check_overlap = F, parse = F, position = position_dodge(width = 0.8),  inherit.aes = T) +
           geom_label(aes(x = factor(node, levels = unique(prepare$node)), y = upper, label = round(DIC, 0)), fill = "beige", colour = "black", fontface = "plain",  size = 3.1) +
           labs(x = "Split nodes (sorted by DIC in ascending order)", y = "Between-trial standard deviation") +
-          scale_color_manual(breaks = c("statistically significant", "statistically non-significant"), values = c("green4", "red"), na.value = "black") +
           theme_classic() +
           theme(axis.text.x = element_text(color = "black", size = 12, angle = 45, hjust = 1), axis.text.y = element_text(color = "black", size = 12), legend.position = "none")
 
 
-  return(list(node.split.forestplot = p1, tau.forestplot = p2))
+
+  ## Write the table with the EMs from both models as .xlsx
+  write_xlsx(table.EM, paste0(getwd(),"Table NMA vs Node-Split.xlsx"))
+  write_xlsx(table.assess, paste0(getwd(),"Table assesssment Node-Split.xlsx"))
+
+
+  return(list(table.EM = table.EM, table.assess = table.assess, node.split.forestplot = p1, tau.forestplot = p2))
 
 }

@@ -22,7 +22,6 @@ run.metareg(
   measure,
   assumption,
   heter.prior,
-  net.ref,
   mean.misspar,
   var.misspar,
   D,
@@ -42,8 +41,6 @@ run.metareg(
 \item{heter.prior}{A vector of length equal to two with the following values: \code{rep(1, 2)}, \code{rep(2, 2)}, and \code{rep(3, 2)} refers to half-normal distribution with variance 1 or 0.5, and uniform distribution with interval [0, 5], respectively,
 for the between-trial standard deviation. To indicate an empirically-based prior distribution for the between-trial variance, the first and second values of the vector should be the mean and precision
 of the selected prior distribution. The empirically-based prior distribution for the between-trial variance is applicable only when \code{"OR"} or \code{"SMD"} is considered.}
-
-\item{net.ref}{Integer specifying the reference intervention of the network. The default is the most frequently appeared intervention in the network.}
 
 \item{mean.misspar}{A positive non-zero number for the mean of the normal distribution of the informative missingness parameter.}
 
