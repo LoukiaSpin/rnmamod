@@ -53,7 +53,7 @@ forestplot.ref <- function(net, drug.names) {
            labs(x = "", y = "", colour = "Analysis") +
            scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
            scale_color_manual(breaks = c("Credible interval", "Predictive interval"), values = c("black", "#D55E00")) +
-    geom_label(aes(x = as.factor(order)[1], y = 0, hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
+           geom_label(aes(x = as.factor(order)[is.na(mean)], y = 0, hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
            coord_flip(clip = "off") +
            theme_classic() +
            theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12),
