@@ -312,7 +312,7 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
   tau <- t(getResults %>% dplyr::select(starts_with("tau")))
 
   # Regression coefficient for comparisons with the reference intervention
-  beta <- t(getResults %>% dplyr::select(starts_with("beta") & !ends_with("1]")))
+  beta <- t(getResults %>% dplyr::select(starts_with("beta")))
 
   # SUrface under the Cumulative RAnking curve values
   SUCRA <- t(getResults %>% dplyr::select(starts_with("SUCRA")))
