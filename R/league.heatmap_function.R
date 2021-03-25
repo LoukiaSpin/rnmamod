@@ -22,10 +22,11 @@
 #' league.heatmap(net = res, drug.names = drug.names)
 #'
 #' @export
-league.heatmap <- function(net, drug.names){
+league.heatmap <- function(net, drug.names, expon){
 
 
   par <- net$EM; sucra <- net$SUCRA
+
 
   ## Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html
   reflect_triangle <- function(m, from=c("lower", "upper")) {
@@ -63,15 +64,29 @@ league.heatmap <- function(net, drug.names){
 
 
   ## Symmetric matrix for effect measure and its bounds after ordering rows and columns from the best to the worst intervention
-  point <- point1[order(drug.order.col), order(drug.order.row)]
-  lower <- lower1[order(drug.order.col), order(drug.order.row)]
-  upper <- upper1[order(drug.order.col), order(drug.order.row)]
+  if(missing(expon) || expon == F) {
+
+    point <- point1[order(drug.order.col), order(drug.order.row)]
+    lower <- lower1[order(drug.order.col), order(drug.order.row)]
+    upper <- upper1[order(drug.order.col), order(drug.order.row)]
 
 
-  ## Spot the statistically significant comparisons (i.e. the 95% CrI does not include the value of no difference)
-  #(signif.status <- ifelse(upper < 0 | lower > 0, "**", ""))
-  (signif.status <- melt(ifelse(upper < 0 | lower > 0, "significant", "non-significant"), na.rm = F)[3])
-  signif.status[is.na(signif.status)] <- 0
+    ## Spot the statistically significant comparisons (i.e. the 95% CrI does not include the value of no difference)
+    (signif.status <- melt(ifelse(upper < 0 | lower > 0, "significant", "non-significant"), na.rm = F)[3])
+    signif.status[is.na(signif.status)] <- 0
+
+  } else {
+
+    point <- round(exp(point1[order(drug.order.col), order(drug.order.row)]), 2)
+    lower <- round(exp(lower1[order(drug.order.col), order(drug.order.row)]), 2)
+    upper <- round(exp(upper1[order(drug.order.col), order(drug.order.row)]), 2)
+
+
+    ## Spot the statistically significant comparisons (i.e. the 95% CrI does not include the value of no difference)
+    (signif.status <- melt(ifelse(upper < 1 | lower > 1, "significant", "non-significant"), na.rm = F)[3])
+    signif.status[is.na(signif.status)] <- 1
+
+  }
 
 
 
@@ -89,38 +104,32 @@ league.heatmap <- function(net, drug.names){
   mat.new1 <- melt(final, na.rm = F)
 
 
-  ## Necessary sub-dataset to color the cells according to the value of the effect measure
-  # Reflect the upper triangle of the effect measure to the lower triangle
-  #dummy <- matrix(1, nrow = length(drug.names), ncol = length(drug.names))
-  #dummy[lower.tri(dummy, diag = F)] <- -1
-  #mat <- point*dummy
-  mat <- point
- # diag(mat) <- ifelse(D == 0, min(par[, 1]), max(par[, 1]))
- # colnames(mat) <- order.drug; rownames(mat) <- order.drug
-
 
   ## Merge both datasets to be used for ggplot2
-  #mat.new <- cbind(mat.new1, melt(mat, na.rm = F)[, 3]*(D - 1) + melt(mat, na.rm = F)[, 3]*D)
+  mat <- point
   mat.new <- cbind(mat.new1, melt(mat, na.rm = F)[, 3])
   colnames(mat.new) <- c("Var1", "Var2", "value", "value2")
 
 
+
+  ## The final dataset for ggplot2
   diag(mat) <- NA
   final_col <- melt(mat)
   mat.new$value.SUCRA <- final_col$value
+
 
 
   ## Hooray, the precious league table as a heatmap!
   p <- ggplot(mat.new, aes(Var2, factor(Var1, level = order.drug[length(order.drug):1]), fill = value2)) +
          geom_tile(aes(fill = value.SUCRA)) +
          geom_fit_text(aes(Var2, Var1, label = value), reflow = T) +
-         #geom_fit_text(aes(Var2, Var1, label = value, fontface = "bold"), reflow = T) +
          geom_fit_text(aes(Var2, Var1, label = value, fontface = ifelse(signif.status == "significant", "bold", "plain")), reflow = T) +
-         scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, na.value = "grey70") +
+         scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = ifelse(missing(expon) || expon == F, 0, 1), na.value = "grey70") +
          scale_x_discrete(position = "top") +
          labs(x = "", y = "") +
          theme_bw() +
          theme(legend.position = "none", axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0), axis.text.y = element_text(size = 12))
+
 
   return(p)
 

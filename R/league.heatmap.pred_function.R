@@ -22,7 +22,7 @@
 #' league.heatmap(net = res, drug.names = drug.names)
 #'
 #' @export
-league.heatmap.pred <- function(net, drug.names){
+league.heatmap.pred <- function(net, drug.names, expon){
 
 
   par.pred <- net$EM.pred; par <- net$EM; sucra <- net$SUCRA
@@ -75,13 +75,28 @@ league.heatmap.pred <- function(net, drug.names){
 
 
   ## Symmetric matrix for effect measure and its bounds after ordering rows and columns from the best to the worst intervention
-  # Effect estimates
-  point <- point1[order(drug.order.col), order(drug.order.row)]
-  lower <- lower1[order(drug.order.col), order(drug.order.row)]
-  upper <- upper1[order(drug.order.col), order(drug.order.row)]
-  # Predictions
-  lower.pred <- lower.pred1[order(drug.order.col), order(drug.order.row)]
-  upper.pred  <- upper.pred1[order(drug.order.col), order(drug.order.row)]
+  if (missing(expon) || expon == F) {
+
+    # Effect estimates
+    point <- point1[order(drug.order.col), order(drug.order.row)]
+    lower <- lower1[order(drug.order.col), order(drug.order.row)]
+    upper <- upper1[order(drug.order.col), order(drug.order.row)]
+    # Predictions
+    lower.pred <- lower.pred1[order(drug.order.col), order(drug.order.row)]
+    upper.pred  <- upper.pred1[order(drug.order.col), order(drug.order.row)]
+
+  } else {
+
+    # Effect estimates
+    point <- round(exp(point1[order(drug.order.col), order(drug.order.row)]), 2)
+    lower <- round(exp(lower1[order(drug.order.col), order(drug.order.row)]), 2)
+    upper <- round(exp(upper1[order(drug.order.col), order(drug.order.row)]), 2)
+    # Predictions
+    lower.pred <- round(exp(lower.pred1[order(drug.order.col), order(drug.order.row)]), 2)
+    upper.pred  <- round(exp(upper.pred1[order(drug.order.col), order(drug.order.row)]), 2)
+
+  }
+
 
 
   ## Merge point estimate with 95% credible interval in a new symmetric matric
@@ -108,12 +123,26 @@ league.heatmap.pred <- function(net, drug.names){
 
 
   ## Spot the statistically significant comparisons (i.e. the 95% CrI does not include the value of no difference)
-  # Effect estimate
-  (signif.status <- melt(ifelse(upper < 0 | lower > 0, "significant", "non-significant"), na.rm = F)[3])
-  signif.status[is.na(signif.status)] <- 0
-  # Prediction
-  (signif.status.pred <- melt(ifelse(upper.pred < 0 | lower.pred > 0, "significant", "non-significant"), na.rm = F)[3])
-  signif.status.pred[is.na(signif.status.pred)] <- 0
+  if (missing(expon) || expon == F) {
+
+    # Effect estimate
+    (signif.status <- melt(ifelse(upper < 0 | lower > 0, "significant", "non-significant"), na.rm = F)[3])
+    signif.status[is.na(signif.status)] <- 0
+    # Prediction
+    (signif.status.pred <- melt(ifelse(upper.pred < 0 | lower.pred > 0, "significant", "non-significant"), na.rm = F)[3])
+    signif.status.pred[is.na(signif.status.pred)] <- 0
+
+  } else {
+
+    # Effect estimate
+    (signif.status <- melt(ifelse(upper < 1 | lower > 1, "significant", "non-significant"), na.rm = F)[3])
+    signif.status[is.na(signif.status)] <- 1
+    # Prediction
+    (signif.status.pred <- melt(ifelse(upper.pred < 1 | lower.pred > 1, "significant", "non-significant"), na.rm = F)[3])
+    signif.status.pred[is.na(signif.status.pred)] <- 1
+
+  }
+
 
 
   ## Separate statistical significance for effect estiamte and prediction results
@@ -141,7 +170,7 @@ league.heatmap.pred <- function(net, drug.names){
          geom_tile(aes(fill = value.SUCRA)) +
          geom_fit_text(aes(Var2, Var1, label = value), reflow = T) +
          geom_fit_text(aes(Var2, Var1, label = value, fontface = ifelse(signif.status.final == "significant", "bold", "plain")), reflow = T) +
-         scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, na.value = "grey70") +
+         scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = ifelse(missing(expon) || expon == F, 0, 1), na.value = "grey70") +
          scale_x_discrete(position = "top") +
          labs(x = "", y = "") +
          theme_bw() +

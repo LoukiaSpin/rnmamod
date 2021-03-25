@@ -195,7 +195,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
 
     p3 <- ggplot(data = prepare, aes(x = covariate, y = round(mean, 2)) ) +
             geom_point() +
-            geom_ribbon(aes(ymin = round(lower, 2), ymax = round(upper, 2), fill = "#D55E00"), alpha = .2) +
+            geom_ribbon(aes(ymin = round(lower, 2), ymax = round(upper, 2)), fill = "#D55E00", alpha = .2) +
             geom_line(aes(y = mean),  size = 1, color = "#009E73") +
             geom_hline(yintercept = 0, lty = 2, size = 1.5, col = "grey") +
             geom_label(aes(x = min(covariate), y = 0, hjust = 0, vjust = 1, label = paste(intercept, ifelse(slope > 0, "+", "-"), abs(slope), "*covariate")), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
