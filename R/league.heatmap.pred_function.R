@@ -170,7 +170,10 @@ league.heatmap.pred <- function(net, drug.names, expon){
          geom_tile(aes(fill = value.SUCRA)) +
          geom_fit_text(aes(Var2, Var1, label = value), reflow = T) +
          geom_fit_text(aes(Var2, Var1, label = value, fontface = ifelse(signif.status.final == "significant", "bold", "plain")), reflow = T) +
-         scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = ifelse(missing(expon) || expon == F, 0, 1), na.value = "grey70") +
+         #scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = ifelse(missing(expon) || expon == F, 0, 1), na.value = "grey70") +
+         scale_fill_gradientn(colours = c("blue", "white", "red"),
+                              values = rescale(c(min(mat.new$value2, na.rm = T), ifelse(missing(expon) || expon == F, 0, 1), max(mat.new$value2, na.rm = T))),
+                              limits = c(min(mat.new$value2, na.rm = T), max(mat.new$value2, na.rm = T))) +
          scale_x_discrete(position = "top") +
          labs(x = "", y = "") +
          theme_bw() +
