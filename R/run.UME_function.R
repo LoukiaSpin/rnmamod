@@ -160,9 +160,9 @@ run.UME <- function(data, measure, assumption, heter.prior, mean.misspar, var.mi
 
 
 
-    if (max(na) > 2 & has_error(improved.UME(t, m, N), silent = T) == F) {
+    if (max(na) > 2 & has_error(improved.UME(t, m, N, ns, na), silent = T) == F) {
 
-      impr.UME <- improved.UME(t, m, N)
+      impr.UME <- improved.UME(t, m, N, ns, na)
 
       ## Condition for the data specification based on the assumption about the structure of the missingness parameter
       if (measure == "SMD" & (assumption == "HIE-ARM" || assumption == "IDE-ARM")) {
@@ -191,7 +191,7 @@ run.UME <- function(data, measure, assumption, heter.prior, mean.misspar, var.mi
 
       }
 
-    } else if (max(na) < 3 || has_error(improved.UME(t, m, N), silent = T) == T) {
+    } else if (max(na) < 3 || has_error(improved.UME(t, m, N, ns, na), silent = T) == T) {
 
       ## Condition for the data specification based on the assumption about the structure of the missingness parameter
       if (measure == "SMD" & (assumption == "HIE-ARM" || assumption == "IDE-ARM")) {
@@ -258,7 +258,7 @@ run.UME <- function(data, measure, assumption, heter.prior, mean.misspar, var.mi
 
 
     ## Observed comparisons in the network
-    observed.comp0 <- improved.UME(t, m, N)$obs.comp
+    observed.comp0 <- improved.UME(t, m, N, ns, na)$obs.comp
     observed.comp <- matrix(Numextract(observed.comp0[, 1]), nrow = length(observed.comp0[, 1]), ncol = 2, byrow = T)
     t1.obs.com <- as.numeric(as.character(observed.comp[, 1]))
     t2.obs.com <- as.numeric(as.character(observed.comp[, 2]))
@@ -322,9 +322,9 @@ run.UME <- function(data, measure, assumption, heter.prior, mean.misspar, var.mi
 
 
 
-    if (max(na) > 2 & has_error(improved.UME(t, m, N), silent = T) == F) {
+    if (max(na) > 2 & has_error(improved.UME(t, m, N, ns, na), silent = T) == F) {
 
-      impr.UME <- improved.UME(t, m, N)
+      impr.UME <- improved.UME(t, m, N, ns, na)
 
       ## Condition for the data specification based on the assumption about the structure of the missingness parameter
       if (assumption == "IND-CORR") {
@@ -341,7 +341,7 @@ run.UME <- function(data, measure, assumption, heter.prior, mean.misspar, var.mi
 
       }
 
-    } else if (max(na) < 3 || has_error(improved.UME(t, m, N), silent = T) == T) {
+    } else if (max(na) < 3 || has_error(improved.UME(t, m, N, ns, na), silent = T) == T) {
 
       if (assumption == "IND-CORR") {
 

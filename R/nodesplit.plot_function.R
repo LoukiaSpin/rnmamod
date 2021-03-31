@@ -11,7 +11,7 @@ nodesplit.plot <- function(node, full, drug.names) {
 
   ## Keep results on 'direct evidence', 'indirect evidence', 'inconsistency factor', 'between-trial standard deviation',
   ## and model assessment measures (i.e., DIC, posterior mean of refisual deviance, and pD)
-  direct0 <- node$direct; indirect0 <- node$EM; IF0 <- node$diff; tau0 <- node$tau; model.assess <- node$model.assessment
+  direct0 <- node$direct; indirect0 <- node$indirect; IF0 <- node$diff; tau0 <- node$tau; model.assess <- node$model.assessment
 
 
   ## Sort 'direct evidence', 'indirect evidence', 'inconsistency factor', and 'between-trial standard deviation' by DIC in ascending order

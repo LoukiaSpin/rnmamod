@@ -114,7 +114,25 @@ UME.plot <- function(full, ume, drug.names) {
 
 
   ## Scatterplot on the deviance contribution of consistency versus UME models
-  scatterplots <- scatterplots.dev(full, ume, drug.names)
+  scatterplot.o <- scatterplots.dev(dev.o.full[, 1], dev.o.ume[, 1], colour = "red")
+  scatterplot.m <- scatterplots.dev(dev.m.full[, 1], dev.m.ume[, 1], colour = "green4")
+
+
+
+  ## Bland-Altman plot on the deviance contribution of consistency versus UME models
+  BA.observed <- BlandAltman.plot(dev.o.full[, 1], dev.o.ume[, 1], colour = "red")
+  BA.missing <- BlandAltman.plot(dev.m.full[, 1], dev.m.ume[, 1], colour = "green4")
+
+
+
+  ## Bring together all four plots
+  p1 <- ggarrange(scatterplot.o, BA.observed, nrow = 2, ncol = 1, labels = c("A)", "B)"))
+  p2 <- ggarrange(scatterplot.m, BA.missing, nrow = 2, ncol = 1)
+
+  p1 <- annotate_figure(p1, fig.lab = "Observed outcomes", fig.lab.face = "bold", fig.lab.pos = "top")
+  p2 <- annotate_figure(p2, fig.lab = "Missing outcome data", fig.lab.face = "bold", fig.lab.pos = "top")
+
+  scatterplots <- ggarrange(p1, p2, ncol = 2)
 
 
 
@@ -133,15 +151,20 @@ UME.plot <- function(full, ume, drug.names) {
 
 
 
-  ## Bring together all four leverage plots
-  lev.plots <- ggarrange(lever.full.o, lever.ume.o, lever.full.m, lever.ume.m, nrow = 2, ncol = 2, labels = c("A)", "", "B)", ""))
+  ## Bring together the leverage plots for observed outcome
+  #lev.plots <- ggarrange(lever.full.o, lever.ume.o, lever.full.m, lever.ume.m, nrow = 2, ncol = 2, labels = c("A)", "", "B)", ""))
+  lev.plots <- ggarrange(lever.full.o, lever.ume.o, nrow = 1, ncol = 2, labels = c("A)",  "B)"))
+
 
 
   ## Write the table with the EMs from both models as .xlsx
   write_xlsx(EM.both.models, paste0(getwd(),"Table NMA vs UME.xlsx"))
 
 
-  return(list(EM.both.models = EM.both.models, model.assessment = model.assessment, between.trial.SD = between.trial.SD,
-              scatterplots = scatterplots, leverage.plots = lev.plots))
+  return(list(EM.both.models = EM.both.models,
+              model.assessment = model.assessment,
+              between.trial.SD = between.trial.SD,
+              scatterplots = scatterplots,
+              levarage.plots = lev.plots))
 
 }

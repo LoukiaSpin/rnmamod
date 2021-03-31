@@ -312,35 +312,19 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
   tau <- t(getResults %>% dplyr::select(starts_with("tau")))
 
   # Regression coefficient for comparisons with the reference intervention
-  beta <- t(getResults %>% dplyr::select(starts_with("beta")))
+  beta <- t(getResults %>% dplyr::select(starts_with("beta[")))
 
   # SUrface under the Cumulative RAnking curve values
   SUCRA <- t(getResults %>% dplyr::select(starts_with("SUCRA")))
 
   # Within-trial effects size (multi-arm trials with T interventions provide T-1 such effect sizes)
-  delta <- t(getResults %>% dplyr::select(starts_with("delta") & !ends_with(",1]")))
+  delta <- t(getResults %>% dplyr::select(starts_with("delta[") & !ends_with(",1]")))
 
   # Ranking probability of each intervention for every rank
   effectiveness <- t(getResults %>% dplyr::select(starts_with("effectiveness")))
 
   # Estimated missingness parameter
-  if (assumption == "IDE-COMMON") {
-
-    phi <- t(getResults %>% dplyr::select(starts_with("phi")))
-
-  } else if (assumption == "HIE-COMMON"){
-
-    phi <- t(getResults %>% dplyr::select(starts_with("mean.phi")))
-
-  } else if (assumption == "HIE-TRIAL" || assumption == "HIE-ARM") {
-
-    phi <- t(getResults %>% dplyr::select(starts_with("mean.phi[")))
-
-  } else {
-
-    phi <- t(getResults %>% dplyr::select(starts_with("phi[")))
-
-  }
+  phi <- t(getResults %>% dplyr::select(starts_with("phi") | starts_with("mean.phi") | starts_with("mean.phi[") | starts_with("phi[")))
 
   # Trial-arm deviance contribution for observed outcome
   dev.o <- t(getResults %>% dplyr::select(starts_with("dev.o")))
@@ -421,11 +405,11 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
   ## Return a list of results
   if(nt > 2) {
 
-    return(list(EM = EM, EM.ref = EM.ref, EM.pred = EM.pred, pred.ref = pred.ref, tau = tau, beta = beta, SUCRA = SUCRA, delta = delta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, effectiveness = effectiveness, phi = phi, model.assessment = model.assessment))
+    return(list(EM = EM, EM.ref = EM.ref, EM.pred = EM.pred, pred.ref = pred.ref, tau = tau, beta = beta, SUCRA = SUCRA, delta = delta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, effectiveness = effectiveness, phi = phi, model.assessment = model.assessment, jagsfit = jagsfit))
 
   } else {
 
-    return(list(EM = EM, EM.pred = EM.pred, tau = tau, delta = delta, beta = beta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, phi = phi, model.assessment = model.assessment))
+    return(list(EM = EM, EM.pred = EM.pred, tau = tau, delta = delta, beta = beta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, phi = phi, model.assessment = model.assessment, jagsfit = jagsfit))
 
   }
 

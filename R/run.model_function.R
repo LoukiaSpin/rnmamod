@@ -299,23 +299,7 @@ run.model <- function(data, measure, assumption, heter.prior, mean.misspar, var.
   effectiveness <- t(getResults %>% dplyr::select(starts_with("effectiveness")))
 
   # Estimated missingness parameter
-  if (assumption == "IDE-COMMON") {
-
-    phi <- t(getResults %>% dplyr::select(starts_with("phi")))
-
-  } else if (assumption == "HIE-COMMON"){
-
-    phi <- t(getResults %>% dplyr::select(starts_with("mean.phi")))
-
-  } else if (assumption == "HIE-TRIAL" || assumption == "HIE-ARM") {
-
-    phi <- t(getResults %>% dplyr::select(starts_with("mean.phi[")))
-
-  } else {
-
-    phi <- t(getResults %>% dplyr::select(starts_with("phi[")))
-
-  }
+  phi <- t(getResults %>% dplyr::select(starts_with("phi") | starts_with("mean.phi") | starts_with("mean.phi[") | starts_with("phi[")))
 
   # Trial-arm deviance contribution for observed outcome
   dev.o <- t(getResults %>% dplyr::select(starts_with("dev.o")))
