@@ -24,13 +24,14 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
     dplyr,
+    tidyr,
+    reshape2,
     ggplot2,
     ggpubr,
     ggrepel,
     R2jags,
     mcmcplots,
     ggfittext,
-    reshape2,
     netmeta,
     gemtc,
     BUGSnet,

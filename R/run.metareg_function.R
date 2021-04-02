@@ -145,14 +145,15 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
 
 
 
-    ## Center covariate if metric
-    if (!is.factor(covariate)) {
+    ## Center covariate if metric and not arm-specific
+    if (!is.factor(covariate) & is.vector(covariate)) {
 
       eff.mod <- covariate - mean(covariate)
 
-    } else {
+    } else if ((!is.factor(covariate) & !is.vector(covariate)) || is.factor(covariate)) {
 
       eff.mod <- covariate
+
     }
 
 
@@ -249,14 +250,15 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
     }
 
 
-    ## Center covariate if metric
-    if (!is.factor(covariate)) {
+    ## Center covariate if metric and not arm-specific
+    if (!is.factor(covariate) & is.vector(covariate)) {
 
       eff.mod <- covariate - mean(covariate)
 
-    } else {
+    } else if ((!is.factor(covariate) & !is.vector(covariate)) || is.factor(covariate)) {
 
       eff.mod <- covariate
+
     }
 
 

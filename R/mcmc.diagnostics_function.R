@@ -33,6 +33,8 @@
 mcmc.diagnostics <- function(net, par){
 
 
+  options(warn = -1)
+
   jagsfit <- net$jagsfit
 
   ## Turn results into a data-frame to select model parameters (using 'dplyr')

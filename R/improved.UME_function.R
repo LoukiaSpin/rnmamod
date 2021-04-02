@@ -4,13 +4,17 @@
 
 improved.UME <- function(t, m, N, ns, na){
 
+
   ## Turn into contrast-level data: one row per possible comparison in each trial ('netmeta')
   (wide.format <- pairwise(as.list(t), event = as.list(m), n = as.list(N), data = cbind(t, m, N), studlab = 1:ns)[, c(3:6, 8, 7, 9)])
   colnames(wide.format) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
+
+
+  ## Create a vector with the pairwise comparisons of each row
   wide.format$comp <- paste0(wide.format$t1, "vs", wide.format$t2)
 
 
-  ## Repeat 'na' as many times as the length of the corresponding trial
+  ## Repeat 'na' (number of arms in each trial) as many times as the number of possible comparisons in each trial
   arms0 <- list()
   for(i in 1:ns) {
     arms0[[i]] <- rep(na[i], dim(combn(na[i], 2))[2] )
@@ -26,7 +30,8 @@ improved.UME <- function(t, m, N, ns, na){
   ## The frequency of each observed comparisons in two-arm and multi-arm trials
   (tab.comp.arms0 <- xtabs(~ comp + arms, data = wide.format))
 
-  # Turn into data-frame into order to select the comparisons
+
+  ## Turn 'tab.comp.arms0' into a data-frame
   (tab.comp.arms <- data.frame(names(tab.comp.arms0[, 1]), tab.comp.arms0[, 1], tab.comp.arms0[, 2]))
   colnames(tab.comp.arms) <- c("comp", "multi", "two")
   rownames(tab.comp.arms) <- NULL
@@ -42,7 +47,11 @@ improved.UME <- function(t, m, N, ns, na){
   for(i in 1:length(subs[, 1])) {
     pairwise.n0[[i]] <- wide.format[which(wide.format$comp == unlist(subs)[i]), 1:3]
   }
-  pairwise.n <- do.call(rbind, pairwise.n0)
+  pairwise.n1 <- do.call(rbind, pairwise.n0)
+
+
+  ## When more studies correspond to a comparison, remove the duplicated rows
+  pairwise.n <- pairwise.n1[!duplicated(pairwise.n1[, 2:3]), ]
 
 
   ## Sort by the study id in increasing order
