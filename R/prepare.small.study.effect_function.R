@@ -218,6 +218,6 @@ prepare.small.study.effect <- function(data, measure, var.misspar, direction, D)
   }
 
 
-  return(list(covariate = I, variance = I*Var, stndard.error = I*SE, precision = I*Prec))
+  return(list(covariate = I, variance = I*Var, standard.error = I*SE, precision = I*Prec))
 
 }

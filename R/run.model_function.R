@@ -148,19 +148,19 @@ run.model <- function(data, measure, assumption, heter.prior, mean.misspar, var.
     # Under the Independent structure with or without SMD as effect measure
     if (measure == "SMD" & assumption != "IND-CORR") {
 
-      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "sigma" = sigma, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
+      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "sigma" = sigma, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
     } else if (measure == "SMD" & assumption == "IND-CORR"){
 
-      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "sigma" = sigma, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
+      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "sigma" = sigma, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
     } else if (measure != "SMD" & assumption == "IND-CORR") {
 
-      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
+      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
     } else {
 
-      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
+      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
     }
 
@@ -241,11 +241,11 @@ run.model <- function(data, measure, assumption, heter.prior, mean.misspar, var.
     ## Condition for the Independent structure
     if (assumption != "IND-CORR") {
 
-      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
+      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
     } else {
 
-      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns))
+      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
     }
 
@@ -387,7 +387,6 @@ run.model <- function(data, measure, assumption, heter.prior, mean.misspar, var.
     return(list(EM = EM, EM.pred = EM.pred, tau = tau, delta = delta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, phi = phi, model.assessment = model.assessment, jagsfit = jagsfit))
 
   }
-
 
 }
 

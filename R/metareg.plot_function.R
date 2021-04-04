@@ -37,7 +37,8 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
   # Sort the drugs by their SUCRA in decreasing order
   drug.names.sorted <- drug.names[order(sucra.full[, 1], decreasing = T)]
 
-
+  # Covariate
+  covariate <- na.omit(unlist(covariate))
 
 
   ## A data-frame with the effect estimates and regression coefficients of reference-comparisons from both analyses (Sort by NMA-SUCRA in decreasing order)
@@ -73,8 +74,8 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
     ## Isolate the 95% CrI and indicate whether the evidence is string (*) or weak (no '*')
     CrI.full <- paste0("(", round(exp(EM.full[, 3]), 2), ",", " ", round(exp(EM.full[, 7]), 2), ")", ifelse(EM.full[, 3] > 0 | EM.full[, 7] < 0, "*", " "))
     CrI.meta <- paste0("(", round(exp(EM.meta[, 3]), 2), ",", " ", round(exp(EM.meta[, 7]), 2), ")", ifelse(EM.meta[, 3] > 0 | EM.meta[, 7] < 0, "*", " "))
-    CrI.meta.s <- paste0("(", EM.meta.s[, 2], ",", " ", EM.meta.s[, 3], ")", ifelse(EM.meta.s[, 2] > 0 | EM.meta.s[, 3] < 0, "*", " "))
-    CrI.meta.l <- paste0("(", EM.meta.l[, 2], ",", " ", EM.meta.l[, 3], ")", ifelse(EM.meta.l[, 2] > 0 | EM.meta.l[, 3] < 0, "*", " "))
+    CrI.meta.s <- paste0("(", EM.meta.s[, 2], ",", " ", EM.meta.s[, 3], ")", ifelse(EM.meta.s[, 2] > 1 | EM.meta.s[, 3] < 1, "*", " "))
+    CrI.meta.l <- paste0("(", EM.meta.l[, 2], ",", " ", EM.meta.l[, 3], ")", ifelse(EM.meta.l[, 2] > 1 | EM.meta.l[, 3] < 1, "*", " "))
     CrI.beta <- paste0("(", round(exp(beta[, 3]), 2), ",", " ", round(exp(beta[, 7]), 2), ")", ifelse(beta[, 3] > 0 | beta[, 7] < 0, "*", " "))
 
     EM.both.models <- na.omit(data.frame(drug.names.sorted, round(exp(EM.full[, 1]), 2), CrI.full, round(exp(EM.meta.s[, 1]), 2), CrI.meta.s, round(exp(EM.meta[, 1]), 2), CrI.meta,

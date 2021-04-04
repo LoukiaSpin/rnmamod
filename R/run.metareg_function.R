@@ -255,7 +255,7 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
 
       eff.mod <- covariate - mean(covariate)
 
-    } else if ((!is.factor(covariate) & !is.vector(covariate)) || is.factor(covariate)) {
+    } else if (!is.vector(covariate) || is.factor(covariate)) {
 
       eff.mod <- covariate
 
@@ -263,13 +263,21 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
 
 
     ## Condition for the Independent structure
-    if (assumption != "IND-CORR") {
+    if (assumption != "IND-CORR" & is.vector(eff.mod)) {
 
-      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = eff.mod)
+      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = eff.mod, "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
-    } else {
+    } else if (assumption != "IND-CORR" & !is.vector(eff.mod)) {
 
-      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = eff.mod)
+      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = eff.mod)
+
+    } else if (assumption == "IND-CORR" & is.vector(eff.mod)) {
+
+      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = eff.mod, "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
+
+    } else if (assumption == "IND-CORR" & !is.vector(eff.mod)) {
+
+      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = eff.mod)
 
     }
 
