@@ -172,17 +172,7 @@ run.model <- function(data, measure, rho, assumption, heter.prior, mean.misspar,
     }
 
 
-
-    # Under the Independent structure with or without SMD as effect measure
-    if (assumption == "IND-CORR"){
-
-      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref,  "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
-
-    } else {
-
-      data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = n1, "n2" = n2, "rho" = rho, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
-
-    }
+    data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = ifelse(measure == "ROM", n1, NA), "n2" = ifelse(measure == "ROM", n2, NA), "rho" = ifelse(measure == "ROM", rho, NA), "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
 
   } else {
@@ -257,17 +247,7 @@ run.model <- function(data, measure, rho, assumption, heter.prior, mean.misspar,
     }
 
 
-
-    ## Condition for the Independent structure
-    if (assumption != "IND-CORR") {
-
-      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
-
-    } else {
-
-      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
-
-    }
+    data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
   }
 

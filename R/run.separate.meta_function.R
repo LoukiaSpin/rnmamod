@@ -102,9 +102,20 @@ run.separate.meta <- function(data, measure, rho, assumption, heter.prior, mean.
 
     ## Order by 'id of t1' < 'id of t1' - Trials reporting change from baseline and baseline per arm
     y.b <- sd.b <- treat
-    for(i in 1:ns){
-      y.b[i, ] <- ifelse(dim(y.bas[i, ])[2] == 0, NA, y.bas[i, order(t0[i, ], na.last = T)])
-      sd.b[i, ] <- ifelse(dim(y.bas[i, ])[2] == 0, NA, sd.bas[i, order(t0[i, ], na.last = T)])
+    if (dim(ind)[2] == 0) {
+
+      for(i in 1:ns){
+        y.b[i, ] <- NA
+        se.b[i, ] <- NA
+      }
+
+    } else {
+
+      for(i in 1:ns){
+        y.b[i, ] <- y.bas[i, order(t0[i, ], na.last = T)]
+        se.b[i, ] <- se.bas[i, order(t0[i, ], na.last = T)]
+      }
+
     }
 
 
@@ -116,13 +127,12 @@ run.separate.meta <- function(data, measure, rho, assumption, heter.prior, mean.
 
     if(dim(ind)[2] == 0) {
 
-      pairwise.observed <-  pairwise.observed0
+      pairwise.observed <- pairwise.observed0
 
     } else {
       # Maintain baseline mean outcome and standard deviation
       pairwise.observed <- cbind(pairwise.observed0, pairwise(as.list(t), mean = as.list(y.b), sd = as.list(sd.b), n = as.list(c), data = data, studlab = 1:ns)[, c(7, 10, 8, 11)])
       colnames(pairwise.observed) <- c("study", "arm1", "arm2", "y1", "y2", "sd1", "sd2", "c1", "c2", "bas.y1", "bas.y2", "bas.sd1", "bas.sd2")
-
     }
 
 

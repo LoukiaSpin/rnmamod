@@ -89,7 +89,7 @@ model{
        theta[i, k] <- u[i]*exp(delta[i, k])                                                                   # link function for ratio of means (RoM) in logarithmic scale
        delta[i, k] ~ dnorm(md[i, k], taud[i, k])                                                              # within-trial true log RoM (random-effect)
        md[i, k] <- EM[t[i, k], t[i, 1]] + sw[i, k]                                                            # mean of log RoM distributions (with multi-arm trial correction)
-       taud[i, k] <- 2*tau*(k - 1)/k                                                                          # precision of log RoM distributions (with multi-arm trial correction)
+       taud[i, k] <- 2*prec*(k - 1)/k                                                                         # precision of log RoM distributions (with multi-arm trial correction)
        w[i, k] <- delta[i, k] - EM[t[i, k], t[i, 1]]                                                          # adjustment for multi-arm trials
        sw[i, k] <- sum(w[i, 1:(k - 1)])/(k - 1)                                                               # cumulative adjustment for multi-arm trials
                       }

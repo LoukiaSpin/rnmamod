@@ -3,6 +3,7 @@
 #       Random-effects NMA model with consistency and accommodation of multi-arm trials       #
 #                        <Normal likelihood, log link, Random Effects>                        #
 #                (Extension of Dias et al., 2013 in Appendix - PMID: 23104435)                #
+#       [Trial set 1: change from baseline & baseline; Trial set 2: final measurements]       #  
 #                               One-stage pattern-mixture model                               #
 #                           (Spineli et al., 2021 - PMID: 33406990)                           #
 #           Ratio of Means (ROM) and Informative Missingness Ratio of Means (IMROM)           #
@@ -22,7 +23,10 @@ model{
      u[i] ~ dnorm(0, 0.0001)
      delta[i, 1] <- 0
      w[i, 1] <- 0
+     }
 
+
+   for(i in 1:n1){                                                                                           # loop through trials reporting at final point  
      for(k in 1:na[i]){                                                                                      # loop through all arms in trial i
        prec.o[i, k] <- pow(se.o[i, k], -2)                                                                   # observed precision of the outcome
        y.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])                                                        # normal likelihood for the oberved mean of the outcome
@@ -41,6 +45,41 @@ model{
                       (N[i, k] - m0[i, k])*(log(N[i, k] - m0[i, k]) - 
                       log(N[i, k] - hat.m[i, k])))
                        }
+                    }
+
+    for(i in 1:n2){                                                                                           # loop through trials reporting the change from baseline and baseline 
+       for(k in 1:na[i + n1]){                                                                                # loop through all arms in trial i
+         prec.b[i + n1, k] <- pow(se.b[i + n1, k], -2)                                                        # precision of the outcome at baseline
+         prec.o[i + n1, k] <- pow(se.o[i + n1, k], -2)                                                        # precision of the observed change from baseline
+         y.b[i + n1, k] ~ dnorm(theta.b[i + n1, k], prec.b[i + n1, k])                                        # normal likelihood of the outcome at baseline
+         y.o[i + n1, k] ~ dnorm(md.cond[i + n1, k], prec.cond[i + n1, k])                                     # normal likelihood of the observed change from baseline conditional on the baseline
+         md.cond[i + n1, k] <- theta.o[i + n1, k] + sqrt(prec.b[i + n1, k]/prec.o[i + n1, k])*rho*(y.b[i + n1, k] # conditional mean of the observed change from baseline conditional on the baseline 
+                               - theta.b[i + n1, k])
+         prec.cond[i + n1, k] <- prec.o[i + n1, k]/(1 - rho*rho)
+         m[i + n1, k] ~ dbin(q[i + n1, k], N[i + n1, k])                                                      # binomial likelihood for missing outcome data (MOD)
+         q[i + n1, k] ~ dunif(0, 1)                                                                           # uniform likelihood for the probability of MOD
+
+         theta.cfb[i + n1, k] <- theta[i + n1, k] - theta.b[i + n1, k]                                        # Underlying change from baseline for the randomised sample in arm k 
+         theta.b[i + n1, k] ~ dnorm(0, 0.0001)
+
+         ## Sharing IMRoM for change from baseline with IMRoM at final point
+         ## (we have no reason to believe that the missingness mechanism (MM) for change from baseline differs from the MM for the final point)
+         theta.o[i + n1, k] <- theta.cfb[i + n1, k]/(1 - q[i + n1, k]*(1 - exp(phi)))                         # linking equation for Informative Missingness Ratio of Means (IMRoM)
+
+         ## Deviance contribution for observed and missing data (change from baseline)
+         hat.par[i + n1, k] <- theta.o[i + n1, k]
+         dev.o[i + n1, k] <- (y.o[i + n1, k] - theta.o[i + n1, k])*(y.o[i + n1, k] -                          # Deviance contribution (observed data; PMID: 23104435)
+                             theta.o[i + n1, k])*prec.o[i + n1, k]
+         m0[i + n1, k] <- m[i + n1, k] + 0.01*equals(m[i + n1, k], 0)                                         # Correction for zero MOD in arm k od trial i (PMID: 25809313) 
+         hat.m[i + n1, k] <- q[i + n1, k]*N[i + n1, k]                                                        # Expected value of numerators (missing data; PMID: 25809313)
+         dev.m[i + n1, k] <- 2*(m0[i + n1, k]*(log(m0[i + n1, k]) - log(hat.m[i + n1, k])) +                  # Deviance contribution (MOD; PMID: 25809313)
+                             (N[i + n1, k] - m0[i + n1, k])*(log(N[i + n1, k] - m0[i + n1, k]) - 
+                             log(N[i + n1, k] - hat.m[i + n1, k])))
+                       }
+                    }
+
+
+   for(i in 1:ns){  
 
      resdev.o[i] <- sum(dev.o[i, 1:na[i]])                                                                   # Summed residual deviance contribution for this trial (observed data; PMID: 23104435)
      resdev.m[i] <- sum(dev.m[i, 1:na[i]])                                                                   # Summed residual deviance contribution for this trial (MOD; PMID: 25809313)
@@ -50,7 +89,7 @@ model{
        delta.star[i, k] <- delta[i, k] + (beta[t[i, k]] - beta[t[i, 1]])*eff.mod[i]*(1 - equals(eff.mod[i], 0))
        delta[i, k] ~ dnorm(md[i, k], taud[i, k])                                                             # within-trial true log RoM (random-effect)
        md[i, k] <- d[t[i, k]] - d[t[i, 1]] + sw[i, k]                                                        # mean of log RoM distributions (with multi-arm trial correction)
-       taud[i, k] <- 2*tau*(k - 1)/k                                                                         # precision of log RoM distributions (with multi-arm trial correction)
+       taud[i, k] <- 2*prec*(k - 1)/k                                                                        # precision of log RoM distributions (with multi-arm trial correction)
        w[i, k] <- delta[i, k] - (d[t[i, k]] - d[t[i, 1]])                                                    # adjustment for multi-arm trials
        sw[i, k] <- sum(w[i, 1:(k - 1)])/(k - 1)                                                              # cumulative adjustment for multi-arm trials
                       }

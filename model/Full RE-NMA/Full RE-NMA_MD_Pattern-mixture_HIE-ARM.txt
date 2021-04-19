@@ -53,7 +53,7 @@ model{
       
       for(k in 2:na[i]){                                       
         theta[i, k] <- u[i] + delta.star[i, k]                            # link function for mean difference (MD)
-        delta.star[i, k] <- delta[i, k] + (beta[t[i, k]] - beta[t[i, 1]])*(eff.mod[i]*equals(Z, 1) + eff.mod[i, k]*equals(Z, 2)) 
+        delta.star[i, k] <- delta[i, k] + (beta[t[i, k]] - beta[t[i, 1]])*eff.mod[i]*(1 - equals(eff.mod[i], 0)) 
         delta[i, k] ~ dnorm(md[i, k], precd[i, k])                        # within-trial true MD (random-effect)
         md[i, k] <- d[t[i, k]] - d[t[i, 1]] + sw[i, k]                    # mean of MD distributions (with multi-arm trial correction)
         precd[i, k] <- 2*prec*(k - 1)/k                                   # precision of MD distributions (with multi-arm trial correction)

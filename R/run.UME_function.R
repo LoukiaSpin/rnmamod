@@ -207,20 +207,8 @@ run.UME <- function(data, measure, rho, assumption, heter.prior, mean.misspar, v
 
       impr.UME <- improved.UME(t, m, N, ns, na)
 
-      ## Condition for the data specification based on the assumption about the structure of the missingness parameter
-      if (assumption == "IND-CORR"){
+      data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = n1, "n2" = n2, rho = "rho", "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "t1.bn" = impr.UME$t1.bn, "t2.bn" = impr.UME$t2.bn, "base" = impr.UME$base, "nbase.multi" = impr.UME$nbase.multi)
 
-        data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "t1.bn" = impr.UME$t1.bn, "t2.bn" = impr.UME$t2.bn, "base" = impr.UME$base, "nbase.multi" = impr.UME$nbase.multi)
-
-       } else if (assumption == "HIE-ARM" || assumption == "IDE-ARM") {
-
-        data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = n1, "n2" = n2, rho = "rho", "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "t1.bn" = impr.UME$t1.bn, "t2.bn" = impr.UME$t2.bn, "base" = impr.UME$base, "nbase.multi" = impr.UME$nbase.multi)
-
-      } else if (assumption != "IND-CORR" || assumption != "HIE-ARM" || assumption != "IDE-ARM") {
-
-        data.jag <- list("y.o" = y0, "se.o" = se0,  "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "t1.bn" = impr.UME$t1.bn, "t2.bn" = impr.UME$t2.bn, "base" = impr.UME$base, "nbase.multi" = impr.UME$nbase.multi)
-
-      }
 
     } else if (max(na) < 3 || has_error(improved.UME(t, m, N, ns, na), silent = T) == T) {
 

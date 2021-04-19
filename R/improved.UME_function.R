@@ -32,7 +32,15 @@ improved.UME <- function(t, m, N, ns, na){
 
 
   ## Turn 'tab.comp.arms0' into a data-frame
-  (tab.comp.arms <- data.frame(names(tab.comp.arms0[, 1]), tab.comp.arms0[, 1], tab.comp.arms0[, 2]))
+  if(dim(tab.comp.arms0)[2] == 1) {
+
+    tab.comp.arms <- data.frame(names(tab.comp.arms0[, 1]), tab.comp.arms0[, 1], rep(0, dim(tab.comp.arms0)[1]))
+
+  } else {
+
+    tab.comp.arms <- data.frame(names(tab.comp.arms0[, 1]), tab.comp.arms0[, 1], tab.comp.arms0[, 2])
+  }
+  #(tab.comp.arms <- data.frame(names(tab.comp.arms0[, 1]), tab.comp.arms0[, 1], tab.comp.arms0[, 2]))
   colnames(tab.comp.arms) <- c("comp", "multi", "two")
   rownames(tab.comp.arms) <- NULL
 

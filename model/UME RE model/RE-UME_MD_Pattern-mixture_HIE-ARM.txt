@@ -2,7 +2,7 @@
 #                                                                                             #
 #                         Random-effects unrelated mean effects model                         #
 #                     <Normal likelihood, identity link, Random Effects>                      #
-#             (Improved parameterisation  of Dias et al., 2013 - PMID: 23804508)              #
+#             (Improved parameterisation of Dias et al., 2013 - PMID: 23804508)               #
 #                               One-stage pattern-mixture model                               #
 #                           (Spineli et al., 2021 - PMID: 33406990)                           #
 #        Mean Difference (MD) and Informative Missingness Difference of Means (IMDOM)         #

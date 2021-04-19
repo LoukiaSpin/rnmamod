@@ -2,7 +2,7 @@
 #                                                                                             #
 #                         Random-effects unrelated mean effects model                         #
 #                      <Binomial likelihood, logit link, Random Effects>                      #
-#             (Improved parameterisation  of Dias et al., 2013 - PMID: 23804508)              #
+#             (Improved parameterisation of Dias et al., 2013 - PMID: 23804508)               #
 #                               One-stage pattern-mixture model                               #
 #                           (Spineli et al., 2019 - PMID: 31018836)                           #
 #      Odds ratio (OR) and Informative Missingness Odds ratio (IMOR) in logarithmic scale     #

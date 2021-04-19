@@ -35,11 +35,8 @@ model{
 
         ## Missing participants and likelihood per arm
         mod[i, k] ~ dbin(q[i, k], N[i, k])                                                  # binomial likelihood for missing outcome data (MOD)
-        q[i, k] ~ dunif(0, 1)                                                               # uniform likelihood for the probability of MOD
-
-        theta[i, k] <- u[i]*exp(delta[i, t[i, k]])                                          # link function for ratio of means (RoM) in logarithmic scale
-        index[i, k] <- split[i]*(equals(t[i, k], pair[1])+ equals(t[i, k], pair[2]))                     
-                       }
+        q[i, k] ~ dunif(0, 1)                                                               # uniform likelihood for the probability of MOD                 
+              }
          }
 
 
@@ -52,7 +49,7 @@ model{
          md.cond[i + n1, k] <- theta.o[i + n1, k] + sqrt(prec.b[i + n1, k]/prec.o[i + n1, k])*rho*(y.b[i + n1, k] # conditional mean of the observed change from baseline conditional on the baseline 
                                - theta.b[i + n1, k])
          prec.cond[i + n1, k] <- prec.o[i + n1, k]/(1 - rho*rho)
-         m[i + n1, k] ~ dbin(q[i + n1, t[i + n1, k]], N[i + n1, k])                                               # binomial likelihood for missing outcome data (MOD)
+         m[i + n1, k] ~ dbin(q[i + n1, k], N[i + n1, k])                                                          # binomial likelihood for missing outcome data (MOD)
          q[i + n1, k] ~ dunif(0, 1)                                                                               # uniform likelihood for the probability of MOD
 
          theta.cfb[i + n1, k] <- theta[i + n1, k] - theta.b[i + n1, k]                                            # Underlying change from baseline for the randomised sample in arm k 
