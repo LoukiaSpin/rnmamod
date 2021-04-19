@@ -4,11 +4,17 @@
 heatmap.mod <- function(data, trial.names, drug.names) {
 
 
-  (m <- data %>% dplyr::select(starts_with("m")))
-  (n <- data %>% dplyr::select(starts_with("n")))
-  (t <- data %>% dplyr::select(starts_with("t")))
-  (nt <- length(table(as.matrix(t))))
-  (ns <- length(m[, 1]))
+  m <- data %>% dplyr::select(starts_with("m"))
+  c <- data %>% dplyr::select(starts_with("c"))   # Number of completers in each arm of every trial
+  n0 <- data %>% dplyr::select(starts_with("n"))  # Number randomised
+  if (dim(c)[2] == 0) {
+    n <- n0
+  } else {
+    n <- m + c
+  }
+  t <- data %>% dplyr::select(starts_with("t"))
+  nt <- length(table(as.matrix(t)))
+  ns <- length(m[, 1])
   na..  <- rep(0, length(m[, 1]))
   for(i in 1:length(m[, 1])){
     na..[i] <- table(!is.na(t[i, ]))["TRUE"]

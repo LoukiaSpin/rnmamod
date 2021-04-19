@@ -4,6 +4,7 @@
 #                             (Dias et al., 2010 – PMID: 20213715)                            #
 #                        <Normal likelihood, log link, Random Effects>                        #
 #                      (Dias et al., 2013 in Appendix  - PMID: 23104435)                      #
+#       [Trial set 1: change from baseline & baseline; Trial set 2: final measurements]       #  
 #                               One-stage pattern-mixture model                               #
 #                           (Spineli et al., 2021 - PMID: 33406990)                           #
 #           Ratio of Means (ROM) and Informative Missingness Ratio of Means (IMROM)           #
@@ -22,22 +23,53 @@ model{
 
       ## Baseline mean value
       u[i] ~ dnorm(0, 0.0001)
+      }
 
+
+    for(i in 1:n1){                                                                         # loop through trials reporting at final point 
       for(k in 1:na[i]){                                                                    # loop through all arms in trial i
         ## Observed mean value and precision per arm & linking equation
         prec.o[i, k] <- pow(se.o[i, k], -2)                                                 # observed precision of the outcome
-        y.o[i, k] ~ dnorm(theta.o[i, t[i, k]], prec.o[i, k])                                # normal likelihood for the oberved mean of the outcome
+        y.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])                                      # normal likelihood for the oberved mean of the outcome
         theta.o[i, k] <- theta[i, k]/(1 - q[i, k]*(1 - exp(phi[i, k])))                     # linking equation for Informative Missingness Ratio of Means (IMRoM)
         phi[i, k] ~ dnorm(mean.phi[t[i, k]], prec.phi[t[i, k]])                             # hierarchical, intervetion-specific IMRoM
 
         ## Missing participants and likelihood per arm
-        mod[i, k] ~ dbin(q[i, t[i, k]], N[i, k])                                            # binomial likelihood for missing outcome data (MOD)
-        q[i, t[i, k]] ~ dunif(0, 1)                                                         # uniform likelihood for the probability of MOD
+        mod[i, k] ~ dbin(q[i, k], N[i, k])                                                  # binomial likelihood for missing outcome data (MOD)
+        q[i, k] ~ dunif(0, 1)                                                               # uniform likelihood for the probability of MOD                   
+                       }
+                    }
 
-        theta[i, t[i, k]] <- u[i]*exp(delta[i, t[i, k]])                                    # link function for ratio of means (RoM) in logarithmic scale
+
+    for(i in 1:n2){                                                                                               # loop through trials reporting the change from baseline and baseline 
+       for(k in 1:na[i + n1]){                                                                                    # loop through all arms in trial i
+         prec.b[i + n1, k] <- pow(se.b[i + n1, k], -2)                                                            # precision of the outcome at baseline
+         prec.o[i + n1, k] <- pow(se.o[i + n1, k], -2)                                                            # precision of the observed change from baseline
+         y.b[i + n1, k] ~ dnorm(theta.b[i + n1, k], prec.b[i + n1, k])                                            # normal likelihood of the outcome at baseline
+         y.o[i + n1, k] ~ dnorm(md.cond[i + n1, k], prec.cond[i + n1, k])                                         # normal likelihood of the observed change from baseline conditional on the baseline
+         md.cond[i + n1, k] <- theta.o[i + n1, k] + sqrt(prec.b[i + n1, k]/prec.o[i + n1, k])*rho*(y.b[i + n1, k] # conditional mean of the observed change from baseline conditional on the baseline 
+                               - theta.b[i + n1, k])
+         prec.cond[i + n1, k] <- prec.o[i + n1, k]/(1 - rho*rho)
+         m[i + n1, k] ~ dbin(q[i + n1, t[i + n1, k]], N[i + n1, k])                                               # binomial likelihood for missing outcome data (MOD)
+         q[i + n1, k] ~ dunif(0, 1)                                                                               # uniform likelihood for the probability of MOD
+
+         theta.cfb[i + n1, k] <- theta[i + n1, k] - theta.b[i + n1, k]                                            # Underlying change from baseline for the randomised sample in arm k 
+         theta.b[i + n1, k] ~ dnorm(0, 0.0001)
+
+         ## Sharing IMRoM for change from baseline with IMRoM at final point
+         ## (we have no reason to believe that the missingness mechanism (MM) for change from baseline differs from the MM for the final point)
+         theta.o[i + n1, k] <- theta.cfb[i + n1, k]/(1 - q[i + n1, k]*(1 - exp(phi[i + n1, k])))              # linking equation for Informative Missingness Ratio of Means (IMRoM)
+         phi[i + n1, k] ~ dnorm(mean.phi[t[i + n1, k]], prec.phi[t[i + n1, k]])                               # hierarchical, intervetion-specific log IMRoM 
+                       }
+                    }
+
+
+    for(i in 1:ns){   
+     for(k in 1:na[i]){ 
+        theta[i, k] <- u[i]*exp(delta[i, t[i, k]])                                    # link function for ratio of means (RoM) in logarithmic scale
         index[i, k] <- split[i]*(equals(t[i, k], pair[1])+ equals(t[i, k], pair[2]))                     
                        }
-      
+
       for(k in 2:na[i]){                                      
         delta[i, si[i, k]] ~ dnorm(md[i, si[i, k]], precd[i, si[i, k]])                     # within-trial true log RoM (random-effect)
         md[i, si[i, k]] <- (d[si[i, k]] - d[bi[i]] + sw[i, k])*(1 - index[i, m[i, k]])      # mean of log RoM distributions (with multi-arm trial correction)                         

@@ -51,10 +51,13 @@
 #' run.UME(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.separate.meta <- function(data, measure, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin){
+run.separate.meta <- function(data, measure, rho, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin){
 
+
+  options(warn = -1)
 
   ## Default arguments
+  rho <- ifelse(missing(rho) & (measure == "MD" || measure == "SMD"|| measure == "ROM"), 0.5, ifelse(missing(rho) & measure == "OR", NA, rho))
   assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
   var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
@@ -68,17 +71,20 @@ run.separate.meta <- function(data, measure, assumption, heter.prior, mean.missp
 
 
     ## Continuous: arm-level, wide-format dataset
-    (y.obs <- data %>% dplyr::select(starts_with("y")))                             # Observed mean value in each arm of every trial
-    (sd.obs <- data %>% dplyr::select(starts_with("sd")))                           # Observed standard deviation in each arm of every trial
-    (mod <- data %>% dplyr::select(starts_with("m")))                               # Number of missing participants in each arm of every trial
-    (c <- data %>% dplyr::select(starts_with("c")))                                 # Number of completers in each arm of every trial
-    (rand <- mod + c)                                                               # Number of randomised participants in each arm of every trial
-    (treat <- data %>% dplyr::select(starts_with("t")))                             # Intervention studied in each arm of every trial
+    y.obs <- data %>% dplyr::select(starts_with("y"))                               # Observed mean value in each arm of every trial
+    sd.obs <- data %>% dplyr::select(starts_with("sd"))                             # Observed standard deviation in each arm of every trial
+    y.bas <- data %>% dplyr::select(starts_with("bas.y"))                           # Mean value at baseline in each arm of every trial
+    sd.bas <- data %>% dplyr::select(starts_with("bas.sd"))                         # Standard deviation at baseline in each arm of every trial
+    ind <- data %>% dplyr::select(starts_with("ind"))                               # Trial indicator (1: final measurement; 2: change from baseline and baseline measurement
+    mod <- data %>% dplyr::select(starts_with("m"))                                 # Number of missing participants in each arm of every trial
+    c <- data %>% dplyr::select(starts_with("c"))                                   # Number of completers in each arm of every trial
+    rand <- mod + c                                                                 # Number of randomised participants in each arm of every trial
+    treat <- data %>% dplyr::select(starts_with("t"))                               # Intervention studied in each arm of every trial
     na <- apply(treat, 1, function(x) length(which(!is.na(x))))                     # Number of interventions investigated in every trial per network
     nt <- length(table(as.matrix(treat)))                                           # Total number of interventions per network
     ns <- length(y.obs[, 1])                                                        # Total number of included trials per network
-    # Trial-specific observed pooled standard deviation
-    (sigma <- sqrt(apply((sd.obs^2)*(c - 1), 1, sum, na.rm = T)/(apply(c, 1, sum, na.rm = T) - na)))
+    n1 <- ifelse(dim(ind)[2] == 0, ns, table(ind)[1])                               # Number of trials reporting data at final point
+    n2 <- ifelse(dim(ind)[2] == 0, 0, table(ind)[2])                                # Number of trials reporting data at change from baseline
 
 
     ## Order by 'id of t1' < 'id of t1'
@@ -94,10 +100,30 @@ run.separate.meta <- function(data, measure, assumption, heter.prior, mean.missp
     }
 
 
+    ## Order by 'id of t1' < 'id of t1' - Trials reporting change from baseline and baseline per arm
+    y.b <- sd.b <- treat
+    for(i in 1:ns){
+      y.b[i, ] <- ifelse(dim(y.bas[i, ])[2] == 0, NA, y.bas[i, order(t0[i, ], na.last = T)])
+      sd.b[i, ] <- ifelse(dim(y.bas[i, ])[2] == 0, NA, sd.bas[i, order(t0[i, ], na.last = T)])
+    }
+
+
     ## Turn into contrast-level data: one row per possible comparison in each trial ('netmeta')
     # Maintain study-id, intervention, observed mean outcome, observed standard deviation, and number randomised
-    (pairwise.observed <- pairwise(as.list(t), mean = as.list(y0), sd = as.list(sd0), n = as.list(N), data = data, studlab = 1:ns)[, c(3:5, 7, 10, 8, 11, 6, 9)])
-    colnames(pairwise.observed) <- c("study", "arm1", "arm2", "y1", "y2", "sd1", "sd2", "n1", "n2")
+    (pairwise.observed0 <- pairwise(as.list(t), mean = as.list(y0), sd = as.list(sd0), n = as.list(c), data = data, studlab = 1:ns)[, c(3:5, 7, 10, 8, 11, 6, 9)])
+    colnames(pairwise.observed0) <- c("study", "arm1", "arm2", "y1", "y2", "sd1", "sd2", "c1", "c2")
+
+
+    if(dim(ind)[2] == 0) {
+
+      pairwise.observed <-  pairwise.observed0
+
+    } else {
+      # Maintain baseline mean outcome and standard deviation
+      pairwise.observed <- cbind(pairwise.observed0, pairwise(as.list(t), mean = as.list(y.b), sd = as.list(sd.b), n = as.list(c), data = data, studlab = 1:ns)[, c(7, 10, 8, 11)])
+      colnames(pairwise.observed) <- c("study", "arm1", "arm2", "y1", "y2", "sd1", "sd2", "c1", "c2", "bas.y1", "bas.y2", "bas.sd1", "bas.sd2")
+
+    }
 
 
     # Maintain MOD and merge with 'pairwise.observed'
@@ -172,7 +198,7 @@ run.separate.meta <- function(data, measure, assumption, heter.prior, mean.missp
   meta <- list()
   for(i in 1:N.comp) {
 
-    meta[[i]] <- run.model(data = pairwise[pairwise$arm1 == keep.comp[i, 1] & pairwise$arm2 == keep.comp[i, 2], -c(1:3)], measure, assumption, heter.prior, mean.misspar, var.misspar, D = 1, n.chains, n.iter, n.burnin, n.thin) # 'D' does not matter in pairwise meta-analysis
+    meta[[i]] <- run.model(data = pairwise[pairwise$arm1 == keep.comp[i, 1] & pairwise$arm2 == keep.comp[i, 2], -c(1:3)], measure, rho, assumption, heter.prior, mean.misspar, var.misspar, D = 1, n.chains, n.iter, n.burnin, n.thin) # 'D' does not matter in pairwise meta-analysis
 
   }
 

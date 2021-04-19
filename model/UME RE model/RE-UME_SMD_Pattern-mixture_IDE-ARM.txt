@@ -25,12 +25,22 @@ model{
       u[i] ~ dnorm(0, 0.0001)
 
       ## Pooled standard deviation under the missing at random assumption
+      sigma[i] <- sqrt(sum(nom[i, 1:na[i]])/(sum(c[i, 1:na[i]]) - na[i]))
       a[i] <- sum(N[i, 1:na[i]] - 1)/2
       b[i] <- sum(N[i, 1:na[i]] - 1)/(2*sigma[i]*sigma[i])
       var.pooled[i] ~ dgamma(a[i], b[i])                                  # Gamma likelihood for the pooled variance in trial i (PMID: 21394888)
       sd.pooled[i] <- sqrt(var.pooled[i])
 
       for(k in 1:na[i]){                                                  # loop through all arms in trial i
+        ## The number of completers 
+        c[i, k] <- N[i, k] - m[i, k]
+
+        ## The observed standard deviation
+        sd.obs[i, k] <- se.o[i, k]*sqrt(c[i, k])
+
+        ## The nominator of the pooled-SD
+        nom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1
+
         ## Observed mean value and precision per arm & linking equation
         prec.o[i, k] <- pow(se.o[i, k], -2)                               # observed precision of the outcome
         y.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])                    # normal likelihood for the oberved mean of the outcome
