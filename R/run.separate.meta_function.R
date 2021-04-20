@@ -106,14 +106,14 @@ run.separate.meta <- function(data, measure, rho, assumption, heter.prior, mean.
 
       for(i in 1:ns){
         y.b[i, ] <- NA
-        se.b[i, ] <- NA
+        sd.b[i, ] <- NA
       }
 
     } else {
 
       for(i in 1:ns){
         y.b[i, ] <- y.bas[i, order(t0[i, ], na.last = T)]
-        se.b[i, ] <- se.bas[i, order(t0[i, ], na.last = T)]
+        sd.b[i, ] <- sd.bas[i, order(t0[i, ], na.last = T)]
       }
 
     }

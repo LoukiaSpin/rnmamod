@@ -6,7 +6,7 @@ improved.UME <- function(t, m, N, ns, na){
 
 
   ## Turn into contrast-level data: one row per possible comparison in each trial ('netmeta')
-  (wide.format <- pairwise(as.list(t), event = as.list(m), n = as.list(N), data = cbind(t, m, N), studlab = 1:ns)[, c(3:6, 8, 7, 9)])
+  wide.format <- pairwise(as.list(t), event = as.list(m), n = as.list(N), data = cbind(t, m, N), studlab = 1:ns)[, c(3:6, 8, 7, 9)]
   colnames(wide.format) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
 
 
@@ -22,7 +22,7 @@ improved.UME <- function(t, m, N, ns, na){
 
 
   ## Indicate whether a trial is two-arm or multi-arm
-  (wide.format$arms <- unlist(arms0))
+  wide.format$arms <- unlist(arms0)
   wide.format[wide.format$arms > 2, 9] <- "multi-arm"
   wide.format[wide.format$arms < 3, 9] <- "two-arm"
 
@@ -63,22 +63,60 @@ improved.UME <- function(t, m, N, ns, na){
 
 
   ## Sort by the study id in increasing order
-  (final0 <- pairwise.n[order(pairwise.n$study),])
+  final0 <- pairwise.n[order(pairwise.n$study),]
+
+
+
+  ## Find the unique comparisons with the baseline intervention
+  indic0 <- list()
+  for(i in 1:ns) {
+    indic0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(na[i] - 1)]
+  }
+  (indic <- unique(t(do.call(cbind, indic0))))
+  t1.indic <- indic[, 1]
+  t2.indic <- indic[, 2]
+
 
 
   ## Finally, reduce to comparisons between non-baseline interventions
-  (final <- final0[!is.element(final0$t1, unique(t[unique(final0$study), 1])),])
+  if (length(unique(t[unique(final0$study), 1])) < 2) {
+
+    final <- NA
+
+  } else {
+
+    #final <- final0[!is.element(final0$t1, unique(t[unique(final0$study), 1])),]
+    final <- final0[!is.element(paste0(final0[, 2], "vs", final0[, 3]), paste0(t1.indic, "vs", t2.indic)), ]
+
+  }
+
 
 
   ## Add also the baseline treatment for each selected trial
-  base <- rep(NA, length(final[, 1]))
-  for(i in 1:length(final[, 1])){
-    final$base[i] <- unique(t[final$study[i], 1])
+  if (is.na(final)) {
+
+    base <- nbase.multi <- NA
+
+  } else {
+
+    base <- rep(NA, length(final[, 1]))
+    for(i in 1:length(final[, 1])){
+      final$base[i] <- unique(t[final$study[i], 1])
+    }
+    nbase.multi <- length(final[, 1])
+
   }
-  nbase.multi <- length(final[, 1])
 
 
-  return(list(nbase.multi = nbase.multi, t1.bn = final$t1, t2.bn = final$t2, base = final$base, obs.comp = tab.comp.arms))
+  if (max(na) == 2) {
+
+    return(list(obs.comp = tab.comp.arms))
+
+  } else {
+
+    return(list(nbase.multi = nbase.multi, t1.bn = final$t1, t2.bn = final$t2, base = final$base, obs.comp = tab.comp.arms))
+
+  }
 
 
 }

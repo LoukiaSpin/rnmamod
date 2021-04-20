@@ -210,7 +210,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
   if(!is.character(covar.values[[1]])) {
 
     p1 <- ggplot(data = prepare.EM.metric, aes(x = as.factor(order), y = as.numeric(mean), ymin = as.numeric(lower), ymax = as.numeric(upper), colour = analysis, group = analysis)) +
-            geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
+            geom_linerange(size = 2, position = position_dodge(width = 0.5), width = 0.1) +
             geom_hline(yintercept = intercept.value, lty = 2, size = 1.3, col = "grey53") +
             geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
             geom_text(aes(x = as.factor(order), y = round(as.numeric(mean), 2), label = round(as.numeric(mean), 2), hjust = 0, vjust = -0.4),
@@ -231,7 +231,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
   } else {
 
     p1 <- ggplot(data = prepare.EM.nominal, aes(x = as.factor(order), y = as.numeric(mean), ymin = as.numeric(lower), ymax = as.numeric(upper), colour = analysis, group = analysis)) +
-            geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
+            geom_linerange(size = 2, position = position_dodge(width = 0.5), width = 0.1) +
             geom_hline(yintercept = intercept.value, lty = 2, size = 1.3, col = "grey53") +
             geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
             geom_text(aes(x = as.factor(order), y = round(as.numeric(mean), 2), label = round(as.numeric(mean), 2), hjust = 0, vjust = -0.4),
@@ -255,7 +255,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
 
   ## Forest plots of SUCRA under NMA and meta-regression
   p2 <-  ggplot(data = prepare.sucra, aes(x = as.factor(order), y = as.numeric(mean), ymin = as.numeric(lower), ymax = as.numeric(upper), colour = analysis, group = analysis)) +
-           geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
+           geom_linerange(size = 2, position = position_dodge(width = 0.5), width = 0.1) +
            geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
            geom_text(aes(x = as.factor(order), y = round(as.numeric(mean), 2), label = round(as.numeric(mean)*100, 0), hjust = 0, vjust = -0.4),
                      color = "black", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T) +

@@ -124,13 +124,13 @@ run.model <- function(data, measure, rho, assumption, heter.prior, mean.misspar,
 
 
     ## Condition regarding the specification of the prior mean ('mean.misspar') for the missingness parameter
-    if(missing(mean.misspar)) {
+    if(missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" )) {
 
       mean.misspar <- rep(0, 2)
 
-    } else if(!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & !is.null(dim(mean.misspar))) {
+    } else if(missing(mean.misspar) & (assumption != "HIE-ARM" || assumption != "IDE-ARM" )) {
 
-      mean.misspar <- as.vector(mean.misspar)
+      mean.misspar <- 0
 
     } else if(!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & is.null(dim(mean.misspar))) {
 
@@ -141,6 +141,7 @@ run.model <- function(data, measure, rho, assumption, heter.prior, mean.misspar,
       mean.misspar <- mean.misspar
 
     }
+
 
 
 
@@ -172,7 +173,8 @@ run.model <- function(data, measure, rho, assumption, heter.prior, mean.misspar,
     }
 
 
-    data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = ifelse(measure == "ROM", n1, NA), "n2" = ifelse(measure == "ROM", n2, NA), "rho" = ifelse(measure == "ROM", rho, NA), "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
+    data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = ifelse(measure == "ROM", n1, NA), "n2" = ifelse(measure == "ROM", n2, NA), "rho" = rho, "ref" = ref,
+                     "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
 
   } else {

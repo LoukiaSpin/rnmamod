@@ -4,6 +4,7 @@
 UME.plot <- function(full, ume, drug.names) {
 
 
+
   ## The results on the following parameters will be used:
   # Posterior results on the effect estimates under consistency model
   EM.full <- full$EM

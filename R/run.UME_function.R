@@ -155,13 +155,13 @@ run.UME <- function(data, measure, rho, assumption, heter.prior, mean.misspar, v
 
 
     ## Condition regarding the specification of the prior mean ('mean.misspar') for the missingness parameter
-    if(missing(mean.misspar)) {
+    if(missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" )) {
 
       mean.misspar <- rep(0, 2)
 
-    } else if(!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & !is.null(dim(mean.misspar))) {
+    } else if(missing(mean.misspar) & (assumption != "HIE-ARM" || assumption != "IDE-ARM" )) {
 
-      mean.misspar <- as.vector(mean.misspar)
+      mean.misspar <- 0
 
     } else if(!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & is.null(dim(mean.misspar))) {
 
@@ -207,25 +207,16 @@ run.UME <- function(data, measure, rho, assumption, heter.prior, mean.misspar, v
 
       impr.UME <- improved.UME(t, m, N, ns, na)
 
-      data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = n1, "n2" = n2, rho = "rho", "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "t1.bn" = impr.UME$t1.bn, "t2.bn" = impr.UME$t2.bn, "base" = impr.UME$base, "nbase.multi" = impr.UME$nbase.multi)
+      data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = ifelse(measure == "ROM", n1, NA), "n2" = ifelse(measure == "ROM", n2, NA), "rho" = rho,
+                       "ref" = ifelse(assumption == "HIE-ARM" || assumption == "IDE-ARM", ref, NA), "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "t1.bn" = impr.UME$t1.bn, "t2.bn" = impr.UME$t2.bn, "base" = impr.UME$base, "nbase.multi" = impr.UME$nbase.multi)
 
 
     } else if (max(na) < 3 || has_error(improved.UME(t, m, N, ns, na), silent = T) == T) {
 
-      ## Condition for the data specification based on the assumption about the structure of the missingness parameter
-     if (assumption == "IND-CORR"){
 
-        data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "ns" = ns, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "nbase.multi" = 0)
+    data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b,"m" = m, "N" = N, "t" = t, "na" = na, "ns" = ns, "n1" = ifelse(measure == "ROM", n1, NA), "n2" = ifelse(measure == "ROM", n2, NA), "rho" = rho, "ref" = ifelse(assumption == "HIE-ARM" || assumption == "IDE-ARM", ref, NA),
+                     "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "nbase.multi" = 0)
 
-      } else if (assumption == "HIE-ARM" || assumption == "IDE-ARM") {
-
-        data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = n1, "n2" = n2, "rho" = rho, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "nbase.multi" = 0)
-
-      } else if (assumption != "IND-CORR" || assumption != "HIE-ARM" || assumption != "IDE-ARM") {
-
-        data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "ns" = ns, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "nbase.multi" = 0)
-
-      }
 
     }
 

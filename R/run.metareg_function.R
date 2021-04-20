@@ -49,10 +49,13 @@
 #' run.model(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, D = 0, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
+run.metareg <- function(data, covariate, measure, rho, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
 
+
+  options(warn = -1)
 
   ## Default arguments
+  rho <- ifelse(missing(rho) & (measure == "MD" || measure == "SMD"|| measure == "ROM"), 0.5, ifelse(missing(rho) & measure == "OR", NA, rho))
   assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
   var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
@@ -68,17 +71,26 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
     ## Continuous: arm-level, wide-format dataset
     y.obs <- data %>% dplyr::select(starts_with("y"))                             # Observed mean value in each arm of every trial
     sd.obs <- data %>% dplyr::select(starts_with("sd"))                           # Observed standard deviation in each arm of every trial
+    y.bas <- data %>% dplyr::select(starts_with("bas.y"))                         # Mean value at baseline in each arm of every trial
+    sd.bas <- data %>% dplyr::select(starts_with("bas.sd"))                       # Standard deviation at baseline in each arm of every trial
+    ind <- data %>% dplyr::select(starts_with("ind"))                             # Trial indicator (1: final measurement; 2: change from baseline and baseline measurement
     mod <- data %>% dplyr::select(starts_with("m"))                               # Number of missing participants in each arm of every trial
     c <- data %>% dplyr::select(starts_with("c"))                                 # Number of completers in each arm of every trial
     se.obs <- sd.obs/sqrt(c)                                                      # Observed standard error in each arm of every trial
     rand <- mod + c                                                               # Number of randomised participants in each arm of every trial
+    if (dim(ind)[2] == 0) {
+      se.bas <- NA                                                                # Standard error at baseline in each arm of every trial
+    } else {
+      se.bas <- sd.bas/sqrt(rand)                                                 # Standard error at baseline in each arm of every trial
+    }
     treat <- data %>% dplyr::select(starts_with("t"))                             # Intervention studied in each arm of every trial
-    na <- apply(treat, 1, function(x) length(which(!is.na(x))))                     # Number of interventions investigated in every trial per network
-    nt <- length(table(as.matrix(treat)))                                           # Total number of interventions per network
-    ns <- length(y.obs[, 1])                                                        # Total number of included trials per network
-    ref <- 1                                                                        # The first intervention (t1 = 1) is the reference of the network
-    # Trial-specific observed pooled standard deviation
-    sigma <- sqrt(apply((sd.obs^2)*(c - 1), 1, sum, na.rm = T)/(apply(c, 1, sum, na.rm = T) - na))
+    na <- apply(treat, 1, function(x) length(which(!is.na(x))))                   # Number of interventions investigated in every trial per network
+    nt <- length(table(as.matrix(treat)))                                         # Total number of interventions per network
+    ns <- length(y.obs[, 1])                                                      # Total number of included trials per network
+    n1 <- ifelse(dim(ind)[2] == 0, ns, table(ind)[1])                             # Number of trials reporting data at final point
+    n2 <- ifelse(dim(ind)[2] == 0, 0, table(ind)[2])                              # Number of trials reporting data at change from baseline
+    ref <- 1                                                                      # The first intervention (t1 = 1) is the reference of the network
+
 
 
     ## Order by 'id of t1' < 'id of t1'
@@ -95,14 +107,34 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
 
 
 
+    ## Order by 'id of t1' < 'id of t1' - Trials reporting change from baseline and baseline per arm
+    y.b <- se.b <- treat
+    if (dim(ind)[2] == 0) {
+
+      for(i in 1:ns){
+        y.b[i, ] <- NA
+        se.b[i, ] <- NA
+      }
+
+    } else {
+
+      for(i in 1:ns){
+        y.b[i, ] <- y.bas[i, order(t0[i, ], na.last = T)]
+        se.b[i, ] <- se.bas[i, order(t0[i, ], na.last = T)]
+      }
+
+    }
+
+
+
     ## Condition regarding the specification of the prior mean ('mean.misspar') for the missingness parameter
-    if(missing(mean.misspar)) {
+    if(missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" )) {
 
       mean.misspar <- rep(0, 2)
 
-    } else if(!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & !is.null(dim(mean.misspar))) {
+    } else if(missing(mean.misspar) & (assumption != "HIE-ARM" || assumption != "IDE-ARM" )) {
 
-      mean.misspar <- as.vector(mean.misspar)
+      mean.misspar <- 0
 
     } else if(!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & is.null(dim(mean.misspar))) {
 
@@ -157,29 +189,20 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
     }
 
 
+    if (is.vector(eff.mod)) {
 
-    ## Under the Independent structure with or without SMD as effect measure
-    if (measure == "SMD" & assumption != "IND-CORR") {
+      data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = ifelse(measure == "ROM", n1, NA), "n2" = ifelse(measure == "ROM", n2, NA), "rho" = ifelse(measure == "ROM", rho, NA),
+                       "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = eff.mod, "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
-      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "sigma" = sigma, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = eff.mod)
+    } else if (!is.vector(eff.mod)) {
 
-    } else if (measure == "SMD" & assumption == "IND-CORR"){
-
-      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "sigma" = sigma, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = eff.mod)
-
-    } else if (measure != "SMD" & assumption == "IND-CORR") {
-
-      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = eff.mod)
-
-    } else {
-
-      data.jag <- list("y.o" = y0, "se.o" = se0, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = eff.mod)
 
     }
 
+    data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = ifelse(measure == "ROM", n1, NA), "n2" = ifelse(measure == "ROM", n2, NA), "rho" = ifelse(measure == "ROM", rho, NA),
+                     "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = eff.mod)
 
   } else {
-
 
 
     ## Binary: arm-level, wide-format dataset
@@ -263,21 +286,15 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
 
 
     ## Condition for the Independent structure
-    if (assumption != "IND-CORR" & is.vector(eff.mod)) {
+    if (is.vector(eff.mod)) {
 
-      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = eff.mod, "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
+      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar,
+                       "D" = D, "heter.prior" = heter.prior, "eff.mod" = eff.mod, "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
-    } else if (assumption != "IND-CORR" & !is.vector(eff.mod)) {
+    } else if (!is.vector(eff.mod)) {
 
-      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = eff.mod)
-
-    } else if (assumption == "IND-CORR" & is.vector(eff.mod)) {
-
-      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = eff.mod, "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
-
-    } else if (assumption == "IND-CORR" & !is.vector(eff.mod)) {
-
-      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = eff.mod)
+      data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar,
+                       "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = eff.mod)
 
     }
 
