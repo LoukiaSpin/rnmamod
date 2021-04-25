@@ -173,12 +173,11 @@ run.model <- function(data, measure, rho, assumption, heter.prior, mean.misspar,
     }
 
 
-    data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = ifelse(measure == "ROM", n1, NA), "n2" = ifelse(measure == "ROM", n2, NA), "rho" = rho, "ref" = ref,
+    data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = ifelse(dim(ind)[2] == 0, NA, n1), "n2" = ifelse(dim(ind)[2] == 0, NA, n2), "rho" = rho, "ref" = ref,
                      "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
 
   } else {
-
 
 
     ## Binary: arm-level, wide-format dataset
@@ -205,25 +204,30 @@ run.model <- function(data, measure, rho, assumption, heter.prior, mean.misspar,
 
 
     ## Condition regarding the specification of the prior mean ('mean.misspar') for the missingness parameter
-    if(missing(mean.misspar)) {
+    if(missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" )) {
 
       mean.misspar <- rep(0.0001, 2)
 
-    } else if(!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & !is.null(dim(mean.misspar))) {
+    } else if(missing(mean.misspar) & (assumption != "HIE-ARM" || assumption != "IDE-ARM" )) {
 
-      mean.misspar <- as.vector(mean.misspar)
-      mean.misspar[1] <- ifelse(mean.misspar[1] == 0, 0.0001, mean.misspar[1])
-      mean.misspar[2] <- ifelse(mean.misspar[2] == 0, 0.0001, mean.misspar[2])
+      mean.misspar <- 0.0001
 
     } else if(!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & is.null(dim(mean.misspar))) {
 
       mean.misspar <- rep(ifelse(mean.misspar == 0, 0.0001, mean.misspar), 2)
 
-    } else if(!missing(mean.misspar) & (assumption != "HIE-ARM" || assumption != "IDE-ARM")) {
+    } else if (!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & !is.null(dim(mean.misspar))) {
+
+      mean.misspar <- as.vector(mean.misspar)
+      mean.misspar[1] <- ifelse(mean.misspar[1] == 0, 0.0001, mean.misspar[1])
+      mean.misspar[2] <- ifelse(mean.misspar[2] == 0, 0.0001, mean.misspar[2])
+
+    } else {
 
       mean.misspar <- ifelse(mean.misspar == 0, 0.0001, mean.misspar)
 
     }
+
 
 
     M <- ifelse(!is.na(r), mean.misspar, NA)   # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
@@ -380,15 +384,13 @@ run.model <- function(data, measure, rho, assumption, heter.prior, mean.misspar,
 
 
   ## Return a list of results
-  if(nt > 2) {
+  nma.results <- list(EM = EM, EM.ref = EM.ref, EM.pred = EM.pred, pred.ref = pred.ref, tau = tau, SUCRA = SUCRA, delta = delta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, effectiveness = effectiveness, phi = phi, model.assessment = model.assessment, jagsfit = jagsfit)
 
-    return(list(EM = EM, EM.ref = EM.ref, EM.pred = EM.pred, pred.ref = pred.ref, tau = tau, SUCRA = SUCRA, delta = delta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, effectiveness = effectiveness, phi = phi, model.assessment = model.assessment, jagsfit = jagsfit))
+  ma.results <- list(EM = EM, EM.pred = EM.pred, tau = tau, delta = delta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, phi = phi, model.assessment = model.assessment, jagsfit = jagsfit)
 
-  } else {
-
-    return(list(EM = EM, EM.pred = EM.pred, tau = tau, delta = delta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, phi = phi, model.assessment = model.assessment, jagsfit = jagsfit))
-
-  }
+ ifelse(nt > 2, return(nma.results), return(ma.results))
 
 }
+
+
 
