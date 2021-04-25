@@ -59,9 +59,9 @@ netplot <- function(data, drug.names, show.bias, ...){
   #  transform0[transform0$treatment == i, 2] <- drug.names[i]
   #}
   oldvals <- sort(unique(transform0$treatment))
-  newvals <- drug.names
-  newvals[match(transform0$treatment, oldvals)]
-
+  for(i in 1:length(oldvals)) {
+    transform[transform0$treatment == oldvals[i], 2] <- drug.names[i]
+  }
 
 
   ## Prepare data to use BUGSnet
