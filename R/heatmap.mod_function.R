@@ -33,9 +33,12 @@ heatmap.mod <- function(data, trial.names, drug.names) {
 
 
   ## Rename interventions
-  for(i in sort(unique(transform$treatment))) {
-    transform[transform$treatment == i, 2] <- drug.names[i]
-  }
+  #for(i in sort(unique(transform$treatment))) {
+  #  transform[transform$treatment == i, 2] <- drug.names[i]
+  #}
+  oldvals <- sort(unique(transform$treatment))
+  newvals <- drug.names
+  newvals[match(transform$treatment, oldvals) ]
 
 
   ## Rename trials
