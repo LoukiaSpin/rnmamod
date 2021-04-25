@@ -6,12 +6,7 @@ heatmap.mod <- function(data, trial.names, drug.names) {
 
   m <- data %>% dplyr::select(starts_with("m"))
   c <- data %>% dplyr::select(starts_with("c"))   # Number of completers in each arm of every trial
-  n0 <- data %>% dplyr::select(starts_with("n"))  # Number randomised
-  if (dim(c)[2] == 0) {
-    n <- n0
-  } else {
-    n <- m + c
-  }
+  n <- data %>% dplyr::select(starts_with("n"))  # Number randomised
   t <- data %>% dplyr::select(starts_with("t"))
   nt <- length(table(as.matrix(t)))
   ns <- length(m[, 1])
@@ -29,10 +24,28 @@ heatmap.mod <- function(data, trial.names, drug.names) {
 
   ## Turn one row per trial to one row per trial-arm
   (transform <- mtc.data.studyrow(cbind(t, m, n, na..), armVars = c('treatment'= 't', 'response'='m', 'sampleSize'='n'), nArmsVar='na'))
-  for(i in 1:length(unique(transform$study))){
+
+
+  ## Turn all columns into numeric
+  for(i in 1:ncol(transform)){
+    transform[, i] <- as.numeric(transform[, i])
+  }
+
+
+  ## Rename interventions
+  for(i in sort(unique(transform$treatment))) {
     transform[transform$treatment == i, 2] <- drug.names[i]
+  }
+
+
+  ## Rename trials
+  for(i in 1:length(unique(transform$study))){
+
     transform[transform$study == i, 1] <- trial.names[i]
   }
+
+
+  ## Calculate percentage of MOD in trial-arm
   transform$m.prop <- round((transform$response/transform$sampleSize)*100, 0)
 
 
@@ -51,7 +64,7 @@ heatmap.mod <- function(data, trial.names, drug.names) {
 
   } else {
 
-    ggplot(transform, aes(treatment, factor(study, level = 1:ns), fill = ifelse(m.prop <= 5, "low", ifelse(m.prop > 20, "high", "moderate") ))) +
+    ggplot(transform, aes(treatment, study, fill = ifelse(m.prop <= 5, "low", ifelse(m.prop > 20, "high", "moderate") ))) +
       geom_tile(colour = "white") +
       scale_fill_manual(breaks = c("low", "moderate", "high"), values = c("green3", "orange", "firebrick1")) +
       scale_x_discrete(position = "top") +
