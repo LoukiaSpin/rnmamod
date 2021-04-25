@@ -60,7 +60,7 @@ netplot <- function(data, drug.names, show.bias, ...){
   #}
   oldvals <- sort(unique(transform0$treatment))
   newvals <- drug.names
-  newvals[match(transform0$treatment, oldvals) ]
+  newvals[match(transform0$treatment, oldvals)]
 
 
 
@@ -73,7 +73,7 @@ netplot <- function(data, drug.names, show.bias, ...){
 
 
   ## Turn arm-level to contrast-level dataset
-  (pairwise <- pairwise(as.list(t), event = as.list(m), n = as.list(n), data = data, studlab = 1:ns)[, c(3:6, 8, 7, 9)])
+  (pairwise <- pairwise(as.list(t), event = as.list(m), n = as.list(n), data = cbind(t, m, n), studlab = 1:ns)[, c(3:6, 8, 7, 9)])
   colnames(pairwise) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
 
 
