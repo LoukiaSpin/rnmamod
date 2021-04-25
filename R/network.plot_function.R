@@ -55,9 +55,12 @@ netplot <- function(data, drug.names, show.bias, ...){
   transform0 <- mtc.data.studyrow(cbind(t, m, n, na..), armVars = c('treatment'= 't', 'response'='m', 'sampleSize'='n'), nArmsVar='na')
   (transform0$treatment1 <- as.numeric(as.character(transform0$treatment)))
   (transform0$treatment <- as.numeric(as.character(transform0$treatment)))
-  for(i in sort(unique(transform0$treatment))) {
-    transform0[transform0$treatment == i, 2] <- drug.names[i]
-  }
+  #for(i in sort(unique(transform0$treatment))) {
+  #  transform0[transform0$treatment == i, 2] <- drug.names[i]
+  #}
+  oldvals <- sort(unique(transform0$treatment))
+  newvals <- drug.names
+  newvals[match(transform0$treatment, oldvals) ]
 
 
 
