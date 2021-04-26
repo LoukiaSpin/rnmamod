@@ -60,7 +60,7 @@ netplot <- function(data, drug.names, show.bias, ...){
   #}
   oldvals <- sort(unique(transform0$treatment))
   for(i in 1:length(oldvals)) {
-    transform[transform0$treatment == oldvals[i], 2] <- drug.names[i]
+    transform0[transform0$treatment == oldvals[i], 2] <- drug.names[i]
   }
 
 
