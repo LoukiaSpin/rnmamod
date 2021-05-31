@@ -19,18 +19,23 @@ prepare.UME <- function(measure, assumption) {
                          "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])",
                          "\n\t\t\tc[i, k] <- N[i, k] - m[i, k]",
                          "\n\t\t\tsd.obs[i, k] <- se.o[i, k]*sqrt(c[i, k])",
-                         "\n\t\t\tnom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1)")
+                         "\n\t\t\tnom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1)",
+                         "\n\t\t\t}")
   } else if (measure == "MD" || measure == "ROM") {
     code <- paste0(code, "\n\t\ttheta[i, 1] <- u[i]",
                          "\n\t\tfor (k in 1:na[i]) {",
                          "\n\t\t\tprec.o[i, k] <- pow(se.o[i, k], -2)",
-                         "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])")
+                         "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])",
+                         "\n\t\t\t}")
   } else if (measure == "OR") {
     code <- paste0(code, "\n\t\tlogit(p[i, 1]) <- u[i]",
                          "\n\t\tfor (k in 1:na[i]) {",
                          "\n\t\t\tr[i, k] ~ dbin(p_o[i, k], obs[i, k])",
-                         "\n\t\t\tobs[i, k] <- N[i, k] - m[i, k]")
+                         "\n\t\t\tobs[i, k] <- N[i, k] - m[i, k]",
+                         "\n\t\t\t}")
   }
+
+  code <- paste0(code, "\n\t\tfor (k in 1:na[i]) {")
 
   code <- if (measure == "MD" || measure == "SMD") {
     paste0(code, "\n\t\t\ttheta.o[i, k] <- theta[i, k] - phi.m[i, k]*q[i, k]")
@@ -90,17 +95,18 @@ prepare.UME <- function(measure, assumption) {
   code <- if (measure == "MD" || measure == "SMD" || measure == "ROM") {
     paste0(code, "\n\t\ttheta.m[i, 1] <- u.m[i]",
                  "\n\t\tfor (k in 1:na[i]) {",
-                 "\n\t\t\ty.m[i, k] ~ dnorm(theta.m[i, k], prec.o[i, k])")
+                 "\n\t\t\ty.m[i, k] ~ dnorm(theta.m[i, k], prec.o[i, k])",
+                 "\n\t\t\t}")
   } else if (measure == "OR") {
     paste0(code, "\n\t\tlogit(p.m[i, 1]) <- u.m[i]",
                  "\n\t\tfor (k in 1:na[i]) {",
                  "\n\t\t\tr.m[i, k] ~ dnorm(p_o.m[i, k], N[i, k])",
                  "\n\t\t\tp_o.m[i, k] <- max(0, min(1, ((-((q[i, k] - p.m[i, k])*(1 - exp(phi.m[i, k])) - 1) - sqrt((pow(((q[i, k] - p.m[i, k])*(1 - exp(phi.m[i, k])) - 1), 2)) -
-                                         ((4*p.m[i, k])*(1 - q[i, k])*(1 - exp(phi.m[i, k])))))/(2*(1 - q[i, k])*(1 - exp(phi.m[i, k]))))))")
+                                         ((4*p.m[i, k])*(1 - q[i, k])*(1 - exp(phi.m[i, k])))))/(2*(1 - q[i, k])*(1 - exp(phi.m[i, k]))))))",
+                 "\n\t\t\t}")
   }
 
-  code <- paste0(code, "\n\t\t\t}",
-                       "\n\t\tfor (k in 2:na[i]) {")
+  code <- paste0(code, "\n\t\tfor (k in 2:na[i]) {")
 
   if (measure == "MD") {
     code <- paste0(code, "\n\t\t\ttheta.m[i, k] <- u.m[i] + delta.m[i, k]")
@@ -112,21 +118,21 @@ prepare.UME <- function(measure, assumption) {
     code <- paste0(code, "\n\t\t\tlogit(p.m[i, k]) <- u.m[i] + delta.m[i, k]")
   }
 
-  code < paste0(code, "\n\t\t\tdelta.m[i, k] ~ dnorm(md.m[i, k], precd.m[i, k])",
-                      "\n\t\t\tmd.m[i, k] <- EM.m[t[i, k], t[i, 1]] + sw.m[i, k]",
-                      "\n\t\t\tw.m[i, k] <- delta.m[i, k] - EM.m[t[i, k], t[i, 1]]",
-                      "\n\t\t\tsw.m[i, k] <- sum(w.m[i, 1:(k - 1)])/(k - 1)",
-                      "\n\t\t\tprecd.m[i, k] <- 2*(k - 1)*prec/k",
-                      "\n\t\t\t}}",
-                      "\n\tfor (i in 1:nbase.multi) {",
-                      "\n\t\tEM[t2.bn[i], t1.bn[i]] <- EM.m[t2.bn[i], base[i]] - EM.m[t1.bn[i], base[i]]",
-                      "\n\t\t}",
-                      "\n\tfor (i in 1:N.obs) {",
-                      "\n\t\tEM[t2[i], t1[i]] ~ dnorm(0, .0001)",
-                      "\n\t\t}", # 53 for MD, ROM and 6 for SMD, 57 for OR
-                      "\n\tfor (i in 1:N.obs.multi) {",
-                      "\n\t\tEM.m[t2.m[i], t1.m[i]] ~ dnorm(0, .0001)",
-                      "\n\t\t}")
+  code <- paste0(code, "\n\t\t\tdelta.m[i, k] ~ dnorm(md.m[i, k], precd.m[i, k])",
+                       "\n\t\t\tmd.m[i, k] <- EM.m[t[i, k], t[i, 1]] + sw.m[i, k]",
+                       "\n\t\t\tw.m[i, k] <- delta.m[i, k] - EM.m[t[i, k], t[i, 1]]",
+                       "\n\t\t\tsw.m[i, k] <- sum(w.m[i, 1:(k - 1)])/(k - 1)",
+                       "\n\t\t\tprecd.m[i, k] <- 2*(k - 1)*prec/k",
+                       "\n\t\t\t}}",
+                       "\n\tfor (i in 1:nbase.multi) {",
+                       "\n\t\tEM[t2.bn[i], t1.bn[i]] <- EM.m[t2.bn[i], base[i]] - EM.m[t1.bn[i], base[i]]",
+                       "\n\t\t}",
+                       "\n\tfor (i in 1:N.obs) {",
+                       "\n\t\tEM[t2[i], t1[i]] ~ dnorm(0, .0001)",
+                       "\n\t\t}",
+                       "\n\tfor (i in 1:N.obs.multi) {",
+                       "\n\t\tEM.m[t2.m[i], t1.m[i]] ~ dnorm(0, .0001)",
+                       "\n\t\t}")
 
   if (assumption == "HIE-ARM") {
     code <- paste0(code, "\n\tfor (i in 1:ns) {",
@@ -219,7 +225,6 @@ prepare.UME <- function(measure, assumption) {
                        "\n\ttau.b ~ dunif(0, heter.prior[2])",
                        "\n\ttau <- tau.a*equals(heter.prior[3], 1) + tau.b*equals(heter.prior[3], 2)",
                        "\n}")
-
   return(code)
 
 }
