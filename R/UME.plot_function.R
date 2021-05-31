@@ -1,7 +1,7 @@
 #' Plot the results from the unrelated mean effects model
 #'
 #' @export
-UME.plot <- function(full, ume, drug.names) {
+UME.plot <- function(full, ume, drug.names, effect.size, expon, threshold) {
 
 
 
@@ -157,6 +157,11 @@ UME.plot <- function(full, ume, drug.names) {
   lev.plots <- ggarrange(lever.full.o, lever.ume.o, nrow = 1, ncol = 2, labels = c("A)",  "B)"))
 
 
+  forestplots <- forestplot.panel.UME(full, ume, drug.names, effect.size, expon)
+
+
+  heatmap <- heatmap.similarity.UME(full, ume, drug.names, threshold)
+
 
   ## Write the table with the EMs from both models as .xlsx
   write_xlsx(EM.both.models, paste0(getwd(),"Table NMA vs UME.xlsx"))
@@ -166,6 +171,8 @@ UME.plot <- function(full, ume, drug.names) {
               model.assessment = model.assessment,
               between.trial.SD = between.trial.SD,
               scatterplots = scatterplots,
-              levarage.plots = lev.plots))
+              levarage.plots = lev.plots,
+              forestplots.panel = forestplots,
+              heatmap.similarity = heatmap))
 
 }

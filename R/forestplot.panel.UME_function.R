@@ -39,13 +39,12 @@ forestplot.panel.UME <- function(full, ume, drug.names, effect.size, expon) {
 
 
   # Indicate frail comparisons
-  #frail.comp.ind <- ifelse(is.element(comparison, ume$frail.comp), "yes", "no")
   frail.comp.ind <- ifelse(is.element(poss.pair.comp.clean$comp, ume$frail.comp), "yes", "no")
 
 
   # Obtain posterior mean and posterior standard deviation of observed comparisons from NMA and UME model
   EM.full <- full$EM
-  ume.mean <- ume$EM[, 1]
+  ume.mean <- round(ume$EM[, 1], 2)
   ume.sd <- ume$EM[, 2]
 
 

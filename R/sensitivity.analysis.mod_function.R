@@ -170,8 +170,14 @@ run.sensitivity <- function(data, measure, rho, assumption, heter.prior, var.mis
                             "ref" = ref, "meand.phi" = mean.misspar[i, ], "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
 
-      jagsfit[[i]] <- jags(data = data.jag[[i]], parameters.to.save = param.jags, model.file = paste0("./model/Full RE-NMA/Full RE-NMA_", measure, "_Pattern-mixture_", assumption, ".txt"),
-                           n.chains = n.chains, n.iter = n.iter, n.burnin = n.burnin, n.thin = n.thin, DIC = F)
+      jagsfit[[i]] <- jags(data = data.jag[[i]],
+                           parameters.to.save = param.jags,
+                           model.file = textConnection(prepare.model(measure, assumption)),
+                           n.chains = n.chains,
+                           n.iter = n.iter,
+                           n.burnin = n.burnin,
+                           n.thin = n.thin,
+                           DIC = F)
     }
 
     end.time <- Sys.time()
@@ -237,8 +243,14 @@ run.sensitivity <- function(data, measure, rho, assumption, heter.prior, var.mis
                             "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
 
-      jagsfit[[i]] <- jags(data = data.jag[[i]], parameters.to.save = param.jags, model.file = paste0("./model/Full RE-NMA/Full RE-NMA_", measure, "_Pattern-mixture_", assumption, ".txt"),
-                           n.chains = n.chains, n.iter = n.iter, n.burnin = n.burnin, n.thin = n.thin, DIC = F)
+      jagsfit[[i]] <- jags(data = data.jag[[i]],
+                           parameters.to.save = param.jags,
+                           model.file = textConnection(prepare.model(measure, assumption)),
+                           n.chains = n.chains,
+                           n.iter = n.iter,
+                           n.burnin = n.burnin,
+                           n.thin = n.thin,
+                           DIC = F)
     }
 
     end.time <- Sys.time()
