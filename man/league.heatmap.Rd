@@ -4,7 +4,7 @@
 \alias{league.heatmap}
 \title{A heatmap league table with ordered interventions}
 \usage{
-league.heatmap(net, drug.names)
+league.heatmap(net, drug.names, expon)
 }
 \arguments{
 \item{net}{An object of S3 class \code{nma.continuous.full.model}.}

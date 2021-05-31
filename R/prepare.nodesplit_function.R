@@ -1,4 +1,4 @@
-prepare.model <- function(measure, assumption) {
+prepare.nodesplit <- function(measure, assumption) {
 
   code <- paste0("model\n{")
 
@@ -18,7 +18,7 @@ prepare.model <- function(measure, assumption) {
                          "\n\t\tfor (k in 1:na[i]) {",
                          "\n\t\t\tprec.o[i, k] <- pow(se.o[i, k], -2)",
                          "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])",
-                         "\n\t\t\tc[i, k] <- N[i, k] - m[i, k]",
+                         "\n\t\t\tc[i, k] <- N[i, k] - mod[i, k]",
                          "\n\t\t\tsd.obs[i, k] <- se.o[i, k]*sqrt(c[i, k])",
                          "\n\t\t\tnom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1)")
   } else if (measure == "MD" || measure == "ROM") {
@@ -30,7 +30,7 @@ prepare.model <- function(measure, assumption) {
     code <- paste0(code, "\n\t\tlogit(p[i, 1]) <- u[i]",
                          "\n\t\tfor (k in 1:na[i]) {",
                          "\n\t\t\tr[i, k] ~ dbin(p_o[i, k], obs[i, k])",
-                         "\n\t\t\tobs[i, k] <- N[i, k] - m[i, k]")
+                         "\n\t\t\tobs[i, k] <- N[i, k] - mod[i, k]")
   }
 
   code <- if (measure == "MD" || measure == "SMD") {
@@ -42,16 +42,16 @@ prepare.model <- function(measure, assumption) {
                                        ((4*p[i, k])*(1 - q[i, k])*(1 - exp(phi.m[i, k])))))/(2*(1 - q[i, k])*(1 - exp(phi.m[i, k]))))))")
   }
 
-  code <- paste0(code, "\n\t\t\tm[i, k] ~ dbin(q[i, k], N[i, k])",
+  code <- paste0(code, "\n\t\t\tmod[i, k] ~ dbin(q[i, k], N[i, k])",
                        "\n\t\t\tq[i, k] ~ dunif(0, 1)",
-                       "\n\t\t\tm0[i, k] <- m[i, k] + 0.01*equals(m[i, k], 0)",
+                       "\n\t\t\tm0[i, k] <- mod[i, k] + 0.01*equals(mod[i, k], 0)",
                        "\n\t\t\that.m[i, k] <- q[i, k]*N[i, k]",
                        "\n\t\t\tdev.m[i, k] <- 2*(m0[i, k]*(log(m0[i, k]) - log(hat.m[i, k])) +
                         (N[i, k] - m0[i, k])*(log(N[i, k] - m0[i, k]) - log(N[i, k] - hat.m[i, k])))")
 
   if (measure == "MD" || measure == "SMD" || measure == "ROM") {
     code <- paste0(code, "\n\t\t\that.par[i, k] <- theta.o[i, k]",
-                         "\n\t\t\tdev.o[i, k] <- (y.o[i, k] - theta.o[i,k])*(y.o[i, k] - theta.o[i, k])*prec.o[i, k]")
+                         "\n\t\t\tdev.o[i, k] <- (y.o[i, k] - theta.o[i, k])*(y.o[i, k] - theta.o[i, k])*prec.o[i, k]")
   } else if (measure == "OR") {
     code <- paste0(code, "\n\t\t\that.par[i, k] <- rhat[i, k]",
                          "\n\t\t\trhat[i, k] <- p_o[i, k]*obs[i, k]",

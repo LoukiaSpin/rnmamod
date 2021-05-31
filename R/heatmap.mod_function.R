@@ -6,7 +6,12 @@ heatmap.mod <- function(data, trial.names, drug.names) {
 
   m <- data %>% dplyr::select(starts_with("m"))
   c <- data %>% dplyr::select(starts_with("c"))   # Number of completers in each arm of every trial
-  n <- data %>% dplyr::select(starts_with("n"))  # Number randomised
+  n <- data %>% dplyr::select(starts_with("n"))   # Number randomised
+  if (is.null(c)) {
+    n <- n
+  } else {
+    n <- m + c
+  }
   t <- data %>% dplyr::select(starts_with("t"))
   nt <- length(table(as.matrix(t)))
   ns <- length(m[, 1])

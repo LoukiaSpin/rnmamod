@@ -65,7 +65,7 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
 
 
     ## Information for the prior distribution on the missingness parameter (IMDOM or logIMROM)
-    M <- ifelse(!is.na(m), mean.misspar, NA)  # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
+    M <- ifelse(!is.na(mod), mean.misspar, NA)  # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
     prec.misspar <- 1/var.misspar
     psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
     cov.misspar <- 0.5*var.misspar             # covariance of pair of missingness parameters in a trial (independent structure)
@@ -129,7 +129,7 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
 
 
       ## Parameters to save
-      param.jags <- c("EM", "direct", "diff", "tau", "totresdev.o")
+      param.jags <- c("EM", "direct", "diff", "tau", "totresdev.o", "hat.par")
 
 
       for(i in 1:length(pair[, 1])){
@@ -237,7 +237,7 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
     }
 
 
-    M <- ifelse(!is.na(m), mean.misspar, NA)   # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
+    M <- ifelse(!is.na(mod), mean.misspar, NA)   # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
     prec.misspar <- 1/var.misspar
     psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
     cov.misspar <- 0.5*var.misspar             # covariance of pair of missingness parameters in a trial (independent structure)
@@ -292,7 +292,7 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
 
 
       ## Parameters to save
-      param.jags <- c("EM", "direct", "diff", "tau", "totresdev.o")
+      param.jags <- c("EM", "direct", "diff", "tau", "totresdev.o", "hat.par")
 
 
       ## Define necessary model components
@@ -351,7 +351,7 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
   }
 
 
-  ## Obtain the posterior distribution of the necessary model parameters (node: 'treat1' versus 'treat2')
+  ## Obtain the posterior distribution of the necessary model parameters (node: 'treat1' versus 'treat2'
   # Indirect effect size for the split node
   EM <- data.frame(pair[, 2], pair[, 1], do.call(rbind,lapply(1:length(pair[, 1]), function(i) jagsfit[[i]]$BUGSoutput$summary[paste0("EM[", pair[i, 2], ",", pair[i, 1], "]"), c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")])))
   colnames(EM) <- c("treat1", "treat2", "mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")
@@ -368,29 +368,25 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
   tau <- data.frame(pair[, 2], pair[, 1], do.call(rbind,lapply(1:length(pair[, 1]), function(i) jagsfit[[i]]$BUGSoutput$summary["tau", c("50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff")])))
   colnames(tau) <- c("treat1", "treat2", "50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff")
 
-  # Total residual deviance
-  dev <- do.call(rbind,lapply(1:length(pair[, 1]), function(i) jagsfit[[i]]$BUGSoutput$summary["totresdev.o", "mean"]))
+  getResults <- hat.par <- list()
+  dev <- rep(NA, length(pair[, 1]))
+  for (i in 1:length(pair[, 1])) {
+    getResults[[i]] <- as.data.frame(t(jagsfit[[i]]$BUGSoutput$summary))
+
+    # Total residual deviance
+    dev[i] <- t(getResults[[i]] %>% dplyr::select(starts_with("totresdev.o")))[, 1]
+
+    # Fitted/predicted number of observed data (hat.par")
+    hat.par[[i]] <- t(getResults[[i]] %>% dplyr::select(starts_with("hat.par[")))
+  }
 
 
-  DIC <- do.call(rbind,lapply(1:length(pair[, 1]), function(i) jagsfit[[i]]$BUGSoutput$DIC))
-  pD <- do.call(rbind,lapply(1:length(pair[, 1]), function(i) jagsfit[[i]]$BUGSoutput$pD))
-  model.assessment <- data.frame(pair[, 2], pair[, 1], DIC, dev, pD)
-  colnames(model.assessment) <- c("treat1", "treat2", "DIC", "deviance", "pD")
 
   ## Calculate the deviance at posterior mean of fitted values
   # Turn 'number of observed' and 'm' into a vector (first column, followed by second column, and so on)
-  m.new <- suppressMessages({as.vector(na.omit(melt(m)[, 2]))})
+  m.new <- suppressMessages({as.vector(na.omit(melt(mod)[, 2]))})
   N.new <- suppressMessages({as.vector(na.omit(melt(N)[, 2]))})
   obs <- N.new - m.new
-
-  # Correction for zero MOD in trial-arm
-  m0 <- ifelse(m.new == 0, m.new + 0.01, m.new)
-
-  ## Deviance at the posterior mean of the fitted MOD
-  dev.post.m <- 2*(m0*(log(m0) - log(as.vector(hat.m[, 1]))) + (N.new - m0)*(log(N.new - m0) - log(N.new - as.vector(hat.m[, 1]))))
-
-  # Sign of the difference between observed and fitted MOD
-  sign.dev.m <- sign(m0 - as.vector(hat.m[, 1]))
 
   if (measure == "MD" || measure == "SMD"|| measure == "ROM") {
 
@@ -398,11 +394,11 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
     y0.new <- suppressMessages({as.vector(na.omit(melt(y0)[, 2]))})
     se0.new <- suppressMessages({as.vector(na.omit(melt(se0)[, 2]))})
 
-    # Deviance at the posterior mean of the fitted mean outcome
-    dev.post.o <- (y0.new - as.vector(hat.par[, 1]))*(y0.new - as.vector(hat.par[, 1]))*(1/se0.new^2)
-
-    # Sign of the difference between observed and fitted mean outcome
-    sign.dev.o <- sign(y0.new - as.vector(hat.par[, 1]))
+    dev.post.o <- list()
+    for (i in 1:length(pair[, 1])) {
+      # Deviance at the posterior mean of the fitted mean outcome
+      dev.post.o[[i]] <- (y0.new - as.vector(hat.par[[i]][, 1]))*(y0.new - as.vector(hat.par[[i]][, 1]))*(1/se0.new^2)
+    }
 
   } else {
 
@@ -412,33 +408,27 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
     # Correction for zero events in trial-arm
     r0 <- ifelse(r.new == 0, r.new + 0.01, ifelse(r.new == obs, r.new - 0.01, r.new))
 
-    # Deviance at the posterior mean of the fitted response
-    dev.post.o <- 2*(r0*(log(r0) - log(as.vector(hat.par[, 1]))) + (obs - r0)*(log(obs - r0) - log(obs - as.vector(hat.par[, 1]))))
-
-    # Sign of the difference between observed and fitted response
-    sign.dev.o <- sign(r0 - as.vector(hat.par[, 1]))
-
+    dev.post.o <- list()
+    for (i in 1:length(pair[, 1])) {
+      # Deviance at the posterior mean of the fitted mean outcome
+      dev.post.o[[i]] <- 2*(r0*(log(r0) - log(as.vector(hat.par[[i]][, 1]))) + (obs - r0)*(log(obs - r0) - log(obs - as.vector(hat.par[[i]][, 1]))))
+    }
   }
 
 
-  ## Obtain the leverage for observed and missing outcomes
-  leverage.o <- as.vector(dev.o[, 1]) - dev.post.o
-  leverage.m <- as.vector(dev.m[, 1]) - dev.post.m
-
   # Number of effective parameters
-  pD <- dev - sum(dev.post.o)
+  pD <- do.call(rbind, lapply(1:length(pair[, 1]), function(i) dev[[i]] - sum(dev.post.o[[i]])))
+
 
   # Deviance information criterion
-  DIC <- pD + dev
+  DIC <- do.call(rbind, lapply(1:length(pair[, 1]), function(i) pD[[i]] + dev[[i]]))
 
   # A data-frame on the measures of model assessment: DIC, pD, and total residual deviance
-  model.assessment <- data.frame(DIC, pD, dev)
-
+  model.assessment <- data.frame(pair[, 2], pair[, 1], DIC, unlist(dev), pD)
+  colnames(model.assessment) <- c("treat1", "treat2", "DIC", "deviance", "pD")
 
 
   return(list(direct = direct, indirect = EM, diff = diff, tau = tau, model.assessment = model.assessment))
-
-
 }
 
 

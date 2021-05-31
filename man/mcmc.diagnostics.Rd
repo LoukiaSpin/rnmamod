@@ -7,20 +7,7 @@
 See, function \code{nma.continuous.full.model}.
 }
 \usage{
-mcmc.diagnostics(
-  par,
-  data,
-  measure,
-  assumption,
-  heter.prior,
-  mean.misspar,
-  var.misspar,
-  D,
-  n.chains,
-  n.iter,
-  n.burnin,
-  n.thin
-)
+mcmc.diagnostics(net, par)
 }
 \arguments{
 \item{data}{A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' for the specification of the columns.}

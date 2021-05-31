@@ -4,40 +4,19 @@
 \alias{netplot}
 \title{The network plot}
 \usage{
-netplot(data, drug.names, show.bias, ...)
+netplot(data, drug.names, ...)
 }
 \arguments{
 \item{data}{A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models.
-See 'Format' in \code{nma.continuous.full.model} for the specification of the columns.}
+See 'Format' in \code{run.model} for the specification of the columns.}
 
 \item{drug.names}{A vector of characteristics with name of the interventions as appear in the function \code{run.model}.}
-
-\item{show.bias}{Indicates whether to show the risk of bias in the nodes and links.}
 }
 \value{
-A network plot with coloured nodes and links to indicate the risk of bias due to missing outcome data.
-
-\dontshow{load("./data/NMA Dataset Continuous.RData")}
+A network plot with coloured closed-loops informed by multi-arm trials.
 }
 \description{
-A function to create the network plot and illustrate the risk of bias due to missing outcome data in each node and link using different colours.
-The node refers to the intervention and the link refers to the observed pairwise comparison. The risk of bias due to missing outcome data
-can be low (the proportion of missing outcome data is up to 5\%), moderate (the proportion of missing outcome data is more than 5\% and up to 20\%),
-or high (the proportion of missing outcome data is more than 20\%). Green, orange and red represent low, moderate, and high risk of bias.
-For each node, the risk of bias is determined by the total proportion of missing outcome data in the corresponding intervention, namely, the ratio of
-the sum of missing outcome data to the sum of randomised in that intervention.
-For each link, the risk of bias is determined by the total proportion of missing outcome data across the corresponding trials, namely, the ratio of
-the sum of missing outcome data to the sum of randomised in these trials. The function uses the \code{net.plot} function from the BUGSnet package to
-colour the nodes and links according to the risk of bias due to missing outcome data. The user can specify to plot the network plot without illustrating
-the risk of bias due to missing outcome data. In this case, the function uses the \code{nma.networkplot} function from the pcnetmeta package to create
-the network plot. The fucntion allows the user to incorporate the arguments of \code{net.plot} (when \code{show.bias = TRUE}) and \code{nma.networkplot}
-(when \code{show.bias = FALSE}).
-}
-\examples{
-### Show the data (one-trial-per-row format)
-(data <- as.data.frame(one.stage.dataset.NMA[[3]]))
-drug.names <- sapply(1:8, function(x) letters[x])
-
-netplot(data = res, drug.names = drug.names)
-
+A function to create the network plot. Each node refers to the intervention and each link refers to the observed pairwise comparison. 
+Closed loops of interventions informed by multi-arm trials are indicated with different colours. The R-package \code{\link[pcnetmeta]}
+is used to create the network plot.
 }

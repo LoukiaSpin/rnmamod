@@ -97,9 +97,8 @@ run.separate.meta <- function(data, measure, assumption, heter.prior, mean.missp
 
     ## Turn into contrast-level data: one row per possible comparison in each trial ('netmeta')
     # Maintain study-id, intervention, observed mean outcome, observed standard deviation, and number randomised
-    (pairwise.observed0 <- pairwise(as.list(t), mean = as.list(y0), sd = as.list(sd0), n = as.list(c), data = data, studlab = 1:ns)[, c(3:5, 7, 10, 8, 11, 6, 9)])
-    colnames(pairwise.observed0) <- c("study", "arm1", "arm2", "y1", "y2", "sd1", "sd2", "c1", "c2")
-
+    (pairwise.observed <- pairwise(as.list(t), mean = as.list(y0), sd = as.list(sd0), n = as.list(c), data = data, studlab = 1:ns)[, c(3:5, 7, 10, 8, 11, 6, 9)])
+    colnames(pairwise.observed) <- c("study", "arm1", "arm2", "y1", "y2", "sd1", "sd2", "c1", "c2")
 
 
     # Maintain MOD and merge with 'pairwise.observed'
