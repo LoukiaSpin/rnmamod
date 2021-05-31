@@ -1,4 +1,4 @@
-#' Perform network meta-regression for an aggregate binary or continuous outcome with missing participant data
+#' Perform network meta-analysis for an aggregate binary or continuous outcome with missing participant data
 #'
 #' @param data A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' for the specification of the columns.
 #' @param measure Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"}.
@@ -49,7 +49,7 @@
 #' run.model(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, D = 0, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
+run.model <- function(data, measure, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin) {
 
 
   options(warn = -1)
@@ -80,11 +80,9 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
     ref <- 1                                                                      # The first intervention (t1 = 1) is the reference of the network
 
 
-
     ## Order by 'id of t1' < 'id of t1'
     y0 <- se0 <- m <- N <- t <- t0 <- treat
-    for(i in 1:ns){
-
+    for (i in 1:ns) {
       t0[i, ] <- order(treat[i, ], na.last = T)
       y0[i, ] <- y.obs[i, order(t0[i, ], na.last = T)]
       se0[i, ] <- se.obs[i, order(t0[i, ], na.last = T)]
@@ -115,15 +113,6 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
     }
 
 
-
-    ## Information for the prior distribution on the missingness parameter (IMDOM or logIMROM)
-    M <- ifelse(!is.na(y0), mean.misspar, NA)  # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
-    prec.misspar <- 1/var.misspar
-    psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
-    cov.misspar <- 0.5*var.misspar             # covariance of pair of missingness parameters in a trial (independent structure)
-
-
-
     ## Specification of the prior distribution for the between-trial parameter
     if (heter.prior[[1]] == "halfnormal") {
 
@@ -143,65 +132,6 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
 
     }
 
-
-
-    ## Center covariate if metric and not arm-specific
-    if (!is.factor(covariate) & is.vector(covariate)) {
-
-      eff.mod <- covariate - mean(covariate)
-
-    } else if ((!is.factor(covariate) & !is.vector(covariate)) || is.factor(covariate)) {
-
-      eff.mod <- covariate
-
-    }
-
-
-    if (is.vector(eff.mod)) {
-
-      data.jag <- list("y.o" = y0,
-                       "se.o" = se0,
-                       "m" = m,
-                       "N" = N,
-                       "t" = t,
-                       "na" = na,
-                       "nt" = nt,
-                       "ns" = ns,
-                       "ref" = ref,
-                       "M" = M,
-                       "cov.phi" = cov.misspar,
-                       "var.phi" = var.misspar,
-                       "meand.phi" = mean.misspar,
-                       "precd.phi" = prec.misspar,
-                       "D" = D,
-                       "heter.prior" = heter.prior,
-                       "eff.mod" = eff.mod,
-                       "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
-
-    } else if (!is.vector(eff.mod)) {
-
-    data.jag <- list("y.o" = y0,
-                     "se.o" = se0,
-                     "m" = m,
-                     "N" = N,
-                     "t" = t,
-                     "na" = na,
-                     "nt" = nt,
-                     "ns" = ns,
-                     "ref" = ref,
-                     "M" = M,
-                     "cov.phi" = cov.misspar,
-                     "var.phi" = var.misspar,
-                     "meand.phi" = mean.misspar,
-                     "precd.phi" = prec.misspar,
-                     "D" = D,
-                     "heter.prior" = heter.prior,
-                     "eff.mod" = rep(0, ns),
-                     "eff.mod2" = eff.mod)
-
-    }
-
-
   } else {
 
 
@@ -216,10 +146,9 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
     ref <- 1                                                                        # The first intervention (t1 = 1) is the reference of the network
 
 
-    ## Order by 'id of t1' < 'id of t1'
+    ## Order by 'id of t1' < 'id of t2' < 'id of t3', and so on
     r <- m <- N <- t <- t0 <- treat
     for (i in 1:ns) {
-
       t0[i, ] <- order(treat[i, ], na.last = T)
       r[i, ] <- event[i, order(t0[i, ], na.last = T)]
       m[i, ] <- mod[i, order(t0[i, ], na.last = T)]
@@ -229,9 +158,17 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
 
 
     ## Condition regarding the specification of the prior mean ('mean.misspar') for the missingness parameter
-    if (missing(mean.misspar)) {
+    if(missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" )) {
 
       mean.misspar <- rep(0.0001, 2)
+
+    } else if(missing(mean.misspar) & (assumption != "HIE-ARM" || assumption != "IDE-ARM" )) {
+
+      mean.misspar <- 0.0001
+
+    } else if(!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & is.null(dim(mean.misspar))) {
+
+      mean.misspar <- rep(ifelse(mean.misspar == 0, 0.0001, mean.misspar), 2)
 
     } else if (!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & !is.null(dim(mean.misspar))) {
 
@@ -239,22 +176,11 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
       mean.misspar[1] <- ifelse(mean.misspar[1] == 0, 0.0001, mean.misspar[1])
       mean.misspar[2] <- ifelse(mean.misspar[2] == 0, 0.0001, mean.misspar[2])
 
-    } else if (!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & is.null(dim(mean.misspar))) {
-
-      mean.misspar <- rep(ifelse(mean.misspar == 0, 0.0001, mean.misspar), 2)
-
-    } else if (!missing(mean.misspar) & (assumption != "HIE-ARM" || assumption != "IDE-ARM")) {
+    } else {
 
       mean.misspar <- ifelse(mean.misspar == 0, 0.0001, mean.misspar)
 
     }
-
-
-    M <- ifelse(!is.na(r), mean.misspar, NA)   # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
-    prec.misspar <- 1/var.misspar
-    psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
-    cov.misspar <- 0.5*var.misspar             # covariance of pair of missingness parameters in a trial (independent structure)
-
 
 
     ## Specification of the prior distribution for the between-trial parameter
@@ -272,73 +198,45 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
 
     }
 
+  }
 
-    ## Center covariate if metric and not arm-specific
-    if (!is.factor(covariate) & is.vector(covariate)) {
-
-      eff.mod <- covariate - mean(covariate)
-
-    } else if (!is.vector(covariate) || is.factor(covariate)) {
-
-      eff.mod <- covariate
-
-    }
+  ## Information for the prior distribution on the missingness parameter (IMDOM or logIMROM)
+  M <- ifelse(!is.na(m), mean.misspar, NA)  # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
+  prec.misspar <- 1/var.misspar
+  psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
+  cov.misspar <- 0.5*var.misspar             # covariance of pair of missingness parameters in a trial (independent structure)
 
 
-    if (is.vector(eff.mod)) {
+  data.jag <- list("m" = m,
+                   "N" = N,
+                   "t" = t,
+                   "na" = na,
+                   "nt" = nt,
+                   "ns" = ns,
+                   "ref" = ref,
+                   "M" = M,
+                   "cov.phi" = cov.misspar,
+                   "var.phi" = var.misspar,
+                   "meand.phi" = mean.misspar,
+                   "precd.phi" = prec.misspar,
+                   "D" = D,
+                   "heter.prior" = heter.prior,
+                   #"eff.mod2" = matrix(0, nrow = ns, ncol = max(na)),
+                   "eff.mod" = rep(0, ns))
 
-      data.jag <- list("r" = r,
-                       "m" = m,
-                       "N" = N,
-                       "t" = t,
-                       "na" = na,
-                       "nt" = nt,
-                       "ns" = ns,
-                       "ref" = ref,
-                       "M" = M,
-                       "cov.phi" = cov.misspar,
-                       "var.phi" = var.misspar,
-                       "meand.phi" = mean.misspar,
-                       "precd.phi" = prec.misspar,
-                       "D" = D,
-                       "heter.prior" = heter.prior,
-                       "eff.mod" = eff.mod,
-                       "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
 
-    } else if (!is.vector(eff.mod)) {
-
-      data.jag <- list("r" = r,
-                       "m" = m,
-                       "N" = N,
-                       "t" = t,
-                       "na" = na,
-                       "nt" = nt,
-                       "ns" = ns,
-                       "ref" = ref,
-                       "M" = M,
-                       "cov.phi" = cov.misspar,
-                       "var.phi" = var.misspar,
-                       "meand.phi" = mean.misspar,
-                       "precd.phi" = prec.misspar,
-                       "D" = D,
-                       "heter.prior" = heter.prior,
-                       "eff.mod" = rep(0, ns),
-                       "eff.mod2" = eff.mod)
-
-    }
-
+  if (measure == "MD" || measure == "SMD" || measure == "ROM") {
+    data.jag <- append(data.jag, list("y.o" = y0, "se.o" = se0))
+  } else if (measure == "OR") {
+    data.jag <- append(data.jag, list("r" = r))
   }
 
 
-  ## Condition for the hierarchical structure of the missingness parameter
+  param.jags <- c("delta", "EM", "EM.ref", "EM.pred", "pred.ref", "tau", "SUCRA",  "effectiveness", "dev.m", "dev.o", "totresdev.o", "hat.par", "hat.m")
   if (assumption == "HIE-COMMON" || assumption == "HIE-TRIAL" || assumption == "HIE-ARM") {
-
-    param.jags <- c("delta", "EM", "EM.ref", "EM.pred", "pred.ref", "tau", "beta", "SUCRA", "mean.phi", "effectiveness", "dev.m", "dev.o", "hat.par", "hat.m")
-
+    param.jags <- append(param.jags, "mean.phi")
   } else {
-
-    param.jags <- c("delta", "EM", "EM.ref", "EM.pred", "pred.ref", "tau", "beta", "SUCRA", "phi", "effectiveness", "dev.m", "dev.o", "hat.par", "hat.m")
-
+    param.jags <- append(param.jags, "phi")
   }
 
 
@@ -373,14 +271,11 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
   # Between-trial standard deviation
   tau <- t(getResults %>% dplyr::select(starts_with("tau")))
 
-  # Regression coefficient for comparisons with the reference intervention
-  beta <- t(getResults %>% dplyr::select(starts_with("beta[")))
-
   # SUrface under the Cumulative RAnking curve values
   SUCRA <- t(getResults %>% dplyr::select(starts_with("SUCRA")))
 
   # Within-trial effects size (multi-arm trials with T interventions provide T-1 such effect sizes)
-  delta <- t(getResults %>% dplyr::select(starts_with("delta[") & !ends_with(",1]")))
+  delta <- t(getResults %>% dplyr::select(starts_with("delta") & !ends_with(",1]")))
 
   # Ranking probability of each intervention for every rank
   effectiveness <- t(getResults %>% dplyr::select(starts_with("effectiveness")))
@@ -400,18 +295,8 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
   # Fitted/predicted outcome
   hat.par <- t(getResults %>% dplyr::select(starts_with("hat.par")))
 
-  # Deviance information criterion (as obtained from 'R2jags')
-  DIC <- jagsfit$BUGSoutput$DIC
-
-  # Number of effective parameters obtained as pD = var(deviance)/2
-  pD <- jagsfit$BUGSoutput$pD
-
-  # Total residual deviance (as obtained from 'R2jags')
-  dev <- jagsfit$BUGSoutput$summary["deviance", "50%"]
-
-  # A data-frame on the measures of model assessment: DIC, pD, and total residual deviance
-  model.assessment <- data.frame(DIC, pD, dev)
-
+  # Total residual deviance
+  dev <- jagsfit$BUGSoutput$summary["totresdev.o", "mean"]
 
 
   ## Calculate the deviance at posterior mean of fitted values
@@ -462,19 +347,39 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
   leverage.o <- as.vector(dev.o[, 1]) - dev.post.o
   leverage.m <- as.vector(dev.m[, 1]) - dev.post.m
 
+  # Number of effective parameters
+  pD <- dev - sum(dev.post.o)
+
+  # Deviance information criterion
+  DIC <- pD + dev
+
+  # A data-frame on the measures of model assessment: DIC, pD, and total residual deviance
+  model.assessment <- data.frame(DIC, pD, dev)
+
 
 
   ## Return a list of results
-  if (nt > 2) {
+  ma.results <- list(EM = EM,
+                     EM.pred = EM.pred,
+                     tau = tau,
+                     delta = delta,
+                     dev.m = dev.m,
+                     dev.o = dev.o,
+                     hat.m = hat.m,
+                     hat.par = hat.par,
+                     leverage.o = leverage.o,
+                     sign.dev.o = sign.dev.o,
+                     leverage.m = leverage.m,
+                     sign.dev.m = sign.dev.m,
+                     phi = phi,
+                     model.assessment = model.assessment,
+                     jagsfit = jagsfit)
 
-    return(list(EM = EM, EM.ref = EM.ref, EM.pred = EM.pred, pred.ref = pred.ref, tau = tau, beta = beta, SUCRA = SUCRA, delta = delta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, effectiveness = effectiveness, phi = phi, model.assessment = model.assessment, jagsfit = jagsfit))
+  nma.results <- append(ma.results, list(EM.ref = EM.ref, pred.ref = pred.ref, SUCRA = SUCRA, effectiveness = effectiveness))
 
-  } else {
-
-    return(list(EM = EM, EM.pred = EM.pred, tau = tau, delta = delta, beta = beta, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, phi = phi, model.assessment = model.assessment, jagsfit = jagsfit))
-
-  }
-
+  ifelse(nt > 2, return(nma.results), return(ma.results))
 
 }
+
+
 

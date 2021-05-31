@@ -34,58 +34,59 @@ improved.UME <- function(t, m, N, ns, na){
   ## Turn 'tab.comp.arms0' into a data-frame
   if(dim(tab.comp.arms0)[2] == 1) {
 
-    tab.comp.arms <- data.frame(names(tab.comp.arms0[, 1]), tab.comp.arms0[, 1], rep(0, dim(tab.comp.arms0)[1]))
+    tab.comp.arms <- data.frame(names(tab.comp.arms0[, 1]), rep(0, dim(tab.comp.arms0)[1]), tab.comp.arms0[, 1])
+    colnames(tab.comp.arms) <- c("comp", "multi", "two")
+    rownames(tab.comp.arms) <- NULL
+
 
   } else {
 
     tab.comp.arms <- data.frame(names(tab.comp.arms0[, 1]), tab.comp.arms0[, 1], tab.comp.arms0[, 2])
+    colnames(tab.comp.arms) <- c("comp", "multi", "two")
+    rownames(tab.comp.arms) <- NULL
+
+
+    ## Keep only those comparisons not studied in two-arm trials
+    tab.comp.arms$select <- ifelse(tab.comp.arms$two == 0 & tab.comp.arms$multi != 0, T, F)
+    subs <- subset(tab.comp.arms, select == T, select = comp)
+
+
+    ## Match the selected comparisons with the study id
+    pairwise.n0 <- list()
+    for(i in 1:length(subs[, 1])) {
+      pairwise.n0[[i]] <- wide.format[which(wide.format$comp == unlist(subs)[i]), 1:3]
+    }
+    pairwise.n1 <- do.call(rbind, pairwise.n0)
+
+
+    ## When more studies correspond to a comparison, remove the duplicated rows
+    pairwise.n <- pairwise.n1[!duplicated(pairwise.n1[, 2:3]), ]
+
+
+    ## Sort by the study id in increasing order
+    final0 <- pairwise.n[order(pairwise.n$study), ]
+
+
+    ## Find the unique comparisons with the baseline intervention
+    indic0 <- list()
+    for(i in 1:ns) {
+      indic0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(na[i] - 1)]
+    }
+    (indic <- unique(t(do.call(cbind, indic0))))
+    t1.indic <- indic[, 1]    # Baseline interventions at the corresponding comparisons
+    t2.indic <- indic[, 2]    # Non-baseline interventions at the corresponding comparisons
+
   }
-  #(tab.comp.arms <- data.frame(names(tab.comp.arms0[, 1]), tab.comp.arms0[, 1], tab.comp.arms0[, 2]))
-  colnames(tab.comp.arms) <- c("comp", "multi", "two")
-  rownames(tab.comp.arms) <- NULL
-
-
-  ## Keep only those comparisons not studied in two-arm trials
-  tab.comp.arms$select <- ifelse(tab.comp.arms$two == 0 & tab.comp.arms$multi != 0, T, F)
-  subs <- subset(tab.comp.arms, select == T, select = comp)
-
-
-  ## Match the selected comparisons with the study id
-  pairwise.n0 <- list()
-  for(i in 1:length(subs[, 1])) {
-    pairwise.n0[[i]] <- wide.format[which(wide.format$comp == unlist(subs)[i]), 1:3]
-  }
-  pairwise.n1 <- do.call(rbind, pairwise.n0)
-
-
-  ## When more studies correspond to a comparison, remove the duplicated rows
-  pairwise.n <- pairwise.n1[!duplicated(pairwise.n1[, 2:3]), ]
-
-
-  ## Sort by the study id in increasing order
-  final0 <- pairwise.n[order(pairwise.n$study),]
-
-
-
-  ## Find the unique comparisons with the baseline intervention
-  indic0 <- list()
-  for(i in 1:ns) {
-    indic0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(na[i] - 1)]
-  }
-  (indic <- unique(t(do.call(cbind, indic0))))
-  t1.indic <- indic[, 1]
-  t2.indic <- indic[, 2]
 
 
 
   ## Finally, reduce to comparisons between non-baseline interventions
-  if (length(unique(t[unique(final0$study), 1])) < 2) {
+  if (dim(tab.comp.arms0)[2] == 1) {
 
     final <- NA
 
   } else {
 
-    #final <- final0[!is.element(final0$t1, unique(t[unique(final0$study), 1])),]
     final <- final0[!is.element(paste0(final0[, 2], "vs", final0[, 3]), paste0(t1.indic, "vs", t2.indic)), ]
 
   }
@@ -93,22 +94,23 @@ improved.UME <- function(t, m, N, ns, na){
 
 
   ## Add also the baseline treatment for each selected trial
-  if (is.na(final)) {
+  if (dim(tab.comp.arms0)[2] == 1) {
 
     base <- nbase.multi <- NA
 
   } else {
 
-    base <- rep(NA, length(final[, 1]))
+    base <- rep(NA, length(final[, 1]))   # Baseline interventions in the selected trials in 'final'
+
     for(i in 1:length(final[, 1])){
       final$base[i] <- unique(t[final$study[i], 1])
     }
-    nbase.multi <- length(final[, 1])
+    nbase.multi <- length(final[, 1])     # Non-baseline interventions in the selected trials in 'final'
 
   }
 
 
-  if (max(na) == 2) {
+  if (dim(tab.comp.arms0)[2] == 1) {
 
     return(list(obs.comp = tab.comp.arms))
 

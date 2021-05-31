@@ -51,13 +51,12 @@
 #' run.UME(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.UME <- function(data, measure, rho, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin) {
+run.UME <- function(data, measure, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin) {
 
 
   options(warn = -1)
 
   ## Default arguments
-  rho <- ifelse(missing(rho) & (measure == "MD" || measure == "SMD"|| measure == "ROM"), 0.5, ifelse(missing(rho) & measure == "OR", NA, rho))
   assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
   var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
@@ -67,37 +66,27 @@ run.UME <- function(data, measure, rho, assumption, heter.prior, mean.misspar, v
 
 
   ## For a continuous outcome
-  if(measure == "MD" || measure == "SMD"|| measure == "ROM"){
+  if (measure == "MD" || measure == "SMD"|| measure == "ROM") {
 
 
     ## Continuous: arm-level, wide-format dataset
     y.obs <- data %>% dplyr::select(starts_with("y"))                               # Observed mean value in each arm of every trial
     sd.obs <- data %>% dplyr::select(starts_with("sd"))                             # Observed standard deviation in each arm of every trial
-    y.bas <- data %>% dplyr::select(starts_with("bas.y"))                           # Mean value at baseline in each arm of every trial
-    sd.bas <- data %>% dplyr::select(starts_with("bas.sd"))                         # Standard deviation at baseline in each arm of every trial
-    ind <- data %>% dplyr::select(starts_with("ind"))                               # Trial indicator (1: final measurement; 2: change from baseline and baseline measurement
     mod <- data %>% dplyr::select(starts_with("m"))                                 # Number of missing participants in each arm of every trial
     c <- data %>% dplyr::select(starts_with("c"))                                   # Number of completers in each arm of every trial
     se.obs <- sd.obs/sqrt(c)                                                        # Observed standard error in each arm of every trial
     rand <- mod + c                                                                 # Number of randomised participants in each arm of every trial
-    if (dim(ind)[2] == 0) {
-      se.bas <- NA                                                                  # Standard error at baseline in each arm of every trial
-    } else {
-      se.bas <- sd.bas/sqrt(rand)                                                   # Standard error at baseline in each arm of every trial
-    }
     treat <- data %>% dplyr::select(starts_with("t"))                               # Intervention studied in each arm of every trial
     na <- apply(treat, 1, function(x) length(which(!is.na(x))))                     # Number of interventions investigated in every trial per network
     nt <- length(table(as.matrix(treat)))                                           # Total number of interventions per network
     ns <- length(y.obs[, 1])                                                        # Total number of included trials per network
-    n1 <- ifelse(dim(ind)[2] == 0, ns, table(ind)[1])                               # Number of trials reporting data at final point
-    n2 <- ifelse(dim(ind)[2] == 0, 0, table(ind)[2])                                # Number of trials reporting data at change from baseline
     ref <- 1                                                                        # The first intervention (t1 = 1) is the reference of the network
+    ns.multi <- length(na[na > 2])
 
 
     ## Order by 'id of t1' < 'id of t1'
     y0 <- se0 <- m <- N <- t <- t0 <- treat
-    for(i in 1:ns){
-
+    for (i in 1:ns) {
       t0[i, ] <- order(treat[i, ], na.last = T)
       y0[i, ] <- y.obs[i, order(t0[i, ], na.last = T)]
       se0[i, ] <- se.obs[i, order(t0[i, ], na.last = T)]
@@ -107,63 +96,26 @@ run.UME <- function(data, measure, rho, assumption, heter.prior, mean.misspar, v
     }
 
 
-    ## Order by 'id of t1' < 'id of t1' - Trials reporting change from baseline and baseline per arm
-    y.b <- se.b <- treat
-    if (dim(ind)[2] == 0) {
-
-      for(i in 1:ns){
-        y.b[i, ] <- NA
-        se.b[i, ] <- NA
-      }
-
-    } else {
-
-      for(i in 1:ns){
-        y.b[i, ] <- y.bas[i, order(t0[i, ], na.last = T)]
-        se.b[i, ] <- se.bas[i, order(t0[i, ], na.last = T)]
-      }
-
-    }
-
-
-
-    ## Unique comparisons with the baseline intervention
-    ## A function to extract numbers from a character. Source: http://stla.github.io/stlapblog/posts/Numextract.html
-    Numextract <- function(string){
-      unlist(regmatches(string,gregexpr("[[:digit:]]+\\.*[[:digit:]]*",string)))
-    }
-
-
-    ## Observed comparisons in the network
-    observed.comp0 <- improved.UME(t, m, N, ns, na)$obs.comp
-    observed.comp <- matrix(Numextract(observed.comp0[, 1]), nrow = length(observed.comp0[, 1]), ncol = 2, byrow = T)
-    t1.obs.com <- as.numeric(as.character(observed.comp[, 1]))
-    t2.obs.com <- as.numeric(as.character(observed.comp[, 2]))
-    obs.comp <- paste0(t2.obs.com, "vs", t1.obs.com)
-
-
-    ## Keep only comparisons with the baseline intervention
-    indic0 <- list()
-    for(i in 1:ns) {
-      indic0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(na[i] - 1)]
-    }
-    (indic <- unique(t(do.call(cbind, indic0))))
-    t1.indic <- indic[, 1]
-    t2.indic <- indic[, 2]
-    N.obs <- length(t1.indic)
+    ## Move multi-arm trials at the bottom
+    y0 <- y0[order(na, na.last = T), ]
+    se0 <- se0[order(na, na.last = T), ]
+    m <- m[order(na, na.last = T), ]
+    N <- N[order(na, na.last = T), ]
+    t <- t[order(na, na.last = T), ]
+    na <- sort(na)
 
 
 
     ## Condition regarding the specification of the prior mean ('mean.misspar') for the missingness parameter
-    if(missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" )) {
+    if (missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" )) {
 
       mean.misspar <- rep(0, 2)
 
-    } else if(missing(mean.misspar) & (assumption != "HIE-ARM" || assumption != "IDE-ARM" )) {
+    } else if (missing(mean.misspar) & (assumption != "HIE-ARM" || assumption != "IDE-ARM" )) {
 
       mean.misspar <- 0
 
-    } else if(!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & is.null(dim(mean.misspar))) {
+    } else if (!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & is.null(dim(mean.misspar))) {
 
       mean.misspar <- rep(mean.misspar, 2)
 
@@ -172,14 +124,6 @@ run.UME <- function(data, measure, rho, assumption, heter.prior, mean.misspar, v
       mean.misspar <- mean.misspar
 
     }
-
-
-
-    ## Information for the prior distribution on the missingness parameter (IMDOM or logIMROM)
-    M <- ifelse(!is.na(y0), mean.misspar, NA)  # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
-    prec.misspar <- 1/var.misspar
-    psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
-    cov.misspar <- 0.5*var.misspar             # covariance of pair of missingness parameters in a trial (independent structure)
 
 
     ## Specification of the prior distribution for the between-trial parameter
@@ -202,25 +146,6 @@ run.UME <- function(data, measure, rho, assumption, heter.prior, mean.misspar, v
     }
 
 
-
-    if (max(na) > 2 & has_error(improved.UME(t, m, N, ns, na), silent = T) == F) {
-
-      impr.UME <- improved.UME(t, m, N, ns, na)
-
-      data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = ifelse(measure == "ROM", n1, NA), "n2" = ifelse(measure == "ROM", n2, NA), "rho" = rho,
-                       "ref" = ifelse(assumption == "HIE-ARM" || assumption == "IDE-ARM", ref, NA), "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "t1.bn" = impr.UME$t1.bn, "t2.bn" = impr.UME$t2.bn, "base" = impr.UME$base, "nbase.multi" = impr.UME$nbase.multi)
-
-
-    } else if (max(na) < 3 || has_error(improved.UME(t, m, N, ns, na), silent = T) == T) {
-
-
-    data.jag <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b,"m" = m, "N" = N, "t" = t, "na" = na, "ns" = ns, "n1" = ifelse(measure == "ROM", n1, NA), "n2" = ifelse(measure == "ROM", n2, NA), "rho" = rho, "ref" = ifelse(assumption == "HIE-ARM" || assumption == "IDE-ARM", ref, NA),
-                     "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "nbase.multi" = 0)
-
-
-    }
-
-
   } else {
 
 
@@ -233,12 +158,12 @@ run.UME <- function(data, measure, rho, assumption, heter.prior, mean.misspar, v
     nt <- length(table(as.matrix(treat)))                                           # Total number of interventions per network
     ns <- length(event[, 1])                                                        # Total number of included trials per network
     ref <- 1                                                                        # The first intervention (t1 = 1) is the reference of the network
+    ns.multi <- length(na[na > 2])
 
 
     ## Order by 'id of t1' < 'id of t1'
     r <- m <- N <- t <- t0 <- treat
-    for(i in 1:ns){
-
+    for (i in 1:ns) {
       t0[i, ] <- order(treat[i, ], na.last = T)
       r[i, ] <- event[i, order(t0[i, ], na.last = T)]
       m[i, ] <- mod[i, order(t0[i, ], na.last = T)]
@@ -247,31 +172,12 @@ run.UME <- function(data, measure, rho, assumption, heter.prior, mean.misspar, v
     }
 
 
-
-    ## Unique comparisons with the baseline intervention
-    ## A function to extract numbers from a character. Source: http://stla.github.io/stlapblog/posts/Numextract.html
-    Numextract <- function(string){
-      unlist(regmatches(string,gregexpr("[[:digit:]]+\\.*[[:digit:]]*",string)))
-    }
-
-
-    ## Observed comparisons in the network
-    observed.comp0 <- improved.UME(t, m, N, ns, na)$obs.comp
-    observed.comp <- matrix(Numextract(observed.comp0[, 1]), nrow = length(observed.comp0[, 1]), ncol = 2, byrow = T)
-    t1.obs.com <- as.numeric(as.character(observed.comp[, 1]))
-    t2.obs.com <- as.numeric(as.character(observed.comp[, 2]))
-    obs.comp <- paste0(t2.obs.com, "vs", t1.obs.com)
-
-
-    ## Keep only comparisons with the baseline intervention
-    indic0 <- list()
-    for(i in 1:ns) {
-      indic0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(na[i] - 1)]
-    }
-    (indic <- unique(t(do.call(cbind, indic0))))
-    t1.indic <- indic[, 1]
-    t2.indic <- indic[, 2]
-    N.obs <- length(t1.indic)
+    ## Move multi-arm trials at the bottom
+    r <- r[order(na, na.last = T), ]
+    m <- m[order(na, na.last = T), ]
+    N <- N[order(na, na.last = T), ]
+    t <- t[order(na, na.last = T), ]
+    na <- sort(na)
 
 
     ## Condition regarding the specification of the prior mean ('mean.misspar') for the missingness parameter
@@ -296,12 +202,6 @@ run.UME <- function(data, measure, rho, assumption, heter.prior, mean.misspar, v
     }
 
 
-    M <- ifelse(!is.na(r), mean.misspar, NA)   # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
-    prec.misspar <- 1/var.misspar
-    psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
-    cov.misspar <- 0.5*var.misspar             # covariance of pair of missingness parameters in a trial (independent structure)
-
-
 
     ## Specification of the prior distribution for the between-trial parameter
     if (heter.prior[[1]] == "halfnormal") {
@@ -318,67 +218,132 @@ run.UME <- function(data, measure, rho, assumption, heter.prior, mean.misspar, v
 
     }
 
+  }
 
 
-    if (max(na) > 2 & has_error(improved.UME(t, m, N, ns, na), silent = T) == F) {
+  ## Unique comparisons with the baseline intervention
+  ## A function to extract numbers from a character. Source: http://stla.github.io/stlapblog/posts/Numextract.html
+  Numextract <- function(string) {
+    unlist(regmatches(string,gregexpr("[[:digit:]]+\\.*[[:digit:]]*", string)))
+  }
 
-      impr.UME <- improved.UME(t, m, N, ns, na)
 
-      ## Condition for the data specification based on the assumption about the structure of the missingness parameter
-      if (assumption == "IND-CORR") {
+  ## Observed comparisons in the network
+  observed.comp0 <- improved.UME(t, m, N, ns, na)$obs.comp
+  observed.comp <- matrix(Numextract(observed.comp0[, 1]), nrow = length(observed.comp0[, 1]), ncol = 2, byrow = T)
+  t1.obs.com <- as.numeric(as.character(observed.comp[, 1]))
+  t2.obs.com <- as.numeric(as.character(observed.comp[, 2]))
+  obs.comp <- paste0(t2.obs.com, "vs", t1.obs.com)
 
-        data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "ns" = ns, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "t1.bn" = impr.UME$t1.bn, "t2.bn" = impr.UME$t2.bn, "base" = impr.UME$base, "nbase.multi" = impr.UME$nbase.multi)
 
-      } else if (assumption == "HIE-ARM" || assumption == "IDE-ARM") {
+  ## Keep only comparisons with the baseline intervention
+  indic0 <- list()
+  for(i in 1:ns) {
+    indic0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(na[i] - 1)]
+  }
+  (indic <- unique(t(do.call(cbind, indic0))))
+  t1.indic <- indic[, 1]
+  t2.indic <- indic[, 2]
+  N.obs <- length(t1.indic)
 
-        data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "t1.bn" = impr.UME$t1.bn, "t2.bn" = impr.UME$t2.bn, "base" = impr.UME$base, "nbase.multi" = impr.UME$nbase.multi)
 
-      } else if (assumption != "HIE-ARM" || assumption != "IDE-ARM" || assumption != "IND-CORR") {
+  ## Keep only comparisons with the baseline intervention in multi-arm trials
+  if (ns.multi < 1) {
+    N.obs.multi <- 0
+    t1.indic.multi <- 0
+    t2.indic.multi <- 0
 
-        data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "ns" = ns, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "t1.bn" = impr.UME$t1.bn, "t2.bn" = impr.UME$t2.bn, "base" = impr.UME$base, "nbase.multi" = impr.UME$nbase.multi)
-
-      }
-
-    } else if (max(na) < 3 || has_error(improved.UME(t, m, N, ns, na), silent = T) == T) {
-
-      if (assumption == "IND-CORR") {
-
-        data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "ns" = ns, "M" = M, "cov.phi" = cov.misspar, "var.phi" = var.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "nbase.multi" = 0)
-
-      } else if (assumption == "HIE-ARM" || assumption == "IDE-ARM") {
-
-        data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "nbase.multi" = 0)
-
-      } else if (assumption != "HIE-ARM" || assumption != "IDE-ARM" || assumption != "IND-CORR") {
-
-        data.jag <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "ns" = ns, "meand.phi" = mean.misspar, "precd.phi" = prec.misspar, "heter.prior" = heter.prior, "t1" = t1.indic, "t2" = t2.indic, "N.obs" = N.obs, "nbase.multi" = 0)
-
-      }
-
+  } else {
+    indic.multi0 <- list()
+    for(i in (ns - ns.multi + 1):ns) {
+      indic.multi0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(na[i] - 1)]
     }
-
-
+    (indic.multi <- unique(t(do.call(cbind, indic.multi0))))
+    t1.indic.multi <- indic.multi[, 1]
+    t2.indic.multi <- indic.multi[, 2]
+    N.obs.multi <- length(t1.indic.multi)
   }
 
 
 
-  ## Define the nodes to be monitored
-  param.jags <- c("EM", "dev.o", "resdev.o", "totresdev.o", "dev.m", "resdev.m", "totresdev.m", "tau", "hat.par", "hat.m")
+  ## Information for the prior distribution on the missingness parameter (IMDOM or logIMROM)
+  M <- ifelse(!is.na(m), mean.misspar, NA)  # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
+  prec.misspar <- 1/var.misspar
+  psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
+  cov.misspar <- 0.5*var.misspar             # covariance of pair of missingness parameters in a trial (independent structure)
 
+
+  data.jag <- list("m" = m,
+                   "N" = N,
+                   "t" = t,
+                   "na" = na,
+                   "nt" = nt,
+                   "ns" = ns,
+                   "ref" = ifelse(assumption == "HIE-ARM" || assumption == "IDE-ARM", ref, NA),
+                   "M" = M,
+                   "cov.phi" = cov.misspar,
+                   "var.phi" = var.misspar,
+                   "meand.phi" = mean.misspar,
+                   "precd.phi" = prec.misspar,
+                   "heter.prior" = heter.prior,
+                   "t1" = t1.indic,
+                   "t2" = t2.indic,
+                   "N.obs" = N.obs)
+
+
+  if (measure == "MD" || measure == "SMD" || measure == "ROM") {
+    data.jag <- append(data.jag, list("y.o" = y0, "y.m" = y0, "se.o" = se0))
+  } else if (measure == "OR") {
+    data.jag <- append(data.jag, list("r" = r, "r.m" = r))
+  }
+
+
+  if (max(na) > 2 & has_error(improved.UME(t, m, N, ns, na), silent = T) == F) {
+    impr.UME <- improved.UME(t, m, N, ns, na)
+    data.jag <- append(data.jag, list("t1.m" = t1.indic.multi,
+                                      "t2.m" = t2.indic.multi,
+                                      "N.obs.multi" = N.obs.multi,
+                                      "ns.multi" = ns.multi,
+                                      "t1.bn" = impr.UME$t1.bn,
+                                      "t2.bn" = impr.UME$t2.bn,
+                                      "base" = impr.UME$base,
+                                      "nbase.multi" = impr.UME$nbase.multi))
+  } else if (max(na) < 3 || has_error(improved.UME(t, m, N, ns, na), silent = T) == T) {
+    data.jag <- append(data.jag, list("t1.m" = t1.indic.multi,
+                                      "t2.m" = t2.indic.multi,
+                                      "N.obs.multi" = N.obs.multi,
+                                      "ns.multi" = ns.multi,
+                                      "t1.bn" = 0,
+                                      "t2.bn" = 0,
+                                      "base" = 0,
+                                      "nbase.multi" = 0))
+  }
+
+
+  ## Define the nodes to be monitored
+  param.jags <- c("EM", "EM.m", "dev.o", "resdev.o", "totresdev.o", "dev.m", "resdev.m", "totresdev.m", "tau", "hat.par", "hat.m")
 
 
   ## Run the Bayesian analysis
-  jagsfit <- jags(data = data.jag, parameters.to.save = param.jags, model.file = paste0("./model/UME RE model/RE-UME_", measure, "_Pattern-mixture_", assumption, ".txt"),
-                  n.chains = n.chains, n.iter = n.iter, n.burnin = n.burnin, n.thin = n.thin, DIC = T)
-
+  jagsfit <- jags(data = data.jag,
+                  parameters.to.save = param.jags,
+                  model.file = textConnection(prepare.UME(measure, assumption)),
+                  n.chains = n.chains,
+                  n.iter = n.iter,
+                  n.burnin = n.burnin,
+                  n.thin = n.thin,
+                  DIC = T)
 
 
 
   ## Turn summary of posterior results (R2jags object) into a data-frame to select model parameters (using 'dplyr')
   getResults <- as.data.frame(t(jagsfit$BUGSoutput$summary))
 
-  # Effect size of all unique pairwise comparisons
+  # Effect size of all observed pairwise comparisons
   EM <- t(getResults %>% dplyr::select(starts_with("EM[")))
+
+  # Effect size of observed pairwise comparisons with the baseline intervention in multi-arm trials
+  EM.m <- t(getResults %>% dplyr::select(starts_with("EM.m[")))
 
   # Between-trial standard deviation
   tau <- t(getResults %>% dplyr::select(starts_with("tau")))
@@ -395,17 +360,8 @@ run.UME <- function(data, measure, rho, assumption, heter.prior, mean.misspar, v
   # Fitted/predicted outcome
   hat.par <- t(getResults %>% dplyr::select(starts_with("hat.par")))
 
-  # Deviance information criterion (as obtained from 'R2jags')
-  DIC <- jagsfit$BUGSoutput$DIC
-
-  # Number of effective parameters obtained as pD = var(deviance)/2
-  pD <- jagsfit$BUGSoutput$pD
-
-  # Total residual deviance (as obtained from 'R2jags')
-  dev <- jagsfit$BUGSoutput$summary["deviance", "50%"]
-
-  # A data-frame on the measures of model assessment: DIC, pD, and total residual deviance
-  model.assessment <- data.frame(DIC, pD, dev)
+  # Total residual deviance
+  dev <- jagsfit$BUGSoutput$summary["totresdev.o", "mean"]
 
 
 
@@ -457,8 +413,36 @@ run.UME <- function(data, measure, rho, assumption, heter.prior, mean.misspar, v
   leverage.o <- as.vector(dev.o[, 1]) - dev.post.o
   leverage.m <- as.vector(dev.m[, 1]) - dev.post.m
 
+  # Number of effective parameters
+  pD <- dev - sum(dev.post.o)
 
-  return(list(EM = EM, dev.m = dev.m, dev.o = dev.o, hat.m = hat.m, hat.par = hat.par, leverage.o = leverage.o, sign.dev.o = sign.dev.o, leverage.m = leverage.m, sign.dev.m = sign.dev.m, tau = tau, model.assessment = model.assessment, obs.comp = obs.comp))
+  # Deviance information criterion
+  DIC <- pD + dev
+
+  # A data-frame on the measures of model assessment: DIC, pD, and total residual deviance
+  model.assessment <- data.frame(DIC, pD, dev)
+
+  # Collect the minimum results at common
+  results <- list(EM = EM,
+              dev.m = dev.m,
+              dev.o = dev.o,
+              hat.m = hat.m,
+              hat.par = hat.par,
+              leverage.o = leverage.o,
+              sign.dev.o = sign.dev.o,
+              leverage.m = leverage.m,
+              sign.dev.m = sign.dev.m,
+              tau = tau,
+              model.assessment = model.assessment,
+              obs.comp = obs.comp,
+              jagsfit = jagsfit)
+
+  # Return different list of results according to a condition
+  if (max(na) < 3 || has_error(improved.UME(t, m, N, ns, na), silent = T) == T) {
+    return(results)
+  } else {
+    return(append(results, list(EM.m = EM.m, frail.comp = paste0(impr.UME$t2.bn, "vs", impr.UME$t1.bn))))
+  }
 
 }
 
