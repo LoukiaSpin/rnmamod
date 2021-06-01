@@ -25,7 +25,7 @@
 league.heatmap <- function(net, drug.names, expon){
 
 
-  par <- net$EM; sucra <- net$SUCRA
+  par <- net$EM; sucra <- net$SUCRA; measure <- net$measure
 
 
   ## Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html
@@ -64,8 +64,7 @@ league.heatmap <- function(net, drug.names, expon){
 
 
   ## Symmetric matrix for effect measure and its bounds after ordering rows and columns from the best to the worst intervention
-  if(missing(expon) || expon == F) {
-
+  if(measure != "OR" & measure != "ROM") {
     point <- point1[order(drug.order.col), order(drug.order.row)]
     lower <- lower1[order(drug.order.col), order(drug.order.row)]
     upper <- upper1[order(drug.order.col), order(drug.order.row)]
@@ -74,9 +73,7 @@ league.heatmap <- function(net, drug.names, expon){
     ## Spot the statistically significant comparisons (i.e. the 95% CrI does not include the value of no difference)
     (signif.status <- melt(ifelse(upper < 0 | lower > 0, "significant", "non-significant"), na.rm = F)[3])
     signif.status[is.na(signif.status)] <- 0
-
   } else {
-
     point <- round(exp(point1[order(drug.order.col), order(drug.order.row)]), 2)
     lower <- round(exp(lower1[order(drug.order.col), order(drug.order.row)]), 2)
     upper <- round(exp(upper1[order(drug.order.col), order(drug.order.row)]), 2)
@@ -85,7 +82,6 @@ league.heatmap <- function(net, drug.names, expon){
     ## Spot the statistically significant comparisons (i.e. the 95% CrI does not include the value of no difference)
     (signif.status <- melt(ifelse(upper < 1 | lower > 1, "significant", "non-significant"), na.rm = F)[3])
     signif.status[is.na(signif.status)] <- 1
-
   }
 
 
@@ -124,9 +120,8 @@ league.heatmap <- function(net, drug.names, expon){
          geom_tile(aes(fill = value.SUCRA)) +
          geom_fit_text(aes(Var2, Var1, label = value), reflow = T) +
          geom_fit_text(aes(Var2, Var1, label = value, fontface = ifelse(signif.status == "significant", "bold", "plain")), reflow = T) +
-         #scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = ifelse(missing(expon) || expon == F, 0, 1), na.value = "grey70") +
          scale_fill_gradientn(colours = c("blue", "white", "red"),
-                              values = rescale(c(min(mat.new$value2, na.rm = T), ifelse(missing(expon) || expon == F, 0, 1), max(mat.new$value2, na.rm = T))),
+                              values = rescale(c(min(mat.new$value2, na.rm = T), ifelse(measure != "OR" & measure != "ROM", 0, 1), max(mat.new$value2, na.rm = T))),
                               limits = c(min(mat.new$value2, na.rm = T), max(mat.new$value2, na.rm = T))) +
          scale_x_discrete(position = "top") +
          labs(x = "", y = "") +

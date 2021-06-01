@@ -1,7 +1,7 @@
 #' Plot the results from the meta-regression analysis
 #'
 #' @export
-metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, expon) {
+metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
 
 
   options(warn = -1)
@@ -40,9 +40,12 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
   # Covariate
   covariate <- na.omit(unlist(covariate))
 
+  # Effect emasure name
+  measure <- effect.measure.name(full$measure)
+
 
   ## A data-frame with the effect estimates and regression coefficients of reference-comparisons from both analyses (Sort by NMA-SUCRA in decreasing order)
-  if (!is.character(covar.values[[1]]) & (missing(expon) || expon == F)) {
+  if (!is.character(covar.values[[1]]) & (measure != "OR" & measure != "ROM")) {
 
 
     ## Calculate the effect estimate at two other values of the metric covariate: one smaller and one larger than the mean
@@ -64,7 +67,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
                                   "Poster. mean beta", "95% CrI beta")
     rownames(EM.both.models) <- NULL
 
-  } else if (!is.character(covar.values[[1]]) & expon == T) {
+  } else if (!is.character(covar.values[[1]]) & (measure == "OR" || measure == "ROM")) {
 
     ## Calculate the effect estimate at two other values of the metric covariate: one smaller and one larger than the mean
     EM.meta.s <- round(exp(EM.meta[, c(1, 3, 7)] + beta[, c(1, 3, 7)]*(covar.values[[1]] - mean(covariate))), 2)
@@ -85,7 +88,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
                                   "Poster. mean beta", "95% CrI beta")
     rownames(EM.both.models) <- NULL
 
-  } else if (is.character(covar.values[[1]]) & (missing(expon) || expon == F)) {
+  } else if (is.character(covar.values[[1]]) & ((measure != "OR" & measure != "ROM"))) {
 
 
     ## Calculate the effect estimate at the non-reference level of the binary covariate
@@ -105,7 +108,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
     rownames(EM.both.models) <- NULL
 
 
-  } else if (is.character(covar.values[[1]]) & expon == T) {
+  } else if (is.character(covar.values[[1]]) & (measure == "OR" || measure == "ROM")) {
 
 
     ## Calculate the effect estimate at the non-reference level of the binary covariate
@@ -149,33 +152,33 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
 
 
   ## Prepare data for ggplot2 (forest-plot)
-  if(!is.character(covar.values[[1]]) & (missing(expon) || expon == F)) {
+  if(!is.character(covar.values[[1]]) & (measure != "OR" & measure != "ROM")) {
 
     ## Create a data-frame with effect estimates of basic parameters before and after adjustment
     prepare.EM.metric <- data.frame(rep(length(drug.names):1, 4), rep(drug.names.sorted, 4), round(rbind(EM.full[, c(1, 3, 7)], EM.meta[, c(1, 3, 7)], EM.meta.s, EM.meta.l), 2),
-                                    rep(c("Unadjusted", "At the mean value", paste("At", round(covar.values[[1]], 2), "(below the mean value)"), paste("At", round(covar.values[[2]], 2), "(above the mean value)")), each = length(drug.names)))
+                                    rep(c("Unadjusted", "Mean value", paste("At", round(covar.values[[1]], 2), "(1rst quart.)"), paste("At", round(covar.values[[2]], 2), "(3rd quart.)")), each = length(drug.names)))
     colnames(prepare.EM.metric) <- c("order", "comparison", "mean", "lower", "upper", "analysis")
     rownames(prepare.EM.metric) <- NULL
 
 
-    ## Arguments for ggplot2 that depend on 'expon'
+    ## Arguments for ggplot2
     intercept.value <- 0; trans.value <- "identity"
 
 
-  } else if(!is.character(covar.values[[1]]) & expon == T) {
+  } else if(!is.character(covar.values[[1]]) & (measure == "OR" || measure == "ROM")) {
 
 
     ## Create a data-frame with effect estimates of basic parameters before and after adjustment
     prepare.EM.metric <- data.frame(rep(length(drug.names):1, 4), rep(drug.names.sorted, 4), round(rbind(exp(EM.full[, c(1, 3, 7)]), exp(EM.meta[, c(1, 3, 7)]), EM.meta.s, EM.meta.l), 2),
-                                    rep(c("Unadjusted", "At the mean value", paste("At", round(covar.values[[1]], 2), "(below the mean value)"), paste("At", round(covar.values[[2]], 2), "(above the mean value)")), each = length(drug.names)))
+                                    rep(c("Unadjusted", "Mean value", paste("At", round(covar.values[[1]], 2), "(1rst quart.)"), paste("At", round(covar.values[[2]], 2), "(3rd quart.)")), each = length(drug.names)))
     colnames(prepare.EM.metric) <- c("order", "comparison", "mean", "lower", "upper", "analysis")
     rownames(prepare.EM.metric) <- NULL
 
 
-    ## Arguments for ggplot2 that depend on 'expon'
+    ## Arguments for ggplot2
     intercept.value <- 1; trans.value <- "log10"
 
-  } else if(is.character(covar.values[[1]]) & (missing(expon) || expon == F)) {
+  } else if(is.character(covar.values[[1]]) & (measure != "OR" & measure != "ROM")) {
 
 
     ## Create a data-frame with effect estimates of basic parameters before and after adjustment
@@ -185,11 +188,11 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
     rownames(prepare.EM.nominal) <- NULL
 
 
-    ## Arguments for ggplot2 that depend on 'expon'
+    ## Arguments for ggplot2
     intercept.value <- 0; trans.value <- "identity"
 
 
-  } else if(is.character(covar.values[[1]]) & expon == T) {
+  } else if(is.character(covar.values[[1]]) & (measure == "OR" || measure == "ROM")) {
 
 
     ## Create a data-frame with effect estimates of basic parameters before and after adjustment
@@ -199,7 +202,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
     rownames(prepare.EM.nominal) <- NULL
 
 
-    ## Arguments for ggplot2 that depend on 'expon'
+    ## Arguments for ggplot2
     intercept.value <- 1; trans.value <- "log10"
 
   }
@@ -215,10 +218,10 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
             geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
             geom_text(aes(x = as.factor(order), y = round(as.numeric(mean), 2), label = round(as.numeric(mean), 2), hjust = 0, vjust = -0.4),
                      color = "black", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T) +
-            labs(x = "", y = "Effect estimate", colour = "Analysis") +
+            labs(x = "", y = measure, colour = "Analysis") +
             scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
-            scale_color_manual(breaks = c("Unadjusted", "At the mean value", paste("At", round(covar.values[[1]], 2), "(below the mean value)"),
-                                          paste("At", round(covar.values[[2]], 2), "(above the mean value)")), values = c("#009E73", "#D55E00", "#56B4E9", "#CC79A7")) +
+            scale_color_manual(breaks = c("Unadjusted", "Mean value", paste("At", round(covar.values[[1]], 2), "(1rst quart.)"),
+                                          paste("At", round(covar.values[[2]], 2), "(3rd quart.)")), values = c("#009E73", "#D55E00", "#56B4E9", "#CC79A7")) +
             geom_label(aes(x = unique(as.factor(order)[is.na(mean)]), y = intercept.value, hjust = 0, vjust = 1, label = "Reference intervention"),
                        fill = "beige", colour = "black", fontface = "plain", size = 4) +
             scale_y_continuous(trans = trans.value) +
@@ -236,7 +239,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
             geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
             geom_text(aes(x = as.factor(order), y = round(as.numeric(mean), 2), label = round(as.numeric(mean), 2), hjust = 0, vjust = -0.4),
                       color = "black", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T) +
-            labs(x = "", y = "Effect estimate", colour = "Analysis") +
+            labs(x = "", y = measure, colour = "Analysis") +
             scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
             scale_color_manual(breaks = c("Unadjusted", paste(covar.values[[1]], "(reference level)"), paste(covar.values[[2]], "(non-reference level)")),
                                           values = c("#009E73", "#D55E00", "#56B4E9")) +
@@ -277,8 +280,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
 
 
   ## Prepare data-frame for scatter-plots/ error-bars (ggplot2)
-  if (missing(expon) || expon == F) {
-
+  if (measure != "OR" & measure != "ROM") {
     cov.values <- rep(covariate, each = length(drug.names))
     EM.meta.mean <- EM.meta[, 1] + beta[, 1] %o% covariate
     EM.meta.lower <- EM.meta[, 3] + beta[, 3] %o% covariate
@@ -287,9 +289,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
     intercept <- rep(EM.meta[, 1], length(covariate))
     prepare <- na.omit(data.frame(paste(rep(drug.names.sorted, length(covariate)), "versus", na.omit(drug.names.sorted[is.na(EM.full)])), cov.values, melt(EM.meta.mean)[, 3],  melt(EM.meta.lower)[, 3],  melt(EM.meta.upper)[, 3], slope, intercept))
     colnames(prepare) <- c("comparison", "covariate", "mean", "lower", "upper", "slope", "intercept")
-
   } else {
-
     cov.values <- rep(covariate, each = length(drug.names))
     EM.meta.mean <- round(exp(EM.meta[, 1] + beta[, 1] %o% covariate), 2)
     EM.meta.lower <- round(exp(EM.meta[, 3] + beta[, 3] %o% covariate), 2)
@@ -298,7 +298,6 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
     intercept <- exp(rep(EM.meta[, 1], length(covariate)))
     prepare <- na.omit(data.frame(paste(rep(drug.names.sorted, length(covariate)), "versus", na.omit(drug.names.sorted[is.na(EM.full)])), cov.values, melt(EM.meta.mean)[, 3],  melt(EM.meta.lower)[, 3],  melt(EM.meta.upper)[, 3], slope, intercept))
     colnames(prepare) <- c("comparison", "covariate", "mean", "lower", "upper", "slope", "intercept")
-
   }
 
 
@@ -318,7 +317,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
             geom_hline(yintercept = intercept.value, lty = 2, size = 1, col = "grey") +
             #geom_label(aes(x = min(covariate), y = 0, hjust = 0, vjust = 1, label = paste(intercept, ifelse(slope > 0, "+", "-"), abs(slope), "*covariate")), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
             facet_wrap(vars(factor(comparison, levels = unique(prepare$comparison))), scales = "free_y") +
-            labs(x = covar.values[[3]], y = "") +
+            labs(x = covar.values[[3]], y = measure) +
             scale_y_continuous(trans = trans.value) +
             theme_classic() +
             theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), legend.position = "none",
@@ -335,7 +334,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
             geom_hline(yintercept = intercept.value, lty = 2, size = 1.5, col = "grey") +
            # geom_label(aes(x = min(covariate), y = 0, hjust = 0, vjust = 1, label = paste(intercept, ifelse(slope > 0, "+", "-"), abs(slope), "*covariate")), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
             facet_wrap(vars(factor(comparison, levels = unique(prepare$comparison))), scales = "free_y") +
-            labs(x = covar.values[[3]], y = "") +
+            labs(x = covar.values[[3]], y = measure) +
             scale_y_continuous(trans = trans.value) +
             theme_classic() +
             theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), legend.position = "none",
@@ -351,7 +350,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
             geom_text(aes(x = as.factor(covariate), y = round(as.numeric(mean), 2), label = round(as.numeric(mean), 2)),
                       color = "black", hjust = -0.2, vjust = -0.5, size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.8), inherit.aes = T) +
             facet_wrap(vars(factor(comparison, levels = unique(prepare$comparison))), scales = "free_y") +
-            labs(x = covar.values[[3]], y = "") +
+            labs(x = covar.values[[3]], y = measure) +
             scale_x_discrete(breaks = as.factor(c(0, 1)), labels = covar.values) +
             scale_y_continuous(trans = trans.value) +
             theme_classic() +
@@ -370,7 +369,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names, exp
             geom_text(aes(x = as.factor(covariate), y = round(as.numeric(mean), 2), label = round(as.numeric(mean), 2)),
                       color = "black", hjust = -0.2, vjust = -0.5, size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.8), inherit.aes = T) +
             facet_wrap(vars(factor(comparison, levels = unique(prepare$comparison))), scales = "free_y") +
-            labs(x = covar.values[[3]], y = "") +
+            labs(x = covar.values[[3]], y = measure) +
             scale_x_discrete(breaks = as.factor(c(0, 1)), labels = covar.values) +
             scale_y_continuous(trans = trans.value) +
             theme_classic() +

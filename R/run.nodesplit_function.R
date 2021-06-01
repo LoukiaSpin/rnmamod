@@ -428,7 +428,7 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
   colnames(model.assessment) <- c("treat1", "treat2", "DIC", "deviance", "pD")
 
 
-  return(list(direct = direct, indirect = EM, diff = diff, tau = tau, model.assessment = model.assessment))
+  return(list(direct = direct, indirect = EM, diff = diff, tau = tau, model.assessment = model.assessment, measure = measure))
 }
 
 

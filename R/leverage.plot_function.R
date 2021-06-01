@@ -65,9 +65,9 @@ leverage.plot <- function(net, drug.names, title.o, title.m) {
   ## Leverage plot for observed outcomes
   observed <- ggplot(data = prepare.lev, aes(x = signed.dev.o, y = lev.o)) +
                geom_point(size = 2, colour = "black") +
-               geom_smooth(aes(x = signed.dev.o, y = 1 - (signed.dev.o^2)), method = 'loess', formula = 'y ~ x',  colour = "green4", linetype = 2) +
+               geom_smooth(aes(x = signed.dev.o, y = 1 - (signed.dev.o^2)), method = 'loess', formula = 'y ~ x',  colour = "#009E73", linetype = 2) +
                geom_smooth(aes(x = signed.dev.o, y = 2 - (signed.dev.o^2)), method = 'loess', formula = 'y ~ x',  colour = "orange", linetype = 2) +
-               geom_smooth(aes(x = signed.dev.o, y = 3 - (signed.dev.o^2)), method = 'loess', formula = 'y ~ x',  colour = "red", linetype = 2) +
+               geom_smooth(aes(x = signed.dev.o, y = 3 - (signed.dev.o^2)), method = 'loess', formula = 'y ~ x',  colour = "#D55E00", linetype = 2) +
                geom_text_repel(data = poor.fit.o, aes(x = signed.dev, y = leverage, label = poor),
                          color = "blue", fontface = "bold", hjust = "right", size = 3.8, max.overlaps = Inf, nudge_x = -0.1, direction = "y") +
                labs(x = expression(""%+-% sqrt("Posterior mean of the residual deviance")), y = "Leverage (each data point)") +
@@ -84,9 +84,9 @@ leverage.plot <- function(net, drug.names, title.o, title.m) {
   ## Leverage plot for missing outcomes
   missing <- ggplot(data = prepare.lev, aes(x = signed.dev.m, y = lev.m)) +
                geom_point(size = 2, colour = "black") +
-               geom_smooth(aes(x = signed.dev.m, y = 1 - (signed.dev.m^2)), method = 'loess', formula = 'y ~ x', colour = "green4", linetype = 2) +
+               geom_smooth(aes(x = signed.dev.m, y = 1 - (signed.dev.m^2)), method = 'loess', formula = 'y ~ x', colour = "#009E73", linetype = 2) +
                geom_smooth(aes(x = signed.dev.m, y = 2 - (signed.dev.m^2)), method = 'loess', formula = 'y ~ x', colour = "orange", linetype = 2) +
-               geom_smooth(aes(x = signed.dev.m, y = 3 - (signed.dev.m^2)), method = 'loess', formula = 'y ~ x', colour = "red", linetype = 2) +
+               geom_smooth(aes(x = signed.dev.m, y = 3 - (signed.dev.m^2)), method = 'loess', formula = 'y ~ x', colour = "#D55E00", linetype = 2) +
                geom_text_repel(data = poor.fit.m, aes(x = signed.dev, y = leverage, label = poor),
                                color = "blue", fontface = "bold", hjust = "right", size = 3.8, max.overlaps = Inf, nudge_x = -0.1, direction = "y") +
                labs(x = expression(""%+-% sqrt("Posterior mean of the residual deviance")), y = "Leverage (each data point)") +

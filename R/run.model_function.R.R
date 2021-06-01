@@ -373,6 +373,7 @@ run.model <- function(data, measure, assumption, heter.prior, mean.misspar, var.
                      sign.dev.m = sign.dev.m,
                      phi = phi,
                      model.assessment = model.assessment,
+                     measure = measure,
                      jagsfit = jagsfit)
 
   nma.results <- append(ma.results, list(EM.ref = EM.ref, pred.ref = pred.ref, SUCRA = SUCRA, effectiveness = effectiveness))

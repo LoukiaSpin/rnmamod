@@ -43,60 +43,28 @@ heatmap.similarity.UME <- function(full, ume, drug.names, threshold){
 
   options(warn = -1)
 
-  ## Obtain all unique pairwise comparisons using the 'combn' functions
-  poss.pair.comp <- data.frame(t(combn(1:length(drug.names), 2))[, 2], t(combn(1:length(drug.names), 2))[, 1])
-  colnames(poss.pair.comp) <- c("treat1", "treat2")
-  poss.pair.comp$comp <- paste0(poss.pair.comp[, 1], "vs", poss.pair.comp[, 2])
-  poss.pair.comp.clean <- poss.pair.comp[is.element(poss.pair.comp$comp, ume$obs.comp), ]
-
-
-  ## Replace intervention id with their original name - ALL POSSIBLE COMPARISONS
-  # For treat1 (non-baseline arm)
-  for(i in sort(unique(unlist(poss.pair.comp[, 1])))) {
-    poss.pair.comp[poss.pair.comp$treat1 == i, 1] <- drug.names[i]
-  }
-
-  # For treat2 (baseline arm)
-  for(i in sort(unique(unlist(poss.pair.comp[, 2])))) {
-    poss.pair.comp[poss.pair.comp$treat2 == i, 2] <- drug.names[i]
-  }
-
-
-  ## Replace intervention id with their original name  - ONLY OBSERVED COMPARISONS
-  # For treat1 (non-baseline arm)
-  for(i in sort(unique(unlist(poss.pair.comp.clean[, 1])))) {
-    poss.pair.comp.clean[poss.pair.comp.clean$treat1 == i, 1] <- drug.names[i]
-  }
-
-  # For treat2 (baseline arm)
-  for(i in sort(unique(unlist(poss.pair.comp.clean[, 2])))) {
-    poss.pair.comp.clean[poss.pair.comp.clean$treat2 == i, 2] <- drug.names[i]
-  }
-
-
-
-  ## Create a vector with the comparisons (non-baseline versus beseline) using the 'paste' function
-  comparison <- paste(poss.pair.comp.clean[, 1], "vs", poss.pair.comp.clean[, 2])
-  observed <- paste(poss.pair.comp[, 1], "vs", poss.pair.comp[, 2])
-
+  ## Possible and observed comparisons (with names)
+  possible.comp <- possible.observed.frail.comparisons(drug.names, ume$obs.comp)
 
 
   ## Assign the robustness index to the observed comparisons
-  EM.full <- full$EM; ume.post <- ume$EM
-  robust <- similarity.index(EM.full[is.element(poss.pair.comp$comp, ume$obs.comp), 1:2], ume.post[, 1:2], threshold)$KLD
+  EM.full <- full$EM
+  ume.post <- ume$EM
+  robust <- similarity.index(EM.full[is.element(possible.comp$poss.comp[, 4], possible.comp$obs.comp[, 3]), 1:2], ume.post[, 1:2], threshold)$KLD
 
-  poss.pair.comp[is.element(observed, comparison) == T, 4] <- robust
-  colnames(poss.pair.comp) <- c("treat1", "treat2", "comp", "RI")
+  poss.comp <- cbind(possible.comp$poss.comp, rep(NA, length(possible.comp$poss.comp[, 1])))
+  poss.comp[is.element(possible.comp$poss.comp[, 5], possible.comp$obs.comp[, 4]) == T, 6] <- robust
+  colnames(poss.comp) <- c("ID", "treat1", "treat2", "comp", "comp.name", "RI")
 
 
   ## Create a dummy vector on whether a comparison is frail
-  frail <- ifelse(is.element(poss.pair.comp.clean$comp, ume$frail.comp), 1, 0)
+  frail <- ifelse(is.element(possible.comp$poss.comp[, 4], ume$frail.comp), 1, 0)
 
 
   ## Lower triangular heatmap matrix - Comparisons are read from the left to the right
   ## CAREFUL: The interventions in the drug.names should follow the order you considered to run NMA pattern-mixture model!
   mat <- matrix(NA, nrow = length(drug.names) - 1, ncol = length(drug.names) - 1)
-  mat[lower.tri(mat, diag = T)] <- round(poss.pair.comp$RI, 2)
+  mat[lower.tri(mat, diag = T)] <- round(poss.comp$RI, 2)
   colnames(mat) <- drug.names[1:(length(drug.names) - 1)]; rownames(mat) <- drug.names[2:length(drug.names)]
   mat.new <- melt(mat, na.rm = F)
 

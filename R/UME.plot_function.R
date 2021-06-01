@@ -1,7 +1,7 @@
 #' Plot the results from the unrelated mean effects model
 #'
 #' @export
-UME.plot <- function(full, ume, drug.names, effect.size, expon, threshold) {
+UME.plot <- function(full, ume, drug.names, threshold) {
 
 
 
@@ -36,37 +36,14 @@ UME.plot <- function(full, ume, drug.names, effect.size, expon, threshold) {
   # Measures of model assessment: DIC, pD, total residual deviance (as obtained from R2jags) under UME model
   model.assess.ume <- ume$model.assessment
 
+  obs.comp <- ume$obs.comp
 
-
-  ## Obtain all unique pairwise comparisons using the 'combn' functions
-  poss.pair.comp <- data.frame(t(combn(1:length(drug.names), 2))[, 2], t(combn(1:length(drug.names), 2))[, 1])
-  colnames(poss.pair.comp) <- c("treat1", "treat2")
-
-
-  poss.pair.comp$comp <- paste0(poss.pair.comp[, 1], "vs", poss.pair.comp[, 2])
-  poss.pair.comp.clean <- poss.pair.comp[is.element(poss.pair.comp$comp, ume$obs.comp), ]
-
-
-  ## Replace intervention id with their original name
-  # For treat1 (non-baseline arm)
-  for(i in sort(unique(unlist(poss.pair.comp.clean[, 1])))) {
-    poss.pair.comp.clean[poss.pair.comp.clean$treat1 == i, 1] <- drug.names[i]
-  }
-
-  # For treat2 (baseline arm)
-  for(i in sort(unique(unlist(poss.pair.comp.clean[, 2])))) {
-    poss.pair.comp.clean[poss.pair.comp.clean$treat2 == i, 2] <- drug.names[i]
-  }
-
-
-
-  ## Create a vector with the comparisons (non-baseline versus beseline) using the 'paste' function
-  comparison <- paste(poss.pair.comp.clean[, 1], "vs", poss.pair.comp.clean[, 2])
-
+  ## Possible and observed comaprisons (with names)
+  possible.comp <- possible.observed.frail.comparisons(drug.names, obs.comp)
 
 
   ## Keep only the effect estimates according to the 'poss.pair.comp.clean' - Consistency model
-  EM.full.clean <- format(round(EM.full[is.element(poss.pair.comp$comp, ume$obs.comp), c(1:3, 7)], 2), nsmall = 2)
+  EM.full.clean <- format(round(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), c(1:3, 7)], 2), nsmall = 2)
 
 
 
@@ -86,9 +63,9 @@ UME.plot <- function(full, ume, drug.names, effect.size, expon, threshold) {
 
 
   ## Create a data-frame with effect estimates on both models
-  EM.both.models <- data.frame(comparison, EM.full.clean[, 1:2], CrI.full.clean, EM.ume.clean[, 1:2], CrI.ume.clean)
+  EM.both.models <- data.frame(possible.comp$obs.comp[, 4], EM.full.clean[, 1:2], CrI.full.clean, EM.ume.clean[, 1:2], CrI.ume.clean)
   colnames(EM.both.models) <- c("Comparison", "Posterior mean NMA", "Posterior SD NMA", "95% CrI NMA", "Posterior mean UME",
-                                "Posterior SD UME", "95% CrI UME  ")
+                                "Posterior SD UME", "95% CrI UME")
   rownames(EM.both.models) <- NULL
 
 
@@ -115,14 +92,14 @@ UME.plot <- function(full, ume, drug.names, effect.size, expon, threshold) {
 
 
   ## Scatterplot on the deviance contribution of consistency versus UME models
-  scatterplot.o <- scatterplots.dev(dev.o.full[, 1], dev.o.ume[, 1], colour = "red")
-  scatterplot.m <- scatterplots.dev(dev.m.full[, 1], dev.m.ume[, 1], colour = "green4")
+  scatterplot.o <- scatterplots.dev(dev.o.full[, 1], dev.o.ume[, 1], colour = "#D55E00")
+  scatterplot.m <- scatterplots.dev(dev.m.full[, 1], dev.m.ume[, 1], colour = "#009E73")
 
 
 
   ## Bland-Altman plot on the deviance contribution of consistency versus UME models
-  BA.observed <- BlandAltman.plot(dev.o.full[, 1], dev.o.ume[, 1], colour = "red")
-  BA.missing <- BlandAltman.plot(dev.m.full[, 1], dev.m.ume[, 1], colour = "green4")
+  BA.observed <- BlandAltman.plot(dev.o.full[, 1], dev.o.ume[, 1], colour = "#D55E00")
+  BA.missing <- BlandAltman.plot(dev.m.full[, 1], dev.m.ume[, 1], colour = "#009E73")
 
 
 
@@ -157,7 +134,7 @@ UME.plot <- function(full, ume, drug.names, effect.size, expon, threshold) {
   lev.plots <- ggarrange(lever.full.o, lever.ume.o, nrow = 1, ncol = 2, labels = c("A)",  "B)"))
 
 
-  forestplots <- forestplot.panel.UME(full, ume, drug.names, effect.size, expon)
+  forestplots <- forestplot.panel.UME(full, ume, drug.names)
 
 
   heatmap <- heatmap.similarity.UME(full, ume, drug.names, threshold)

@@ -7,6 +7,7 @@ nodesplit.plot <- function(node, full, drug.names) {
   ## Keep tau and model assessment measures from NMA model
   tau.values <- full$tau[c(5, 2, 3, 7)]
   model.assess.NMA <- full$model.assessment
+  measure <- effect.measure.name(full$measure)
 
 
   ## Keep results on 'direct evidence', 'indirect evidence', 'inconsistency factor', 'between-trial standard deviation',
@@ -36,54 +37,69 @@ nodesplit.plot <- function(node, full, drug.names) {
 
   ## Prepare the dataset to create the panel of forest-plot on the 'direct evidence', 'indirect evidence', and 'inconsistency factor' for each split node
   comp <- paste(direct[, 1], "vs", direct[, 2])
-  prepare <- data.frame(rep(comp, 3), rbind(direct[, c(3, 5:6)], indirect[, c(3, 5:6)], IF[, c(3, 5:6)]), rep(c("direct", "indirect", "IF"), each = length(direct[, 1])))
-  colnames(prepare) <- c("node", "mean", "lower", "upper", "evidence")
-  prepare$stat.signif <- ifelse(prepare$lower > 0 | prepare$upper < 0  , "statistically significant", "statistically non-significant")
+  if (measure != "OR" & measure != "ROM") {
+    prepare <- data.frame(rep(comp, 3), rbind(direct[, c(3, 5:6)], indirect[, c(3, 5:6)], IF[, c(3, 5:6)]), rep(c("direct", "indirect", "IF"), each = length(direct[, 1])))
+    colnames(prepare) <- c("node", "mean", "lower", "upper", "evidence")
+    prepare$stat.signif <- ifelse(prepare$lower > 0 | prepare$upper < 0  , "statistically significant", "statistically non-significant")
+  } else {
+    prepare <- data.frame(rep(comp, 3), rbind(exp(direct[, c(3, 5:6)]), exp(indirect[, c(3, 5:6)]), exp(IF[, c(3, 5:6)])), rep(c("direct", "indirect", "IF"), each = length(direct[, 1])))
+    colnames(prepare) <- c("node", "mean", "lower", "upper", "evidence")
+    prepare$stat.signif <- ifelse(prepare$lower > 1 | prepare$upper < 1  , "statistically significant", "statistically non-significant")
+  }
   prepare$stat.signif <- ifelse(prepare$evidence != "IF", NA, prepare$stat.signif)
   prepare$DIC <- sort(model.assess$DIC)
 
 
   ## Create the panel of forest-plots
-  if(length(unique(comp)) <= 16) {
+  if(length(unique(comp)) <= 30) {
 
     p1 <- ggplot(data = prepare, aes(x = factor(evidence, levels = c("IF", "indirect", "direct")), y = mean, ymin = lower, ymax = upper, colour = stat.signif) ) +
             geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-            geom_hline(yintercept = 0, lty = 2, size = 1.5, col = "grey") +
+            geom_hline(yintercept = ifelse(measure != "OR" & measure != "ROM", 0, 1), lty = 2, size = 1.5, col = "grey") +
             geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
             geom_text(aes(x = as.factor(evidence), y = round(mean, 2), label = round(mean, 2), hjust = 0, vjust = -0.4), color = "black", size = 4.0,
                       check_overlap = F, parse = F, position = position_dodge(width = 0.5),  inherit.aes = T) +
             geom_label(aes(x = 3.5, y = -Inf, hjust = 0, vjust = 1, label = round(DIC, 0)), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
+            scale_y_continuous(trans = ifelse(measure != "OR" & measure != "ROM", "identity", "log10")) +
             facet_wrap(vars(factor(node, levels = unique(prepare$node))), scales = "free_x") +
+            labs(x = "", y = measure, colour = "") +
             coord_flip() +
-            labs(x = "", y = "", colour = "") +
             scale_color_manual(breaks = c("statistically significant", "statistically non-significant"), values = c("#009E73", "#D55E00"), na.value = "black") +
             theme_classic() +
             theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), legend.position = "none",
-                  strip.text = element_text(size = 11))
+                  strip.text = element_text(size = 11), legend.title = element_text(color = "black", size = 12, face = "bold"), legend.text = element_text(color = "black", size = 12))
 
 
   } else {
 
     # Keep nodes with statistically significant inconsistency OR with inconsistent sign in the direct and indirect estimate
-    selection <- subset(prepare, stat.signif == "statistically significant" |
-                          (mean[evidence == "direct"] < 0 & mean[evidence == "indirect"] > 0) |
-                          (mean[evidence == "direct"] > 0 & mean[evidence == "indirect"] < 0))
+    selection <- if (measure != "OR" & measure != "ROM") {
+      subset(prepare, stat.signif == "statistically significant" |
+               (mean[evidence == "direct"] < 0 & mean[evidence == "indirect"] > 0) |
+               (mean[evidence == "direct"] > 0 & mean[evidence == "indirect"] < 0))
+    } else {
+      subset(prepare, stat.signif == "statistically significant" |
+               (mean[evidence == "direct"] < 1 & mean[evidence == "indirect"] > 1) |
+               (mean[evidence == "direct"] > 1 & mean[evidence == "indirect"] < 1))
+    }
+
 
 
     p1 <- ggplot(data = selection, aes(x = factor(evidence, levels = c("IF", "indirect", "direct")), y = mean, ymin = lower, ymax = upper, colour = stat.signif) ) +
             geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-            geom_hline(yintercept = 0, lty = 2, size = 1.5, col = "grey") +
+            geom_hline(yintercept = ifelse(measure != "OR" & measure != "ROM", 0, 1), lty = 2, size = 1.5, col = "grey") +
             geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
             geom_text(aes(x = as.factor(evidence), y = round(mean, 2), label = round(mean, 2), hjust = 0, vjust = -0.4), color = "black", size = 4.0,
                       check_overlap = F, parse = F, position = position_dodge(width = 0.5),  inherit.aes = T) +
             geom_label(aes(x = 3.5, y = -Inf, hjust = 0, vjust = 1, label = round(DIC, 0)), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
             facet_wrap(vars(factor(node, levels = unique(prepare$node))), scales = "free_x") +
+            scale_y_continuous(trans = ifelse(measure != "OR" & measure != "ROM", "identity", "log10")) +
+            labs(x = "", y = measure, colour = "Evidence on inconsistency") +
             coord_flip() +
-            labs(x = "", y = "", colour = "Evidence on inconsistency") +
             scale_color_manual(breaks = c("statistically significant", "statistically non-significant"), values = c("#009E73", "#D55E00"), na.value = "black") +
             theme_classic() +
             theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), legend.position = "bottom",
-                  strip.text = element_text(size = 11))
+                  strip.text = element_text(size = 11), legend.title = element_text(color = "black", size = 12, face = "bold"), legend.text = element_text(color = "black", size = 12))
 
   }
 
@@ -124,9 +140,9 @@ nodesplit.plot <- function(node, full, drug.names) {
   ## Create the forest-plot for 'between-trial standard deviation'
   p2 <- ggplot(data = prepare.tau, aes(x = factor(node, levels = unique(prepare$node)), y = median, ymin = lower, ymax = upper) ) +
           geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-          geom_hline(yintercept = tau.values[1], lty = 2, size = 1.2, col = "red") +
-          geom_hline(yintercept = tau.values[3], lty = 2, size = 1.2, col = "red") +
-          geom_hline(yintercept = tau.values[4], lty = 2, size = 1.2, col = "red") +
+          geom_hline(yintercept = tau.values[1], lty = 2, size = 1.2, col = "#D55E00") +
+          geom_hline(yintercept = tau.values[3], lty = 2, size = 1.2, col = "#D55E00") +
+          geom_hline(yintercept = tau.values[4], lty = 2, size = 1.2, col = "#D55E00") +
           geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
           geom_text(aes(x = factor(node, levels = unique(prepare$node)), y = round(median, 2), label = round(median, 2), hjust = 0, vjust = -0.4), color = "black", size = 4.0,
                     check_overlap = F, parse = F, position = position_dodge(width = 0.5),  inherit.aes = T) +
@@ -142,6 +158,9 @@ nodesplit.plot <- function(node, full, drug.names) {
   write_xlsx(table.assess, paste0(getwd(),"Table assesssment Node-Split.xlsx"))
 
 
-  return(list(table.EM = table.EM, table.assess = table.assess, node.split.forestplot = p1, tau.forestplot = p2))
+  return(list(table.EM = table.EM,
+              table.assess = table.assess,
+              node.split.forestplot = p1,
+              tau.forestplot = p2))
 
 }

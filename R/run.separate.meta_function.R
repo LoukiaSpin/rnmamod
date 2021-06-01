@@ -185,7 +185,7 @@ run.separate.meta <- function(data, measure, assumption, heter.prior, mean.missp
   colnames(tau) <- c("t1", "t2", "median", "sd", "2.5%", "25%", "50%", "75%", "97.5%", "Rhat", "n.eff")
   rownames(tau) <- NULL
 
-  return(list(EM = EM, tau = tau))
+  return(list(EM = EM, tau = tau, measure = measure))
 
 
 }

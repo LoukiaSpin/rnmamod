@@ -434,6 +434,7 @@ run.UME <- function(data, measure, assumption, heter.prior, mean.misspar, var.mi
               sign.dev.m = sign.dev.m,
               tau = tau,
               model.assessment = model.assessment,
+              measure = measure,
               obs.comp = obs.comp,
               jagsfit = jagsfit)
 
