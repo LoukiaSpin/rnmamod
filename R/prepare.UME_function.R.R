@@ -1,4 +1,4 @@
-prepare.UME <- function(measure, assumption) {
+prepare.UME <- function(measure, model, assumption) {
 
   code <- paste0("model\n{")
 

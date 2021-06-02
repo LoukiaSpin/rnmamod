@@ -51,13 +51,31 @@
 #' run.UME(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.UME <- function(data, measure, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin) {
+run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin) {
 
 
   options(warn = -1)
 
   ## Default arguments
+  measure <- if (missing(measure)) {
+    stop("The 'measure' needs to be defined")
+  } else if (measure != "MD" & measure != "SMD" & measure != "ROM" & measure != "OR") {
+    stop("Insert 'MD', 'SMD', 'ROM', or 'OR'")
+  } else {
+    measure
+  }
+  model <- ifelse(missing(model), "RE", model)
   assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
+  heter.prior <- if (model == "RE" & missing(heter.prior)) {
+    stop("The 'heter.prior' needs to be defined")
+  } else if (model == "FE" & missing(heter.prior)) {
+    list(NA, NA, NA)
+  } else if (model == "FE") {
+    message("The argument 'heter.prior' has been ignored")
+    list(NA, NA, NA)
+  } else {
+    heter.prior
+  }
   var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
   n.iter <- ifelse(missing(n.iter), 10000, n.iter)
@@ -127,22 +145,24 @@ run.UME <- function(data, measure, assumption, heter.prior, mean.misspar, var.mi
 
 
     ## Specification of the prior distribution for the between-trial parameter
-    if (heter.prior[[1]] == "halfnormal") {
+    if (model == "RE" & heter.prior[[1]] == "halfnormal") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 1))
 
-    } else if (heter.prior[[1]] == "uniform") {
+    } else if (model == "RE" & heter.prior[[1]] == "uniform") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 2))
 
-    } else if (measure == "SMD" & heter.prior[[1]] == "logt") {
+    } else if (model == "RE" & measure == "SMD" & heter.prior[[1]] == "logt") {
 
       heter.prior <- as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
 
-    } else if (measure != "SMD" & heter.prior[[1]] == "logt") {
+    } else if (model == "RE" & measure != "SMD" & heter.prior[[1]] == "logt") {
 
       stop("There are currently no empirically-based prior distributions for MD and ROM. Choose a half-normal or a uniform prior distribution, instead")
 
+    } else if (model == "FE") {
+      heter.prior <- NA
     }
 
 
@@ -204,18 +224,20 @@ run.UME <- function(data, measure, assumption, heter.prior, mean.misspar, var.mi
 
 
     ## Specification of the prior distribution for the between-trial parameter
-    if (heter.prior[[1]] == "halfnormal") {
+    if (model == "RE" & heter.prior[[1]] == "halfnormal") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 1))
 
-    } else if (heter.prior[[1]] == "uniform") {
+    } else if (model == "RE" & heter.prior[[1]] == "uniform") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 2))
 
-    } else if (heter.prior[[1]] == "lognormal")  {
+    } else if (model == "RE" & heter.prior[[1]] == "lognormal")  {
 
       heter.prior <- as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
 
+    } else if (model == "FE") {
+      heter.prior <- NA
     }
 
   }
@@ -321,13 +343,17 @@ run.UME <- function(data, measure, assumption, heter.prior, mean.misspar, var.mi
 
 
   ## Define the nodes to be monitored
-  param.jags <- c("EM", "EM.m", "dev.o", "resdev.o", "totresdev.o", "dev.m", "resdev.m", "totresdev.m", "tau", "hat.par", "hat.m")
+  param.jags <- if (model == "RE") {
+    c("EM", "EM.m", "dev.o", "resdev.o", "totresdev.o", "dev.m", "resdev.m", "totresdev.m", "tau", "hat.par", "hat.m")
+  } else {
+    c("EM", "EM.m", "dev.o", "resdev.o", "totresdev.o", "dev.m", "resdev.m", "totresdev.m", "hat.par", "hat.m")
+  }
 
 
   ## Run the Bayesian analysis
   jagsfit <- jags(data = data.jag,
                   parameters.to.save = param.jags,
-                  model.file = textConnection(prepare.UME(measure, assumption)),
+                  model.file = textConnection(prepare.UME(measure, model, assumption)),
                   n.chains = n.chains,
                   n.iter = n.iter,
                   n.burnin = n.burnin,
@@ -423,20 +449,36 @@ run.UME <- function(data, measure, assumption, heter.prior, mean.misspar, var.mi
   model.assessment <- data.frame(DIC, pD, dev)
 
   # Collect the minimum results at common
-  results <- list(EM = EM,
-              dev.m = dev.m,
-              dev.o = dev.o,
-              hat.m = hat.m,
-              hat.par = hat.par,
-              leverage.o = leverage.o,
-              sign.dev.o = sign.dev.o,
-              leverage.m = leverage.m,
-              sign.dev.m = sign.dev.m,
-              tau = tau,
-              model.assessment = model.assessment,
-              measure = measure,
-              obs.comp = obs.comp,
-              jagsfit = jagsfit)
+  results <- if (model == "RE") {
+    list(EM = EM,
+         dev.m = dev.m,
+         dev.o = dev.o,
+         hat.m = hat.m,
+         hat.par = hat.par,
+         leverage.o = leverage.o,
+         sign.dev.o = sign.dev.o,
+         leverage.m = leverage.m,
+         sign.dev.m = sign.dev.m,
+         tau = tau,
+         model.assessment = model.assessment,
+         measure = measure,
+         obs.comp = obs.comp,
+         jagsfit = jagsfit)
+  } else {
+    list(EM = EM,
+         dev.m = dev.m,
+         dev.o = dev.o,
+         hat.m = hat.m,
+         hat.par = hat.par,
+         leverage.o = leverage.o,
+         sign.dev.o = sign.dev.o,
+         leverage.m = leverage.m,
+         sign.dev.m = sign.dev.m,
+         model.assessment = model.assessment,
+         measure = measure,
+         obs.comp = obs.comp,
+         jagsfit = jagsfit)
+  }
 
   # Return different list of results according to a condition
   if (max(na) < 3 || has_error(improved.UME(t, m, N, ns, na), silent = T) == T) {
