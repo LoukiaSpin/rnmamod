@@ -49,13 +49,31 @@
 #' run.model(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, D = 0, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
+run.metareg <- function(data, covariate, measure, model, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
 
 
   options(warn = -1)
 
   ## Default arguments
+  measure <- if (missing(measure)) {
+    stop("The 'measure' needs to be defined")
+  } else if (measure != "MD" & measure != "SMD" & measure != "ROM" & measure != "OR") {
+    stop("Insert 'MD', 'SMD', 'ROM', or 'OR'")
+  } else {
+    measure
+  }
+  model <- ifelse(missing(model), "RE", model)
   assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
+  heter.prior <- if (model == "RE" & missing(heter.prior)) {
+    stop("The 'heter.prior' needs to be defined")
+  } else if (model == "FE" & missing(heter.prior)) {
+    list(NA, NA, NA)
+  } else if (model == "FE") {
+    message("The argument 'heter.prior' has been ignored")
+    list(NA, NA, NA)
+  } else {
+    heter.prior
+  }
   var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
   n.iter <- ifelse(missing(n.iter), 10000, n.iter)
@@ -116,22 +134,24 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
 
 
     ## Specification of the prior distribution for the between-trial parameter
-    if (heter.prior[[1]] == "halfnormal") {
+    if (model == "RE" & heter.prior[[1]] == "halfnormal") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 1))
 
-    } else if (heter.prior[[1]] == "uniform") {
+    } else if (model == "RE" & heter.prior[[1]] == "uniform") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 2))
 
-    } else if (measure == "SMD" & heter.prior[[1]] == "logt") {
+    } else if (model == "RE" & model == "RE" & measure == "SMD" & heter.prior[[1]] == "logt") {
 
       heter.prior <- as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
 
-    } else if (measure != "SMD" & heter.prior[[1]] == "logt") {
+    } else if (model == "RE" & measure != "SMD" & heter.prior[[1]] == "logt") {
 
       stop("There are currently no empirically-based prior distributions for MD and ROM. Choose a half-normal or a uniform prior distribution, instead")
 
+    } else if (model == "FE") {
+      heter.prior <- NA
     }
 
 
@@ -184,18 +204,20 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
 
 
     ## Specification of the prior distribution for the between-trial parameter
-    if (heter.prior[[1]] == "halfnormal") {
+    if (model == "RE" & heter.prior[[1]] == "halfnormal") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 1))
 
-    } else if (heter.prior[[1]] == "uniform") {
+    } else if (model == "RE" & heter.prior[[1]] == "uniform") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 2))
 
-    } else if (heter.prior[[1]] == "lognormal")  {
+    } else if (model == "RE" & heter.prior[[1]] == "lognormal")  {
 
       heter.prior <- as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
 
+    } else if (model == "FE") {
+      heter.prior <- NA
     }
 
   }
@@ -267,14 +289,29 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
 
 
   ## Run the Bayesian analysis
-  jagsfit <- jags(data = data.jag,
-                  parameters.to.save = param.jags,
-                  model.file = textConnection(prepare.model(measure, assumption)),
-                  n.chains = n.chains,
-                  n.iter = n.iter,
-                  n.burnin = n.burnin,
-                  n.thin = n.thin,
-                  DIC = T)
+  if (model == "RE") {
+    data.jag <- data.jag
+    param.jags <- param.jags
+    jagsfit <- jags(data = data.jag,
+                    parameters.to.save = param.jags,
+                    model.file = textConnection(prepare.model.RE(measure, assumption)),
+                    n.chains = n.chains,
+                    n.iter = n.iter,
+                    n.burnin = n.burnin,
+                    n.thin = n.thin,
+                    DIC = T)
+  } else {
+    data.jag <- data.jag[data.jag != "heter.prior"]
+    param.jags <- param.jags[param.jags != "EM.pred" & param.jags != "pred.ref" & param.jags != "tau" & param.jags != "delta"]
+    jagsfit <- jags(data = data.jag,
+                    parameters.to.save = param.jags,
+                    model.file = textConnection(prepare.model.FE(measure, assumption)),
+                    n.chains = n.chains,
+                    n.iter = n.iter,
+                    n.burnin = n.burnin,
+                    n.thin = n.thin,
+                    DIC = T)
+  }
 
 
 
@@ -303,7 +340,7 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
   SUCRA <- t(getResults %>% dplyr::select(starts_with("SUCRA")))
 
   # Within-trial effects size (multi-arm trials with T interventions provide T-1 such effect sizes)
-  delta <- t(getResults %>% dplyr::select(starts_with("delta[") & !ends_with(",1]")))
+  delta <- t(getResults %>% dplyr::select(starts_with("delta") & !ends_with(",1]")))
 
   # Ranking probability of each intervention for every rank
   effectiveness <- t(getResults %>% dplyr::select(starts_with("effectiveness")))
@@ -388,26 +425,46 @@ run.metareg <- function(data, covariate, measure, assumption, heter.prior, mean.
 
 
   ## Return a list of results
-  ma.results <- list(EM = EM,
-                     EM.pred = EM.pred,
-                     tau = tau,
-                     delta = delta,
-                     beta = beta,
-                     dev.m = dev.m,
-                     dev.o = dev.o,
-                     hat.m = hat.m,
-                     hat.par = hat.par,
-                     leverage.o = leverage.o,
-                     sign.dev.o = sign.dev.o,
-                     leverage.m = leverage.m,
-                     sign.dev.m = sign.dev.m,
-                     phi = phi,
-                     model.assessment = model.assessment,
-                     measure = measure,
-                     jagsfit = jagsfit)
-
-  nma.results <- append(ma.results, list(EM.ref = EM.ref, pred.ref = pred.ref, SUCRA = SUCRA, effectiveness = effectiveness))
+  if (model == "RE") {
+    ma.results <- list(EM = EM,
+                       EM.pred = EM.pred,
+                       tau = tau,
+                       delta = delta,
+                       beta = beta,
+                       dev.m = dev.m,
+                       dev.o = dev.o,
+                       hat.m = hat.m,
+                       hat.par = hat.par,
+                       leverage.o = leverage.o,
+                       sign.dev.o = sign.dev.o,
+                       leverage.m = leverage.m,
+                       sign.dev.m = sign.dev.m,
+                       phi = phi,
+                       model.assessment = model.assessment,
+                       measure = measure,
+                       model = model,
+                       jagsfit = jagsfit)
+    nma.results <- append(ma.results, list(EM.ref = EM.ref, pred.ref = pred.ref, SUCRA = SUCRA, effectiveness = effectiveness))
+  } else {
+    ma.results <- list(EM = EM,
+                       beta = beta,
+                       dev.m = dev.m,
+                       dev.o = dev.o,
+                       hat.m = hat.m,
+                       hat.par = hat.par,
+                       leverage.o = leverage.o,
+                       sign.dev.o = sign.dev.o,
+                       leverage.m = leverage.m,
+                       sign.dev.m = sign.dev.m,
+                       phi = phi,
+                       model.assessment = model.assessment,
+                       measure = measure,
+                       model = model,
+                       jagsfit = jagsfit)
+    nma.results <- append(ma.results, list(EM.ref = EM.ref, SUCRA = SUCRA, effectiveness = effectiveness))
+  }
 
   ifelse(nt > 2, return(nma.results), return(ma.results))
+
 }
 

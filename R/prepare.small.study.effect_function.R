@@ -1,7 +1,9 @@
 #' Preparing the direction variable for the investigation of possible small-study effect
 #'
-#' @param data
-#' @param direction A list refering to the direction of each intervention in the network
+#' @param data  ddd
+#' @param measure ddd
+#' @param var.misspar ddd
+#' @param direction A list referring to the direction of each intervention in the network
 #' @param D A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.
 #'
 #' @export

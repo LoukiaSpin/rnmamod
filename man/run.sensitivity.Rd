@@ -19,6 +19,7 @@ Apart from \strong{na}, all other elements appear in \code{data} as many times a
 run.sensitivity(
   data,
   measure,
+  rho,
   assumption,
   heter.prior,
   var.misspar,

@@ -1,12 +1,18 @@
-prepare.nodesplit <- function(measure, assumption) {
+prepare.nodesplit <- function(measure, model, assumption) {
 
   code <- paste0("model\n{")
 
-  code <- paste0(code, "\n\tfor (i in 1:ns) {",
-                       "\n\t\tdelta[i, 1] <- 0",
-                       "\n\t\tj[i, 1] <- 0",
-                       "\n\t\tw[i, 1] <- 0",
-                       "\n\t\tu[i] ~ dnorm(0, .0001)")
+  code <- paste0(code, "\n\tfor (i in 1:ns) {")
+
+  code <- if (model == "RE"){
+    paste0(code, "\n\t\tdelta[i, 1] <- 0",
+                 "\n\t\tj[i, 1] <- 0",
+                 "\n\t\tw[i, 1] <- 0",
+                 "\n\t\tu[i] ~ dnorm(0, .0001)")
+  } else {
+    paste0(code, "\n\t\tu[i] ~ dnorm(0, .0001)")
+  }
+
 
   if (measure == "SMD") {
     code <- paste0(code, "\n\t\ttheta[i, 1] <- u[i]",
@@ -14,23 +20,27 @@ prepare.nodesplit <- function(measure, assumption) {
                          "\n\t\ta[i] <- sum(N[i, 1:na[i]] - 1)/2",
                          "\n\t\tb[i] <- sum(N[i, 1:na[i]] - 1)/(2*sigma[i]*sigma[i])",
                          "\n\t\tvar.pooled[i] ~ dgamma(a[i], b[i])",
-                         "\n\t\tsd.pooled[i] <- sqrt(var.pooled[i])",
-                         "\n\t\tfor (k in 1:na[i]) {",
-                         "\n\t\t\tprec.o[i, k] <- pow(se.o[i, k], -2)",
-                         "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])",
-                         "\n\t\t\tc[i, k] <- N[i, k] - mod[i, k]",
-                         "\n\t\t\tsd.obs[i, k] <- se.o[i, k]*sqrt(c[i, k])",
-                         "\n\t\t\tnom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1)")
+                         "\n\t\tsd.pooled[i] <- sqrt(var.pooled[i])")
   } else if (measure == "MD" || measure == "ROM") {
-    code <- paste0(code, "\n\t\ttheta[i, 1] <- u[i]",
-                         "\n\t\tfor (k in 1:na[i]) {",
-                         "\n\t\t\tprec.o[i, k] <- pow(se.o[i, k], -2)",
-                         "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])")
+    code <- paste0(code, "\n\t\ttheta[i, 1] <- u[i]")
   } else if (measure == "OR") {
-    code <- paste0(code, "\n\t\tlogit(p[i, 1]) <- u[i]",
-                         "\n\t\tfor (k in 1:na[i]) {",
-                         "\n\t\t\tr[i, k] ~ dbin(p_o[i, k], obs[i, k])",
-                         "\n\t\t\tobs[i, k] <- N[i, k] - mod[i, k]")
+    code <- paste0(code, "\n\t\tlogit(p[i, 1]) <- u[i]")
+  }
+
+  code <- paste0(code, "\n\t\tfor (k in 1:na[i]) {")
+
+  code <- if (measure == "SMD") {
+    paste0(code, "\n\t\t\tprec.o[i, k] <- pow(se.o[i, k], -2)",
+                 "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])",
+                 "\n\t\t\tc[i, k] <- N[i, k] - mod[i, k]",
+                 "\n\t\t\tsd.obs[i, k] <- se.o[i, k]*sqrt(c[i, k])",
+                 "\n\t\t\tnom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1)")
+  } else if (measure == "MD" || measure == "ROM") {
+    paste0(code, "\n\t\t\tprec.o[i, k] <- pow(se.o[i, k], -2)",
+                 "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])")
+  } else if (measure == "OR") {
+    paste0(code, "\n\t\t\tr[i, k] ~ dbin(p_o[i, k], obs[i, k])",
+                 "\n\t\t\tobs[i, k] <- N[i, k] - mod[i, k]")
   }
 
   code <- if (measure == "MD" || measure == "SMD") {
@@ -61,8 +71,9 @@ prepare.nodesplit <- function(measure, assumption) {
   code <- paste0(code, "\n\t\t\tindex[i, k] <- split[i]*(equals(t[i, k], pair[1]) + equals(t[i, k], pair[2]))",
                        "\n\t\t\t}",
                        "\n\t\tresdev.o[i] <- sum(dev.o[i, 1:na[i]])",
-                       "\n\t\tresdev.m[i] <- sum(dev.m[i, 1:na[i]])",
-                       "\n\t\tfor (k in 2:na[i]) {")
+                       "\n\t\tresdev.m[i] <- sum(dev.m[i, 1:na[i]])")
+
+  code <- paste0(code, "\n\t\tfor (k in 2:na[i]) {")
 
   code <- if (measure == "MD") {
     paste0(code, "\n\t\t\ttheta[i, k] <- u[i] + delta[i, k]")
@@ -74,13 +85,18 @@ prepare.nodesplit <- function(measure, assumption) {
     paste0(code, "\n\t\t\tlogit(p[i, k]) <- u[i] + delta[i, k]")
   }
 
-  code <- paste0(code, "\n\t\t\tdelta[i, k] ~ dnorm(md[i, k], precd[i, k])",
-                       "\n\t\t\tmd[i, k] <- (d[si[i, k]] - d[bi[i]] + sw[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]",
-                       "\n\t\t\tj[i, k] <- k - (equals(1, split[i])*step(k - 3))",
-                       "\n\t\t\tprecd[i, k] <- prec*2*(j[i, k] - 1)/j[i, k]",
-                       "\n\t\t\tw[i, k] <- (delta[i, k] - d[si[i, k]] + d[bi[i]])*(1 - index[i, k]) ",
-                       "\n\t\t\tsw[i, k] <- sum(w[i, 1:(k-1)])/(j[i, k] - 1)",
-                       "\n\t\t\t}}")
+  code <- if (model == "RE") {
+    paste0(code, "\n\t\t\tdelta[i, k] ~ dnorm(md[i, k], precd[i, k])",
+                 "\n\t\t\tmd[i, k] <- (d[si[i, k]] - d[bi[i]] + sw[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]",
+                 "\n\t\t\tj[i, k] <- k - (equals(1, split[i])*step(k - 3))",
+                 "\n\t\t\tprecd[i, k] <- prec*2*(j[i, k] - 1)/j[i, k]",
+                 "\n\t\t\tw[i, k] <- (delta[i, k] - d[si[i, k]] + d[bi[i]])*(1 - index[i, k]) ",
+                 "\n\t\t\tsw[i, k] <- sum(w[i, 1:(k-1)])/(j[i, k] - 1)")
+  } else {
+    paste0(code, "\n\t\t\tdelta[i, k] <- (d[si[i, k]] - d[bi[i]])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]")
+  }
+
+  code <- paste0(code, "\n\t\t\t}}")
 
   code <- paste0(code, "\n\ttotresdev.o <- sum(resdev.o[])",
                        "\n\ttotresdev.m <- sum(resdev.m[])",
@@ -183,12 +199,18 @@ prepare.nodesplit <- function(measure, assumption) {
                        "\n\t\t\tEM[k, c] <- d[k] - d[c]",
                        "\n\t\t\t}}",
                        "\n\tdirect ~ dnorm(0, .0001)",
-                       "\n\tdiff <- direct - EM[pair[2], pair[1]]",
-                       "\n\tprec <- pow(tau, -2)",
-                       "\n\ttau.a ~ dnorm(0, heter.prior[2])I(0, )",
-                       "\n\ttau.b ~ dunif(0, heter.prior[2])",
-                       "\n\ttau <- tau.a*equals(heter.prior[3], 1) + tau.b*equals(heter.prior[3], 2)",
-                       "\n}")
+                       "\n\tdiff <- direct - EM[pair[2], pair[1]]")
+
+  code <- if (model == "RE") {
+    paste0(code, "\n\tprec <- pow(tau, -2)",
+                 "\n\ttau.a ~ dnorm(0, heter.prior[2])I(0, )",
+                 "\n\ttau.b ~ dunif(0, heter.prior[2])",
+                 "\n\ttau <- tau.a*equals(heter.prior[3], 1) + tau.b*equals(heter.prior[3], 2)")
+  } else {
+    paste0(code, "")
+  }
+
+  code <- paste0(code, "\n}")
 
   return(code)
 

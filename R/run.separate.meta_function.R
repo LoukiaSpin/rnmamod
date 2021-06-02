@@ -51,13 +51,31 @@
 #' run.UME(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.separate.meta <- function(data, measure, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin){
+run.separate.meta <- function(data, measure, model, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin){
 
 
   options(warn = -1)
 
   ## Default arguments
+  measure <- if (missing(measure)) {
+    stop("The 'measure' needs to be defined")
+  } else if (measure != "MD" & measure != "SMD" & measure != "ROM" & measure != "OR") {
+    stop("Insert 'MD', 'SMD', 'ROM', or 'OR'")
+  } else {
+    measure
+  }
+  model <- ifelse(missing(model), "RE", model)
   assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
+  heter.prior <- if (model == "RE" & missing(heter.prior)) {
+    stop("The 'heter.prior' needs to be defined")
+  } else if (model == "FE" & missing(heter.prior)) {
+    list(NA, NA, NA)
+  } else if (model == "FE") {
+    message("The argument 'heter.prior' has been ignored")
+    list(NA, NA, NA)
+  } else {
+    heter.prior
+  }
   var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
   n.iter <- ifelse(missing(n.iter), 10000, n.iter)
@@ -173,7 +191,7 @@ run.separate.meta <- function(data, measure, assumption, heter.prior, mean.missp
   meta <- list()
   for(i in 1:N.comp) {
 
-    meta[[i]] <- run.model(data = pairwise[pairwise$arm1 == keep.comp[i, 1] & pairwise$arm2 == keep.comp[i, 2], -c(1:3)], measure, assumption, heter.prior, mean.misspar, var.misspar, D = 1, n.chains, n.iter, n.burnin, n.thin) # 'D' does not matter in pairwise meta-analysis
+    meta[[i]] <- run.model(data = pairwise[pairwise$arm1 == keep.comp[i, 1] & pairwise$arm2 == keep.comp[i, 2], -c(1:3)], measure, model, assumption, heter.prior, mean.misspar, var.misspar, D = 1, n.chains, n.iter, n.burnin, n.thin) # 'D' does not matter in pairwise meta-analysis
 
   }
 
@@ -181,11 +199,23 @@ run.separate.meta <- function(data, measure, assumption, heter.prior, mean.missp
   colnames(EM) <- c("t1", "t2", "mean", "sd", "2.5%", "25%", "50%", "75%", "97.5%", "Rhat", "n.eff")
   rownames(EM) <- NULL
 
-  tau <- data.frame(keep.comp, do.call(rbind, lapply(1:N.comp, function(i) meta[[i]]$tau)))
-  colnames(tau) <- c("t1", "t2", "median", "sd", "2.5%", "25%", "50%", "75%", "97.5%", "Rhat", "n.eff")
-  rownames(tau) <- NULL
+  if (model == "RE") {
+    tau <- data.frame(keep.comp, do.call(rbind, lapply(1:N.comp, function(i) meta[[i]]$tau)))
+    colnames(tau) <- c("t1", "t2", "median", "sd", "2.5%", "25%", "50%", "75%", "97.5%", "Rhat", "n.eff")
+    rownames(tau) <- NULL
+  } else {
+    tau <- NA
+  }
 
-  return(list(EM = EM, tau = tau, measure = measure))
+
+  ## Return results based on the model
+  return.results <- if (model == "RE") {
+    list(EM = EM, tau = tau, measure = measure, model = model)
+  } else {
+    list(EM = EM, measure = measure, model = model)
+  }
+
+  return(return.results)
 
 
 }

@@ -4,7 +4,7 @@
 \alias{scatterplots.dev}
 \title{Scatterplots on the posterior mean of deviance between consistency and unrelated mean effects (UME) models}
 \usage{
-scatterplots.dev(full, ume, drug.names)
+scatterplots.dev(full, ume, colour)
 }
 \description{
 Scatterplots on the posterior mean of deviance between consistency and unrelated mean effects (UME) models

@@ -4,7 +4,7 @@
 \alias{metareg.plot}
 \title{Plot the results from the meta-regression analysis}
 \usage{
-metareg.plot(full, metareg, covariate, covar.values, drug.names, expon)
+metareg.plot(full, metareg, covariate, covar.values, drug.names)
 }
 \description{
 Plot the results from the meta-regression analysis

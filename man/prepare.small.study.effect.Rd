@@ -7,7 +7,13 @@
 prepare.small.study.effect(data, measure, var.misspar, direction, D)
 }
 \arguments{
-\item{direction}{A list refering to the direction of each intervention in the network}
+\item{data}{ddd}
+
+\item{measure}{ddd}
+
+\item{var.misspar}{ddd}
+
+\item{direction}{A list referring to the direction of each intervention in the network}
 
 \item{D}{A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.}
 }

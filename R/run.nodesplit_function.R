@@ -1,13 +1,31 @@
 #' A function to perform Bayesian node-splitting approach for aggregate binary or continuous outcomes
 #'
 #' @export
-run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin){
+run.nodesplit <- function(data, measure, model, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin){
 
 
   options(warn = -1)
 
   ## Default arguments
+  measure <- if (missing(measure)) {
+    stop("The 'measure' needs to be defined")
+  } else if (measure != "MD" & measure != "SMD" & measure != "ROM" & measure != "OR") {
+    stop("Insert 'MD', 'SMD', 'ROM', or 'OR'")
+  } else {
+    measure
+  }
+  model <- ifelse(missing(model), "RE", model)
   assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
+  heter.prior <- if (model == "RE" & missing(heter.prior)) {
+    stop("The 'heter.prior' needs to be defined")
+  } else if (model == "FE" & missing(heter.prior)) {
+    list(NA, NA, NA)
+  } else if (model == "FE") {
+    message("The argument 'heter.prior' has been ignored")
+    list(NA, NA, NA)
+  } else {
+    heter.prior
+  }
   var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
   n.iter <- ifelse(missing(n.iter), 10000, n.iter)
@@ -73,22 +91,24 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
 
 
     ## Specification of the prior distribution for the between-trial parameter
-    if (heter.prior[[1]] == "halfnormal") {
+    if (model == "RE" & heter.prior[[1]] == "halfnormal") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 1))
 
-    } else if (heter.prior[[1]] == "uniform") {
+    } else if (model == "RE" & heter.prior[[1]] == "uniform") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 2))
 
-    } else if (measure == "SMD" & heter.prior[[1]] == "logt") {
+    } else if (model == "RE" & measure == "SMD" & heter.prior[[1]] == "logt") {
 
       heter.prior <- as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
 
-    } else if (measure != "SMD" & heter.prior[[1]] == "logt") {
+    } else if (model == "RE" & measure != "SMD" & heter.prior[[1]] == "logt") {
 
       stop("There are currently no empirically-based prior distributions for MD and ROM. Choose a half-normal or a uniform prior distribution, instead")
 
+    } else if (model == "FE") {
+      heter.prior <- NA
     }
 
 
@@ -129,7 +149,11 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
 
 
       ## Parameters to save
-      param.jags <- c("EM", "direct", "diff", "tau", "totresdev.o", "hat.par")
+      param.jags <- if (model == "RE") {
+        c("EM", "direct", "diff", "tau", "totresdev.o", "hat.par")
+      } else {
+        c("EM", "direct", "diff",  "totresdev.o", "hat.par")
+      }
 
 
       for(i in 1:length(pair[, 1])){
@@ -150,31 +174,33 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
 
         # Under the Independent structure with or without SMD as effect measure
         data.jag[[i]] <- list("y.o" = y0,
-                                "se.o" = se0,
-                                "mod" = mod,
-                                "N" = N,
-                                "t" = t,
-                                "na" = na..,
-                                "nt" = nt,
-                                "ns" = ns,
-                                "ref" = ref,
-                                "meand.phi" = mean.misspar,
-                                "precd.phi" = prec.misspar,
-                                "split" = checkPair[[i]][, "split"],
-                                "m" = m[[i]],
-                                "bi" = bi[[i]],
-                                "si" = si[[i]],
-                                "pair" = pair[i, ],
-                                "heter.prior" = heter.prior,
-                                "M" = M,
-                                "cov.phi" = cov.misspar,
-                                "var.phi" = var.misspar)
+                              "se.o" = se0,
+                              "mod" = mod,
+                              "N" = N,
+                              "t" = t,
+                              "na" = na..,
+                              "nt" = nt,
+                              "ns" = ns,
+                              "ref" = ref,
+                              "meand.phi" = mean.misspar,
+                              "precd.phi" = prec.misspar,
+                              "split" = checkPair[[i]][, "split"],
+                              "m" = m[[i]],
+                              "bi" = bi[[i]],
+                              "si" = si[[i]],
+                              "pair" = pair[i, ],
+                              "heter.prior" = heter.prior,
+                              "M" = M,
+                              "cov.phi" = cov.misspar,
+                              "var.phi" = var.misspar)
+
+
 
 
         ## Run the Bayesian analysis
         jagsfit[[i]] <- jags(data = data.jag[[i]],
                              parameters.to.save = param.jags,
-                             model.file = textConnection(prepare.nodesplit(measure, assumption)),
+                             model.file = textConnection(prepare.nodesplit(measure, model, assumption)),
                              n.chains = n.chains,
                              n.iter = n.iter,
                              n.burnin = n.burnin,
@@ -245,18 +271,20 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
 
 
     ## Specification of the prior distribution for the between-trial parameter
-    if (heter.prior[[1]] == "halfnormal") {
+    if (model == "RE" & heter.prior[[1]] == "halfnormal") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 1))
 
-    } else if (heter.prior[[1]] == "uniform") {
+    } else if (model == "RE" & heter.prior[[1]] == "uniform") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 2))
 
-    } else if (heter.prior[[1]] == "lognormal")  {
+    } else if (model == "RE" & heter.prior[[1]] == "lognormal")  {
 
       heter.prior <- as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
 
+    } else if (model == "FE") {
+      heter.prior <- NA
     }
 
 
@@ -292,7 +320,11 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
 
 
       ## Parameters to save
-      param.jags <- c("EM", "direct", "diff", "tau", "totresdev.o", "hat.par")
+      param.jags <- if (model == "RE") {
+        c("EM", "direct", "diff", "tau", "totresdev.o", "hat.par")
+      } else {
+        c("EM", "direct", "diff",  "totresdev.o", "hat.par")
+      }
 
 
       ## Define necessary model components
@@ -336,7 +368,7 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
         ## Run the Bayesian analysis
         jagsfit[[i]] <- jags(data = data.jag[[i]],
                              parameters.to.save = param.jags,
-                             model.file = textConnection(prepare.nodesplit(measure, assumption)),
+                             model.file = textConnection(prepare.nodesplit(measure, model, assumption)),
                              n.chains = n.chains,
                              n.iter = n.iter,
                              n.burnin = n.burnin,
@@ -365,8 +397,13 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
   colnames(diff) <- c("treat1", "treat2", "mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")
 
   # Between-trial variance after node-splitting
-  tau <- data.frame(pair[, 2], pair[, 1], do.call(rbind,lapply(1:length(pair[, 1]), function(i) jagsfit[[i]]$BUGSoutput$summary["tau", c("50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff")])))
-  colnames(tau) <- c("treat1", "treat2", "50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff")
+  if (model == "RE") {
+    tau <- data.frame(pair[, 2], pair[, 1], do.call(rbind,lapply(1:length(pair[, 1]), function(i) jagsfit[[i]]$BUGSoutput$summary["tau", c("50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff")])))
+    colnames(tau) <- c("treat1", "treat2", "50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff")
+  } else {
+    tau <- NA
+  }
+
 
   getResults <- hat.par <- list()
   dev <- rep(NA, length(pair[, 1]))
@@ -427,8 +464,25 @@ run.nodesplit <- function(data, measure, assumption, heter.prior, mean.misspar, 
   model.assessment <- data.frame(pair[, 2], pair[, 1], DIC, unlist(dev), pD)
   colnames(model.assessment) <- c("treat1", "treat2", "DIC", "deviance", "pD")
 
+  results <- if (model == "RE") {
+    list(direct = direct,
+         indirect = EM,
+         diff = diff,
+         tau = tau,
+         model.assessment = model.assessment,
+         measure = measure,
+         model = model)
+  } else {
+    list(direct = direct,
+         indirect = EM,
+         diff = diff,
+         model.assessment = model.assessment,
+         measure = measure,
+         model = model)
+  }
 
-  return(list(direct = direct, indirect = EM, diff = diff, tau = tau, model.assessment = model.assessment, measure = measure))
+
+  return(results)
 }
 
 

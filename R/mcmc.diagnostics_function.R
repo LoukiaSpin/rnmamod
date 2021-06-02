@@ -35,6 +35,7 @@ mcmc.diagnostics <- function(net, par){
 
   options(warn = -1)
 
+
   jagsfit <- net$jagsfit
 
   ## Turn results into a data-frame to select model parameters (using 'dplyr')
@@ -46,17 +47,20 @@ mcmc.diagnostics <- function(net, par){
   # Predictive effects of all unique pairwise comparisons
   EM.pred <- t(getResults %>% dplyr::select(starts_with("EM.pred[")))
 
+
   # SUrface under the Cumulative RAnking curve values
   SUCRA <- t(getResults %>% dplyr::select(starts_with("SUCRA")))
 
   # Within-trial effects size (multi-arm trials with T interventions provide T-1 such effect sizes)
-  delta <- t(getResults %>% dplyr::select(starts_with("delta")))
+  delta <- t(getResults %>% dplyr::select(starts_with("delta") & !ends_with(",1]")))
+
 
   # Ranking probability of each intervention for every rank
   effectiveness <- t(getResults %>% dplyr::select(starts_with("effectiveness")))
 
   # Between-trial standard deviation
   tau <- t(getResults %>% dplyr::select(starts_with("tau")))
+
 
   # Estimated missingness parameter
   phi <- t(getResults %>% dplyr::select(starts_with("phi") | starts_with("mean.phi") | starts_with("mean.phi[") | starts_with("phi[")))
@@ -74,12 +78,10 @@ mcmc.diagnostics <- function(net, par){
   ## A panel of autocorrelation plots for each chain and every monitored parameter
   n.chains <- res1$jagsfit$BUGSoutput$n.chains
   autocorrelation <- par(mfrow = c(3, n.chains))
-  for(i in 1:n.chains){
-
+  for (i in 1:n.chains) {
     autplot1(jagsfit.mcmc[, par[1]], chain = i, main = paste(par[1], "-", "chain", i))
     autplot1(jagsfit.mcmc[, par[2]], chain = i, main = paste(par[2], "-","chain", i))
     autplot1(jagsfit.mcmc[, par[3]], chain = i, main = paste(par[3], "-","chain", i))
-
   }
 
 
@@ -92,13 +94,13 @@ mcmc.diagnostics <- function(net, par){
   ## Keep results on the maximum Rhat for the selected monitored model parameters
   if(is.null(dim(phi))){
 
-    R.hat.max <- c(max(EM[, 8]), max(EM.pred[, 8]), max(delta[, 8]), max(tau[8]), max(SUCRA[, 8]), max(effectiveness[, 8]), phi[8], max(beta[, 8]))
-    R.hat.max[8] <- ifelse(is.infinite(R.hat.max[8]), NA, R.hat.max[8])
+    R.hat.max <- append(R.hat.max, c(max(EM[, 8]), max(EM.pred[, 8]), max(delta[, 8]), max(tau[8]), max(SUCRA[, 8]), max(effectiveness[, 8]), phi[8], max(beta[, 8])))
+    R.hat.max[c(2:4, 8)] <- ifelse(is.infinite(R.hat.max[c(2:4, 8)]), NA, R.hat.max[c(2:4, 8)])
 
   } else {
 
     R.hat.max <- c(max(EM[, 8]), max(EM.pred[, 8]), max(delta[, 8]), max(tau[8]), max(SUCRA[, 8]), max(effectiveness[, 8]), max(phi[, 8]), max(beta[, 8]))
-    R.hat.max[8] <- ifelse(is.infinite(R.hat.max[8]), NA, R.hat.max[8])
+    R.hat.max[c(2:4, 8)] <- ifelse(is.infinite(R.hat.max[c(2:4, 8)]), NA, R.hat.max[c(2:4, 8)])
 
   }
 

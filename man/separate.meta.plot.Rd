@@ -4,7 +4,7 @@
 \alias{separate.meta.plot}
 \title{Plot the results from the unrelated mean effects model}
 \usage{
-separate.meta.plot(full, meta, drug.names)
+\method{separate}{meta.plot}(full, meta, drug.names)
 }
 \description{
 Plot the results from the unrelated mean effects model

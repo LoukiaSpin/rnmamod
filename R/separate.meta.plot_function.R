@@ -19,7 +19,20 @@ separate.meta.plot <- function(full, meta, drug.names) {
   tau.meta <- meta$tau
 
   # Effect measure
-  measure <- effect.measure.name(full$measure)
+  measure <- if (full$measure != meta$measure) {
+    stop("The argument 'measure' differs in 'run.model' and 'run.separate.meta'. Specify the same 'measure' and run the analysis again")
+  } else {
+    effect.measure.name(full$measure)
+  }
+
+
+  # Analysis model
+  model <- if (full$model != meta$model) {
+    stop("The argument 'model' differs in 'run.model' and 'run.separate.meta'. Specify the same 'model' and run the analysis again")
+  } else {
+    full$model
+  }
+
 
   # Possible and observed comparisons
   possible.comp <- possible.observed.frail.comparisons(drug.names, obs.comp = paste0(meta$EM[, "t2"], "vs", meta$EM[, "t1"]))
@@ -39,7 +52,11 @@ separate.meta.plot <- function(full, meta, drug.names) {
 
 
   ## Between-trial standard deviation of separate RE-MAs
-  tau.meta.clean <- format(round(tau.meta[, c(3:5, 9)], 2), nsmall = 2)
+  if (model == "RE") {
+    tau.meta.clean <- format(round(tau.meta[, c(3:5, 9)], 2), nsmall = 2)
+  } else {
+    tau.meta.clean <- NA
+  }
 
 
 
@@ -54,14 +71,24 @@ separate.meta.plot <- function(full, meta, drug.names) {
 
 
   ## The 95% CrIs of the between-trial standard deviation of separate RE-MAs
-  CrI.tau.meta <- paste0("(", tau.meta.clean[, 3], ",", " ", tau.meta.clean[, 4], ")")
+  CrI.tau.meta <- if (model == "RE") {
+    paste0("(", tau.meta.clean[, 3], ",", " ", tau.meta.clean[, 4], ")")
+  } else {
+    NA
+  }
 
 
 
   ## Create a data-frame with effect estimates on both models
-  EM.both.models <- data.frame(possible.comp$obs.comp[, 4], EM.full.clean[, 1:2], CrI.full.clean, EM.meta.clean[, 1:2], CrI.meta.clean, tau.meta.clean[, 1:2], CrI.tau.meta)
-  colnames(EM.both.models) <- c("Comparison", "Posterior mean NMA", "Posterior SD NMA", "95% CrI NMA", "Posterior mean MA",
-                                "Posterior SD MA", "95% CrI MA", "Posterior median tau", "Posterior SD tau", "95% CrI tau")
+  if (model == "RE") {
+    EM.both.models <- data.frame(possible.comp$obs.comp[, 4], EM.full.clean[, 1:2], CrI.full.clean, EM.meta.clean[, 1:2], CrI.meta.clean, tau.meta.clean[, 1:2], CrI.tau.meta)
+    colnames(EM.both.models) <- c("Comparison", "Posterior mean NMA", "Posterior SD NMA", "95% CrI NMA", "Posterior mean MA",
+                                  "Posterior SD MA", "95% CrI MA", "Posterior median tau", "Posterior SD tau", "95% CrI tau")
+  } else {
+    EM.both.models <- data.frame(possible.comp$obs.comp[, 4], EM.full.clean[, 1:2], CrI.full.clean, EM.meta.clean[, 1:2], CrI.meta.clean)
+    colnames(EM.both.models) <- c("Comparison", "Posterior mean NMA", "Posterior SD NMA", "95% CrI NMA", "Posterior mean MA",
+                                  "Posterior SD MA", "95% CrI MA")
+  }
   rownames(EM.both.models) <- NULL
 
 
@@ -77,8 +104,13 @@ separate.meta.plot <- function(full, meta, drug.names) {
   rownames(prepare) <- NULL
 
   # Between-trial standard deviation
-  prepare.tau <- data.frame(possible.comp$obs.comp[, 4], tau.meta.clean[, -2])
-  colnames(prepare.tau) <- c("comparison", "median", "lower", "upper")
+  if (model == "RE") {
+    prepare.tau <- data.frame(possible.comp$obs.comp[, 4], tau.meta.clean[, -2])
+    colnames(prepare.tau) <- c("comparison", "median", "lower", "upper")
+  } else {
+    prepare.tau <- NA
+  }
+
 
 
 
@@ -102,25 +134,33 @@ separate.meta.plot <- function(full, meta, drug.names) {
 
 
   ## Forest plots of comparisons-specific between-trial standard deviation
-  p2 <- ggplot(data = prepare.tau, aes(x = as.factor(1:length(obs.comp)), y = as.numeric(median), ymin = as.numeric(lower), ymax = as.numeric(upper))) +
-           geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-           geom_hline(yintercept = tau.full[3], lty = 2, size = 1.3, col = "#006CD1") +
-           geom_hline(yintercept = tau.full[5], lty = 2, size = 1.3, col = "#006CD1") +
-           geom_hline(yintercept = tau.full[7], lty = 2, size = 1.3, col = "#006CD1") +
-           geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
-           geom_text(aes(x = as.factor(1:length(obs.comp)), y = round(as.numeric(median), 2), label = round(as.numeric(median), 2)),
-                     color = "black", hjust = -0.1, vjust = -0.5, size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.8), inherit.aes = T) +
-           scale_x_discrete(breaks = as.factor(1:length(obs.comp)), labels = prepare.tau$comparison[1:length(obs.comp)]) +
-           labs(x = "", y = "Between-trial standard deviation") +
-           coord_flip() +
-           theme_classic() +
-           theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12),
-                 axis.title.x = element_text(color = "black", face = "bold", size = 12))
+  p2 <- if (model == "RE") {
+    ggplot(data = prepare.tau, aes(x = as.factor(1:length(obs.comp)), y = as.numeric(median), ymin = as.numeric(lower), ymax = as.numeric(upper))) +
+      geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
+      geom_hline(yintercept = tau.full[3], lty = 2, size = 1.3, col = "#006CD1") +
+      geom_hline(yintercept = tau.full[5], lty = 2, size = 1.3, col = "#006CD1") +
+      geom_hline(yintercept = tau.full[7], lty = 2, size = 1.3, col = "#006CD1") +
+      geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
+      geom_text(aes(x = as.factor(1:length(obs.comp)), y = round(as.numeric(median), 2), label = round(as.numeric(median), 2)),
+                color = "black", hjust = -0.1, vjust = -0.5, size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.8), inherit.aes = T) +
+      scale_x_discrete(breaks = as.factor(1:length(obs.comp)), labels = prepare.tau$comparison[1:length(obs.comp)]) +
+      labs(x = "", y = "Between-trial standard deviation") +
+      coord_flip() +
+      theme_classic() +
+      theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12),
+            axis.title.x = element_text(color = "black", face = "bold", size = 12))
+  } else {
+    NA
+  }
 
 
 
   ## Bring together both forest-plots
-  forest.plots <- ggarrange(p1, p2, nrow = 1, ncol = 2, labels = c("A)", "B)"), common.legend = T, legend = "bottom")
+  forest.plots <- if (model == "RE") {
+    ggarrange(p1, p2, nrow = 1, ncol = 2, labels = c("A)", "B)"), common.legend = T, legend = "bottom")
+  } else {
+    p1
+  }
 
 
 

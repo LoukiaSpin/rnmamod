@@ -4,7 +4,7 @@
 \alias{UME.plot}
 \title{Plot the results from the unrelated mean effects model}
 \usage{
-UME.plot(full, ume, drug.names)
+UME.plot(full, ume, drug.names, threshold)
 }
 \description{
 Plot the results from the unrelated mean effects model

@@ -7,19 +7,37 @@ nodesplit.plot <- function(node, full, drug.names) {
   ## Keep tau and model assessment measures from NMA model
   tau.values <- full$tau[c(5, 2, 3, 7)]
   model.assess.NMA <- full$model.assessment
-  measure <- effect.measure.name(full$measure)
+
+  # Effect measure
+  measure <- if (full$measure != node$measure) {
+    stop("The argument 'measure' differs in 'run.model' and 'run.nodesplit'. Specify the same 'measure' and run the analysis again")
+  } else {
+    effect.measure.name(full$measure)
+  }
+
+
+  # Analysis model
+  model <- if (full$model != node$model) {
+    stop("The argument 'model' differs in 'run.model' and 'run.nodesplit'. Specify the same 'model' and run the analysis again")
+  } else {
+    full$model
+  }
 
 
   ## Keep results on 'direct evidence', 'indirect evidence', 'inconsistency factor', 'between-trial standard deviation',
   ## and model assessment measures (i.e., DIC, posterior mean of refisual deviance, and pD)
-  direct0 <- node$direct; indirect0 <- node$indirect; IF0 <- node$diff; tau0 <- node$tau; model.assess <- node$model.assessment
+  direct0 <- node$direct; indirect0 <- node$indirect; IF0 <- node$diff; model.assess <- node$model.assessment
 
 
   ## Sort 'direct evidence', 'indirect evidence', 'inconsistency factor', and 'between-trial standard deviation' by DIC in ascending order
   direct <- direct0[order(model.assess$DIC), ]
   indirect <- indirect0[order(model.assess$DIC), ]
   IF <- IF0[order(model.assess$DIC), ]
-  tau <- tau0[order(model.assess$DIC), ]
+  if (model == "RE") {
+    tau <- node$tau[order(model.assess$DIC), ]
+  } else {
+    tau <- NA
+  }
   model.assess.sort <- model.assess[order(model.assess$DIC), ]
 
 
@@ -123,33 +141,50 @@ nodesplit.plot <- function(node, full, drug.names) {
 
 
   ## Create a table on the model assessment measures and between-trial standard deviation per split node
-  CrI.tau <- paste0("(", round(tau[, 5], 2), ",", " ", round(tau[, 6], 2), ")")
-  table.assess0 <- data.frame(comp, round(model.assess.sort[, -c(1:2)], 2), Better.fit, round(tau[, 3:4], 2), CrI.tau)
-  colnames(table.assess0) <- c("Approach", "DIC", "Post. mean dev.", "pD", "DIC-based better fit", "Post. median tau", "Post. SD tau", "95% CrI tau")
-  add <- data.frame("NMA", round(model.assess.NMA[c(1, 3, 2)], 2), "-", round(tau.values[1], 2), round(tau.values[2], 2), paste0("(", round(tau.values[3], 2), ",", " ", round(tau.values[4], 2), ")"))
-  colnames(add) <- colnames(table.assess0)
-  table.assess <- rbind(add, table.assess0)
+  if (model == "RE") {
+    CrI.tau <- paste0("(", round(tau[, 5], 2), ",", " ", round(tau[, 6], 2), ")")
+    table.assess0 <- data.frame(comp, round(model.assess.sort[, -c(1:2)], 2), Better.fit, round(tau[, 3:4], 2), CrI.tau)
+    colnames(table.assess0) <- c("Approach", "DIC", "Post. mean dev.", "pD", "DIC-based better fit", "Post. median tau", "Post. SD tau", "95% CrI tau")
+    add <- data.frame("NMA", round(model.assess.NMA[c(1, 3, 2)], 2), "-", round(tau.values[1], 2), round(tau.values[2], 2), paste0("(", round(tau.values[3], 2), ",", " ", round(tau.values[4], 2), ")"))
+    colnames(add) <- colnames(table.assess0)
+    table.assess <- rbind(add, table.assess0)
+  } else {
+    table.assess0 <- data.frame(comp, round(model.assess.sort[, -c(1:2)], 2), Better.fit)
+    colnames(table.assess0) <- c("Approach", "DIC", "Post. mean dev.", "pD", "DIC-based better fit")
+    add <- data.frame("NMA", round(model.assess.NMA[c(1, 3, 2)], 2), "-")
+    colnames(add) <- colnames(table.assess0)
+    table.assess <- rbind(add, table.assess0)
+  }
 
 
 
   ## Prepare the dataset to create the panel of forest-plot on the 'between-trial standard deviation' for each split node
-  prepare.tau <- data.frame(comp, tau[, c(3, 5:6)], sort(model.assess$DIC))
-  colnames(prepare.tau) <- c("node", "median", "lower", "upper", "DIC")
+  if (model == "RE") {
+    prepare.tau <- data.frame(comp, tau[, c(3, 5:6)], sort(model.assess$DIC))
+    colnames(prepare.tau) <- c("node", "median", "lower", "upper", "DIC")
+  } else {
+    prepare.tau <- NA
+  }
+
 
 
   ## Create the forest-plot for 'between-trial standard deviation'
-  p2 <- ggplot(data = prepare.tau, aes(x = factor(node, levels = unique(prepare$node)), y = median, ymin = lower, ymax = upper) ) +
-          geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-          geom_hline(yintercept = tau.values[1], lty = 2, size = 1.2, col = "#D55E00") +
-          geom_hline(yintercept = tau.values[3], lty = 2, size = 1.2, col = "#D55E00") +
-          geom_hline(yintercept = tau.values[4], lty = 2, size = 1.2, col = "#D55E00") +
-          geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
-          geom_text(aes(x = factor(node, levels = unique(prepare$node)), y = round(median, 2), label = round(median, 2), hjust = 0, vjust = -0.4), color = "black", size = 4.0,
-                    check_overlap = F, parse = F, position = position_dodge(width = 0.5),  inherit.aes = T) +
-          geom_label(aes(x = factor(node, levels = unique(prepare$node)), y = upper, label = round(DIC, 0)), fill = "beige", colour = "black", fontface = "plain",  size = 3.1) +
-          labs(x = "Split nodes (sorted by DIC in ascending order)", y = "Between-trial standard deviation") +
-          theme_classic() +
-          theme(axis.text.x = element_text(color = "black", size = 12, angle = 45, hjust = 1), axis.text.y = element_text(color = "black", size = 12), legend.position = "none")
+  p2 <- if (model == "RE") {
+    ggplot(data = prepare.tau, aes(x = factor(node, levels = unique(prepare$node)), y = median, ymin = lower, ymax = upper) ) +
+      geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
+      geom_hline(yintercept = tau.values[1], lty = 2, size = 1.2, col = "#D55E00") +
+      geom_hline(yintercept = tau.values[3], lty = 2, size = 1.2, col = "#D55E00") +
+      geom_hline(yintercept = tau.values[4], lty = 2, size = 1.2, col = "#D55E00") +
+      geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
+      geom_text(aes(x = factor(node, levels = unique(prepare$node)), y = round(median, 2), label = round(median, 2), hjust = 0, vjust = -0.4), color = "black", size = 4.0,
+                check_overlap = F, parse = F, position = position_dodge(width = 0.5),  inherit.aes = T) +
+      geom_label(aes(x = factor(node, levels = unique(prepare$node)), y = upper, label = round(DIC, 0)), fill = "beige", colour = "black", fontface = "plain",  size = 3.1) +
+      labs(x = "Split nodes (sorted by DIC in ascending order)", y = "Between-trial standard deviation") +
+      theme_classic() +
+      theme(axis.text.x = element_text(color = "black", size = 12, angle = 45, hjust = 1), axis.text.y = element_text(color = "black", size = 12), legend.position = "none")
+  } else {
+    NA
+  }
 
 
 
@@ -158,9 +193,18 @@ nodesplit.plot <- function(node, full, drug.names) {
   write_xlsx(table.assess, paste0(getwd(),"Table assesssment Node-Split.xlsx"))
 
 
-  return(list(table.EM = table.EM,
-              table.assess = table.assess,
-              node.split.forestplot = p1,
-              tau.forestplot = p2))
+  ## Return results
+  results <- if (model == "RE") {
+    list(table.EM = table.EM,
+         table.assess = table.assess,
+         node.split.forestplot = p1,
+         tau.forestplot = p2)
+  } else {
+    list(table.EM = table.EM,
+         table.assess = table.assess,
+         node.split.forestplot = p1)
+  }
 
+
+  return(results)
 }
