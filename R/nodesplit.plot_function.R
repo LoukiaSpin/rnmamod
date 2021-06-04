@@ -205,6 +205,5 @@ nodesplit.plot <- function(node, full, drug.names) {
          node.split.forestplot = p1)
   }
 
-
   return(results)
 }

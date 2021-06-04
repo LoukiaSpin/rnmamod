@@ -25,7 +25,6 @@ separate.meta.plot <- function(full, meta, drug.names) {
     effect.measure.name(full$measure)
   }
 
-
   # Analysis model
   model <- if (full$model != meta$model) {
     stop("The argument 'model' differs in 'run.model' and 'run.separate.meta'. Specify the same 'model' and run the analysis again")

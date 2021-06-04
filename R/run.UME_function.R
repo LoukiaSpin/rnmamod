@@ -462,6 +462,7 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
          tau = tau,
          model.assessment = model.assessment,
          measure = measure,
+         model = model,
          obs.comp = obs.comp,
          jagsfit = jagsfit)
   } else {
@@ -476,6 +477,7 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
          sign.dev.m = sign.dev.m,
          model.assessment = model.assessment,
          measure = measure,
+         model = model,
          obs.comp = obs.comp,
          jagsfit = jagsfit)
   }
