@@ -54,14 +54,10 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
 
   options(warn = -1)
 
+  ## Prepare the dataset
+  item <- data.preparation(data, measure)
+
   ## Default arguments
-  measure <- if (missing(measure)) {
-    stop("The 'measure' needs to be defined")
-  } else if (!is.element(measure, c("MD", "SMD", "ROM", "OR"))) {
-    stop("Insert 'MD', 'SMD', 'ROM', or 'OR'")
-  } else {
-    measure
-  }
   model <- if (missing(model)) {
     "RE"
   } else if (!is.element(model, c("RE", "FE"))) {
@@ -85,74 +81,20 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   n.thin <- ifelse(missing(n.thin), 1, n.thin)
 
 
-  ## For a continuous outcome
-  if (measure == "MD" || measure == "SMD"|| measure == "ROM") {
-
-    ## Continuous: arm-level, wide-format dataset
-    y.obs <- data %>% dplyr::select(starts_with("y"))                             # Observed mean value in each arm of every trial
-    sd.obs <- data %>% dplyr::select(starts_with("sd"))                           # Observed standard deviation in each arm of every trial
-    mod <- data %>% dplyr::select(starts_with("m"))                               # Number of missing participants in each arm of every trial
-    c <- data %>% dplyr::select(starts_with("c"))                                 # Number of completers in each arm of every trial
-    se.obs <- sd.obs/sqrt(c)                                                      # Observed standard error in each arm of every trial
-    rand <- mod + c                                                               # Number of randomised participants in each arm of every trial
-    treat <- data %>% dplyr::select(starts_with("t"))                             # Intervention studied in each arm of every trial
-    na <- apply(treat, 1, function(x) length(which(!is.na(x))))                   # Number of interventions investigated in every trial per network
-    nt <- length(table(as.matrix(treat)))                                         # Total number of interventions per network
-    ns <- length(y.obs[, 1])                                                      # Total number of included trials per network
-    ref <- 1                                                                      # The first intervention (t1 = 1) is the reference of the network
-
-
-    ## Order by 'id of t1' < 'id of t1'
-    y0 <- se0 <- m <- N <- t <- t0 <- treat
-    for (i in 1:ns) {
-      t0[i, ] <- order(treat[i, ], na.last = T)
-      y0[i, ] <- y.obs[i, order(t0[i, ], na.last = T)]
-      se0[i, ] <- se.obs[i, order(t0[i, ], na.last = T)]
-      m[i, ] <- mod[i, order(t0[i, ], na.last = T)]
-      N[i, ] <- rand[i, order(t0[i, ], na.last = T)]
-      t[i, ] <- sort(treat[i, ], na.last = T)
-    }
-
-  } else {
-
-
-    ## Binary: arm-level, wide-format dataset
-    event <- data %>% dplyr::select(starts_with("r"))                               # Number of observed events in each arm of every trial
-    mod <- data %>% dplyr::select(starts_with("m"))                                 # Number of missing participants in each arm of every trial
-    rand <- data %>% dplyr::select(starts_with("n"))                                # Number randomised participants in each arm of every trial
-    treat <- data %>% dplyr::select(starts_with("t"))                               # Intervention studied in each arm of every trial
-    na <- apply(treat, 1, function(x) length(which(!is.na(x))))                     # Number of interventions investigated in every trial per network
-    nt <- length(table(as.matrix(treat)))                                           # Total number of interventions per network
-    ns <- length(event[, 1])                                                        # Total number of included trials per network
-    ref <- 1                                                                        # The first intervention (t1 = 1) is the reference of the network
-
-
-    ## Order by 'id of t1' < 'id of t2' < 'id of t3', and so on
-    r <- m <- N <- t <- t0 <- treat
-    for (i in 1:ns) {
-      t0[i, ] <- order(treat[i, ], na.last = T)
-      r[i, ] <- event[i, order(t0[i, ], na.last = T)]
-      m[i, ] <- mod[i, order(t0[i, ], na.last = T)]
-      N[i, ] <- rand[i, order(t0[i, ], na.last = T)]
-      t[i, ] <- sort(treat[i, ], na.last = T)
-    }
-
-  }
-
   ## Information for the prior distribution on the missingness parameter (IMDOM or logIMROM)
-  M <- ifelse(!is.na(m), mean.misspar, NA)  # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
+  M <- ifelse(!is.na(item$m), mean.misspar, NA)  # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
   prec.misspar <- 1/var.misspar
   psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
   cov.misspar <- 0.5*var.misspar             # covariance of pair of missingness parameters in a trial (independent structure)
 
 
-  data.jag <- list("m" = m,
-                   "N" = N,
-                   "t" = t,
-                   "na" = na,
-                   "nt" = nt,
-                   "ns" = ns,
-                   "ref" = ref,
+  data.jag <- list("m" = item$m,
+                   "N" = item$N,
+                   "t" = item$t,
+                   "na" = item$na,
+                   "nt" = item$nt,
+                   "ns" = item$ns,
+                   "ref" = item$ref,
                    "M" = M,
                    "cov.phi" = cov.misspar,
                    "var.phi" = var.misspar,
@@ -160,14 +102,14 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
                    "precd.phi" = prec.misspar,
                    "D" = D,
                    "heter.prior" = heter.prior,
-                   #"eff.mod2" = matrix(0, nrow = ns, ncol = max(na)),
-                   "eff.mod" = rep(0, ns))
+                   #"eff.mod2" = matrix(0, nrow = item$ns, ncol = max(item$na)),
+                   "eff.mod" = rep(0, item$ns))
 
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
-    data.jag <- append(data.jag, list("y.o" = y0, "se.o" = se0))
+    data.jag <- append(data.jag, list("y.o" = item$y0, "se.o" = item$se0))
   } else if (measure == "OR") {
-    data.jag <- append(data.jag, list("r" = r))
+    data.jag <- append(data.jag, list("r" = item$r))
   }
 
 

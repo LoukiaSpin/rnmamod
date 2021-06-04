@@ -1,3 +1,8 @@
+#' Indicate the mean value of the distribution of the missingness parameter
+#' @param assumption The assumption about the IM
+#' @param mean.misspar The mean value for the IM
+#'
+#' @export
 missingness.param.prior <- function(assumption, mean.misspar) {
 
 
