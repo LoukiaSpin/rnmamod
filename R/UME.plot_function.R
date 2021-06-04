@@ -6,6 +6,18 @@ UME.plot <- function(full, ume, drug.names, threshold) {
 
 
   ## The results on the following parameters will be used:
+  # Analysis model
+  model <- if (full$model != ume$model) {
+    stop("The argument 'model' differs in 'run.model' and 'run.UME'. Specify the same 'model' and run the analysis again")
+  } else {
+    full$model
+  }
+
+  # Effect measure
+  measure <- if (full$measure != ume$measure) {
+    stop("The argument 'measure' differs in 'run.model' and 'run.UME'. Specify the same 'measure' and run the analysis again")
+  }
+
   # Posterior results on the effect estimates under consistency model
   EM.full <- full$EM
 
@@ -13,10 +25,18 @@ UME.plot <- function(full, ume, drug.names, threshold) {
   EM.ume <- ume$EM
 
   # Posterior results on between-trial standard deviation under consistency model
-  tau.full <- full$tau
+  tau.full <- if (model == "RE") {
+    full$tau
+  } else {
+    NA
+  }
 
   # Posterior results on between-trial standard deviation under UME model
-  tau.ume <- ume$tau
+  tau.ume <- if (model == "RE") {
+    ume$tau
+  } else {
+    NA
+  }
 
   # Posterior mean on deviance contribution for missing outcomes under consistency model
   dev.m.full <- full$dev.m
@@ -36,9 +56,10 @@ UME.plot <- function(full, ume, drug.names, threshold) {
   # Measures of model assessment: DIC, pD, total residual deviance (as obtained from R2jags) under UME model
   model.assess.ume <- ume$model.assessment
 
+  # Observed comparisons in the network
   obs.comp <- ume$obs.comp
 
-  ## Possible and observed comaprisons (with names)
+  ## Possible and observed comparisons (with names)
   possible.comp <- possible.observed.frail.comparisons(drug.names, obs.comp)
 
 
@@ -84,34 +105,38 @@ UME.plot <- function(full, ume, drug.names, threshold) {
 
 
 
-  ## A data-frame with the posterior median and 95% CrII on between-trial standard deviation
-  between.trial.SD <- rbind(tau.full[c(5, 3, 7)], tau.ume[c(5, 3, 7)])
-  colnames(between.trial.SD) <- c("Posterior median", "Lower 95% CrI", "Upper 95% CrI")
-  rownames(between.trial.SD) <- c("Full NMA", "UME model")
+  ## A data-frame with the posterior median and 95% CrI on between-trial standard deviation
+  between.trial.SD <- if (model == "RE") {
+    rbind(tau.full[c(5, 3, 7)], tau.ume[c(5, 3, 7)])
+    colnames(between.trial.SD) <- c("Posterior median", "Lower 95% CrI", "Upper 95% CrI")
+    rownames(between.trial.SD) <- c("Full NMA", "UME model")
+  } else {
+    NA
+  }
 
 
 
   ## Scatterplot on the deviance contribution of consistency versus UME models
   scatterplot.o <- scatterplots.dev(dev.o.full[, 1], dev.o.ume[, 1], colour = "#D55E00")
-  scatterplot.m <- scatterplots.dev(dev.m.full[, 1], dev.m.ume[, 1], colour = "#009E73")
+  #scatterplot.m <- scatterplots.dev(dev.m.full[, 1], dev.m.ume[, 1], colour = "#009E73")
 
 
 
   ## Bland-Altman plot on the deviance contribution of consistency versus UME models
   BA.observed <- BlandAltman.plot(dev.o.full[, 1], dev.o.ume[, 1], colour = "#D55E00")
-  BA.missing <- BlandAltman.plot(dev.m.full[, 1], dev.m.ume[, 1], colour = "#009E73")
+  #BA.missing <- BlandAltman.plot(dev.m.full[, 1], dev.m.ume[, 1], colour = "#009E73")
 
 
 
   ## Bring together all four plots
-  p1 <- ggarrange(scatterplot.o, BA.observed, nrow = 2, ncol = 1, labels = c("A)", "B)"))
-  p2 <- ggarrange(scatterplot.m, BA.missing, nrow = 2, ncol = 1)
+  #p1 <- ggarrange(scatterplot.o, BA.observed, nrow = 2, ncol = 1, labels = c("A)", "B)"))
+  #p2 <- ggarrange(scatterplot.m, BA.missing, nrow = 2, ncol = 1)
 
-  p1 <- annotate_figure(p1, fig.lab = "Observed outcomes", fig.lab.face = "bold", fig.lab.pos = "top")
-  p2 <- annotate_figure(p2, fig.lab = "Missing outcome data", fig.lab.face = "bold", fig.lab.pos = "top")
+  #p1 <- annotate_figure(p1, fig.lab = "Observed outcomes", fig.lab.face = "bold", fig.lab.pos = "top")
+  #p2 <- annotate_figure(p2, fig.lab = "Missing outcome data", fig.lab.face = "bold", fig.lab.pos = "top")
 
-  scatterplots <- ggarrange(p1, p2, ncol = 2)
-
+  #scatterplots <- ggarrange(p1, p2, ncol = 2)
+  scatterplots <- ggarrange(scatterplot.o, BA.observed, nrow = 1, ncol = 2)
 
 
   ## Leverage plots
@@ -119,13 +144,13 @@ UME.plot <- function(full, ume, drug.names, threshold) {
   lever.full.o <- leverage.plot(full, drug.names, title.o = "Observed outcomes under consistency model", title.m = "Missing outcome data under consistency model")$leverage.plot.observed
 
   # Consistency model for missing outcomes
-  lever.full.m <- leverage.plot(full, drug.names, title.o = "Observed outcomes under consistency model", title.m = "Missing outcome data under consistency model")$leverage.plot.missing
+  #lever.full.m <- leverage.plot(full, drug.names, title.o = "Observed outcomes under consistency model", title.m = "Missing outcome data under consistency model")$leverage.plot.missing
 
   # UME model for observed outcomes
   lever.ume.o <- leverage.plot(ume, drug.names, title.o = "Observed outcomes under UME model", title.m = "Missing outcome data under UME model")$leverage.plot.observed
 
   # UME model for missing outcomes
-  lever.ume.m <- leverage.plot(ume, drug.names, title.o = "Observed outcomes under UME model", title.m = "Missing outcome data under UME model")$leverage.plot.missing
+  #lever.ume.m <- leverage.plot(ume, drug.names, title.o = "Observed outcomes under UME model", title.m = "Missing outcome data under UME model")$leverage.plot.missing
 
 
 
@@ -144,12 +169,23 @@ UME.plot <- function(full, ume, drug.names, threshold) {
   write_xlsx(EM.both.models, paste0(getwd(),"Table NMA vs UME.xlsx"))
 
 
-  return(list(EM.both.models = EM.both.models,
-              model.assessment = model.assessment,
-              between.trial.SD = between.trial.SD,
-              scatterplots = scatterplots,
-              levarage.plots = lev.plots,
-              forestplots.panel = forestplots,
-              heatmap.similarity = heatmap))
+  ## Return results
+  results <- if (model == "RE") {
+    list(EM.both.models = EM.both.models,
+         model.assessment = model.assessment,
+         between.trial.SD = between.trial.SD,
+         scatterplots = scatterplots,
+         levarage.plots = lev.plots,
+         forestplots.panel = forestplots,
+         heatmap.similarity = heatmap)
+  } else {
+    list(EM.both.models = EM.both.models,
+         model.assessment = model.assessment,
+         scatterplots = scatterplots,
+         levarage.plots = lev.plots,
+         forestplots.panel = forestplots,
+         heatmap.similarity = heatmap)
+  }
 
+  return(results)
 }
