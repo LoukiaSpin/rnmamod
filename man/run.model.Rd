@@ -19,6 +19,7 @@ Apart from \strong{na}, all other elements appear in \code{data} as many times a
 run.model(
   data,
   measure,
+  model,
   assumption,
   heter.prior,
   mean.misspar,

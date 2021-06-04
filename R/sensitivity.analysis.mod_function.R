@@ -59,18 +59,15 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, var.m
   } else {
     measure
   }
-  model <- ifelse(missing(model), "RE", model)
-  assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
-  heter.prior <- if (model == "RE" & missing(heter.prior)) {
-    stop("The 'heter.prior' needs to be defined")
-  } else if (model == "FE" & missing(heter.prior)) {
-    list(NA, NA, NA)
-  } else if (model == "FE") {
-    message("The argument 'heter.prior' has been ignored")
-    list(NA, NA, NA)
+  model <- if (missing(model)) {
+    "RE"
+  } else if (model != "RE" & model != "FE") {
+    stop("Insert 'RE', or 'FE'")
   } else {
-    heter.prior
+    model
   }
+  assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
+  heter.prior <- heterogeneity.param.prior(measure, model, heter.prior)
   var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
   n.iter <- ifelse(missing(n.iter), 10000, n.iter)
@@ -107,37 +104,8 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, var.m
     }
 
 
-    ## A 2x2 matrix of 25 reference-specific scenarios (PMID: 30223064)
-    (scenarios <- c(-2, -1, 0, 1, 2))
-    (mean.misspar <- as.matrix(cbind(rep(scenarios, each = 5), rep(scenarios, 5)))) # 2nd column refers to the reference intervention (control in MA)
-
-
-    ## Information for the prior distribution on the missingness parameter (IMDOM or logIMROM)
-    prec.misspar <- 1/var.misspar
-    psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
-
-
-
-    ## Specification of the prior distribution for the between-trial parameter
-    if (model == "RE" & heter.prior[[1]] == "halfnormal") {
-
-      heter.prior <- as.numeric(c(0, heter.prior[[3]], 1))
-
-    } else if (model == "RE" & heter.prior[[1]] == "uniform") {
-
-      heter.prior <- as.numeric(c(0, heter.prior[[3]], 2))
-
-    } else if (model == "RE" & measure == "SMD" & heter.prior[[1]] == "logt") {
-
-      heter.prior <- as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
-
-    } else if (model == "RE" & measure != "SMD" & heter.prior[[1]] == "logt") {
-
-      stop("There are currently no empirically-based prior distributions for MD and ROM. Choose a half-normal or a uniform prior distribution, instead")
-
-    } else if (model == "FE") {
-      heter.prior <- NA
-    }
+    ## Scenarios for missingness mechanism in an intervention (PMID: 30223064)
+    scenarios <- c(-2, -1, 0, 1, 2)
 
   } else {
 
@@ -153,32 +121,18 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, var.m
 
 
 
-    ## A 2x2 matrix of 25 reference-specific scenarios (PMID: 30223064)
-    (scenarios <- c(-log(3), -log(2), log(0.9999), log(2), log(3)))
-    (mean.misspar <- as.matrix(cbind(rep(scenarios, each = 5), rep(scenarios, 5)))) # 2nd column refers to the reference intervention
-    prec.misspar <- 1/var.misspar
-    psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
+    ## Scenarios for missingness mechanism in an intervention (PMID: 30223064)
+    scenarios <- c(-log(3), -log(2), log(0.9999), log(2), log(3))
+   }
 
 
+  ## A 2x2 matrix of 25 reference-specific scenarios (PMID: 30223064)
+  mean.misspar <- as.matrix(cbind(rep(scenarios, each = 5), rep(scenarios, 5))) # 2nd column refers to the reference intervention (control in MA)
 
-    ## Specification of the prior distribution for the between-trial parameter
-    if (model == "RE" & heter.prior[[1]] == "halfnormal") {
 
-      heter.prior <- as.numeric(c(0, heter.prior[[3]], 1))
-
-    } else if (model == "RE" & heter.prior[[1]] == "uniform") {
-
-      heter.prior <- as.numeric(c(0, heter.prior[[3]], 2))
-
-    } else if (model == "RE" & heter.prior[[1]] == "lognormal")  {
-
-      heter.prior <- as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
-
-    } else if (model == "FE") {
-      heter.prior <- NA
-    }
-
-  }
+  ## Information for the prior distribution on the missingness parameter (IMDOM or logIMROM)
+  prec.misspar <- 1/var.misspar
+  psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
 
 
 

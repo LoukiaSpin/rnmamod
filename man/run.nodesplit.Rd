@@ -7,6 +7,7 @@
 run.nodesplit(
   data,
   measure,
+  model,
   assumption,
   heter.prior,
   mean.misspar,

@@ -20,6 +20,7 @@ run.metareg(
   data,
   covariate,
   measure,
+  model,
   assumption,
   heter.prior,
   mean.misspar,

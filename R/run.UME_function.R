@@ -64,18 +64,15 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
   } else {
     measure
   }
-  model <- ifelse(missing(model), "RE", model)
-  assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
-  heter.prior <- if (model == "RE" & missing(heter.prior)) {
-    stop("The 'heter.prior' needs to be defined")
-  } else if (model == "FE" & missing(heter.prior)) {
-    list(NA, NA, NA)
-  } else if (model == "FE") {
-    message("The argument 'heter.prior' has been ignored")
-    list(NA, NA, NA)
+  model <- if (missing(model)) {
+    "RE"
+  } else if (model != "RE" & model != "FE") {
+    stop("Insert 'RE', or 'FE'")
   } else {
-    heter.prior
+    model
   }
+  assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
+  heter.prior <- heterogeneity.param.prior(measure, model, heter.prior)
   var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
   n.iter <- ifelse(missing(n.iter), 10000, n.iter)
@@ -143,29 +140,6 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
 
     }
 
-
-    ## Specification of the prior distribution for the between-trial parameter
-    if (model == "RE" & heter.prior[[1]] == "halfnormal") {
-
-      heter.prior <- as.numeric(c(0, heter.prior[[3]], 1))
-
-    } else if (model == "RE" & heter.prior[[1]] == "uniform") {
-
-      heter.prior <- as.numeric(c(0, heter.prior[[3]], 2))
-
-    } else if (model == "RE" & measure == "SMD" & heter.prior[[1]] == "logt") {
-
-      heter.prior <- as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
-
-    } else if (model == "RE" & measure != "SMD" & heter.prior[[1]] == "logt") {
-
-      stop("There are currently no empirically-based prior distributions for MD and ROM. Choose a half-normal or a uniform prior distribution, instead")
-
-    } else if (model == "FE") {
-      heter.prior <- NA
-    }
-
-
   } else {
 
 
@@ -219,25 +193,6 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
 
       mean.misspar <- ifelse(mean.misspar == 0, 0.0001, mean.misspar)
 
-    }
-
-
-
-    ## Specification of the prior distribution for the between-trial parameter
-    if (model == "RE" & heter.prior[[1]] == "halfnormal") {
-
-      heter.prior <- as.numeric(c(0, heter.prior[[3]], 1))
-
-    } else if (model == "RE" & heter.prior[[1]] == "uniform") {
-
-      heter.prior <- as.numeric(c(0, heter.prior[[3]], 2))
-
-    } else if (model == "RE" & heter.prior[[1]] == "lognormal")  {
-
-      heter.prior <- as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
-
-    } else if (model == "FE") {
-      heter.prior <- NA
     }
 
   }

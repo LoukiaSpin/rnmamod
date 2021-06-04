@@ -14,18 +14,15 @@ run.nodesplit <- function(data, measure, model, assumption, heter.prior, mean.mi
   } else {
     measure
   }
-  model <- ifelse(missing(model), "RE", model)
-  assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
-  heter.prior <- if (model == "RE" & missing(heter.prior)) {
-    stop("The 'heter.prior' needs to be defined")
-  } else if (model == "FE" & missing(heter.prior)) {
-    list(NA, NA, NA)
-  } else if (model == "FE") {
-    message("The argument 'heter.prior' has been ignored")
-    list(NA, NA, NA)
+  model <- if (missing(model)) {
+    "RE"
+  } else if (model != "RE" & model != "FE") {
+    stop("Insert 'RE', or 'FE'")
   } else {
-    heter.prior
+    model
   }
+  assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
+  heter.prior <- heterogeneity.param.prior(measure, model, heter.prior)
   var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
   n.iter <- ifelse(missing(n.iter), 10000, n.iter)
@@ -82,37 +79,6 @@ run.nodesplit <- function(data, measure, model, assumption, heter.prior, mean.mi
     }
 
 
-    ## Information for the prior distribution on the missingness parameter (IMDOM or logIMROM)
-    M <- ifelse(!is.na(mod), mean.misspar, NA)  # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
-    prec.misspar <- 1/var.misspar
-    psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
-    cov.misspar <- 0.5*var.misspar             # covariance of pair of missingness parameters in a trial (independent structure)
-
-
-
-    ## Specification of the prior distribution for the between-trial parameter
-    if (model == "RE" & heter.prior[[1]] == "halfnormal") {
-
-      heter.prior <- as.numeric(c(0, heter.prior[[3]], 1))
-
-    } else if (model == "RE" & heter.prior[[1]] == "uniform") {
-
-      heter.prior <- as.numeric(c(0, heter.prior[[3]], 2))
-
-    } else if (model == "RE" & measure == "SMD" & heter.prior[[1]] == "logt") {
-
-      heter.prior <- as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
-
-    } else if (model == "RE" & measure != "SMD" & heter.prior[[1]] == "logt") {
-
-      stop("There are currently no empirically-based prior distributions for MD and ROM. Choose a half-normal or a uniform prior distribution, instead")
-
-    } else if (model == "FE") {
-      heter.prior <- NA
-    }
-
-
-
     ## Rename columns to agree with gemtc
     names(y0) <- paste0("y..",1:length(y0[1, ]),".")
     names(se0) <- paste0("se..",1:length(se0[1, ]),".")
@@ -123,98 +89,6 @@ run.nodesplit <- function(data, measure, model, assumption, heter.prior, mean.mi
     ## Convert one-study-per-row data to one-arm-per-row as required in GeMTC
     transform <- mtc.data.studyrow(cbind(t, y0, se0, N, na..), armVars = c('treatment'= 't', 'mean'='y', 'std.error'='se', 'sampleSize'='n'), nArmsVar='na')
     transform$treatment <- as.numeric(transform$treatment)
-
-
-    ## Detect the nodes to split
-    splitting <- mtc.nodesplit.comparisons(mtc.network(transform))
-    colnames(splitting) <- NULL
-    rownames(splitting) <- NULL
-
-    if(dim(splitting)[1] < 1) {
-
-      stop("There is no loop to evaluate", call. = FALSE)
-
-      suppressMessages({
-        message("Called from: netmodr::run.nodesplit")
-
-      })
-
-    } else {
-
-      pair <- t(apply(apply(as.matrix(splitting, ncol = 2), 2, as.numeric), 1, sort))
-
-
-      ## Define necessary model components
-      jagsfit <- data.jag <- checkPair <- bi <- si <- m <- list()
-
-
-      ## Parameters to save
-      param.jags <- if (model == "RE") {
-        c("EM", "direct", "diff", "tau", "totresdev.o", "hat.par")
-      } else {
-        c("EM", "direct", "diff",  "totresdev.o", "hat.par")
-      }
-
-
-      for(i in 1:length(pair[, 1])){
-
-
-        ## Calculate split (1 if node to split is present) and b (baseline position)
-        checkPair[[i]] <- PairXY(as.matrix(t), pair[i, ])
-
-        ## Build vector bi[i] with baseline treatment: t[i, b[i]]
-        bi[[i]] <- Basetreat(as.matrix(t), checkPair[[i]][,"b"])
-
-        ## Indexes to sweep non-baseline arms only
-        m[[i]] <- NonbaseSweep(checkPair[[i]], na..)
-
-        ## Build matrix si[i,k] with non-baseline treatments: t[i, m[i,k]]
-        si[[i]] <- Sweeptreat(as.matrix(t), m[[i]])
-
-
-        # Under the Independent structure with or without SMD as effect measure
-        data.jag[[i]] <- list("y.o" = y0,
-                              "se.o" = se0,
-                              "mod" = mod,
-                              "N" = N,
-                              "t" = t,
-                              "na" = na..,
-                              "nt" = nt,
-                              "ns" = ns,
-                              "ref" = ref,
-                              "meand.phi" = mean.misspar,
-                              "precd.phi" = prec.misspar,
-                              "split" = checkPair[[i]][, "split"],
-                              "m" = m[[i]],
-                              "bi" = bi[[i]],
-                              "si" = si[[i]],
-                              "pair" = pair[i, ],
-                              "heter.prior" = heter.prior,
-                              "M" = M,
-                              "cov.phi" = cov.misspar,
-                              "var.phi" = var.misspar)
-
-
-
-
-        ## Run the Bayesian analysis
-        print(paste(i, "out of", length(pair[, 1]), "split nodes"))
-        jagsfit[[i]] <- jags(data = data.jag[[i]],
-                             parameters.to.save = param.jags,
-                             model.file = textConnection(prepare.nodesplit(measure, model, assumption)),
-                             n.chains = n.chains,
-                             n.iter = n.iter,
-                             n.burnin = n.burnin,
-                             n.thin = n.thin,
-                             DIC = T)
-
-      }  # Stop loop for 'pair'
-
-
-    }
-
-    ## Define node to split: AB=(1,2)
-
 
   } else {
 
@@ -264,32 +138,6 @@ run.nodesplit <- function(data, measure, model, assumption, heter.prior, mean.mi
     }
 
 
-    M <- ifelse(!is.na(mod), mean.misspar, NA)   # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
-    prec.misspar <- 1/var.misspar
-    psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
-    cov.misspar <- 0.5*var.misspar             # covariance of pair of missingness parameters in a trial (independent structure)
-
-
-
-    ## Specification of the prior distribution for the between-trial parameter
-    if (model == "RE" & heter.prior[[1]] == "halfnormal") {
-
-      heter.prior <- as.numeric(c(0, heter.prior[[3]], 1))
-
-    } else if (model == "RE" & heter.prior[[1]] == "uniform") {
-
-      heter.prior <- as.numeric(c(0, heter.prior[[3]], 2))
-
-    } else if (model == "RE" & heter.prior[[1]] == "lognormal")  {
-
-      heter.prior <- as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
-
-    } else if (model == "FE") {
-      heter.prior <- NA
-    }
-
-
-
     ## Rename columns to agree with gemtc
     names(r) <- paste0("r..",1:length(r[1, ]),".")
     names(N) <- paste0("n..",1:length(N[1, ]),".")
@@ -300,89 +148,103 @@ run.nodesplit <- function(data, measure, model, assumption, heter.prior, mean.mi
     transform <- mtc.data.studyrow(cbind(t, r, N, na..), armVars = c('treatment'= 't', 'response'='r', 'sampleSize'='n'), nArmsVar='na')
     transform$treatment <- as.numeric(transform$treatment)
 
+  }
 
-    ## Detect the nodes to split
-    splitting <- mtc.nodesplit.comparisons(mtc.network(transform))
-    colnames(splitting) <- NULL
-    rownames(splitting) <- NULL
 
-    if(dim(splitting)[1] < 1) {
+  M <- ifelse(!is.na(mod), mean.misspar, NA)   # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
+  prec.misspar <- 1/var.misspar
+  psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
+  cov.misspar <- 0.5*var.misspar             # covariance of pair of missingness parameters in a trial (independent structure)
 
-      stop("There is no loop to evaluate", call. = F)
 
-      suppressMessages({
-        message("Called from: netmodr::run.nodesplit")
-      })
 
+  ## Detect the nodes to split
+  splitting <- mtc.nodesplit.comparisons(mtc.network(transform))
+  colnames(splitting) <- NULL
+  rownames(splitting) <- NULL
+
+  if(dim(splitting)[1] < 1) {
+
+    stop("There is no loop to evaluate", call. = F)
+
+    suppressMessages({
+      message("Called from: netmodr::run.nodesplit")
+    })
+
+  } else {
+
+    ## Define node to split: AB=(1,2)
+    pair <- t(apply(apply(as.matrix(splitting, ncol = 2), 2, as.numeric), 1, sort))
+
+
+    ## Parameters to save
+    param.jags <- if (model == "RE") {
+      c("EM", "direct", "diff", "tau", "totresdev.o", "hat.par")
     } else {
+      c("EM", "direct", "diff",  "totresdev.o", "hat.par")
+    }
 
-      ## Define node to split: AB=(1,2)
-      pair <- t(apply(apply(as.matrix(splitting, ncol = 2), 2, as.numeric), 1, sort))
+
+    ## Define necessary model components
+    jagsfit <- data.jag <- checkPair <- bi <- si <- m <- list()
 
 
-      ## Parameters to save
-      param.jags <- if (model == "RE") {
-        c("EM", "direct", "diff", "tau", "totresdev.o", "hat.par")
-      } else {
-        c("EM", "direct", "diff",  "totresdev.o", "hat.par")
+    for(i in 1:length(pair[, 1])){
+
+
+      ## Calculate split (1 if node to split is present) and b (baseline position)
+      checkPair[[i]] <- PairXY(as.matrix(t), pair[i, ])
+
+      ## Build vector bi[i] with baseline treatment: t[i, b[i]]
+      bi[[i]] <- Basetreat(as.matrix(t), checkPair[[i]][,"b"])
+
+      ## Indexes to sweep non-baseline arms only
+      m[[i]] <- NonbaseSweep(checkPair[[i]], na..)
+
+      ## Build matrix si[i,k] with non-baseline treatments: t[i, m[i,k]]
+      si[[i]] <- Sweeptreat(as.matrix(t), m[[i]])
+
+
+      data.jag[[i]] <- list("mod" = mod,
+                            "N" = N,
+                            "t" = t,
+                            "na" = na..,
+                            "nt" = nt,
+                            "ns" = ns,
+                            "ref" = ref,
+                            "meand.phi" = mean.misspar,
+                            "precd.phi" = prec.misspar,
+                            "split" = checkPair[[i]][, "split"],
+                            "m" = m[[i]],
+                            "bi" = bi[[i]],
+                            "si" = si[[i]],
+                            "pair" = pair[i, ],
+                            "heter.prior" = heter.prior)
+
+
+      if (measure == "MD" || measure == "SMD" || measure == "ROM") {
+        data.jag[[i]] <- append(data.jag[[i]], list("y.o" = y0, "se.o" = se0))
+      } else if (measure == "OR") {
+        data.jag[[i]] <- append(data.jag[[i]], list("r" = r))
       }
 
 
-      ## Define necessary model components
-      jagsfit <- data.jag <- checkPair <- bi <- si <- m <- list()
+      ## Run the Bayesian analysis
+      message(paste(i, "out of", length(pair[, 1]), "split nodes"))
+      jagsfit[[i]] <- jags(data = data.jag[[i]],
+                           parameters.to.save = param.jags,
+                           model.file = textConnection(prepare.nodesplit(measure, model, assumption)),
+                           n.chains = n.chains,
+                           n.iter = n.iter,
+                           n.burnin = n.burnin,
+                           n.thin = n.thin,
+                           DIC = T)
 
+    } # Stop loop for 'pair'
 
-      for(i in 1:length(pair[, 1])){
-
-
-        ## Calculate split (1 if node to split is present) and b (baseline position)
-        checkPair[[i]] <- PairXY(as.matrix(t), pair[i, ])
-
-        ## Build vector bi[i] with baseline treatment: t[i, b[i]]
-        bi[[i]] <- Basetreat(as.matrix(t), checkPair[[i]][,"b"])
-
-        ## Indexes to sweep non-baseline arms only
-        m[[i]] <- NonbaseSweep(checkPair[[i]], na..)
-
-        ## Build matrix si[i,k] with non-baseline treatments: t[i, m[i,k]]
-        si[[i]] <- Sweeptreat(as.matrix(t), m[[i]])
-
-
-        data.jag[[i]] <- list("r" = r,
-                              "mod" = mod,
-                              "N" = N,
-                              "t" = t,
-                              "na" = na..,
-                              "nt" = nt,
-                              "ns" = ns,
-                              "ref" = ref,
-                              "meand.phi" = mean.misspar,
-                              "precd.phi" = prec.misspar,
-                              "split" = checkPair[[i]][, "split"],
-                              "m" = m[[i]],
-                              "bi" = bi[[i]],
-                              "si" = si[[i]],
-                              "pair" = pair[i, ],
-                              "heter.prior" = heter.prior)
-
-
-        ## Run the Bayesian analysis
-        message(paste(i, "out of", length(pair[, 1]), "split nodes"))
-        jagsfit[[i]] <- jags(data = data.jag[[i]],
-                             parameters.to.save = param.jags,
-                             model.file = textConnection(prepare.nodesplit(measure, model, assumption)),
-                             n.chains = n.chains,
-                             n.iter = n.iter,
-                             n.burnin = n.burnin,
-                             n.thin = n.thin,
-                             DIC = T)
-
-      } # Stop loop for 'pair'
-
-
-    }
 
   }
+
 
 
   ## Obtain the posterior distribution of the necessary model parameters (node: 'treat1' versus 'treat2'

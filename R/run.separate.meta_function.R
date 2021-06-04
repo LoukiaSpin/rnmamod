@@ -64,23 +64,13 @@ run.separate.meta <- function(data, measure, model, assumption, heter.prior, mea
   } else {
     measure
   }
-  model <- ifelse(missing(model), "RE", model)
-  assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
-  heter.prior <- if (model == "RE" & missing(heter.prior)) {
-    stop("The 'heter.prior' needs to be defined")
-  } else if (model == "FE" & missing(heter.prior)) {
-    list(NA, NA, NA)
-  } else if (model == "FE") {
-    message("The argument 'heter.prior' has been ignored")
-    list(NA, NA, NA)
+  model <- if (missing(model)) {
+    "RE"
+  } else if (model != "RE" & model != "FE") {
+    stop("Insert 'RE', or 'FE'")
   } else {
-    heter.prior
+    model
   }
-  var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
-  n.chains <- ifelse(missing(n.chains), 2, n.chains)
-  n.iter <- ifelse(missing(n.iter), 10000, n.iter)
-  n.burnin <- ifelse(missing(n.burnin), 1000, n.burnin)
-  n.thin <- ifelse(missing(n.thin), 1, n.thin)
 
 
   ## For a continuous outcome
