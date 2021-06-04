@@ -106,12 +106,12 @@ UME.plot <- function(full, ume, drug.names, threshold) {
 
 
   ## A data-frame with the posterior median and 95% CrI on between-trial standard deviation
-  between.trial.SD <- if (model == "RE") {
-    rbind(tau.full[c(5, 3, 7)], tau.ume[c(5, 3, 7)])
+  if (model == "RE") {
+    between.trial.SD <- rbind(tau.full[c(5, 3, 7)], tau.ume[c(5, 3, 7)])
     colnames(between.trial.SD) <- c("Posterior median", "Lower 95% CrI", "Upper 95% CrI")
     rownames(between.trial.SD) <- c("Full NMA", "UME model")
   } else {
-    NA
+    between.trial.SD <- NA
   }
 
 

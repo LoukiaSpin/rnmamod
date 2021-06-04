@@ -189,8 +189,8 @@ run.separate.meta <- function(data, measure, model, assumption, heter.prior, mea
 
   ## Run each random-effects paiwise meta-analysis
   meta <- list()
-  for(i in 1:N.comp) {
-
+  for (i in 1:N.comp) {
+    message(paste(i, "out of", N.comp, "observed comparisons"))
     meta[[i]] <- run.model(data = pairwise[pairwise$arm1 == keep.comp[i, 1] & pairwise$arm2 == keep.comp[i, 2], -c(1:3)], measure, model, assumption, heter.prior, mean.misspar, var.misspar, D = 1, n.chains, n.iter, n.burnin, n.thin) # 'D' does not matter in pairwise meta-analysis
 
   }

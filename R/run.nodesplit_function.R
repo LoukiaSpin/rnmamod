@@ -198,6 +198,7 @@ run.nodesplit <- function(data, measure, model, assumption, heter.prior, mean.mi
 
 
         ## Run the Bayesian analysis
+        print(paste(i, "out of", length(pair[, 1]), "split nodes"))
         jagsfit[[i]] <- jags(data = data.jag[[i]],
                              parameters.to.save = param.jags,
                              model.file = textConnection(prepare.nodesplit(measure, model, assumption)),
@@ -366,6 +367,7 @@ run.nodesplit <- function(data, measure, model, assumption, heter.prior, mean.mi
 
 
         ## Run the Bayesian analysis
+        message(paste(i, "out of", length(pair[, 1]), "split nodes"))
         jagsfit[[i]] <- jags(data = data.jag[[i]],
                              parameters.to.save = param.jags,
                              model.file = textConnection(prepare.nodesplit(measure, model, assumption)),
