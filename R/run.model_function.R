@@ -57,19 +57,26 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   ## Default arguments
   measure <- if (missing(measure)) {
     stop("The 'measure' needs to be defined")
-  } else if (measure != "MD" & measure != "SMD" & measure != "ROM" & measure != "OR") {
+  } else if (!is.element(measure, c("MD", "SMD", "ROM", "OR"))) {
     stop("Insert 'MD', 'SMD', 'ROM', or 'OR'")
   } else {
     measure
   }
   model <- if (missing(model)) {
     "RE"
-  } else if (model != "RE" & model != "FE") {
+  } else if (!is.element(model, c("RE", "FE"))) {
     stop("Insert 'RE', or 'FE'")
   } else {
     model
   }
-  assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
+  assumption <- if (missing(assumption)) {
+    "IDE-ARM"
+  } else if (!is.element(assumption,  c("IDE-ARM", "IDE-TRIAL", "IDE-COMMON", "HIE-ARM", "HIE-TRIAL", "HIE-COMMON", "IND-CORR", "IND-UNCORR"))) {
+    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'")
+  } else {
+    assumption
+  }
+  mean.misspar <- missingness.param.prior(assumption, mean.misspar)
   heter.prior <- heterogeneity.param.prior(measure, model, heter.prior)
   var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
@@ -106,27 +113,6 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
       t[i, ] <- sort(treat[i, ], na.last = T)
     }
 
-
-
-    ## Condition regarding the specification of the prior mean ('mean.misspar') for the missingness parameter
-    if (missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" )) {
-
-      mean.misspar <- rep(0, 2)
-
-    } else if (missing(mean.misspar) & (assumption != "HIE-ARM" || assumption != "IDE-ARM" )) {
-
-      mean.misspar <- 0
-
-    } else if (!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & is.null(dim(mean.misspar))) {
-
-      mean.misspar <- rep(mean.misspar, 2)
-
-    } else {
-
-      mean.misspar <- mean.misspar
-
-    }
-
   } else {
 
 
@@ -149,32 +135,6 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
       m[i, ] <- mod[i, order(t0[i, ], na.last = T)]
       N[i, ] <- rand[i, order(t0[i, ], na.last = T)]
       t[i, ] <- sort(treat[i, ], na.last = T)
-    }
-
-
-    ## Condition regarding the specification of the prior mean ('mean.misspar') for the missingness parameter
-    if(missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" )) {
-
-      mean.misspar <- rep(0.0001, 2)
-
-    } else if(missing(mean.misspar) & (assumption != "HIE-ARM" || assumption != "IDE-ARM" )) {
-
-      mean.misspar <- 0.0001
-
-    } else if(!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & is.null(dim(mean.misspar))) {
-
-      mean.misspar <- rep(ifelse(mean.misspar == 0, 0.0001, mean.misspar), 2)
-
-    } else if (!missing(mean.misspar) & (assumption == "HIE-ARM" || assumption == "IDE-ARM" ) & !is.null(dim(mean.misspar))) {
-
-      mean.misspar <- as.vector(mean.misspar)
-      mean.misspar[1] <- ifelse(mean.misspar[1] == 0, 0.0001, mean.misspar[1])
-      mean.misspar[2] <- ifelse(mean.misspar[2] == 0, 0.0001, mean.misspar[2])
-
-    } else {
-
-      mean.misspar <- ifelse(mean.misspar == 0, 0.0001, mean.misspar)
-
     }
 
   }
@@ -204,7 +164,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
                    "eff.mod" = rep(0, ns))
 
 
-  if (measure == "MD" || measure == "SMD" || measure == "ROM") {
+  if (is.element(measure, c("MD", "SMD", "ROM"))) {
     data.jag <- append(data.jag, list("y.o" = y0, "se.o" = se0))
   } else if (measure == "OR") {
     data.jag <- append(data.jag, list("r" = r))
@@ -212,7 +172,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
 
 
   param.jags <- c("delta", "EM", "EM.ref", "EM.pred", "pred.ref", "tau", "SUCRA",  "effectiveness", "dev.m", "dev.o", "totresdev.o", "hat.par", "hat.m")
-  if (assumption == "HIE-COMMON" || assumption == "HIE-TRIAL" || assumption == "HIE-ARM") {
+  if (is.element(assumption, c("HIE-COMMON", "HIE-TRIAL", "HIE-ARM"))) {
     param.jags <- append(param.jags, "mean.phi")
   } else {
     param.jags <- append(param.jags, "phi")
@@ -222,7 +182,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   param.jags <- if (model == "RE") {
     param.jags
   } else {
-    param.jags[param.jags != "EM.pred" & param.jags != "pred.ref" & param.jags != "tau" & param.jags != "delta"]
+    param.jags[!is.element(param.jags, c("EM.pred", "pred.ref", "tau","delta"))]
   }
 
 
@@ -298,7 +258,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   # Sign of the difference between observed and fitted MOD
   sign.dev.m <- sign(m0 - as.vector(hat.m[, 1]))
 
-  if (measure == "MD" || measure == "SMD"|| measure == "ROM") {
+  if (is.element(measure, c("MD", "SMD", "ROM"))) {
 
     # Turn 'y0', 'se0'into a vector (first column, followed by second column, and so on)
     y0.new <- suppressMessages({as.vector(na.omit(melt(y0)[, 2]))})
