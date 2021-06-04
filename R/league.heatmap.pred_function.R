@@ -27,6 +27,10 @@ league.heatmap.pred <- function(net, drug.names){
 
   par.pred <- net$EM.pred; par <- net$EM; sucra <- net$SUCRA; measure <- net$measure
 
+  model <- if (net$model == "FE") {
+    stop("Prediction is *not* relevant in the fixed-effect model")
+  }
+
 
   ## Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html
   reflect_triangle <- function(m, from=c("lower", "upper")) {
