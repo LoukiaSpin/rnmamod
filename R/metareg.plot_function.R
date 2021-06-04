@@ -7,6 +7,18 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
   options(warn = -1)
 
   ## The results on the following parameters will be used:
+  # Analysis model
+  model <- if (full$model != metareg$model) {
+    stop("The argument 'model' differs in 'run.model' and 'run.metareg'. Specify the same 'model' and run the analysis again")
+  } else {
+    full$model
+  }
+
+  # Effect measure
+  measure <- if (full$measure != metareg$measure) {
+    stop("The argument 'measure' differs in 'run.model' and 'run.metareg'. Specify the same 'measure' and run the analysis again")
+  }
+
   # Posterior results on the SUCRA value under NMA
   sucra.full <- round(full$SUCRA, 2)
 
@@ -23,10 +35,19 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
   beta <- round(metareg$beta, 2)[order(sucra.full[, 1], decreasing = T), ]
 
   # Posterior results on between-trial standard deviation under NMA
-  tau.full <- round(full$tau, 2)
+  tau.full <- if (model == "RE") {
+    round(full$tau, 2)
+  } else {
+    NA
+  }
+
 
   # Posterior results on between-trial standard deviation under meta-regression
-  tau.meta <- round(metareg$tau, 2)
+  tau.meta <- if (model == "RE") {
+    round(metareg$tau, 2)
+  } else {
+    NA
+  }
 
   # Posterior mean of model assessment measures under NMA
   model.assess.NMA <- round(full$model.assessment, 2)
@@ -126,21 +147,29 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
     colnames(EM.both.models) <- c("Comparison", "Poster. mean NMA", "95% CrI NMA", "Poster. mean NMReg (ref)", "95% CrI NMReg (ref)",
                                   "Poster. mean NMReg (non-ref)", "95% CrI NMReg (non-ref)", "Poster. mean beta", "95% CrI beta")
     rownames(EM.both.models) <- NULL
-
-
   }
 
 
 
   ## The 95% CrIs of the between-trial standard deviation under NMA and meta-regression
-  CrI.tau.full <- paste0("(", tau.full[, 3], ",", " ", tau.full[, 7], ")")
-  CrI.tau.meta <- paste0("(", tau.meta[, 3], ",", " ", tau.meta[, 7], ")")
+  if (model == "RE") {
+    CrI.tau.full <- paste0("(", tau.full[, 3], ",", " ", tau.full[, 7], ")")
+    CrI.tau.meta <- paste0("(", tau.meta[, 3], ",", " ", tau.meta[, 7], ")")
+  } else {
+    CrI.tau.full <- NA
+    CrI.tau.meta <- NA
+  }
 
 
 
   ## A data-frame on the model assessment results and between-trial standard deviation under NMA & meta-regression
-  table.model.assess <- data.frame(c("Network meta-analysis", "Meta-regression"), rbind(model.assess.NMA[c(1, 3, 2)], model.assess.meta[c(1, 3, 2)]), rbind(cbind(tau.full[, 1], tau.full[, 2], CrI.tau.full), cbind(tau.meta[, 1], tau.meta[, 2], CrI.tau.meta)))
-  colnames(table.model.assess) <- c("Analysis", "DIC", "Post. mean Dev.", "pD", "Post. median tau", "Post, SD tau", "95% CrI tau")
+  if (model == "RE") {
+    table.model.assess <- data.frame(c("Network meta-analysis", "Meta-regression"), rbind(model.assess.NMA[c(1, 3, 2)], model.assess.meta[c(1, 3, 2)]), rbind(cbind(tau.full[, 1], tau.full[, 2], CrI.tau.full), cbind(tau.meta[, 1], tau.meta[, 2], CrI.tau.meta)))
+    colnames(table.model.assess) <- c("Analysis", "DIC", "Post. mean Dev.", "pD", "Post. median tau", "Post, SD tau", "95% CrI tau")
+  } else {
+    table.model.assess <- data.frame(c("Network meta-analysis", "Meta-regression"), rbind(model.assess.NMA[c(1, 3, 2)], model.assess.meta[c(1, 3, 2)]))
+    colnames(table.model.assess) <- c("Analysis", "DIC", "Post. mean Dev.", "pD")
+  }
 
 
 
@@ -385,7 +414,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
   write_xlsx(table.model.assess, paste0(getwd(),"Table Meta-regression assessment.xlsx"))
 
 
-
+  ## Return results
   return(list(EM.both.models = EM.both.models, table.model.assess = table.model.assess, forest.plots = forest.plots, scatterplots = p3))
 
 }

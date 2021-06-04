@@ -46,14 +46,31 @@
 #' run.sensitivity(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, D = 0, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.sensitivity <- function(data, measure, rho, assumption, heter.prior, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
+run.sensitivity <- function(data, measure, model, assumption, heter.prior, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
 
 
   options(warn = -1)
 
   ## Default arguments
-  rho <- ifelse(missing(rho) & (measure == "MD" || measure == "SMD"|| measure == "ROM"), 0.5, ifelse(missing(rho) & measure == "OR", NA, rho))
-  assumption <- ifelse(missing(assumption), "IDE-ARM", ifelse(assumption != "HIE-ARM" || assumption != "IDE-ARM",  "IDE-ARM"))
+  measure <- if (missing(measure)) {
+    stop("The 'measure' needs to be defined")
+  } else if (measure != "MD" & measure != "SMD" & measure != "ROM" & measure != "OR") {
+    stop("Insert 'MD', 'SMD', 'ROM', or 'OR'")
+  } else {
+    measure
+  }
+  model <- ifelse(missing(model), "RE", model)
+  assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
+  heter.prior <- if (model == "RE" & missing(heter.prior)) {
+    stop("The 'heter.prior' needs to be defined")
+  } else if (model == "FE" & missing(heter.prior)) {
+    list(NA, NA, NA)
+  } else if (model == "FE") {
+    message("The argument 'heter.prior' has been ignored")
+    list(NA, NA, NA)
+  } else {
+    heter.prior
+  }
   var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
   n.iter <- ifelse(missing(n.iter), 10000, n.iter)
@@ -66,24 +83,14 @@ run.sensitivity <- function(data, measure, rho, assumption, heter.prior, var.mis
     ## Continuous: arm-level, wide-format dataset
     y.obs <- data %>% dplyr::select(starts_with("y"))           # Observed mean value in each arm of every trial
     sd.obs <- data %>% dplyr::select(starts_with("sd"))         # Observed standard deviation in each arm of every trial
-    y.bas <- data %>% dplyr::select(starts_with("bas.y"))       # Mean value at baseline in each arm of every trial
-    sd.bas <- data %>% dplyr::select(starts_with("bas.sd"))     # Standard deviation at baseline in each arm of every trial
-    ind <- data %>% dplyr::select(starts_with("ind"))           # Trial indicator (1: final measurement; 2: change from baseline and baseline measurement
     mod <- data %>% dplyr::select(starts_with("m"))             # Number of missing participants in each arm of every trial
     c <- data %>% dplyr::select(starts_with("c"))               # Number of completers in each arm of every trial
     se.obs <- sd.obs/sqrt(c)                                    # Observed standard error in each arm of every trial
     rand <- mod + c                                             # Number of randomised participants in each arm of every trial
-    if (dim(ind)[2] == 0) {
-      se.bas <- NA                                              # Standard error at baseline in each arm of every trial
-    } else {
-      se.bas <- sd.bas/sqrt(rand)                               # Standard error at baseline in each arm of every trial
-    }
     treat <- data %>% dplyr::select(starts_with("t"))           # Intervention studied in each arm of every trial
     na <- apply(treat, 1, function(x) length(which(!is.na(x)))) # Number of interventions investigated in every trial per network
     nt <- length(table(as.matrix(treat)))                       # Total number of interventions per network
     ns <- length(y.obs[, 1])                                    # Total number of included trials per network
-    n1 <- ifelse(dim(ind)[2] == 0, ns, table(ind)[1])           # Number of trials reporting data at final point
-    n2 <- ifelse(dim(ind)[2] == 0, 0, table(ind)[2])            # Number of trials reporting data at change from baseline
     ref <- 1                                                    # The first intervention (t1 = 1) is the reference of the network
 
 
@@ -100,25 +107,6 @@ run.sensitivity <- function(data, measure, rho, assumption, heter.prior, var.mis
     }
 
 
-    ## Order by 'id of t1' < 'id of t1' - Trials reporting change from baseline and baseline per arm
-    y.b <- se.b <- treat
-    if (dim(ind)[2] == 0) {
-
-      for(i in 1:ns){
-        y.b[i, ] <- NA
-        se.b[i, ] <- NA
-      }
-
-    } else {
-
-      for(i in 1:ns){
-        y.b[i, ] <- y.bas[i, order(t0[i, ], na.last = T)]
-        se.b[i, ] <- se.bas[i, order(t0[i, ], na.last = T)]
-      }
-
-    }
-
-
     ## A 2x2 matrix of 25 reference-specific scenarios (PMID: 30223064)
     (scenarios <- c(-2, -1, 0, 1, 2))
     (mean.misspar <- as.matrix(cbind(rep(scenarios, each = 5), rep(scenarios, 5)))) # 2nd column refers to the reference intervention (control in MA)
@@ -131,59 +119,25 @@ run.sensitivity <- function(data, measure, rho, assumption, heter.prior, var.mis
 
 
     ## Specification of the prior distribution for the between-trial parameter
-    if (heter.prior[[1]] == "halfnormal") {
+    if (model == "RE" & heter.prior[[1]] == "halfnormal") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 1))
 
-    } else if (heter.prior[[1]] == "uniform") {
+    } else if (model == "RE" & heter.prior[[1]] == "uniform") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 2))
 
-    } else if (measure == "SMD" & heter.prior[[1]] == "logt") {
+    } else if (model == "RE" & measure == "SMD" & heter.prior[[1]] == "logt") {
 
       heter.prior <- as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
 
-    } else if (measure != "SMD" & heter.prior[[1]] == "logt") {
+    } else if (model == "RE" & measure != "SMD" & heter.prior[[1]] == "logt") {
 
       stop("There are currently no empirically-based prior distributions for MD and ROM. Choose a half-normal or a uniform prior distribution, instead")
 
+    } else if (model == "FE") {
+      heter.prior <- NA
     }
-
-
-
-    ## Prepare parameters for JAGS
-    jagsfit <- data.jag <- list()
-
-
-    ## Parameters to save
-    param.jags <- c("EM", "tau")
-
-
-    ## Calculate time needed for all models
-    start.time <- Sys.time()
-
-    set.seed(123)
-    memory.limit(size = 40000)
-    for(i in 1:length(mean.misspar[, 1])){
-
-      data.jag[[i]] <- list("y.o" = y0, "se.o" = se0, "y.b" = y.b, "se.b" = se.b, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "n1" = ifelse(measure == "ROM", n1, NA), "n2" = ifelse(measure == "ROM", n2, NA), "rho" = ifelse(measure == "ROM", rho, NA),
-                            "ref" = ref, "meand.phi" = mean.misspar[i, ], "precd.phi" = prec.misspar, "D" = D, "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
-
-
-      jagsfit[[i]] <- jags(data = data.jag[[i]],
-                           parameters.to.save = param.jags,
-                           model.file = textConnection(prepare.model(measure, assumption)),
-                           n.chains = n.chains,
-                           n.iter = n.iter,
-                           n.burnin = n.burnin,
-                           n.thin = n.thin,
-                           DIC = F)
-    }
-
-    end.time <- Sys.time()
-    time.taken <- end.time - start.time
-
-
 
   } else {
 
@@ -208,63 +162,93 @@ run.sensitivity <- function(data, measure, rho, assumption, heter.prior, var.mis
 
 
     ## Specification of the prior distribution for the between-trial parameter
-    if (heter.prior[[1]] == "halfnormal") {
+    if (model == "RE" & heter.prior[[1]] == "halfnormal") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 1))
 
-    } else if (heter.prior[[1]] == "uniform") {
+    } else if (model == "RE" & heter.prior[[1]] == "uniform") {
 
       heter.prior <- as.numeric(c(0, heter.prior[[3]], 2))
 
-    } else if (heter.prior[[1]] == "lognormal")  {
+    } else if (model == "RE" & heter.prior[[1]] == "lognormal")  {
 
       heter.prior <- as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
 
+    } else if (model == "FE") {
+      heter.prior <- NA
+    }
+
+  }
+
+
+
+  ## Prepare parameters for JAGS
+  jagsfit <- data.jag <- list()
+
+
+  ## Parameters to save
+  param.jags <- if (model == "RE") {
+    c("EM", "tau")
+  } else {
+    c("EM")
+  }
+
+
+
+  ## Calculate time needed for all models
+  for(i in 1:length(mean.misspar[, 1])){
+
+    data.jag[[i]] <- list("m" = m,
+                          "N" = N,
+                          "t" = t,
+                          "na" = na,
+                          "nt" = nt,
+                          "ns" = ns,
+                          "ref" = ref,
+                          "meand.phi" = mean.misspar[i, ],
+                          "precd.phi" = prec.misspar,
+                          "D" = D,
+                          "heter.prior" = heter.prior,
+                          #"eff.mod2" = matrix(0, nrow = ns, ncol = max(na)),
+                          "eff.mod" = rep(0, ns))
+
+
+    if (measure == "MD" || measure == "SMD" || measure == "ROM") {
+      data.jag[[i]] <- append(data.jag[[i]], list("y.o" = y0, "se.o" = se0))
+    } else if (measure == "OR") {
+      data.jag[[i]] <- append(data.jag[[i]], list("r" = r))
     }
 
 
-
-    ## Prepare parameters for JAGS
-    jagsfit <- data.jag <- list()
-
-
-    ## Parameters to save
-    param.jags <- c("EM", "tau")
-
-
-    ## Calculate time needed for all models
-    start.time <- Sys.time()
-
-    set.seed(123)
-    memory.limit(size = 40000)
-    for(i in 1:length(mean.misspar[, 1])){
-
-      data.jag[[i]] <- list("r" = r, "m" = m, "N" = N, "t" = t, "na" = na, "nt" = nt, "ns" = ns, "ref" = ref, "meand.phi" = mean.misspar[i, ], "precd.phi" = prec.misspar, "D" = D,
-                            "heter.prior" = heter.prior, "eff.mod" = rep(0, ns), "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)))
-
-
-      jagsfit[[i]] <- jags(data = data.jag[[i]],
-                           parameters.to.save = param.jags,
-                           model.file = textConnection(prepare.model(measure, assumption)),
-                           n.chains = n.chains,
-                           n.iter = n.iter,
-                           n.burnin = n.burnin,
-                           n.thin = n.thin,
-                           DIC = F)
-    }
-
-    end.time <- Sys.time()
-    time.taken <- end.time - start.time
-
+    message(paste(i, "out of", length(mean.misspar[, 1]), "total scenarios"))
+    jagsfit[[i]] <- jags(data = data.jag[[i]],
+                         parameters.to.save = param.jags,
+                         model.file = textConnection(prepare.model(measure, model, assumption)),
+                         n.chains = n.chains,
+                         n.iter = n.iter,
+                         n.burnin = n.burnin,
+                         n.thin = n.thin,
+                         DIC = F)
   }
 
 
   ## Obtain the posterior distribution of the necessary model paramters
   EM <- do.call(rbind,lapply(1:length(mean.misspar[, 1]), function(i) jagsfit[[i]]$BUGSoutput$summary[1:(nt*(nt - 1)*0.5), c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]))
-  tau <- do.call(rbind,lapply(1:length(mean.misspar[, 1]), function(i) jagsfit[[i]]$BUGSoutput$summary["tau", c("50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]))
+  if (model == "RE") {
+    tau <- do.call(rbind,lapply(1:length(mean.misspar[, 1]), function(i) jagsfit[[i]]$BUGSoutput$summary["tau", c("50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]))
+  } else {
+    tau <- NA
+  }
 
 
-  return(list(EM = EM, tau = tau))
+  ## Return results
+  results <- if (model == "RE"){
+    list(EM = EM, tau = tau)
+  } else {
+    list(EM = EM)
+  }
+
+  return(results)
 
 }
 

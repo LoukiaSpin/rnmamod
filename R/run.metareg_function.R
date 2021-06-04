@@ -289,29 +289,14 @@ run.metareg <- function(data, covariate, measure, model, assumption, heter.prior
 
 
   ## Run the Bayesian analysis
-  if (model == "RE") {
-    data.jag <- data.jag
-    param.jags <- param.jags
-    jagsfit <- jags(data = data.jag,
-                    parameters.to.save = param.jags,
-                    model.file = textConnection(prepare.model.RE(measure, assumption)),
-                    n.chains = n.chains,
-                    n.iter = n.iter,
-                    n.burnin = n.burnin,
-                    n.thin = n.thin,
-                    DIC = T)
-  } else {
-    data.jag <- data.jag[data.jag != "heter.prior"]
-    param.jags <- param.jags[param.jags != "EM.pred" & param.jags != "pred.ref" & param.jags != "tau" & param.jags != "delta"]
-    jagsfit <- jags(data = data.jag,
-                    parameters.to.save = param.jags,
-                    model.file = textConnection(prepare.model.FE(measure, assumption)),
-                    n.chains = n.chains,
-                    n.iter = n.iter,
-                    n.burnin = n.burnin,
-                    n.thin = n.thin,
-                    DIC = T)
-  }
+  jagsfit <- jags(data = data.jag,
+                  parameters.to.save = param.jags,
+                  model.file = textConnection(prepare.model(measure, model, assumption)),
+                  n.chains = n.chains,
+                  n.iter = n.iter,
+                  n.burnin = n.burnin,
+                  n.thin = n.thin,
+                  DIC = T)
 
 
 
