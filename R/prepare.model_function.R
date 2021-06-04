@@ -221,14 +221,14 @@ prepare.model <- function(measure, model, assumption) {
                  "\n\t\t\tEM.pred[k, c] ~ dnorm(EM[k, c], prec)")
   } else {
     paste0(code, "\n\tfor (t in 1:(ref - 1)) {",
-           "\n\t\tEM.ref[t] <- d[t] - d[ref]",
-           "\n\t\t}",
-           "\n\tfor (t in (ref + 1):nt) {",
-           "\n\t\tEM.ref[t] <- d[t] - d[ref]",
-           "\n\t\t}",
-           "\n\tfor (c in 1:(nt - 1)) {",
-           "\n\t\tfor (k in (c + 1):nt) {",
-           "\n\t\t\tEM[k, c] <- d[k] - d[c]")
+                 "\n\t\tEM.ref[t] <- d[t] - d[ref]",
+                 "\n\t\t}",
+                 "\n\tfor (t in (ref + 1):nt) {",
+                 "\n\t\tEM.ref[t] <- d[t] - d[ref]",
+                 "\n\t\t}",
+                 "\n\tfor (c in 1:(nt - 1)) {",
+                 "\n\t\tfor (k in (c + 1):nt) {",
+                 "\n\t\t\tEM[k, c] <- d[k] - d[c]")
   }
 
   code <- paste0(code, "\n\t\t\t}}")
