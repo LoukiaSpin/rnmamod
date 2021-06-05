@@ -52,10 +52,7 @@
 run.model <- function(data, measure, model, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin) {
 
 
-  options(warn = -1)
-
-
-  ## Prepare the dataset
+  ## Prepare the dataset for the R2jags
   item <- data.preparation(data, measure)
 
 
@@ -83,7 +80,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   n.thin <- ifelse(missing(n.thin), 1, n.thin)
 
 
-  ## Data for R2jags
+  ## Data in list format for R2jags
   data.jag <- list("m" = item$m,
                    "N" = item$N,
                    "t" = item$t,
@@ -99,7 +96,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
                    "precd.phi" = 1/var.misspar,
                    "D" = D,
                    "heter.prior" = heter.prior,
-                   #"eff.mod2" = matrix(0, nrow = item$ns, ncol = max(item$na)),
+                   "eff.mod2" = matrix(0, nrow = item$ns, ncol = max(item$na)),
                    "eff.mod" = rep(0, item$ns))
 
 
@@ -110,7 +107,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   }
 
 
-  param.jags <- c("delta", "EM", "EM.ref", "EM.pred", "pred.ref", "tau", "SUCRA",  "effectiveness", "dev.m", "dev.o", "totresdev.o", "hat.par", "hat.m")
+  param.jags <- c("delta", "EM", "EM.ref", "EM.pred", "pred.ref", "tau", "SUCRA",  "effectiveness", "dev.o", "totresdev.o", "hat.par")
   if (is.element(assumption, c("HIE-COMMON", "HIE-TRIAL", "HIE-ARM"))) {
     param.jags <- append(param.jags, "mean.phi")
   } else {
@@ -132,8 +129,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
                   n.chains = n.chains,
                   n.iter = n.iter,
                   n.burnin = n.burnin,
-                  n.thin = n.thin,
-                  DIC = T)
+                  n.thin = n.thin)
 
 
   ## Turn summary of posterior results (R2jags object) into a data-frame to select model parameters (using 'dplyr')
@@ -169,12 +165,6 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   # Trial-arm deviance contribution for observed outcome
   dev.o <- t(getResults %>% dplyr::select(starts_with("dev.o")))
 
-  # Trial-arm deviance contribution for missing outcome data
-  dev.m <- t(getResults %>% dplyr::select(starts_with("dev.m")))
-
-  # Fitted/predicted number of missing outcome data
-  hat.m <- t(getResults %>% dplyr::select(starts_with("hat.m")))
-
   # Fitted/predicted outcome
   hat.par <- t(getResults %>% dplyr::select(starts_with("hat.par")))
 
@@ -188,14 +178,6 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   N.new <- suppressMessages({as.vector(na.omit(melt(item$N)[, 2]))})
   obs <- N.new - m.new
 
-  # Correction for zero MOD in trial-arm
-  #m0 <- ifelse(m.new == 0, m.new + 0.01, m.new)
-
-  ## Deviance at the posterior mean of the fitted MOD
-  #dev.post.m <- 2*(m0*(log(m0) - log(as.vector(hat.m[, 1]))) + (N.new - m0)*(log(N.new - m0) - log(N.new - as.vector(hat.m[, 1]))))
-
-  # Sign of the difference between observed and fitted MOD
-  #sign.dev.m <- sign(m0 - as.vector(hat.m[, 1]))
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
 
@@ -226,9 +208,8 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   }
 
 
-  ## Obtain the leverage for observed and missing outcomes
+  ## Obtain the leverage for observed outcomes
   leverage.o <- as.vector(dev.o[, 1]) - dev.post.o
-  #leverage.m <- as.vector(dev.m[, 1]) - dev.post.m
 
   # Number of effective parameters
   pD <- dev - sum(dev.post.o)
@@ -243,33 +224,25 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   ## Return a list of results
   if (model == "RE") {
     ma.results <- list(EM = EM,
-                        EM.pred = EM.pred,
-                        tau = tau,
-                        delta = delta,
-                        #dev.m = dev.m,
-                        dev.o = dev.o,
-                        #hat.m = hat.m,
-                        hat.par = hat.par,
-                        leverage.o = leverage.o,
-                        sign.dev.o = sign.dev.o,
-                        #leverage.m = leverage.m,
-                        #sign.dev.m = sign.dev.m,
-                        phi = phi,
-                        model.assessment = model.assessment,
-                        measure = measure,
-                        model = model,
-                        jagsfit = jagsfit)
-    nma.results <- append(ma.results, list(EM.ref = EM.ref, pred.ref = pred.ref, SUCRA = SUCRA, effectiveness = effectiveness))
-  } else {
-    ma.results <- list(EM = EM,
-                       #dev.m = dev.m,
+                       EM.pred = EM.pred,
+                       tau = tau,
+                       delta = delta,
                        dev.o = dev.o,
-                       #hat.m = hat.m,
                        hat.par = hat.par,
                        leverage.o = leverage.o,
                        sign.dev.o = sign.dev.o,
-                       #leverage.m = leverage.m,
-                       #sign.dev.m = sign.dev.m,
+                       phi = phi,
+                       model.assessment = model.assessment,
+                       measure = measure,
+                       model = model,
+                       jagsfit = jagsfit)
+    nma.results <- append(ma.results, list(EM.ref = EM.ref, pred.ref = pred.ref, SUCRA = SUCRA, effectiveness = effectiveness))
+  } else {
+    ma.results <- list(EM = EM,
+                       dev.o = dev.o,
+                       hat.par = hat.par,
+                       leverage.o = leverage.o,
+                       sign.dev.o = sign.dev.o,
                        phi = phi,
                        model.assessment = model.assessment,
                        measure = measure,
@@ -279,7 +252,6 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   }
 
   ifelse(item$nt > 2, return(nma.results), return(ma.results))
-
 }
 
 

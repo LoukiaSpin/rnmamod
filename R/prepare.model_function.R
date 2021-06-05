@@ -79,14 +79,14 @@ prepare.model <- function(measure, model, assumption) {
   }
 
   code <- if (model == "RE") {
-    paste0(code, "\n\t\t\tdelta.star[i, k] <- delta[i, k] + (beta[t[i, k]] - beta[t[i, 1]])*eff.mod[i]*(1 - equals(eff.mod[i], 0))",
+    paste0(code, "\n\t\t\tdelta.star[i, k] <- delta[i, k] + (beta[t[i, k]] - beta[t[i, 1]])*(eff.mod[i]*(1 - equals(eff.mod[i], 0)) + eff.mod2[i, k]*equals(eff.mod[i], 0))",
                  "\n\t\t\tdelta[i, k] ~ dnorm(md[i, k], precd[i, k])",
                  "\n\t\t\tmd[i, k] <- d[t[i, k]] - d[t[i, 1]] + sw[i, k]",
                  "\n\t\t\tprecd[i, k] <- 2*prec*(k - 1)/k",
                  "\n\t\t\tw[i, k] <- delta[i, k] - (d[t[i, k]] - d[t[i, 1]])",
                  "\n\t\t\tsw[i, k] <- sum(w[i, 1:(k - 1)])/(k - 1)")
   } else {
-    paste0(code, "\n\t\t\tdelta.star[i, k] <- d[t[i, k]] - d[t[i, 1]] + (beta[t[i, k]] - beta[t[i, 1]])*eff.mod[i]*(1 - equals(eff.mod[i], 0))")
+    paste0(code, "\n\t\t\tdelta.star[i, k] <- d[t[i, k]] - d[t[i, 1]] + (beta[t[i, k]] - beta[t[i, 1]])*(eff.mod[i]*(1 - equals(eff.mod[i], 0)) + eff.mod2[i, k]*equals(eff.mod[i], 0))")
   }
 
   code <- paste0(code, "\n\t\t\t}}",

@@ -41,7 +41,6 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
     NA
   }
 
-
   # Posterior results on between-trial standard deviation under meta-regression
   tau.meta <- if (model == "RE") {
     round(metareg$tau, 2)
