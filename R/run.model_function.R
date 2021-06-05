@@ -54,8 +54,10 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
 
   options(warn = -1)
 
+
   ## Prepare the dataset
   item <- data.preparation(data, measure)
+
 
   ## Default arguments
   model <- if (missing(model)) {
@@ -74,20 +76,14 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   }
   mean.misspar <- missingness.param.prior(assumption, mean.misspar)
   heter.prior <- heterogeneity.param.prior(measure, model, heter.prior)
-  var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
+  var.misspar <- ifelse(missing(var.misspar) & (is.element(measure, c("OR", "MD", "SMD"))), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
   n.iter <- ifelse(missing(n.iter), 10000, n.iter)
   n.burnin <- ifelse(missing(n.burnin), 1000, n.burnin)
   n.thin <- ifelse(missing(n.thin), 1, n.thin)
 
 
-  ## Information for the prior distribution on the missingness parameter (IMDOM or logIMROM)
-  M <- ifelse(!is.na(item$m), mean.misspar, NA)  # Vector of the mean value of the normal distribution of the informative missingness parameter as the number of arms in trial i (independent structure)
-  prec.misspar <- 1/var.misspar
-  psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
-  cov.misspar <- 0.5*var.misspar             # covariance of pair of missingness parameters in a trial (independent structure)
-
-
+  ## Data for R2jags
   data.jag <- list("m" = item$m,
                    "N" = item$N,
                    "t" = item$t,
@@ -95,11 +91,12 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
                    "nt" = item$nt,
                    "ns" = item$ns,
                    "ref" = item$ref,
-                   "M" = M,
-                   "cov.phi" = cov.misspar,
+                   "I" = item$I,
+                   "M" = ifelse(!is.na(item$m), mean.misspar, NA),
+                   "cov.phi" = 0.5*var.misspar,
                    "var.phi" = var.misspar,
                    "meand.phi" = mean.misspar,
-                   "precd.phi" = prec.misspar,
+                   "precd.phi" = 1/var.misspar,
                    "D" = D,
                    "heter.prior" = heter.prior,
                    #"eff.mod2" = matrix(0, nrow = item$ns, ncol = max(item$na)),
@@ -187,24 +184,24 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
 
   ## Calculate the deviance at posterior mean of fitted values
   # Turn 'number of observed' and 'm' into a vector (first column, followed by second column, and so on)
-  m.new <- suppressMessages({as.vector(na.omit(melt(m)[, 2]))})
-  N.new <- suppressMessages({as.vector(na.omit(melt(N)[, 2]))})
+  m.new <- suppressMessages({as.vector(na.omit(melt(item$m)[, 2]))})
+  N.new <- suppressMessages({as.vector(na.omit(melt(item$N)[, 2]))})
   obs <- N.new - m.new
 
   # Correction for zero MOD in trial-arm
-  m0 <- ifelse(m.new == 0, m.new + 0.01, m.new)
+  #m0 <- ifelse(m.new == 0, m.new + 0.01, m.new)
 
   ## Deviance at the posterior mean of the fitted MOD
-  dev.post.m <- 2*(m0*(log(m0) - log(as.vector(hat.m[, 1]))) + (N.new - m0)*(log(N.new - m0) - log(N.new - as.vector(hat.m[, 1]))))
+  #dev.post.m <- 2*(m0*(log(m0) - log(as.vector(hat.m[, 1]))) + (N.new - m0)*(log(N.new - m0) - log(N.new - as.vector(hat.m[, 1]))))
 
   # Sign of the difference between observed and fitted MOD
-  sign.dev.m <- sign(m0 - as.vector(hat.m[, 1]))
+  #sign.dev.m <- sign(m0 - as.vector(hat.m[, 1]))
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
 
     # Turn 'y0', 'se0'into a vector (first column, followed by second column, and so on)
-    y0.new <- suppressMessages({as.vector(na.omit(melt(y0)[, 2]))})
-    se0.new <- suppressMessages({as.vector(na.omit(melt(se0)[, 2]))})
+    y0.new <- suppressMessages({as.vector(na.omit(melt(item$y0)[, 2]))})
+    se0.new <- suppressMessages({as.vector(na.omit(melt(item$se0)[, 2]))})
 
     # Deviance at the posterior mean of the fitted mean outcome
     dev.post.o <- (y0.new - as.vector(hat.par[, 1]))*(y0.new - as.vector(hat.par[, 1]))*(1/se0.new^2)
@@ -215,7 +212,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   } else {
 
     # Turn 'r' and number of observed into a vector (first column, followed by second column, and so on)
-    r.new <- suppressMessages({as.vector(na.omit(melt(r)[, 2]))})
+    r.new <- suppressMessages({as.vector(na.omit(melt(item$r)[, 2]))})
 
     # Correction for zero events in trial-arm
     r0 <- ifelse(r.new == 0, r.new + 0.01, ifelse(r.new == obs, r.new - 0.01, r.new))
@@ -231,7 +228,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
 
   ## Obtain the leverage for observed and missing outcomes
   leverage.o <- as.vector(dev.o[, 1]) - dev.post.o
-  leverage.m <- as.vector(dev.m[, 1]) - dev.post.m
+  #leverage.m <- as.vector(dev.m[, 1]) - dev.post.m
 
   # Number of effective parameters
   pD <- dev - sum(dev.post.o)
@@ -249,14 +246,14 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
                         EM.pred = EM.pred,
                         tau = tau,
                         delta = delta,
-                        dev.m = dev.m,
+                        #dev.m = dev.m,
                         dev.o = dev.o,
-                        hat.m = hat.m,
+                        #hat.m = hat.m,
                         hat.par = hat.par,
                         leverage.o = leverage.o,
                         sign.dev.o = sign.dev.o,
-                        leverage.m = leverage.m,
-                        sign.dev.m = sign.dev.m,
+                        #leverage.m = leverage.m,
+                        #sign.dev.m = sign.dev.m,
                         phi = phi,
                         model.assessment = model.assessment,
                         measure = measure,
@@ -265,14 +262,14 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
     nma.results <- append(ma.results, list(EM.ref = EM.ref, pred.ref = pred.ref, SUCRA = SUCRA, effectiveness = effectiveness))
   } else {
     ma.results <- list(EM = EM,
-                       dev.m = dev.m,
+                       #dev.m = dev.m,
                        dev.o = dev.o,
-                       hat.m = hat.m,
+                       #hat.m = hat.m,
                        hat.par = hat.par,
                        leverage.o = leverage.o,
                        sign.dev.o = sign.dev.o,
-                       leverage.m = leverage.m,
-                       sign.dev.m = sign.dev.m,
+                       #leverage.m = leverage.m,
+                       #sign.dev.m = sign.dev.m,
                        phi = phi,
                        model.assessment = model.assessment,
                        measure = measure,
@@ -281,7 +278,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
     nma.results <- append(ma.results, list(EM.ref = EM.ref, SUCRA = SUCRA, effectiveness = effectiveness))
   }
 
-  ifelse(nt > 2, return(nma.results), return(ma.results))
+  ifelse(item$nt > 2, return(nma.results), return(ma.results))
 
 }
 

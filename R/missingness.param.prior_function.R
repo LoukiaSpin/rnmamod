@@ -17,7 +17,7 @@ missingness.param.prior <- function(assumption, mean.misspar) {
 
   }  else if (!missing(mean.misspar) & (is.element(assumption, c("HIE-ARM", "IDE-ARM"))) & is.null(dim(mean.misspar))) {
 
-    mean.misspar <- rep(mean.misspar, 2)
+    mean.misspar <- rep(ifelse(mean.misspar == 0, 0.0001, mean.misspar), 2)
 
   } else if (!missing(mean.misspar) & (is.element(assumption, c("HIE-ARM", "IDE-ARM"))) & !is.null(dim(mean.misspar))) {
 

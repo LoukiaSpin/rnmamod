@@ -30,7 +30,7 @@ prepare.model <- function(measure, model, assumption) {
   if (measure == "SMD") {
     code <- paste0(code, "\n\t\t\tprec.o[i, k] <- pow(se.o[i, k], -2)",
                          "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])",
-                         "\n\t\t\tc[i, k] <- N[i, k] - m[i, k]",
+                         "\n\t\t\tc[i, k] <- N[i, k] - m[i, k])",
                          "\n\t\t\tsd.obs[i, k] <- se.o[i, k]*sqrt(c[i, k])",
                          "\n\t\t\tnom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1)")
   } else if (measure == "MD" || measure == "ROM") {
@@ -50,12 +50,10 @@ prepare.model <- function(measure, model, assumption) {
                                        ((4*p[i, k])*(1 - q[i, k])*(1 - exp(phi.m[i, k])))))/(2*(1 - q[i, k])*(1 - exp(phi.m[i, k]))))))")
   }
 
-  code <- paste0(code, "\n\t\t\tm[i, k] ~ dbin(q[i, k], N[i, k])",
-                       "\n\t\t\tq[i, k] ~ dunif(0, 1)",
-                       "\n\t\t\tm0[i, k] <- m[i, k] + 0.01*equals(m[i, k], 0)",
-                       "\n\t\t\that.m[i, k] <- q[i, k]*N[i, k]",
-                       "\n\t\t\tdev.m[i, k] <- 2*(m0[i, k]*(log(m0[i, k]) - log(hat.m[i, k])) +
-                        (N[i, k] - m0[i, k])*(log(N[i, k] - m0[i, k]) - log(N[i, k] - hat.m[i, k])))")
+  code <- paste0(code, "\n\t\t\tq[i, k] <- q0[i, k]*I[i, k]",
+                       "\n\t\t\tm[i, k] ~ dbin(q0[i, k], N[i, k])",
+                       "\n\t\t\tq0[i, k] ~ dunif(0, 1)")
+
 
   if (measure == "MD" || measure == "SMD" || measure == "ROM") {
     code <- paste0(code, "\n\t\t\that.par[i, k] <- theta.o[i, k]",
@@ -68,7 +66,6 @@ prepare.model <- function(measure, model, assumption) {
 
   code <- paste0(code, "\n\t\t\t}",
                        "\n\t\tresdev.o[i] <- sum(dev.o[i, 1:na[i]])",
-                       "\n\t\tresdev.m[i] <- sum(dev.m[i, 1:na[i]])",
                        "\n\t\tfor (k in 2:na[i]) {")
 
   code <- if (measure == "MD") {
@@ -94,7 +91,6 @@ prepare.model <- function(measure, model, assumption) {
 
   code <- paste0(code, "\n\t\t\t}}",
                        "\n\ttotresdev.o <- sum(resdev.o[])",
-                       "\n\ttotresdev.m <- sum(resdev.m[])",
                        "\n\td[ref] <- 0",
                        "\n\tbeta[ref] <- 0",
                        "\n\tfor (t in 1:(ref - 1)) {",
@@ -237,7 +233,7 @@ prepare.model <- function(measure, model, assumption) {
     paste0(code, "\n\tprec <- pow(tau, -2)",
                  "\n\ttau.a ~ dnorm(0, heter.prior[2])I(0, )",
                  "\n\ttau.b ~ dunif(0, heter.prior[2])",
-                "\n\ttau <- tau.a*equals(heter.prior[3], 1) + tau.b*equals(heter.prior[3], 2)")
+                 "\n\ttau <- tau.a*equals(heter.prior[3], 1) + tau.b*equals(heter.prior[3], 2)")
   } else {
     paste0(code, " ")
   }

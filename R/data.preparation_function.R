@@ -12,9 +12,9 @@ data.preparation <- function(data, measure) {
   } else if (!is.element(measure, c("MD", "SMD", "ROM", "OR"))) {
     stop("Insert 'MD', 'SMD', 'ROM', or 'OR'")
   } else if ((dim(data %>% dplyr::select(starts_with("r")))[2] > 0) & is.element(measure, c("MD", "SMD", "ROM"))) {
-    stop("Inser 'OR' because the outcome data are binary")
+    stop("Insert 'OR' because the outcome data are binary")
   } else if ((dim(data %>% dplyr::select(starts_with("r")))[2] == 0) & is.element(measure, "OR")) {
-    stop("Inser 'MD', 'SMD' or 'ROM' because the outcome data are continuous")
+    stop("Insert 'MD', 'SMD' or 'ROM' because the outcome data are continuous")
   } else {
     measure
   }
@@ -34,9 +34,8 @@ data.preparation <- function(data, measure) {
     y.obs <- data %>% dplyr::select(starts_with("y"))                             # Observed mean value in each arm of every trial
     sd.obs <- data %>% dplyr::select(starts_with("sd"))                           # Observed standard deviation in each arm of every trial
     mod <- data %>% dplyr::select(starts_with("m"))                               # Number of missing participants in each arm of every trial
-    c <- data %>% dplyr::select(starts_with("c"))                                 # Number of completers in each arm of every trial
-    se.obs <- sd.obs/sqrt(c)                                                      # Observed standard error in each arm of every trial
-    rand <- mod + c                                                               # Number of randomised participants in each arm of every trial
+    rand <- data %>% dplyr::select(starts_with("c"))                              # Number randomised participants in each arm of every trial
+    se.obs <- sd.obs/sqrt(rand - ifelse(is.na(mod), 0, 1))                                             # Observed standard error in each arm of every trial
 
 
     ## Order by 'id of t1' < 'id of t1'
@@ -71,14 +70,15 @@ data.preparation <- function(data, measure) {
 
   }
 
-  I <- m
+  I <- m.fake <- m
   for (i in 1:ns) {
-    I[i, ] <- ifelse(is.na(m[i, ]), 0, 1)
+    I[i, ] <- ifelse(is.na(m[i, ]) & !is.na(N[i, ]), 0, ifelse(!is.na(m[i, ]) & !is.na(N[i, ]), 1, NA))
+    m.fake[i, ] <- ifelse(is.na(m[i, ]) & !is.na(N[i, ]), 0, ifelse(!is.na(m[i, ]) & !is.na(N[i, ]), m[i, ], NA))
   }
 
 
   ## Return results
-  results <- list(m = m,
+  results <- list(m = m.fake,
                   N = N,
                   t = t,
                   I = I,
