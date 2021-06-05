@@ -94,7 +94,7 @@ separate.meta.plot <- function(full, meta, drug.names) {
 
   ## Prepare dataset for ggplot2
   # Effect estimate
-  if (measure != "OR" & measure != "ROM") {
+  if (!is.element(measure, c("OR", "ROM"))) {
     prepare <- data.frame(rep(1:length(obs.comp), 2), rep(possible.comp$obs.comp[, 4], 2), rbind(apply(EM.full.clean[, -2], 2, as.numeric), apply(EM.meta.clean[, -2], 2, as.numeric)), rep(c("Network meta-analysis", "Paiwise meta-analysis"), each = length(obs.comp)))
   } else {
     prepare <- data.frame(rep(1:length(obs.comp), 2), rep(possible.comp$obs.comp[, 4], 2), rbind(exp(apply(EM.full.clean[, -2], 2, as.numeric)), exp(apply(EM.meta.clean[, -2], 2, as.numeric))), rep(c("Network meta-analysis", "Paiwise meta-analysis"), each = length(obs.comp)))

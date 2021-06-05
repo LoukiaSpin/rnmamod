@@ -50,12 +50,9 @@ prepare.UME <- function(measure, model, assumption) {
                                        ((4*p[i, k])*(1 - q[i, k])*(1 - exp(phi.m[i, k])))))/(2*(1 - q[i, k])*(1 - exp(phi.m[i, k]))))))")
   }
 
-  code <- paste0(code, "\n\t\t\tm[i, k] ~ dbin(q[i, k], N[i, k])",
-                       "\n\t\t\tq[i, k] ~ dunif(0, 1)",
-                       "\n\t\t\tm0[i, k] <- m[i, k] + 0.01*equals(m[i, k], 0)",
-                       "\n\t\t\that.m[i, k] <- q[i, k]*N[i, k]",
-                       "\n\t\t\tdev.m[i, k] <- 2*(m0[i, k]*(log(m0[i, k]) - log(hat.m[i, k])) +
-                        (N[i, k] - m0[i, k])*(log(N[i, k] - m0[i, k]) - log(N[i, k] - hat.m[i, k])))")
+  code <- paste0(code, "\n\t\t\tq[i, k] <- q0[i, k]*I[i, k]",
+                       "\n\t\t\tm[i, k] ~ dbin(q0[i, k], N[i, k])",
+                       "\n\t\t\tq0[i, k] ~ dunif(0, 1)")
 
   if (measure == "MD" || measure == "SMD" || measure == "ROM") {
     code <- paste0(code, "\n\t\t\that.par[i, k] <- theta.o[i, k]",
@@ -68,7 +65,6 @@ prepare.UME <- function(measure, model, assumption) {
 
   code <- paste0(code, "\n\t\t\t}",
                        "\n\t\tresdev.o[i] <- sum(dev.o[i, 1:na[i]])",
-                       "\n\t\tresdev.m[i] <- sum(dev.m[i, 1:na[i]])",
                        "\n\t\tfor (k in 2:na[i]) {")
 
   code <- if (measure == "MD") {
@@ -92,8 +88,7 @@ prepare.UME <- function(measure, model, assumption) {
   }
 
   code <- paste0(code, "\n\t\t\t}}",
-                       "\n\ttotresdev.o <- sum(resdev.o[])",
-                       "\n\ttotresdev.m <- sum(resdev.m[])")
+                       "\n\ttotresdev.o <- sum(resdev.o[])")
 
   code <- paste0(code, "\n\tfor (i in (ns - ns.multi + 1):ns) {")
 

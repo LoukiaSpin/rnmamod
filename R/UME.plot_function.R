@@ -38,12 +38,6 @@ UME.plot <- function(full, ume, drug.names, threshold) {
     NA
   }
 
-  # Posterior mean on deviance contribution for missing outcomes under consistency model
-  dev.m.full <- full$dev.m
-
-  # Posterior mean on deviance contribution for missing outcomes under UME model
-  dev.m.ume <- ume$dev.m
-
   # Posterior mean on deviance contribution for observed outcomes under consistency model
   dev.o.full <- full$dev.o
 
@@ -58,6 +52,7 @@ UME.plot <- function(full, ume, drug.names, threshold) {
 
   # Observed comparisons in the network
   obs.comp <- ume$obs.comp
+
 
   ## Possible and observed comparisons (with names)
   possible.comp <- possible.observed.frail.comparisons(drug.names, obs.comp)
@@ -118,44 +113,26 @@ UME.plot <- function(full, ume, drug.names, threshold) {
 
   ## Scatterplot on the deviance contribution of consistency versus UME models
   scatterplot.o <- scatterplots.dev(dev.o.full[, 1], dev.o.ume[, 1], colour = "#D55E00")
-  #scatterplot.m <- scatterplots.dev(dev.m.full[, 1], dev.m.ume[, 1], colour = "#009E73")
-
 
 
   ## Bland-Altman plot on the deviance contribution of consistency versus UME models
   BA.observed <- BlandAltman.plot(dev.o.full[, 1], dev.o.ume[, 1], colour = "#D55E00")
-  #BA.missing <- BlandAltman.plot(dev.m.full[, 1], dev.m.ume[, 1], colour = "#009E73")
-
 
 
   ## Bring together all four plots
-  #p1 <- ggarrange(scatterplot.o, BA.observed, nrow = 2, ncol = 1, labels = c("A)", "B)"))
-  #p2 <- ggarrange(scatterplot.m, BA.missing, nrow = 2, ncol = 1)
-
-  #p1 <- annotate_figure(p1, fig.lab = "Observed outcomes", fig.lab.face = "bold", fig.lab.pos = "top")
-  #p2 <- annotate_figure(p2, fig.lab = "Missing outcome data", fig.lab.face = "bold", fig.lab.pos = "top")
-
-  #scatterplots <- ggarrange(p1, p2, ncol = 2)
   scatterplots <- ggarrange(scatterplot.o, BA.observed, nrow = 1, ncol = 2)
 
 
   ## Leverage plots
   # Consistency model for observed outcomes
-  lever.full.o <- leverage.plot(full, drug.names, title.o = "Observed outcomes under consistency model", title.m = "Missing outcome data under consistency model")$leverage.plot.observed
+  lever.full.o <- leverage.plot(full, drug.names, title.o = "Observed outcomes under consistency model")
 
-  # Consistency model for missing outcomes
-  #lever.full.m <- leverage.plot(full, drug.names, title.o = "Observed outcomes under consistency model", title.m = "Missing outcome data under consistency model")$leverage.plot.missing
-
-  # UME model for observed outcomes
-  lever.ume.o <- leverage.plot(ume, drug.names, title.o = "Observed outcomes under UME model", title.m = "Missing outcome data under UME model")$leverage.plot.observed
-
-  # UME model for missing outcomes
-  #lever.ume.m <- leverage.plot(ume, drug.names, title.o = "Observed outcomes under UME model", title.m = "Missing outcome data under UME model")$leverage.plot.missing
+    # UME model for observed outcomes
+  lever.ume.o <- leverage.plot(ume, drug.names, title.o = "Observed outcomes under UME model")
 
 
 
   ## Bring together the leverage plots for observed outcome
-  #lev.plots <- ggarrange(lever.full.o, lever.ume.o, lever.full.m, lever.ume.m, nrow = 2, ncol = 2, labels = c("A)", "", "B)", ""))
   lev.plots <- ggarrange(lever.full.o, lever.ume.o, nrow = 1, ncol = 2, labels = c("A)",  "B)"))
 
 

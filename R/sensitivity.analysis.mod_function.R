@@ -49,91 +49,44 @@
 run.sensitivity <- function(data, measure, model, assumption, heter.prior, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
 
 
-  options(warn = -1)
+  ## Prepare the dataset for the R2jags
+  item <- data.preparation(data, measure)
+
 
   ## Default arguments
-  measure <- if (missing(measure)) {
-    stop("The 'measure' needs to be defined")
-  } else if (measure != "MD" & measure != "SMD" & measure != "ROM" & measure != "OR") {
-    stop("Insert 'MD', 'SMD', 'ROM', or 'OR'")
-  } else {
-    measure
-  }
   model <- if (missing(model)) {
     "RE"
-  } else if (model != "RE" & model != "FE") {
+  } else if (!is.element(model, c("RE", "FE"))) {
     stop("Insert 'RE', or 'FE'")
   } else {
     model
   }
-  assumption <- ifelse(missing(assumption), "IDE-ARM", assumption)
+  assumption <- if (missing(assumption)) {
+    "IDE-ARM"
+  } else if (!is.element(assumption,  c("IDE-ARM", "IDE-TRIAL", "IDE-COMMON", "HIE-ARM", "HIE-TRIAL", "HIE-COMMON", "IND-CORR", "IND-UNCORR"))) {
+    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'")
+  } else {
+    assumption
+  }
+  mean.misspar <- missingness.param.prior(assumption, mean.misspar)
   heter.prior <- heterogeneity.param.prior(measure, model, heter.prior)
-  var.misspar <- ifelse(missing(var.misspar) & (measure == "OR" || measure == "MD"|| measure == "SMD"), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
+  var.misspar <- ifelse(missing(var.misspar) & (is.element(measure, c("OR", "MD", "SMD"))), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
   n.iter <- ifelse(missing(n.iter), 10000, n.iter)
   n.burnin <- ifelse(missing(n.burnin), 1000, n.burnin)
   n.thin <- ifelse(missing(n.thin), 1, n.thin)
 
 
-  if(measure == "MD" || measure == "SMD"|| measure == "ROM"){
-
-    ## Continuous: arm-level, wide-format dataset
-    y.obs <- data %>% dplyr::select(starts_with("y"))           # Observed mean value in each arm of every trial
-    sd.obs <- data %>% dplyr::select(starts_with("sd"))         # Observed standard deviation in each arm of every trial
-    mod <- data %>% dplyr::select(starts_with("m"))             # Number of missing participants in each arm of every trial
-    c <- data %>% dplyr::select(starts_with("c"))               # Number of completers in each arm of every trial
-    se.obs <- sd.obs/sqrt(c)                                    # Observed standard error in each arm of every trial
-    rand <- mod + c                                             # Number of randomised participants in each arm of every trial
-    treat <- data %>% dplyr::select(starts_with("t"))           # Intervention studied in each arm of every trial
-    na <- apply(treat, 1, function(x) length(which(!is.na(x)))) # Number of interventions investigated in every trial per network
-    nt <- length(table(as.matrix(treat)))                       # Total number of interventions per network
-    ns <- length(y.obs[, 1])                                    # Total number of included trials per network
-    ref <- 1                                                    # The first intervention (t1 = 1) is the reference of the network
-
-
-
-    ## Order by 'id of t1' < 'id of t1'
-    y0 <- se0 <- m <- N <- t <- t0 <- treat
-    for(i in 1:ns){
-      t0[i, ] <- order(treat[i, ], na.last = T)
-      y0[i, ] <- y.obs[i, order(t0[i, ], na.last = T)]
-      se0[i, ] <- se.obs[i, order(t0[i, ], na.last = T)]
-      m[i, ] <- mod[i, order(t0[i, ], na.last = T)]
-      N[i, ] <- rand[i, order(t0[i, ], na.last = T)]
-      t[i, ] <- sort(treat[i, ], na.last = T)
-    }
-
-
-    ## Scenarios for missingness mechanism in an intervention (PMID: 30223064)
+  ## Scenarios for missingness mechanism in an intervention (PMID: 30223064)
+  if (is.element(measure, c("MD", "SMD", "ROM"))) {
     scenarios <- c(-2, -1, 0, 1, 2)
-
   } else {
-
-    ## Binary: arm-level, wide-format dataset
-    (r <- data %>% dplyr::select(starts_with("r")))             # Number of observed events in each arm of every trial
-    (m <- data %>% dplyr::select(starts_with("m")))             # Number of missing participants in each arm of every trial
-    (N <- data %>% dplyr::select(starts_with("n")))             # Number randomised participants in each arm of every trial
-    (t <- data %>% dplyr::select(starts_with("t")))             # Intervention studied in each arm of every trial
-    na <- apply(t, 1, function(x) length(which(!is.na(x))))     # Number of interventions investigated in every trial per network
-    nt <- length(table(as.matrix(t)))                           # Total number of interventions per network
-    ns <- length(r[, 1])                                        # Total number of included trials per network
-    ref <- 1                                                                        # The first intervention (t1 = 1) is the reference of the network
-
-
-
-    ## Scenarios for missingness mechanism in an intervention (PMID: 30223064)
     scenarios <- c(-log(3), -log(2), log(0.9999), log(2), log(3))
    }
 
 
   ## A 2x2 matrix of 25 reference-specific scenarios (PMID: 30223064)
   mean.misspar <- as.matrix(cbind(rep(scenarios, each = 5), rep(scenarios, 5))) # 2nd column refers to the reference intervention (control in MA)
-
-
-  ## Information for the prior distribution on the missingness parameter (IMDOM or logIMROM)
-  prec.misspar <- 1/var.misspar
-  psi.misspar <- sqrt(var.misspar)           # the lower bound of the uniform prior distribution for the prior standard deviation of the missingness parameter (hierarchical structure)
-
 
 
   ## Prepare parameters for JAGS
@@ -152,26 +105,28 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, var.m
   ## Calculate time needed for all models
   for(i in 1:length(mean.misspar[, 1])){
 
-    data.jag[[i]] <- list("m" = m,
-                          "N" = N,
-                          "t" = t,
-                          "na" = na,
-                          "nt" = nt,
-                          "ns" = ns,
-                          "ref" = ref,
+    data.jag[[i]] <- list("m" = item$m,
+                          "N" = item$N,
+                          "t" = item$t,
+                          "na" = item$na,
+                          "nt" = item$nt,
+                          "ns" = item$ns,
+                          "ref" = item$ref,
+                          "I" = item$I,
                           "meand.phi" = mean.misspar[i, ],
-                          "precd.phi" = prec.misspar,
+                          "precd.phi" = 1/var.misspar,
                           "D" = D,
                           "heter.prior" = heter.prior,
-                          #"eff.mod2" = matrix(0, nrow = ns, ncol = max(na)),
+                          "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)),
                           "eff.mod" = rep(0, ns))
 
 
-    if (measure == "MD" || measure == "SMD" || measure == "ROM") {
-      data.jag[[i]] <- append(data.jag[[i]], list("y.o" = y0, "se.o" = se0))
+    if (is.element(measure, c("MD", "SMD", "ROM"))) {
+      data.jag[[i]] <- append(data.jag[[i]], list("y.o" = item$y0, "se.o" = item$se0))
     } else if (measure == "OR") {
-      data.jag[[i]] <- append(data.jag[[i]], list("r" = r))
+      data.jag[[i]] <- append(data.jag[[i]], list("r" = item$r))
     }
+
 
 
     message(paste(i, "out of", length(mean.misspar[, 1]), "total scenarios"))
@@ -181,13 +136,12 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, var.m
                          n.chains = n.chains,
                          n.iter = n.iter,
                          n.burnin = n.burnin,
-                         n.thin = n.thin,
-                         DIC = F)
+                         n.thin = n.thin)
   }
 
 
   ## Obtain the posterior distribution of the necessary model paramters
-  EM <- do.call(rbind,lapply(1:length(mean.misspar[, 1]), function(i) jagsfit[[i]]$BUGSoutput$summary[1:(nt*(nt - 1)*0.5), c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]))
+  EM <- do.call(rbind,lapply(1:length(mean.misspar[, 1]), function(i) jagsfit[[i]]$BUGSoutput$summary[1:(item$nt*(item$nt - 1)*0.5), c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]))
   if (model == "RE") {
     tau <- do.call(rbind,lapply(1:length(mean.misspar[, 1]), function(i) jagsfit[[i]]$BUGSoutput$summary["tau", c("50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]))
   } else {

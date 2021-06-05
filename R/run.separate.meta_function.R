@@ -54,19 +54,14 @@
 run.separate.meta <- function(data, measure, model, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin){
 
 
-  options(warn = -1)
+  ## Prepare the dataset for the R2jags
+  item <- data.preparation(data, measure)
+
 
   ## Default arguments
-  measure <- if (missing(measure)) {
-    stop("The 'measure' needs to be defined")
-  } else if (measure != "MD" & measure != "SMD" & measure != "ROM" & measure != "OR") {
-    stop("Insert 'MD', 'SMD', 'ROM', or 'OR'")
-  } else {
-    measure
-  }
   model <- if (missing(model)) {
     "RE"
-  } else if (model != "RE" & model != "FE") {
+  } else if (!is.element(model, c("RE", "FE"))) {
     stop("Insert 'RE', or 'FE'")
   } else {
     model
@@ -74,79 +69,29 @@ run.separate.meta <- function(data, measure, model, assumption, heter.prior, mea
 
 
   ## For a continuous outcome
-  if(measure == "MD" || measure == "SMD"|| measure == "ROM"){
-
-
-    ## Continuous: arm-level, wide-format dataset
-    y.obs <- data %>% dplyr::select(starts_with("y"))                               # Observed mean value in each arm of every trial
-    sd.obs <- data %>% dplyr::select(starts_with("sd"))                             # Observed standard deviation in each arm of every trial
-    mod <- data %>% dplyr::select(starts_with("m"))                                 # Number of missing participants in each arm of every trial
-    c <- data %>% dplyr::select(starts_with("c"))                                   # Number of completers in each arm of every trial
-    rand <- mod + c                                                                 # Number of randomised participants in each arm of every trial
-    treat <- data %>% dplyr::select(starts_with("t"))                               # Intervention studied in each arm of every trial
-    na <- apply(treat, 1, function(x) length(which(!is.na(x))))                     # Number of interventions investigated in every trial per network
-    nt <- length(table(as.matrix(treat)))                                           # Total number of interventions per network
-    ns <- length(y.obs[, 1])                                                        # Total number of included trials per network
-
-
-    ## Order by 'id of t1' < 'id of t1'
-    y0 <- sd0 <- m <- N <- t <- t0 <- treat
-    for(i in 1:ns){
-
-      t0[i, ] <- order(treat[i, ], na.last = T)
-      y0[i, ] <- y.obs[i, order(t0[i, ], na.last = T)]
-      sd0[i, ] <- sd.obs[i, order(t0[i, ], na.last = T)]
-      m[i, ] <- mod[i, order(t0[i, ], na.last = T)]
-      N[i, ] <- rand[i, order(t0[i, ], na.last = T)]
-      t[i, ] <- sort(treat[i, ], na.last = T)
-    }
-
-
+  if (is.element(measure, c("MD", "SMD", "ROM"))) {
 
     ## Turn into contrast-level data: one row per possible comparison in each trial ('netmeta')
     # Maintain study-id, intervention, observed mean outcome, observed standard deviation, and number randomised
-    (pairwise.observed <- pairwise(as.list(t), mean = as.list(y0), sd = as.list(sd0), n = as.list(c), data = data, studlab = 1:ns)[, c(3:5, 7, 10, 8, 11, 6, 9)])
-    colnames(pairwise.observed) <- c("study", "arm1", "arm2", "y1", "y2", "sd1", "sd2", "c1", "c2")
+    (pairwise.observed <- pairwise(as.list(item$t), mean = as.list(item$y0), sd = as.list(item$sd0), n = as.list(item$N), data = data, studlab = 1:item$ns)[, c(3:5, 7, 10, 8, 11, 6, 9)])
+    colnames(pairwise.observed) <- c("study", "arm1", "arm2", "y1", "y2", "sd1", "sd2", "n1", "n2")
 
 
     # Maintain MOD and merge with 'pairwise.observed'
-    (pairwise.mod <- pairwise(as.list(t), mean = as.list(y0), sd = as.list(sd0), n = as.list(m), data = data, studlab = 1:ns)[, c(6, 9)])
+    (pairwise.mod <- pairwise(as.list(item$t), mean = as.list(item$y0), sd = as.list(item$sd0), n = as.list(item$m), data = data, studlab = 1:item$ns)[, c(6, 9)])
     colnames(pairwise.mod) <- c("m1", "m2")
 
 
   } else {
 
-
-    ## Binary: arm-level, wide-format dataset
-    (event <- data %>% dplyr::select(starts_with("r")))                             # Number of observed events in each arm of every trial
-    (mod <- data %>% dplyr::select(starts_with("m")))                               # Number of missing participants in each arm of every trial
-    (rand <- data %>% dplyr::select(starts_with("n")))                              # Number randomised participants in each arm of every trial
-    (treat <- data %>% dplyr::select(starts_with("t")))                             # Intervention studied in each arm of every trial
-    na <- apply(treat, 1, function(x) length(which(!is.na(x))))                     # Number of interventions investigated in every trial per network
-    nt <- length(table(as.matrix(treat)))                                           # Total number of interventions per network
-    ns <- length(event[, 1])                                                        # Total number of included trials per network
-
-
-    ## Order by 'id of t1' < 'id of t1'
-    r <- m <- N <- t <- t0 <- treat
-    for(i in 1:ns){
-
-      t0[i, ] <- order(treat[i, ], na.last = T)
-      r[i, ] <- event[i, order(t0[i, ], na.last = T)]
-      m[i, ] <- mod[i, order(t0[i, ], na.last = T)]
-      N[i, ] <- rand[i, order(t0[i, ], na.last = T)]
-      t[i, ] <- sort(treat[i, ], na.last = T)
-    }
-
-
     ## Turn into contrast-level data: one row per possible comparison in each trial ('netmeta')
     # Maintain study-id, intervention, observed events, and number randomised
-    (pairwise.observed <- pairwise(as.list(t), event = as.list(r), n = as.list(N), data = data, studlab = 1:ns)[, c(3:6, 8, 7, 9)])
+    (pairwise.observed <- pairwise(as.list(item$t), event = as.list(item$r), n = as.list(item$N), data = data, studlab = 1:item$ns)[, c(3:6, 8, 7, 9)])
     colnames(pairwise.observed) <- c("study", "arm1", "arm2", "r1", "r2", "n1", "n2")
 
 
     # Maintain MOD and merge with 'pairwise.observed'
-    (pairwise.mod <- pairwise(as.list(t), event = as.list(m), n = as.list(N), data = data, studlab = 1:ns)[, c(6, 8)])
+    (pairwise.mod <- pairwise(as.list(item$t), event = as.list(item$m), n = as.list(item$N), data = data, studlab = 1:item$ns)[, c(6, 8)])
     colnames(pairwise.mod) <- c("m1", "m2")
 
   }
@@ -206,7 +151,5 @@ run.separate.meta <- function(data, measure, model, assumption, heter.prior, mea
   }
 
   return(return.results)
-
-
 }
 
