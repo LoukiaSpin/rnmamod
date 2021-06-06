@@ -54,6 +54,10 @@
 run.separate.meta <- function(data, measure, model, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin){
 
 
+  ## Turn off warning when variables in the 'data.jag' are not used
+  options(warn = -1)
+
+
   ## Prepare the dataset for the R2jags
   item <- data.preparation(data, measure)
 

@@ -4,6 +4,16 @@
 robustness.index <- function(sens, primary.scenar, threshold, nt){
 
   ES.mat <- sens$EM
+  if (missing(threshold) & is.element(sens$measure, "OR")) {
+    threshold <- 0.17
+    message("The value 0.17 was assigned on 'threshold' by default")
+  } else if (missing(threshold) & is.element(sens$measure, c("MD", "SMD", "ROM"))) {
+    threshold <- 0.28
+    message("The value 0.28 was assigned on 'threshold' by default")
+  } else {
+    threshold <- threshold
+    message(paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(robust$measure)))
+  }
 
   ## Function for the Kullback-Leibler Divergence (comparing two univariate normal distributions)
   KLD.measure.univ <- function(mean.y, sd.y, mean.x, sd.x){
@@ -61,7 +71,7 @@ robustness.index <- function(sens, primary.scenar, threshold, nt){
 
   robust <- ifelse(RI < threshold, "robust", "frail")
 
-  return(list(RI = RI, robust = robust, KLD = KLD))
+  return(list(RI = RI, robust = robust, KLD = KLD, measure = sens$measure, threshold = threshold))
 }
 
 

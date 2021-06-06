@@ -29,38 +29,38 @@ forestplot.panel.UME <- function(full, ume, drug.names) {
 
 
   # Calculate bounds of 95% CrI
-  if (measure != "OR" & measure != "ROM") {
+  #if (!is.element(measure, c("Odds ratio", "Ratio of means"))) {
     ume.lower <- EM.ume[, 1] - 1.96*EM.ume[, 2]
     ume.upper <- EM.ume[, 1] + 1.96*EM.ume[, 2]
-  } else {
-    ume.lower <- exp(EM.ume[, 1] - 1.96*EM.ume[, 2])
-    ume.upper <- exp(EM.ume[, 1] + 1.96*EM.ume[, 2])
-  }
+  #} else {
+  #  ume.lower <- exp(EM.ume[, 1] - 1.96*EM.ume[, 2])
+  #  ume.upper <- exp(EM.ume[, 1] + 1.96*EM.ume[, 2])
+  #}
 
 
 
   ## Keep only the effect estimates according to the 'poss.pair.comp.clean' - Consistency model
-  if (measure != "OR" & measure != "ROM") {
+  #if (!is.element(measure, c("Odds ratio", "Ratio of means"))) {
     ume.mean <- round(EM.ume[, 1], 2)
     nma.mean <- round(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 1], 2)
     nma.lower <- round(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 3], 2)
     nma.upper <- round(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 7], 2)
-  } else {
-    ume.mean <- round(exp(EM.ume[, 1]), 2)
-    nma.mean <- round(exp(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 1]), 2)
-    nma.lower <- round(exp(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 3]), 2)
-    nma.upper <- round(exp(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 7]), 2)
-  }
+  #} else {
+  #  ume.mean <- round(exp(EM.ume[, 1]), 2)
+  #  nma.mean <- round(exp(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 1]), 2)
+  #  nma.lower <- round(exp(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 3]), 2)
+  #  nma.upper <- round(exp(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 7]), 2)
+  #}
 
 
   # Indicate statistical significance
-  if (measure != "OR" & measure != "ROM") {
+  #if (!is.element(measure, c("Odds ratio", "Ratio of means"))) {
     nma.stat.signif <- ifelse(nma.lower > 0 | nma.upper < 0, "strong", "weak")
     ume.stat.signif <- ifelse(ume.lower > 0 | ume.upper < 0, "strong", "weak")
-  } else {
-    nma.stat.signif <- ifelse(nma.lower > 1 | nma.upper < 1, "strong", "weak")
-    ume.stat.signif <- ifelse(ume.lower > 1 | ume.upper < 1, "strong", "weak")
-  }
+  #} else {
+  #  nma.stat.signif <- ifelse(nma.lower > 1 | nma.upper < 1, "strong", "weak")
+  #  ume.stat.signif <- ifelse(ume.lower > 1 | ume.upper < 1, "strong", "weak")
+  #}
 
 
   # Create the dataframe
@@ -71,7 +71,7 @@ forestplot.panel.UME <- function(full, ume, drug.names) {
 
   ## Obtain forestplot
   ggplot(data = data.set, aes(x = as.factor(analysis), y = mean, ymin = lower, ymax = upper, colour = stat.sign)) +
-    geom_rect(aes(fill = frail),xmin = -Inf,xmax = Inf, ymin = -Inf, ymax = Inf, alpha = 0.2) +
+    geom_rect(aes(fill = frail),xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, alpha = 0.2) +
     geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
     geom_hline(yintercept = 0, lty = 2, size = 1, col = "black") +
     geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
@@ -80,8 +80,9 @@ forestplot.panel.UME <- function(full, ume, drug.names) {
     facet_wrap(vars(factor(comp, levels = unique(data.set$comp))), scales = "free_x") +
     scale_fill_manual(breaks = c("yes", "no"), values = c("grey53", "white")) +
     scale_color_manual(breaks = c("strong", "weak"), values = c("#009E73", "#D55E00")) +
-    scale_y_continuous(trans = ifelse(measure != "OR" & measure != "ROM", "identity", "log10")) +
-    labs(x = "", y = measure, colour = "Evidence", fill = "") +
+    #scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
+    scale_y_continuous(trans = "identity") +
+    labs(x = "", y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), paste(measure, "(in logarithmic scale)"), measure), colour = "Evidence", fill = "") +
     coord_flip() +
     theme_classic() +
     guides(fill = FALSE) +

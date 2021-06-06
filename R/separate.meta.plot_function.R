@@ -4,7 +4,6 @@
 separate.meta.plot <- function(full, meta, drug.names) {
 
 
-
   ## The results on the following parameters will be used:
   # Posterior results on the effect estimates under NMA
   EM.full <- full$EM
@@ -94,11 +93,11 @@ separate.meta.plot <- function(full, meta, drug.names) {
 
   ## Prepare dataset for ggplot2
   # Effect estimate
-  if (!is.element(measure, c("OR", "ROM"))) {
+  #if (is.element(measure, c("Odds ratio", "Ratio of means"))) {
+  #  prepare <- data.frame(rep(1:length(obs.comp), 2), rep(possible.comp$obs.comp[, 4], 2), rbind(apply(apply(EM.full.clean[, -2], 2, as.numeric), 2, exp), apply(apply(EM.meta.clean[, -2], 2, as.numeric), 2, exp)), rep(c("Network meta-analysis", "Paiwise meta-analysis"), each = length(obs.comp)))
+  #} else  {
     prepare <- data.frame(rep(1:length(obs.comp), 2), rep(possible.comp$obs.comp[, 4], 2), rbind(apply(EM.full.clean[, -2], 2, as.numeric), apply(EM.meta.clean[, -2], 2, as.numeric)), rep(c("Network meta-analysis", "Paiwise meta-analysis"), each = length(obs.comp)))
-  } else {
-    prepare <- data.frame(rep(1:length(obs.comp), 2), rep(possible.comp$obs.comp[, 4], 2), rbind(exp(apply(EM.full.clean[, -2], 2, as.numeric)), exp(apply(EM.meta.clean[, -2], 2, as.numeric))), rep(c("Network meta-analysis", "Paiwise meta-analysis"), each = length(obs.comp)))
-  }
+  #}
   colnames(prepare) <- c("order", "comparison", "mean", "lower", "upper", "analysis")
   rownames(prepare) <- NULL
 
@@ -116,13 +115,15 @@ separate.meta.plot <- function(full, meta, drug.names) {
   ## Forest plots of comparisons on effect estimate
   p1 <- ggplot(data = prepare, aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper, colour = analysis, group = analysis)) +
           geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-          geom_hline(yintercept = ifelse(measure != "OR" & measure != "ROM", 0, 1), lty = 2, size = 1.3, col = "grey53") +
+          #geom_hline(yintercept = ifelse(measure != "Odds ratio" & measure != "Ratio of means", 0, 1), lty = 2, size = 1.3, col = "grey53") +
+          geom_hline(yintercept = 0, lty = 2, size = 1.3, col = "grey53") +
           geom_point(size = 1.5,  colour = "black", stroke = 0.3, position = position_dodge(width = 0.5)) +
           geom_text(aes(x = as.factor(order), y = round(as.numeric(mean), 2), label = round(as.numeric(mean), 2)),
                     color = "black", hjust = -0.1, vjust = -0.5, size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.8), inherit.aes = T) +
-          labs(x = "", y = measure, colour = "Analysis") +
+          labs(x = "", y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), paste(measure, "(in logarithmic scale)"), measure), colour = "Analysis") +
           scale_x_discrete(breaks = as.factor(1:length(obs.comp)), labels = prepare$comparison[1:length(obs.comp)]) +
-          scale_y_continuous(trans = ifelse(measure != "OR" & measure != "ROM", "identity", "log10")) +
+          #scale_y_continuous(trans = ifelse(measure != "Odds ratio" & measure != "Ratio of means", "identity", "log10")) +
+          scale_y_continuous(trans = "identity") +
           scale_color_manual(breaks = c("Network meta-analysis", "Paiwise meta-analysis"), values = c("#009E73", "#D55E00")) +
           coord_flip() +
           theme_classic() +

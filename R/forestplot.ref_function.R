@@ -43,16 +43,16 @@ forestplot.ref <- function(net, drug.names) {
 
 
   ## Create a data-frame with credible and predictive intervals of comparisons with the reference intervention
-  if (measure != "OR" & measure != "ROM" & model == "RE") {
+  if (!is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
     prepare.EM <- data.frame(rep(length(drug.names):1, 2), rep(drug.names.sorted, 2), round(rbind(EM.ref, pred.ref), 2), rep(c("Credible interval", "Predictive interval"), each = length(drug.names)))
     colnames(prepare.EM) <- c("order", "comparison", "mean", "lower", "upper", "interval")
-  } else if ((measure == "OR" || measure == "ROM") & model == "RE") {
+  } else if (is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
     prepare.EM <- data.frame(rep(length(drug.names):1, 2), rep(drug.names.sorted, 2), round(rbind(exp(EM.ref), exp(pred.ref)), 2), rep(c("Credible interval", "Predictive interval"), each = length(drug.names)))
     colnames(prepare.EM) <- c("order", "comparison", "mean", "lower", "upper", "interval")
-  } else if (measure != "OR" & measure != "ROM" & model == "FE") {
+  } else if (!is.element(measure, c("Odds ratio", "Ratio of means")) & model == "FE") {
     prepare.EM <- data.frame(length(drug.names):1, drug.names.sorted, round(EM.ref, 2))
     colnames(prepare.EM) <- c("order", "comparison", "mean", "lower", "upper")
-  } else if ((measure == "OR" || measure == "ROM") & model == "RE") {
+  } else if (is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
     prepare.EM <- data.frame(length(drug.names):1, drug.names.sorted, round(exp(EM.ref), 2))
     colnames(prepare.EM) <- c("order", "comparison", "mean", "lower", "upper")
   }
@@ -72,7 +72,7 @@ forestplot.ref <- function(net, drug.names) {
     ggplot(data = prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), ], aes(x = order, y = mean, ymin = lower, ymax = upper, colour = interval)) +
       geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
       geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper), size = 2, position = position_dodge(width = 0.5), width = 0.1) +
-      geom_hline(yintercept = ifelse(measure != "OR" & measure != "ROM", 0, 1), lty = 2, size = 1.3, col = "grey53") +
+      geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 2, size = 1.3, col = "grey53") +
       geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
       geom_text(aes(x = order, y = mean, label = paste0(mean, " ", " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")",
                                                         " ", "[", prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), 4], ",", " ", prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), 5], "]"),
@@ -80,8 +80,8 @@ forestplot.ref <- function(net, drug.names) {
       labs(x = "", y = measure, colour = "Analysis") +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
       scale_color_manual(breaks = c("Credible interval", "Predictive interval"), values = c("black", "#D55E00")) +
-      geom_label(aes(x = as.factor(order)[is.na(mean)], y = ifelse(measure != "OR" & measure != "ROM", -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
-      scale_y_continuous(trans = ifelse(measure != "OR" & measure != "ROM", "identity", "log10")) +
+      geom_label(aes(x = as.factor(order)[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
+      scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
       coord_flip(clip = "off") +
       theme_classic() +
       theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12),
@@ -91,14 +91,14 @@ forestplot.ref <- function(net, drug.names) {
     ggplot(data = prepare.EM, aes(x = order, y = mean, ymin = lower, ymax = upper)) +
       geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
       geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper), size = 2, position = position_dodge(width = 0.5), width = 0.1, colour = "black") +
-      geom_hline(yintercept = ifelse(measure != "OR" & measure != "ROM", 0, 1), lty = 2, size = 1.3, col = "grey53") +
+      geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 2, size = 1.3, col = "grey53") +
       geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
       geom_text(aes(x = order, y = mean, label = paste0(mean, " ", " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")"),
                     hjust = 0, vjust = -0.4), color = "blue", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T, na.rm = T) +
       labs(x = "", y = measure) +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
-      geom_label(aes(x = as.factor(order)[is.na(mean)], y = ifelse(measure != "OR" & measure != "ROM", -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
-      scale_y_continuous(trans = ifelse(measure != "OR" & measure != "ROM", "identity", "log10")) +
+      geom_label(aes(x = as.factor(order)[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
+      scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
       coord_flip(clip = "off") +
       theme_classic() +
       theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12),

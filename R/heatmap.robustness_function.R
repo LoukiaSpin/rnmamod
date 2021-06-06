@@ -4,6 +4,17 @@
 heatmap.robustness <- function(robust, drug.names, threshold){
 
   RI <- robust$RI
+  if (missing(threshold) & is.element(robust$measure, "OR")) {
+    threshold <- 0.17
+    message("The value 0.17 was assigned on 'threshold' by default")
+  } else if (missing(threshold) & is.element(robust$measure, c("MD", "SMD", "ROM"))) {
+    threshold <- 0.28
+    message("The value 0.28 was assigned on 'threshold' by default")
+  } else {
+    threshold <- threshold
+    message(paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(robust$measure)))
+  }
+
 
   ## Lower triangular heatmap matrix - Comparisons are read from the left to the right
   ## CAREFUL: The interventions in the drug.names should follow the order you considered to run NMA pattern-mixture model!

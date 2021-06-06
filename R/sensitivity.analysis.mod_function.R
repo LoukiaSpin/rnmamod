@@ -46,7 +46,7 @@
 #' run.sensitivity(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, D = 0, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.sensitivity <- function(data, measure, model, assumption, heter.prior, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
+run.sensitivity <- function(data, measure, model, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
 
 
   ## Prepare the dataset for the R2jags
@@ -117,8 +117,8 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, var.m
                           "precd.phi" = 1/var.misspar,
                           "D" = D,
                           "heter.prior" = heter.prior,
-                          "eff.mod2" = matrix(0, nrow = ns, ncol = max(na)),
-                          "eff.mod" = rep(0, ns))
+                          "eff.mod2" = matrix(0, nrow = item$ns, ncol = max(item$na)),
+                          "eff.mod" = rep(0, item$ns))
 
 
     if (is.element(measure, c("MD", "SMD", "ROM"))) {
@@ -151,9 +151,9 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, var.m
 
   ## Return results
   results <- if (model == "RE"){
-    list(EM = EM, tau = tau)
+    list(EM = EM, tau = tau, measure = measure)
   } else {
-    list(EM = EM)
+    list(EM = EM, measure = measure)
   }
 
   return(results)

@@ -5,13 +5,7 @@ heatmap.mod <- function(data, trial.names, drug.names) {
 
 
   m <- data %>% dplyr::select(starts_with("m"))
-  c <- data %>% dplyr::select(starts_with("c"))   # Number of completers in each arm of every trial
   n <- data %>% dplyr::select(starts_with("n"))   # Number randomised
-  if (is.null(c)) {
-    n <- n
-  } else {
-    n <- m + c
-  }
   t <- data %>% dplyr::select(starts_with("t"))
   nt <- length(table(as.matrix(t)))
   ns <- length(m[, 1])
@@ -65,6 +59,7 @@ heatmap.mod <- function(data, trial.names, drug.names) {
       scale_fill_manual(breaks = c("low", "moderate", "high"), values = c("green3", "orange", "firebrick1")) +
       scale_x_discrete(position = "top") +
       labs(x = "", y = "", fill = "Risk of bias due to missingness") +
+      theme_bw() +
       theme(axis.text.x = element_text(size = 11), axis.text.y = element_text(size = 11),
             legend.position = "bottom", legend.title = element_text(size = 11, face = "bold"), legend.text = element_text(size = 11))
 
@@ -75,6 +70,7 @@ heatmap.mod <- function(data, trial.names, drug.names) {
       scale_fill_manual(breaks = c("low", "moderate", "high"), values = c("green3", "orange", "firebrick1")) +
       scale_x_discrete(position = "top") +
       labs(x = "", y = "", fill = "Risk of bias due to missingness") +
+      theme_bw() +
       theme(axis.text.x = element_text(size = 11), axis.text.y = element_text(size = 11),
             legend.position = "bottom", legend.title = element_text(size = 11, face = "bold"), legend.text = element_text(size = 11))
   }

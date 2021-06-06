@@ -5,10 +5,16 @@
 #' @param D A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.
 #'
 #' @export
-balloon.plot.mod <- function(sens, compar, outcome, D, drug.names){
+balloon.plot.mod <- function(sens, compar, D, drug.names){
 
 
   ES.all <- sens$EM
+
+  outcome <- if (is.element(sens$measure, c("MD", "SMD", "ROM"))) {
+    "continuous"
+  } else {
+    "binary"
+  }
 
   ## Define the position and number of the scenarios
   scenarios <- c(1, 2, 3, 4, 5)
@@ -80,7 +86,7 @@ balloon.plot.mod <- function(sens, compar, outcome, D, drug.names){
                 theme_bw() +
                 theme(axis.text.x = element_text(size = 12, angle = 360, vjust = 0.8, hjust = 0.5), axis.text.y = element_text(size = 12, vjust = 0.5, hjust = 1),
                       axis.title.x = element_text(size = 12, face = "bold"), axis.title.y = element_text(size = 12, angle = 90, face = "bold"),
-                      legend.position = "bottom", legend.text = element_text(size = 10), legend.key.width = unit(1.5, "cm"),
+                      legend.position = "bottom", legend.text = element_text(size = 12), legend.key.width = unit(1.5, "cm"),
                       legend.title = element_text(size = 12, face = "bold"), panel.grid.minor = element_blank(), panel.background = element_rect(fill = "grey86"))
 
   } else {
@@ -101,7 +107,7 @@ balloon.plot.mod <- function(sens, compar, outcome, D, drug.names){
                 theme_bw() +
                 theme(axis.text.x = element_text(size = 12, angle = 360, vjust = 0.8, hjust = 0.5), axis.text.y = element_text(size = 12, vjust = 0.5, hjust = 1),
                       axis.title.x = element_text(size = 12, face = "bold"), axis.title.y = element_text(size = 12, angle = 90, face = "bold"),
-                      legend.position = "bottom", legend.text = element_text(size = 10), legend.key.width = unit(1.5, "cm"),
+                      legend.position = "bottom", legend.text = element_text(size = 12), legend.key.width = unit(1.5, "cm"),
                       legend.title = element_text(size = 12, face = "bold"), panel.grid.minor = element_blank(), panel.background = element_rect(fill = "grey86"))
 
   }
