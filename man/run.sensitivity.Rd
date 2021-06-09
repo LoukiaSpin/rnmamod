@@ -22,6 +22,7 @@ run.sensitivity(
   model,
   assumption,
   heter.prior,
+  mean.misspar,
   var.misspar,
   D,
   n.chains,
@@ -37,6 +38,8 @@ run.sensitivity(
 
 \item{assumption}{Character string indicating the structure of the informative missingness parameter. Set \code{assumption} equal to one of the following:  \code{"HIE-ARM"}, or \code{"IDE-ARM"}.}
 
+\item{mean.misspar}{A positive non-zero number for the mean of the normal distribution of the informative missingness parameter.}
+
 \item{var.misspar}{A positive non-zero number for the variance of the normal distribution of the informative missingness parameter.}
 
 \item{D}{A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.}
@@ -48,8 +51,6 @@ run.sensitivity(
 \item{n.burnin}{Integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.}
 
 \item{n.thin}{Integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.}
-
-\item{mean.misspar}{A positive non-zero number for the mean of the normal distribution of the informative missingness parameter.}
 }
 \value{
 An R2jags output on the summaries of the posterior distribution, and the Gelman–Rubin convergence diagnostic of the following parameters:

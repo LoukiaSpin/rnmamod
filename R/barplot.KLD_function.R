@@ -47,7 +47,7 @@ barplot.KLD <- function(robust, compar, outcome, drug.names){
   ## In each facet, x-axis is sorted by KLD in descending order
   barplot <- ggplot(dataset.new, aes(x = reorder(scenarios, -KLD), y = KLD, fill = distance)) +
     geom_bar(stat = "identity", width = 0.5) +
-    scale_fill_manual(breaks = c("more distant", "less distant", "no distance"), values = c("red", "orange", "green4")) +
+    scale_fill_manual(breaks = c("more distant", "less distant", "no distance"), values = c("#D55E00", "orange", "#009E73")) +
     facet_grid(. ~  plausibility, scales = "free_x", space = "free") +
     labs(x = "Scenarios (active vs control)", y = "Kullback-Leibler divergence measure", fill = "Distance between the scenarios") +
     #geom_hline(yintercept = 0.28, linetype = 2) +

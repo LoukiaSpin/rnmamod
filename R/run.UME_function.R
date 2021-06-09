@@ -164,7 +164,8 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
   }
 
 
-  if (max(na) > 2 & has_error(improved.UME(t, m, N, item$ns, na), silent = T) == F) {
+  #if (max(na) > 2 & has_error(improved.UME(t, m, N, item$ns, na), silent = T) == F) {
+  if (max(na) > 2 & !is.null(improved.UME(t, m, N, item$ns, na)$nbase.multi)) {
     impr.UME <- improved.UME(t, m, N, item$ns, na)
     data.jag <- append(data.jag, list("t1.m" = t1.indic.multi,
                                       "t2.m" = t2.indic.multi,
@@ -174,7 +175,8 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
                                       "t2.bn" = impr.UME$t2.bn,
                                       "base" = impr.UME$base,
                                       "nbase.multi" = impr.UME$nbase.multi))
-  } else if (max(na) < 3 || has_error(improved.UME(t, m, N, item$ns, na), silent = T) == T) {
+  #} else if (max(na) < 3 || has_error(improved.UME(t, m, N, item$ns, na), silent = T) == T) {
+  } else if (max(na) < 3 || is.null(improved.UME(t, m, N, item$ns, na)$nbase.multi)) {
     data.jag <- append(data.jag, list("t1.m" = t1.indic.multi,
                                       "t2.m" = t2.indic.multi,
                                       "N.obs.multi" = N.obs.multi,
@@ -302,7 +304,8 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
   }
 
   # Return different list of results according to a condition
-  if (max(na) < 3 || has_error(improved.UME(t, m, N, ns, na), silent = T) == T) {
+  #if (max(na) < 3 || has_error(improved.UME(t, m, N, ns, na), silent = T) == T) {
+  if (is.null(improved.UME(t, m, N, item$ns, na)$nbase.multi)) {
     return(results)
   } else {
     return(append(results, list(EM.m = EM.m, frail.comp = paste0(impr.UME$t2.bn, "vs", impr.UME$t1.bn))))

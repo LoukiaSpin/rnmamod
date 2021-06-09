@@ -95,7 +95,7 @@ nodesplit.plot <- function(node, full, drug.names) {
 
     # Keep nodes with statistically significant inconsistency OR with inconsistent sign in the direct and indirect estimate
     #selection <- if (!is.element(measure, c("Odds ratio", "Ratio of means"))) {
-      subset(prepare, stat.signif == "statistically significant" |
+    selection <- subset(prepare, stat.signif == "statistically significant" |
                (mean[evidence == "direct"] < 0 & mean[evidence == "indirect"] > 0) |
                (mean[evidence == "direct"] > 0 & mean[evidence == "indirect"] < 0))
     #} else {

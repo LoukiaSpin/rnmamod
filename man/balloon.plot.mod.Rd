@@ -4,7 +4,7 @@
 \alias{balloon.plot.mod}
 \title{Enhanced balloon plot}
 \usage{
-balloon.plot.mod(sens, compar, outcome, D, drug.names)
+balloon.plot.mod(sens, compar, D, drug.names)
 }
 \arguments{
 \item{D}{A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.}

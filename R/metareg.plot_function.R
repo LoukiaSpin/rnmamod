@@ -65,7 +65,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
 
 
   ## A data-frame with the effect estimates and regression coefficients of reference-comparisons from both analyses (Sort by NMA-SUCRA in decreasing order)
-  if (!is.character(covar.values[[1]]) & (measure != "OR" & measure != "ROM")) {
+  if (!is.character(covar.values[[1]]) & (!is.element(measure, c()))) {
 
 
     ## Calculate the effect estimate at two other values of the metric covariate: one smaller and one larger than the mean
@@ -87,7 +87,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
                                   "Poster. mean beta", "95% CrI beta")
     rownames(EM.both.models) <- NULL
 
-  } else if (!is.character(covar.values[[1]]) & (measure == "OR" || measure == "ROM")) {
+  } else if (!is.character(covar.values[[1]]) & (is.element(measure, c("Odds ratio", "Ratio of means")))) {
 
     ## Calculate the effect estimate at two other values of the metric covariate: one smaller and one larger than the mean
     EM.meta.s <- round(exp(EM.meta[, c(1, 3, 7)] + beta[, c(1, 3, 7)]*(covar.values[[1]] - mean(covariate))), 2)
@@ -108,7 +108,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
                                   "Poster. mean beta", "95% CrI beta")
     rownames(EM.both.models) <- NULL
 
-  } else if (is.character(covar.values[[1]]) & ((measure != "OR" & measure != "ROM"))) {
+  } else if (is.character(covar.values[[1]]) & (!is.element(measure, c("Odds ratio", "Ratio of means")))) {
 
 
     ## Calculate the effect estimate at the non-reference level of the binary covariate
@@ -128,7 +128,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
     rownames(EM.both.models) <- NULL
 
 
-  } else if (is.character(covar.values[[1]]) & (measure == "OR" || measure == "ROM")) {
+  } else if (is.character(covar.values[[1]]) & (is.element(measure, c("Odds ratio", "Ratio of means")))) {
 
 
     ## Calculate the effect estimate at the non-reference level of the binary covariate
@@ -180,7 +180,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
 
 
   ## Prepare data for ggplot2 (forest-plot)
-  if(!is.character(covar.values[[1]]) & (measure != "OR" & measure != "ROM")) {
+  if(!is.character(covar.values[[1]]) & !is.element(measure, c("Odds ratio", "Ratio of means"))) {
 
     ## Create a data-frame with effect estimates of basic parameters before and after adjustment
     prepare.EM.metric <- data.frame(rep(length(drug.names):1, 4), rep(drug.names.sorted, 4), round(rbind(EM.full[, c(1, 3, 7)], EM.meta[, c(1, 3, 7)], EM.meta.s, EM.meta.l), 2),
@@ -193,7 +193,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
     intercept.value <- 0; trans.value <- "identity"
 
 
-  } else if(!is.character(covar.values[[1]]) & (measure == "OR" || measure == "ROM")) {
+  } else if(!is.character(covar.values[[1]]) & is.element(measure, c("Odds ratio", "Ratio of means"))) {
 
 
     ## Create a data-frame with effect estimates of basic parameters before and after adjustment
@@ -206,7 +206,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
     ## Arguments for ggplot2
     intercept.value <- 1; trans.value <- "log10"
 
-  } else if(is.character(covar.values[[1]]) & (measure != "OR" & measure != "ROM")) {
+  } else if(is.character(covar.values[[1]]) & !is.element(measure, c("Odds ratio", "Ratio of means"))) {
 
 
     ## Create a data-frame with effect estimates of basic parameters before and after adjustment
@@ -220,7 +220,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
     intercept.value <- 0; trans.value <- "identity"
 
 
-  } else if(is.character(covar.values[[1]]) & (measure == "OR" || measure == "ROM")) {
+  } else if(is.character(covar.values[[1]]) & is.element(measure, c("Odds ratio", "Ratio of means"))) {
 
 
     ## Create a data-frame with effect estimates of basic parameters before and after adjustment
@@ -308,7 +308,7 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
 
 
   ## Prepare data-frame for scatter-plots/ error-bars (ggplot2)
-  if (measure != "OR" & measure != "ROM") {
+  if (!is.element(measure, c("Odds ratio", "Ratio of means"))) {
     cov.values <- rep(covariate, each = length(drug.names))
     EM.meta.mean <- EM.meta[, 1] + beta[, 1] %o% covariate
     EM.meta.lower <- EM.meta[, 3] + beta[, 3] %o% covariate

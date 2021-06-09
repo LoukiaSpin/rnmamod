@@ -4,15 +4,19 @@
 heatmap.robustness <- function(robust, drug.names, threshold){
 
   RI <- robust$RI
-  if (missing(threshold) & is.element(robust$measure, "OR")) {
-    threshold <- 0.17
-    message("The value 0.17 was assigned on 'threshold' by default")
-  } else if (missing(threshold) & is.element(robust$measure, c("MD", "SMD", "ROM"))) {
+
+  if (missing(threshold) & is.element(sens$measure, "OR")) {
     threshold <- 0.28
-    message("The value 0.28 was assigned on 'threshold' by default")
+    #message("The value 0.28 was assigned on 'threshold' by default")
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The value 0.28 was assigned on 'threshold' by default", "\033[0m", "\n")))
+  } else if (missing(threshold) & is.element(sens$measure, c("MD", "SMD", "ROM"))) {
+    threshold <- 0.17
+    #message("The value 0.17 was assigned on 'threshold' by default")
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The value 0.17 was assigned on 'threshold' by default", "\033[0m", "\n")))
   } else {
     threshold <- threshold
-    message(paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(robust$measure)))
+    #message(paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(full$measure)))
+    message(cat(paste0("\033[0;", col = 32, "m", txt = paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(sens$measure)), "\033[0m", "\n")))
   }
 
 
@@ -28,7 +32,7 @@ heatmap.robustness <- function(robust, drug.names, threshold){
   p <- ggplot(mat.new, aes(Var2, factor(Var1, level = drug.names[length(drug.names):2]), fill = ifelse(value < threshold, "high", "poor"))) +
          geom_tile(colour = "white") +
          geom_text(aes(Var2, Var1, label = value, fontface = "bold"), size = rel(4.5)) +
-         scale_fill_manual(breaks = c("high", "poor"), values = c("green3", "firebrick1")) +
+         scale_fill_manual(breaks = c("high", "poor"), values = c("#009E73", "#D55E00")) +
          scale_x_discrete(position = "top") +
          labs(x = "", y = "") +
          theme(legend.position = "none", axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12))

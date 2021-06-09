@@ -32,14 +32,13 @@ improved.UME <- function(t, m, N, ns, na){
 
 
   ## Turn 'tab.comp.arms0' into a data-frame
-  if(dim(tab.comp.arms0)[2] == 1) {
+  if(dim(tab.comp.arms0)[2] == 1 || length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 1) {
 
     tab.comp.arms <- data.frame(names(tab.comp.arms0[, 1]), rep(0, dim(tab.comp.arms0)[1]), tab.comp.arms0[, 1])
     colnames(tab.comp.arms) <- c("comp", "multi", "two")
     rownames(tab.comp.arms) <- NULL
 
-
-  } else {
+  } else if(dim(tab.comp.arms0)[2] > 1 & length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 2) {
 
     tab.comp.arms <- data.frame(names(tab.comp.arms0[, 1]), tab.comp.arms0[, 1], tab.comp.arms0[, 2])
     colnames(tab.comp.arms) <- c("comp", "multi", "two")
@@ -81,11 +80,11 @@ improved.UME <- function(t, m, N, ns, na){
 
 
   ## Finally, reduce to comparisons between non-baseline interventions
-  if (dim(tab.comp.arms0)[2] == 1) {
+  if (dim(tab.comp.arms0)[2] == 1 || length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 1) {
 
     final <- NA
 
-  } else {
+  } else if(dim(tab.comp.arms0)[2] > 1 & length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 2) {
 
     final <- final0[!is.element(paste0(final0[, 2], "vs", final0[, 3]), paste0(t1.indic, "vs", t2.indic)), ]
 
@@ -94,11 +93,11 @@ improved.UME <- function(t, m, N, ns, na){
 
 
   ## Add also the baseline treatment for each selected trial
-  if (dim(tab.comp.arms0)[2] == 1) {
+  if (dim(tab.comp.arms0)[2] == 1 || length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 1) {
 
     base <- nbase.multi <- NA
 
-  } else {
+  } else if(dim(tab.comp.arms0)[2] > 1 & length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 2) {
 
     base <- rep(NA, length(final[, 1]))   # Baseline interventions in the selected trials in 'final'
 
@@ -110,11 +109,11 @@ improved.UME <- function(t, m, N, ns, na){
   }
 
 
-  if (dim(tab.comp.arms0)[2] == 1) {
+  if (dim(tab.comp.arms0)[2] == 1 || length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 1) {
 
     return(list(obs.comp = tab.comp.arms))
 
-  } else {
+  } else if(dim(tab.comp.arms0)[2] > 1 & length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 2) {
 
     return(list(nbase.multi = nbase.multi, t1.bn = final$t1, t2.bn = final$t2, base = final$base, obs.comp = tab.comp.arms))
 

@@ -4,7 +4,7 @@
 \alias{leverage.plot}
 \title{Create the leverage plot}
 \usage{
-leverage.plot(net, drug.names, title.o, title.m)
+leverage.plot(net, drug.names, title.o)
 }
 \description{
 Create the leverage plot
