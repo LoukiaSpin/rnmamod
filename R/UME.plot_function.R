@@ -4,18 +4,18 @@
 UME.plot <- function(full, ume, drug.names, threshold) {
 
 
-  if (missing(threshold) & is.element(sens$measure, "OR")) {
+  if (missing(threshold) & is.element(full$measure, "OR")) {
     threshold <- 0.28
     #message("The value 0.28 was assigned on 'threshold' by default")
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The value 0.28 was assigned on 'threshold' by default", "\033[0m", "\n")))
-  } else if (missing(threshold) & is.element(sens$measure, c("MD", "SMD", "ROM"))) {
+  } else if (missing(threshold) & is.element(full$measure, c("MD", "SMD", "ROM"))) {
     threshold <- 0.17
     #message("The value 0.17 was assigned on 'threshold' by default")
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The value 0.17 was assigned on 'threshold' by default", "\033[0m", "\n")))
   } else {
     threshold <- threshold
     #message(paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(full$measure)))
-    message(cat(paste0("\033[0;", col = 32, "m", txt = paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(sens$measure)), "\033[0m", "\n")))
+    message(cat(paste0("\033[0;", col = 32, "m", txt = paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(full$measure)), "\033[0m", "\n")))
   }
 
   ## The results on the following parameters will be used:

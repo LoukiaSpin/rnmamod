@@ -26,6 +26,10 @@ heterogeneity.param.prior <- function(measure, model, heter.prior) {
     as.numeric(c(0, heter.prior[[3]], 1))
   } else if (model == "RE" & heter.prior[[1]] == "uniform") {
     as.numeric(c(0, heter.prior[[3]], 2))
+  } else if (model == "RE" & heter.prior[[1]] == "lognormal") {
+    as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
+  } else if (model == "RE" & heter.prior[[1]] == "logt") {
+    as.numeric(c(heter.prior[[2]], heter.prior[[3]], 4))
   } else if (model == "RE" & measure == "OR" & heter.prior[[1]] == "lognormal")  {
     as.numeric(c(heter.prior[[2]], heter.prior[[3]], 3))
   } else if (model == "RE" & measure != "OR" & heter.prior[[1]] == "lognormal") {

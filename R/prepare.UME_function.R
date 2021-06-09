@@ -237,7 +237,11 @@ prepare.UME <- function(measure, model, assumption) {
     paste0(code, "\n\tprec <- pow(tau, -2)",
            "\n\ttau.a ~ dnorm(0, heter.prior[2])I(0, )",
            "\n\ttau.b ~ dunif(0, heter.prior[2])",
-           "\n\ttau <- tau.a*equals(heter.prior[3], 1) + tau.b*equals(heter.prior[3], 2)")
+           "\n\ttau2.c ~ dlnorm(heter.prior[1], heter.prior[2])",
+           "\n\tlog.tau2.d ~ dt(heter.prior[1], heter.prior[2], 5) ",
+           "\n\ttau <- tau.a*equals(heter.prior[3], 1) + tau.b*equals(heter.prior[3], 2)+
+            pow(tau2, 0.5)*equals(heter.prior[3], 3) + pow(tau2, 0.5)*equals(heter.prior[3], 4)",
+           "\n\ttau2 <- tau2.c*equals(heter.prior[3], 3) + exp(log.tau2.d)*equals(heter.prior[3], 4)")
   } else {
     paste0(code, " ")
   }
