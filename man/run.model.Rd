@@ -2,18 +2,32 @@
 % Please edit documentation in R/run.model_function.R
 \name{run.model}
 \alias{run.model}
-\title{Perform network meta-analysis for an aggregate binary or continuous outcome with missing participant data}
+\title{Perform pairwise or network meta-analysis with missing participant outcome data}
 \format{
 The columns of the data frame \code{data} refer to the following ordered elements for a continuous outcome:
-\describe{
- \item{\strong{t}}{An intervention identifier.}
- \item{\strong{y}}{The observed mean value of the outcome.}
- \item{\strong{sd}}{The observed standard deviation of the outcome.}
- \item{\strong{m}}{The number of missing outcome data.}
- \item{\strong{c}}{The number of participants completing the assigned intervention.}
- \item{\strong{na}}{The number of compared interventions.}
+\tabular{ll}{
+ \strong{t} \tab An intervention identifier.\cr
+ \tab \cr
+ \strong{y} \tab The observed mean value of the outcome.\cr
+ \tab \cr
+ \strong{sd} \tab The observed standard deviation of the outcome.\cr
+ \tab \cr
+ \strong{m} \tab The number of missing outcome data.\cr
+ \tab \cr
+ \strong{n} \tab The number of participants randomised on the assigned intervention.\cr
 }
-Apart from \strong{na}, all other elements appear in \code{data} as many times as the maximum number of interventions compared in a trial. See, 'Example'.
+
+For a binary outcome, the columns of the data-frame \code{data} refer to the following ordered elements:
+\tabular{ll}{
+ \strong{t} \tab An intervention identifier.\cr
+ \tab \cr
+ \strong{r} \tab The observed number of events of the outcome.\cr
+ \tab \cr
+ \strong{m} \tab The number of missing outcome data.\cr
+ \tab \cr
+ \strong{n} \tab The number of participants randomised on the assigned intervention.\cr
+}
+All elements appear in \code{data} as many times as the maximum number of interventions compared in a trial.
 }
 \usage{
 run.model(
@@ -34,17 +48,21 @@ run.model(
 \arguments{
 \item{data}{A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' for the specification of the columns.}
 
-\item{measure}{Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"}.}
+\item{measure}{Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio, mean difference,
+standardised mean difference and ratio of means, respectively.}
 
-\item{assumption}{Character string indicating the structure of the informative missingness parameter. Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.}
+\item{model}{Character string indicating the analysis model with values \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model, respectively.}
 
-\item{heter.prior}{A vector of length equal to two with the following values: \code{rep(1, 2)}, \code{rep(2, 2)}, and \code{rep(3, 2)} refers to half-normal distribution with variance 1 or 0.5, and uniform distribution with interval [0, 5], respectively,
-for the between-trial standard deviation. To indicate an empirically-based prior distribution for the between-trial variance, the first and second values of the vector should be the mean and precision
-of the selected prior distribution. The empirically-based prior distribution for the between-trial variance is applicable only when \code{"OR"} or \code{"SMD"} is considered.}
+\item{assumption}{Character string indicating the structure of the informative missingness parameter. Set \code{assumption} equal to one of the following:  \code{"IDE-ARM"}, \code{"IDE-TRIAL"},
+\code{"IDE-COMMON"}, \code{"HIE-ARM"}, \code{"HIE-TRIAL"}, \code{"HIE-COMMON"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.}
 
-\item{mean.misspar}{A positive non-zero number for the mean of the normal distribution of the informative missingness parameter.}
+\item{heter.prior}{A list of three elements with the following order: 1) a character string indicating the distribution with (currently available) values \code{"halfnormal"},
+\code{"uniform"}, \code{"lognormal"}, or \code{"logt"}; 2) two numeric values that refer to the parameters of the selected distribution. For \code{"halfnormal"}, \code{"lognormal"}, and \code{"logt"}
+these numbers refer to the mean and precision, respectively. For \code{"uniform"}, these numbers refer to the minimum and maximum value of the distribution.}
 
-\item{var.misspar}{A positive non-zero number for the variance of the normal distribution of the informative missingness parameter.}
+\item{mean.misspar}{A real number for the mean of the normal distribution of the selected informative missingness parameter (see \code{assumption}).}
+
+\item{var.misspar}{A positive non-zero number for the variance of the normal distribution of the selected informative missingness parameter (see \code{assumption}).}
 
 \item{D}{A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.}
 
@@ -57,32 +75,67 @@ of the selected prior distribution. The empirically-based prior distribution for
 \item{n.thin}{Integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.}
 }
 \value{
-An R2jags output on the summaries of the posterior distribution, and the Gelman–Rubin convergence diagnostic of the following parameters:
-\describe{
- \item{\code{EM}}{The effect estimate of all possible comparisons of interventions.}
- \item{\code{SUCRA}}{The surface under the cumulative ranking curve for each intervention.}
- \item{\code{phi}}{The informative missingness parameter.}
- \item{\code{delta}}{The underlying trial-specific effect estimate. For a multi-arm trial, we estimate \emph{T-1} trial-specific effect estimates, where \emph{T} is the number of interventions in the trial.}
- \item{\code{tau}}{The between-trial standard deviation assumed to be common for all observed comparisons.}
+An R2jags output on the summaries of the posterior distribution, and the GelmanRubin convergence diagnostic of the following parameters for a fixed-effect pairwise meta-analysis model:
+\tabular{ll}{
+ \code{EM} \tab The estimated effect measure (according to \code{measure}).\cr
+ \tab \cr
+ \code{dev.o} \tab The deviance contribution of each trial-arm based on the observed outcome.\cr
+ \tab \cr
+ \code{hat.par} \tab The fitted outcome at each trial-arm.\cr
+ \tab \cr
+ \code{phi} \tab The informative missingness parameter.\cr
+}
+
+For a random-effects pairwise meta-analysis model, the output additionally includes the following elements:
+\tabular{ll}{
+ \code{EM.pred} \tab The predicted effect measure (according to \code{measure}).\cr
+ \tab \cr
+ \code{delta} \tab The underlying trial-specific estimated effect measure (according to \code{measure}).
+ For a multi-arm trial, we estimate \emph{T-1} trial-specific effect estimates, where \emph{T} is the number of interventions in the trial.\cr
+ \tab \cr
+ \code{tau} \tab The between-trial standard deviation.\cr
+}
+
+In the case of network meta-analysis (NMA), the output additionally includes:
+\tabular{ll}{
+ \code{EM.ref} \tab The estimated effect measure (according to \code{measure}) of all comparisons with the reference intervention.\cr
+ \tab \cr
+ \code{pred.ref} \tab The predicted effect measure (according to \code{measure}) of all comparisons with the reference intervention.\cr
+ \tab \cr
+ \code{SUCRA} \tab The surface under the cumulative ranking curve for each intervention.\cr
+ \tab \cr
+ \code{effectiveneness} \tab The ranking probability of each intervention for every rank.\cr
+}
+In NMA, \code{EM} and \code{EM.pred} refer to all possible comparisons in the network. Furthermore, \code{tau} is typically assumed to be common for all observed comparisons in the network.
+
+Furthermore, the output includes the following elements - the first three resulting from monitored parameters:
+\tabular{ll}{
+ \code{leverage.o} \tab The leverage for the observed outcome at each trial-arm.\cr
+ \tab \cr
+ \code{sign.dev.o} \tab The sign of the difference between observed and fitted outcome at each trial-arm.\cr
+ \tab \cr
+ \code{model.assessment} \tab A data-frame on the measures of model assessment: deviance information criterion, number of effective parameters, and total residual deviance.\cr
+ \tab \cr
+ \code{measure} \tab The effect measured as defined in \code{measure} to be used in other functions of the package.\cr
+ \tab \cr
+ \code{model} \tab The analysis model as defined in \code{model} to be used in other functions of the package.\cr
+ \tab \cr
+ \code{jagsfit} \tab An object of S3 class \code{\link[R2jags]{jags}} with the posterior results on all monitored parameters to be used in \code{mcmc.diagnostics} function.\cr
 }
 }
 \description{
-Perform network meta-analysis for an aggregate binary or continuous outcome with missing participant data
+Perform one-stage pairwise or network meta-analysis with incorporation of pattern-mixture model to address aggregate binary or continuous missing participant outcome data
 }
 \examples{
+\dontshow{load("./data/cipriani2011.bin.RData")}
 ### Show the data (one-trial-per-row format)
-(data <- as.data.frame(one.stage.dataset.NMA[[3]]))
+(data <- as.data.frame(cipriani.bin.new))
 
-### Run a random-effects network meta-analysis with consistency equations for the standardised mean difference
-### assuming missing at random for identical, common informative missingness difference of means.
-run.model(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, D = 0, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+### Run a random-effects network meta-analysis with consistency equations for the odds ratio (in the logarithmic scale)
+### assuming missing at random for identical, intervention-specific informative missingness odds ratio.
+run.model(data = data, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 0, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 
 }
-\references{
-Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. Stat Sci. 1992;7:457–472.
-
-\dontshow{load("./data/NMA Dataset Continuous.RData")}
-}
-\seealso{
-\code{\link{R2jags}}
+\author{
+{Loukia M. Spineli}
 }

@@ -23,6 +23,7 @@ License:
 Encoding: UTF-8
 LazyData: true
 Imports: 
+    Rdpack,
     dplyr,
     tidyr,
     reshape2,
@@ -34,11 +35,16 @@ Imports:
     ggfittext,
     netmeta,
     gemtc,
-    BUGSnet,
     pcnetmeta,
     ggthemes,
     stringr,
     testit,
     writexl
+RdMacros: Rdpack
 SystemRequirements: JAGS (http://mcmc-jags.sourceforge.net)
 RoxygenNote: 7.1.1
+Suggests: 
+    spelling,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Language: en-US
