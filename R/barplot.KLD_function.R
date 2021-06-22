@@ -4,7 +4,7 @@
 barplot.KLD <- function(robust, compar, outcome, drug.names){
 
   KLD <- robust$KLD[compar, ]
-  outcome <- if (is.element(sens$measure, c("MD", "SMD", "ROM"))) {
+  outcome <- if (is.element(robust$measure, c("MD", "SMD", "ROM"))) {
     "continuous"
   } else {
     "binary"
