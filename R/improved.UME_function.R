@@ -78,7 +78,6 @@ improved.UME <- function(t, m, N, ns, na){
   }
 
 
-
   ## Finally, reduce to comparisons between non-baseline interventions
   if (dim(tab.comp.arms0)[2] == 1 || length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 1) {
 

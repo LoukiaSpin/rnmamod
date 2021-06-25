@@ -1,9 +1,14 @@
 #' Heatmap of robutness for NMA
 #'
 #' @export
-heatmap.robustness <- function(robust, drug.names, threshold){
+heatmap.robustness <- function(robust, drug.names){
 
-  RI <- robust$RI
+
+  if(length(drug.names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis")
+  }
+
+  RI <- robust$RI; threshold <- robust$threshold
 
   if (missing(threshold) & is.element(robust$measure, "OR")) {
     threshold <- 0.28

@@ -4,6 +4,11 @@
 UME.plot <- function(full, ume, drug.names, threshold) {
 
 
+  if(length(drug.names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
+  }
+
+
   if (missing(threshold) & is.element(full$measure, "OR")) {
     threshold <- 0.28
     #message("The value 0.28 was assigned on 'threshold' by default")

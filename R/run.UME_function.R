@@ -60,6 +60,9 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
 
   ## Prepare the dataset for the R2jags
   item <- data.preparation(data, measure)
+  if(item$nt < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
+  }
 
 
   ## Default arguments
@@ -110,7 +113,7 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
   ## Keep only comparisons with the baseline intervention
   indic0 <- list()
   for(i in 1:item$ns) {
-    indic0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(item$na[i] - 1)]
+    indic0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(na[i] - 1)]
   }
   (indic <- unique(t(do.call(cbind, indic0))))
   t1.indic <- indic[, 1]
@@ -119,18 +122,17 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
 
 
   ## Keep only comparisons with the baseline intervention in multi-arm trials
-  ns.multi <- length(item$na[na > 2])
+  ns.multi <- length(na[na > 2])
   if (ns.multi < 1) {
     N.obs.multi <- 0
     t1.indic.multi <- 0
     t2.indic.multi <- 0
-
   } else {
     indic.multi0 <- list()
     for(i in (item$ns - ns.multi + 1):item$ns) {
       indic.multi0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(na[i] - 1)]
     }
-    (indic.multi <- unique(t(do.call(cbind, indic.multi0))))
+    indic.multi <- unique(t(do.call(cbind, indic.multi0)))
     t1.indic.multi <- indic.multi[, 1]
     t2.indic.multi <- indic.multi[, 2]
     N.obs.multi <- length(t1.indic.multi)
@@ -145,7 +147,7 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
                    "nt" = item$nt,
                    "ns" = item$ns,
                    "ref" = ifelse(is.element(assumption, c("HIE-ARM", "IDE-ARM")), item$ref, NA),
-                   "I" = item$I[order(item$na, na.last = T), ],
+                   "I" = item$I[order(na, na.last = T), ],
                    "M" = ifelse(!is.na(m), mean.misspar, NA),
                    "cov.phi" = 0.5*var.misspar,
                    "var.phi" = var.misspar,
@@ -158,9 +160,9 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
 
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
-    data.jag <- append(data.jag, list("y.o" = item$y0[order(item$na, na.last = T), ], "se.o" = item$se0[order(item$na, na.last = T), ]))
+    data.jag <- append(data.jag, list("y.o" = item$y0[order(na, na.last = T), ], "se.o" = item$se0[order(na, na.last = T), ]))
   } else if (measure == "OR") {
-    data.jag <- append(data.jag, list("r" = item$r[order(item$na, na.last = T), ]))
+    data.jag <- append(data.jag, list("r" = item$r[order(na, na.last = T), ]))
   }
 
 

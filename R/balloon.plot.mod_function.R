@@ -16,6 +16,29 @@ balloon.plot.mod <- function(sens, compar, D, drug.names){
     "binary"
   }
 
+
+  drug.names <- if (missing(drug.names)) {
+    stop("The 'drug.names' needs to be defined")
+  } else {
+    drug.names
+  }
+
+
+  compar <- if (length(drug.names) > 2 & missing(compar)) {
+    stop("The 'compar' needs to be defined")
+  } else if (length(drug.names) < 3 & missing(compar)) {
+    1
+  } else {
+    compar
+  }
+
+  D <- if (missing(D)) {
+    stop("The 'D' needs to be defined")
+  } else {
+    D
+  }
+
+
   ## Define the position and number of the scenarios
   scenarios <- c(1, 2, 3, 4, 5)
   (nt <- (1 + sqrt(1 + 8*(length(ES.all[, 1])/length(scenarios)^2)))/2)  # The quadratic formula for the roots of the general quadratic equation

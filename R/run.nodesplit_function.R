@@ -71,10 +71,6 @@ run.nodesplit <- function(data, measure, model, assumption, heter.prior, mean.mi
 
     stop("There is no loop to evaluate", call. = F)
 
-    suppressMessages({
-      message("Called from: rnmamod::run.nodesplit")
-    })
-
   } else {
 
     ## Define node to split: AB=(1,2)

@@ -16,13 +16,15 @@
 #' @export
 rankosucra.plot <- function(net, drug.names){
 
-  SUCRA <- net$SUCRA; effectiveness <- net$effectiveness
+
+  if(length(drug.names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
+  }
+
+  SUCRA <- net$SUCRA; effectiveness <- net$effectiveness; nt <- length(drug.names)
 
   # Order techniques according to their SUCRA value (from best to worst)
   drug.names.order <- drug.names[order(-SUCRA[, 1])]
-
-  nt <- length(drug.names)
-
 
   # Note: row is the drug, column is the order
   prob.rank0 <- matrix(effectiveness[, 1], nrow = nt, ncol = nt, byrow = T)

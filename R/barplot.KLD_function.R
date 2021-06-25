@@ -4,11 +4,30 @@
 barplot.KLD <- function(robust, compar, outcome, drug.names){
 
   KLD <- robust$KLD[compar, ]
+
+
+  drug.names <- if (missing(drug.names)) {
+    stop("The 'drug.names' needs to be defined")
+  } else {
+    drug.names
+  }
+
+
+  compar <- if (length(drug.names) > 2 & missing(compar)) {
+    stop("The 'compar' needs to be defined")
+  } else if (length(drug.names) < 3 & missing(compar)) {
+    1
+  } else {
+    compar
+  }
+
+
   outcome <- if (is.element(robust$measure, c("MD", "SMD", "ROM"))) {
     "continuous"
   } else {
     "binary"
   }
+
 
   comparisons <- t(combn(drug.names, 2))
 

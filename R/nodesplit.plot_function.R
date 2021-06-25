@@ -4,6 +4,10 @@
 nodesplit.plot <- function(node, full, drug.names) {
 
 
+  if(length(drug.names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
+  }
+
   ## Keep tau and model assessment measures from NMA model
   tau.values <- full$tau[c(5, 2, 3, 7)]
   model.assess.NMA <- full$model.assessment

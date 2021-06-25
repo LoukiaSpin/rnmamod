@@ -25,6 +25,11 @@
 league.heatmap <- function(net, drug.names, expon){
 
 
+  if(length(drug.names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
+  }
+
+
   par <- net$EM; sucra <- net$SUCRA; measure <- net$measure
 
 

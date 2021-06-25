@@ -6,6 +6,10 @@ forestplot.ref <- function(net, drug.names) {
 
   options(warn = -1)
 
+  if(is.null(net$EM.ref[, c(1, 3, 7)])) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
+  }
+
   ## The results on the following parameters will be used:
   # Effect measure
   measure <- effect.measure.name(net$measure)
@@ -18,6 +22,7 @@ forestplot.ref <- function(net, drug.names) {
 
   # Posterior results on the effect estimates of comparisons with the reference intervention of the network
   EM.ref0 <- rbind(rep(NA, 3), net$EM.ref[, c(1, 3, 7)])
+
 
   # Sort by SUCRA in decreasing order and remove the reference intervention (number 1)
   EM.ref <- EM.ref0[order(sucra[, 1], decreasing = T), ]

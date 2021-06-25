@@ -132,6 +132,11 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   } else {
     assumption
   }
+  D <- if (missing(D)) {
+    stop("The 'D' needs to be defined")
+  } else {
+    D
+  }
   mean.misspar <- missingness.param.prior(assumption, mean.misspar)
   heter.prior <- heterogeneity.param.prior(measure, model, heter.prior)
   var.misspar <- ifelse(missing(var.misspar) & (is.element(measure, c("OR", "MD", "SMD"))), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))

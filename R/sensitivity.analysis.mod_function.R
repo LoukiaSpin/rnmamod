@@ -151,9 +151,9 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, mean.
 
   ## Return results
   results <- if (model == "RE"){
-    list(EM = EM, tau = tau, measure = measure)
+    list(EM = EM, tau = tau, measure = measure, scenarios = scenarios)
   } else {
-    list(EM = EM, measure = measure)
+    list(EM = EM, measure = measure, scenarios = scenarios)
   }
 
   return(results)

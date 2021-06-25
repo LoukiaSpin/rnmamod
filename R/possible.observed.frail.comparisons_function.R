@@ -1,6 +1,10 @@
 possible.observed.frail.comparisons <- function(drug.names, obs.comp) {
 
 
+  if(length(drug.names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
+  }
+
   ## Obtain all unique pairwise comparisons using the 'combn' functions
   nt <- length(drug.names)
   poss.pair.comp <- data.frame(t(combn(1:nt, 2))[, 2], t(combn(1:nt, 2))[, 1])

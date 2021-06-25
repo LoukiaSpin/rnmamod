@@ -6,19 +6,19 @@ prepare.UME <- function(measure, model, assumption) {
 
   code <- if (model == "RE") {
     paste0(code, "\n\t\tdelta[i, 1] <- 0",
-           "\n\t\tw[i, 1] <- 0",
-           "\n\t\tu[i] ~ dnorm(0, .0001)")
+                 "\n\t\tw[i, 1] <- 0",
+                 "\n\t\tu[i] ~ dnorm(0, .0001)")
   } else {
     paste0(code, "\n\t\tu[i] ~ dnorm(0, .0001)")
   }
 
   if (measure == "SMD") {
     code <- paste0(code, "\n\t\ttheta[i, 1] <- u[i]",
-                   "\n\t\tsigma[i] <- sqrt(sum(nom[i, 1:na[i]])/(sum(c[i, 1:na[i]]) - na[i]))",
-                   "\n\t\ta[i] <- sum(N[i, 1:na[i]] - 1)/2",
-                   "\n\t\tb[i] <- sum(N[i, 1:na[i]] - 1)/(2*sigma[i]*sigma[i])",
-                   "\n\t\tvar.pooled[i] ~ dgamma(a[i], b[i])",
-                   "\n\t\tsd.pooled[i] <- sqrt(var.pooled[i])")
+                         "\n\t\tsigma[i] <- sqrt(sum(nom[i, 1:na[i]])/(sum(c[i, 1:na[i]]) - na[i]))",
+                         "\n\t\ta[i] <- sum(N[i, 1:na[i]] - 1)/2",
+                         "\n\t\tb[i] <- sum(N[i, 1:na[i]] - 1)/(2*sigma[i]*sigma[i])",
+                         "\n\t\tvar.pooled[i] ~ dgamma(a[i], b[i])",
+                         "\n\t\tsd.pooled[i] <- sqrt(var.pooled[i])")
   } else if (measure == "MD" || measure == "ROM") {
     code <- paste0(code, "\n\t\ttheta[i, 1] <- u[i]")
   } else if (measure == "OR") {
@@ -29,16 +29,16 @@ prepare.UME <- function(measure, model, assumption) {
 
   if (measure == "SMD") {
     code <- paste0(code, "\n\t\t\tprec.o[i, k] <- pow(se.o[i, k], -2)",
-                   "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])",
-                   "\n\t\t\tc[i, k] <- N[i, k] - m[i, k]",
-                   "\n\t\t\tsd.obs[i, k] <- se.o[i, k]*sqrt(c[i, k])",
-                   "\n\t\t\tnom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1)")
+                         "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])",
+                         "\n\t\t\tc[i, k] <- N[i, k] - m[i, k]",
+                         "\n\t\t\tsd.obs[i, k] <- se.o[i, k]*sqrt(c[i, k])",
+                         "\n\t\t\tnom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1)")
   } else if (measure == "MD" || measure == "ROM") {
     code <- paste0(code, "\n\t\t\tprec.o[i, k] <- pow(se.o[i, k], -2)",
-                   "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])")
+                         "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])")
   } else if (measure == "OR") {
     code <- paste0(code, "\n\t\t\tr[i, k] ~ dbin(p_o[i, k], obs[i, k])",
-                   "\n\t\t\tobs[i, k] <- N[i, k] - m[i, k]")
+                         "\n\t\t\tobs[i, k] <- N[i, k] - m[i, k]")
   }
 
   code <- if (measure == "MD" || measure == "SMD") {

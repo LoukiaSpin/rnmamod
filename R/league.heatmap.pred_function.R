@@ -25,11 +25,16 @@
 league.heatmap.pred <- function(net, drug.names){
 
 
-  par.pred <- net$EM.pred; par <- net$EM; sucra <- net$SUCRA; measure <- net$measure
+  if(length(drug.names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
+  }
+
 
   model <- if (net$model == "FE") {
     stop("Prediction is *not* relevant in the fixed-effect model")
   }
+
+  par.pred <- net$EM.pred; par <- net$EM; sucra <- net$SUCRA; measure <- net$measure
 
 
   ## Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html

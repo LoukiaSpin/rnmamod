@@ -1,10 +1,13 @@
 #' Robustness index
 #'
 #' @export
-robustness.index <- function(sens, primary.scenar, threshold, nt){
+robustness.index <- function(sens, primary.scenar, threshold){
 
 
   ES.mat <- sens$EM
+
+  (nt <- (1 + sqrt(1 + 8*(length(ES.mat[, 1])/length(sens$scenarios)^2)))/2)  # The quadratic formula for the roots of the general quadratic equation
+
 
   if (missing(threshold) & is.element(sens$measure, "OR")) {
     threshold <- 0.28

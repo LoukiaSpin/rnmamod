@@ -4,9 +4,13 @@
 separate.meta.plot <- function(full, meta, drug.names) {
 
 
+  if(length(drug.names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
+  }
+
   ## The results on the following parameters will be used:
   # Posterior results on the effect estimates under NMA
-  EM.full <- full$EM
+  EM.full <-  full$EM
 
   # Posterior results on the effect estimates under separate random-effect pairwise meta-analysis (RE-MAs)
   EM.meta <- meta$EM
