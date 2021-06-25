@@ -9,15 +9,39 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
   ## The results on the following parameters will be used:
   # Analysis model
   model <- if (full$model != metareg$model) {
-    stop("The argument 'model' differs in 'run.model' and 'run.metareg'. Specify the same 'model' and run the analysis again")
+    stop("The argument 'model' differs in 'run.model' and 'run.metareg'. Specify the same 'model' and run the analysis again", call. = F)
   } else {
     full$model
   }
 
   # Effect measure
   measure <- if (full$measure != metareg$measure) {
-    stop("The argument 'measure' differs in 'run.model' and 'run.metareg'. Specify the same 'measure' and run the analysis again")
+    stop("The argument 'measure' differs in 'run.model' and 'run.metareg'. Specify the same 'measure' and run the analysis again", call. = F)
   }
+
+
+  covariate <- if (missing(covariate)) {
+    stop("The argument 'covariate' needs to be defined", call. = F)
+  } else {
+    na.omit(unlist(covariate))
+  }
+
+
+  covar.values <- if (missing(covar.values)) {
+    stop("The argument 'covar.values' needs to be defined", call. = F)
+  } else {
+    covar.values
+  }
+
+
+  drug.names <- if (missing(drug.names)) {
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    nt <- length(full$SUCRA[, 1])
+    as.character(1:nt)
+  } else {
+    drug.names
+  }
+
 
   # Posterior results on the SUCRA value under NMA
   sucra.full <- round(full$SUCRA, 2)
@@ -57,15 +81,12 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
   # Sort the drugs by their SUCRA in decreasing order
   drug.names.sorted <- drug.names[order(sucra.full[, 1], decreasing = T)]
 
-  # Covariate
-  covariate <- na.omit(unlist(covariate))
-
   # Effect emasure name
   measure <- effect.measure.name(full$measure)
 
 
   ## A data-frame with the effect estimates and regression coefficients of reference-comparisons from both analyses (Sort by NMA-SUCRA in decreasing order)
-  if (!is.character(covar.values[[1]]) & (!is.element(measure, c()))) {
+  if (!is.character(covar.values[[1]]) & (!is.element(measure, c("Odds ratio", "Ratio of means")))) {
 
 
     ## Calculate the effect estimate at two other values of the metric covariate: one smaller and one larger than the mean

@@ -4,9 +4,11 @@
 robustness.index <- function(sens, primary.scenar, threshold){
 
 
-  ES.mat <- sens$EM
-
-  (nt <- (1 + sqrt(1 + 8*(length(ES.mat[, 1])/length(sens$scenarios)^2)))/2)  # The quadratic formula for the roots of the general quadratic equation
+  primary.scenar <- if (missing(primary.scenar)) {
+    stop("The 'primary.scenar' needs to be defined", call. = F)
+  } else {
+    primary.scenar
+  }
 
 
   if (missing(threshold) & is.element(sens$measure, "OR")) {
@@ -22,6 +24,12 @@ robustness.index <- function(sens, primary.scenar, threshold){
     #message(paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(full$measure)))
     message(cat(paste0("\033[0;", col = 32, "m", txt = paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(sens$measure)), "\033[0m", "\n")))
   }
+
+
+  ES.mat <- sens$EM
+
+  (nt <- (1 + sqrt(1 + 8*(length(ES.mat[, 1])/length(sens$scenarios)^2)))/2)  # The quadratic formula for the roots of the general quadratic equation
+
 
   ## Function for the Kullback-Leibler Divergence (comparing two univariate normal distributions)
   KLD.measure.univ <- function(mean.y, sd.y, mean.x, sd.x){

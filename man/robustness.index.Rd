@@ -4,7 +4,7 @@
 \alias{robustness.index}
 \title{Robustness index}
 \usage{
-robustness.index(sens, primary.scenar, threshold, nt)
+robustness.index(sens, primary.scenar, threshold)
 }
 \description{
 Robustness index

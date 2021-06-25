@@ -4,7 +4,11 @@
 heatmap.mod <- function(data, trial.names, drug.names) {
 
 
-  m <- data %>% dplyr::select(starts_with("m"))
+  m <- if (dim(data %>% dplyr::select(starts_with("m")))[2] == 0) {
+    stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
+  } else {
+    data %>% dplyr::select(starts_with("m"))                                    # Number of missing participants in each arm of every trial
+  }
   n <- data %>% dplyr::select(starts_with("n"))   # Number randomised
   t <- data %>% dplyr::select(starts_with("t"))
   nt <- length(table(as.matrix(t)))
@@ -12,6 +16,14 @@ heatmap.mod <- function(data, trial.names, drug.names) {
   na..  <- rep(0, length(m[, 1]))
   for(i in 1:length(m[, 1])){
     na..[i] <- table(!is.na(t[i, ]))["TRUE"]
+  }
+
+
+  drug.names <- if (missing(drug.names)) {
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    as.character(1:nt)
+  } else {
+    drug.names
   }
 
 

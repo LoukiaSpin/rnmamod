@@ -25,6 +25,14 @@
 league.heatmap <- function(net, drug.names, expon){
 
 
+  drug.names <- if (missing(drug.names)) {
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    as.character(1:length(net$SUCRA[, 1]))
+  } else {
+    drug.names
+  }
+
+
   if(length(drug.names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
   }
@@ -85,7 +93,7 @@ league.heatmap <- function(net, drug.names, expon){
 
 
     ## Spot the statistically significant comparisons (i.e. the 95% CrI does not include the value of no difference)
-    (signif.status <- melt(ifelse(upper < 1 | lower > 1, "significant", "non-significant"), na.rm = F)[3])
+    signif.status <- melt(ifelse(upper < 1 | lower > 1, "significant", "non-significant"), na.rm = F)[3]
     signif.status[is.na(signif.status)] <- 1
   }
 
@@ -93,7 +101,7 @@ league.heatmap <- function(net, drug.names, expon){
 
   ## Merge point estimate with 95% credible interval in a new symmetric matric
   #(final <- matrix(paste0(point, signif.status, "\n", "(", lower, ",", " ", upper, ")"), nrow = length(drug.names), ncol = length(drug.names)))
-  (final <- matrix(paste0(point,  "\n", "(", lower, ",", " ", upper, ")"), nrow = length(drug.names), ncol = length(drug.names)))
+  final <- matrix(paste0(point,  "\n", "(", lower, ",", " ", upper, ")"), nrow = length(drug.names), ncol = length(drug.names))
   colnames(final) <- order.drug; rownames(final) <- order.drug
 
 
@@ -112,16 +120,14 @@ league.heatmap <- function(net, drug.names, expon){
   colnames(mat.new) <- c("Var1", "Var2", "value", "value2")
 
 
-
   ## The final dataset for ggplot2
   diag(mat) <- NA
   final_col <- melt(mat)
   mat.new$value.SUCRA <- final_col$value
 
 
-  library(scales)
   ## Hooray, the precious league table as a heatmap!
-  p <- ggplot(mat.new, aes(Var2, factor(Var1, level = order.drug[length(order.drug):1]), fill = value2)) +
+  p <- ggplot(mat.new, aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), fill = value2)) +
          geom_tile(aes(fill = value.SUCRA)) +
          geom_fit_text(aes(Var2, Var1, label = value), reflow = T) +
          geom_fit_text(aes(Var2, Var1, label = value, fontface = ifelse(signif.status == "significant", "bold", "plain")), reflow = T) +

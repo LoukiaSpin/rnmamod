@@ -3,12 +3,22 @@
 #' @export
 heatmap.robustness <- function(robust, drug.names){
 
+  RI <- robust$RI; threshold <- robust$threshold
+
+
+  drug.names <- if (missing(drug.names)) {
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    nt <- (1 + sqrt(1 + 8*length(robust$robust)))/2
+    as.character(1:nt)
+  } else {
+    drug.names
+  }
+
 
   if(length(drug.names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis")
   }
 
-  RI <- robust$RI; threshold <- robust$threshold
 
   if (missing(threshold) & is.element(robust$measure, "OR")) {
     threshold <- 0.28
@@ -34,9 +44,9 @@ heatmap.robustness <- function(robust, drug.names){
 
 
   ## Create the heatmap for one network of interventions
-  p <- ggplot(mat.new, aes(Var2, factor(Var1, level = drug.names[length(drug.names):2]), fill = ifelse(value < threshold, "high", "poor"))) +
+  p <- ggplot(mat.new, aes(factor(Var2, level = drug.names[1:(length(drug.names) - 1)]), factor(Var1, level = drug.names[length(drug.names):2]), fill = ifelse(value < threshold, "high", "poor"))) +
          geom_tile(colour = "white") +
-         geom_text(aes(Var2, Var1, label = value, fontface = "bold"), size = rel(4.5)) +
+         geom_text(aes(factor(Var2, level = drug.names[1:(length(drug.names) - 1)]), factor(Var1, level = drug.names[length(drug.names):2]), label = value, fontface = "bold"), size = rel(4.5)) +
          scale_fill_manual(breaks = c("high", "poor"), values = c("#009E73", "#D55E00")) +
          scale_x_discrete(position = "top") +
          labs(x = "", y = "") +

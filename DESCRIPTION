@@ -39,7 +39,8 @@ Imports:
     ggthemes,
     stringr,
     testit,
-    writexl
+    writexl,
+    scales
 RdMacros: Rdpack
 SystemRequirements: JAGS (http://mcmc-jags.sourceforge.net)
 RoxygenNote: 7.1.1

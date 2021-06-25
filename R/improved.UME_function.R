@@ -4,6 +4,8 @@
 
 improved.UME <- function(t, m, N, ns, na){
 
+  #item <- data.preparation(data = data1, measure = "OR")
+  #t <- item$t; m <- item$m; N <- item$N; ns <- item$ns; na <- item$na
 
   ## Turn into contrast-level data: one row per possible comparison in each trial ('netmeta')
   wide.format <- pairwise(as.list(t), event = as.list(m), n = as.list(N), data = cbind(t, m, N), studlab = 1:ns)[, c(3:6, 8, 7, 9)]
@@ -59,11 +61,12 @@ improved.UME <- function(t, m, N, ns, na){
 
 
     ## When more studies correspond to a comparison, remove the duplicated rows
-    pairwise.n <- pairwise.n1[!duplicated(pairwise.n1[, 2:3]), ]
+    #pairwise.n <- pairwise.n1[!duplicated(pairwise.n1[, 2:3]), ]
 
 
     ## Sort by the study id in increasing order
-    final0 <- pairwise.n[order(pairwise.n$study), ]
+    #final0 <- pairwise.n[order(pairwise.n$study), ]
+    final0 <- pairwise.n1[order(pairwise.n1$study), ]
 
 
     ## Find the unique comparisons with the baseline intervention

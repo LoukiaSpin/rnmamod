@@ -5,10 +5,16 @@
 #' @param D A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.
 #'
 #' @export
-balloon.plot.mod <- function(sens, compar, D, drug.names){
+balloon.plot.mod <- function(sens, compar, drug.names){
 
 
-  ES.all <- sens$EM
+  ES.all <- sens$EM; D <- sens$D
+
+
+  ## Define the position and number of the scenarios
+  scenarios <- c(1, 2, 3, 4, 5)
+  (nt <- (1 + sqrt(1 + 8*(length(ES.all[, 1])/length(scenarios)^2)))/2)  # The quadratic formula for the roots of the general quadratic equation
+
 
   outcome <- if (is.element(sens$measure, c("MD", "SMD", "ROM"))) {
     "continuous"
@@ -18,7 +24,8 @@ balloon.plot.mod <- function(sens, compar, D, drug.names){
 
 
   drug.names <- if (missing(drug.names)) {
-    stop("The 'drug.names' needs to be defined")
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    as.character(1:nt)
   } else {
     drug.names
   }
@@ -31,17 +38,6 @@ balloon.plot.mod <- function(sens, compar, D, drug.names){
   } else {
     compar
   }
-
-  D <- if (missing(D)) {
-    stop("The 'D' needs to be defined")
-  } else {
-    D
-  }
-
-
-  ## Define the position and number of the scenarios
-  scenarios <- c(1, 2, 3, 4, 5)
-  (nt <- (1 + sqrt(1 + 8*(length(ES.all[, 1])/length(scenarios)^2)))/2)  # The quadratic formula for the roots of the general quadratic equation
 
 
   ## Each parameter is a matrix with rows referring to the scenarios and columns referring to the possible comparisons

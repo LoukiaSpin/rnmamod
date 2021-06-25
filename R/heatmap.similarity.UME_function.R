@@ -79,9 +79,9 @@ heatmap.similarity.UME <- function(full, ume, drug.names, threshold){
 
 
   ## Create the heatmap for one network of interventions
-  p <- ggplot(mat.new, aes(Var2, factor(Var1, level = drug.names[length(drug.names):2]), fill = ifelse(value < threshold, "high", "poor"))) +
+  p <- ggplot(mat.new, aes(factor(Var2, level = drug.names[1:(length(drug.names) - 1)]), factor(Var1, level = drug.names[length(drug.names):2]), fill = ifelse(value < threshold, "high", "poor"))) +
          geom_tile(colour = "white") +
-         geom_text(aes(Var2, Var1, label = value, fontface = "bold"), colour = ifelse(mat.new2$value < 1, "black", "white"), size = rel(4.5)) +
+         geom_text(aes(factor(Var2, level = drug.names[1:(length(drug.names) - 1)]), factor(Var1, level = drug.names[length(drug.names):2]), label = value, fontface = "bold"), colour = ifelse(mat.new2$value < 1, "black", "white"), size = rel(4.5)) +
          scale_fill_manual(breaks = c("high", "poor"), values = c("#009E73", "#D55E00"), na.value = "white") +
          scale_x_discrete(position = "top") +
          labs(x = "", y = "", fill = "Similarity") +

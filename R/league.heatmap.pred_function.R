@@ -25,6 +25,14 @@
 league.heatmap.pred <- function(net, drug.names){
 
 
+  drug.names <- if (missing(drug.names)) {
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    as.character(1:length(net$SUCRA[, 1]))
+  } else {
+    drug.names
+  }
+
+
   if(length(drug.names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
   }
@@ -167,7 +175,7 @@ league.heatmap.pred <- function(net, drug.names){
 
 
   ## Hooray, the precious league table as a heatmap!
-  p <- ggplot(mat.new, aes(Var2, factor(Var1, level = order.drug[length(order.drug):1]), fill = value2)) +
+  p <- ggplot(mat.new, aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), fill = value2)) +
          geom_tile(aes(fill = value.SUCRA)) +
          geom_fit_text(aes(Var2, Var1, label = value), reflow = T) +
          geom_fit_text(aes(Var2, Var1, label = value, fontface = ifelse(signif.status.final == "significant", "bold", "plain")), reflow = T) +

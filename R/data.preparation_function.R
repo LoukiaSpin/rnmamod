@@ -29,13 +29,21 @@ data.preparation <- function(data, measure) {
   ref <- 1                                                                      # The first intervention (t1 = 1) is the reference of the network
 
 
+  ## When no missing outcome data are collected
+  mod <- if (dim(data %>% dplyr::select(starts_with("m")))[2] == 0) {
+    message("Missing participant outcome data have *not* been collected")
+    as.data.frame(matrix(NA, nrow = nrow(treat), ncol = ncol(treat)))
+  } else {
+    data %>% dplyr::select(starts_with("m"))                                    # Number of missing participants in each arm of every trial
+  }
+
+
   ## For a continuous outcome
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
 
     ## Continuous: arm-level, wide-format dataset
     y.obs <- data %>% dplyr::select(starts_with("y"))                             # Observed mean value in each arm of every trial
     sd.obs <- data %>% dplyr::select(starts_with("sd"))                           # Observed standard deviation in each arm of every trial
-    mod <- data %>% dplyr::select(starts_with("m"))                               # Number of missing participants in each arm of every trial
     rand <- data %>% dplyr::select(starts_with("n"))                              # Number randomised participants in each arm of every trial
     se.obs <- sd.obs/sqrt(rand - ifelse(is.na(mod), 0, 1))                                             # Observed standard error in each arm of every trial
 
@@ -56,7 +64,6 @@ data.preparation <- function(data, measure) {
 
     ## Binary: arm-level, wide-format dataset
     event <- data %>% dplyr::select(starts_with("r"))                               # Number of observed events in each arm of every trial
-    mod <- data %>% dplyr::select(starts_with("m"))                                 # Number of missing participants in each arm of every trial
     rand <- data %>% dplyr::select(starts_with("n"))                                # Number randomised participants in each arm of every trial
 
 

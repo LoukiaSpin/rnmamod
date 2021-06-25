@@ -54,7 +54,6 @@ prepare.model <- function(measure, model, assumption) {
                        "\n\t\t\tm[i, k] ~ dbin(q0[i, k], N[i, k])",
                        "\n\t\t\tq0[i, k] ~ dunif(0, 1)")
 
-
   if (measure == "MD" || measure == "SMD" || measure == "ROM") {
     code <- paste0(code, "\n\t\t\that.par[i, k] <- theta.o[i, k]",
                          "\n\t\t\tdev.o[i, k] <- (y.o[i, k] - theta.o[i, k])*(y.o[i, k] - theta.o[i, k])*prec.o[i, k]")

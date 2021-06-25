@@ -59,21 +59,31 @@ run.metareg <- function(data, covariate, measure, model, assumption, heter.prior
   ## Prepare the dataset for the R2jags
   item <- data.preparation(data, measure)
 
+  covariate <- if (missing(covariate)) {
+    stop("The argument 'covariate' needs to be defined", call. = F)
+  } else {
+    covariate
+  }
 
   ## Default arguments
   model <- if (missing(model)) {
     "RE"
   } else if (!is.element(model, c("RE", "FE"))) {
-    stop("Insert 'RE', or 'FE'")
+    stop("Insert 'RE', or 'FE'", call. = F)
   } else {
     model
   }
   assumption <- if (missing(assumption)) {
     "IDE-ARM"
   } else if (!is.element(assumption,  c("IDE-ARM", "IDE-TRIAL", "IDE-COMMON", "HIE-ARM", "HIE-TRIAL", "HIE-COMMON", "IND-CORR", "IND-UNCORR"))) {
-    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'")
+    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'", call. = F)
   } else {
     assumption
+  }
+  D <- if (missing(D)) {
+    stop("The 'D' needs to be defined", call. = F)
+  } else {
+    D
   }
   mean.misspar <- missingness.param.prior(assumption, mean.misspar)
   heter.prior <- heterogeneity.param.prior(measure, model, heter.prior)

@@ -4,7 +4,7 @@
 \alias{heatmap.robustness}
 \title{Heatmap of robutness for NMA}
 \usage{
-heatmap.robustness(robust, drug.names, threshold)
+heatmap.robustness(robust, drug.names)
 }
 \description{
 Heatmap of robutness for NMA

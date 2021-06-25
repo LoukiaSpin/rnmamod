@@ -17,6 +17,15 @@
 rankosucra.plot <- function(net, drug.names){
 
 
+  drug.names <- if (missing(drug.names)) {
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    nt <- length(net$SUCRA[, 1])
+    as.character(1:nt)
+  } else {
+    drug.names
+  }
+
+
   if(length(drug.names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
   }
@@ -51,7 +60,8 @@ rankosucra.plot <- function(net, drug.names){
   p <- ggplot(rank.data, aes(x = as.factor(Order), y = value.rank)) +
          geom_bar(stat = "identity", color = "brown2", fill = "brown2") +
          geom_line(aes(x = Order, y = value.cum), size = 1, color = "blue") +
-         facet_wrap(vars(Intervention)) +
+         #facet_wrap(vars(Intervention)) +
+         facet_wrap(vars(factor(Intervention, level = drug.names.order[1:length(drug.names.order)]))) +
          geom_text(data = dat_text, aes(x = x, y = y, label = label), fontface = "bold") +
          labs(x = "Rank", y = "Probability (%)") +
          theme_classic() +

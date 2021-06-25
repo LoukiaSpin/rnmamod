@@ -53,6 +53,11 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, mean.
   item <- data.preparation(data, measure)
 
 
+  if (unique(na.omit(unlist(item$I))) == 0) {
+    stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
+  }
+
+
   ## Default arguments
   model <- if (missing(model)) {
     "RE"
@@ -67,6 +72,11 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, mean.
     stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'")
   } else {
     assumption
+  }
+  D <- if (missing(D)) {
+    stop("The 'D' needs to be defined")
+  } else {
+    D
   }
   mean.misspar <- missingness.param.prior(assumption, mean.misspar)
   heter.prior <- heterogeneity.param.prior(measure, model, heter.prior)
@@ -151,9 +161,9 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, mean.
 
   ## Return results
   results <- if (model == "RE"){
-    list(EM = EM, tau = tau, measure = measure, scenarios = scenarios)
+    list(EM = EM, tau = tau, measure = measure, scenarios = scenarios, D = D)
   } else {
-    list(EM = EM, measure = measure, scenarios = scenarios)
+    list(EM = EM, measure = measure, scenarios = scenarios, D = D)
   }
 
   return(results)

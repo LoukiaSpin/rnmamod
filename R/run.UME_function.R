@@ -102,6 +102,7 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
   N <- item$N[order(item$na, na.last = T), ]
   na <- sort(item$na)
 
+
   ## Observed comparisons in the network
   observed.comp0 <- improved.UME(t, m, N, item$ns, na)$obs.comp
   observed.comp <- matrix(Numextract(observed.comp0[, 1]), nrow = length(observed.comp0[, 1]), ncol = 2, byrow = T)
@@ -160,9 +161,9 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
 
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
-    data.jag <- append(data.jag, list("y.o" = item$y0[order(na, na.last = T), ], "se.o" = item$se0[order(na, na.last = T), ]))
+    data.jag <- append(data.jag, list("y.o" = item$y0[order(na, na.last = T), ], "se.o" = item$se0[order(na, na.last = T), ], "y.m" = item$y0[order(na, na.last = T), ], ))
   } else if (measure == "OR") {
-    data.jag <- append(data.jag, list("r" = item$r[order(na, na.last = T), ]))
+    data.jag <- append(data.jag, list("r" = item$r[order(na, na.last = T), ], "r.m"= item$r[order(na, na.last = T), ]))
   }
 
 

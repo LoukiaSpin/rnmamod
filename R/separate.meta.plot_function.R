@@ -4,13 +4,22 @@
 separate.meta.plot <- function(full, meta, drug.names) {
 
 
-  if(length(drug.names) < 3) {
+  drug.names <- if (missing(drug.names)) {
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    nt <- length(net$SUCRA[, 1])
+    as.character(1:nt)
+  } else {
+    drug.names
+  }
+
+
+  if (length(drug.names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
   }
 
   ## The results on the following parameters will be used:
   # Posterior results on the effect estimates under NMA
-  EM.full <-  full$EM
+  EM.full <- full$EM
 
   # Posterior results on the effect estimates under separate random-effect pairwise meta-analysis (RE-MAs)
   EM.meta <- meta$EM

@@ -7,7 +7,9 @@ barplot.KLD <- function(robust, compar, outcome, drug.names){
 
 
   drug.names <- if (missing(drug.names)) {
-    stop("The 'drug.names' needs to be defined")
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    nt <- (1 + sqrt(1 + 8*length(robust$robust)))/2
+    as.character(1:nt)
   } else {
     drug.names
   }
