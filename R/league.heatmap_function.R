@@ -26,7 +26,7 @@ league.heatmap <- function(net, drug.names, expon){
 
 
   drug.names <- if (missing(drug.names)) {
-    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
     as.character(1:length(net$SUCRA[, 1]))
   } else {
     drug.names
@@ -129,8 +129,8 @@ league.heatmap <- function(net, drug.names, expon){
   ## Hooray, the precious league table as a heatmap!
   p <- ggplot(mat.new, aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), fill = value2)) +
          geom_tile(aes(fill = value.SUCRA)) +
-         geom_fit_text(aes(Var2, Var1, label = value), reflow = T) +
-         geom_fit_text(aes(Var2, Var1, label = value, fontface = ifelse(signif.status == "significant", "bold", "plain")), reflow = T) +
+         geom_fit_text(aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), label = value), reflow = T) +
+         geom_fit_text(aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), label = value, fontface = ifelse(signif.status == "significant", "bold", "plain")), reflow = T) +
          scale_fill_gradientn(colours = c("blue", "white", "red"),
                               values = rescale(c(min(mat.new$value2, na.rm = T), ifelse(measure != "OR" & measure != "ROM", 0, 1), max(mat.new$value2, na.rm = T))),
                               limits = c(min(mat.new$value2, na.rm = T), max(mat.new$value2, na.rm = T))) +

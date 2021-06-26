@@ -36,6 +36,13 @@ mcmc.diagnostics <- function(net, par){
   options(warn = -1)
 
 
+  par <- if (missing(par)) {
+    stop("The argument 'par' needs to be defined", call. = F)
+  } else {
+    par
+  }
+
+
   jagsfit <- net$jagsfit
 
   ## Turn results into a data-frame to select model parameters (using 'dplyr')

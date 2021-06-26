@@ -30,7 +30,7 @@ prepare.model <- function(measure, model, assumption) {
   if (measure == "SMD") {
     code <- paste0(code, "\n\t\t\tprec.o[i, k] <- pow(se.o[i, k], -2)",
                          "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])",
-                         "\n\t\t\tc[i, k] <- N[i, k] - m[i, k])",
+                         "\n\t\t\tc[i, k] <- N[i, k] - m[i, k]",
                          "\n\t\t\tsd.obs[i, k] <- se.o[i, k]*sqrt(c[i, k])",
                          "\n\t\t\tnom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1)")
   } else if (measure == "MD" || measure == "ROM") {

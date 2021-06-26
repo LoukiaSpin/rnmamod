@@ -18,7 +18,7 @@ rankosucra.plot <- function(net, drug.names){
 
 
   drug.names <- if (missing(drug.names)) {
-    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
     nt <- length(net$SUCRA[, 1])
     as.character(1:nt)
   } else {

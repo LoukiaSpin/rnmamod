@@ -69,14 +69,14 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
   model <- if (missing(model)) {
     "RE"
   } else if (!is.element(model, c("RE", "FE"))) {
-    stop("Insert 'RE', or 'FE'")
+    stop("Insert 'RE', or 'FE'", call. = F)
   } else {
     model
   }
   assumption <- if (missing(assumption)) {
     "IDE-ARM"
   } else if (!is.element(assumption,  c("IDE-ARM", "IDE-TRIAL", "IDE-COMMON", "HIE-ARM", "HIE-TRIAL", "HIE-COMMON", "IND-CORR", "IND-UNCORR"))) {
-    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'")
+    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'", call. = F)
   } else {
     assumption
   }
@@ -148,7 +148,7 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
                    "nt" = item$nt,
                    "ns" = item$ns,
                    "ref" = ifelse(is.element(assumption, c("HIE-ARM", "IDE-ARM")), item$ref, NA),
-                   "I" = item$I[order(na, na.last = T), ],
+                   "I" = item$I[order(item$na, na.last = T), ],
                    "M" = ifelse(!is.na(m), mean.misspar, NA),
                    "cov.phi" = 0.5*var.misspar,
                    "var.phi" = var.misspar,
@@ -161,9 +161,9 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
 
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
-    data.jag <- append(data.jag, list("y.o" = item$y0[order(na, na.last = T), ], "se.o" = item$se0[order(na, na.last = T), ], "y.m" = item$y0[order(na, na.last = T), ], ))
+    data.jag <- append(data.jag, list("y.o" = item$y0[order(item$na, na.last = T), ], "se.o" = item$se0[order(item$na, na.last = T), ], "y.m" = item$y0[order(item$na, na.last = T), ]))
   } else if (measure == "OR") {
-    data.jag <- append(data.jag, list("r" = item$r[order(na, na.last = T), ], "r.m"= item$r[order(na, na.last = T), ]))
+    data.jag <- append(data.jag, list("r" = item$r[order(item$na, na.last = T), ], "r.m"= item$r[order(item$na, na.last = T), ]))
   }
 
 

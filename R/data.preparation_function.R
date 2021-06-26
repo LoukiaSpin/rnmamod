@@ -8,15 +8,15 @@ data.preparation <- function(data, measure) {
 
 
   measure <- if (missing(measure)) {
-    stop("The 'measure' needs to be defined")
+    stop("The argument 'measure' needs to be defined", call. = F)
   } else if ((dim(data %>% dplyr::select(starts_with("r")))[2] > 0) & !is.element(measure, c("MD", "SMD", "ROM", "OR"))) {
-    stop("Insert 'OR'")
+    stop("Insert 'OR'", call. = F)
   } else if ((dim(data %>% dplyr::select(starts_with("r")))[2] == 0) & !is.element(measure, c("MD", "SMD", "ROM", "OR"))) {
-    stop("Insert 'MD', 'SMD' or 'ROM'")
+    stop("Insert 'MD', 'SMD' or 'ROM'", call. = F)
   } else if ((dim(data %>% dplyr::select(starts_with("r")))[2] > 0) & is.element(measure, c("MD", "SMD", "ROM"))) {
-    stop("Insert 'OR' because the outcome data are binary")
+    stop("Insert 'OR' because the outcome data are binary", call. = F)
   } else if ((dim(data %>% dplyr::select(starts_with("r")))[2] == 0) & is.element(measure, "OR")) {
-    stop("Insert 'MD', 'SMD' or 'ROM' because the outcome data are continuous")
+    stop("Insert 'MD', 'SMD' or 'ROM' because the outcome data are continuous", call. = F)
   } else {
     measure
   }
@@ -45,14 +45,15 @@ data.preparation <- function(data, measure) {
     y.obs <- data %>% dplyr::select(starts_with("y"))                             # Observed mean value in each arm of every trial
     sd.obs <- data %>% dplyr::select(starts_with("sd"))                           # Observed standard deviation in each arm of every trial
     rand <- data %>% dplyr::select(starts_with("n"))                              # Number randomised participants in each arm of every trial
-    se.obs <- sd.obs/sqrt(rand - ifelse(is.na(mod), 0, 1))                                             # Observed standard error in each arm of every trial
+    se.obs <- sd.obs/sqrt(rand - mod)                                             # Observed standard error in each arm of every trial
 
 
     ## Order by 'id of t1' < 'id of t1'
-    y0 <- se0 <- m <- N <- t <- t0 <- treat
+    y0 <- sd0 <- se0 <- m <- N <- t <- t0 <- treat
     for (i in 1:ns) {
       t0[i, ] <- order(treat[i, ], na.last = T)
       y0[i, ] <- y.obs[i, order(t0[i, ], na.last = T)]
+      sd0[i, ] <- sd.obs[i, order(t0[i, ], na.last = T)]
       se0[i, ] <- se.obs[i, order(t0[i, ], na.last = T)]
       m[i, ] <- mod[i, order(t0[i, ], na.last = T)]
       N[i, ] <- rand[i, order(t0[i, ], na.last = T)]
@@ -101,7 +102,7 @@ data.preparation <- function(data, measure) {
                   measure = measure)
 
   results <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
-    append(results, list(y0 = y0, se0 = se0))
+    append(results, list(y0 = y0, se0 = se0, sd0 = sd0))
   } else {
     append(results, list(r = r))
   }

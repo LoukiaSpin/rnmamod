@@ -81,7 +81,7 @@ run.metareg <- function(data, covariate, measure, model, assumption, heter.prior
     assumption
   }
   D <- if (missing(D)) {
-    stop("The 'D' needs to be defined", call. = F)
+    stop("The argument 'D' needs to be defined", call. = F)
   } else {
     D
   }

@@ -4,14 +4,14 @@
 \alias{balloon.plot.mod}
 \title{Enhanced balloon plot}
 \usage{
-balloon.plot.mod(sens, compar, D, drug.names)
+balloon.plot.mod(sens, compar, drug.names)
 }
 \arguments{
-\item{D}{A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.}
-
 \item{drug.names}{A vector of characters with the names of the interventions in the order they appear in the function \code{run.sensitivity}.}
 
 \item{net}{An object of S3 class \code{run.sensitivity}.}
+
+\item{D}{A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.}
 }
 \description{
 Enhanced balloon plot

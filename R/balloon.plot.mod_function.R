@@ -8,6 +8,10 @@
 balloon.plot.mod <- function(sens, compar, drug.names){
 
 
+  if (is.na(sens)) {
+    stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
+  }
+
   ES.all <- sens$EM; D <- sens$D
 
 
@@ -24,7 +28,7 @@ balloon.plot.mod <- function(sens, compar, drug.names){
 
 
   drug.names <- if (missing(drug.names)) {
-    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
     as.character(1:nt)
   } else {
     drug.names
@@ -32,7 +36,7 @@ balloon.plot.mod <- function(sens, compar, drug.names){
 
 
   compar <- if (length(drug.names) > 2 & missing(compar)) {
-    stop("The 'compar' needs to be defined")
+    stop("The argument 'compar' needs to be defined", call. = F)
   } else if (length(drug.names) < 3 & missing(compar)) {
     1
   } else {

@@ -19,8 +19,16 @@ heatmap.mod <- function(data, trial.names, drug.names) {
   }
 
 
+  trial.names <- if (missing(trial.names)) {
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'trial.names' has not been defined. The trial ID, as specified in 'data' is used as trial names", "\033[0m", "\n")))
+    as.character(1:ns)
+  } else {
+    trial.names
+  }
+
+
   drug.names <- if (missing(drug.names)) {
-    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
     as.character(1:nt)
   } else {
     drug.names

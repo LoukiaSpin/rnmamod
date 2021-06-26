@@ -5,7 +5,7 @@ UME.plot <- function(full, ume, drug.names, threshold) {
 
 
   drug.names <- if (missing(drug.names)) {
-    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
     nt <- length(full$SUCRA[, 1])
     as.character(1:nt)
   } else {
@@ -35,14 +35,14 @@ UME.plot <- function(full, ume, drug.names, threshold) {
   ## The results on the following parameters will be used:
   # Analysis model
   model <- if (full$model != ume$model) {
-    stop("The argument 'model' differs in 'run.model' and 'run.UME'. Specify the same 'model' and run the analysis again")
+    stop("The argument 'model' differs in 'run.model' and 'run.UME'. Specify the same 'model' and run the analysis again", call. = F)
   } else {
     full$model
   }
 
   # Effect measure
   measure <- if (full$measure != ume$measure) {
-    stop("The argument 'measure' differs in 'run.model' and 'run.UME'. Specify the same 'measure' and run the analysis again")
+    stop("The argument 'measure' differs in 'run.model' and 'run.UME'. Specify the same 'measure' and run the analysis again", call. = F)
   }
 
   # Posterior results on the effect estimates under consistency model

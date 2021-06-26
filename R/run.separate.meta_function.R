@@ -57,21 +57,19 @@ run.separate.meta <- function(data, measure, model, assumption, heter.prior, mea
   ## Turn off warning when variables in the 'data.jag' are not used
   options(warn = -1)
 
+
+  ## Prepare the dataset for the R2jags
   item <- data.preparation(data, measure)
   if(item$nt < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
   }
 
 
-  ## Prepare the dataset for the R2jags
-  item <- data.preparation(data, measure)
-
-
   ## Default arguments
   model <- if (missing(model)) {
     "RE"
   } else if (!is.element(model, c("RE", "FE"))) {
-    stop("Insert 'RE', or 'FE'")
+    stop("Insert 'RE', or 'FE'", call. = F)
   } else {
     model
   }
@@ -106,11 +104,10 @@ run.separate.meta <- function(data, measure, model, assumption, heter.prior, mea
   }
 
 
-
   ## The dataset for the analysis
-  pairwise <- data.frame(pairwise.observed, pairwise.mod)
-  pairwise$t1 <- rep(1, dim(pairwise)[1])
-  pairwise$t2 <- rep(2, dim(pairwise)[1])
+  pairwise.data <- data.frame(pairwise.observed, pairwise.mod)
+  pairwise.data$t1 <- rep(1, dim(pairwise.data)[1])
+  pairwise.data$t2 <- rep(2, dim(pairwise.data)[1])
 
 
   ## Unique comparisons with the baseline intervention
@@ -121,7 +118,7 @@ run.separate.meta <- function(data, measure, model, assumption, heter.prior, mea
 
 
   ## Observed comparisons in the network
-  comp <- as.data.frame(table(paste0(pairwise$arm1, "vs", pairwise$arm2)))
+  comp <- as.data.frame(table(paste0(pairwise.data$arm1, "vs", pairwise.data$arm2)))
   colnames(comp) <- c("comparison", "frequency")
 
 
@@ -131,12 +128,11 @@ run.separate.meta <- function(data, measure, model, assumption, heter.prior, mea
   N.comp <- dim(keep.comp)[1]
 
 
-  ## Run each random-effects paiwise meta-analysis
+  ## Run each random-effects pairwise meta-analysis
   meta <- list()
   for (i in 1:N.comp) {
     message(paste(i, "out of", N.comp, "observed comparisons"))
-    meta[[i]] <- run.model(data = pairwise[pairwise$arm1 == keep.comp[i, 1] & pairwise$arm2 == keep.comp[i, 2], -c(1:3)], measure, model, assumption, heter.prior, mean.misspar, var.misspar, D = 1, n.chains, n.iter, n.burnin, n.thin) # 'D' does not matter in pairwise meta-analysis
-
+    meta[[i]] <- run.model(data = pairwise.data[pairwise.data$arm1 == keep.comp[i, 1] & pairwise.data$arm2 == keep.comp[i, 2], ], measure, model, assumption, heter.prior, mean.misspar, var.misspar, D = 1, n.chains, n.iter, n.burnin, n.thin) # 'D' does not matter in pairwise meta-analysis
   }
 
   EM <- data.frame(keep.comp, do.call(rbind, lapply(1:N.comp, function(i) meta[[i]]$EM)))

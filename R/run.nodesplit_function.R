@@ -16,14 +16,14 @@ run.nodesplit <- function(data, measure, model, assumption, heter.prior, mean.mi
   model <- if (missing(model)) {
     "RE"
   } else if (!is.element(model, c("RE", "FE"))) {
-    stop("Insert 'RE', or 'FE'")
+    stop("Insert 'RE', or 'FE'", call. = F)
   } else {
     model
   }
   assumption <- if (missing(assumption)) {
     "IDE-ARM"
   } else if (!is.element(assumption,  c("IDE-ARM", "IDE-TRIAL", "IDE-COMMON", "HIE-ARM", "HIE-TRIAL", "HIE-COMMON", "IND-CORR", "IND-UNCORR"))) {
-    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'")
+    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'", call. = F)
   } else {
     assumption
   }
@@ -46,7 +46,7 @@ run.nodesplit <- function(data, measure, model, assumption, heter.prior, mean.mi
     na.. <- item$na
 
     ## Convert one-study-per-row data to one-arm-per-row as required in GeMTC
-    transform <- mtc.data.studyrow(cbind(item$t, item$y0, item$se0, item$N, item$na), armVars = c('treatment'= 't', 'mean'='y', 'std.error'='se', 'sampleSize'='n'), nArmsVar='na')
+    transform <- mtc.data.studyrow(cbind(item$t, item$y0, item$se0, item$N, na..), armVars = c('treatment'= 't', 'mean'='y', 'std.error'='se', 'sampleSize'='n'), nArmsVar='na')
 
   } else {
 
@@ -74,7 +74,12 @@ run.nodesplit <- function(data, measure, model, assumption, heter.prior, mean.mi
   } else {
 
     ## Define node to split: AB=(1,2)
-    pair <- t(apply(apply(as.matrix(splitting, ncol = 2), 2, as.numeric), 1, sort))
+    pair <- if (dim(splitting)[1] == 1) {
+      t(apply(as.matrix(splitting, ncol = 2), 2, as.numeric))
+    } else if (dim(splitting)[1] > 1) {
+      t(apply(apply(as.matrix(splitting, ncol = 2), 2, as.numeric), 1, sort))
+    }
+
 
 
     ## Parameters to save

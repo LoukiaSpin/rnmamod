@@ -3,11 +3,16 @@
 #' @export
 heatmap.robustness <- function(robust, drug.names){
 
+
+  if (is.na(robust)) {
+    stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
+  }
+
+
   RI <- robust$RI; threshold <- robust$threshold
 
-
   drug.names <- if (missing(drug.names)) {
-    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The  argument 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
     nt <- (1 + sqrt(1 + 8*length(robust$robust)))/2
     as.character(1:nt)
   } else {
@@ -16,7 +21,7 @@ heatmap.robustness <- function(robust, drug.names){
 
 
   if(length(drug.names) < 3) {
-    stop("This function is *not* relevant for a pairwise meta-analysis")
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
   }
 
 

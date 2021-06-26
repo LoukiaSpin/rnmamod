@@ -55,6 +55,7 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, mean.
 
   if (unique(na.omit(unlist(item$I))) == 0) {
     stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
+    return(NA)
   }
 
 
@@ -62,19 +63,19 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, mean.
   model <- if (missing(model)) {
     "RE"
   } else if (!is.element(model, c("RE", "FE"))) {
-    stop("Insert 'RE', or 'FE'")
+    stop("Insert 'RE', or 'FE'", call. = F)
   } else {
     model
   }
   assumption <- if (missing(assumption)) {
     "IDE-ARM"
   } else if (!is.element(assumption,  c("IDE-ARM", "IDE-TRIAL", "IDE-COMMON", "HIE-ARM", "HIE-TRIAL", "HIE-COMMON", "IND-CORR", "IND-UNCORR"))) {
-    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'")
+    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'", call. = F)
   } else {
     assumption
   }
   D <- if (missing(D)) {
-    stop("The 'D' needs to be defined")
+    stop("The argument 'D' needs to be defined", call. = F)
   } else {
     D
   }

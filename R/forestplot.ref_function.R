@@ -7,7 +7,7 @@ forestplot.ref <- function(net, drug.names) {
 
 
   drug.names <- if (missing(drug.names)) {
-    message(cat(paste0("\033[0;", col = 32, "m", txt = "The 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
     nt <- length(net$SUCRA[, 1])
     as.character(1:nt)
   } else {
@@ -89,7 +89,7 @@ forestplot.ref <- function(net, drug.names) {
       geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper), size = 2, position = position_dodge(width = 0.5), width = 0.1) +
       geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 2, size = 1.3, col = "grey53") +
       geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
-      geom_text(aes(x = order, y = mean, label = paste0(mean, " ", " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")",
+      geom_text(aes(x = order, y = mean, label = paste0(mean, " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")",
                                                         " ", "[", prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), 4], ",", " ", prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), 5], "]"),
                     hjust = 0, vjust = -0.4), color = "blue", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T, na.rm = T) +
       labs(x = "", y = measure, colour = "Analysis") +
@@ -108,7 +108,7 @@ forestplot.ref <- function(net, drug.names) {
       geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper), size = 2, position = position_dodge(width = 0.5), width = 0.1, colour = "black") +
       geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 2, size = 1.3, col = "grey53") +
       geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
-      geom_text(aes(x = order, y = mean, label = paste0(mean, " ", " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")"),
+      geom_text(aes(x = order, y = mean, label = paste0(mean, " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")"),
                     hjust = 0, vjust = -0.4), color = "blue", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T, na.rm = T) +
       labs(x = "", y = measure) +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +

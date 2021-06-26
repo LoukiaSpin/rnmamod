@@ -106,8 +106,8 @@ improved.UME <- function(t, m, N, ns, na){
     for(i in 1:length(final[, 1])){
       final$base[i] <- unique(t[final$study[i], 1])
     }
-    nbase.multi <- length(final[, 1])     # Non-baseline interventions in the selected trials in 'final'
-
+    #nbase.multi <- length(final[, 1])
+    nbase.multi <- dim(final[!duplicated(final[, 2:4]), 2:4])[1] # *Unique* non-baseline interventions in the selected trials in 'final'
   }
 
 

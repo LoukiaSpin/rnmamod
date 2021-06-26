@@ -4,8 +4,14 @@
 robustness.index <- function(sens, primary.scenar, threshold){
 
 
+  if (is.na(sens)) {
+    stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
+    return(NA)
+  }
+
+
   primary.scenar <- if (missing(primary.scenar)) {
-    stop("The 'primary.scenar' needs to be defined", call. = F)
+    stop("The argument 'primary.scenar' needs to be defined", call. = F)
   } else {
     primary.scenar
   }
