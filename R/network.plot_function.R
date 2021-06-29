@@ -2,12 +2,12 @@
 #'
 #' @description A function to facilitate drawing the network plot via the \code{\link[pcnetmeta]{nma.networkplot}} function
 #'   of the R-package \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}. The \code{\link[gemtc]{mtc.data.studyrow}} function
-#'   of the R-package \href{https://CRAN.R-project.org/package=gemtc}{gemtc} is also used to convert \code{data} into a one-arm-per-row format.
+#'   of the R-package \href{https://CRAN.R-project.org/package=gemtc}{gemtc} is also used to convert \code{data} from the one-trial-per-row format into the one-arm-per-row format.
 #'
 #' @param data A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models.
-#'   See 'Format' in \code{\link{run.model}} for the specification of the columns.
-#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the \code{data}. If \code{drug.names} is not defined, the order of their interventions
-#'   as they appear in the \code{data} is used, instead.
+#'   See 'Format' in \code{\link[rnmamod]{run.model}} function for the specification of the columns.
+#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data}. If the argument \code{drug.names} is not defined, the order of the interventions
+#'   as they appear in the argument \code{data} is used, instead.
 #' @param ... Additional arguments from the \code{\link[pcnetmeta]{nma.networkplot}} function of the R-package \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}.
 #'
 #' @return A network plot with coloured closed-loops informed by multi-arm trials. Each node refers to the intervention and each link refers to the observed pairwise comparison.
@@ -18,7 +18,7 @@
 #'
 #' @references
 #' Lifeng Lin, Jing Zhang, James S. Hodges, Haitao Chu. Performing Arm-Based Network Meta-Analysis in R
-#' with the pcnetmeta Package. \emph{J Stat Softw} 2017;\bold{80}(5): 1--25. <\doi{10.18637/jss.v080.i05}>
+#' with the pcnetmeta Package. \emph{J Stat Softw} 2017;\bold{80}(5): 1--25. [\doi{10.18637/jss.v080.i05}]
 #'
 #' Gert van Valkenhoef and Joel Kuiper. gemtc: Network Meta-Analysis Using Bayesian Methods. \emph{R package version 1.0-1}.
 #' 2021. \url{https://CRAN.R-project.org/package=gemtc}
@@ -28,17 +28,21 @@
 #' @examples
 #' data("nma.baker2009")
 #'
+#' # Return the first six trials of the dataset
 #' head(nma.baker2009)
-#'    t1 t2 t3     y1     y2 y3   sd1   sd2 sd3 m1  m2 m3  n1  n2 n3
-#' #1  1  2 NA -10.70 -13.31 NA  7.64  7.86  NA  1   6 NA 131 253 NA
-#' #2  1  2 NA  -7.19 -12.52 NA 10.57 10.61  NA  3   1 NA 135 137 NA
-#' #3  2  7 NA -15.70 -15.65 NA 10.95 10.95  NA  1  10 NA 175 172 NA
-#' #4  1  2 NA  -3.35  -8.15 NA 14.03 14.08  NA 10   7 NA 132 130 NA
-#' #5  1  2 NA -10.12 -10.80 NA 10.72 10.90  NA  4 138 NA 134 267 NA
-#' #6  1 12 NA  21.60  17.50 NA 11.70 12.15  NA 11  10 NA 100  91 NA
+#' #>                 study t1 t2 t3 t4  r1  r2 r3 r4 m1 m2 m3 m4  n1  n2 n3 n4
+#' #> Llewellyn-Jones, 1996  3  8 NA NA   8   4 NA NA  0  1 NA NA   8   8 NA NA
+#' #>        Paggiaro, 1998  3  8 NA NA  78  61 NA NA 19 27 NA NA 142 139 NA NA
+#' #>          Mahler, 1999  6  8 NA NA  98  73 NA NA  9 23 NA NA 135 143 NA NA
+#' #>        Casaburi, 2000  7  8 NA NA 222 132 NA NA 12 18 NA NA 279 191 NA NA
+#' #>       van Noord, 2000  6  8 NA NA  29  24 NA NA  7  8 NA NA  47  50 NA NA
+#' #>         Rennard, 2001  6  8 NA NA  72  65 NA NA 22 29 NA NA 132 135 NA NA
 #'
-#' interv.names <- c("placebo", "budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
-#'                   "formoterol", "salmeterol", "tiotropium")
+#' # The names of the interventions in the order they appear in the dataset
+#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
+#'                   "formoterol", "salmeterol", "tiotropium", "placebo")
+#'
+#' # Create the network plot
 #' netplot(data = nma.baker2009, drug.names = interv.names)
 #'
 #' @export
@@ -46,7 +50,7 @@ netplot <- function(data, drug.names, ...){
 
 
   if (missing(drug.names)) {
-    message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in argument 'data' is used as intervention names", "\033[0m", "\n")))
   }
 
 

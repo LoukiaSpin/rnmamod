@@ -3,6 +3,7 @@
 #' @export
 robustness.index <- function(sens, primary.scenar, threshold){
 
+  options(warn = -1)
 
   if (is.na(sens)) {
     stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)

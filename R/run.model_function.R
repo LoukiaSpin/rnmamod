@@ -1,29 +1,61 @@
 #' Perform pairwise or network meta-analysis with missing participant outcome data
 #'
-#' @description Perform one-stage pairwise or network meta-analysis with incorporation of pattern-mixture model to address aggregate binary or continuous missing participant outcome data
+#' @description Perform a one-stage pairwise or network meta-analysis with incorporation of pattern-mixture model to address aggregate binary or continuous missing participant outcome data.
 #'
-#' @param data A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' for the specification of the columns.
+#' @param data A data-frame of the one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' for the specification of the columns.
 #' @param measure Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio, mean difference,
 #'   standardised mean difference and ratio of means, respectively.
+#' @param model Character string indicating the analysis model with values \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model, respectively. The default argument is \code{"RE"}.
 #' @param assumption Character string indicating the structure of the informative missingness parameter.
 #'   Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.
-#' @param model Character string indicating the analysis model with values \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model, respectively.
-#' @param assumption Character string indicating the structure of the informative missingness parameter. Set \code{assumption} equal to one of the following:  \code{"IDE-ARM"}, \code{"IDE-TRIAL"},
-#' \code{"IDE-COMMON"}, \code{"HIE-ARM"}, \code{"HIE-TRIAL"}, \code{"HIE-COMMON"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.
+#'   The default argument is \code{"IDE-ARM"}.
+#'   The abbreviations \code{"IDE"}, \code{"HIE"}, and \code{"IND"} stand for identical, hierarchical and independent, respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and uncorrelated, respectively.
 #' @param heter.prior A list of three elements with the following order: 1) a character string indicating the distribution with (currently available) values \code{"halfnormal"},
 #'   \code{"uniform"}, \code{"lognormal"}, or \code{"logt"}; 2) two numeric values that refer to the parameters of the selected distribution. For \code{"halfnormal"}, \code{"lognormal"}, and \code{"logt"}
 #'   these numbers refer to the mean and precision, respectively. For \code{"uniform"}, these numbers refer to the minimum and maximum value of the distribution.
-#' @param mean.misspar A real number for the mean of the normal distribution of the selected informative missingness parameter (see \code{assumption}).
-#' @param var.misspar A positive non-zero number for the variance of the normal distribution of the selected informative missingness parameter (see \code{assumption}).
+#'   See also the function \code{\link{heterogeneity.param.prior}}.
+#' @param mean.misspar A real number for the mean of the normal distribution of the selected informative missingness parameter (see \code{assumption}). The default argument is 0 and corresponds to the missing-at-random assumption.
+#'   See also the function \code{\link{missingness.param.prior}}.
+#' @param var.misspar A positive non-zero number for the variance of the normal distribution of the selected informative missingness parameter (see \code{assumption}). When the \code{measure} is \code{"OR"}, \code{"MD"}, or \code{"SMD"}
+#'   the default argument is 1; otherwise, the default argument is 0.04 and refers to \code{"ROM"} as \code{measure}.
 #' @param D A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.
-#' @param n.chains Integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
-#' @param n.iter Integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
-#' @param n.burnin Integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
-#' @param n.thin Integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
+#' @param n.chains Integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is 2.
+#' @param n.iter Integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#' The default argument is 10000.
+#' @param n.burnin Integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#' The default argument is 1000.
+#' @param n.thin Integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is 1.
 #'
-#' @return An R2jags output on the summaries of the posterior distribution, and the GelmanRubin convergence diagnostic of the following parameters for a fixed-effect pairwise meta-analysis model:
+#' @format The columns of the data frame \code{data} refer to the following ordered elements for a continuous outcome:
 #' \tabular{ll}{
-#'  \code{EM} \tab The estimated effect measure (according to \code{measure}).\cr
+#'  \strong{t} \tab An intervention identifier in each arm.\cr
+#'  \tab \cr
+#'  \strong{y} \tab The observed mean value of the outcome in each arm.\cr
+#'  \tab \cr
+#'  \strong{sd} \tab The observed standard deviation of the outcome in each arm.\cr
+#'  \tab \cr
+#'  \strong{m} \tab The number of missing outcome data in each arm.\cr
+#'  \tab \cr
+#'  \strong{n} \tab The number of participants randomised on the assigned intervention in each arm.\cr
+#' }
+#'
+#' For a binary outcome, the columns of the data-frame \code{data} refer to the following ordered elements:
+#' \tabular{ll}{
+#'  \strong{t} \tab An intervention identifier in each arm.\cr
+#'  \tab \cr
+#'  \strong{r} \tab The observed number of events of the outcome in each arm.\cr
+#'  \tab \cr
+#'  \strong{m} \tab The number of missing outcome data in each arm.\cr
+#'  \tab \cr
+#'  \strong{n} \tab The number of participants randomised on the assigned intervention in each arm.\cr
+#' }
+#' All elements appear in \code{data} as many times as the maximum number of interventions compared in a trial of the dataset.
+#'
+#' @return An R2jags output on the summaries of the posterior distribution, and the Gelman-Rubin convergence diagnostic of the following parameters for a fixed-effect pairwise meta-analysis model:
+#' \tabular{ll}{
+#'  \code{EM} \tab The estimated effect measure (according to the argument \code{measure}).\cr
 #'  \tab \cr
 #'  \code{dev.o} \tab The deviance contribution of each trial-arm based on the observed outcome.\cr
 #'  \tab \cr
@@ -34,19 +66,19 @@
 #'
 #' For a random-effects pairwise meta-analysis model, the output additionally includes the following elements:
 #' \tabular{ll}{
-#'  \code{EM.pred} \tab The predicted effect measure (according to \code{measure}).\cr
+#'  \code{EM.pred} \tab The predicted effect measure (according to the argument \code{measure}).\cr
 #'  \tab \cr
-#'  \code{delta} \tab The underlying trial-specific estimated effect measure (according to \code{measure}).
-#'  For a multi-arm trial, we estimate \emph{T-1} trial-specific effect estimates, where \emph{T} is the number of interventions in the trial.\cr
+#'  \code{delta} \tab The underlying trial-specific estimated effect measure (according to the argument \code{measure}).
+#'  For a multi-arm trial, we estimate \emph{T-1} effects, where \emph{T} is the number of interventions in the trial.\cr
 #'  \tab \cr
 #'  \code{tau} \tab The between-trial standard deviation.\cr
 #' }
 #'
 #' In the case of network meta-analysis (NMA), the output additionally includes:
 #' \tabular{ll}{
-#'  \code{EM.ref} \tab The estimated effect measure (according to \code{measure}) of all comparisons with the reference intervention.\cr
+#'  \code{EM.ref} \tab The estimated effect measure (according to the argument \code{measure}) of all comparisons with the reference intervention.\cr
 #'  \tab \cr
-#'  \code{pred.ref} \tab The predicted effect measure (according to \code{measure}) of all comparisons with the reference intervention.\cr
+#'  \code{pred.ref} \tab The predicted effect measure (according to the argument \code{measure}) of all comparisons with the reference intervention.\cr
 #'  \tab \cr
 #'  \code{SUCRA} \tab The surface under the cumulative ranking curve for each intervention.\cr
 #'  \tab \cr
@@ -54,7 +86,7 @@
 #' }
 #' In NMA, \code{EM} and \code{EM.pred} refer to all possible comparisons in the network. Furthermore, \code{tau} is typically assumed to be common for all observed comparisons in the network.
 #'
-#' Furthermore, the output includes the following elements - the first three resulting from monitored parameters:
+#' Furthermore, the output includes the following elements - the first three resulting from relevant monitored parameters:
 #' \tabular{ll}{
 #'  \code{leverage.o} \tab The leverage for the observed outcome at each trial-arm.\cr
 #'  \tab \cr
@@ -62,48 +94,28 @@
 #'  \tab \cr
 #'  \code{model.assessment} \tab A data-frame on the measures of model assessment: deviance information criterion, number of effective parameters, and total residual deviance.\cr
 #'  \tab \cr
-#'  \code{measure} \tab The effect measured as defined in \code{measure} to be used in other functions of the package.\cr
+#'  \code{measure} \tab The effect measure as defined in the argument \code{measure} to be used in other functions of the package.\cr
 #'  \tab \cr
-#'  \code{model} \tab The analysis model as defined in \code{model} to be used in other functions of the package.\cr
+#'  \code{model} \tab The analysis model as defined in the argument \code{model} to be used in other functions of the package.\cr
 #'  \tab \cr
-#'  \code{jagsfit} \tab An object of S3 class \code{\link[R2jags]{jags}} with the posterior results on all monitored parameters to be used in \code{mcmc.diagnostics} function.\cr
+#'  \code{jagsfit} \tab An object of S3 class \code{\link[R2jags]{jags}} with the posterior results on all monitored parameters to be used in the \code{mcmc.diagnostics} function.\cr
 #' }
 #'
-#' @format The columns of the data frame \code{data} refer to the following ordered elements for a continuous outcome:
-#' \tabular{ll}{
-#'  \strong{t} \tab An intervention identifier.\cr
-#'  \tab \cr
-#'  \strong{y} \tab The observed mean value of the outcome.\cr
-#'  \tab \cr
-#'  \strong{sd} \tab The observed standard deviation of the outcome.\cr
-#'  \tab \cr
-#'  \strong{m} \tab The number of missing outcome data.\cr
-#'  \tab \cr
-#'  \strong{n} \tab The number of participants randomised on the assigned intervention.\cr
-#' }
-#'
-#' For a binary outcome, the columns of the data-frame \code{data} refer to the following ordered elements:
-#' \tabular{ll}{
-#'  \strong{t} \tab An intervention identifier.\cr
-#'  \tab \cr
-#'  \strong{r} \tab The observed number of events of the outcome.\cr
-#'  \tab \cr
-#'  \strong{m} \tab The number of missing outcome data.\cr
-#'  \tab \cr
-#'  \strong{n} \tab The number of participants randomised on the assigned intervention.\cr
-#' }
-#' All elements appear in \code{data} as many times as the maximum number of interventions compared in a trial.
+#' WRITE what happens when MOD have not been extracted, which likelihood models are run and mention the pattern-mixture models.
+#' MENTION that the results are S3 objected used from other functions of the package.
+#' ADD citations (Dias 2013, Turner 2015, Mavridis 2015, Spineli 2019 BMC, Spineli 2019 JCE, Spineli 2021).
 #'
 #' @author {Loukia M. Spineli}
 #'
 #' @examples
-#' \dontshow{load("./data/cipriani2011.bin.RData")}
-#' ### Show the data (one-trial-per-row format)
-#' (data <- as.data.frame(cipriani.bin.new))
+#' data("nma.baker2009")
 #'
-#' ### Run a random-effects network meta-analysis with consistency equations for the odds ratio (in the logarithmic scale)
-#' ### assuming missing at random for identical, intervention-specific informative missingness odds ratio.
-#' run.model(data = data, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 0, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' # Show the first six trials of the dataset (one-trial-per-row format)
+#' head(nma.baker2009)
+#'
+#' # Run a random-effects network meta-analysis with consistency equations for the odds ratio (in the logarithmic scale)
+#' # assuming missing at random for identical, intervention-specific informative missingness odds ratio.
+#' run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 0, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
 run.model <- function(data, measure, model, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin) {
@@ -117,7 +129,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   item <- data.preparation(data, measure)
 
 
-  ## Default arguments
+  ## Missing and default arguments
   model <- if (missing(model)) {
     "RE"
   } else if (!is.element(model, c("RE", "FE"))) {
