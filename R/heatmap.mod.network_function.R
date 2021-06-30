@@ -1,9 +1,6 @@
 #' Heatmap of the risk of bias associated with missing participant outcome data in the network
 #'
 #' @description This function illustrates the risk of bias associated with missing participant outcome data (MOD) for each intervention and observed comparison of the network.
-#'   The percentage of MOD in an intervention is defined as the ratio of the sum of MOD for that intervention across the corresponding trials to the sum of the
-#'   randomised participants in that intervention. Similarly, the percentage of MOD in an observed comparison is the ratio of the sum of MOD for that comparison
-#'   across the corresponding trials to the sum of the randomised participants in that comparison.
 #'
 #' @param data A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models.
 #'   See 'Format' in \code{\link[rnmamod]{run.model}} function for the specification of the columns.
@@ -11,6 +8,9 @@
 #'   as they appear in the argument \code{data} is used, instead.
 #'
 #' @return The percentage of MOD in each intervention and observed comparison are depicted using white and black colour in the main diagonal and lower off-diagonal, respectively, of the heatmap.
+#'   The percentage of MOD in an intervention is defined as the ratio of the sum of MOD for that intervention across the corresponding trials to the sum of the
+#'   randomised participants in that intervention. Similarly, the percentage of MOD in an observed comparison is the ratio of the sum of MOD for that comparison
+#'   across the corresponding trials to the sum of the randomised participants in that comparison.
 #'   The pairwise comparisons are read from left to right. We used the 'five-and-twenty' rule of Sackett and colleagues to characterise the percentage of MOD as being associated with low (up to 5\%),
 #'   moderate (more than 5\% and up to 20\%), and high risk of bias (more than 20\%). Low, moderate, and high risk of bias associated with MOD is indicated using green, orange, and red colour, respectively.
 #'   The function is also applicable for a pairwise meta-analysis.
@@ -28,13 +28,13 @@
 #'
 #' # Return the first six trials of the dataset
 #' head(nma.liu2013)
-#' #>            study t1 t2 t3 r1 r2 r3 m1 m2 m3  n1  n2 n3
-#' #>    Richard, 2012  1  3  4 15 16 23  6  8  4  39  42 34
-#' #>     Barone, 2010  1  2 NA 27 38 NA 19 20 NA 152 144 NA
-#' #> Weinbtraub, 2010  1  3 NA  2  5 NA  6  6 NA  27  28 NA
-#' #>      Menza, 2009  1  4  5  4  2  9  6  7  5  17  18 17
-#' #>      Devos, 2008  1  4  5  4  8 11  0  2  1  16  15 17
-#' #>   Antonini, 2006  4  5 NA 10  8 NA  4  4 NA  16  15 NA
+#' #            study t1 t2 t3 r1 r2 r3 m1 m2 m3  n1  n2 n3
+#' #    Richard, 2012  1  3  4 15 16 23  6  8  4  39  42 34
+#' #     Barone, 2010  1  2 NA 27 38 NA 19 20 NA 152 144 NA
+#' # Weinbtraub, 2010  1  3 NA  2  5 NA  6  6 NA  27  28 NA
+#' #      Menza, 2009  1  4  5  4  2  9  6  7  5  17  18 17
+#' #      Devos, 2008  1  4  5  4  8 11  0  2  1  16  15 17
+#' #   Antonini, 2006  4  5 NA 10  8 NA  4  4 NA  16  15 NA
 #'
 #' # The names of the interventions in the order they appear in the dataset
 #' interv.names <- c("placebo", "pramipexole", "SNRI", "SSRI", "TCA", "pergolide")
