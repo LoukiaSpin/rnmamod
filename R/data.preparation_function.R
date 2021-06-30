@@ -85,10 +85,22 @@ data.preparation <- function(data, measure) {
   ## If a trial reports missing outcome data partially or not at all, insert 'NA'.
   I <- m.new <- m
   for (i in 1:ns) {
-    I[i, ] <- ifelse(is.na(m[i, ]) & !is.na(N[i, ]), 0, ifelse(!is.na(m[i, ]) & !is.na(N[i, ]), 1, NA))
-    m.new[i, ] <- ifelse(is.na(m[i, ]) & !is.na(N[i, ]), 0, ifelse(!is.na(m[i, ]) & !is.na(N[i, ]), m[i, ], NA))
-  }
+    I[i, ] <- if (is.na(m[i, ]) & !is.na(N[i, ])) {
+      0
+    } else if (is.na(m[i, ]) & is.na(N[i, ])) {
+      NA
+    } else if (!is.na(m[i, ]) & !is.na(N[i, ])) {
+      1
+    }
 
+    m.new[i, ] <- if (is.na(m[i, ]) & !is.na(N[i, ])) {
+      0
+    } else if (is.na(m[i, ]) & is.na(N[i, ])) {
+      NA
+    } else if (!is.na(m[i, ]) & !is.na(N[i, ])) {
+      m[i, ]
+    }
+  }
 
   ## Return results
   results <- list(m = m.new,
