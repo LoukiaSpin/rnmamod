@@ -1,17 +1,15 @@
 #' A function to perform separate Bayesian random-effects pairwise meta-analyses for aggregate binary or continuous outcomes based on a connected network of interventions
 #'
 #' @param data A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' for the specification of the columns.
-#' @param measure Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"}.
-#' @param assumption Character string indicating the structure of the informative missingness parameter. Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.
-#' @param heter.prior A vector of length equal to two with the following values: \code{rep(1, 2)}, \code{rep(2, 2)}, and \code{rep(3, 2)} refers to half-normal distribution with variance 1 or 0.5, and uniform distribution with interval [0, 5], respectively,
-#' for the between-trial standard deviation. To indicate an empirically-based prior distribution for the between-trial variance, the first and second values of the vector should be the mean and precision
-#' of the selected prior distribution. The empirically-based prior distribution for the between-trial variance is applicable only when \code{"OR"} or \code{"SMD"} is considered.
-#' @param mean.misspar A positive non-zero number for the mean of the normal distribution of the informative missingness parameter.
-#' @param var.misspar A positive non-zero number for the variance of the normal distribution of the informative missingness parameter.
-#' @param n.chains Integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
-#' @param n.iter Integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
-#' @param n.burnin Integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
-#' @param n.thin Integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
+#' @param net An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
+#' @param n.chains Integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is 2.
+#' @param n.iter Integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is 10000.
+#' @param n.burnin Integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is 1000.
+#' @param n.thin Integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is 1.
 #'
 #' @return An R2jags output on the summaries of the posterior distribution, and the Gelman–Rubin convergence diagnostic of the following parameters:
 #' \describe{
@@ -25,34 +23,31 @@
 #'  \item{\code{tau}}{The between-trial standard deviation assumed to be common for all observed comparisons.}
 #' }
 #'
-#' @format The columns of the data frame \code{data} refer to the following ordered elements for a continuous outcome:
-#' \describe{
-#'  \item{\strong{t}}{An intervention identifier.}
-#'  \item{\strong{y}}{The observed mean value of the outcome.}
-#'  \item{\strong{sd}}{The observed standard deviation of the outcome.}
-#'  \item{\strong{m}}{The number of missing outcome data.}
-#'  \item{\strong{c}}{The number of participants completing the assigned intervention.}
-#'  \item{\strong{na}}{The number of compared interventions.}
-#' }
-#' Apart from \strong{na}, all other elements appear in \code{data} as many times as the maximum number of interventions compared in a trial. See, 'Example'.
+#' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link{R2jags}}
 #'
-#' @references
-#' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. Stat Sci. 1992;7:457–472.
-#'
-#' \dontshow{load("./data/NMA Dataset Continuous.RData")}
 #' @examples
-#' ### Show the data (one-trial-per-row format)
-#' (data <- as.data.frame(one.stage.dataset.NMA[[3]]))
+#' \dontshow{
+#' load("./data/nma.baker2009.RData")
+#' }
 #'
-#' ### Run a random-effects network meta-analysis with consistency equations for the standardised mean difference
-#' ### assuming missing at random for identical, common informative missingness difference of means.
-#' run.UME(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' # Perform a random-effects NMA with consistency equations for the odds ratio (in the logarithmic scale) assuming missing at random for identical, intervention-specific informative missingness odds ratio.
+#' res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#'
+#' # Run separate random-effects pairwise meta-analyses using the same arguments with the network meta-analysis above.
+#' run.separate.meta(data = data1, net = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.separate.meta <- function(data, measure, model, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin){
+run.separate.meta <- function(data, net, n.chains, n.iter, n.burnin, n.thin){
 
+
+  measure <- net$measure
+  model <- net$model
+  assumption <- net$assumption
+  heter.prior <- net$heter.prior
+  mean.misspar <- net$mean.misspar
+  var.misspar <- net$var.misspar
 
   ## Turn off warning when variables in the 'data.jag' are not used
   options(warn = -1)
@@ -64,15 +59,6 @@ run.separate.meta <- function(data, measure, model, assumption, heter.prior, mea
     stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
   }
 
-
-  ## Default arguments
-  model <- if (missing(model)) {
-    "RE"
-  } else if (!is.element(model, c("RE", "FE"))) {
-    stop("Insert 'RE', or 'FE'", call. = F)
-  } else {
-    model
-  }
 
 
   ## For a continuous outcome

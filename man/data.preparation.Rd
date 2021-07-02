@@ -2,15 +2,40 @@
 % Please edit documentation in R/data.preparation_function.R
 \name{data.preparation}
 \alias{data.preparation}
-\title{Prepare the dataaet in the proper format for R2jags}
+\title{Prepare the dataset in the proper format for R2jags}
 \usage{
 data.preparation(data, measure)
 }
 \arguments{
-\item{data}{The dataset}
+\item{data}{A data-frame of the one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' in the \code{run.model} function.}
 
-\item{measure}{The effect measure}
+\item{measure}{Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio, mean difference,
+standardised mean difference and ratio of means, respectively.}
+}
+\value{
+A list of data-frames on the following elements to be passed to \code{\link{run.model}}:
+\tabular{ll}{
+ \code{m} \tab The number of missing participant outcome data in each arm of every trial (see 'Details' in the \code{run.model} function).\cr
+ \tab \cr
+ \code{N} \tab The number of participants randomised on the assigned intervention in each arm.\cr
+ \tab \cr
+ \code{t} \tab The intervention identifier in each arm of every trial.\cr
+ \tab \cr
+ \code{I} \tab The pseudo-data-frame \code{I} (see 'Details' in the \code{run.model} function).\cr
+ \tab \cr
+ \code{r} \tab The observed number of events of the outcome in each arm of every trial, when the outcome is binary.\cr
+ \tab \cr
+ \code{y0} \tab The observed mean value of the outcome in each arm, when the outcome is continuous\cr
+ \tab \cr
+ \code{se0} \tab The observed standard deviation of the outcome in each arm, when the outcome is continuous\cr
+}
 }
 \description{
-Prepare the dataaet in the proper format for R2jags
+This function prepares the dataset in the proper format for R2jags. \code{data.preparation} is found in the \code{run.model} function; thus, the arguments are as specified in the latter.
+}
+\seealso{
+\code{\link{R2jags}}, \code{\link{run.model}}
+}
+\author{
+{Loukia M. Spineli}
 }

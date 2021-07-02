@@ -3,54 +3,61 @@
 \name{mcmc.diagnostics}
 \alias{mcmc.diagnostics}
 \title{Markov Chain Monte Carlo Diagnostics}
-\format{
-See, function \code{nma.continuous.full.model}.
-}
 \usage{
 mcmc.diagnostics(net, par)
 }
 \arguments{
-\item{data}{A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' for the specification of the columns.}
+\item{net}{An object of S3 class \code{\link{run.model}} and \code{\link{run.metareg}}. See 'Value' in \code{\link{run.model}}.}
 
-\item{measure}{Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"}.}
-
-\item{assumption}{Character string indicating the structure of the informative missingness parameter. Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.}
-
-\item{heter.prior}{A vector of length equal to two with the following values: \code{rep(1, 2)}, \code{rep(2, 2)}, and \code{rep(3, 2)} refers to half-normal distribution with variance 1 or 0.5, and uniform distribution with interval [0, 5], respectively,
-for the between-trial standard deviation. To indicate an empirically-based prior distribution for the between-trial variance, the first and second values of the vector should be the mean and precision
-of the selected prior distribution. The empirically-based prior distribution for the between-trial variance is applicable only when \code{"OR"} or \code{"SMD"} is considered.}
-
-\item{mean.misspar}{A positive non-zero number for the mean of the normal distribution of the informative missingness parameter.}
-
-\item{var.misspar}{A positive non-zero number for the variance of the normal distribution of the informative missingness parameter.}
-
-\item{D}{A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.}
-
-\item{n.chains}{Integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.}
-
-\item{n.iter}{Integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.}
-
-\item{n.burnin}{Integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.}
-
-\item{n.thin}{Integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.}
+\item{par}{A vector of three character strings that refer to three monitored parameters in \code{jagsfit} which is an object of S3 class \code{\link{run.model}} and \code{\link{run.metareg}}.
+These three selected parameters will be considered in the diagnostic plots (see 'Value').}
 }
 \value{
-A panel of autocorrelation plots where the rows correspond to the chains and the columns correspond to the monitor parameters (maximum three).
-Additionally, it uses the \code{\link[mcmcplots]{mcmcplot}} function to create an HTML file with a panel of diagnostic plots (trace, density, and autocorrelation) for each monitored parameter.
+This function returns a data-frame that contains the Gelman-Rubin convergence diagnostic, R-hat, and convergence status of the following monitored parameters:
+\tabular{ll}{
+ \code{EM} \tab The estimated summary effect measure.\cr
+ \tab \cr
+ \code{EM.pred} \tab The predicted summary effect measure.\cr
+ \tab \cr
+ \code{delta} \tab The estimated trial-specific effect measure.
+ \tab \cr
+ \code{effectiveneness} \tab The ranking probability of each intervention for every rank.\cr
+ \tab \cr
+ \code{phi} \tab The informative missingness parameter.\cr
+ \tab \cr
+ \code{beta} \tab The regression coefficient.\cr
+}
+\code{mcmc.diagnostics} also uses the \code{\link[mcmcplots]{mcmcplot}} function to create an HTML file with a panel of diagnostic plots (trace, density, and autocorrelation) for each monitored parameter.
 }
 \description{
-Markov Chain Monte Carlo Diagnostics
+This function evaluates whether convergence has been achieved for the monitored parameters of the Bayesian models.
+  The Gelman-Rubin convergence diagnostic and relevant diagnostic plots are applied for that purpose.
+}
+\details{
+For each monitored parameter, \code{mcmc.diagnostics} considers the maximum R-hat and compares it with the threshold 1.1: convergence is achieved for the monitored parameter, when the maximum R-hat
+  is below that threshold; otherwise, the Markov Chain Monte Carlo algorithm has not converged for thar parameter. If the monitored parameter is a vector with the posterior results, there is only one R-hat.
+  If the monitored parameter is a matrix of the posterior results, there are as many R-hats as the number of rows for that parameter.
 }
 \examples{
-### Obtain the diagnostic plots and check convergence for all monitored parameters using the R.hat
-mcmc.diagnostics(par = c("tau2", "EM[3,1]", "EM[3,2]"), net = res1)
+\dontshow{
+load("./data/nma.baker2009.RData")
+}
+
+\dontshow{
+# Perform a random-effects NMA with consistency equations for the odds ratio (in the logarithmic scale) assuming missing at random for identical, intervention-specific informative missingness odds ratio.
+res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+}
+
+# Obtain the diagnostic plots and check convergence for all monitored parameters using the R.hat
+mcmc.diagnostics(net = res1, par = c("tau", "EM[2,1]", "EM.pred[2,1]"))
 
 }
 \references{
-Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. Stat Sci. 1992;7:457–472.
-
-\dontshow{load("netmodr/data/One-stage model_NMA Dataset.RData")}
+Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457–-472. [\doi{10.1214/ss/1177011136}]
 }
 \seealso{
-\code{\link{mcmcplots}}
+\code{\link[mcmcplots]{mcmcplots}}, \code{\link{run.model}}, \code{\link{run.metareg}}
+}
+\author{
+{Loukia M. Spineli}
 }

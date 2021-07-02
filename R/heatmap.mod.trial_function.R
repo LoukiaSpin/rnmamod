@@ -14,13 +14,13 @@
 #'   and high risk of bias (more than 20\%). Low, moderate, high risk of bias due to MOD are indicated using green, orange, and red colour, respectively.
 #'   The function is also applicable for a pairwise meta-analysis.
 #'
-#' @seealso \code{\link[rnmamod]{run.model}}
+#' @author {Loukia M. Spineli}
+#'
+#' @seealso \code{\link{run.model}}
 #'
 #' @references
 #' Sackett DL, Richardson WS, Rosenberg WM, Haynes RB. Evidence-based medicine: how to practice and teach EBM.
 #' New York: Churchill Livingstone 1997. ISBN: 0-443-05686-2.
-#'
-#' @author {Loukia M. Spineli}
 #'
 #' @examples
 #' data("nma.liu2013")
