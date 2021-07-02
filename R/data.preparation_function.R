@@ -25,7 +25,7 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{R2jags}}, \code{\link{run.model}}
+#' @seealso \href{https://CRAN.R-project.org/package=R2jags}{R2jags}, \code{\link{run.model}}
 #'
 #' @export
 data.preparation <- function(data, measure) {

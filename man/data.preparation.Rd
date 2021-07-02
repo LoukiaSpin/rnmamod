@@ -34,7 +34,7 @@ A list of data-frames on the following elements to be passed to \code{\link{run.
 This function prepares the dataset in the proper format for R2jags. \code{data.preparation} is found in the \code{run.model} function; thus, the arguments are as specified in the latter.
 }
 \seealso{
-\code{\link{R2jags}}, \code{\link{run.model}}
+\href{https://CRAN.R-project.org/package=R2jags}{R2jags}, \code{\link{run.model}}
 }
 \author{
 {Loukia M. Spineli}

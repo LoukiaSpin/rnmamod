@@ -13,7 +13,7 @@
 #'  \tab \cr
 #'  \code{EM.pred} \tab The predicted summary effect measure.\cr
 #'  \tab \cr
-#'  \code{delta} \tab The estimated trial-specific effect measure.
+#'  \code{delta} \tab The estimated trial-specific effect measure.\cr
 #'  \tab \cr
 #'  \code{effectiveneness} \tab The ranking probability of each intervention for every rank.\cr
 #'  \tab \cr
@@ -24,12 +24,12 @@
 #' \code{mcmc.diagnostics} also uses the \code{\link[mcmcplots]{mcmcplot}} function to create an HTML file with a panel of diagnostic plots (trace, density, and autocorrelation) for each monitored parameter.
 #'
 #' @details For each monitored parameter, \code{mcmc.diagnostics} considers the maximum R-hat and compares it with the threshold 1.1: convergence is achieved for the monitored parameter, when the maximum R-hat
-#'   is below that threshold; otherwise, the Markov Chain Monte Carlo algorithm has not converged for thar parameter. If the monitored parameter is a vector with the posterior results, there is only one R-hat.
+#'   is below that threshold; otherwise, the Markov Chain Monte Carlo algorithm has not converged for that parameter. If the monitored parameter is a vector with the posterior results, there is only one R-hat.
 #'   If the monitored parameter is a matrix of the posterior results, there are as many R-hats as the number of rows for that parameter.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link[mcmcplots]{mcmcplots}}, \code{\link{run.model}}, \code{\link{run.metareg}}
+#' @seealso \code{\link[mcmcplots]{mcmcplot}}, \code{\link{run.model}}, \code{\link{run.metareg}}
 #'
 #' @references
 #' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457–-472. [\doi{10.1214/ss/1177011136}]

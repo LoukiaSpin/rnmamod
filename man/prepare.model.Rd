@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepare.model_function.R
 \name{prepare.model}
 \alias{prepare.model}
-\title{The WinBUG code for Bayesian network meta-analysis}
+\title{The WinBUGS code for Bayesian network meta-analysis}
 \usage{
 prepare.model(measure, model, assumption)
 }
@@ -17,15 +17,14 @@ Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{
 The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"}, \code{"HIE"}, and \code{"IND"} stand for identical, hierarchical and independent, respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and uncorrelated, respectively.}
 }
 \value{
-An R character vector object to be passed to \code{\link{run.model}} through the \code{\link[base]{textConnection}} function as the argument \code{object}.
+An R character vector object to be passed to \code{\link{run.model}} through the \code{\link[base]{textconnections}} function as the argument \code{object}.
 }
 \description{
 The WinBUGS code, as written by Dias et al. (2013) to run a one-stage Bayesian network meta-analysis, extended to incorporate the pattern-mixture model for binary or continuous missing participant outcome data.
   In the case of two interventions, the code boils down to a one-stage Bayesian pairwise meta-analysis with pattern-mixture model.
 }
 \details{
-This functions creates the model in the JAGS dialect of the BUGS language. The output of this function constitutes the argument \code{model.file} of the \code{\link[R2jags]{jags}} functions via the \code{\link[base]{textConnection}} function.
-  When the \code{measure} is
+This functions creates the model in the JAGS dialect of the BUGS language. The output of this function constitutes the argument \code{model.file} of the \code{\link[R2jags]{jags}} functions via the \code{\link[base]{textconnections}} function.
 }
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome data in network meta-analysis: a one-stage pattern-mixture model approach. \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
@@ -37,7 +36,7 @@ Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account for uncer
 Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision making 2: a generalized linear modeling framework for pairwise and network meta-analysis of randomized controlled trials. \emph{Med Decis Making} 2013;\bold{33}(5):607--617. [\doi{10.1177/0272989X12458724}]
 }
 \seealso{
-\code{\link{run.model}}, \code{\link[base]{textConnection}}, \code{\link[R2jags]{jags}}
+\code{\link{run.model}}, \code{\link[base]{textconnections}}, \code{\link[R2jags]{jags}}
 }
 \author{
 {Loukia M. Spineli}
