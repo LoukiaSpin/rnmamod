@@ -39,21 +39,17 @@ For each monitored parameter, \code{mcmc.diagnostics} considers the maximum R-ha
   If the monitored parameter is a matrix of the posterior results, there are as many R-hats as the number of rows for that parameter.
 }
 \examples{
-\dontshow{
-load("./data/nma.baker2009.RData")
-}
+data("nma.baker2009.RData")
 
-\dontshow{
-# Perform a random-effects NMA with consistency equations for the odds ratio (in the logarithmic scale) assuming missing at random for identical, intervention-specific informative missingness odds ratio.
+# Perform a random-effects network meta-analysis
 res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
-}
 
 # Obtain the diagnostic plots and check convergence for all monitored parameters using the R.hat
 mcmc.diagnostics(net = res1, par = c("tau", "EM[2,1]", "EM.pred[2,1]"))
 
 }
 \references{
-Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457–-472. [\doi{10.1214/ss/1177011136}]
+Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457--472. [\doi{10.1214/ss/1177011136}]
 }
 \seealso{
 \code{\link[mcmcplots]{mcmcplot}}, \code{\link{run.model}}, \code{\link{run.metareg}}

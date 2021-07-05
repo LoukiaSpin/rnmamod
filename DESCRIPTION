@@ -19,7 +19,7 @@ Authors@R:
 Maintainer: <Spineli.Loukia@mh-hannover.de>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-License:
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
@@ -45,7 +45,6 @@ RdMacros: Rdpack
 SystemRequirements: JAGS (http://mcmc-jags.sourceforge.net)
 RoxygenNote: 7.1.1
 Suggests: 
-    spelling,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Language: en-US

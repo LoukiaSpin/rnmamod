@@ -1,5 +1,6 @@
 #####################################################################################
 #  LOAD DATA MANIPULATING FUNCTIONS - PREPARATION  FOR DIAS NODE-SPLITTING APPROACH #
+#  Author: Dias et al., 2010 [doi: 10.1002/sim.3767]                                #
 #####################################################################################
 #
 NonbaseSweep <- function(index, na)

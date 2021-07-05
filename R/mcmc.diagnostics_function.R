@@ -32,17 +32,13 @@
 #' @seealso \code{\link[mcmcplots]{mcmcplot}}, \code{\link{run.model}}, \code{\link{run.metareg}}
 #'
 #' @references
-#' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457–-472. [\doi{10.1214/ss/1177011136}]
+#' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457--472. [\doi{10.1214/ss/1177011136}]
 #'
 #' @examples
-#' \dontshow{
-#' load("./data/nma.baker2009.RData")
-#' }
+#' data("nma.baker2009.RData")
 #'
-#' \dontshow{
-#' # Perform a random-effects NMA with consistency equations for the odds ratio (in the logarithmic scale) assuming missing at random for identical, intervention-specific informative missingness odds ratio.
+#' # Perform a random-effects network meta-analysis
 #' res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
-#' }
 #'
 #' # Obtain the diagnostic plots and check convergence for all monitored parameters using the R.hat
 #' mcmc.diagnostics(net = res1, par = c("tau", "EM[2,1]", "EM.pred[2,1]"))
@@ -76,6 +72,7 @@ mcmc.diagnostics <- function(net, par){
   # SUrface under the Cumulative RAnking curve values
   SUCRA <- t(getResults %>% dplyr::select(starts_with("SUCRA")))
 
+
   # Within-trial effects size (multi-arm trials with T interventions provide T-1 such effect sizes)
   delta <- t(getResults %>% dplyr::select(starts_with("delta") & !ends_with(",1]")))
 
@@ -88,7 +85,6 @@ mcmc.diagnostics <- function(net, par){
 
 
   # Estimated missingness parameter
-  #phi <- t(getResults %>% dplyr::select(starts_with("phi") | starts_with("mean.phi") | starts_with("mean.phi[") | starts_with("phi[")))
   phi <- net$phi
 
   # Regression coefficient for comparisons with the reference intervention
@@ -115,14 +111,21 @@ mcmc.diagnostics <- function(net, par){
 
   ## Keep results on the maximum Rhat for the selected monitored model parameters
   if (is.null(dim(phi))) {
-    R.hat.max <- c(c(max(EM[, 8]), max(EM.pred[, 8]), max(delta[, 8]), max(tau[8]), max(SUCRA[, 8]), max(effectiveness[, 8]), phi[8], max(beta[, 8])))
+    R.hat.max <- c(max(EM[, 8]), max(EM.pred[, 8]), max(delta[, 8]), tau[8], max(SUCRA[, 8]), max(effectiveness[, 8]), max(phi[8]), max(beta[, 8]))
     #R.hat.max[c(2:4, 8)] <- ifelse(is.infinite(R.hat.max[c(2:4, 8)]), NA, R.hat.max[c(2:4, 8)])
-    R.hat.max <- ifelse(is.infinite(R.hat.max), NA, R.hat.max)
+    #R.hat.max <- ifelse(is.infinite(R.hat.max), NA, R.hat.max)
+    for (i in 1:length(R.hat.max)) {
+      R.hat.max[i] <- ifelse(is.infinite(R.hat.max[i]), NA, R.hat.max[i])
+    }
   } else {
-    R.hat.max <- c(max(EM[, 8]), max(EM.pred[, 8]), max(delta[, 8]), max(tau[8]), max(SUCRA[, 8]), max(effectiveness[, 8]), max(phi[, 8]), max(beta[, 8]))
+    R.hat.max <- c(max(EM[, 8]), max(EM.pred[, 8]), max(delta[, 8]), tau[8], max(SUCRA[, 8]), max(effectiveness[, 8]), max(phi[, 8]), max(beta[, 8]))
     #R.hat.max[c(2:4, 8)] <- ifelse(is.infinite(R.hat.max[c(2:4, 8)]), NA, R.hat.max[c(2:4, 8)])
-    R.hat.max <- ifelse(is.infinite(R.hat.max), NA, R.hat.max)
+    #R.hat.max <- ifelse(is.infinite(R.hat.max), NA, R.hat.max)
+    for (i in 1:length(R.hat.max)) {
+      R.hat.max[i] <- ifelse(is.infinite(R.hat.max[i]), NA, R.hat.max[i])
+    }
   }
+
 
 
   ## Indicate whether each model parameter achieved or failed to achieve convergence

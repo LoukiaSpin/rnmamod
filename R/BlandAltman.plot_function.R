@@ -1,4 +1,19 @@
-#' Bland-Altman plot on the posterior mean of deviance between consistency and unrelated mean effects (UME) models
+#' Create the Bland-Altman plot
+#'
+#' @description This function facilitates creating the Bland-Altman plot for two methods with the least arguments.
+#'
+#' @param group1 A vector with the numeric values of the new or target method.
+#' @param group2 A vector with the numeric values of the old or reference method.
+#' @param colour A string to define the colour of the points in the plot.
+#'
+#' @details \code{BlandAltman.plot} is inte on the posterior mean of deviance between consistency and unrelated mean effects (UME) models
+#'
+#' @author {Loukia M. Spineli}
+#'
+#' @seealso \code{\link{run.UME}}, \code{\link{UME.plot}}
+#'
+#' @references
+#' Bland JM, Altman DG. Measuring agreement in method comparison studies. \emph{Stat Methods Med Res} 1999;\bold{8}:135--60
 #'
 #' @export
 BlandAltman.plot <- function(group1, group2, colour){
@@ -7,7 +22,7 @@ BlandAltman.plot <- function(group1, group2, colour){
 
   ## A function to extract numbers from a character. Source: http://stla.github.io/stlapblog/posts/Numextract.html
   Numextract <- function(string){
-    unlist(regmatches(string,gregexpr("[[:digit:]]+\\.*[[:digit:]]*",string)))
+    unlist(regmatches(string,gregexpr("[[:digit:]]+\\.*[[:digit:]]*", string)))
   }
 
 

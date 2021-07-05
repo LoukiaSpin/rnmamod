@@ -1,3 +1,30 @@
+#' The WinBUGS code for Bayesian node-splitting model
+#'
+#' @description The WinBUGS code, as written by Dias et al. (2010) to run a one-stage Bayesian node-splitting model, extended to incorporate the pattern-mixture model for binary or continuous missing participant outcome data.
+#'
+#' @param measure Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio, mean difference,
+#'   standardised mean difference and ratio of means, respectively.
+#' @param model Character string indicating the analysis model with values \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model, respectively. The default argument is \code{"RE"}.
+#' @param assumption Character string indicating the structure of the informative missingness parameter.
+#'   Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.
+#'   The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"}, \code{"HIE"}, and \code{"IND"} stand for identical, hierarchical and independent, respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and uncorrelated, respectively.
+#'
+#' @return An R character vector object to be passed to \code{\link{run.nodesplit}} through the \code{\link[base]{textconnections}} function as the argument \code{object}.
+#'
+#' @details This functions creates the model in the JAGS dialect of the BUGS language. The output of this function constitutes the argument \code{model.file} of \code{\link[R2jags]{jags}} via the \code{\link[base]{textconnections}} function.
+#'
+#' @author {Loukia M. Spineli}
+#'
+#' @seealso \code{\link{run.nodesplit}}, \code{\link[base]{textconnections}}, \code{\link[R2jags]{jags}}
+#'
+#' @references
+#' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome data in network meta-analysis: a one-stage pattern-mixture model approach. \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
+#'
+#' Spineli LM. An empirical comparison of Bayesian modelling strategies for missing binary outcome data in network meta-analysis. \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86. [\doi{10.1186/s12874-019-0731-y}]
+#'
+#' Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed treatment comparison meta-analysis. \emph{Stat Med} 2010;\bold{29}(7-8):932--44. [\doi{10.1002/sim.3767}]
+#'
+#' @export
 prepare.nodesplit <- function(measure, model, assumption) {
 
   code <- paste0("model\n{")

@@ -34,7 +34,7 @@
 #' }
 #' Apart from \strong{na}, all other elements appear in \code{data} as many times as the maximum number of interventions compared in a trial. See, 'Example'.
 #'
-#' @seealso \code{\link{R2jags}}
+#' @seealso \href{https://CRAN.R-project.org/package=R2jags}{R2jags}
 #'
 #' @references
 #' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. Stat Sci. 1992;7:457–472.

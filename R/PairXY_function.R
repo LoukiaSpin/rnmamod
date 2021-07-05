@@ -1,9 +1,10 @@
 #####################################################################################
 #  LOAD DATA MANIPULATING FUNCTIONS - PREPARATION  FOR DIAS NODE-SPLITTING APPROACH #
+#  Author: Dias et al., 2010 [doi: 10.1002/sim.3767]                                #
 #####################################################################################
 #
 PairXY <- function(treat, pair)
-  # Check if pair(X,Y) in row i of data 
+  # Check if pair(X,Y) in row i of data
   # and give baseline for data row i
 {
   N <- nrow(treat)

@@ -33,6 +33,15 @@ A list of data-frames on the following elements to be passed to \code{\link{run.
 \description{
 This function prepares the dataset in the proper format for R2jags. \code{data.preparation} is found in the \code{run.model} function; thus, the arguments are as specified in the latter.
 }
+\details{
+\code{data.preparation} prepares the data for the Bayesian analysis. The data preparation includes the following actions. First, \code{data.preparation} checks
+  whether the element \strong{m} exists in \code{data}. If this element is missing, \code{data.preparation} creates a pseudo-data-frame for \code{m} that has the zero value for the observed trial-arms, and \code{NA} for the unobserved trial-arms,
+  and the pseudo-data-frame \code{I} that has the same values with the pseudo-data-frame for \code{m}. If the element \strong{m} exists in \code{data} and has values only for some trials, the pseudo-data-frame for \code{m} has the same values with
+  \code{m} for the corresponding trial-arms, and the pseudo-data-frame \code{I} has the value one for these trial-arms. Both pseudo-data-frames aim to retain the trials without information on MOD in \code{data} and allow running the Bayesian analysis
+  when MOD have not been extracted for any trial of the dataset. Second, \code{data.preparation} sorts the interventions across the arms of each trial in an ascending order and correspondingly sorts within each trial the remaining elements in \code{data}
+  (see also 'Format' in \code{run.model}). Since all Bayesian models in the package consider the first column in \strong{t} to include the control arm for every trial, this sorting ensures that interventions with a lower identifier are consistently treated as the control arm in each trial. This case is relevant in
+  non-star-shaped networks.
+}
 \seealso{
 \href{https://CRAN.R-project.org/package=R2jags}{R2jags}, \code{\link{run.model}}
 }

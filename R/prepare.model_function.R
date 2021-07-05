@@ -12,7 +12,7 @@
 #'
 #' @return An R character vector object to be passed to \code{\link{run.model}} through the \code{\link[base]{textconnections}} function as the argument \code{object}.
 #'
-#' @details This functions creates the model in the JAGS dialect of the BUGS language. The output of this function constitutes the argument \code{model.file} of the \code{\link[R2jags]{jags}} functions via the \code{\link[base]{textconnections}} function.
+#' @details This functions creates the model in the JAGS dialect of the BUGS language. The output of this function constitutes the argument \code{model.file} of \code{\link[R2jags]{jags}} via the \code{\link[base]{textconnections}} function.
 #'
 #' @author {Loukia M. Spineli}
 #'

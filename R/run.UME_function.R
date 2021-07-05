@@ -1,57 +1,99 @@
-#' A function to perform Bayesian unrelated mean effects model for aggregate binary or continuous outcomes
+#' A function to perform Bayesian unrelated mean effects model
 #'
-#' @param data A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' for the specification of the columns.
-#' @param measure Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"}.
-#' @param assumption Character string indicating the structure of the informative missingness parameter. Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.
-#' @param heter.prior A vector of length equal to two with the following values: \code{rep(1, 2)}, \code{rep(2, 2)}, and \code{rep(3, 2)} refers to half-normal distribution with variance 1 or 0.5, and uniform distribution with interval [0, 5], respectively,
-#' for the between-trial standard deviation. To indicate an empirically-based prior distribution for the between-trial variance, the first and second values of the vector should be the mean and precision
-#' of the selected prior distribution. The empirically-based prior distribution for the between-trial variance is applicable only when \code{"OR"} or \code{"SMD"} is considered.
-#' @param mean.misspar A positive non-zero number for the mean of the normal distribution of the informative missingness parameter.
-#' @param var.misspar A positive non-zero number for the variance of the normal distribution of the informative missingness parameter.
-#' @param n.chains Integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
-#' @param n.iter Integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
-#' @param n.burnin Integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
-#' @param n.thin Integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
+#' @description This function performs a Bayesian network meta-analysis based on the unrelated mean effects model of Dias et al. (2013a) extended to address aggregate binary and continuous participant outcome data via the pattern-mixture model
+#'   (Spineli, 2019; Spineli et al., 2021). This model offers a global evaluation of the plausibility of the consistency assumption in the network (Dias et al. (2013b)).
 #'
-#' @return An R2jags output on the summaries of the posterior distribution, and the Gelman–Rubin convergence diagnostic of the following parameters:
-#' \describe{
-#'  \item{\code{EM}}{The effect estimate of all observed comparisons of interventions in the network.}
-#'  \item{\code{dev.o}}{The deviance contribution of each trial-arm based on the observed outcomes.}
-#'  \item{\code{resdev.o}}{The total residual deviance contribution of every trial based on the observed outcomes.}
-#'  \item{\code{totresdev.o}}{The total residual deviance based on the observed outcomes.}
-#'  \item{\code{dev.m}}{The deviance contribution of each trial-arm based on the missing outcomes.}
-#'  \item{\code{resdev.m}}{The total residual deviance contribution of every trial based on the missing outcomes.}
-#'  \item{\code{resdev.m}}{The total residual deviance based on the missing outcomes.}
-#'  \item{\code{tau}}{The between-trial standard deviation assumed to be common for all observed comparisons.}
+#' @param data A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' in \code{\link{run.model}} for the specification of the columns.
+#' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
+#' @param n.chains Integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is 2.
+#' @param n.iter Integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is 10000.
+#' @param n.burnin Integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is 1000.
+#' @param n.thin Integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is 1.
+#'
+#' @return An R2jags output on the summaries of the posterior distribution, and the Gelman-Rubin convergence diagnostic of the following monitored parameters:
+#' \tabular{ll}{
+#'  \code{EM} \tab The summary effect estimate for each pairwise comparison observed in the network.\cr
+#'  \tab \cr
+#'  \code{EM.m} \tab The summary effect estimate for each pairwise comparison observed in multi-arm trials. Only multi-arm trials are considered for the estimation of the corresponding summary effects.\cr
+#'  \tab \cr
+#'  \code{dev.o} \tab The deviance contribution of each trial-arm based on the observed outcome.\cr
+#'  \tab \cr
+#'  \code{hat.par} \tab The fitted outcome at each trial-arm.\cr
+#'  \tab \cr
+#'  \code{tau} \tab The between-trial standard deviation (assumed common across the observed pairwise comparisons), when a random-effects model has been specified.\cr
 #' }
 #'
-#' @format The columns of the data frame \code{data} refer to the following ordered elements for a continuous outcome:
-#' \describe{
-#'  \item{\strong{t}}{An intervention identifier.}
-#'  \item{\strong{y}}{The observed mean value of the outcome.}
-#'  \item{\strong{sd}}{The observed standard deviation of the outcome.}
-#'  \item{\strong{m}}{The number of missing outcome data.}
-#'  \item{\strong{c}}{The number of participants completing the assigned intervention.}
-#'  \item{\strong{na}}{The number of compared interventions.}
+#' The output also includes the following elements - the first three resulting from relevant monitored parameters:
+#' \tabular{ll}{
+#'  \code{leverage.o} \tab The leverage for the observed outcome at each trial-arm.\cr
+#'  \tab \cr
+#'  \code{sign.dev.o} \tab The sign of the difference between observed and fitted outcome at each trial-arm.\cr
+#'  \tab \cr
+#'  \code{model.assessment} \tab A data-frame on the measures of model assessment: deviance information criterion, number of effective parameters, and total residual deviance.\cr
+#'  \tab \cr
+#'  \code{jagsfit} \tab An object of S3 class \code{\link[R2jags]{jags}} with the posterior results on all monitored parameters to be used in the \code{mcmc.diagnostics} function.\cr
 #' }
-#' Apart from \strong{na}, all other elements appear in \code{data} as many times as the maximum number of interventions compared in a trial. See, 'Example'.
 #'
-#' @seealso \code{\link{R2jags}}
+#' Furthermore, \code{run.UME} returns a character vector with the pairwise comparisons observed in the network, \code{obs.comp},
+#' and a character vector with comparisons between non-baseline interventions observed in multi-arm trials only, \code{frail.comp}. Both vectors are used in \code{UME.plot} function.
+#'
+#' @details \code{run.UME} does not contain the arguments \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, and \code{var.misspar} that are found in \code{run.model}.
+#'   This is to prevent misspecifying the Bayesian model as it would make the comparison of the consistency model (via \code{run.model}) with the unrelated mean effects model meaningless.
+#'   Instead, these arguments are contained in the argument \code{full} of the function. Therefore, the user needs first to apply \code{run.model}, and then use \code{run.UME} (see, 'Examples').
+#'
+#'   Initially, \code{run.nodesplit} calls the \code{improved.UME} function to identify the \emph{frail comparisons}, that is, comparisons between non-baseline interventions in multi-arm trials -- not investigated in any two-arm trial of the network (Spineli, 2021).
+#'   The 'original' model of Dias et al. (2013a) omits the frail comparisons from the estimation process. Consequently, the number of estimated summary effect sizes is less than those obtained by performing separate pairwise meta-analyses (see \code{run.series.meta}).
+#'
+#'   Then, to perform the Bayesian unrelated effect measures model, \code{run.nodesplit} calls the \code{prepare.UME} function which contains the WinBUGS code as written by Dias et al. (2013a) for binomial and normal likelihood to analyse binary and continuous outcome data, respectively.
+#'   \code{prepare.UME} has been extended to incorporate the pattern-mixture model with informative missingness parameters for binary and continuous outcome data (see, 'Details' in \code{run.model}).
+#'   \code{prepare.UME} has been also 'upgraded' to account for the multi-arm trials by assigning conditional univariate normal distributions on the basic parameters of these trials, that is, effect parameters between non-baseline and baseline arms (Dias et al., 2013b; Spineli, 2021).
+#'
+#'   \code{run.UME} runs Bayesian unrelated mean effects model in \code{JAGS}. The progress of the simulation appears in the R console.
+#'
+#'   The output of \code{run.UME} is not end-user-ready. The \code{UME.plot} function uses the output of \code{run.UME} as an S3 object and processes it further to provide an end-user-ready output.
+#'
+#'   \code{run.UME} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+#'
+#' @author {Loukia M. Spineli}
+#'
+#' @seealso \code{\link{run.model}}, \code{\link{UME.plot}}, \code{\link{prepare.UME}}, \code{\link{run.series.meta}}, \code{\link[R2jags]{jags}}
 #'
 #' @references
-#' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. Stat Sci. 1992;7:457–472.
+#' Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
 #'
-#' \dontshow{load("./data/NMA Dataset Continuous.RData")}
+#' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome data in network meta-analysis: a one-stage pattern-mixture model approach. \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
+#'
+#' Spineli LM. An empirical comparison of Bayesian modelling strategies for missing binary outcome data in network meta-analysis. \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86. [\doi{10.1186/s12874-019-0731-y}]
+#'
+#' Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis for decision making 4: inconsistency in networks of evidence based on randomized controlled trials. \emph{Med Decis Making} 2013a;\bold{33}(5):641--56. [\doi{10.1177/0272989X12455847}]
+#'
+#' Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision making 2: a generalized linear modeling framework for pairwise and network meta-analysis of randomized controlled trials. \emph{Med Decis Making} 2013b;\bold{33}(5):607--617. [\doi{10.1177/0272989X12458724}]
+#'
+#' Gelman A, Rubin DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457--472. [\doi{10.1214/ss/1177011136}]
+#'
 #' @examples
-#' ### Show the data (one-trial-per-row format)
-#' (data <- as.data.frame(one.stage.dataset.NMA[[3]]))
+#' data("nma.liu2013.RData")
 #'
-#' ### Run a random-effects network meta-analysis with consistency equations for the standardised mean difference
-#' ### assuming missing at random for identical, common informative missingness difference of means.
-#' run.UME(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' # Perform a random-effects network meta-analysis (consistency model)
+#' res1 <- run.model(data = nma.liu2013, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#'
+#' # Run random-effects unrelated mean effects model
+#' run.UME(data = nma.liu2013, full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar, var.misspar, n.chains, n.iter, n.burnin, n.thin) {
+run.UME <- function(data, full, n.chains, n.iter, n.burnin, n.thin) {
+
+
+  measure <- full$measure
+  model <- full$model
+  assumption <- full$assumption
+  heter.prior <- full$heter.prior
+  mean.misspar <- full$mean.misspar
+  var.misspar <- full$var.misspar
 
 
   ## Turn off warning when variables in the 'data.jag' are not used
@@ -66,23 +108,6 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
 
 
   ## Default arguments
-  model <- if (missing(model)) {
-    "RE"
-  } else if (!is.element(model, c("RE", "FE"))) {
-    stop("Insert 'RE', or 'FE'", call. = F)
-  } else {
-    model
-  }
-  assumption <- if (missing(assumption)) {
-    "IDE-ARM"
-  } else if (!is.element(assumption,  c("IDE-ARM", "IDE-TRIAL", "IDE-COMMON", "HIE-ARM", "HIE-TRIAL", "HIE-COMMON", "IND-CORR", "IND-UNCORR"))) {
-    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'", call. = F)
-  } else {
-    assumption
-  }
-  mean.misspar <- missingness.param.prior(assumption, mean.misspar)
-  heter.prior <- heterogeneity.param.prior(measure, model, heter.prior)
-  var.misspar <- ifelse(missing(var.misspar) & (is.element(measure, c("OR", "MD", "SMD"))), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
   n.iter <- ifelse(missing(n.iter), 10000, n.iter)
   n.burnin <- ifelse(missing(n.burnin), 1000, n.burnin)
@@ -167,7 +192,6 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
   }
 
 
-  #if (max(na) > 2 & has_error(improved.UME(t, m, N, item$ns, na), silent = T) == F) {
   if (max(na) > 2 & !is.null(improved.UME(t, m, N, item$ns, na)$nbase.multi)) {
     impr.UME <- improved.UME(t, m, N, item$ns, na)
     data.jag <- append(data.jag, list("t1.m" = t1.indic.multi,
@@ -178,7 +202,6 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
                                       "t2.bn" = impr.UME$t2.bn,
                                       "base" = impr.UME$base,
                                       "nbase.multi" = impr.UME$nbase.multi))
-  #} else if (max(na) < 3 || has_error(improved.UME(t, m, N, item$ns, na), silent = T) == T) {
   } else if (max(na) < 3 || is.null(improved.UME(t, m, N, item$ns, na)$nbase.multi)) {
     data.jag <- append(data.jag, list("t1.m" = t1.indic.multi,
                                       "t2.m" = t2.indic.multi,
@@ -234,16 +257,16 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
 
   ## Calculate the deviance at posterior mean of fitted values
   # Turn 'number of observed' and 'm' into a vector (first column, followed by second column, and so on)
-  m.new <- suppressMessages({as.vector(na.omit(melt(item$m)[, 2]))})
-  N.new <- suppressMessages({as.vector(na.omit(melt(item$N)[, 2]))})
+  m.new <- suppressMessages({as.vector(na.omit(melt(m)[, 2]))})
+  N.new <- suppressMessages({as.vector(na.omit(melt(N)[, 2]))})
   obs <- N.new - m.new
 
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
 
     # Turn 'y0', 'se0'into a vector (first column, followed by second column, and so on)
-    y0.new <- suppressMessages({as.vector(na.omit(melt(item$y0)[, 2]))})
-    se0.new <- suppressMessages({as.vector(na.omit(melt(item$se0)[, 2]))})
+    y0.new <- suppressMessages({as.vector(na.omit(melt(item$y0[order(item$na, na.last = T), ])[, 2]))})
+    se0.new <- suppressMessages({as.vector(na.omit(melt(item$se0[order(item$na, na.last = T), ])[, 2]))})
 
     # Deviance at the posterior mean of the fitted mean outcome
     dev.post.o <- (y0.new - as.vector(hat.par[, 1]))*(y0.new - as.vector(hat.par[, 1]))*(1/se0.new^2)
@@ -254,7 +277,7 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
   } else {
 
     # Turn 'r' and number of observed into a vector (first column, followed by second column, and so on)
-    r.new <- suppressMessages({as.vector(na.omit(melt(item$r)[, 2]))})
+    r.new <- suppressMessages({as.vector(na.omit(melt(item$r[order(item$na, na.last = T), ])[, 2]))})
 
     # Correction for zero events in trial-arm
     r0 <- ifelse(r.new == 0, r.new + 0.01, ifelse(r.new == obs, r.new - 0.01, r.new))
@@ -289,8 +312,6 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
          sign.dev.o = sign.dev.o,
          tau = tau,
          model.assessment = model.assessment,
-         measure = measure,
-         model = model,
          obs.comp = obs.comp,
          jagsfit = jagsfit)
   } else {
@@ -300,14 +321,11 @@ run.UME <- function(data, measure, model, assumption, heter.prior, mean.misspar,
          leverage.o = leverage.o,
          sign.dev.o = sign.dev.o,
          model.assessment = model.assessment,
-         measure = measure,
-         model = model,
          obs.comp = obs.comp,
          jagsfit = jagsfit)
   }
 
   # Return different list of results according to a condition
-  #if (max(na) < 3 || has_error(improved.UME(t, m, N, ns, na), silent = T) == T) {
   if (is.null(improved.UME(t, m, N, item$ns, na)$nbase.multi)) {
     return(results)
   } else {

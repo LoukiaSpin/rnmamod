@@ -80,5 +80,5 @@ Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequenc
 \dontshow{load("./data/NMA Dataset Continuous.RData")}
 }
 \seealso{
-\code{\link{R2jags}}
+\href{https://CRAN.R-project.org/package=R2jags}{R2jags}
 }

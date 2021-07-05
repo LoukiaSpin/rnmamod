@@ -4,8 +4,51 @@
 \alias{forestplot.ref}
 \title{Forest-plot of comparisons with the reference intervention}
 \usage{
-forestplot.ref(net, drug.names)
+forestplot.ref(full, drug.names)
+}
+\arguments{
+\item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
+
+\item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
+as they appear in \code{data} is used, instead.}
+}
+\value{
+A panel of two forest plots: (1) a forest plot on the effect estimates and predictions of comparisons with the reference intervention of the network, and
+(2) a forest plot on the posterior mean and 95\% credible interval of SUCRA values of the interventions (Salanti et al., 2011).
 }
 \description{
-Forest-plot of comparisons with the reference intervention
+This function illustrates a forest plot of the posterior mean and 95\% credible and predictive interval of comparisons with the reference intervention of the network.
+}
+\details{
+The x-axis in the forest plot of effect sizes displays all interventions in the network; the reference intervention is indicated in the plot with a homonymous label.
+  For each comparison with the reference intervention, the 95\% credible and predictive intervals are displayed as overlapping lines with different colours. When the between-trial variance is very low, these two intervals become indiscernible.
+  Furthermore, the corresponding numerical results are displayed above each line: 95\% credible intervals are found in parentheses, and 95\% predictive intervals are found in brackets.
+  Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
+
+  The interventions are sorted in the descending order of their SUCRA values.
+
+  \code{forestplot.ref} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+}
+\examples{
+data("nma.baker2009.RData")
+
+# Perform a random-effects network meta-analysis
+res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+
+# The names of the interventions in the order they appear in the dataset
+interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
+                  "formoterol", "salmeterol", "tiotropium", "placebo")
+
+# Create the league heatmap
+forestplot.ref(full = res1, drug.names = interv.names)
+
+}
+\references{
+Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
+}
+\seealso{
+\code{\link{run.model}}
+}
+\author{
+{Loukia M. Spineli}
 }

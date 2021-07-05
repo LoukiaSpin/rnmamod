@@ -1,11 +1,43 @@
-## Detect the non-baseline comparisons in multi-arm trials that are not informed by two-arm trials, and hence,
-## the posterior distribution coincides with the prior distribution whichi means implausible posterior SD.
-
-
+#' A function to detect the frail comparisons in multi-arm trials
+#'
+#' @description \code{improved.UME} detects the frail comparisons in multi-arm trials, that is, comparisons between non-baseline interventions not investigated in any two-arm trial of the network (Spineli, 2021).
+#'   The 'original' model of Dias et al. (2013) omits the frail comparisons from the estimation process of the unrelated mean effects model.
+#'   Consequently, their posterior distribution coincides with the prior distribution yielding implausible posterior standard deviations.
+#'
+#' @param t A data-frame of the one-trial-per-row format containing the intervention identifier in each arm of every trial (see 'Details' below, and 'Arguments' in \code{run.model}).
+#' @param m A data-frame of the one-trial-per-row format containing the number of missing participant outcome data (MOD) in each arm of every trial (see 'Details' below, and 'Arguments' in \code{run.model}).
+#' @param N A data-frame of the one-trial-per-row format containing the number of participants randomised on the assigned intervention in each arm of every trial (see 'Details' below, and 'Arguments' in \code{run.model}).
+#' @param ns A scale parameter on the number trials.
+#' @param na A vector of length equal to \code{ns} with the number of arms in each trial.
+#'
+#' @return The output of \code{improved.UME} is a list of elements that are used by the \code{run.UME}:
+#' \tabular{ll}{
+#'  \code{nbase.multi} \tab A scalar parameter on the number of frail comparisons.\cr
+#'  \tab \cr
+#'  \code{t1.bn} \tab A vector with numeric values on the first arm of each frail comparison.\cr
+#'  \tab \cr
+#'  \code{t2.bn} \tab A vector with numeric values on the second arm of each frail comparison.\cr
+#'  \tab \cr
+#'  \code{base} \tab A vector with numeric values on the baseline intervention of the multi-arm trials that contain the frail comparisons.\cr
+#'  \tab \cr
+#'  \code{obs.comp} \tab A data-frame that indicates how many two-arms and multi-arm trials have included each pairwise comparison observed in the network.\cr
+#' }
+#'
+#' @details \code{improved.UME} is integrated in the \code{run.UME} function and calls the output of the \code{data.preparation} function after sorting the rows so that multi-arm trials appear at the bottom of the dataset.
+#'   When there are no multi-arm trials or no frail comparisons in the network, \code{improved.UME} returns only the element \code{obs.comp} (see, 'Value').
+#'
+#' @author {Loukia M. Spineli}
+#'
+#' @seealso \code{\link{run.UME}}, \code{\link{data.preparation}}, \code{\link{run.model}}
+#'
+#' @references
+#' Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
+#'
+#' Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis for decision making 4: inconsistency in networks of evidence based on randomized controlled trials. \emph{Med Decis Making} 2013;\bold{33}(5):641--56. [\doi{10.1177/0272989X12455847}]
+#'
+#' @export
 improved.UME <- function(t, m, N, ns, na){
 
-  #item <- data.preparation(data = data1, measure = "OR")
-  #t <- item$t; m <- item$m; N <- item$N; ns <- item$ns; na <- item$na
 
   ## Turn into contrast-level data: one row per possible comparison in each trial ('netmeta')
   wide.format <- pairwise(as.list(t), event = as.list(m), n = as.list(N), data = cbind(t, m, N), studlab = 1:ns)[, c(3:6, 8, 7, 9)]

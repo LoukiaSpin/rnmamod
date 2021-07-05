@@ -2,7 +2,7 @@
 % Please edit documentation in R/run.model_function.R
 \name{run.model}
 \alias{run.model}
-\title{Perform pairwise or network meta-analysis with missing participant outcome data}
+\title{Pairwise or network meta-analysis with missing participant outcome data}
 \format{
 The columns of the data frame in the argument \code{data} refer to the following ordered elements for a continuous outcome:
 \tabular{ll}{
@@ -28,8 +28,8 @@ For a binary outcome, the columns of the data-frame in the argument \code{data} 
  \strong{n} \tab The number of participants randomised on the assigned intervention in each arm.\cr
 }
 The number of rows in \code{data} equals the number of collected trials. Each element appears in \code{data} as many times as the maximum number of interventions compared in a trial of the dataset. In pairwise meta-analysis (PMA), the maximum number of arms is inherently two.
-The same holds for NMA without multi-arm trials. In case of NMA with multi-arm trials, the maximum number of arms exceeds two. See 'Examples' that illustrates the structure of \code{data} for a network with a maximum number of four arms.
-In this example, the multi-arm trials appear at the bottom of the dataset; however, this structure is not a necessary prerequisite for the \code{run.model} function.
+The same holds for NMA without multi-arm trials. In the case of NMA with multi-arm trials, the maximum number of arms exceeds two. See 'Examples' that illustrates the structure of \code{data} for a network with a maximum number of four arms.
+In this example, the multi-arm trials appear at the bottom of the dataset; however, this structure is not necessary prerequisite \code{run.model}.
 }
 \usage{
 run.model(
@@ -85,7 +85,7 @@ The default argument is 1000.}
 The default argument is 1.}
 }
 \value{
-A list of R2jags output on the summaries of the posterior distribution, and the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the following parameters for a fixed-effect PMA:
+A list of R2jags outputs on the summaries of the posterior distribution, and the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the following monitored parameters for a fixed-effect PMA:
 \tabular{ll}{
  \code{EM} \tab The estimated summary effect measure (according to the argument \code{measure}).\cr
  \tab \cr
@@ -116,7 +116,7 @@ For a random-effects NMA, the output additionally includes:
  \tab \cr
  \code{effectiveneness} \tab The ranking probability of each intervention for every rank.\cr
 }
-In NMA, \code{EM} and \code{EM.pred} refer to all possible comparisons in the network. Furthermore, \code{tau} is typically assumed to be common for all observed comparisons in the network.
+In NMA, \code{EM} and \code{EM.pred} refer to all possible pairwise comparisons of interventions in the network. Furthermore, \code{tau} is typically assumed to be common for all observed comparisons in the network.
 
 Furthermore, the output includes the following elements - the first three resulting from relevant monitored parameters:
 \tabular{ll}{
@@ -126,38 +126,40 @@ Furthermore, the output includes the following elements - the first three result
  \tab \cr
  \code{model.assessment} \tab A data-frame on the measures of model assessment: deviance information criterion, number of effective parameters, and total residual deviance.\cr
  \tab \cr
- \code{measure} \tab The effect measure as defined in the argument \code{measure} to be used in other functions of the package.\cr
- \tab \cr
- \code{model} \tab The analysis model as defined in the argument \code{model} to be used in other functions of the package.\cr
- \tab \cr
  \code{jagsfit} \tab An object of S3 class \code{\link[R2jags]{jags}} with the posterior results on all monitored parameters to be used in the \code{mcmc.diagnostics} function.\cr
 }
-The \code{run.model} function also returns the arguments as specified by the user to be considered in other functions of the package.
+The \code{run.model} function also returns the arguments \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, \code{var.misspar}, and \code{D}
+as specified by the user to be considered in other functions of the package.
 }
 \description{
 This function performs a one-stage pairwise or network meta-analysis while addressing aggregate binary or continuous missing participant outcome data via the pattern-mixture model.
-The output of \code{run.model} is used by other functions of the package to provide the proper visualisation and compare with the output of subsequent analyses to infer the reliability of the results.
 }
 \details{
-The \code{data.preparation} function is called to prepare the data for the Bayesian analysis. The data preparation includes the following actions. First, the \code{data.preparation} function checks
+The model as specified by the arguments of \code{run.model} runs in \code{JAGS} and the progress of the simulation appears in the R console.
+  The output of \code{run.model} is used as an S3 object by other functions of the package function to be processed further and provide an end-user-ready output.
+
+  The \code{data.preparation} function is called to prepare the data for the Bayesian analysis. The data preparation includes the following actions. First, \code{data.preparation} checks
   whether the element \strong{m} exists in \code{data}. If this element is missing, the \code{data.preparation} function creates a pseudo-data-frame for \code{m} that has the zero value for the observed trial-arms, and \code{NA} for the unobserved trial-arms,
   and the pseudo-data-frame \code{I} that has the same values with the pseudo-data-frame for \code{m}. If the element \strong{m} exists in \code{data} and has values only for some trials, the pseudo-data-frame for \code{m} has the same values with
-  \code{m} for the corresponding trial-arms, and the pseudo-data-frame \code{I} has the value one for these trial-arms. Both pseudo-data-frames aim to retain in \code{data} the trials without information on MOD and allow running the Bayesian analysis via the \code{prepare.model}
+  \code{m} for the corresponding trial-arms, and the pseudo-data-frame \code{I} has the value one for these trial-arms. Both pseudo-data-frames aim to retain the trials without information on MOD in \code{data} and allow running the Bayesian analysis via the \code{prepare.model}
   function when MOD have not been extracted for any trial of the dataset. Second, the \code{data.preparation} function sorts the interventions across the arms of each trial in an ascending order and correspondingly sorts within each trial the remaining elements in \code{data} (see 'Format').
-  Since the \code{prepare.model} function considers the first column in \strong{t} to include the control arm of every trial, this sorting ensures that interventions with a lower identifier are consistently treated as the control arm in each trial. This case is relevant in
+  Since the \code{prepare.model} function considers the first column in \strong{t} to include the control arm for every trial, this sorting ensures that interventions with a lower identifier are consistently treated as the control arm in each trial. This case is relevant in
   non-star-shaped networks. By default, \code{run.model} function treats the intervention with identifier equal to one as the reference intervention of the network.
 
-  To perform the Bayesian PMA or NMA, the \code{prepare.model} function is called which contains the WinBUGS code as written by Dias et al. (2013) for binomial and normal likelihood to analyse binary and continuous outcome data, respectively. The \code{prepare.model} function uses consistency models (as
-  described in Lu and Ades (2006)) to estimate all possible comparisons in the network. It also accounts for the multi-arm trials by assigning conditional univariate normal distrbutions on the basic parameters of these trials, that is, effect parameters between non-baseline and baseline arms (Dias et al., 2013).
+  To perform the Bayesian PMA or NMA, the \code{prepare.model} function is called which contains the WinBUGS code as written by Dias et al. (2013) for binomial and normal likelihood to analyse binary and continuous outcome data, respectively. \code{prepare.model} uses consistency models (as
+  described in Lu and Ades (2006)) to estimate all possible comparisons in the network. It also accounts for the multi-arm trials by assigning conditional univariate normal distributions on the basic parameters of these trials, that is, effect parameters between non-baseline and baseline arms (Dias et al., 2013).
+
   The code of Dias et al. (2013) has been extended to incorporate the pattern-mixture model to adjusted the underlying outcome in each arm of every trial for MOD (Turner et al., 2015; Spineli et al., 2021). Assumptions about the missingness parameter is specified using the arguments \code{mean.misspar} and \code{var.misspar}.
-  Specifically, the \code{run.model} function considers the informative missingness odds ratio in the logarithmic scale for binary outcome data (White et al., 2008; Turner et al., 2015; Spineli, 2019), the informative missingness difference of means when \code{measure} is \code{"MD"} or \code{"SMD"},
-  and the informative missingness ratio of means in the logarithmic scale when \code{measure} is \code{"ROM"} (Mavridis et al., 2015; Spineli et al., 2021). When the \code{assumption} is trial-specific (i.e., \code{"IDE-TRIAL"} or \code{"HIE-TRIAL"}), or independent (i.e., \code{"IND-CORR"} or \code{"IND-UNCORR"}),
-  only one numeric value can be assigned to \code{mean.misspar} as the same missingness scenario is applied to all trials and trial-arms of the dataset, respectively. When the \code{assumption} is \code{"IDE-ARM"} or \code{"HIE-ARM"}, a maximum of two
-  \emph{different} numeric values can be assigned to \code{mean.misspars} as a vector: the first value refers to the experimental arm, and the second value refers to the control arm of each trial. In case of a network, the first value is considered for all non-reference interventions
+  Specifically, \code{run.model} considers the informative missingness odds ratio in the logarithmic scale for binary outcome data (White et al., 2008; Turner et al., 2015; Spineli, 2019), the informative missingness difference of means when \code{measure} is \code{"MD"} or \code{"SMD"},
+  and the informative missingness ratio of means in the logarithmic scale when \code{measure} is \code{"ROM"} (Mavridis et al., 2015; Spineli et al., 2021).
+
+  When \code{assumption} is trial-specific (i.e., \code{"IDE-TRIAL"} or \code{"HIE-TRIAL"}), or independent (i.e., \code{"IND-CORR"} or \code{"IND-UNCORR"}),
+  only one numeric value can be assigned to \code{mean.misspar} as the same missingness scenario is applied to all trials and trial-arms of the dataset, respectively. When \code{assumption} is \code{"IDE-ARM"} or \code{"HIE-ARM"}, a maximum of two
+  \emph{different} numeric values can be assigned as a vector to \code{mean.misspars}: the first value refers to the experimental arm, and the second value refers to the control arm of each trial. In the case of a network, the first value is considered for all non-reference interventions
   and the second value is considered for the reference intervention of the network (i.e., the intervention with identifier equal to one). This is necessary to ensure transitivity in the assumed values for the missingness parameter across the comparisons in the network (Spineli, 2019).
   When one numeric value is considered, the same missingness scenario is applied to all interventions in the dataset.
 
-  Currently, there are no empirically-based prior distributions for the informative missingness parameters. The users may refer to Mavridis et al. (2015) and Spineli (2019) to determine \code{mean.misspar} for an informative missingness mechanism and select a proper value for \code{var.misspar}.
+  Currently, there are no empirically-based prior distributions for the informative missingness parameters. The users may refer to White et al. (2008), Mavridis et al. (2015), Turner et al. (2015) and Spineli (2019) to determine \code{mean.misspar} for an informative missingness mechanism and select a proper value for \code{var.misspar}.
 }
 \examples{
 data("nma.baker2009")
@@ -165,7 +167,7 @@ data("nma.baker2009")
 # Show the first six trials of the dataset (one-trial-per-row format)
 View(nma.baker2009)
 
-# Perform a random-effects NMA with consistency equations for the odds ratio (in the logarithmic scale) assuming missing at random for identical, intervention-specific informative missingness odds ratio.
+# Perform a random-effects network meta-analysis
 run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 
 }
@@ -182,11 +184,11 @@ Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account for uncer
 
 Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision making 2: a generalized linear modeling framework for pairwise and network meta-analysis of randomized controlled trials. \emph{Med Decis Making} 2013;\bold{33}(5):607--617. [\doi{10.1177/0272989X12458724}]
 
-White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data in meta-analysis—part 1: two-stage methods. \emph{Stat Med} 2008;\bold{27}(5):711--727. [\doi{10.1002/sim.3008}]
+White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data in meta-analysis--part 1: two-stage methods. \emph{Stat Med} 2008;\bold{27}(5):711--727. [\doi{10.1002/sim.3008}]
 
-Lu G, Ades AE. Assessing evidence inconsistency in mixed treatment comparisons. \emph{J Am Stat Assoc} 2006;\bold{101}:447–-459. [\doi{10.1198/016214505000001302}]
+Lu G, Ades AE. Assessing evidence inconsistency in mixed treatment comparisons. \emph{J Am Stat Assoc} 2006;\bold{101}:447--459. [\doi{10.1198/016214505000001302}]
 
-Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457-–472. [\doi{10.1214/ss/1177011136}]
+Gelman A, Rubin DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457--472. [\doi{10.1214/ss/1177011136}]
 }
 \seealso{
 \code{\link{data.preparation}}, \code{\link{prepare.model}}, \code{\link{missingness.param.prior}}, \code{\link{heterogeneity.param.prior}}, \code{\link[R2jags]{jags}}

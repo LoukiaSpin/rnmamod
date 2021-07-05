@@ -1,33 +1,57 @@
-#' A heatmap league table with ordered interventions
+#' League heatmap for all possible comparisons
 #'
 #' @description
-#' A function to create a heatmap with the treatment effects of all possible comparisons of interventions.
-#' The rows and columns of the heatmap refer to the interventions which are sorted by decreasing order from the best to the worst
-#' by their SUCRA value. The off-diagonals contain the posterior mean and the 95\% credible interval
-#' of the corresponding comparisons. The main diagonal contains the SUCRA values of the corresponding interventions. Results in the lower
-#' triangle refer to comparisons in the opposite direction after converting negative values into positive values, and vice versa.
-#' Darker shades of red correspond to larger treatment effects. Comparisons between interventions should be read from left to right and
-#' the estimate in the cell refers to the row-defining intervention against the column-defining intervention. Results that indicate strong
-#' evidence in favor of the row-defining intervention (i.e. the respective 95\% credible interval does not include the zero value of no difference)
-#' are indicated with a double asterisk.
+#' A function to create a heatmap with the estimated effects of all possible comparisons of interventions in the network.
+#' \code{league.heatmap} can be used for a random-effects or fixed-effect network meta-analysis.
+#' \code{league.heatmap} is applied for one outcome only.
 #'
-#' @param net An object of S3 class \code{nma.continuous.full.model}.
-#' @param drug.names A vector of characteristics with name of the interventions as appear in the function \code{nma.continuous.full.model}.
+#' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
+#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
+#'   as they appear in \code{data} is used, instead.
 #'
-#' @return A heatmap of the treatment effects of all possible comparisons in the off-diagonals, and the SUCRA values in the diagonals
+#' @return A league heatmap of the posterior mean and 95\% credible interval of all possible comparisons in the off-diagonals, and the posterior mean of the SUCRA values in the diagonal.
 #'
-#' \dontshow{load("netmodr/data/NMA_results.RData")}
+#' @details The rows and columns of the heatmap display the names of interventions which are sorted by decreasing order from the best to the worst
+#'   based on their SUCRA value (Salanti et al., 2011). The off-diagonals contain the posterior mean and 95\% credible interval of the effect measure
+#'   of the corresponding comparisons. The main diagonal contains the SUCRA values of the corresponding interventions.
+#'
+#'   Results in the lower triangle refer to comparisons in the opposite direction after converting negative values into positive values (in absolute or logarithmic scale), and vice versa.
+#'   Darker shades of red and blue correspond to larger treatment effects in the upper and lower triangle, respectively.
+#'   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
+#'
+#'   Comparisons between interventions should be read from left to right.
+#'   Therefore, each cell refers to the corresponding row-defining intervention against the column-defining intervention. Results that indicate strong
+#'   evidence in favor of the row-defining intervention (i.e. the respective 95\% credible interval does not include the null value) are indicated in bold.
+#'
+#'   \code{league.heatmap} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+#'
+#' @author {Loukia M. Spineli}, {Chrysostomos Kalyvas}, {Katerina Papadimitropoulou}
+#'
+#' @seealso \code{\link{run.model}}
+#'
+#' @references
+#' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
+#'
 #' @examples
-#' drug.names <- sapply(1:14, function(x) letters[x])
-#' league.heatmap(net = res, drug.names = drug.names)
+#' data("nma.baker2009.RData")
+#'
+#' # Perform a random-effects network meta-analysis
+#' res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#'
+#' # The names of the interventions in the order they appear in the dataset
+#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
+#'                   "formoterol", "salmeterol", "tiotropium", "placebo")
+#'
+#' # Create the league heatmap
+#' league.heatmap(full = res1, drug.names = interv.names)
 #'
 #' @export
-league.heatmap <- function(net, drug.names, expon){
+league.heatmap <- function(full, drug.names){
 
 
   drug.names <- if (missing(drug.names)) {
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
-    as.character(1:length(net$SUCRA[, 1]))
+    as.character(1:length(full$SUCRA[, 1]))
   } else {
     drug.names
   }
@@ -38,7 +62,7 @@ league.heatmap <- function(net, drug.names, expon){
   }
 
 
-  par <- net$EM; sucra <- net$SUCRA; measure <- net$measure
+  par <- full$EM; sucra <- full$SUCRA; measure <- full$measure
 
 
   ## Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html

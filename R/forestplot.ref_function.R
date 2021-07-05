@@ -1,14 +1,52 @@
 #' Forest-plot of comparisons with the reference intervention
 #'
+#' @description This function illustrates a forest plot of the posterior mean and 95\% credible and predictive interval of comparisons with the reference intervention of the network.
+#'
+#' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
+#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
+#'   as they appear in \code{data} is used, instead.
+#'
+#' @return A panel of two forest plots: (1) a forest plot on the effect estimates and predictions of comparisons with the reference intervention of the network, and
+#' (2) a forest plot on the posterior mean and 95\% credible interval of SUCRA values of the interventions (Salanti et al., 2011).
+#'
+#' @details The x-axis in the forest plot of effect sizes displays all interventions in the network; the reference intervention is indicated in the plot with a homonymous label.
+#'   For each comparison with the reference intervention, the 95\% credible and predictive intervals are displayed as overlapping lines with different colours. When the between-trial variance is very low, these two intervals become indiscernible.
+#'   Furthermore, the corresponding numerical results are displayed above each line: 95\% credible intervals are found in parentheses, and 95\% predictive intervals are found in brackets.
+#'   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
+#'
+#'   The interventions are sorted in the descending order of their SUCRA values.
+#'
+#'   \code{forestplot.ref} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+#'
+#' @author {Loukia M. Spineli}
+#'
+#' @seealso \code{\link{run.model}}
+#'
+#' @references
+#' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
+#'
+#' @examples
+#' data("nma.baker2009.RData")
+#'
+#' # Perform a random-effects network meta-analysis
+#' res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#'
+#' # The names of the interventions in the order they appear in the dataset
+#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
+#'                   "formoterol", "salmeterol", "tiotropium", "placebo")
+#'
+#' # Create the league heatmap
+#' forestplot.ref(full = res1, drug.names = interv.names)
+#'
 #' @export
-forestplot.ref <- function(net, drug.names) {
+forestplot.ref <- function(full, drug.names) {
 
   options(warn = -1)
 
 
   drug.names <- if (missing(drug.names)) {
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
-    nt <- length(net$SUCRA[, 1])
+    nt <- length(full$SUCRA[, 1])
     as.character(1:nt)
   } else {
     drug.names
@@ -22,16 +60,16 @@ forestplot.ref <- function(net, drug.names) {
 
   ## The results on the following parameters will be used:
   # Effect measure
-  measure <- effect.measure.name(net$measure)
+  measure <- effect.measure.name(full$measure)
 
   # Analysis model
-  model <- net$model
+  model <- full$model
 
   # Posterior results on the SUCRA of each intervention
-  sucra <- net$SUCRA
+  sucra <- full$SUCRA
 
   # Posterior results on the effect estimates of comparisons with the reference intervention of the network
-  EM.ref0 <- rbind(rep(NA, 3), net$EM.ref[, c(1, 3, 7)])
+  EM.ref0 <- rbind(rep(NA, 3), full$EM.ref[, c(1, 3, 7)])
 
 
   # Sort by SUCRA in decreasing order and remove the reference intervention (number 1)
@@ -39,7 +77,7 @@ forestplot.ref <- function(net, drug.names) {
 
   # Posterior results on the predicted estimates of comparisons with the reference intervention of the network
   pred.ref0 <- if (model == "RE") {
-    rbind(rep(NA, 3), net$pred.ref[, c(1, 3, 7)])
+    rbind(rep(NA, 3), full$pred.ref[, c(1, 3, 7)])
   } else {
     NA
   }
@@ -120,7 +158,6 @@ forestplot.ref <- function(net, drug.names) {
             axis.title.x = element_text(color = "black", face = "bold", size = 12), legend.position = "bottom", legend.justification = c(0.23, 0),
             legend.text =  element_text(color = "black", size = 12), legend.title =  element_text(color = "black", face = "bold", size = 12))
   }
-
 
 
 
