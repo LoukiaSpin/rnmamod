@@ -17,40 +17,41 @@ as they appear in \code{data} is used, instead.}
 \item{threshold}{A number indicating the threshold of similarity. See 'Details' below.}
 }
 \value{
-\code{UME.plot} returns the following list with plots:
+\code{UME.plot} prints on the R console two messages: (1) the threshold of similarity determined by the user in green text, (2) and followed by the most parsimonious model (if any) based on the deviance information criterion (DIC; in red text).
+Then, the function returns the following list of elements:
 \tabular{ll}{
+ \code{EM.both.models} \tab The posterior mean, posterior standard deviation, and 95\% credible interval of the summary effect size for each pairwise comparison observed in the network under the consistency model and the unrelated mean effects model.\cr
+ \tab \cr
+ \code{model.assessment} \tab The DIC, number of effective parameters, and total residual deviance under the consistency model and the unrelated mean effects model.\cr
+ \tab \cr
+ \code{between.trial.SD} \tab The posterior median and 95\% credible interval of the between-trial standard deviation (\eqn{\tau}) under the consistency model and the unrelated mean effects model.
+  When a fixed-effect model has been performed, \code{UME.plot} does not return this element.\cr
+ \tab \cr
  \code{scatterplots} \tab The scatterplot and the Bland-Altman plot on the posterior mean deviance contribution of the individual data points under the consistency model and the unrelated mean effects model.
   See 'Details' and 'Value' in \code{\link{scatterplots.dev}} and \code{\link{BlandAltman.plot}}.\cr
  \tab \cr
  \code{levarage.plots} \tab The leverage plot on the posterior mean of deviance of the individual data points under the consistency model and the unrelated mean effects model, separately.
   See 'Details' and 'Value' in \code{\link{leverage.plot}}.\cr
  \tab \cr
- \code{intervalplots.panel} \tab The leverage plot on the posterior mean of deviance of the individual data points under the consistency model and the unrelated mean effects model, separately.
-  See 'Details' and 'Value' in \code{\link{leverage.plot}}.\cr
+ \code{intervalplots.panel} \tab A panel of interval plots on the summary effect size under the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
+  See 'Details' and 'Value' in \code{\link{intervalplot.panel.UME}}.\cr
+ \tab \cr
+ \code{heatmap.similarity} \tab A heatmap of similarity in the posterior distribution of summary effect size between the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
+  See 'Details' and 'Value' in \code{\link{heatmap.similarity.UME}} and \code{\link{similarity.index.UME}}.\cr
 }
-
-
-  Furthermore, \code{UME.plot} returns a panel of interval plots on the summary effect size under the compared models for pairwise comparisons observed in the network.
-  Each interval plot illustrates the posterior mean and 95\% credible interval of summary effect size under the consistency model and unrelated mean effects model.
-  An interval highlighted with green, when it does not cross the vertical line of no difference, and red otherwise. See \code{intervalplot.panel.UME}.
-
-  Furthermore, the function returns a interval plot on the median and 95\% credible interval of \eqn{\tau} after each split node. The lines that correspond to the split nodes are sorted in ascending order of the
-  deviance information criterion (DIC) which appears at the top of each line. The 95\% credible interval of \eqn{\tau} under the consistency model appears as a rectangle in the interval plot.
-  When a fixed-effect model has been performed, \code{nodesplit.plot} does not return the interval plot of \eqn{\tau}.
-
-  The R console prints the data-frame with the posterior mean, posterior standard deviation and 95\% credible interval of the direct and indirect effect and the inconsistency factor of each split.
-  The console also prints the data-frame with the model assessment parameters (DIC, posterior mean of total residual deviance, and number of effective parameters), the posterior median, posterior standard deviation and 95\% credible interval of \eqn{\tau}
-  under the consistency model and after each split node. The DIC of the model after each split node is compared with the DIC of the consistency model (Spiegelhalter et al. (2002), Dias et al. (2010)). If the difference in DIC exceeds 5, the consistency model is preferred; if the difference in DIC is less than -5,
-  the model after split node is preferred; otherwise, there is little to choose between the compared models.
-
-  Furthermore, \code{nodesplit.plot} exports both data-frames to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 }
 \description{
 This function hosts a toolkit of functions that facilitates the comparison of the consistency model (via \code{run.model}) with the unrelated mean effects model (via \code{run.UME}) regarding the posterior summaries of summary effect size for
   the pairwise comparisons observed in the network, the between-trial standard deviation (\eqn{\tau}) and model assessment parameters.
 }
 \details{
-\code{nodesplit.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+The consisntency
+The DIC of the model after each split node is compared with the DIC of the consistency model (Spiegelhalter et al. (2002), Dias et al. (2010)). If the difference in DIC exceeds 5, the consistency model is preferred; if the difference in DIC is less than -5,
+  the model after split node is preferred; otherwise, there is little to choose between the compared models.
+
+  Furthermore, \code{UME.plot} exports \code{EM.both.models} to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+
+  \code{UME.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 }
 \examples{
 data("nma.baker2009.RData")

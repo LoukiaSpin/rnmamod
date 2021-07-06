@@ -71,7 +71,7 @@ intervalplot.panel.UME <- function(full, ume, drug.names) {
     geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
     geom_text(aes(x = as.factor(analysis), y = mean, label = mean), color = "black", hjust = 0.35, vjust = -0.25, size = 3.3, check_overlap = F, parse = F,
               position = position_dodge(width = 0.8), inherit.aes = T) +
-    facet_wrap(vars(factor(comp, levels = unique(data.set$comp))), scales = "free_x") +
+    facet_wrap(vars(factor(comp, levels = unique(data.set$comp))), scales = "fixed") +
     scale_fill_manual(breaks = c("yes", "no"), values = c("grey53", "white")) +
     scale_color_manual(breaks = c("strong", "weak"), values = c("#009E73", "#D55E00")) +
     #scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +

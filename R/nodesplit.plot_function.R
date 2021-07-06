@@ -131,7 +131,7 @@ nodesplit.plot <- function(full, node, drug.names) {
                       check_overlap = F, parse = F, position = position_dodge(width = 0.5),  inherit.aes = T) +
             geom_label(aes(x = 3.5, y = -Inf, hjust = 0, vjust = 1, label = round(DIC, 0)), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
             scale_y_continuous(trans = "identity") +
-            facet_wrap(vars(factor(node, levels = unique(prepare$node))), scales = "free_x") +
+            facet_wrap(vars(factor(node, levels = unique(prepare$node))), scales = "fixed") +
             labs(x = "", y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), paste(measure, "(in logarithmic scale)"), measure), colour = "") +
             coord_flip() +
             scale_color_manual(breaks = c("statistically significant", "statistically non-significant"), values = c("#009E73", "#D55E00"), na.value = "black") +
@@ -154,7 +154,7 @@ nodesplit.plot <- function(full, node, drug.names) {
             geom_text(aes(x = as.factor(evidence), y = round(mean, 2), label = round(mean, 2), hjust = 0, vjust = -0.4), color = "black", size = 4.0,
                       check_overlap = F, parse = F, position = position_dodge(width = 0.5),  inherit.aes = T) +
             geom_label(aes(x = 3.5, y = -Inf, hjust = 0, vjust = 1, label = round(DIC, 0)), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
-            facet_wrap(vars(factor(node, levels = unique(prepare$node))), scales = "free_x") +
+            facet_wrap(vars(factor(node, levels = unique(prepare$node))), scales = "fixed") +
             scale_y_continuous(trans = "identity") +
             labs(x = "", y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), paste(measure, "(in logarithmic scale)"), measure), colour = "Evidence on inconsistency") +
             coord_flip() +
