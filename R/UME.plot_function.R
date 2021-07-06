@@ -1,7 +1,79 @@
-#' Plot the results from the unrelated mean effects model
+#' End-user-ready results: consistency model versus unrelated mean effects model
+#'
+#' @description This function hosts a toolkit of functions that facilitates the comparison of the consistency model (via \code{run.model}) with the unrelated mean effects model (via \code{run.UME}) regarding the posterior summaries of summary effect size for
+#'   the pairwise comparisons observed in the network, the between-trial standard deviation (\eqn{\tau}) and model assessment parameters.
+#'
+#' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
+#' @param ume An object of S3 class \code{\link{run.UME}}. See 'Value' in \code{\link{run.UME}}.
+#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
+#'   as they appear in \code{data} is used, instead.
+#' @param threshold A number indicating the threshold of similarity. See 'Details' below.
+#'
+#' @return \code{UME.plot} returns the following list with plots:
+#'\tabular{ll}{
+#'  \code{scatterplots} \tab The scatterplot and the Bland-Altman plot on the posterior mean deviance contribution of the individual data points under the consistency model and the unrelated mean effects model.
+#'   See 'Details' and 'Value' in \code{\link{scatterplots.dev}} and \code{\link{BlandAltman.plot}}.\cr
+#'  \tab \cr
+#'  \code{levarage.plots} \tab The leverage plot on the posterior mean of deviance of the individual data points under the consistency model and the unrelated mean effects model, separately.
+#'   See 'Details' and 'Value' in \code{\link{leverage.plot}}.\cr
+#'  \tab \cr
+#'  \code{intervalplots.panel} \tab A panel of interval plots on the summary effect size under the compared models for each pairwise comparison observed in the network.
+#'   See 'Details' and 'Value' in \code{\link{intervalplot.panel.UME}}.\cr
+#'  \tab \cr
+#'  \code{heatmap.similarity} \tab A panel of interval plots on the summary effect size under the compared models for each pairwise comparison observed in the network.
+#'   See 'Details' and 'Value' in \code{\link{heatmap.similarity}}.\cr
+#' }
+#'
+#'
+#'
+#'   Furthermore, the function returns a interval plot on the median and 95\% credible interval of \eqn{\tau} after each split node. The lines that correspond to the split nodes are sorted in ascending order of the
+#'   deviance information criterion (DIC) which appears at the top of each line. The 95\% credible interval of \eqn{\tau} under the consistency model appears as a rectangle in the interval plot.
+#'   When a fixed-effect model has been performed, \code{nodesplit.plot} does not return the interval plot of \eqn{\tau}.
+#'
+#'   The R console prints the data-frame with the posterior mean, posterior standard deviation and 95\% credible interval of the direct and indirect effect and the inconsistency factor of each split.
+#'   The console also prints the data-frame with the model assessment parameters (DIC, posterior mean of total residual deviance, and number of effective parameters), the posterior median, posterior standard deviation and 95\% credible interval of \eqn{\tau}
+#'   under the consistency model and after each split node. The DIC of the model after each split node is compared with the DIC of the consistency model (Spiegelhalter et al. (2002), Dias et al. (2010)). If the difference in DIC exceeds 5, the consistency model is preferred; if the difference in DIC is less than -5,
+#'   the model after split node is preferred; otherwise, there is little to choose between the compared models.
+#'
+#'   Furthermore, \code{nodesplit.plot} exports both data-frames to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+#'
+#' @details \code{nodesplit.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+#'
+#' @author {Loukia M. Spineli}
+#'
+#' @seealso \code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{BlandAltman.plot}}, \code{link{BlandAltman.plot}}, \code{\link{leverage.plot}}, \code{\link{intervalplot.panel.UME}}, \code{\link{similarity.index.UME}}, \code{\link{heatmap.similarity.UME}}
+#'
+#' @references
+#' Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
+#'
+#' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021. [\doi{10.1002/jrsm.1478}]
+#'
+#' Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis for decision making 4: inconsistency in networks of evidence based on randomized controlled trials. \emph{Med Decis Making} 2013a;\bold{33}(5):641--56. [\doi{10.1177/0272989X12455847}]
+#'
+#' Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616. [\doi{10.1111/1467-9868.00353}]
+#'
+#' @examples
+#' data("nma.baker2009.RData")
+#'
+#' # Perform a random-effects network meta-analysis
+#' res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#'
+#' # Run random-effects network meta-analysis with node-splitting approachs
+#' node1 <- run.nodesplit(data = nma.baker2009, full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#'
+#' # The names of the interventions in the order they appear in the dataset
+#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
+#'                   "formoterol", "salmeterol", "tiotropium", "placebo")
+#'
+#' # Plot the results from the consistency model and the node-splitting approach
+#' nodesplit.plot(full = res1, node = node1, drug.names = interv.names)
 #'
 #' @export
 UME.plot <- function(full, ume, drug.names, threshold) {
+
+
+  model <- full$model
+  measure <- full$measure
 
 
   drug.names <- if (missing(drug.names)) {
@@ -30,19 +102,6 @@ UME.plot <- function(full, ume, drug.names, threshold) {
     threshold <- threshold
     #message(paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(full$measure)))
     message(cat(paste0("\033[0;", col = 32, "m", txt = paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(full$measure)), "\033[0m", "\n")))
-  }
-
-  ## The results on the following parameters will be used:
-  # Analysis model
-  model <- if (full$model != ume$model) {
-    stop("The argument 'model' differs in 'run.model' and 'run.UME'. Specify the same 'model' and run the analysis again", call. = F)
-  } else {
-    full$model
-  }
-
-  # Effect measure
-  measure <- if (full$measure != ume$measure) {
-    stop("The argument 'measure' differs in 'run.model' and 'run.UME'. Specify the same 'measure' and run the analysis again", call. = F)
   }
 
   # Posterior results on the effect estimates under consistency model
@@ -152,10 +211,10 @@ UME.plot <- function(full, ume, drug.names, threshold) {
 
   ## Leverage plots
   # Consistency model for observed outcomes
-  lever.full.o <- leverage.plot(full, drug.names, title.o = "Observed outcomes under consistency model")
+  lever.full.o <- leverage.plot(full, drug.names, title = "Observed outcomes under consistency model")
 
     # UME model for observed outcomes
-  lever.ume.o <- leverage.plot(ume, drug.names, title.o = "Observed outcomes under UME model")
+  lever.ume.o <- leverage.plot(ume, drug.names, title = "Observed outcomes under UME model")
 
 
 
@@ -163,7 +222,7 @@ UME.plot <- function(full, ume, drug.names, threshold) {
   lev.plots <- ggarrange(lever.full.o, lever.ume.o, nrow = 1, ncol = 2, labels = c("A)",  "B)"))
 
 
-  forestplots <- forestplot.panel.UME(full, ume, drug.names)
+  intervalplots <- intervalplot.panel.UME(full, ume, drug.names)
 
 
   heatmap <- heatmap.similarity.UME(full, ume, drug.names, threshold)
@@ -180,7 +239,7 @@ UME.plot <- function(full, ume, drug.names, threshold) {
          between.trial.SD = between.trial.SD,
          scatterplots = scatterplots,
          levarage.plots = lev.plots,
-         forestplots.panel = forestplots,
+         intervalplots.panel = intervalplots,
          heatmap.similarity = heatmap,
          threshold = threshold)
   } else {
@@ -188,7 +247,7 @@ UME.plot <- function(full, ume, drug.names, threshold) {
          model.assessment = model.assessment,
          scatterplots = scatterplots,
          levarage.plots = lev.plots,
-         forestplots.panel = forestplots,
+         intervalplots.panel = intervalplots,
          heatmap.similarity = heatmap,
          threshold = threshold)
   }

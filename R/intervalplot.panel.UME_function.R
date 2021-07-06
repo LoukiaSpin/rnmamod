@@ -1,17 +1,29 @@
-#' A panel of forestplots on the posterior summaries of the observed comparisons in the network under the compared models
+#' A panel of interval plots: Consistency model versus unrelated mean effects model
 #'
-#' @param nma A vector with the posterior mean of the treatment effects of the observed comparisons obtained via the \code{UME.plot} function.
-#' @param ume A vector with the posterior standard deviation of the treatment effects of the observed comparisons obtained via the \code{UME.plot} function.
-#' @param effect.size Text label on the effect measurd considered that appears on the x-axis.
-#' @param expon Logical indicating whether the results should appear on the exponential scale. The default which is \code{expon = T}. It is relevant for
-#' the odds ratio and ratio of means.
+#' @description This function creates a panel of interval plots on the summary effect sizes under the consistency model and the unrelated mean effects model.
+#'   The number of interval plots equals the number of pairwise comparisons observed in the network.
 #'
-#' @return A panel of forestplots on the posterior summaries of the observed comparisons in the network under the NMA, original and refined UME models.
-#' The results refer to the posterior mean and 95% credible interval of the log OR. Grey panels refer to the omitted comparisons.
-#' Red and green colours indicate weak and strong evidence, respectively. Namely, the corresponding 95% credible interval includes
-#' and excludes the null value, respectively.
-
-forestplot.panel.UME <- function(full, ume, drug.names) {
+#' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
+#' @param ume An object of S3 class \code{\link{run.UME}}. See 'Value' in \code{\link{run.UME}}.
+#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}.
+#'   If the argument \code{drug.names} is not defined, the order of the interventions as they appear in \code{data} is used, instead.
+#'
+#' @return A panel of interval plots on the posterior mean and 95\% credible interval of the summary effect size under the consistency model and the improved
+#'   unrelated mean effects model (Spineli, 2021) of all pairwise comparisons observed in the network.
+#'
+#' @details \code{intervalplot.panel.UME} is integrated in the \code{UME.plot} function. The consistency model and the unrelated mean effects model are
+#'   abbreviated in the y-axis as 'NMA model' and 'UME model'. The intervals are highlighted with green, when the corresponding summary effect sizes do not cross the vertical line of no difference, and red otherwise.
+#'   Grey panels refer to the frail comparisons as detected by the \code{run.UME} function (see 'Details' in \code{run.UME}).
+#'
+#' @author {Loukia M. Spineli}
+#'
+#' @seealso \code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{UME.plot}}
+#'
+#' @references
+#' Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
+#'
+#' @export
+intervalplot.panel.UME <- function(full, ume, drug.names) {
 
 
   EM.full <- full$EM
@@ -29,38 +41,20 @@ forestplot.panel.UME <- function(full, ume, drug.names) {
 
 
   # Calculate bounds of 95% CrI
-  #if (!is.element(measure, c("Odds ratio", "Ratio of means"))) {
-    ume.lower <- EM.ume[, 1] - 1.96*EM.ume[, 2]
-    ume.upper <- EM.ume[, 1] + 1.96*EM.ume[, 2]
-  #} else {
-  #  ume.lower <- exp(EM.ume[, 1] - 1.96*EM.ume[, 2])
-  #  ume.upper <- exp(EM.ume[, 1] + 1.96*EM.ume[, 2])
-  #}
-
+  ume.lower <- EM.ume[, 1] - 1.96*EM.ume[, 2]
+  ume.upper <- EM.ume[, 1] + 1.96*EM.ume[, 2]
 
 
   ## Keep only the effect estimates according to the 'poss.pair.comp.clean' - Consistency model
-  #if (!is.element(measure, c("Odds ratio", "Ratio of means"))) {
-    ume.mean <- round(EM.ume[, 1], 2)
-    nma.mean <- round(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 1], 2)
-    nma.lower <- round(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 3], 2)
-    nma.upper <- round(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 7], 2)
-  #} else {
-  #  ume.mean <- round(exp(EM.ume[, 1]), 2)
-  #  nma.mean <- round(exp(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 1]), 2)
-  #  nma.lower <- round(exp(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 3]), 2)
-  #  nma.upper <- round(exp(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 7]), 2)
-  #}
+  ume.mean <- round(EM.ume[, 1], 2)
+  nma.mean <- round(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 1], 2)
+  nma.lower <- round(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 3], 2)
+  nma.upper <- round(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), 7], 2)
 
 
   # Indicate statistical significance
-  #if (!is.element(measure, c("Odds ratio", "Ratio of means"))) {
-    nma.stat.signif <- ifelse(nma.lower > 0 | nma.upper < 0, "strong", "weak")
-    ume.stat.signif <- ifelse(ume.lower > 0 | ume.upper < 0, "strong", "weak")
-  #} else {
-  #  nma.stat.signif <- ifelse(nma.lower > 1 | nma.upper < 1, "strong", "weak")
-  #  ume.stat.signif <- ifelse(ume.lower > 1 | ume.upper < 1, "strong", "weak")
-  #}
+  nma.stat.signif <- ifelse(nma.lower > 0 | nma.upper < 0, "strong", "weak")
+  ume.stat.signif <- ifelse(ume.lower > 0 | ume.upper < 0, "strong", "weak")
 
 
   # Create the dataframe

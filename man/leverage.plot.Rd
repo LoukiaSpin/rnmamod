@@ -4,8 +4,39 @@
 \alias{leverage.plot}
 \title{Create the leverage plot}
 \usage{
-leverage.plot(net, drug.names, title.o)
+leverage.plot(net, drug.names, title)
+}
+\arguments{
+\item{net}{An object of S3 class \code{\link{run.model}} or \code{\link{run.UME}}. See 'Value' in \code{\link{run.model}} and \code{\link{run.UME}}.}
+
+\item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}.
+If the argument \code{drug.names} is not defined, the order of the interventions as they appear in \code{data} is used, instead.}
+
+\item{colour}{A string to define the colour of the points in the plot.}
+}
+\value{
+A scatterplot of the leverage against the square root of the posterior mean of residual deviance of the trial-arms under the consistency models or
+  the unrelated mean effects model. The green, yellow, and red curves correspond to the parabola \eqn{x^2 + y = k} with \eqn{k} = 1, 2, and 3, respectively.
+  Data points correspond to trial-arms. Data points found outside the yellow parabola are linked with a pair of numbers.
+  The first number refers to the trial position in the dataset, and the second arm refers to the corresponding trial-arm (see 'Arguments' and 'Value' in \code{data.preparation}).
+  These trial-arms contribute more than 1 to the posterior mean deviance and, hence, the model's poor fit.
 }
 \description{
-Create the leverage plot
+\code{leverage.plot} illustrates the posterior mean of deviance of the individual data points under the unrelated mean effects model (via \code{run.UME})
+  against the posterior mean of deviance under the consistency model (via \code{run.model}).
+}
+\details{
+\code{leverage.plot} is integrated in the \code{UME.plot} function to create the leverage on the posterior mean of deviance under the consistency model and
+  the unrelated mean effects model. These plots appear side-by-side in the output of \code{UME.plot}.
+  Dias et al. (2010) used leverage plots to investigate the fit of the consistency and inconsistency model - the latter through
+  the node-splitting approach.
+}
+\references{
+Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed treatment comparison meta-analysis. \emph{Stat Med} 2010;\bold{29}(7-8):932--44. [\doi{10.1002/sim.3767}]
+}
+\seealso{
+\code{\link{UME.plot}}, \code{\link{run.model}}, \code{\link{run.UME}}
+}
+\author{
+{Loukia M. Spineli}
 }

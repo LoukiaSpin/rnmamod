@@ -52,8 +52,8 @@ Furthermore, \code{run.UME} returns a character vector with the pairwise compari
 and a character vector with comparisons between non-baseline interventions observed in multi-arm trials only, \code{frail.comp}. Both vectors are used in \code{UME.plot} function.
 }
 \description{
-This function performs a Bayesian network meta-analysis based on the unrelated mean effects model of Dias et al. (2010) extended to address aggregate binary and continuous participant outcome data via the pattern-mixture model
-  (Spineli, 2019; Spineli et al., 2021). This model offers a global evaluation of the plausibility of the consistency assumption in the network (Dias et al. (2013)).
+This function performs a Bayesian network meta-analysis based on the unrelated mean effects model of Dias et al. (2013a) extended to address aggregate binary and continuous participant outcome data via the pattern-mixture model
+  (Spineli, 2019; Spineli et al., 2021). This model offers a global evaluation of the plausibility of the consistency assumption in the network (Dias et al. (2013b)).
 }
 \details{
 \code{run.UME} does not contain the arguments \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, and \code{var.misspar} that are found in \code{run.model}.
@@ -61,11 +61,11 @@ This function performs a Bayesian network meta-analysis based on the unrelated m
   Instead, these arguments are contained in the argument \code{full} of the function. Therefore, the user needs first to apply \code{run.model}, and then use \code{run.UME} (see, 'Examples').
 
   Initially, \code{run.nodesplit} calls the \code{improved.UME} function to identify the \emph{frail comparisons}, that is, comparisons between non-baseline interventions in multi-arm trials -- not investigated in any two-arm trial of the network (Spineli, 2021).
-  The 'original' model of Dias et al. (2013) omits the frail comparisons from the estimation process. Consequently, the number of estimated summary effect sizes is less than those obtained by performing separate pairwise meta-analyses (see \code{run.series.meta}).
+  The 'original' model of Dias et al. (2013a) omits the frail comparisons from the estimation process. Consequently, the number of estimated summary effect sizes is less than those obtained by performing separate pairwise meta-analyses (see \code{run.series.meta}).
 
-  Then, to perform the Bayesian unrelated effect measures model, the \code{prepare.UME} function is called which contains the WinBUGS code as written by Dias et al. (2013) for binomial and normal likelihood to analyse binary and continuous outcome data, respectively.
+  Then, to perform the Bayesian unrelated effect measures model, \code{run.nodesplit} calls the \code{prepare.UME} function which contains the WinBUGS code as written by Dias et al. (2013a) for binomial and normal likelihood to analyse binary and continuous outcome data, respectively.
   \code{prepare.UME} has been extended to incorporate the pattern-mixture model with informative missingness parameters for binary and continuous outcome data (see, 'Details' in \code{run.model}).
-  \code{prepare.UME} has been also 'upgraded' to account for the multi-arm trials by assigning conditional univariate normal distributions on the basic parameters of these trials, that is, effect parameters between non-baseline and baseline arms (Dias et al., 2013; Spineli, 2021).
+  \code{prepare.UME} has been also 'upgraded' to account for the multi-arm trials by assigning conditional univariate normal distributions on the basic parameters of these trials, that is, effect parameters between non-baseline and baseline arms (Dias et al., 2013b; Spineli, 2021).
 
   \code{run.UME} runs Bayesian unrelated mean effects model in \code{JAGS}. The progress of the simulation appears in the R console.
 
@@ -90,14 +90,14 @@ Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome data 
 
 Spineli LM. An empirical comparison of Bayesian modelling strategies for missing binary outcome data in network meta-analysis. \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86. [\doi{10.1186/s12874-019-0731-y}]
 
-Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis for decision making 4: inconsistency in networks of evidence based on randomized controlled trials. \emph{Med Decis Making} 2013;\bold{33}(5):641--56. [\doi{10.1177/0272989X12455847}]
+Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis for decision making 4: inconsistency in networks of evidence based on randomized controlled trials. \emph{Med Decis Making} 2013a;\bold{33}(5):641--56. [\doi{10.1177/0272989X12455847}]
 
-Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision making 2: a generalized linear modeling framework for pairwise and network meta-analysis of randomized controlled trials. \emph{Med Decis Making} 2013;\bold{33}(5):607--617. [\doi{10.1177/0272989X12458724}]
+Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision making 2: a generalized linear modeling framework for pairwise and network meta-analysis of randomized controlled trials. \emph{Med Decis Making} 2013b;\bold{33}(5):607--617. [\doi{10.1177/0272989X12458724}]
 
 Gelman A, Rubin DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457--472. [\doi{10.1214/ss/1177011136}]
 }
 \seealso{
-\code{\link{run.model}}, \code{\link{UME.plot}}, \code{\link{prepare.UME}}, \code{run.series.meta}), \code{\link[R2jags]{jags}}
+\code{\link{run.model}}, \code{\link{UME.plot}}, \code{\link{prepare.UME}}, \code{\link{run.series.meta}}, \code{\link[R2jags]{jags}}
 }
 \author{
 {Loukia M. Spineli}

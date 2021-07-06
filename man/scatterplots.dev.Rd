@@ -2,10 +2,40 @@
 % Please edit documentation in R/scatterplots.deviance_function.R
 \name{scatterplots.dev}
 \alias{scatterplots.dev}
-\title{Scatterplots on the posterior mean of deviance between consistency and unrelated mean effects (UME) models}
+\title{Create the deviance scatterplot}
 \usage{
 scatterplots.dev(full, ume, colour)
 }
+\arguments{
+\item{full}{A numeric vector with the posterior mean of deviance obtained using the consistency model.}
+
+\item{ume}{A numeric vector with the posterior mean of deviance obtained using the unrelated mean effects model.}
+
+\item{colour}{A string to define the colour of the points in the plot.}
+}
+\value{
+A scatterplot on the posterior mean deviance contribution of the individual data points under the consistency model and the unrelated mean effects model.
+ Each data point corresponds to a trial-arm indicated by a pair of numbers. The first number refers to the trial position in the dataset,
+ and the second arm refers to the corresponding trial-arm (see 'Arguments' and 'Value' in \code{data.preparation}).
+}
 \description{
-Scatterplots on the posterior mean of deviance between consistency and unrelated mean effects (UME) models
+\code{scatterplots.dev} illustrates the posterior mean of deviance of the individual data points under the unrelated mean effects model (via \code{run.UME})
+  against the posterior mean of deviance under the consistency model (via \code{run.model}).
+}
+\details{
+\code{scatterplots.dev} is integrated in the \code{UME.plot} function to create the scatterplot on the posterior mean of deviance under the compared models,
+  also considered by Dias et al. (2013).
+  When the majority of data points are scattered across the diagonal dotted line, we may conclude that the compared models have a good agreement.
+  Data points scattered above and below the diagonal dotted line may contribute more to the poor fit of the unrelated mean effects model or the consistency model, respectively.
+  However, using the \code{scatterplots.dev}, it is difficult to declare these data points as possible 'outliers'.
+  Therefore, \code{scatterplots.dev} is accompanied by \code{BlandAltman.plot} in the \code{UME.plot} function.
+}
+\references{
+Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis for decision making 4: inconsistency in networks of evidence based on randomized controlled trials. \emph{Med Decis Making} 2013a;\bold{33}(5):641--56. [\doi{10.1177/0272989X12455847}]
+}
+\seealso{
+\code{\link{UME.plot}}, \code{\link{run.model}}, \code{\link{run.UME}}
+}
+\author{
+{Loukia M. Spineli}
 }

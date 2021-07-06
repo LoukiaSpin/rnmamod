@@ -10,7 +10,7 @@
 #'   as they appear in \code{data} is used, instead.
 #'
 #' @return \code{nodesplit.plot} returns a panel of as many interval plots as the number of split nodes in the network. Each interval plot illustrates the posterior mean and 95\% credible interval of the direct and indirect effect of the split nodes
-#'   and the corresponding inconsistency factor. The line that corresponds to the inconsistency factor is highlighted with green, when it does not crosses the vertical line of no difference (between the direct and indirect effect), and red otherwise.
+#'   and the corresponding inconsistency factor. The line that corresponds to the inconsistency factor is highlighted with green, when it does not cross the vertical line of no difference (between the direct and indirect effect), and red otherwise.
 #'   If there are more than 30 split nodes, the function presents the interval plots on split nodes with statistically significant inconsistency factor or those with inconsistent sign in the direct and indirect effect.
 #'
 #'   Furthermore, the function returns a interval plot on the median and 95\% credible interval of \eqn{\tau} after each split node. The lines that correspond to the split nodes are sorted in ascending order of the

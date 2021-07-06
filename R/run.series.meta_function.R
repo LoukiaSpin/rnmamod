@@ -54,7 +54,17 @@ run.series.meta <- function(data, full, n.chains, n.iter, n.burnin, n.thin) {
   measure <- full$measure
   model <- full$model
   assumption <- full$assumption
-  heter.prior <- full$heter.prior
+  heter.prior0 <- as.list(full$heter.prior)
+  heter.prior0[[3]] <- if (heter.prior0[[3]] == 1) {
+    "halfnormal"
+  } else if (heter.prior0[[3]] == 2) {
+    "uniform"
+  } else if (heter.prior0[[3]] == 3) {
+    "lognormal"
+  } else if (heter.prior0[[3]] == 4) {
+    "logt"
+  }
+  heterog.prior <- list(heter.prior0[[3]], heter.prior0[[1]], heter.prior0[[2]])
   mean.misspar <- full$mean.misspar
   var.misspar <- full$var.misspar
 
@@ -127,7 +137,7 @@ run.series.meta <- function(data, full, n.chains, n.iter, n.burnin, n.thin) {
   meta <- list()
   for (i in 1:N.comp) {
     message(paste(i, "out of", N.comp, "observed comparisons"))
-    meta[[i]] <- run.model(data = pairwise.data[pairwise.data$arm1 == keep.comp[i, 1] & pairwise.data$arm2 == keep.comp[i, 2], ], measure, model, assumption, heter.prior, mean.misspar, var.misspar, D = 1, n.chains, n.iter, n.burnin, n.thin) # 'D' does not matter in pairwise meta-analysis
+    meta[[i]] <- run.model(data = pairwise.data[pairwise.data$arm1 == keep.comp[i, 1] & pairwise.data$arm2 == keep.comp[i, 2], ], measure, model, assumption, heter.prior = heterog.prior, mean.misspar, var.misspar, D = 1, n.chains, n.iter, n.burnin, n.thin) # 'D' does not matter in pairwise meta-analysis
   }
 
   EM <- data.frame(keep.comp, do.call(rbind, lapply(1:N.comp, function(i) meta[[i]]$EM)))

@@ -1,43 +1,37 @@
-#' The heatmap of Kullback-Leibler divergence values of the observed comparisons under the network meta-analysis (NMA) and refined unrelated mean effects (UME) models
+#' Heatmap of Kullback-Leibler divergence values: consistency model versus unrelated mean effects model
 #'
-#' @param robust The component \code{"robust"} of class \code{robustness.index}.
-#' @param drug.names A vector of characteristics with name of the interventions as appear in the functions \code{run.model}, \code{run.UME}, or \code{run.UME.Dias}.
-#' @param obs.comp A vector of the observed comparisons of interventions in the network obtained vias the \code{run.UME} function.
-#' @param frail.comp A vector of the omitted comparisons of interventions among the observed comparisons in the network obtained vias the \code{run.UME} function.
-#' @param threshold A number indicating the threshold of similarity.
+#' @description This functions facilitates the detection of observed pairwise comparisons that are sensible
+#'   to applying the consistency model or the unrelated mean effects model. The heatmap is based on the Kullback-Leibler divergence (KLD) measure in
+#'   the summary effect size from the unrelated mean effects model to the consistency model (see \code{similarity.index.UME}).
 #'
-#' @return A heatmap on the Kullback-Leibler divergence (KLD) measure from the refined UME model to the NMA model for each observed comparison in the network.
-#' The observed pairwise comparisons are read from left to right and are highlighted either with a green or red colour. Green and red colours imply high
-#' and poor similarity of the posterior distribution of the treatment effects in the compared models. KLD values in white correspond to omitted comparisons.
-similarity.index <- function(full, ume, threshold){
-
-
-  ## Function for the Kullback-Leibler Divergence (comparing two univariate normal distributions)
-  KLD.measure.univ <- function(mean.y, sd.y, mean.x, sd.x){
-
-    # x is the 'truth' (e.g. the MAR assumption)
-    KLD.xy <- 0.5*(((sd.x/sd.y)^2) + ((mean.y - mean.x)^2)/(sd.y^2) - 1 + 2*log(sd.y/sd.x))
-
-    return(KLD.xy = KLD.xy)
-  }
-
-
-  kldxy <- rep(NA, length(full[, 1]))
-
-  for(i in 1:length(full[, 1])){ ## We are interested in all observed comparisons of the network
-
-    ## Returns the KLD of UME when compared with NMA (NMA as 'true') for comparison i
-    kldxy[i] <- KLD.measure.univ(ume[i, 1], ume[i, 2], full[i, 1], full[i, 2])
-
-  }
-
-
-  robust <- ifelse(kldxy < threshold, "robust", "frail")
-
-  return(list(robust = robust, KLD = kldxy))
-}
-
-
+#' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
+#' @param ume An object of S3 class \code{\link{run.UME}}. See 'Value' in \code{\link{run.UME}}.
+#' @param threshold A number indicating the threshold of similarity. See 'Details' below.
+#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
+#'   as they appear in \code{data} is used, instead.
+#'
+#' @details \code{heatmap.similarity.UME} is integrated in the \code{UME.plot} function. The heatmap illustrates the KLD values for the observed pairwise comparisons in the network.
+#'   The observed pairwise comparisons are read from left to right and are highlighted either with a green or red colour.
+#'   Comparisons highlighted with green or red colour imply high or poor similarity of the posterior distribution of the corresponding summary effect size in the compared models.
+#'   Cells with KLD values in white correspond to frail comparisons as detected by the \code{run.UME} function (see 'Details' in \code{run.UME}).
+#'
+#'   The user may consider the values 0.28 and 0.17 as \code{threshold} for binary and continuous outcome data, respectively.
+#'   These thresholds have been originally developed by Spineli et al. (2021) and considered also by Spineli (2021) in the proposed
+#'   framework of global evaluation of the consistency assumption.
+#'
+#' @return A lower triangular heatmap matrix on the KLD measure in the summary effect size from the unrelated mean effects model
+#'   to the consistency model (See, 'Description' in \code{similarity.index.UME}).
+#'
+#' @author {Loukia M. Spineli}
+#'
+#' @seealso \code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{UME.plot}}, \code{\link{similarity.index.UME}}
+#'
+#' @references
+#' Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
+#'
+#' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021. [\doi{10.1002/jrsm.1478}]
+#'
+#' @export
 heatmap.similarity.UME <- function(full, ume, drug.names, threshold){
 
 
@@ -50,7 +44,7 @@ heatmap.similarity.UME <- function(full, ume, drug.names, threshold){
   ## Assign the robustness index to the observed comparisons
   EM.full <- full$EM
   ume.post <- ume$EM
-  robust <- similarity.index(EM.full[is.element(possible.comp$poss.comp[, 4], possible.comp$obs.comp[, 3]), 1:2], ume.post[, 1:2], threshold)$KLD
+  robust <- similarity.index.UME(EM.full[is.element(possible.comp$poss.comp[, 4], possible.comp$obs.comp[, 3]), 1:2], ume.post[, 1:2], threshold)$KLD
 
   poss.comp <- cbind(possible.comp$poss.comp, rep(NA, length(possible.comp$poss.comp[, 1])))
   poss.comp[is.element(possible.comp$poss.comp[, 5], possible.comp$obs.comp[, 4]) == T, 6] <- robust

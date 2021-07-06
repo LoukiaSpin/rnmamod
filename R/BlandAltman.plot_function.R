@@ -1,17 +1,26 @@
 #' Create the Bland-Altman plot
 #'
-#' @description This function facilitates creating the Bland-Altman plot for two methods with the least arguments.
+#' @description This function facilitates creating the Bland-Altman plot for two methods using only three arguments.
 #'
-#' @param group1 A vector with the numeric values of the new or target method.
-#' @param group2 A vector with the numeric values of the old or reference method.
-#' @param colour A string to define the colour of the points in the plot.
+#' @param group1 A vector with the numeric values of the target method (here, the consistency model).
+#' @param group2 A vector with the numeric values of the reference method (here, the unrelated mean effects model).
+#' @param colour A string to define the colour of the data points in the plot.
 #'
-#' @details \code{BlandAltman.plot} is inte on the posterior mean of deviance between consistency and unrelated mean effects (UME) models
+#' @return Bland-Altman plot on the posterior mean deviance contribution of the individual data points under the consistency model and the unrelated mean effects model.
+#'  Each data point corresponds to a trial-arm indicated by a pair of numbers. The first number refers to the trial position in the dataset,
+#'  and the second arm refers to the corresponding trial-arm (see 'Arguments' and 'Value' in \code{data.preparation}).
+#'  The plot also displays the average bias and the 95\% limits of agreement with horizontal solid black lines.
+#'
+#' @details \code{BlandAltman.plot} is integrated in the \code{UME.plot} function to create the Bland-Altman plot on the posterior mean of deviance under the
+#'   consistency model (via \code{run.model}) and the unrelated mean effects model (via \code{run.UME}).
+#'
+#'   A uniform scattering of the data points within the 95\% limits of agreement and average bias close to 0 indicate that the compared models have a good agreement.
+#'   Data points positioned above or below the 95\% limits of agreement correspond to trials that contribute to the poor fit of the consistency model or unrelated mean effects model, respectively.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run.UME}}, \code{\link{UME.plot}}
-#'
+#' @seealso \code{\link{UME.plot}}, \code{\link{run.model}}, \code{\link{run.UME}}
+#'.
 #' @references
 #' Bland JM, Altman DG. Measuring agreement in method comparison studies. \emph{Stat Methods Med Res} 1999;\bold{8}:135--60
 #'
