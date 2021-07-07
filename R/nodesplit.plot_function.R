@@ -1,30 +1,43 @@
 #' End-user-ready results: consistency model versus node-splitting approach
 #'
 #' @description This function illustrates the direct and indirect effects and inconsistency factor of the split nodes in a panel of interval plots and also exports these results in an Excel format.
-#'   Furthermore, \code{nodesplit.plot} facilitates the comparison of the consistency model (via \code{run.model}) with the node-splitting approach (via \code{run.nodesplit}) regarding between-trial standard deviation (\eqn{\tau}) and model assessment parameters
-#'   after each split node of the network.
+#'   Furthermore, \code{nodesplit.plot} facilitates the comparison of the consistency model (via \code{run.model}) with the node-splitting approach (via \code{run.nodesplit}) regarding between-trial standard deviation (\eqn{\tau})
+#'   and model assessment parameters (Spiegelhalter et al. (2002)) after each split node of the network.
 #'
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
 #' @param node An object of S3 class \code{\link{run.nodesplit}}. See 'Value' in \code{\link{run.nodesplit}}.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
 #'
-#' @return \code{nodesplit.plot} returns a panel of as many interval plots as the number of split nodes in the network. Each interval plot illustrates the posterior mean and 95\% credible interval of the direct and indirect effect of the split nodes
-#'   and the corresponding inconsistency factor. The line that corresponds to the inconsistency factor is highlighted with green, when it does not cross the vertical line of no difference (between the direct and indirect effect), and red otherwise.
+#' @return \code{nodesplit.plot} returns the following list of elements:
+#' \tabular{ll}{
+#'  \code{table.EM} \tab A data-frame with the posterior mean, posterior standard deviation and 95\% credible interval of the direct and indirect effect and the inconsistency factor of each split node.\cr
+#'  \tab \cr
+#'  \code{table.assess} \tab A data-frame with the model assessment parameters (DIC, posterior mean of total residual deviance, and number of effective parameters), the posterior median, posterior standard deviation and 95\% credible interval of \eqn{\tau}
+#'   under the consistency model and after each split node. See 'Details'.\cr
+#'  \tab \cr
+#'  \code{node.split.intervalplot} \tab A panel of interval plots on the direct and indirect effect of the split nodes and the corresponding inconsistency factor. See 'Details'.\cr
+#'  \tab \cr
+#'  \code{tau.intervalplot} \tab An interval plot on \eqn{\tau} after each split node. See 'Details'.\cr
+#' }
+#'
+#' @details \code{node.split.intervalplot} includes as many interval plots as the number of split nodes in the network.
+#'   Each interval plot illustrates the posterior mean and 95\% credible interval of the direct and indirect effect of the split nodes and the corresponding inconsistency factor.
+#'   The line that corresponds to the inconsistency factor is highlighted with green, when it does not cross the vertical line of no difference (between the direct and indirect effect), and red otherwise.
 #'   If there are more than 30 split nodes, the function presents the interval plots on split nodes with statistically significant inconsistency factor or those with inconsistent sign in the direct and indirect effect.
 #'
-#'   Furthermore, the function returns a interval plot on the median and 95\% credible interval of \eqn{\tau} after each split node. The lines that correspond to the split nodes are sorted in ascending order of the
+#'   \code{tau.intervalplot} is a interval plot on the median and 95\% credible interval of \eqn{\tau} after each split node. The lines that correspond to the split nodes are sorted in ascending order of the
 #'   deviance information criterion (DIC) which appears at the top of each line. The 95\% credible interval of \eqn{\tau} under the consistency model appears as a rectangle in the interval plot.
-#'   When a fixed-effect model has been performed, \code{nodesplit.plot} does not return the interval plot of \eqn{\tau}.
+#'   When a fixed-effect model has been performed, \code{nodesplit.plot} does not return \code{tau.intervalplot}.
 #'
-#'   The R console prints the data-frame with the posterior mean, posterior standard deviation and 95\% credible interval of the direct and indirect effect and the inconsistency factor of each split.
-#'   The console also prints the data-frame with the model assessment parameters (DIC, posterior mean of total residual deviance, and number of effective parameters), the posterior median, posterior standard deviation and 95\% credible interval of \eqn{\tau}
-#'   under the consistency model and after each split node. The DIC of the model after each split node is compared with the DIC of the consistency model (Spiegelhalter et al. (2002), Dias et al. (2010)). If the difference in DIC exceeds 5, the consistency model is preferred; if the difference in DIC is less than -5,
+#'   The data-frame \code{table.assess} also include the column \emph{DIC-based better fit} that indicates the preferred model in terms of parsimony for each split node.
+#'   Therefore, the DIC of the model after each split node is compared with the DIC of the consistency model (Dias et al. (2010)).
+#'   If the difference in DIC exceeds 5, the consistency model is preferred; if the difference in DIC is less than -5,
 #'   the model after split node is preferred; otherwise, there is little to choose between the compared models.
 #'
 #'   Furthermore, \code{nodesplit.plot} exports both data-frames to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 #'
-#' @details \code{nodesplit.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+#'   \code{nodesplit.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -127,9 +140,9 @@ nodesplit.plot <- function(full, node, drug.names) {
             geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
             geom_hline(yintercept = 0, lty = 2, size = 1.5, col = "grey") +
             geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
-            geom_text(aes(x = as.factor(evidence), y = round(mean, 2), label = round(mean, 2), hjust = 0, vjust = -0.4), color = "black", size = 4.0,
+            geom_text(aes(x = as.factor(evidence), y = round(mean, 2), label = sprintf("%.2f", mean), hjust = 0, vjust = -0.4), color = "black", size = 4.0,
                       check_overlap = F, parse = F, position = position_dodge(width = 0.5),  inherit.aes = T) +
-            geom_label(aes(x = 3.5, y = -Inf, hjust = 0, vjust = 1, label = round(DIC, 0)), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
+            geom_label(aes(x = 3.5, y = -Inf, hjust = 0, vjust = 1, label = sprintf("%.2f", DIC)), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
             scale_y_continuous(trans = "identity") +
             facet_wrap(vars(factor(node, levels = unique(prepare$node))), scales = "fixed") +
             labs(x = "", y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), paste(measure, "(in logarithmic scale)"), measure), colour = "") +
@@ -218,9 +231,9 @@ nodesplit.plot <- function(full, node, drug.names) {
       geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
       geom_hline(yintercept = tau.values[1], lty = 1, size = 1, col = "#D55E00") +
       geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
-      geom_text(aes(x = as.factor(1:length(prepare.tau$node)), y = round(median, 2), label = round(median, 2), hjust = -0.2, vjust = 0.3), color = "black", size = 4.0,
+      geom_text(aes(x = as.factor(1:length(prepare.tau$node)), y = round(median, 2), label = sprintf("%.2f", median), hjust = -0.2, vjust = 0.3), color = "black", size = 4.0,
                 check_overlap = F, parse = F, position = position_dodge(width = 0.5),  inherit.aes = T) +
-      geom_label(aes(x = as.factor(1:length(prepare.tau$node)), y = upper, label = round(DIC, 0)), fill = "beige", colour = "black", fontface = "plain",  size = 3.1) +
+      geom_label(aes(x = as.factor(1:length(prepare.tau$node)), y = upper, label = sprintf("%.2f", DIC)), fill = "beige", colour = "black", fontface = "plain",  size = 3.1) +
       scale_x_discrete(breaks = as.factor(1:length(prepare.tau$node)), labels = prepare.tau$node[1:length(prepare.tau$node)]) +
       labs(x = "Split nodes (sorted by DIC in ascending order)", y = "Between-trial standard deviation") +
       theme_classic() +

@@ -1,6 +1,6 @@
 #' Similarity index: consistency model versus unrelated mean effects model
 #'
-#' @description This function calculates the Kullback-Leibler divergence (KLD) measure in the summary effect size from the unrelated mean effects model
+#' @description This function calculates the Kullback-Leibler divergence (KLD) measure (Kullback and Leibler, 1951) in the summary effect size from the unrelated mean effects model
 #'   to the consistency model. Then, for each pairwise comparison observed in the network, the KLD value is compared with a threshold that reflects
 #'   the minimally allowed deviation between the compared models.
 #'
@@ -19,9 +19,9 @@
 #' that the summary effect size of a comparison is robust and sensible, respectively, to the applied model.
 #'
 #' @details \code{similarity.index.UME} is integrated in the \code{UME.plot} function.
-#'   The user may consider the values 0.28 and 0.17 as \code{threshold} for binary and continuous outcome data, respectively.
-#'   These thresholds have been originally developed by Spineli et al. (2021) and considered also by Spineli (2021) in the proposed
-#'   framework of global evaluation of the consistency assumption.
+#'   The user may consider the values 0.28 and 0.17 as \code{threshold} for binary and continuous outcome data, (the default values), respectively, or consider other plausible values.
+#'   Spineli et al. (2021) offers a discussion on specifying the \code{threshold}.
+#'   These thresholds have been originally developed by Spineli et al. (2021) and considered also by Spineli (2021) in the proposed framework of global evaluation of the consistency assumption.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -30,7 +30,9 @@
 #' @references
 #' Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
 #'
-#' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021. [\doi{10.1002/jrsm.1478}]
+#' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
+#'
+#' Kullback S, Leibler RA. On information and sufficiency. \emph{Ann Math Stat} 1951;\bold{22}(1):79--86. [\doi{10.1214/aoms/1177729694}]
 #'
 #' @export
 similarity.index.UME <- function(full, ume, threshold){

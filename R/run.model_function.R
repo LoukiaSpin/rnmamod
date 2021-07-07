@@ -97,7 +97,7 @@
 #'  \tab \cr
 #'  \code{jagsfit} \tab An object of S3 class \code{\link[R2jags]{jags}} with the posterior results on all monitored parameters to be used in the \code{mcmc.diagnostics} function.\cr
 #' }
-#' The \code{run.model} function also returns the arguments \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, \code{var.misspar}, and \code{D}
+#' The \code{run.model} function also returns the arguments \code{data}, \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, \code{var.misspar}, and \code{D}
 #' as specified by the user to be considered in other functions of the package.
 #'
 #' @details The model as specified by the arguments of \code{run.model} runs in \code{JAGS} and the progress of the simulation appears in the R console.
@@ -114,7 +114,7 @@
 #'   To perform the Bayesian PMA or NMA, the \code{prepare.model} function is called which contains the WinBUGS code as written by Dias et al. (2013) for binomial and normal likelihood to analyse binary and continuous outcome data, respectively. \code{prepare.model} uses consistency models (as
 #'   described in Lu and Ades (2006)) to estimate all possible comparisons in the network. It also accounts for the multi-arm trials by assigning conditional univariate normal distributions on the basic parameters of these trials, that is, effect parameters between non-baseline and baseline arms (Dias et al., 2013).
 #'
-#'   The code of Dias et al. (2013) has been extended to incorporate the pattern-mixture model to adjusted the underlying outcome in each arm of every trial for MOD (Turner et al., 2015; Spineli et al., 2021). Assumptions about the missingness parameter is specified using the arguments \code{mean.misspar} and \code{var.misspar}.
+#'   The code of Dias et al. (2013) has been extended to incorporate the pattern-mixture model to adjust the underlying outcome in each arm of every trial for MOD (Turner et al., 2015; Spineli et al., 2021). Assumptions about the missingness parameter is specified using the arguments \code{mean.misspar} and \code{var.misspar}.
 #'   Specifically, \code{run.model} considers the informative missingness odds ratio in the logarithmic scale for binary outcome data (White et al., 2008; Turner et al., 2015; Spineli, 2019), the informative missingness difference of means when \code{measure} is \code{"MD"} or \code{"SMD"},
 #'   and the informative missingness ratio of means in the logarithmic scale when \code{measure} is \code{"ROM"} (Mavridis et al., 2015; Spineli et al., 2021).
 #'
@@ -356,6 +356,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
                        sign.dev.o = sign.dev.o,
                        phi = phi,
                        model.assessment = model.assessment,
+                       data = data,
                        measure = measure,
                        model = model,
                        assumption = assumption,
@@ -373,6 +374,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
                        sign.dev.o = sign.dev.o,
                        phi = phi,
                        model.assessment = model.assessment,
+                       data = data,
                        measure = measure,
                        model = model,
                        mean.misspar = mean.misspar,

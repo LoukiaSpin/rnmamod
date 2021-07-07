@@ -3,7 +3,6 @@
 #' @description This function performs a Bayesian network meta-analysis based on the node-splitting approach of Dias et al. (2010) extended to address aggregate binary and continuous participant outcome data via the pattern-mixture model
 #'   (Spineli, 2019; Spineli et al., 2021). This model offers a local evaluation of the plausibility of the consistency assumption in the network (Dias et al. (2010)).
 #'
-#' @param data A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' in \code{\link{run.model}} for the specification of the columns.
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
 #' @param n.chains Integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 #'   The default argument is 2.
@@ -30,7 +29,7 @@
 #'  \code{model.assessment} \tab A data-frame on the measures of model assessment after each split node: deviance information criterion, total residual deviance, and number of effective parameters.\cr
 #' }
 #'
-#' @details \code{run.nodesplit} does not contain the arguments \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, and \code{var.misspar} that are found in \code{run.model}.
+#' @details \code{run.nodesplit} does not contain the arguments \code{data}, \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, and \code{var.misspar} that are found in \code{run.model}.
 #'   This is to prevent misspecifying the Bayesian model as it would make the comparison of the consistency model (via \code{run.model}) with the node-splitting approach meaningless.
 #'   Instead, these arguments are contained in the argument \code{full} of the function. Therefore, the user needs first to apply \code{run.model}, and then use \code{run.nodesplit} (see, 'Examples').
 #'
@@ -64,11 +63,13 @@
 #' res1 <- run.model(data = nma.liu2013, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' # Run random-effects network meta-analysis with node-splitting approach
-#' run.nodesplit(data = nma.liu2013, full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' run.nodesplit(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.nodesplit <- function(data, full, n.chains, n.iter, n.burnin, n.thin){
+run.nodesplit <- function(full, n.chains, n.iter, n.burnin, n.thin){
 
+
+  data <- full$data
   measure <- full$measure
   model <- full$model
   assumption <- full$assumption

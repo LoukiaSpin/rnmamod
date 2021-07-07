@@ -1,52 +1,89 @@
-#' Perform sensitivity meta-analysis for an aggregate binary or continuous outcome with missing participant data
+#' Sensitivity analysis for aggregate missing outcome participant data
 #'
-#' @param data A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' for the specification of the columns.
-#' @param measure Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"}.
-#' @param assumption Character string indicating the structure of the informative missingness parameter. Set \code{assumption} equal to one of the following:  \code{"HIE-ARM"}, or \code{"IDE-ARM"}.
-#' @param mean.misspar A positive non-zero number for the mean of the normal distribution of the informative missingness parameter.
-#' @param var.misspar A positive non-zero number for the variance of the normal distribution of the informative missingness parameter.
-#' @param D A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.
-#' @param n.chains Integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
-#' @param n.iter Integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
-#' @param n.burnin Integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
-#' @param n.thin Integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.
+#' @description This function performs sensitivity analysis by applying pairwise meata-analysis (PMA) or network meta-analysis (NMA) for a series of different scenarios about the informative missingness parameter,
 #'
-#' @return An R2jags output on the summaries of the posterior distribution, and the Gelman–Rubin convergence diagnostic of the following parameters:
-#' \describe{
-#'  \item{\code{EM}}{The effect estimate of all possible comparisons of interventions.}
-#'  \item{\code{SUCRA}}{The surface under the cumulative ranking curve for each intervention.}
-#'  \item{\code{phi}}{The informative missingness parameter.}
-#'  \item{\code{delta}}{The underlying trial-specific effect estimate. For a multi-arm trial, we estimate \emph{T-1} trial-specific effect estimates, where \emph{T} is the number of interventions in the trial.}
-#'  \item{\code{tau}}{The between-trial standard deviation assumed to be common for all observed comparisons.}
+#' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
+#' @param assumption Character string indicating the structure of the informative missingness parameter.
+#'   Set \code{assumption} equal to one of the following: \code{"HIE-ARM"}, or \code{"IDE-ARM"}.
+#'   The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"}, and \code{"HIE"}, stand for identical, and hierarchical, respectively. See 'Details'.
+#' @param mean.scenarios A vector with a length of at least 5 with numeric values for the mean of the normal distribution of the informative missingness parameter (see 'Details').
+#'   The default arguments are c(-log(3), -log(2), log(0.9999), log(2), log(3)) and c(-2, -1, 0, 1, 2) for binary and continuous outcome dara, respectively.
+#' @param var.misspar A positive non-zero number for the variance of the normal distribution of the informative missingness parameter. When the \code{measure} is \code{"OR"}, \code{"MD"}, or \code{"SMD"}
+#'   the default argument is 1; When the \code{measure} is \code{"ROM"} in \code{\link{run.model}} the default argument is 0.04
+#' @param n.chains Integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is 2.
+#' @param n.iter Integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is 10000.
+#' @param n.burnin Integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is 1000.
+#' @param n.thin Integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is 1.
+#'
+#' @return A list of R2jags outputs on the summaries of the posterior distribution, and the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the following monitored parameters for a random-effects PMA:
+#' \tabular{ll}{
+#'  \code{EM} \tab The estimated summary effect measure (according to the argument \code{measure} in \code{run.model}).\cr
+#'  \tab \cr
+#'  \code{tau} \tab The between-trial standard deviation. This element does not appear in the case of a fixed-effect PMA.\cr
 #' }
 #'
-#' @format The columns of the data frame \code{data} refer to the following ordered elements for a continuous outcome:
-#' \describe{
-#'  \item{\strong{t}}{An intervention identifier.}
-#'  \item{\strong{y}}{The observed mean value of the outcome.}
-#'  \item{\strong{sd}}{The observed standard deviation of the outcome.}
-#'  \item{\strong{m}}{The number of missing outcome data.}
-#'  \item{\strong{c}}{The number of participants completing the assigned intervention.}
-#'  \item{\strong{na}}{The number of compared interventions.}
-#' }
-#' Apart from \strong{na}, all other elements appear in \code{data} as many times as the maximum number of interventions compared in a trial. See, 'Example'.
+#' In a random-effects NMA, \code{EM} refer to all possible pairwise comparisons of interventions in the network. Furthermore, \code{tau} is typically assumed to be common for all observed comparisons in the network.
 #'
-#' @seealso \href{https://CRAN.R-project.org/package=R2jags}{R2jags}
+#' @details The model as specified by the arguments of \code{run.sensitivity} and \code{run.model} (the latter via the argument \code{full}) runs in \code{JAGS} and the progress of the simulation appears in the R console.
+#'   The number of times \code{run.sensitivity} is used appears in the R console as a text in red and it equals the number of scenarios specified in argument \code{mean.scenarios} (see 'Examples').
+#'   The output of \code{run.sensitivity} is used as an S3 object by other functions of the package function to be processed further and provide an end-user-ready output.
+#'
+#'   In the case of PMA, \code{EM} and \code{tau} have as many rows as the square of the number of scenarios indicated in argument \code{mean.scenarios}.
+#'   In the case of NMA, each possible pairwise comparison is estimated as many times as the square of the number of scenarios indicated in argument \code{mean.scenarios}.
+#'
+#'   The informative missingness parameter is assumed to differ only across the interventions of the dataset. Therefore, the user can specify this parameter to be arm-specific and identical (\code{assumption} = \code{"IDE-ARM}),
+#'   or arm-specific and hierarchical (\code{assumption} = \code{"HIE-ARM}) (Spineli et al., 2021).
+#'
+#'   The number of scenarios in \code{mean.scenarios} should be equal to or more than 5 to allow for an adequate sensitivity analysis.
+#'   Currently, there are no empirically-based prior distributions for the informative missingness parameters. The users may refer to White et al. (2008), Mavridis et al. (2015), Turner et al. (2015) and Spineli (2019) to determine \code{mean.scenarios}
+#'   for an informative missingness mechanism and select a proper value for \code{var.misspar}.
+#'
+#'   \code{run.sensitivity} does not contain the arguments \code{data}, \code{measure}, \code{model}, and \code{heter.prior} that are found in \code{run.model}.
+#'   This is to prevent misspecifying the Bayesian model as it would make the comparison of the primary analysis (via \code{run.model}) with the re-analyses meaningless.
+#'   Instead, these arguments are contained in the argument \code{full} of the function. Therefore, the user needs first to apply \code{run.model}, and then use \code{run.sensitivity} (see, 'Examples').
+#'
+#' @author {Loukia M. Spineli}
+#'
+#' @seealso \code{\link{run.model}}, \href{https://CRAN.R-project.org/package=R2jags}{R2jags}
 #'
 #' @references
+#' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
+#'
+#' Spineli LM. An empirical comparison of Bayesian modelling strategies for missing binary outcome data in network meta-analysis. \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86. [\doi{10.1186/s12874-019-0731-y}]
+#'
+#' Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for uncertainty due to missing continuous outcome data in pairwise and network meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--741. [\doi{10.1002/sim.6365}]
+#'
+#' Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account for uncertainty due to missing binary outcome data in pairwise meta-analysis. \emph{Stat Med} 2015;\bold{34}(12):2062--2080. [\doi{10.1002/sim.6475}]
+#'
+#' White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data in meta-analysis--part 1: two-stage methods. \emph{Stat Med} 2008;\bold{27}(5):711--727. [\doi{10.1002/sim.3008}]
+#'
 #' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. Stat Sci. 1992;7:457–472.
 #'
-#' \dontshow{load("./data/NMA Dataset Continuous.RData")}
 #' @examples
-#' ### Show the data (one-trial-per-row format)
-#' (data <- as.data.frame(one.stage.dataset.NMA[[3]]))
+#' data("nma.liu2013.RData")
 #'
-#' ### Run a random-effects network meta-analysis with consistency equations for the standardised mean difference
-#' ### assuming missing at random for identical, common informative missingness difference of means.
-#' run.sensitivity(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, D = 0, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' # Perform a random-effects network meta-analysis (consistency model)
+#' res1 <- run.model(data = nma.liu2013, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#'
+#' # Perform the sensitivity analysis (the 'default' argument 'mean.scenarios')
+#' run.sensitivity(full = res1, assumption = "IDE-ARM", var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export
-run.sensitivity <- function(data, measure, model, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){
+run.sensitivity <- function(full, assumption, mean.scenarios, var.misspar, n.chains, n.iter, n.burnin, n.thin){
+
+
+  ## Turn off warning when variables in the 'data.jag' are not used
+  options(warn = -1)
+
+  data <- full$data
+  measure <- full$measure
+  model <- full$model
+  heter.prior <- full$heter.prior
+  D <- full$D
 
 
   ## Prepare the dataset for the R2jags
@@ -60,27 +97,25 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, mean.
 
 
   ## Default arguments
-  model <- if (missing(model)) {
-    "RE"
-  } else if (!is.element(model, c("RE", "FE"))) {
-    stop("Insert 'RE', or 'FE'", call. = F)
-  } else {
-    model
-  }
   assumption <- if (missing(assumption)) {
     "IDE-ARM"
-  } else if (!is.element(assumption,  c("IDE-ARM", "IDE-TRIAL", "IDE-COMMON", "HIE-ARM", "HIE-TRIAL", "HIE-COMMON", "IND-CORR", "IND-UNCORR"))) {
-    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'", call. = F)
+  } else if (!is.element(assumption,  c("IDE-ARM", "HIE-ARM"))) {
+    stop("Insert 'IDE-ARM', or 'HIE-ARM'", call. = F)
   } else {
     assumption
   }
-  D <- if (missing(D)) {
-    stop("The argument 'D' needs to be defined", call. = F)
+  ## Scenarios for missingness mechanism in an intervention (PMID: 30223064)
+  mean.scenarios <- if (missing(mean.scenarios) & is.element(measure, c("MD", "SMD"))) {
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The following vector of scenarios was considered by default: c(-2, -1, 0, 1, 2)", "\033[0m", "\n")))
+    c(-2, -1, 0, 1, 2)
+  } else if (missing(mean.scenarios) & is.element(measure, c("OR", "ROM"))) {
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The following vector of scenarios was considered by default: c(-log(3), -log(2), log(0.9999), log(2), log(3))", "\033[0m", "\n")))
+    c(-log(3), -log(2), log(0.9999), log(2), log(3))
+  } else if (length(mean.scenarios) < 5) {
+    stop("The argument 'mean.scenarios' must have a length of at least 5", call. = F)
   } else {
-    D
+    mean.scenarios
   }
-  mean.misspar <- missingness.param.prior(assumption, mean.misspar)
-  heter.prior <- heterogeneity.param.prior(measure, model, heter.prior)
   var.misspar <- ifelse(missing(var.misspar) & (is.element(measure, c("OR", "MD", "SMD"))), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
   n.iter <- ifelse(missing(n.iter), 10000, n.iter)
@@ -88,16 +123,9 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, mean.
   n.thin <- ifelse(missing(n.thin), 1, n.thin)
 
 
-  ## Scenarios for missingness mechanism in an intervention (PMID: 30223064)
-  if (is.element(measure, c("MD", "SMD", "ROM"))) {
-    scenarios <- c(-2, -1, 0, 1, 2)
-  } else {
-    scenarios <- c(-log(3), -log(2), log(0.9999), log(2), log(3))
-   }
-
 
   ## A 2x2 matrix of 25 reference-specific scenarios (PMID: 30223064)
-  mean.misspar <- as.matrix(cbind(rep(scenarios, each = 5), rep(scenarios, 5))) # 2nd column refers to the reference intervention (control in MA)
+  mean.misspar <- as.matrix(cbind(rep(mean.scenarios, each = length(mean.scenarios)), rep(mean.scenarios, length(mean.scenarios)))) # 2nd column refers to the reference intervention (control in MA)
 
 
   ## Prepare parameters for JAGS
@@ -162,9 +190,9 @@ run.sensitivity <- function(data, measure, model, assumption, heter.prior, mean.
 
   ## Return results
   results <- if (model == "RE"){
-    list(EM = EM, tau = tau, measure = measure, scenarios = scenarios, D = D)
+    list(EM = EM, tau = tau, measure = measure, scenarios = mean.scenarios, D = D)
   } else {
-    list(EM = EM, measure = measure, scenarios = scenarios, D = D)
+    list(EM = EM, measure = measure, scenarios = mean.scenarios, D = D)
   }
 
   return(results)

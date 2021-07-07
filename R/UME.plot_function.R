@@ -1,6 +1,6 @@
 #' End-user-ready results: consistency model versus unrelated mean effects model
 #'
-#' @description This function hosts a toolkit of functions that facilitates the comparison of the consistency model (via \code{run.model}) with the unrelated mean effects model (via \code{run.UME}) regarding the posterior summaries of summary effect size for
+#' @description This function hosts a toolkit of functions that facilitates the comparison of the consistency model (via \code{run.model}) with the unrelated mean effects model (via \code{run.UME}) regarding the posterior summaries of the summary effect size for
 #'   the pairwise comparisons observed in the network, the between-trial standard deviation (\eqn{\tau}) and model assessment parameters.
 #'
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
@@ -11,12 +11,12 @@
 #'
 #' @return \code{UME.plot} prints on the R console two messages: (1) the threshold of similarity determined by the user in green text, (2) and followed by the most parsimonious model (if any) based on the deviance information criterion (DIC; in red text).
 #' Then, the function returns the following list of elements:
-#'\tabular{ll}{
+#' \tabular{ll}{
 #'  \code{EM.both.models} \tab The posterior mean, posterior standard deviation, and 95\% credible interval of the summary effect size for each pairwise comparison observed in the network under the consistency model and the unrelated mean effects model.\cr
 #'  \tab \cr
-#'  \code{model.assessment} \tab The DIC, number of effective parameters, and total residual deviance under the consistency model and the unrelated mean effects model.\cr
+#'  \code{model.assessment} \tab The DIC, number of effective parameters, and total residual deviance under the consistency model and the unrelated mean effects model (Spiegelhalter et al. (2002)).\cr
 #'  \tab \cr
-#'  \code{between.trial.SD} \tab The posterior median and 95\% credible interval of the between-trial standard deviation (\eqn{\tau}) under the consistency model and the unrelated mean effects model.
+#'  \code{between.trial.SD} \tab The posterior median and 95\% credible interval of \eqn{\tau} under the consistency model and the unrelated mean effects model.
 #'   When a fixed-effect model has been performed, \code{UME.plot} does not return this element.\cr
 #'  \tab \cr
 #'  \code{scatterplots} \tab The scatterplot and the Bland-Altman plot on the posterior mean deviance contribution of the individual data points under the consistency model and the unrelated mean effects model.
@@ -32,9 +32,8 @@
 #'   See 'Details' and 'Value' in \code{\link{heatmap.similarity.UME}} and \code{\link{similarity.index.UME}}.\cr
 #' }
 #'
-#' @details The consisntency
-#' The DIC of the model after each split node is compared with the DIC of the consistency model (Spiegelhalter et al. (2002), Dias et al. (2010)). If the difference in DIC exceeds 5, the consistency model is preferred; if the difference in DIC is less than -5,
-#'   the model after split node is preferred; otherwise, there is little to choose between the compared models.
+#' @details The DIC of the consistency model is compared with the DIC of the unrelated mean effects model (Dias et al. (2013)). If the difference in DIC exceeds 5, the unrelated mean effects model is preferred; if the difference in DIC is less than -5,
+#'   the consistency is preferred; otherwise, there is little to choose between the compared models.
 #'
 #'   Furthermore, \code{UME.plot} exports \code{EM.both.models} to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 #'
@@ -47,7 +46,7 @@
 #' @references
 #' Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
 #'
-#' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021. [\doi{10.1002/jrsm.1478}]
+#' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
 #'
 #' Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis for decision making 4: inconsistency in networks of evidence based on randomized controlled trials. \emph{Med Decis Making} 2013a;\bold{33}(5):641--56. [\doi{10.1177/0272989X12455847}]
 #'
@@ -67,7 +66,7 @@
 #'                   "formoterol", "salmeterol", "tiotropium", "placebo")
 #'
 #' # Plot the results from the consistency model and the node-splitting approach
-#' nodesplit.plot(full = res1, node = node1, drug.names = interv.names)
+#' UME.plot(full = res1, ume = ume1, drug.names = interv.names)
 #'
 #' @export
 UME.plot <- function(full, ume, drug.names, threshold) {

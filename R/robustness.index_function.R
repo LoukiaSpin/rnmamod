@@ -1,9 +1,54 @@
-#' Robustness index
+#' Robustness index: Investigate the impact of missing participant outcome data
+#'
+#' @description This function calculates the robustness index, a novel index that quantifies the overall divergence of the sensitivity analysis results from the primary analysis results,
+#'   and considers objective decision rules to infer the presence of lack of robustness of the primary analysis results when conducting a sensitivity analysis (Spineli et al., 2021).
+#'   Currently, \code{robustness.index} is used concerning the impact of missing participant outcome data.
+#'
+#' @param sens An object of S3 class \code{\link{run.sensitivity}}. See 'Value' in \code{\link{run.sensitivity}}.
+#' @param primary.scenar A number to indicate which one of the re-analyses is the primary analysis.The number of re-analyses equals the
+#'   square of the number of scenarios indicated in argument \code{mean.scenarios} of \code{run.sensitivity}.
+#' @param threshold A number indicating the threshold of robustness, that is, the minimally allowed deviation between the primary analysis and re-analysis results. See 'Details' below.
+#'
+#' @return \code{robustness.index} prints on the R console a message on the threshold of robustness determined by the user in green text.
+#' Then, the function returns the following list of elements:
+#' \tabular{ll}{
+#'  \code{RI} \tab A a numeric scalar or vector on the robustnessindex values. In the case of a pairwise meta-analysis (PMA), \code{RI} is scalar as only one summary effect size is obtained.
+#'    In the case of network meta-analysis (NMA), \code{RI} is a vector with length equal to the number of possible pairwise comparisons; one robustness index per possible comparison.\cr
+#'  \tab \cr
+#'  \code{robust} \tab A character vector on whether the primary analysis results are \emph{robust} or \emph{frail} to the different re-analyses.\cr
+#'  \tab \cr
+#'  \code{KLD} \tab A vector or matrix on the Kullback-Leibler divergence (KLD) measure in the summary effect size from a subsequent re-analysis to the primary analysis.
+#'    In the case of a PMA, \code{KLD} is a vector with length equal to the number of total analyses.
+#'    The latter equals the square of the number of scenarios indicated in argument \code{mean.scenarios} of \code{run.sensitivity}. Therefore, one KLD value per analysis.
+#'    In the case of NMA, \code{RI} is a matrix with number of rows equal to the number of total analyses and number of columns equal to the number of possible pairwise comparisons;
+#'    one KLD value per analysis and possible comparison.\cr
+#' }
+#'
+#' @details The user may consider the values 0.28 and 0.17 in the argument \code{threshold} for binary and continuous outcome data (the default values), respectively, or consider other plausible values.
+#'   Spineli et al. (2021) offers a discussion on specifying the \code{threshold} of robustness.
+#'
+#'   In \code{robust}, the value \emph{robust} appears when \code{RI} \eqn{<} \code{threshold}); otherwise, the value \emph{frail} appears.
+#'
+#' @author {Loukia M. Spineli}
+#'
+#' @seealso \code{\link{run.sensitivity}}
+#'
+#' @references
+#' Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
+#'
+#' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
+#'
+#' Kullback S, Leibler RA. On information and sufficiency. \emph{Ann Math Stat} 1951;\bold{22}(1):79--86. [\doi{10.1214/aoms/1177729694}]
 #'
 #' @export
 robustness.index <- function(sens, primary.scenar, threshold){
 
+
   options(warn = -1)
+
+  ES.mat <- sens$EM
+  n.scenar <- sens$scenarios
+  measure <- sens$measure
 
   if (is.na(sens)) {
     stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
@@ -18,7 +63,7 @@ robustness.index <- function(sens, primary.scenar, threshold){
   }
 
 
-  if (missing(threshold) & is.element(sens$measure, "OR")) {
+  if (missing(threshold) & is.element(measure, "OR")) {
     threshold <- 0.28
     #message("The value 0.28 was assigned on 'threshold' by default")
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The value 0.28 was assigned on 'threshold' by default", "\033[0m", "\n")))
@@ -33,9 +78,7 @@ robustness.index <- function(sens, primary.scenar, threshold){
   }
 
 
-  ES.mat <- sens$EM
-
-  (nt <- (1 + sqrt(1 + 8*(length(ES.mat[, 1])/length(sens$scenarios)^2)))/2)  # The quadratic formula for the roots of the general quadratic equation
+  nt <- (1 + sqrt(1 + 8*(length(ES.mat[, 1])/length(n.scenar)^2)))/2  # The quadratic formula for the roots of the general quadratic equation
 
 
   ## Function for the Kullback-Leibler Divergence (comparing two univariate normal distributions)
@@ -47,10 +90,6 @@ robustness.index <- function(sens, primary.scenar, threshold){
     return(list(KLD.xy = KLD.xy))
   }
 
-
-
-  ## Number of scenarios for the sensitivity analysis
-  n.scenar <- length(ES.mat[, 1])/(nt*(nt - 1)/2)
 
 
   ## A matrix of effect estimates of MCMC standard deviations (or standard errors) for all possible comparisons under each scenario
@@ -78,11 +117,11 @@ robustness.index <- function(sens, primary.scenar, threshold){
     for(j in (1:n.scenar)[-primary.scenar]){
 
 
-      ## Returns the KLD of informative scenario j when compared with MAR (MAR as 'true') for comparison i
+      ## Returns the KLD of informative scenario j when compared with the primary analysis for comparison i
       kldxy[[i]][j] <- KLD.measure.univ(mean[j, i], sd[j, i], mean[primary.scenar, i], sd[primary.scenar, i])[[1]]
 
     }
-    kldxy[[i]][13] <- 0  ## This refers to the primary analysis (here, the MAR assumption)
+    kldxy[[i]][primary.scenar] <- 0  ## This refers to the primary analysis
 
     ## Returns the Robustness Index of comparison i across all informative scenarios
     RI[i] <- sqrt(round(t(kldxy[[i]][-primary.scenar]) %*% kldxy[[i]][-primary.scenar], 3))
