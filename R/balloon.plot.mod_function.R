@@ -43,7 +43,7 @@
 #' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
 #'                   "formoterol", "salmeterol", "tiotropium", "placebo")
 #'
-#' # Create the enhanced balloon plot for the comparison 'X'
+#' # Create the enhanced balloon plot for the comparison 'tiotropium versus salmeterol'
 #' balloon.plot.mod(sens = res.sens, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
 #'
 #' @export
@@ -54,18 +54,11 @@ balloon.plot.mod <- function(sens, compar, drug.names){
     stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
   }
 
-  ES.all <- sens$EM; D <- sens$D; scenarios <- sens$scenarios
+  ES.all <- sens$EM; D <- sens$D; scenarios <- sens$scenarios; measure <- sens$measure
 
 
   ## Define the position and number of the scenarios
   nt <- (1 + sqrt(1 + 8*(length(ES.all[, 1])/length(scenarios)^2)))/2  # The quadratic formula for the roots of the general quadratic equation
-
-
-  outcome <- if (is.element(sens$measure, c("MD", "SMD", "ROM"))) {
-    "continuous"
-  } else {
-    "binary"
-  }
 
 
   drug.names <- if (missing(drug.names)) {
@@ -134,7 +127,7 @@ balloon.plot.mod <- function(sens, compar, drug.names){
 
 
   ## Create the proposed balloon plot (separately, for binary and continuous outcomes)
-  bubble <- if(outcome == "binary"){
+  bubble <- if (is.element(measure, c("OR", "ROM"))) {
    ggplot(mat, aes(x = active, y = control, color = sd.value, label = sprintf("%.2f", round(exp(value), 2)))) +
      geom_rect(mapping = aes(NULL, NULL, xmin = 1, xmax = length(scenarios)), ymin = 1, ymax = length(scenarios), color = "grey93", fill = "grey93", alpha = 0.1) +
      geom_rect(mapping = aes(NULL, NULL, xmin = 2, xmax = length(scenarios) - 1), ymin = 2, ymax = length(scenarios) - 1, color = "grey100", fill = "grey100", alpha = 0.1) +
@@ -153,7 +146,7 @@ balloon.plot.mod <- function(sens, compar, drug.names){
            axis.title.x = element_text(size = 12, face = "bold"), axis.title.y = element_text(size = 12, angle = 90, face = "bold"),
            legend.position = "bottom", legend.text = element_text(size = 12), legend.key.width = unit(1.5, "cm"),
            legend.title = element_text(size = 12, face = "bold"), panel.grid.minor = element_blank(), panel.background = element_rect(fill = "grey86"))
-  } else {
+  } else if (is.element(measure, c("MD", "SMD"))) {
     ggplot(mat, aes(x = active, y = control, color = sd.value, label = sprintf("%.2f", round(value, 2)))) +
       geom_rect(mapping = aes(NULL, NULL, xmin = 1, xmax = length(scenarios)), ymin = 1, ymax = length(scenarios), color = "grey93", fill = "grey93", alpha = 0.1) +
       geom_rect(mapping = aes(NULL, NULL, xmin = 2, xmax = length(scenarios) - 1), ymin = 2, ymax = length(scenarios) - 1, color = "grey100", fill = "grey100", alpha = 0.1) +
