@@ -46,6 +46,8 @@
 #'   This is to prevent misspecifying the Bayesian model as it would make the comparison of the primary analysis (via \code{run.model}) with the re-analyses meaningless.
 #'   Instead, these arguments are contained in the argument \code{full} of the function. Therefore, the user needs first to apply \code{run.model}, and then use \code{run.sensitivity} (see, 'Examples').
 #'
+#'   \code{run.sensitivity} can be used only for when missing participant outcome data have been extracted for at least one trial. Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
+#'
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link{run.model}}, \href{https://CRAN.R-project.org/package=R2jags}{R2jags}
@@ -66,10 +68,7 @@
 #' @examples
 #' data("nma.liu2013.RData")
 #'
-#' # Perform a random-effects network meta-analysis (consistency model)
-#' res1 <- run.model(data = nma.liu2013, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
-#'
-#' # Perform the sensitivity analysis (the 'default' argument 'mean.scenarios')
+#' # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
 #' run.sensitivity(full = res1, assumption = "IDE-ARM", var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' @export

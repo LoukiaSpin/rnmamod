@@ -15,17 +15,18 @@
 #'  \code{robust} \tab A character vector on whether the divergence is acceptable or substantial.\cr
 #' }
 #'
-#' In \code{robust}, acceptable divergence is labeled as \emph{robust} (i.e., \code{KLD} \eqn{<} \code{threshold}), and substantial divergence is labeled as \emph{frail}. This is equivalent to concluding
+#' In \code{robust}, acceptable divergence is labeled as \code{"robust"} (i.e., \code{KLD} \eqn{<} \code{threshold}), and substantial divergence is labeled as \code{"frail"}. This is equivalent to concluding
 #' that the summary effect size of a comparison is robust and sensible, respectively, to the applied model.
 #'
-#' @details \code{similarity.index.UME} is integrated in the \code{UME.plot} function.
+#' @details \code{similarity.index.UME} is integrated in the \code{heatmap.similarity.UME} function.
 #'   The user may consider the values 0.28 and 0.17 as \code{threshold} for binary and continuous outcome data, (the default values), respectively, or consider other plausible values.
 #'   Spineli et al. (2021) offers a discussion on specifying the \code{threshold}.
 #'   These thresholds have been originally developed by Spineli et al. (2021) and considered also by Spineli (2021) in the proposed framework of global evaluation of the consistency assumption.
 #'
+#'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{UME.plot}}
+#' @seealso \code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{heatmap.similarity.UME}}
 #'
 #' @references
 #' Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.

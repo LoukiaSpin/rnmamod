@@ -5,7 +5,7 @@
 #'   Currently, \code{robustness.index} is used concerning the impact of missing participant outcome data.
 #'
 #' @param sens An object of S3 class \code{\link{run.sensitivity}}. See 'Value' in \code{\link{run.sensitivity}}.
-#' @param primary.scenar A number to indicate which one of the re-analyses is the primary analysis.The number of re-analyses equals the
+#' @param primary.scenar A number to indicate which one of analyses is the primary analysis. The number of the total analyses equals the
 #'   square of the number of scenarios indicated in argument \code{mean.scenarios} of \code{run.sensitivity}.
 #' @param threshold A number indicating the threshold of robustness, that is, the minimally allowed deviation between the primary analysis and re-analysis results. See 'Details' below.
 #'
@@ -27,7 +27,9 @@
 #' @details The user may consider the values 0.28 and 0.17 in the argument \code{threshold} for binary and continuous outcome data (the default values), respectively, or consider other plausible values.
 #'   Spineli et al. (2021) offers a discussion on specifying the \code{threshold} of robustness.
 #'
-#'   In \code{robust}, the value \emph{robust} appears when \code{RI} \eqn{<} \code{threshold}); otherwise, the value \emph{frail} appears.
+#'   In \code{robust}, the value \code{"robust"} appears when \code{RI} \eqn{<} \code{threshold}); otherwise, the value \code{"frail"} appears.
+#'
+#'   \code{robustness.index} can be used only for when missing participant outcome data have been extracted for at least one trial. Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -40,6 +42,15 @@
 #'
 #' Kullback S, Leibler RA. On information and sufficiency. \emph{Ann Math Stat} 1951;\bold{22}(1):79--86. [\doi{10.1214/aoms/1177729694}]
 #'
+#' @examples
+#' data("nma.liu2013.RData")
+#'
+#' # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
+#' res.sens <- run.sensitivity(full = res1, assumption = "IDE-ARM", var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#'
+#' # Calculate the robustness index
+#' robustness.index(sens = res.sens, primary.scenar = 13, threshold = 0.28)
+#'
 #' @export
 robustness.index <- function(sens, primary.scenar, threshold){
 
@@ -47,7 +58,7 @@ robustness.index <- function(sens, primary.scenar, threshold){
   options(warn = -1)
 
   ES.mat <- sens$EM
-  n.scenar <- sens$scenarios
+  n.scenar <- length(sens$scenarios)^2
   measure <- sens$measure
 
   if (is.na(sens)) {
@@ -78,7 +89,7 @@ robustness.index <- function(sens, primary.scenar, threshold){
   }
 
 
-  nt <- (1 + sqrt(1 + 8*(length(ES.mat[, 1])/length(n.scenar)^2)))/2  # The quadratic formula for the roots of the general quadratic equation
+  nt <- (1 + sqrt(1 + 8*(length(ES.mat[, 1])/sqrt(n.scenar)^2)))/2  # The quadratic formula for the roots of the general quadratic equation
 
 
   ## Function for the Kullback-Leibler Divergence (comparing two univariate normal distributions)

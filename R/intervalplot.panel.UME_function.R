@@ -33,7 +33,7 @@ intervalplot.panel.UME <- function(full, ume, drug.names) {
   measure <- effect.measure.name(full$measure)
 
   ## Possible and observed comparisons
-  possible.comp <- possible.observed.frail.comparisons(drug.names, obs.comp)
+  possible.comp <- possible.observed.comparisons(drug.names, obs.comp)
 
 
   # Indicate frail comparisons
@@ -59,7 +59,7 @@ intervalplot.panel.UME <- function(full, ume, drug.names) {
 
   # Create the dataframe
   data.set <- data.frame(c(nma.mean, ume.mean), c(nma.lower, ume.lower), c(nma.upper, ume.upper), c(nma.stat.signif, ume.stat.signif),
-                        rep(possible.comp$obs.comp[, 4], 2), rep(c("NMA model", "UME model"), each = length(obs.comp)), frail.comp.ind)
+                         rep(possible.comp$obs.comp[, 4], 2), rep(c("NMA model", "UME model"), each = length(obs.comp)), frail.comp.ind)
   colnames(data.set) <- c("mean", "lower", "upper", "stat.sign", "comp", "analysis", "frail")
 
 

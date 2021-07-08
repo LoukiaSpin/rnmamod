@@ -1,4 +1,4 @@
-possible.observed.frail.comparisons <- function(drug.names, obs.comp) {
+possible.observed.comparisons <- function(drug.names, obs.comp) {
 
 
   if(length(drug.names) < 3) {

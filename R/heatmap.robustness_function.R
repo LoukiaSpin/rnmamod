@@ -1,36 +1,50 @@
 #' Heatmap of robsutness index: Investigate the impact of missing participant outcome data
 #'
-#' @description This functions facilitates the detection of comparisons that are sensible to different assumptions about the missingness mechanism in the compared interventions.
-#'   The heatmap is based on the robustness index of each possible pairwise comparison of the investigated network (see \code{robustness.index})
+#' @description This functions facilitates the detection of comparisons that are sensible to different assumptions about the informative missingness parameter
+#'   for the compared interventions. The heatmap is based on the robustness index of each possible pairwise comparison of the investigated network (see \code{robustness.index}).
+#'   Currently, \code{heatmap.robustness} is used concerning the impact of missing participant outcome data.
 #'
-#' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
-#' @param ume An object of S3 class \code{\link{run.UME}}. See 'Value' in \code{\link{run.UME}}.
-#' @param threshold A number indicating the threshold of similarity. See 'Details' below.
+#' @param robust An object of S3 class \code{\link{robustness.index}}. See 'Value' in \code{\link{robustness.index}}.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
 #'
-#' @details \code{heatmap.similarity.UME} is integrated in the \code{UME.plot} function. The heatmap illustrates the KLD values for the observed pairwise comparisons in the network.
-#'   The observed pairwise comparisons are read from left to right and are highlighted either with a green or red colour.
-#'   Comparisons highlighted with green or red colour imply high or poor similarity of the posterior distribution of the corresponding summary effect size in the compared models.
-#'   Cells with KLD values in white correspond to frail comparisons as detected by the \code{run.UME} function (see 'Details' in \code{run.UME}).
+#' @details The heatmap illustrates the robustness index for each possible pairwise comparison in the network.
+#'   The pairwise comparisons are read from left to right and are highlighted either with a green or red colour.
+#'   Comparisons highlighted with green or red colour imply robust or frail conclusions for the primary analysis.
+#'   This corresponds to robustness index below or at least the selected threshold of robustness (see 'Details'in \code{robustness.index}).
+#'   The robustness index value of each pairwise comparison also appears in the corresponding cell.
+#'   When there is at least one comparison with frail conclusions, the primary analysis results may be questionable for the whole network (Spineli et al., 2021).
 #'
-#'   The user may consider the values 0.28 and 0.17 as \code{threshold} for binary and continuous outcome data, respectively.
-#'   These thresholds have been originally developed by Spineli et al. (2021) and considered also by Spineli (2021) in the proposed
-#'   framework of global evaluation of the consistency assumption.
+#'   \code{heatmap.robustness} uses the threshold of robustness selected in the \code{robustness.index} function.
 #'
-#' @return A lower triangular heatmap matrix on the KLD measure in the summary effect size from the unrelated mean effects model
-#'   to the consistency model (See, 'Description' in \code{similarity.index.UME}).
+#'   \code{heatmap.robustness} can be used only for a network of interventions and when missing participant outcome data have been extracted for at least one trial.
+#'   Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
+#'
+#' @return \code{heatmap.robustness} first prints on the R console a message on the threshold of robustness determined by the user in the \code{robustness.index} function.
+#'   Then, it returns a lower triangular heatmap matrix with the robustness index valueof all possible pairwise comparisons.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{robustness.index}}
+#' @seealso \code{\link{robustness.index}}, \code{\link{run.model}}
 #'
 #' @references
-#' Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
-#'
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
 #'
-#' Kullback S, Leibler RA. On information and sufficiency. \emph{Ann Math Stat} 1951;\bold{22}(1):79--86. [\doi{10.1214/aoms/1177729694}]
+#' @examples
+#' data("nma.liu2013.RData")
+#'
+#' # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
+#' res.sens <- run.sensitivity(full = res1, assumption = "IDE-ARM", var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#'
+#' # Calculate the robustness index
+#' robust <- robustness.index(sens = res.sens, primary.scenar = 13, threshold = 0.28)
+#'
+#' # The names of the interventions in the order they appear in the dataset
+#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
+#'                   "formoterol", "salmeterol", "tiotropium", "placebo")
+#'
+#' # Create the heatmap of robustness
+#' heatmap.robustness(robust = robust, drug.names = interv.names)
 #'
 #' @export
 heatmap.robustness <- function(robust, drug.names){

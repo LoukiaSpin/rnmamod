@@ -69,6 +69,7 @@ nodesplit.plot <- function(full, node, drug.names) {
 
 
   data <- full$data
+  measure <- full$measure
   item <- data.preparation(data, measure)
   if(item$nt < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)

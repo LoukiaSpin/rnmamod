@@ -69,7 +69,7 @@ series.meta.plot <- function(full, meta, drug.names) {
   tau.meta <- meta$tau
 
   # Possible and observed comparisons
-  possible.comp <- possible.observed.frail.comparisons(drug.names, obs.comp = paste0(meta$EM[, "t2"], "vs", meta$EM[, "t1"]))
+  possible.comp <- possible.observed.comparisons(drug.names, obs.comp = paste0(meta$EM[, "t2"], "vs", meta$EM[, "t1"]))
 
   # Observed comparisons
   obs.comp <- possible.comp$obs.comp[, 3]

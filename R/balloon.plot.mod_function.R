@@ -1,8 +1,48 @@
-#' Enhanced balloon plot
+#' Enhanced balloon plot: Investigate the impact of missing participant outcome data
 #'
-#' @param net An object of S3 class \code{run.sensitivity}.
-#' @param drug.names A vector of characters with the names of the interventions in the order they appear in the function \code{run.sensitivity}.
-#' @param D A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.
+#' @description This functions creates the enhanced balloon plot with the summary results of a pairwise comparison under different scenarios about the missingness parameter
+#'   for a pair of interventions. Currently, \code{balloon.plot.mod} supports the illustration of the summary effect size and its standard error.
+#'
+#' @param sens An object of S3 class \code{\link{run.sensitivity}}. See 'Value' in \code{\link{run.sensitivity}}.
+#' @param compar A positive integer that indicates the pairwise comparison of interest. For a pairwise meta-analysis, \code{compar} is inherently equal to 1.
+#'   For a network meta-analysis, the user must first use the \code{possible.observed.comparisons} function
+#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
+#'   as they appear in \code{data} is used, instead.
+#'
+#' @details The heatmap illustrates the robustness index for each possible pairwise comparison in the network.
+#'   The pairwise comparisons are read from left to right and are highlighted either with a green or red colour.
+#'   Comparisons highlighted with green or red colour imply robust or frail conclusions for the primary analysis.
+#'   This corresponds to robustness index below or at least the selected threshold of robustness (see 'Details'in \code{robustness.index}).
+#'   The robustness index value of each pairwise comparison also appears in the corresponding cell.
+#'   When there is at least one comparison with frail conclusions, the primary analysis results may be questionable for the whole network (Spineli et al., 2021).
+#'
+#'   \code{heatmap.robustness} uses the threshold of robustness selected in the \code{robustness.index} function.
+#'
+#'   \code{heatmap.robustness} can be used only for a network of interventions and when missing participant outcome data have been extracted for at least one trial.
+#'   Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
+#'
+#' @return \code{heatmap.robustness} first prints on the R console a message on the threshold of robustness determined by the user in the \code{robustness.index} function.
+#'   Then, it returns a lower triangular heatmap matrix with the robustness index valueof all possible pairwise comparisons.
+#'
+#' @author {Loukia M. Spineli}
+#'
+#' @seealso \code{\link{run.sensitivity}}
+#'
+#' @references
+#' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
+#'
+#' @examples
+#' data("nma.liu2013.RData")
+#'
+#' # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
+#' res.sens <- run.sensitivity(full = res1, assumption = "IDE-ARM", var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#'
+#' # The names of the interventions in the order they appear in the dataset
+#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
+#'                   "formoterol", "salmeterol", "tiotropium", "placebo")
+#'
+#' # Create the enhanced balloon plot for the comparison 'X'
+#' balloon.plot.mod(sens = res.sens, compar = 1, drug.names = interv.names)
 #'
 #' @export
 balloon.plot.mod <- function(sens, compar, drug.names){
@@ -12,12 +52,11 @@ balloon.plot.mod <- function(sens, compar, drug.names){
     stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
   }
 
-  ES.all <- sens$EM; D <- sens$D
+  ES.all <- sens$EM; D <- sens$D; scenarios <- sens$scenarios
 
 
   ## Define the position and number of the scenarios
-  scenarios <- c(1, 2, 3, 4, 5)
-  (nt <- (1 + sqrt(1 + 8*(length(ES.all[, 1])/length(scenarios)^2)))/2)  # The quadratic formula for the roots of the general quadratic equation
+  nt <- (1 + sqrt(1 + 8*(length(ES.all[, 1])/length(scenarios)^2)))/2  # The quadratic formula for the roots of the general quadratic equation
 
 
   outcome <- if (is.element(sens$measure, c("MD", "SMD", "ROM"))) {

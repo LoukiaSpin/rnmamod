@@ -39,8 +39,10 @@ heatmap.similarity.UME <- function(full, ume, drug.names, threshold){
 
   options(warn = -1)
 
+
   ## Possible and observed comparisons (with names)
-  possible.comp <- possible.observed.frail.comparisons(drug.names, ume$obs.comp)
+  possible.comp <- possible.observed.comparisons(drug.names, ume$obs.comp)
+
 
 
   ## Assign the robustness index to the observed comparisons
