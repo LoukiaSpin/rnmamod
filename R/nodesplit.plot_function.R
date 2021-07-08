@@ -68,6 +68,13 @@
 nodesplit.plot <- function(full, node, drug.names) {
 
 
+  data <- full$data
+  item <- data.preparation(data, measure)
+  if(item$nt < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
+  }
+
+
   drug.names <- if (missing(drug.names)) {
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
     nt <- length(full$SUCRA[, 1])
