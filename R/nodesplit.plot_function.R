@@ -55,7 +55,7 @@
 #' res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' # Run random-effects network meta-analysis with node-splitting approachs
-#' node1 <- run.nodesplit(data = nma.baker2009, full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' node1 <- run.nodesplit(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' # The names of the interventions in the order they appear in the dataset
 #' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",

@@ -6,7 +6,9 @@
 #' @param assumption Character string indicating the structure of the informative missingness parameter.
 #'   Set \code{assumption} equal to one of the following: \code{"HIE-ARM"}, or \code{"IDE-ARM"}.
 #'   The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"}, and \code{"HIE"}, stand for identical, and hierarchical, respectively. See 'Details'.
-#' @param mean.scenarios A vector with a length of at least 5 with numeric values for the mean of the normal distribution of the informative missingness parameter (see 'Details').
+#' @param mean.scenarios A vector with numeric values for the mean of the normal distribution of the informative missingness parameter (see 'Details').
+#'   The vector should have a length of 5 or larger \emph{positive odd integer}.
+#'   The missing-at-random (MAR) assumption should be the median of the vector, so that the same number of informative scenarios appear before and after the MAR.
 #'   The default arguments are c(-log(3), -log(2), log(0.9999), log(2), log(3)) and c(-2, -1, 0, 1, 2) for binary and continuous outcome dara, respectively.
 #' @param var.misspar A positive non-zero number for the variance of the normal distribution of the informative missingness parameter. When the \code{measure} is \code{"OR"}, \code{"MD"}, or \code{"SMD"}
 #'   the default argument is 1; When the \code{measure} is \code{"ROM"} in \code{\link{run.model}} the default argument is 0.04
@@ -32,13 +34,17 @@
 #'   The number of times \code{run.sensitivity} is used appears in the R console as a text in red and it equals the number of scenarios specified in argument \code{mean.scenarios} (see 'Examples').
 #'   The output of \code{run.sensitivity} is used as an S3 object by other functions of the package function to be processed further and provide an end-user-ready output.
 #'
-#'   In the case of PMA, \code{EM} and \code{tau} have as many rows as the square of the number of scenarios indicated in argument \code{mean.scenarios}.
+#'   In the case of PMA, \code{EM} and \code{tau} have as many rows as the \emph{square of the number of scenarios} indicated in argument \code{mean.scenarios}.
 #'   In the case of NMA, each possible pairwise comparison is estimated as many times as the square of the number of scenarios indicated in argument \code{mean.scenarios}.
 #'
 #'   The informative missingness parameter is assumed to differ only across the interventions of the dataset. Therefore, the user can specify this parameter to be arm-specific and identical (\code{assumption} = \code{"IDE-ARM}),
 #'   or arm-specific and hierarchical (\code{assumption} = \code{"HIE-ARM}) (Spineli et al., 2021).
 #'
-#'   The number of scenarios in \code{mean.scenarios} should be equal to or more than 5 to allow for an adequate sensitivity analysis.
+#'   The number of scenarios in \code{mean.scenarios} should be equal to or more than 5 (a positive odd integer) to allow for an adequate sensitivity analysis.
+#'   It is important that the scenario corresponding to the MAR assumption is the middle of the numbers in \code{mean.scenarios}.
+#'   Under the inforamtive missingness of mean difference parameter, the MAR assumption is equal to 0.
+#'   Under the informative missingness odds ratio parameter and the informative missingness ratio of means parameter, the MAR assumption is equal to 1. Both parameters are analysed in the logarithmic scale. We advise using the value \code{0.999} rather than log(1)
+#'   in \code{mean.scenarios}; otherwise, the execution of the fucntion will be stopped and the error 'Invalid parent values' will be printed in the R console.
 #'   Currently, there are no empirically-based prior distributions for the informative missingness parameters. The users may refer to White et al. (2008), Mavridis et al. (2015), Turner et al. (2015) and Spineli (2019) to determine \code{mean.scenarios}
 #'   for an informative missingness mechanism and select a proper value for \code{var.misspar}.
 #'

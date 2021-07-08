@@ -29,7 +29,7 @@
 #' res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' # Run separate random-effects pairwise meta-analyses
-#' meta1 <- run.series.meta(data = nma.baker2009, full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' meta1 <- run.series.meta(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' # The names of the interventions in the order they appear in the dataset
 #' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
