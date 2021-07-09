@@ -1,7 +1,7 @@
 #' Heatmap of robsutness index: Investigate the impact of missing participant outcome data
 #'
 #' @description This functions facilitates the detection of comparisons that are sensible to different assumptions about the informative missingness parameter
-#'   for the compared interventions. The heatmap is based on the robustness index of each possible pairwise comparison of the investigated network (see \code{robustness.index}).
+#'   for the compared interventions. The heatmap is based on the robustness index of each possible pairwise comparison in the investigated network (see \code{robustness.index}).
 #'   Currently, \code{heatmap.robustness} is used concerning the impact of missing participant outcome data.
 #'
 #' @param robust An object of S3 class \code{\link{robustness.index}}. See 'Value' in \code{\link{robustness.index}}.
@@ -21,7 +21,7 @@
 #'   Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
 #'
 #' @return \code{heatmap.robustness} first prints on the R console a message on the threshold of robustness determined by the user in the \code{robustness.index} function.
-#'   Then, it returns a lower triangular heatmap matrix with the robustness index valueof all possible pairwise comparisons.
+#'   Then, it returns a lower triangular heatmap matrix with the robustness index value of all possible pairwise comparisons.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -95,7 +95,7 @@ heatmap.robustness <- function(robust, drug.names){
   ## Lower triangular heatmap matrix - Comparisons are read from the left to the right
   ## CAREFUL: The interventions in the drug.names should follow the order you considered to run NMA pattern-mixture model!
   mat <- matrix(NA, nrow = length(drug.names) - 1, ncol = length(drug.names) - 1)
-  mat[lower.tri(mat, diag = T)] <- round(RI, 2)
+  mat[lower.tri(mat, diag = T)] <- sprintf("%.2f", RI)
   colnames(mat) <- drug.names[1:(length(drug.names) - 1)]; rownames(mat) <- drug.names[2:length(drug.names)]
   mat.new <- melt(mat, na.rm = T)
 

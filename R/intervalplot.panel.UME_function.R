@@ -57,9 +57,14 @@ intervalplot.panel.UME <- function(full, ume, drug.names) {
   ume.stat.signif <- ifelse(ume.lower > 0 | ume.upper < 0, "strong", "weak")
 
 
-  # Create the dataframe
-  data.set <- data.frame(c(nma.mean, ume.mean), c(nma.lower, ume.lower), c(nma.upper, ume.upper), c(nma.stat.signif, ume.stat.signif),
-                         rep(possible.comp$obs.comp[, 4], 2), rep(c("NMA model", "UME model"), each = length(obs.comp)), frail.comp.ind)
+  # Create the data-frame
+  data.set <- if (is.element(full$measur, c("OR", "ROM"))) {
+    data.frame(round(exp(c(nma.mean, ume.mean)), 2), round(exp(c(nma.lower, ume.lower)), 2), round(exp(c(nma.upper, ume.upper)), 2), c(nma.stat.signif, ume.stat.signif),
+               rep(possible.comp$obs.comp[, 4], 2), rep(c("NMA model", "UME model"), each = length(obs.comp)), frail.comp.ind)
+  } else {
+    data.frame(c(nma.mean, ume.mean), c(nma.lower, ume.lower), c(nma.upper, ume.upper), c(nma.stat.signif, ume.stat.signif),
+               rep(possible.comp$obs.comp[, 4], 2), rep(c("NMA model", "UME model"), each = length(obs.comp)), frail.comp.ind)
+  }
   colnames(data.set) <- c("mean", "lower", "upper", "stat.sign", "comp", "analysis", "frail")
 
 
@@ -67,18 +72,23 @@ intervalplot.panel.UME <- function(full, ume, drug.names) {
   ggplot(data = data.set, aes(x = as.factor(analysis), y = mean, ymin = lower, ymax = upper, colour = stat.sign)) +
     geom_rect(aes(fill = frail),xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, alpha = 0.2) +
     geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-    geom_hline(yintercept = 0, lty = 1, size = 1, col = "black") +
+    geom_hline(yintercept = ifelse(!is.element(full$measure, c("OR", "ROM")), 0, 1), lty = 1, size = 1, col = "grey53") +
+    #geom_hline(yintercept = 0, lty = 1, size = 1, col = "black") +
     geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
     geom_text(aes(x = as.factor(analysis), y = mean, label = paste0(sprintf("%.2f", mean), " ", "(",
               sprintf("%.2f", lower), ",", " ", sprintf("%.2f", upper), ")")),
               color = "black", hjust = 0, vjust = -0.5, size = 3.3, check_overlap = F, parse = F,
               position = position_dodge(width = 0.8), inherit.aes = T) +
+    geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 0.1, -0.2), label = ifelse(full$D == 0, "Favours first arm", "Favours second arm")),
+              size = 3.5, vjust = 0, hjust = 0, color = "black") +
+    geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 1.2, 0.2), label = ifelse(full$D == 0, "Favours second arm", "Favours first arm")),
+              size = 3.5, vjust = 0, hjust = 0, color = "black") +
     facet_wrap(vars(factor(comp, levels = unique(data.set$comp))), scales = "fixed") +
     scale_fill_manual(breaks = c("yes", "no"), values = c("grey53", "white")) +
     scale_color_manual(breaks = c("strong", "weak"), values = c("#009E73", "#D55E00")) +
-    #scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
-    scale_y_continuous(trans = "identity") +
-    labs(x = "", y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), paste(measure, "(in logarithmic scale)"), measure), colour = "Evidence", fill = "") +
+    scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
+    #scale_y_continuous(trans = "identity") +
+    labs(x = "", y = measure, colour = "Evidence", fill = "") +
     coord_flip() +
     theme_classic() +
     guides(fill = FALSE) +

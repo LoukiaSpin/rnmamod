@@ -201,7 +201,7 @@ run.sensitivity <- function(full, assumption, mean.scenarios, var.misspar, n.cha
 
   ## Return results
   results <- if (model == "RE"){
-    list(EM = EM, tau = tau, measure = measure, scenarios = mean.scenarios, D = D)
+    list(EM = EM, tau = tau, measure = measure, scenarios = mean.scenarios, D = D, heter = heter.prior)
   } else {
     list(EM = EM, measure = measure, scenarios = mean.scenarios, D = D)
   }

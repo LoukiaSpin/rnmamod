@@ -17,14 +17,14 @@ as they appear in \code{data} is used, instead.}
 \value{
 \code{nodesplit.plot} returns the following list of elements:
 \tabular{ll}{
- \code{table.EM} \tab A data-frame with the posterior mean, posterior standard deviation and 95\% credible interval of the direct and indirect effect and the inconsistency factor of each split node.\cr
+ \code{Table.effect.size} \tab A data-frame with the posterior mean, posterior standard deviation and 95\% credible interval of the direct and indirect effect and the inconsistency factor of each split node.\cr
  \tab \cr
- \code{table.assess} \tab A data-frame with the model assessment parameters (DIC, posterior mean of total residual deviance, and number of effective parameters), the posterior median, posterior standard deviation and 95\% credible interval of \eqn{\tau}
+ \code{Table.model.assessment} \tab A data-frame with the model assessment parameters (DIC, posterior mean of total residual deviance, and number of effective parameters), the posterior median, posterior standard deviation and 95\% credible interval of \eqn{\tau}
   under the consistency model and after each split node. See 'Details'.\cr
  \tab \cr
- \code{node.split.intervalplot} \tab A panel of interval plots on the direct and indirect effect of the split nodes and the corresponding inconsistency factor. See 'Details'.\cr
+ \code{Intervalplot.IF} \tab A panel of interval plots on the direct and indirect effect of the split nodes and the corresponding inconsistency factor. See 'Details'.\cr
  \tab \cr
- \code{tau.intervalplot} \tab An interval plot on \eqn{\tau} after each split node. See 'Details'.\cr
+ \code{Intervalplot.tau} \tab An interval plot on \eqn{\tau} after each split node. See 'Details'.\cr
 }
 }
 \description{

@@ -20,23 +20,23 @@ as they appear in \code{data} is used, instead.}
 \code{UME.plot} prints on the R console two messages: (1) the threshold of similarity determined by the user in green text, (2) and followed by the most parsimonious model (if any) based on the deviance information criterion (DIC; in red text).
 Then, the function returns the following list of elements:
 \tabular{ll}{
- \code{EM.both.models} \tab The posterior mean, posterior standard deviation, and 95\% credible interval of the summary effect size for each pairwise comparison observed in the network under the consistency model and the unrelated mean effects model.\cr
+ \code{Table.effect.size} \tab The posterior mean, posterior standard deviation, and 95\% credible interval of the summary effect size for each pairwise comparison observed in the network under the consistency model and the unrelated mean effects model.\cr
  \tab \cr
- \code{model.assessment} \tab The DIC, number of effective parameters, and total residual deviance under the consistency model and the unrelated mean effects model (Spiegelhalter et al. (2002)).\cr
+ \code{Table.model.assessment} \tab The DIC, number of effective parameters, and total residual deviance under the consistency model and the unrelated mean effects model (Spiegelhalter et al. (2002)).\cr
  \tab \cr
- \code{between.trial.SD} \tab The posterior median and 95\% credible interval of \eqn{\tau} under the consistency model and the unrelated mean effects model.
+ \code{Table.tau} \tab The posterior median and 95\% credible interval of \eqn{\tau} under the consistency model and the unrelated mean effects model.
   When a fixed-effect model has been performed, \code{UME.plot} does not return this element.\cr
  \tab \cr
- \code{scatterplots} \tab The scatterplot and the Bland-Altman plot on the posterior mean deviance contribution of the individual data points under the consistency model and the unrelated mean effects model.
+ \code{Scatterplots} \tab The scatterplot and the Bland-Altman plot on the posterior mean deviance contribution of the individual data points under the consistency model and the unrelated mean effects model.
   See 'Details' and 'Value' in \code{\link{scatterplots.dev}} and \code{\link{BlandAltman.plot}}.\cr
  \tab \cr
- \code{levarage.plots} \tab The leverage plot on the posterior mean of deviance of the individual data points under the consistency model and the unrelated mean effects model, separately.
+ \code{Levarage.plots} \tab The leverage plot on the posterior mean of deviance of the individual data points under the consistency model and the unrelated mean effects model, separately.
   See 'Details' and 'Value' in \code{\link{leverage.plot}}.\cr
  \tab \cr
- \code{intervalplots.panel} \tab A panel of interval plots on the summary effect size under the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
+ \code{Intervalplots} \tab A panel of interval plots on the summary effect size under the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
   See 'Details' and 'Value' in \code{\link{intervalplot.panel.UME}}.\cr
  \tab \cr
- \code{heatmap.similarity} \tab A heatmap of similarity in the posterior distribution of summary effect size between the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
+ \code{Heatmap} \tab A heatmap of similarity in the posterior distribution of summary effect size between the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
   See 'Details' and 'Value' in \code{\link{heatmap.similarity.UME}} and \code{\link{similarity.index.UME}}.\cr
 }
 }

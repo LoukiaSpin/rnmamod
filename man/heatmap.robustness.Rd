@@ -14,11 +14,11 @@ as they appear in \code{data} is used, instead.}
 }
 \value{
 \code{heatmap.robustness} first prints on the R console a message on the threshold of robustness determined by the user in the \code{robustness.index} function.
-  Then, it returns a lower triangular heatmap matrix with the robustness index valueof all possible pairwise comparisons.
+  Then, it returns a lower triangular heatmap matrix with the robustness index value of all possible pairwise comparisons.
 }
 \description{
 This functions facilitates the detection of comparisons that are sensible to different assumptions about the informative missingness parameter
-  for the compared interventions. The heatmap is based on the robustness index of each possible pairwise comparison of the investigated network (see \code{robustness.index}).
+  for the compared interventions. The heatmap is based on the robustness index of each possible pairwise comparison in the investigated network (see \code{robustness.index}).
   Currently, \code{heatmap.robustness} is used concerning the impact of missing participant outcome data.
 }
 \details{

@@ -19,12 +19,12 @@ as they appear in \code{data} is used, instead.}
 \code{KLD.barplot} returns a panel of barplots on the KLD measure for each analysis.
 }
 \description{
-This function produces a barplot with the Kullback-Leibler divergence (KLD) measure for the primary analysis and all subsequent re-analysis for a pairwise comparison.
+This function produces a barplot with the Kullback-Leibler divergence (KLD) measure from each re-analysis to primary analysis for a pairwise comparison.
   Currently, \code{KLD.barplot} is used concerning the impact of missing participant outcome data.
 }
 \details{
 The scenarios for the missingness parameter in compared interventions are split to \emph{Extreme}, \emph{Sceptical}, and \emph{Optimistic} following the classification of Spineli et al. (2021).
-  In each class, bars will green, orange, and red colour refer to scenarios without distance, less distant, and more distant scenarios from the primary analysis (the missinf-at-random assumption).
+  In each class, bars will green, orange, and red colour refer to scenarios without distance, less distant, and more distant scenarios from the primary analysis (the missing-at-random assumption).
 
   \code{KLD.barplot} can be used only for when missing participant outcome data have been extracted for at least one trial. Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
 }

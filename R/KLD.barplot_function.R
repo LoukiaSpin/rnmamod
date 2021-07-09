@@ -1,6 +1,6 @@
 #' Barplot for the Kullback-Leibler divergence measure: Investigate the impact of missing participant outcome data
 #'
-#' @description This function produces a barplot with the Kullback-Leibler divergence (KLD) measure for the primary analysis and all subsequent re-analysis for a pairwise comparison.
+#' @description This function produces a barplot with the Kullback-Leibler divergence (KLD) measure from each re-analysis to primary analysis for a pairwise comparison.
 #'   Currently, \code{KLD.barplot} is used concerning the impact of missing participant outcome data.
 #'
 #' @param robust An object of S3 class \code{\link{robustness.index}}. See 'Value' in \code{\link{robustness.index}}.
@@ -12,7 +12,7 @@
 #' @return \code{KLD.barplot} returns a panel of barplots on the KLD measure for each analysis.
 #'
 #' @details The scenarios for the missingness parameter in compared interventions are split to \emph{Extreme}, \emph{Sceptical}, and \emph{Optimistic} following the classification of Spineli et al. (2021).
-#'   In each class, bars will green, orange, and red colour refer to scenarios without distance, less distant, and more distant scenarios from the primary analysis (the missinf-at-random assumption).
+#'   In each class, bars will green, orange, and red colour refer to scenarios without distance, less distant, and more distant scenarios from the primary analysis (the missing-at-random assumption).
 #'
 #'   \code{KLD.barplot} can be used only for when missing participant outcome data have been extracted for at least one trial. Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
 #'
@@ -137,7 +137,7 @@ KLD.barplot <- function(robust, compar, drug.names){
     ggtitle(paste(experim, "versus", control)) +
     theme_classic() +
     theme(axis.title = element_text(size = 12, face = "bold"), axis.text = element_text(size = 10.5), axis.text.x = element_text(size = 10.5, angle = 45, hjust = 1),
-          legend.position = "bottom", legend.title = element_text(size = 12, face = "bold"), legend.text = element_text(size = 11),
+          legend.position = "bottom", legend.title = element_text(size = 12, face = "bold"), legend.text = element_text(size = 12),
           strip.text = element_text(size = 12), plot.title = element_text(size = 14, face = "bold", hjust = 0.5))
 
   return(barplot)

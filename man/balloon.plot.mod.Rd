@@ -16,21 +16,30 @@ and the second character refers to the 'control' intervention of the comparison.
 as they appear in \code{data} is used, instead.}
 }
 \value{
-\code{balloon.plot.mod} a balloon plot for one comparison which is enhanced with colours and bubbles of different size and shape. See 'Details'.
+\code{balloon.plot.mod} A list of two enhanced balloon plots for one comparison (see 'Details' for the description of the enhanced balloon plot):
+\tabular{ll}{
+ \strong{Plot.effect.size} \tab The enhanced balloon plot for the summary effect size of one pairwise comparison.\cr
+ \tab \cr
+ \strong{Plot.tau} \tab The enhanced balloon plot for \eqn{\tau}. When the fixed-effect model has been performed in \code{run.sensitivity}, the function will not return the \code{Plot.tau}.\cr
+}
 }
 \description{
-This functions creates the enhanced balloon plot with the summary results of a pairwise comparison under different scenarios about the missingness parameter
-  for a pair of interventions. Currently, \code{balloon.plot.mod} supports the illustration of the summary effect size and its standard error.
+This function creates the enhanced balloon plot for the summary effect size and between-trial standard deviation, \eqn{\tau}, under different scenarios about the missingness parameter
+  for a pair of interventions. \code{balloon.plot.mod} uses the scenarios considered in \code{\link{run.sensitivity}}.
 }
 \details{
-The different colours and bubble sizes reflect the posterior standard deviation of the summary effect size and the magnitude of the posterior mean of the summary effect size for one pairwise comparison.
+For the summary effect size of a pairwise comparison, the different colours and bubble sizes reflect the posterior standard deviation and the magnitude of the posterior mean, respectively.
   A colour key appears below the plot that matches the colours with the corresponding posterior standard deviation value.
-  The size of the bubble is proportional to the magnitude of the corresponding effect size.
-  Crossed bubbles indicate scenrios with conclusive evidence (i.e., the 95% credible interval excludes the null value), and filled bubbles indicate scenarios with inconclusive evidence
-  (i.e., the 95% credible interval includes the null value).
-  The missing-at-random assumption (the primary analysis) is labelled in a white frame.
+  The size of the bubble is proportional to the magnitude of the corresponding posterior mean.
+  Crossed bubbles indicate scenarios with conclusive evidence (i.e., the 95\% credible interval excludes the null value), and filled bubbles indicate scenarios with inconclusive evidence
+  (i.e., the 95\% credible interval includes the null value).
+  The missing-at-random assumption (the primary analysis) is labeled in a white frame.
   Both axes illustrate the scenarios as specified in the argument \code{mean.scenarios} of the \code{run.sensitivity} function:
   the x-axis refers to the 'experimental' intervention, and the y-axis refers to the 'control' intervention.
+
+  The same enhanced balloon plot is created for \eqn{\tau}. However, filled bubbles indicate low extent of statistical heterogeneity,
+  and crossed bubbles indicate considerable extent of statistical heterogeneity. Low extent implies that the posterior median of \eqn{\tau} is lower than
+  the median of the prior distribution for \eqn{\tau} (see, \code{\link{run.sensitivity}} and \code{\link{run.model}}); otherwise, there is considerable statistical heterogeneity,
 
   \code{heatmap.robustness} can be used only for a network of interventions and when missing participant outcome data have been extracted for at least one trial.
   Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
