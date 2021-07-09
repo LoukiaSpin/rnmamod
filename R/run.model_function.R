@@ -164,7 +164,6 @@
 #' run.model(data = nma.baker2009,
 #'           measure = "OR",
 #'           model = "RE",
-#'           covar.assumption = "NO",
 #'           assumption = "IDE-ARM",
 #'           heter.prior = list("halfnormal", 0, 1),
 #'           mean.misspar = 0,
@@ -195,19 +194,19 @@ run.model <- function(data, measure, model, covar.assumption, assumption, heter.
   } else {
     model
   }
-  assumption <- if (missing(assumption)) {
-    "IDE-ARM"
-  } else if (!is.element(assumption,  c("IDE-ARM", "IDE-TRIAL", "IDE-COMMON", "HIE-ARM", "HIE-TRIAL", "HIE-COMMON", "IND-CORR", "IND-UNCORR"))) {
-    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'", call. = F)
-  } else {
-    assumption
-  }
   covar.assumption <- if (missing(covar.assumption)) {
     "NO"
   } else if (!is.element(covar.assumption,  c("NO", "exchangeable", "independent", "common"))) {
     stop("Insert 'NO', 'exchangeable', 'independent', or 'common'", call. = F)
   } else {
     covar.assumption
+  }
+  assumption <- if (missing(assumption)) {
+    "IDE-ARM"
+  } else if (!is.element(assumption,  c("IDE-ARM", "IDE-TRIAL", "IDE-COMMON", "HIE-ARM", "HIE-TRIAL", "HIE-COMMON", "IND-CORR", "IND-UNCORR"))) {
+    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'", call. = F)
+  } else {
+    assumption
   }
   D <- if (missing(D)) {
     stop("The argument 'D' needs to be defined", call. = F)

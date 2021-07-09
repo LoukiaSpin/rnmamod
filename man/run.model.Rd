@@ -36,8 +36,8 @@ run.model(
   data,
   measure,
   model,
-  assumption,
   covar.assumption,
+  assumption,
   heter.prior,
   mean.misspar,
   var.misspar,
@@ -56,13 +56,13 @@ standardised mean difference and ratio of means, respectively.}
 
 \item{model}{Character string indicating the analysis model with values \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model, respectively. The default argument is \code{"RE"}.}
 
-\item{assumption}{Character string indicating the structure of the informative missingness parameter.
-Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.
-The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"}, \code{"HIE"}, and \code{"IND"} stand for identical, hierarchical and independent, respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and uncorrelated, respectively.}
-
 \item{covar.assumption}{Character string indicating the structure of the slope for the intervention by covariate interaction, as described in Cooper et al., (2009).
 Set \code{covar.assumption} equal to one of the following: \code{"NO"}, when no meta-regression is performed; otherwise, \code{"exchangeable"} \code{"independent"}, and \code{"common"}.
 See the \code{ru.metareg} function.}
+
+\item{assumption}{Character string indicating the structure of the informative missingness parameter.
+Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.
+The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"}, \code{"HIE"}, and \code{"IND"} stand for identical, hierarchical and independent, respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and uncorrelated, respectively.}
 
 \item{heter.prior}{A list of three elements with the following order: 1) a character string indicating the distribution with (currently available) values \code{"halfnormal"},
 \code{"uniform"}, \code{"lognormal"}, or \code{"logt"}; 2) two numeric values that refer to the parameters of the selected distribution. For \code{"halfnormal"}, \code{"lognormal"}, and \code{"logt"}
@@ -177,7 +177,6 @@ run.model(data = nma.baker2009,
           measure = "OR",
           model = "RE",
           assumption = "IDE-ARM",
-          covar.assumption = "NO",
           heter.prior = list("halfnormal", 0, 1),
           mean.misspar = 0,
           var.misspar = 1,
