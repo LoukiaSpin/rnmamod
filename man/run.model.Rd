@@ -72,16 +72,16 @@ the default argument is 1; When the \code{measure} is \code{"ROM"} the default a
 
 \item{D}{A binary number for the direction of the outcome. Set \code{D = 1} for a beneficial outcome and \code{D = 0} for a harmful outcome.}
 
-\item{n.chains}{Integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+\item{n.chains}{Positive integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 2.}
 
-\item{n.iter}{Integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+\item{n.iter}{Positive integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 10000.}
 
-\item{n.burnin}{Integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+\item{n.burnin}{Positive integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1000.}
 
-\item{n.thin}{Integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+\item{n.thin}{Positive integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1.}
 }
 \value{
@@ -128,7 +128,7 @@ Furthermore, the output includes the following elements - the first three result
  \tab \cr
  \code{jagsfit} \tab An object of S3 class \code{\link[R2jags]{jags}} with the posterior results on all monitored parameters to be used in the \code{mcmc.diagnostics} function.\cr
 }
-The \code{run.model} function also returns the arguments \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, \code{var.misspar}, and \code{D}
+The \code{run.model} function also returns the arguments \code{data}, \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, \code{var.misspar}, and \code{D}
 as specified by the user to be considered in other functions of the package.
 }
 \description{
@@ -149,7 +149,7 @@ The model as specified by the arguments of \code{run.model} runs in \code{JAGS} 
   To perform the Bayesian PMA or NMA, the \code{prepare.model} function is called which contains the WinBUGS code as written by Dias et al. (2013) for binomial and normal likelihood to analyse binary and continuous outcome data, respectively. \code{prepare.model} uses consistency models (as
   described in Lu and Ades (2006)) to estimate all possible comparisons in the network. It also accounts for the multi-arm trials by assigning conditional univariate normal distributions on the basic parameters of these trials, that is, effect parameters between non-baseline and baseline arms (Dias et al., 2013).
 
-  The code of Dias et al. (2013) has been extended to incorporate the pattern-mixture model to adjusted the underlying outcome in each arm of every trial for MOD (Turner et al., 2015; Spineli et al., 2021). Assumptions about the missingness parameter is specified using the arguments \code{mean.misspar} and \code{var.misspar}.
+  The code of Dias et al. (2013) has been extended to incorporate the pattern-mixture model to adjust the underlying outcome in each arm of every trial for MOD (Turner et al., 2015; Spineli et al., 2021). Assumptions about the missingness parameter is specified using the arguments \code{mean.misspar} and \code{var.misspar}.
   Specifically, \code{run.model} considers the informative missingness odds ratio in the logarithmic scale for binary outcome data (White et al., 2008; Turner et al., 2015; Spineli, 2019), the informative missingness difference of means when \code{measure} is \code{"MD"} or \code{"SMD"},
   and the informative missingness ratio of means in the logarithmic scale when \code{measure} is \code{"ROM"} (Mavridis et al., 2015; Spineli et al., 2021).
 
@@ -168,7 +168,18 @@ data("nma.baker2009")
 View(nma.baker2009)
 
 # Perform a random-effects network meta-analysis
-run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+run.model(data = nma.baker2009,
+          measure = "OR",
+          model = "RE",
+          assumption = "IDE-ARM",
+          heter.prior = list("halfnormal", 0, 1),
+          mean.misspar = 0,
+          var.misspar = 1,
+          D = 1,
+          n.chains = 3,
+          n.iter = 10000,
+          n.burnin = 1000,
+          n.thin = 1)
 
 }
 \references{

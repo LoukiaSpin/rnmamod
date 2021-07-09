@@ -36,11 +36,22 @@
 #' data("nma.baker2009.RData")
 #'
 #' # Perform a random-effects network meta-analysis
-#' res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' res1 <- run.model(data = nma.baker2009,
+#'                   measure = "OR",
+#'                   model = "RE",
+#'                   assumption = "IDE-ARM",
+#'                   heter.prior = list("halfnormal", 0, 1),
+#'                   mean.misspar = 0,
+#'                   var.misspar = 1,
+#'                   D = 1,
+#'                   n.chains = 3,
+#'                   n.iter = 10000,
+#'                   n.burnin = 1000,
+#'                   n.thin = 1)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
-#'                   "formoterol", "salmeterol", "tiotropium", "placebo")
+#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+#'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
 #'
 #' # Create the league heatmap
 #' league.heatmap(full = res1, drug.names = interv.names)
@@ -125,7 +136,7 @@ league.heatmap <- function(full, drug.names){
 
   ## Merge point estimate with 95% credible interval in a new symmetric matric
   #(final <- matrix(paste0(point, signif.status, "\n", "(", lower, ",", " ", upper, ")"), nrow = length(drug.names), ncol = length(drug.names)))
-  final <- matrix(paste0(point,  "\n", "(", lower, ",", " ", upper, ")"), nrow = length(drug.names), ncol = length(drug.names))
+  final <- matrix(paste0(sprintf("%.2f", point),  "\n", "(", sprintf("%.2f", lower), ",", " ", sprintf("%.2f", upper), ")"), nrow = length(drug.names), ncol = length(drug.names))
   colnames(final) <- order.drug; rownames(final) <- order.drug
 
 

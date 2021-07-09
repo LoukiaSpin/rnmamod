@@ -6,7 +6,7 @@
 #' @param net An object of S3 class \code{\link{run.model}} or \code{\link{run.UME}}. See 'Value' in \code{\link{run.model}} and \code{\link{run.UME}}.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}.
 #'   If the argument \code{drug.names} is not defined, the order of the interventions as they appear in \code{data} is used, instead.
-#' @param colour A string to define the colour of the points in the plot.
+#' @param title A title to indicate the model (consistency model or unrelated mean effects model).
 #'
 #' @return A scatterplot of the leverage against the square root of the posterior mean of residual deviance of the trial-arms under the consistency models or
 #'   the unrelated mean effects model. The green, yellow, and red curves correspond to the parabola \eqn{x^2 + y = k} with \eqn{k} = 1, 2, and 3, respectively.

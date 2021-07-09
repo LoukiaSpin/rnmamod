@@ -2,10 +2,77 @@
 % Please edit documentation in R/KLD.barplot_function.R
 \name{KLD.barplot}
 \alias{KLD.barplot}
-\title{A barplot for the Kullback-Leibler divergence measure for all scenarios}
+\title{Barplot for the Kullback-Leibler divergence measure: Investigate the impact of missing participant outcome data}
 \usage{
-KLD.barplot(robust, compar, outcome, drug.names)
+KLD.barplot(robust, compar, drug.names)
+}
+\arguments{
+\item{robust}{An object of S3 class \code{\link{robustness.index}}. See 'Value' in \code{\link{robustness.index}}.}
+
+\item{compar}{A character vector with two characters that indicates the pairwise comparison of interest. The first character refers to the 'experimental' intervention
+and the second character refers to the 'control' intervention of the comparison.}
+
+\item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
+as they appear in \code{data} is used, instead.}
+}
+\value{
+\code{KLD.barplot} returns a panel of barplots on the KLD measure for each analysis.
 }
 \description{
-A barplot for the Kullback-Leibler divergence measure for all scenarios
+This function produces a barplot with the Kullback-Leibler divergence (KLD) measure for the primary analysis and all subsequent re-analysis for a pairwise comparison.
+  Currently, \code{KLD.barplot} is used concerning the impact of missing participant outcome data.
+}
+\details{
+The scenarios for the missingness parameter in compared interventions are split to \emph{Extreme}, \emph{Sceptical}, and \emph{Optimistic} following the classification of Spineli et al. (2021).
+  In each class, bars will green, orange, and red colour refer to scenarios without distance, less distant, and more distant scenarios from the primary analysis (the missinf-at-random assumption).
+
+  \code{KLD.barplot} can be used only for when missing participant outcome data have been extracted for at least one trial. Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
+}
+\examples{
+data("nma.baker2009.RData")
+
+# Perform a random-effects network meta-analysis
+res1 <- run.model(data = nma.baker2009,
+                  measure = "OR",
+                  model = "RE",
+                  assumption = "IDE-ARM",
+                  heter.prior = list("halfnormal", 0, 1),
+                  mean.misspar = 0,
+                  var.misspar = 1,
+                  D = 1,
+                  n.chains = 3,
+                  n.iter = 10000,
+                  n.burnin = 1000,
+                  n.thin = 1)
+
+# Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
+res.sens <- run.sensitivity(full = res1,
+                            assumption = "IDE-ARM",
+                            var.misspar = 1,
+                            n.chains = 3,
+                            n.iter = 10000,
+                            n.burnin = 1000,
+                            n.thin = 1)
+
+# Calculate the robustness index
+robust <- robustness.index(sens = res.sens, threshold = 0.28)
+
+# The names of the interventions in the order they appear in the dataset
+interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+                  salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
+
+# Crate the barplot for the comparison 'tiotropium versus salmeterol'
+KLD.barplot(robust = robust, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
+
+}
+\references{
+Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
+
+Kullback S, Leibler RA. On information and sufficiency. \emph{Ann Math Stat} 1951;\bold{22}(1):79--86. [\doi{10.1214/aoms/1177729694}]
+}
+\seealso{
+\code{\link{robustness.index}}, \code{\link{run.model}}
+}
+\author{
+{Loukia M. Spineli}
 }

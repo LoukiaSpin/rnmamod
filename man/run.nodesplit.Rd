@@ -4,23 +4,21 @@
 \alias{run.nodesplit}
 \title{A function to perform Bayesian node-splitting approach}
 \usage{
-run.nodesplit(data, full, n.chains, n.iter, n.burnin, n.thin)
+run.nodesplit(full, n.chains, n.iter, n.burnin, n.thin)
 }
 \arguments{
-\item{data}{A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' in \code{\link{run.model}} for the specification of the columns.}
-
 \item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
 
-\item{n.chains}{Integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+\item{n.chains}{Positive integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 2.}
 
-\item{n.iter}{Integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+\item{n.iter}{Positive integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 10000.}
 
-\item{n.burnin}{Integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+\item{n.burnin}{Positive integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1000.}
 
-\item{n.thin}{Integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+\item{n.thin}{Positive integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1.}
 }
 \value{
@@ -45,7 +43,7 @@ This function performs a Bayesian network meta-analysis based on the node-splitt
   (Spineli, 2019; Spineli et al., 2021). This model offers a local evaluation of the plausibility of the consistency assumption in the network (Dias et al. (2010)).
 }
 \details{
-\code{run.nodesplit} does not contain the arguments \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, and \code{var.misspar} that are found in \code{run.model}.
+\code{run.nodesplit} does not contain the arguments \code{data}, \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, and \code{var.misspar} that are found in \code{run.model}.
   This is to prevent misspecifying the Bayesian model as it would make the comparison of the consistency model (via \code{run.model}) with the node-splitting approach meaningless.
   Instead, these arguments are contained in the argument \code{full} of the function. Therefore, the user needs first to apply \code{run.model}, and then use \code{run.nodesplit} (see, 'Examples').
 
@@ -63,10 +61,21 @@ This function performs a Bayesian network meta-analysis based on the node-splitt
 data("nma.liu2013.RData")
 
 # Perform a random-effects network meta-analysis (consistency model)
-res1 <- run.model(data = nma.liu2013, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+res1 <- run.model(data = nma.liu2013,
+                  measure = "OR",
+                  model = "RE",
+                  assumption = "IDE-ARM",
+                  heter.prior = list("halfnormal", 0, 1),
+                  mean.misspar = 0,
+                  var.misspar = 1,
+                  D = 1,
+                  n.chains = 3,
+                  n.iter = 10000,
+                  n.burnin = 1000,
+                  n.thin = 1)
 
 # Run random-effects network meta-analysis with node-splitting approach
-run.nodesplit(data = nma.liu2013, full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+run.nodesplit(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 
 }
 \references{

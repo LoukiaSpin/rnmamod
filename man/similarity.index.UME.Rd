@@ -21,27 +21,29 @@ A list of the following two vectors:
  \code{robust} \tab A character vector on whether the divergence is acceptable or substantial.\cr
 }
 
-In \code{robust}, acceptable divergence is labeled as \emph{robust} (i.e., \code{KLD} \eqn{<} \code{threshold}), and substantial divergence is labeled as \emph{frail}. This is equivalent to concluding
+In \code{robust}, acceptable divergence is labeled as \code{"robust"} (i.e., \code{KLD} \eqn{<} \code{threshold}), and substantial divergence is labeled as \code{"frail"}. This is equivalent to concluding
 that the summary effect size of a comparison is robust and sensible, respectively, to the applied model.
 }
 \description{
-This function calculates the Kullback-Leibler divergence (KLD) measure in the summary effect size from the unrelated mean effects model
+This function calculates the Kullback-Leibler divergence (KLD) measure (Kullback and Leibler, 1951) in the summary effect size from the unrelated mean effects model
   to the consistency model. Then, for each pairwise comparison observed in the network, the KLD value is compared with a threshold that reflects
   the minimally allowed deviation between the compared models.
 }
 \details{
-\code{similarity.index.UME} is integrated in the \code{UME.plot} function.
-  The user may consider the values 0.28 and 0.17 as \code{threshold} for binary and continuous outcome data, respectively.
-  These thresholds have been originally developed by Spineli et al. (2021) and considered also by Spineli (2021) in the proposed
-  framework of global evaluation of the consistency assumption.
+\code{similarity.index.UME} is integrated in the \code{heatmap.similarity.UME} function.
+  The user may consider the values 0.28 and 0.17 as \code{threshold} for binary and continuous outcome data, (the default values), respectively, or consider other plausible values.
+  Spineli et al. (2021) offers a discussion on specifying the \code{threshold}.
+  These thresholds have been originally developed by Spineli et al. (2021) and considered also by Spineli (2021) in the proposed framework of global evaluation of the consistency assumption.
 }
 \references{
 Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
 
-Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021. [\doi{10.1002/jrsm.1478}]
+Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
+
+Kullback S, Leibler RA. On information and sufficiency. \emph{Ann Math Stat} 1951;\bold{22}(1):79--86. [\doi{10.1214/aoms/1177729694}]
 }
 \seealso{
-\code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{UME.plot}}
+\code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{heatmap.similarity.UME}}
 }
 \author{
 {Loukia M. Spineli}

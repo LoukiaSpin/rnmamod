@@ -22,9 +22,9 @@ Then, the function returns the following list of elements:
 \tabular{ll}{
  \code{EM.both.models} \tab The posterior mean, posterior standard deviation, and 95\% credible interval of the summary effect size for each pairwise comparison observed in the network under the consistency model and the unrelated mean effects model.\cr
  \tab \cr
- \code{model.assessment} \tab The DIC, number of effective parameters, and total residual deviance under the consistency model and the unrelated mean effects model.\cr
+ \code{model.assessment} \tab The DIC, number of effective parameters, and total residual deviance under the consistency model and the unrelated mean effects model (Spiegelhalter et al. (2002)).\cr
  \tab \cr
- \code{between.trial.SD} \tab The posterior median and 95\% credible interval of the between-trial standard deviation (\eqn{\tau}) under the consistency model and the unrelated mean effects model.
+ \code{between.trial.SD} \tab The posterior median and 95\% credible interval of \eqn{\tau} under the consistency model and the unrelated mean effects model.
   When a fixed-effect model has been performed, \code{UME.plot} does not return this element.\cr
  \tab \cr
  \code{scatterplots} \tab The scatterplot and the Bland-Altman plot on the posterior mean deviance contribution of the individual data points under the consistency model and the unrelated mean effects model.
@@ -41,13 +41,12 @@ Then, the function returns the following list of elements:
 }
 }
 \description{
-This function hosts a toolkit of functions that facilitates the comparison of the consistency model (via \code{run.model}) with the unrelated mean effects model (via \code{run.UME}) regarding the posterior summaries of summary effect size for
+This function hosts a toolkit of functions that facilitates the comparison of the consistency model (via \code{run.model}) with the unrelated mean effects model (via \code{run.UME}) regarding the posterior summaries of the summary effect size for
   the pairwise comparisons observed in the network, the between-trial standard deviation (\eqn{\tau}) and model assessment parameters.
 }
 \details{
-The consisntency
-The DIC of the model after each split node is compared with the DIC of the consistency model (Spiegelhalter et al. (2002), Dias et al. (2010)). If the difference in DIC exceeds 5, the consistency model is preferred; if the difference in DIC is less than -5,
-  the model after split node is preferred; otherwise, there is little to choose between the compared models.
+The DIC of the consistency model is compared with the DIC of the unrelated mean effects model (Dias et al. (2013)). If the difference in DIC exceeds 5, the unrelated mean effects model is preferred; if the difference in DIC is less than -5,
+  the consistency is preferred; otherwise, there is little to choose between the compared models.
 
   Furthermore, \code{UME.plot} exports \code{EM.both.models} to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 
@@ -57,23 +56,34 @@ The DIC of the model after each split node is compared with the DIC of the consi
 data("nma.baker2009.RData")
 
 # Perform a random-effects network meta-analysis
-res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+res1 <- run.model(data = nma.baker2009,
+                  measure = "OR",
+                  model = "RE",
+                  assumption = "IDE-ARM",
+                  heter.prior = list("halfnormal", 0, 1),
+                  mean.misspar = 0,
+                  var.misspar = 1,
+                  D = 1,
+                  n.chains = 3,
+                  n.iter = 10000,
+                  n.burnin = 1000,
+                  n.thin = 1)
 
 # Run random-effects network meta-analysis with node-splitting approachs
-node1 <- run.nodesplit(data = nma.baker2009, full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+ume1 <- run.UME(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
-                  "formoterol", "salmeterol", "tiotropium", "placebo")
+interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+                  salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
 
 # Plot the results from the consistency model and the node-splitting approach
-nodesplit.plot(full = res1, node = node1, drug.names = interv.names)
+UME.plot(full = res1, ume = ume1, drug.names = interv.names)
 
 }
 \references{
 Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
 
-Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021. [\doi{10.1002/jrsm.1478}]
+Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
 
 Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis for decision making 4: inconsistency in networks of evidence based on randomized controlled trials. \emph{Med Decis Making} 2013a;\bold{33}(5):641--56. [\doi{10.1177/0272989X12455847}]
 

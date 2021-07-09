@@ -67,9 +67,11 @@ intervalplot.panel.UME <- function(full, ume, drug.names) {
   ggplot(data = data.set, aes(x = as.factor(analysis), y = mean, ymin = lower, ymax = upper, colour = stat.sign)) +
     geom_rect(aes(fill = frail),xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, alpha = 0.2) +
     geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-    geom_hline(yintercept = 0, lty = 2, size = 1, col = "black") +
+    geom_hline(yintercept = 0, lty = 1, size = 1, col = "black") +
     geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
-    geom_text(aes(x = as.factor(analysis), y = mean, label = mean), color = "black", hjust = 0.35, vjust = -0.25, size = 3.3, check_overlap = F, parse = F,
+    geom_text(aes(x = as.factor(analysis), y = mean, label = paste0(sprintf("%.2f", mean), " ", "(",
+              sprintf("%.2f", lower), ",", " ", sprintf("%.2f", upper), ")")),
+              color = "black", hjust = 0, vjust = -0.5, size = 3.3, check_overlap = F, parse = F,
               position = position_dodge(width = 0.8), inherit.aes = T) +
     facet_wrap(vars(factor(comp, levels = unique(data.set$comp))), scales = "fixed") +
     scale_fill_manual(breaks = c("yes", "no"), values = c("grey53", "white")) +

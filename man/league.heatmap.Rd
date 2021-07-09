@@ -39,11 +39,22 @@ The rows and columns of the heatmap display the names of interventions which are
 data("nma.baker2009.RData")
 
 # Perform a random-effects network meta-analysis
-res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+res1 <- run.model(data = nma.baker2009,
+                  measure = "OR",
+                  model = "RE",
+                  assumption = "IDE-ARM",
+                  heter.prior = list("halfnormal", 0, 1),
+                  mean.misspar = 0,
+                  var.misspar = 1,
+                  D = 1,
+                  n.chains = 3,
+                  n.iter = 10000,
+                  n.burnin = 1000,
+                  n.thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
-                  "formoterol", "salmeterol", "tiotropium", "placebo")
+interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+                  salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
 
 # Create the league heatmap
 league.heatmap(full = res1, drug.names = interv.names)

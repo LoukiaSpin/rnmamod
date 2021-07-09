@@ -45,7 +45,13 @@
 #' data("nma.liu2013.RData")
 #'
 #' # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
-#' res.sens <- run.sensitivity(full = res1, assumption = "IDE-ARM", var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' res.sens <- run.sensitivity(full = res1,
+#'                             assumption = "IDE-ARM",
+#'                             var.misspar = 1,
+#'                             n.chains = 3,
+#'                             n.iter = 10000,
+#'                             n.burnin = 1000,
+#'                             n.thin = 1)
 #'
 #' # Calculate the robustness index
 #' robustness.index(sens = res.sens, primary.scenar = 13, threshold = 0.28)
@@ -139,7 +145,8 @@ robustness.index <- function(sens, threshold){
 
   robust <- ifelse(RI < threshold, "robust", "frail")
 
-  return(list(RI = RI, robust = robust, KLD = KLD, measure = sens$measure, threshold = threshold))
+  return(list(RI = RI, robust = robust, KLD = KLD, measure = sens$measure, threshold = threshold,
+              scenarios = sens$scenarios))
 }
 
 

@@ -1,6 +1,6 @@
 #' Barplot for the Kullback-Leibler divergence measure: Investigate the impact of missing participant outcome data
 #'
-#' @description This function produces a barplot with the Kullback-Leibler divergence measure for all combinations of scenarios for the interventions in a pairwise comparison.
+#' @description This function produces a barplot with the Kullback-Leibler divergence (KLD) measure for the primary analysis and all subsequent re-analysis for a pairwise comparison.
 #'   Currently, \code{KLD.barplot} is used concerning the impact of missing participant outcome data.
 #'
 #' @param robust An object of S3 class \code{\link{robustness.index}}. See 'Value' in \code{\link{robustness.index}}.
@@ -9,31 +9,16 @@
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
 #'
-#' @return \code{KLD.barplot} prints on the R console a message on the threshold of robustness determined by the user in green text.
-#' Then, the function returns the following list of elements:
-#' \tabular{ll}{
-#'  \code{RI} \tab A a numeric scalar or vector on the robustnessindex values. In the case of a pairwise meta-analysis (PMA), \code{RI} is scalar as only one summary effect size is obtained.
-#'    In the case of network meta-analysis (NMA), \code{RI} is a vector with length equal to the number of possible pairwise comparisons; one robustness index per possible comparison.\cr
-#'  \tab \cr
-#'  \code{robust} \tab A character vector on whether the primary analysis results are \emph{robust} or \emph{frail} to the different re-analyses.\cr
-#'  \tab \cr
-#'  \code{KLD} \tab A vector or matrix on the Kullback-Leibler divergence (KLD) measure in the summary effect size from a subsequent re-analysis to the primary analysis.
-#'    In the case of a PMA, \code{KLD} is a vector with length equal to the number of total analyses.
-#'    The latter equals the square of the number of scenarios indicated in argument \code{mean.scenarios} of \code{run.sensitivity}. Therefore, one KLD value per analysis.
-#'    In the case of NMA, \code{RI} is a matrix with number of rows equal to the number of total analyses and number of columns equal to the number of possible pairwise comparisons;
-#'    one KLD value per analysis and possible comparison.\cr
-#' }
+#' @return \code{KLD.barplot} returns a panel of barplots on the KLD measure for each analysis.
 #'
-#' @details The user may consider the values 0.28 and 0.17 in the argument \code{threshold} for binary and continuous outcome data (the default values), respectively, or consider other plausible values.
-#'   Spineli et al. (2021) offers a discussion on specifying the \code{threshold} of robustness.
+#' @details The scenarios for the missingness parameter in compared interventions are split to \emph{Extreme}, \emph{Sceptical}, and \emph{Optimistic} following the classification of Spineli et al. (2021).
+#'   In each class, bars will green, orange, and red colour refer to scenarios without distance, less distant, and more distant scenarios from the primary analysis (the missinf-at-random assumption).
 #'
-#'   In \code{robust}, the value \code{"robust"} appears when \code{RI} \eqn{<} \code{threshold}); otherwise, the value \code{"frail"} appears.
-#'
-#'   \code{robustness.index} can be used only for when missing participant outcome data have been extracted for at least one trial. Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
+#'   \code{KLD.barplot} can be used only for when missing participant outcome data have been extracted for at least one trial. Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run.sensitivity}}, \code{\link{robustness.index}}, \code{\link{run.model}}
+#' @seealso \code{\link{robustness.index}}, \code{\link{run.model}}
 #'
 #' @references
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
@@ -41,17 +26,37 @@
 #' Kullback S, Leibler RA. On information and sufficiency. \emph{Ann Math Stat} 1951;\bold{22}(1):79--86. [\doi{10.1214/aoms/1177729694}]
 #'
 #' @examples
-#' data("nma.Baker2009.RData")
+#' data("nma.baker2009.RData")
+#'
+#' # Perform a random-effects network meta-analysis
+#' res1 <- run.model(data = nma.baker2009,
+#'                   measure = "OR",
+#'                   model = "RE",
+#'                   assumption = "IDE-ARM",
+#'                   heter.prior = list("halfnormal", 0, 1),
+#'                   mean.misspar = 0,
+#'                   var.misspar = 1,
+#'                   D = 1,
+#'                   n.chains = 3,
+#'                   n.iter = 10000,
+#'                   n.burnin = 1000,
+#'                   n.thin = 1)
 #'
 #' # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
-#' res.sens <- run.sensitivity(full = res1, assumption = "IDE-ARM", var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' res.sens <- run.sensitivity(full = res1,
+#'                             assumption = "IDE-ARM",
+#'                             var.misspar = 1,
+#'                             n.chains = 3,
+#'                             n.iter = 10000,
+#'                             n.burnin = 1000,
+#'                             n.thin = 1)
 #'
 #' # Calculate the robustness index
-#' robuat <- robustness.index(sens = res.sens, primary.scenar = 13, threshold = 0.28)
+#' robust <- robustness.index(sens = res.sens, threshold = 0.28)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
-#'                   "formoterol", "salmeterol", "tiotropium", "placebo")
+#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+#'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
 #'
 #' # Crate the barplot for the comparison 'tiotropium versus salmeterol'
 #' KLD.barplot(robust = robust, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
@@ -74,39 +79,35 @@ KLD.barplot <- function(robust, compar, drug.names){
   }
 
 
+  ## Indicate all possible comparisons (necessary for NMA)
+  comparison <- matrix(combn(drug.names, 2), nrow = length(combn(drug.names, 2))/2, ncol = 2, byrow = T)
+  compar.id <- which(comparison[, 1] == compar[2] & comparison[, 2] == compar[1])
+  experim <- comparison[compar.id, 2]
+  control <- comparison[compar.id, 1]
+
   compar <- if (length(drug.names) > 2 & missing(compar)) {
     stop("The argument 'compar' needs to be defined", call. = F)
   } else if (length(drug.names) < 3 & missing(compar)) {
-    1
+    c(comparison[2], comparison[2])
   } else {
     compar
   }
 
 
-  outcome <- if (is.element(robust$measure, c("MD", "SMD", "ROM"))) {
-    "continuous"
-  } else {
-    "binary"
+  ## Define the scenarios
+  scenarios <- if (is.element(robust$measure, c("OR", "ROM"))) {
+    cbind(rep(as.character(fractions(exp(robust$scenarios))), each = length(robust$scenarios)),
+          rep(as.character(fractions(exp(robust$scenarios))), times = length(robust$scenarios)))
+  } else if (is.element(robust$measure, c("MD", "SMD"))) {
+    cbind(rep(robust$scenarios, each = length(robust$scenarios)),
+          rep(robust$scenarios, times = length(robust$scenarios)))
   }
 
 
-  comparisons <- t(combn(drug.names, 2))
-
-
-  if(outcome == "binary"){
-
-    ## Define the scenarios for IMOR
-    scenarios <- cbind(rep(c(0.3, 0.50, 1, 2, 3), each = 5), rep(c(0.3, 0.50, 1, 2, 3), times = 5))
-
-  } else {
-
-    ## Define the scenarios for IMDoM
-    scenarios <- cbind(rep(c(-2, -1, 0, 1, 2), each = 5), rep(c(-2, -1, 0, 1, 2), times = 5))
-
-  }
   colnames(scenarios) <- c("active", "ctrl")
 
-  KLD <- robust$KLD[compar, ]
+
+  KLD <- robust$KLD[compar.id, ]
 
 
   ## Rank the scenarios to calculate their distance in the compared arms
@@ -132,9 +133,8 @@ KLD.barplot <- function(robust, compar, drug.names){
     scale_fill_manual(breaks = c("more distant", "less distant", "no distance"), values = c("#D55E00", "orange", "#009E73")) +
     facet_grid(. ~  plausibility, scales = "free_x", space = "free") +
     labs(x = "Scenarios (active vs control)", y = "Kullback-Leibler divergence measure", fill = "Distance between the scenarios") +
-    #geom_hline(yintercept = 0.28, linetype = 2) +
     ylim(0, ifelse(max(dataset.new$KLD) > 0.3, max(dataset.new$KLD), 0.3)) +
-    ggtitle(paste(comparisons[compar, 2], "versus", comparisons[compar, 1])) +
+    ggtitle(paste(experim, "versus", control)) +
     theme_classic() +
     theme(axis.title = element_text(size = 12, face = "bold"), axis.text = element_text(size = 10.5), axis.text.x = element_text(size = 10.5, angle = 45, hjust = 1),
           legend.position = "bottom", legend.title = element_text(size = 12, face = "bold"), legend.text = element_text(size = 11),

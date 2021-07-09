@@ -156,7 +156,18 @@
 #' View(nma.baker2009)
 #'
 #' # Perform a random-effects network meta-analysis
-#' run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' run.model(data = nma.baker2009,
+#'           measure = "OR",
+#'           model = "RE",
+#'           assumption = "IDE-ARM",
+#'           heter.prior = list("halfnormal", 0, 1),
+#'           mean.misspar = 0,
+#'           var.misspar = 1,
+#'           D = 1,
+#'           n.chains = 3,
+#'           n.iter = 10000,
+#'           n.burnin = 1000,
+#'           n.thin = 1)
 #'
 #' @export
 run.model <- function(data, measure, model, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin) {

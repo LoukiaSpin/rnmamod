@@ -26,14 +26,25 @@
 #' data("nma.baker2009.RData")
 #'
 #' # Perform a random-effects network meta-analysis
-#' res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' res1 <- run.model(data = nma.baker2009,
+#'                   measure = "OR",
+#'                   model = "RE",
+#'                   assumption = "IDE-ARM",
+#'                   heter.prior = list("halfnormal", 0, 1),
+#'                   mean.misspar = 0,
+#'                   var.misspar = 1,
+#'                   D = 1,
+#'                   n.chains = 3,
+#'                   n.iter = 10000,
+#'                   n.burnin = 1000,
+#'                   n.thin = 1)
 #'
 #' # Run separate random-effects pairwise meta-analyses
 #' meta1 <- run.series.meta(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
-#'                   "formoterol", "salmeterol", "tiotropium", "placebo")
+#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+#'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
 #'
 #' # Plot the results from both models
 #' series.meta.plot(full = res1, meta = meta1, drug.names = interv.names)
@@ -57,10 +68,10 @@ series.meta.plot <- function(full, meta, drug.names) {
 
   ## The results on the following parameters will be used:
   # Posterior results on the effect estimates under NMA
-  EM.full <- full$EM
+  EM.full0 <- full$EM
 
   # Posterior results on the effect estimates under separate random-effect pairwise meta-analysis (RE-MAs)
-  EM.meta <- meta$EM
+  EM.meta0 <- meta$EM
 
   # Posterior results on between-trial standard deviation under NMA
   tau.full <- full$tau
@@ -76,15 +87,26 @@ series.meta.plot <- function(full, meta, drug.names) {
 
   model <- full$model
 
-  measure <- effect.measure.name(full$measure)
 
   ## Keep only the effect estimates according to the 'poss.pair.comp.clean' - Consistency model
-  EM.full.clean <- format(round(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), c(1:3, 7)], 2), nsmall = 2)
+  EM.full <- EM.full0[is.element(possible.comp$poss.comp[, 4], obs.comp), c(1:3, 7)]
+  EM.full[, c(1, 3:4)] <- if (is.element(full$measure, c("OR", "ROM"))) {
+    exp(EM.full[, c(1, 3:4)])
+  } else if (is.element(full$measure, c("MD", "SMD"))) {
+    EM.full[, c(1, 3:4)]
+  }
+  EM.full.clean <- format(round(EM.full, 2), nsmall = 2)
 
 
 
   ## Effect estimate of separate RE-MAs
-  EM.meta.clean <- format(round(EM.meta[, c(3:5, 9)], 2), nsmall = 2)
+  EM.meta <- round(EM.meta0[, c(3:5, 9)], 2)
+  EM.meta[, c(1, 3:4)] <- if (is.element(full$measure, c("OR", "ROM"))) {
+    exp(EM.meta[, c(1, 3:4)])
+  } else if (is.element(full$measure, c("MD", "SMD"))) {
+    EM.meta[, c(1, 3:4)]
+  }
+  EM.meta.clean <- format(round(EM.meta, 2), nsmall = 2)
 
 
 
@@ -119,12 +141,11 @@ series.meta.plot <- function(full, meta, drug.names) {
   ## Create a data-frame with effect estimates on both models
   if (model == "RE") {
     EM.both.models <- data.frame(possible.comp$obs.comp[, 4], EM.full.clean[, 1:2], CrI.full.clean, EM.meta.clean[, 1:2], CrI.meta.clean, tau.meta.clean[, 1:2], CrI.tau.meta)
-    colnames(EM.both.models) <- c("Comparison", "Posterior mean NMA", "Posterior SD NMA", "95% CrI NMA", "Posterior mean MA",
-                                  "Posterior SD MA", "95% CrI MA", "Posterior median tau", "Posterior SD tau", "95% CrI tau")
+    colnames(EM.both.models) <- c("Comparison", "Mean NMA", "SD NMA", "95% CrI NMA", "Mean MA",
+                                  "SD MA", "95% CrI MA", "Median tau", "SD tau", "95% CrI tau")
   } else {
     EM.both.models <- data.frame(possible.comp$obs.comp[, 4], EM.full.clean[, 1:2], CrI.full.clean, EM.meta.clean[, 1:2], CrI.meta.clean)
-    colnames(EM.both.models) <- c("Comparison", "Posterior mean NMA", "Posterior SD NMA", "95% CrI NMA", "Posterior mean MA",
-                                  "Posterior SD MA", "95% CrI MA")
+    colnames(EM.both.models) <- c("Comparison", "Mean NMA", "SD NMA", "95% CrI NMA", "Mean MA", "SD MA", "95% CrI MA")
   }
   rownames(EM.both.models) <- NULL
 
@@ -136,6 +157,7 @@ series.meta.plot <- function(full, meta, drug.names) {
   colnames(prepare) <- c("order", "comparison", "mean", "lower", "upper", "analysis")
   rownames(prepare) <- NULL
 
+
   # Between-trial standard deviation
   if (model == "RE") {
     prepare.tau <- data.frame(possible.comp$obs.comp[, 4], tau.meta.clean[, -2])
@@ -146,19 +168,24 @@ series.meta.plot <- function(full, meta, drug.names) {
 
 
 
-
   ## Forest plots of comparisons on effect estimate
   p1 <- ggplot(data = prepare, aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper, colour = analysis, group = analysis)) +
           geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-          #geom_hline(yintercept = ifelse(measure != "Odds ratio" & measure != "Ratio of means", 0, 1), lty = 2, size = 1.3, col = "grey53") +
-          geom_hline(yintercept = 0, lty = 1, size = 1, col = "grey53") +
+          geom_hline(yintercept = ifelse(!is.element(full$measure, c("OR", "ROM")), 0, 1), lty = 1, size = 1, col = "grey53") +
+          #geom_hline(yintercept = 0, lty = 1, size = 1, col = "grey53") +
           geom_point(size = 1.5,  colour = "black", stroke = 0.3, position = position_dodge(width = 0.5)) +
-          geom_text(aes(x = as.factor(order), y = round(as.numeric(mean), 2), label = round(as.numeric(mean), 2)),
-                    color = "black", hjust = -0.1, vjust = -0.5, size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.8), inherit.aes = T) +
-          labs(x = "", y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), paste(measure, "(in logarithmic scale)"), measure), colour = "Analysis") +
+          geom_text(aes(x = as.factor(order), y = mean, label = paste0(sprintf("%.2f", mean), " ", "(",
+                    sprintf("%.2f", lower), ",", " ", sprintf("%.2f", upper), ")"), hjust = 0, vjust = -0.5),
+                    color = "black", size = 4.0, position = position_dodge(width = 0.5)) +
+          geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 0.4, -0.2), label = ifelse(full$D == 0, "Favours first arm", "Favours second arm")),
+                    size = 3.5, vjust = 0, hjust = 0, color = "black") +
+          geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 1.2, 0.2), label = ifelse(full$D == 0, "Favours second arm", "Favours first arm")),
+                    size = 3.5, vjust = 0, hjust = 0, color = "black") +
+          #labs(x = "", y = ifelse(is.element(full$measure, c("OR", "ROM")), paste(effect.measure.name(full$measure), "(in logarithmic scale)"), effect.measure.name(full$measure)), colour = "Analysis") +
+          labs(x = "", y = effect.measure.name(full$measure), colour = "Analysis") +
           scale_x_discrete(breaks = as.factor(1:length(obs.comp)), labels = prepare$comparison[1:length(obs.comp)]) +
-          #scale_y_continuous(trans = ifelse(measure != "Odds ratio" & measure != "Ratio of means", "identity", "log10")) +
-          scale_y_continuous(trans = "identity") +
+          scale_y_continuous(trans = ifelse(!is.element(full$measure, c("OR", "ROM")), "identity", "log10")) +
+          #scale_y_continuous(trans = "identity") +
           scale_color_manual(breaks = c("Network meta-analysis", "Paiwise meta-analysis"), values = c("#009E73", "#D55E00")) +
           coord_flip() +
           theme_classic() +
@@ -175,8 +202,9 @@ series.meta.plot <- function(full, meta, drug.names) {
       geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
       geom_hline(yintercept = tau.full[5], lty = 1, size = 1, col = "#006CD1") +
       geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
-      geom_text(aes(x = as.factor(1:length(obs.comp)), y = round(as.numeric(median), 2), label = round(as.numeric(median), 2)),
-                color = "black", hjust = -0.1, vjust = -0.5, size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.8), inherit.aes = T) +
+      geom_text(aes(x = as.factor(1:length(obs.comp)), y = round(as.numeric(median), 2), label = paste0(round(as.numeric(median), 2), " ", "(",
+                    round(as.numeric(lower), 2), ",", " ", round(as.numeric(upper), 2), ")")),
+                color = "black", hjust = 0, vjust = -0.5, size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.8), inherit.aes = T) +
       scale_x_discrete(breaks = as.factor(1:length(obs.comp)), labels = prepare.tau$comparison[1:length(obs.comp)]) +
       labs(x = "", y = "Between-trial standard deviation") +
       coord_flip() +
@@ -198,8 +226,8 @@ series.meta.plot <- function(full, meta, drug.names) {
 
 
   ## Write the table as .xlsx
-  write_xlsx(EM.both.models, paste0(getwd(),"Table NMA vs MA.xlsx"))
+  write_xlsx(EM.both.models, paste0("Table NMA vs PMA.xlsx"))
 
 
-  return(list(EM.both.models = EM.both.models, forest.plots = forest.plots))
+  return(list(Tabulated.results = knitr::kable(EM.both.models), forest.plots = forest.plots))
 }

@@ -2,17 +2,79 @@
 % Please edit documentation in R/balloon.plot.mod_function.R
 \name{balloon.plot.mod}
 \alias{balloon.plot.mod}
-\title{Enhanced balloon plot}
+\title{Enhanced balloon plot: Investigate the impact of missing participant outcome data}
 \usage{
 balloon.plot.mod(sens, compar, drug.names)
 }
 \arguments{
-\item{drug.names}{A vector of characters with the names of the interventions in the order they appear in the function \code{run.sensitivity}.}
+\item{sens}{An object of S3 class \code{\link{run.sensitivity}}. See 'Value' in \code{\link{run.sensitivity}}.}
 
-\item{net}{An object of S3 class \code{run.sensitivity}.}
+\item{compar}{A character vector with two characters that indicates the pairwise comparison of interest. The first character refers to the 'experimental' intervention
+and the second character refers to the 'control' intervention of the comparison.}
 
-\item{D}{A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.}
+\item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
+as they appear in \code{data} is used, instead.}
+}
+\value{
+\code{balloon.plot.mod} a balloon plot for one comparison which is enhanced with colours and bubbles of different size and shape. See 'Details'.
 }
 \description{
-Enhanced balloon plot
+This functions creates the enhanced balloon plot with the summary results of a pairwise comparison under different scenarios about the missingness parameter
+  for a pair of interventions. Currently, \code{balloon.plot.mod} supports the illustration of the summary effect size and its standard error.
+}
+\details{
+The different colours and bubble sizes reflect the posterior standard deviation of the summary effect size and the magnitude of the posterior mean of the summary effect size for one pairwise comparison.
+  A colour key appears below the plot that matches the colours with the corresponding posterior standard deviation value.
+  The size of the bubble is proportional to the magnitude of the corresponding effect size.
+  Crossed bubbles indicate scenrios with conclusive evidence (i.e., the 95% credible interval excludes the null value), and filled bubbles indicate scenarios with inconclusive evidence
+  (i.e., the 95% credible interval includes the null value).
+  The missing-at-random assumption (the primary analysis) is labelled in a white frame.
+  Both axes illustrate the scenarios as specified in the argument \code{mean.scenarios} of the \code{run.sensitivity} function:
+  the x-axis refers to the 'experimental' intervention, and the y-axis refers to the 'control' intervention.
+
+  \code{heatmap.robustness} can be used only for a network of interventions and when missing participant outcome data have been extracted for at least one trial.
+  Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
+}
+\examples{
+data("nma.baker2009.RData")
+
+# Perform a random-effects network meta-analysis
+res1 <- run.model(data = nma.baker2009,
+                  measure = "OR",
+                  model = "RE",
+                  assumption = "IDE-ARM",
+                  heter.prior = list("halfnormal", 0, 1),
+                  mean.misspar = 0,
+                  var.misspar = 1,
+                  D = 1,
+                  n.chains = 3,
+                  n.iter = 10000,
+                  n.burnin = 1000,
+                  n.thin = 1)
+
+# Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
+res.sens <- run.sensitivity(full = res1,
+                            assumption = "IDE-ARM",
+                            var.misspar = 1,
+                            n.chains = 3,
+                            n.iter = 10000,
+                            n.burnin = 1000,
+                            n.thin = 1)
+
+# The names of the interventions in the order they appear in the dataset
+interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+                  salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
+
+# Create the enhanced balloon plot for the comparison 'tiotropium versus salmeterol'
+balloon.plot.mod(sens = res.sens, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
+
+}
+\references{
+Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
+}
+\seealso{
+\code{\link{run.sensitivity}}, \code{\link{run.model}}
+}
+\author{
+{Loukia M. Spineli}
 }

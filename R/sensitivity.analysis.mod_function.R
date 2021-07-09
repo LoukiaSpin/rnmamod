@@ -75,7 +75,13 @@
 #' data("nma.liu2013.RData")
 #'
 #' # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
-#' run.sensitivity(full = res1, assumption = "IDE-ARM", var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' run.sensitivity(full = res1,
+#'                 assumption = "IDE-ARM",
+#'                 var.misspar = 1,
+#'                 n.chains = 3,
+#'                 n.iter = 10000,
+#'                 n.burnin = 1000,
+#'                 n.thin = 1)
 #'
 #' @export
 run.sensitivity <- function(full, assumption, mean.scenarios, var.misspar, n.chains, n.iter, n.burnin, n.thin){

@@ -2,10 +2,67 @@
 % Please edit documentation in R/heatmap.robustness_function.R
 \name{heatmap.robustness}
 \alias{heatmap.robustness}
-\title{Heatmap of robutness for NMA}
+\title{Heatmap of robsutness index: Investigate the impact of missing participant outcome data}
 \usage{
 heatmap.robustness(robust, drug.names)
 }
+\arguments{
+\item{robust}{An object of S3 class \code{\link{robustness.index}}. See 'Value' in \code{\link{robustness.index}}.}
+
+\item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
+as they appear in \code{data} is used, instead.}
+}
+\value{
+\code{heatmap.robustness} first prints on the R console a message on the threshold of robustness determined by the user in the \code{robustness.index} function.
+  Then, it returns a lower triangular heatmap matrix with the robustness index valueof all possible pairwise comparisons.
+}
 \description{
-Heatmap of robutness for NMA
+This functions facilitates the detection of comparisons that are sensible to different assumptions about the informative missingness parameter
+  for the compared interventions. The heatmap is based on the robustness index of each possible pairwise comparison of the investigated network (see \code{robustness.index}).
+  Currently, \code{heatmap.robustness} is used concerning the impact of missing participant outcome data.
+}
+\details{
+The heatmap illustrates the robustness index for each possible pairwise comparison in the network.
+  The pairwise comparisons are read from left to right and are highlighted either with a green or red colour.
+  Comparisons highlighted with green or red colour imply robust or frail conclusions for the primary analysis.
+  This corresponds to robustness index below or at least the selected threshold of robustness (see 'Details'in \code{robustness.index}).
+  The robustness index value of each pairwise comparison also appears in the corresponding cell.
+  When there is at least one comparison with frail conclusions, the primary analysis results may be questionable for the whole network (Spineli et al., 2021).
+
+  \code{heatmap.robustness} uses the threshold of robustness selected in the \code{robustness.index} function.
+
+  \code{heatmap.robustness} can be used only for a network of interventions and when missing participant outcome data have been extracted for at least one trial.
+  Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
+}
+\examples{
+data("nma.liu2013.RData")
+
+# Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
+res.sens <- run.sensitivity(full = res1,
+                            assumption = "IDE-ARM",
+                            var.misspar = 1,
+                            n.chains = 3,
+                            n.iter = 10000,
+                            n.burnin = 1000,
+                            n.thin = 1)
+
+# Calculate the robustness index
+robust <- robustness.index(sens = res.sens, primary.scenar = 13, threshold = 0.28)
+
+# The names of the interventions in the order they appear in the dataset
+interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+                  salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
+
+# Create the heatmap of robustness
+heatmap.robustness(robust = robust, drug.names = interv.names)
+
+}
+\references{
+Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
+}
+\seealso{
+\code{\link{robustness.index}}, \code{\link{run.model}}
+}
+\author{
+{Loukia M. Spineli}
 }

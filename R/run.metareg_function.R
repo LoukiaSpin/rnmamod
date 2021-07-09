@@ -39,14 +39,22 @@
 #' @references
 #' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. Stat Sci. 1992;7:457–472.
 #'
-#' \dontshow{load("./data/NMA Dataset Continuous.RData")}
 #' @examples
-#' ### Show the data (one-trial-per-row format)
-#' (data <- as.data.frame(one.stage.dataset.NMA[[3]]))
+#' data("nma.liu2013.RData")
 #'
-#' ### Run a random-effects network meta-analysis with consistency equations for the standardised mean difference
-#' ### assuming missing at random for identical, common informative missingness difference of means.
-#' run.model(data = data, measure = "SMD", assumption = "IDE-COMMON", mean.misspar = 0, var.misspar = 1, D = 0, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' # Perform a random-effects network meta-analysis (consistency model)
+#' res1 <- run.model(data = nma.liu2013,
+#'                   measure = "OR",
+#'                   model = "RE",
+#'                   assumption = "IDE-ARM",
+#'                   heter.prior = list("halfnormal", 0, 1),
+#'                   mean.misspar = 0,
+#'                   var.misspar = 1,
+#'                   D = 1,
+#'                   n.chains = 3,
+#'                   n.iter = 10000,
+#'                   n.burnin = 1000,
+#'                   n.thin = 1)
 #'
 #' @export
 run.metareg <- function(data, covariate, measure, model, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin){

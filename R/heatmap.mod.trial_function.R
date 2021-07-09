@@ -117,7 +117,7 @@ heatmap.mod.trial <- function(data, trial.names, drug.names) {
     ggplot(transform, aes(treatment, study, fill = ifelse(m.prop <= 5, "low", ifelse(m.prop > 20, "high", "moderate") ))) +
       geom_tile(colour = "white") +
       geom_text(aes(treatment, study, label = paste0(m.prop, "%"), fontface = "plain"), size = rel(3.8)) +
-      scale_fill_manual(breaks = c("low", "moderate", "high"), values = c("green3", "orange", "firebrick1")) +
+      scale_fill_manual(breaks = c("low", "moderate", "high"), values = c("#009E73", "orange", "#D55E00")) +
       scale_x_discrete(position = "top") +
       labs(x = "", y = "", fill = "Risk of bias due to missingness") +
       theme_bw() +

@@ -12,23 +12,23 @@
 #' @return \code{UME.plot} prints on the R console two messages: (1) the threshold of similarity determined by the user in green text, (2) and followed by the most parsimonious model (if any) based on the deviance information criterion (DIC; in red text).
 #' Then, the function returns the following list of elements:
 #' \tabular{ll}{
-#'  \code{EM.both.models} \tab The posterior mean, posterior standard deviation, and 95\% credible interval of the summary effect size for each pairwise comparison observed in the network under the consistency model and the unrelated mean effects model.\cr
+#'  \code{Table.effect.size} \tab The posterior mean, posterior standard deviation, and 95\% credible interval of the summary effect size for each pairwise comparison observed in the network under the consistency model and the unrelated mean effects model.\cr
 #'  \tab \cr
-#'  \code{model.assessment} \tab The DIC, number of effective parameters, and total residual deviance under the consistency model and the unrelated mean effects model (Spiegelhalter et al. (2002)).\cr
+#'  \code{Table.model.assessment} \tab The DIC, number of effective parameters, and total residual deviance under the consistency model and the unrelated mean effects model (Spiegelhalter et al. (2002)).\cr
 #'  \tab \cr
-#'  \code{between.trial.SD} \tab The posterior median and 95\% credible interval of \eqn{\tau} under the consistency model and the unrelated mean effects model.
+#'  \code{Table.tau} \tab The posterior median and 95\% credible interval of \eqn{\tau} under the consistency model and the unrelated mean effects model.
 #'   When a fixed-effect model has been performed, \code{UME.plot} does not return this element.\cr
 #'  \tab \cr
-#'  \code{scatterplots} \tab The scatterplot and the Bland-Altman plot on the posterior mean deviance contribution of the individual data points under the consistency model and the unrelated mean effects model.
+#'  \code{Scatterplots} \tab The scatterplot and the Bland-Altman plot on the posterior mean deviance contribution of the individual data points under the consistency model and the unrelated mean effects model.
 #'   See 'Details' and 'Value' in \code{\link{scatterplots.dev}} and \code{\link{BlandAltman.plot}}.\cr
 #'  \tab \cr
-#'  \code{levarage.plots} \tab The leverage plot on the posterior mean of deviance of the individual data points under the consistency model and the unrelated mean effects model, separately.
+#'  \code{Levarage.plots} \tab The leverage plot on the posterior mean of deviance of the individual data points under the consistency model and the unrelated mean effects model, separately.
 #'   See 'Details' and 'Value' in \code{\link{leverage.plot}}.\cr
 #'  \tab \cr
-#'  \code{intervalplots.panel} \tab A panel of interval plots on the summary effect size under the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
+#'  \code{Intervalplots} \tab A panel of interval plots on the summary effect size under the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
 #'   See 'Details' and 'Value' in \code{\link{intervalplot.panel.UME}}.\cr
 #'  \tab \cr
-#'  \code{heatmap.similarity} \tab A heatmap of similarity in the posterior distribution of summary effect size between the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
+#'  \code{Heatmap} \tab A heatmap of similarity in the posterior distribution of summary effect size between the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
 #'   See 'Details' and 'Value' in \code{\link{heatmap.similarity.UME}} and \code{\link{similarity.index.UME}}.\cr
 #' }
 #'
@@ -56,14 +56,25 @@
 #' data("nma.baker2009.RData")
 #'
 #' # Perform a random-effects network meta-analysis
-#' res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' res1 <- run.model(data = nma.baker2009,
+#'                   measure = "OR",
+#'                   model = "RE",
+#'                   assumption = "IDE-ARM",
+#'                   heter.prior = list("halfnormal", 0, 1),
+#'                   mean.misspar = 0,
+#'                   var.misspar = 1,
+#'                   D = 1,
+#'                   n.chains = 3,
+#'                   n.iter = 10000,
+#'                   n.burnin = 1000,
+#'                   n.thin = 1)
 #'
 #' # Run random-effects network meta-analysis with node-splitting approachs
 #' ume1 <- run.UME(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
-#'                   "formoterol", "salmeterol", "tiotropium", "placebo")
+#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+#'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
 #'
 #' # Plot the results from the consistency model and the node-splitting approach
 #' UME.plot(full = res1, ume = ume1, drug.names = interv.names)
@@ -166,8 +177,7 @@ UME.plot <- function(full, ume, drug.names, threshold) {
 
   ## Create a data-frame with effect estimates on both models
   EM.both.models <- data.frame(possible.comp$obs.comp[, 4], EM.full.clean[, 1:2], CrI.full.clean, EM.ume.clean[, 1:2], CrI.ume.clean)
-  colnames(EM.both.models) <- c("Comparison", "Posterior mean NMA", "Posterior SD NMA", "95% CrI NMA", "Posterior mean UME",
-                                "Posterior SD UME", "95% CrI UME")
+  colnames(EM.both.models) <- c("Comparison", "Mean NMA", "SD NMA", "95% CrI NMA", "Mean UME", "SD UME", "95% CrI UME")
   rownames(EM.both.models) <- NULL
 
 
@@ -189,7 +199,7 @@ UME.plot <- function(full, ume, drug.names, threshold) {
   ## A data-frame with the posterior median and 95% CrI on between-trial standard deviation
   if (model == "RE") {
     between.trial.SD <- rbind(tau.full[c(5, 3, 7)], tau.ume[c(5, 3, 7)])
-    colnames(between.trial.SD) <- c("Posterior median", "Lower 95% CrI", "Upper 95% CrI")
+    colnames(between.trial.SD) <- c("Median", "Lower 95% CrI", "Upper 95% CrI")
     rownames(between.trial.SD) <- c("Full NMA", "UME model")
   } else {
     between.trial.SD <- NA
@@ -211,10 +221,10 @@ UME.plot <- function(full, ume, drug.names, threshold) {
 
   ## Leverage plots
   # Consistency model for observed outcomes
-  lever.full.o <- leverage.plot(full, drug.names, title = "Observed outcomes under consistency model")
+  lever.full.o <- leverage.plot(full, drug.names, title = "Consistency model")
 
     # UME model for observed outcomes
-  lever.ume.o <- leverage.plot(ume, drug.names, title = "Observed outcomes under UME model")
+  lever.ume.o <- leverage.plot(ume, drug.names, title = "Unrelated mean effects model")
 
 
 
@@ -229,26 +239,26 @@ UME.plot <- function(full, ume, drug.names, threshold) {
 
 
   ## Write the table with the EMs from both models as .xlsx
-  write_xlsx(EM.both.models, paste0(getwd(),"Table NMA vs UME.xlsx"))
+  write_xlsx(EM.both.models, paste0("Table NMA vs UME.xlsx"))
 
 
   ## Return results
   results <- if (model == "RE") {
-    list(EM.both.models = EM.both.models,
-         model.assessment = model.assessment,
-         between.trial.SD = between.trial.SD,
-         scatterplots = scatterplots,
-         levarage.plots = lev.plots,
-         intervalplots.panel = intervalplots,
-         heatmap.similarity = heatmap,
+    list(Table.effect.size = knitr::kable(EM.both.models),
+         Table.model.assessment = knitr::kable(model.assessment),
+         Table.tau = knitr::kable(between.trial.SD),
+         Scatterplots = scatterplots,
+         Levarage.plots = lev.plots,
+         Intervalplots = intervalplots,
+         Heatmap = heatmap,
          threshold = threshold)
   } else {
-    list(EM.both.models = EM.both.models,
-         model.assessment = model.assessment,
-         scatterplots = scatterplots,
-         levarage.plots = lev.plots,
-         intervalplots.panel = intervalplots,
-         heatmap.similarity = heatmap,
+    list(Table.effect.size = knitr::kable(EM.both.models),
+         Table.model.assessment = knitr::kable(model.assessment),
+         Scatterplots = scatterplots,
+         Levarage.plots = lev.plots,
+         Intervalplots = intervalplots,
+         Heatmap = heatmap,
          threshold = threshold)
   }
 

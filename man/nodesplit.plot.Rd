@@ -15,41 +15,65 @@ nodesplit.plot(full, node, drug.names)
 as they appear in \code{data} is used, instead.}
 }
 \value{
-\code{nodesplit.plot} returns a panel of as many interval plots as the number of split nodes in the network. Each interval plot illustrates the posterior mean and 95\% credible interval of the direct and indirect effect of the split nodes
-  and the corresponding inconsistency factor. The line that corresponds to the inconsistency factor is highlighted with green, when it does not cross the vertical line of no difference (between the direct and indirect effect), and red otherwise.
-  If there are more than 30 split nodes, the function presents the interval plots on split nodes with statistically significant inconsistency factor or those with inconsistent sign in the direct and indirect effect.
-
-  Furthermore, the function returns a interval plot on the median and 95\% credible interval of \eqn{\tau} after each split node. The lines that correspond to the split nodes are sorted in ascending order of the
-  deviance information criterion (DIC) which appears at the top of each line. The 95\% credible interval of \eqn{\tau} under the consistency model appears as a rectangle in the interval plot.
-  When a fixed-effect model has been performed, \code{nodesplit.plot} does not return the interval plot of \eqn{\tau}.
-
-  The R console prints the data-frame with the posterior mean, posterior standard deviation and 95\% credible interval of the direct and indirect effect and the inconsistency factor of each split.
-  The console also prints the data-frame with the model assessment parameters (DIC, posterior mean of total residual deviance, and number of effective parameters), the posterior median, posterior standard deviation and 95\% credible interval of \eqn{\tau}
-  under the consistency model and after each split node. The DIC of the model after each split node is compared with the DIC of the consistency model (Spiegelhalter et al. (2002), Dias et al. (2010)). If the difference in DIC exceeds 5, the consistency model is preferred; if the difference in DIC is less than -5,
-  the model after split node is preferred; otherwise, there is little to choose between the compared models.
-
-  Furthermore, \code{nodesplit.plot} exports both data-frames to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+\code{nodesplit.plot} returns the following list of elements:
+\tabular{ll}{
+ \code{table.EM} \tab A data-frame with the posterior mean, posterior standard deviation and 95\% credible interval of the direct and indirect effect and the inconsistency factor of each split node.\cr
+ \tab \cr
+ \code{table.assess} \tab A data-frame with the model assessment parameters (DIC, posterior mean of total residual deviance, and number of effective parameters), the posterior median, posterior standard deviation and 95\% credible interval of \eqn{\tau}
+  under the consistency model and after each split node. See 'Details'.\cr
+ \tab \cr
+ \code{node.split.intervalplot} \tab A panel of interval plots on the direct and indirect effect of the split nodes and the corresponding inconsistency factor. See 'Details'.\cr
+ \tab \cr
+ \code{tau.intervalplot} \tab An interval plot on \eqn{\tau} after each split node. See 'Details'.\cr
+}
 }
 \description{
 This function illustrates the direct and indirect effects and inconsistency factor of the split nodes in a panel of interval plots and also exports these results in an Excel format.
-  Furthermore, \code{nodesplit.plot} facilitates the comparison of the consistency model (via \code{run.model}) with the node-splitting approach (via \code{run.nodesplit}) regarding between-trial standard deviation (\eqn{\tau}) and model assessment parameters
-  after each split node of the network.
+  Furthermore, \code{nodesplit.plot} facilitates the comparison of the consistency model (via \code{run.model}) with the node-splitting approach (via \code{run.nodesplit}) regarding between-trial standard deviation (\eqn{\tau})
+  and model assessment parameters (Spiegelhalter et al. (2002)) after each split node of the network.
 }
 \details{
-\code{nodesplit.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+\code{node.split.intervalplot} includes as many interval plots as the number of split nodes in the network.
+  Each interval plot illustrates the posterior mean and 95\% credible interval of the direct and indirect effect of the split nodes and the corresponding inconsistency factor.
+  The line that corresponds to the inconsistency factor is highlighted with green, when it does not cross the vertical line of no difference (between the direct and indirect effect), and red otherwise.
+  If there are more than 30 split nodes, the function presents the interval plots on split nodes with statistically significant inconsistency factor or those with inconsistent sign in the direct and indirect effect.
+
+  \code{tau.intervalplot} is a interval plot on the median and 95\% credible interval of \eqn{\tau} after each split node. The lines that correspond to the split nodes are sorted in ascending order of the
+  deviance information criterion (DIC) which appears at the top of each line. The 95\% credible interval of \eqn{\tau} under the consistency model appears as a rectangle in the interval plot.
+  When a fixed-effect model has been performed, \code{nodesplit.plot} does not return \code{tau.intervalplot}.
+
+  The data-frame \code{table.assess} also include the column \emph{DIC-based better fit} that indicates the preferred model in terms of parsimony for each split node.
+  Therefore, the DIC of the model after each split node is compared with the DIC of the consistency model (Dias et al. (2010)).
+  If the difference in DIC exceeds 5, the consistency model is preferred; if the difference in DIC is less than -5,
+  the model after split node is preferred; otherwise, there is little to choose between the compared models.
+
+  Furthermore, \code{nodesplit.plot} exports both data-frames to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+
+  \code{nodesplit.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 }
 \examples{
 data("nma.baker2009.RData")
 
 # Perform a random-effects network meta-analysis
-res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+res1 <- run.model(data = nma.baker2009,
+                  measure = "OR",
+                  model = "RE",
+                  assumption = "IDE-ARM",
+                  heter.prior = list("halfnormal", 0, 1),
+                  mean.misspar = 0,
+                  var.misspar = 1,
+                  D = 1,
+                  n.chains = 3,
+                  n.iter = 10000,
+                  n.burnin = 1000,
+                  n.thin = 1)
 
 # Run random-effects network meta-analysis with node-splitting approachs
-node1 <- run.nodesplit(data = nma.baker2009, full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+node1 <- run.nodesplit(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
-                  "formoterol", "salmeterol", "tiotropium", "placebo")
+interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+                  salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
 
 # Plot the results from the consistency model and the node-splitting approach
 nodesplit.plot(full = res1, node = node1, drug.names = interv.names)

@@ -2,10 +2,71 @@
 % Please edit documentation in R/robustness.index_function.R
 \name{robustness.index}
 \alias{robustness.index}
-\title{Robustness index}
+\title{Robustness index: Investigate the impact of missing participant outcome data}
 \usage{
-robustness.index(sens, primary.scenar, threshold)
+robustness.index(sens, threshold)
+}
+\arguments{
+\item{sens}{An object of S3 class \code{\link{run.sensitivity}}. See 'Value' in \code{\link{run.sensitivity}}.}
+
+\item{threshold}{A number indicating the threshold of robustness, that is, the minimally allowed deviation between the primary analysis and re-analysis results. See 'Details' below.}
+}
+\value{
+\code{robustness.index} prints on the R console a message on the threshold of robustness determined by the user in green text.
+Then, the function returns the following list of elements:
+\tabular{ll}{
+ \code{RI} \tab A a numeric scalar or vector on the robustnessindex values. In the case of a pairwise meta-analysis (PMA), \code{RI} is scalar as only one summary effect size is obtained.
+   In the case of network meta-analysis (NMA), \code{RI} is a vector with length equal to the number of possible pairwise comparisons; one robustness index per possible comparison.\cr
+ \tab \cr
+ \code{robust} \tab A character vector on whether the primary analysis results are \emph{robust} or \emph{frail} to the different re-analyses.\cr
+ \tab \cr
+ \code{KLD} \tab A vector or matrix on the Kullback-Leibler divergence (KLD) measure in the summary effect size from a subsequent re-analysis to the primary analysis.
+   In the case of a PMA, \code{KLD} is a vector with length equal to the number of total analyses.
+   The latter equals the square of the number of scenarios indicated in argument \code{mean.scenarios} of \code{run.sensitivity}. Therefore, one KLD value per analysis.
+   In the case of NMA, \code{RI} is a matrix with number of rows equal to the number of total analyses and number of columns equal to the number of possible pairwise comparisons;
+   one KLD value per analysis and possible comparison.\cr
+}
 }
 \description{
-Robustness index
+This function calculates the robustness index, a novel index that quantifies the overall divergence of the sensitivity analysis results from the primary analysis results
+  (missing-at-random assumption), and considers objective decision rules to infer the presence of lack of robustness of the primary analysis results when conducting a sensitivity analysis (Spineli et al., 2021).
+  Currently, \code{robustness.index} is used concerning the impact of missing participant outcome data.
+}
+\details{
+The user may consider the values 0.28 and 0.17 in the argument \code{threshold} for binary and continuous outcome data (the default values), respectively, or consider other plausible values.
+  Spineli et al. (2021) offers a discussion on specifying the \code{threshold} of robustness.
+
+  Currently, the primary analysis is considered to be the MAR assumption and it corresponds to the middle of the numbers in the argument \code{mean.scenarios}
+  of the \code{run.sensitivity} function (see 'Arguments' and 'Details' in \code{run.sensitivity}).
+
+  In \code{robust}, the value \code{"robust"} appears when \code{RI} \eqn{<} \code{threshold}); otherwise, the value \code{"frail"} appears.
+
+  \code{robustness.index} can be used only for when missing participant outcome data have been extracted for at least one trial. Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
+}
+\examples{
+data("nma.liu2013.RData")
+
+# Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
+res.sens <- run.sensitivity(full = res1,
+                            assumption = "IDE-ARM",
+                            var.misspar = 1,
+                            n.chains = 3,
+                            n.iter = 10000,
+                            n.burnin = 1000,
+                            n.thin = 1)
+
+# Calculate the robustness index
+robustness.index(sens = res.sens, primary.scenar = 13, threshold = 0.28)
+
+}
+\references{
+Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
+
+Kullback S, Leibler RA. On information and sufficiency. \emph{Ann Math Stat} 1951;\bold{22}(1):79--86. [\doi{10.1214/aoms/1177729694}]
+}
+\seealso{
+\code{\link{run.sensitivity}}
+}
+\author{
+{Loukia M. Spineli}
 }

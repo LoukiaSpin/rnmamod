@@ -12,7 +12,7 @@ leverage.plot(net, drug.names, title)
 \item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}.
 If the argument \code{drug.names} is not defined, the order of the interventions as they appear in \code{data} is used, instead.}
 
-\item{colour}{A string to define the colour of the points in the plot.}
+\item{title}{A title to indicate the model (consistency model or unrelated mean effects model).}
 }
 \value{
 A scatterplot of the leverage against the square root of the posterior mean of residual deviance of the trial-arms under the consistency models or

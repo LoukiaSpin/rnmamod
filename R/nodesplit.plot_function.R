@@ -11,14 +11,14 @@
 #'
 #' @return \code{nodesplit.plot} returns the following list of elements:
 #' \tabular{ll}{
-#'  \code{table.EM} \tab A data-frame with the posterior mean, posterior standard deviation and 95\% credible interval of the direct and indirect effect and the inconsistency factor of each split node.\cr
+#'  \code{Table.effect.size} \tab A data-frame with the posterior mean, posterior standard deviation and 95\% credible interval of the direct and indirect effect and the inconsistency factor of each split node.\cr
 #'  \tab \cr
-#'  \code{table.assess} \tab A data-frame with the model assessment parameters (DIC, posterior mean of total residual deviance, and number of effective parameters), the posterior median, posterior standard deviation and 95\% credible interval of \eqn{\tau}
+#'  \code{Table.model.assessment} \tab A data-frame with the model assessment parameters (DIC, posterior mean of total residual deviance, and number of effective parameters), the posterior median, posterior standard deviation and 95\% credible interval of \eqn{\tau}
 #'   under the consistency model and after each split node. See 'Details'.\cr
 #'  \tab \cr
-#'  \code{node.split.intervalplot} \tab A panel of interval plots on the direct and indirect effect of the split nodes and the corresponding inconsistency factor. See 'Details'.\cr
+#'  \code{Intervalplot.IF} \tab A panel of interval plots on the direct and indirect effect of the split nodes and the corresponding inconsistency factor. See 'Details'.\cr
 #'  \tab \cr
-#'  \code{tau.intervalplot} \tab An interval plot on \eqn{\tau} after each split node. See 'Details'.\cr
+#'  \code{Intervalplot.tau} \tab An interval plot on \eqn{\tau} after each split node. See 'Details'.\cr
 #' }
 #'
 #' @details \code{node.split.intervalplot} includes as many interval plots as the number of split nodes in the network.
@@ -52,14 +52,25 @@
 #' data("nma.baker2009.RData")
 #'
 #' # Perform a random-effects network meta-analysis
-#' res1 <- run.model(data = nma.baker2009, measure = "OR", model = "RE", assumption = "IDE-ARM", heter.prior = list("halfnormal", 0, 1), mean.misspar = 0, var.misspar = 1, D = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' res1 <- run.model(data = nma.baker2009,
+#'                   measure = "OR",
+#'                   model = "RE",
+#'                   assumption = "IDE-ARM",
+#'                   heter.prior = list("halfnormal", 0, 1),
+#'                   mean.misspar = 0,
+#'                   var.misspar = 1,
+#'                   D = 1,
+#'                   n.chains = 3,
+#'                   n.iter = 10000,
+#'                   n.burnin = 1000,
+#'                   n.thin = 1)
 #'
 #' # Run random-effects network meta-analysis with node-splitting approachs
 #' node1 <- run.nodesplit(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
-#'                   "formoterol", "salmeterol", "tiotropium", "placebo")
+#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+#'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
 #'
 #' # Plot the results from the consistency model and the node-splitting approach
 #' nodesplit.plot(full = res1, node = node1, drug.names = interv.names)
@@ -104,7 +115,7 @@ nodesplit.plot <- function(full, node, drug.names) {
 
 
   ## Keep results on 'direct evidence', 'indirect evidence', 'inconsistency factor', 'between-trial standard deviation',
-  ## and model assessment measures (i.e., DIC, posterior mean of refisual deviance, and pD)
+  ## and model assessment measures (i.e., DIC, posterior mean of residual deviance, and pD)
   direct0 <- node$direct; indirect0 <- node$indirect; IF0 <- node$diff; model.assess <- node$model.assessment
 
 
@@ -146,9 +157,10 @@ nodesplit.plot <- function(full, node, drug.names) {
 
     p1 <- ggplot(data = prepare, aes(x = factor(evidence, levels = c("IF", "indirect", "direct")), y = mean, ymin = lower, ymax = upper, colour = stat.signif) ) +
             geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-            geom_hline(yintercept = 0, lty = 2, size = 1.5, col = "grey") +
+            geom_hline(yintercept = 0, lty = 1, size = 1, col = "grey") +
             geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
-            geom_text(aes(x = as.factor(evidence), y = round(mean, 2), label = sprintf("%.2f", mean), hjust = 0, vjust = -0.4), color = "black", size = 4.0,
+            geom_text(aes(x = as.factor(evidence), y = round(mean, 2), label = paste0(sprintf("%.2f", mean), " ", "(",
+                      sprintf("%.2f", lower), ",", " ", sprintf("%.2f", upper), ")"), hjust = 0, vjust = -0.5), color = "black", size = 4.0,
                       check_overlap = F, parse = F, position = position_dodge(width = 0.5),  inherit.aes = T) +
             geom_label(aes(x = 3.5, y = -Inf, hjust = 0, vjust = 1, label = sprintf("%.2f", DIC)), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
             scale_y_continuous(trans = "identity") +
@@ -170,9 +182,10 @@ nodesplit.plot <- function(full, node, drug.names) {
 
     p1 <- ggplot(data = selection, aes(x = factor(evidence, levels = c("IF", "indirect", "direct")), y = mean, ymin = lower, ymax = upper, colour = stat.signif) ) +
             geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-            geom_hline(yintercept = 0, lty = 2, size = 1.5, col = "grey") +
+            geom_hline(yintercept = 0, lty = 1, size = 1, col = "grey") +
             geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
-            geom_text(aes(x = as.factor(evidence), y = round(mean, 2), label = round(mean, 2), hjust = 0, vjust = -0.4), color = "black", size = 4.0,
+            geom_text(aes(x = as.factor(evidence), y = round(mean, 2), label = paste0(sprintf("%.2f", mean), " ", "(",
+                      sprintf("%.2f", lower), ",", " ", sprintf("%.2f", upper), ")"), hjust = 0, vjust = -0.5), color = "black", size = 4.0,
                       check_overlap = F, parse = F, position = position_dodge(width = 0.5),  inherit.aes = T) +
             geom_label(aes(x = 3.5, y = -Inf, hjust = 0, vjust = 1, label = round(DIC, 0)), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
             facet_wrap(vars(factor(node, levels = unique(prepare$node))), scales = "fixed") +
@@ -193,8 +206,9 @@ nodesplit.plot <- function(full, node, drug.names) {
   CrI.indirect <- paste0("(", round(indirect[, 5], 2), ",", " ", round(indirect[, 6], 2), ")", ifelse(indirect[, 5] > 0 | indirect[, 6] < 0, "*", " "))
   CrI.IF <- paste0("(", round(IF[, 5], 2), ",", " ", round(IF[, 6], 2), ")", ifelse(IF[, 5] > 0 | IF[, 6] < 0, "*", " "))
   table.EM <- data.frame(comp, round(direct[, 3:4], 2), CrI.direct, round(indirect[, 3:4], 2), CrI.indirect, round(IF[, 3:4], 2), CrI.IF)
-  colnames(table.EM) <- c("Split node", "Post. mean dir.", "Post. SD dir.", "95% CrI dir.", "Post. mean indir", "Post. SD indir.", "95% CrI indir.",
-                         "Post. mean IF", "Post. SD IF", "95% CrI IF")
+  colnames(table.EM) <- c("Node", "Mean direct", "SD direct", "95% CrI direct", "Mean indirect", "SD indirect", "95% CrI indirect",
+                         "Mean IF", "SD IF", "95% CrI IF")
+  rownames(table.EM) <- NULL
 
 
 
@@ -209,17 +223,18 @@ nodesplit.plot <- function(full, node, drug.names) {
   if (model == "RE") {
     CrI.tau <- paste0("(", round(tau[, 5], 2), ",", " ", round(tau[, 6], 2), ")")
     table.assess0 <- data.frame(comp, round(model.assess.sort[, -c(1:2)], 2), Better.fit, round(tau[, 3:4], 2), CrI.tau)
-    colnames(table.assess0) <- c("Approach", "DIC", "Post. mean dev.", "pD", "DIC-based better fit", "Post. median tau", "Post. SD tau", "95% CrI tau")
+    colnames(table.assess0) <- c("Approach", "DIC", "Mean deviance", "pD", "DIC-based better fit", "Median tau", "SD tau", "95% CrI tau")
     add <- data.frame("NMA", round(model.assess.NMA[c(1, 3, 2)], 2), "-", round(tau.values[1], 2), round(tau.values[2], 2), paste0("(", round(tau.values[3], 2), ",", " ", round(tau.values[4], 2), ")"))
     colnames(add) <- colnames(table.assess0)
     table.assess <- rbind(add, table.assess0)
   } else {
     table.assess0 <- data.frame(comp, round(model.assess.sort[, -c(1:2)], 2), Better.fit)
-    colnames(table.assess0) <- c("Approach", "DIC", "Post. mean dev.", "pD", "DIC-based better fit")
+    colnames(table.assess0) <- c("Approach", "DIC", "Mean deviance", "pD", "DIC-based better fit")
     add <- data.frame("NMA", round(model.assess.NMA[c(1, 3, 2)], 2), "-")
     colnames(add) <- colnames(table.assess0)
     table.assess <- rbind(add, table.assess0)
   }
+  rownames(table.assess) <- NULL
 
 
 
@@ -253,20 +268,20 @@ nodesplit.plot <- function(full, node, drug.names) {
 
 
   ## Write the table with the EMs from both models as .xlsx
-  write_xlsx(table.EM, paste0(getwd(),"Table NMA vs Node-Split.xlsx"))
-  write_xlsx(table.assess, paste0(getwd(),"Table assesssment Node-Split.xlsx"))
+  write_xlsx(table.EM, paste0("Table NMA vs Node-Split.xlsx"))
+  write_xlsx(table.assess, paste0("Table assesssment Node-Split.xlsx"))
 
 
   ## Return results
   results <- if (model == "RE") {
-    list(table.EM = table.EM,
-         table.assess = table.assess,
-         node.split.intervalplot = p1,
-         tau.intervalplot = p2)
+    list(Table.effect.size = knitr::kable(table.EM),
+         Table.model.assessment = knitr::kable(table.assess),
+         Intervalplot.IF = p1,
+         intervalplot.tau = p2)
   } else {
-    list(table.EM = table.EM,
-         table.assess = table.assess,
-         node.split.intervalplot = p1)
+    list(Table.effect.size = table.EM,
+         Table.model.assessment = table.assess,
+         Intervalplot.IF = p1)
   }
 
   return(results)

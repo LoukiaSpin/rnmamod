@@ -22,8 +22,8 @@ A lower triangular heatmap matrix on the KLD measure in the summary effect size 
 }
 \description{
 This functions facilitates the detection of observed pairwise comparisons that are sensible
-  to applying the consistency model or the unrelated mean effects model. The heatmap is based on the Kullback-Leibler divergence (KLD) measure in
-  the summary effect size from the unrelated mean effects model to the consistency model (see \code{similarity.index.UME}).
+  to applying the consistency model or the unrelated mean effects model. The heatmap is based on the Kullback-Leibler divergence (KLD) measure
+  (Kullback and Leibler, 1951) in the summary effect size from the unrelated mean effects model to the consistency model (see \code{similarity.index.UME}).
 }
 \details{
 \code{heatmap.similarity.UME} is integrated in the \code{UME.plot} function. The heatmap illustrates the KLD values for the observed pairwise comparisons in the network.
@@ -38,7 +38,9 @@ This functions facilitates the detection of observed pairwise comparisons that a
 \references{
 Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
 
-Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021. [\doi{10.1002/jrsm.1478}]
+Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
+
+Kullback S, Leibler RA. On information and sufficiency. \emph{Ann Math Stat} 1951;\bold{22}(1):79--86. [\doi{10.1214/aoms/1177729694}]
 }
 \seealso{
 \code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{UME.plot}}, \code{\link{similarity.index.UME}}

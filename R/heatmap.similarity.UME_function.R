@@ -48,7 +48,7 @@ heatmap.similarity.UME <- function(full, ume, drug.names, threshold){
   ## Assign the robustness index to the observed comparisons
   EM.full <- full$EM
   ume.post <- ume$EM
-  robust <- similarity.index.UME(EM.full[is.element(possible.comp$poss.comp[, 4], possible.comp$obs.comp[, 3]), 1:2], ume.post[, 1:2], threshold)$KLD
+  robust <- sprintf("%.2f", similarity.index.UME(EM.full[is.element(possible.comp$poss.comp[, 4], possible.comp$obs.comp[, 3]), 1:2], ume.post[, 1:2], threshold)$KLD)
 
   poss.comp <- cbind(possible.comp$poss.comp, rep(NA, length(possible.comp$poss.comp[, 1])))
   poss.comp[is.element(possible.comp$poss.comp[, 5], possible.comp$obs.comp[, 4]) == T, 6] <- robust
@@ -62,7 +62,7 @@ heatmap.similarity.UME <- function(full, ume, drug.names, threshold){
   ## Lower triangular heatmap matrix - Comparisons are read from the left to the right
   ## CAREFUL: The interventions in the drug.names should follow the order you considered to run NMA pattern-mixture model!
   mat <- matrix(NA, nrow = length(drug.names) - 1, ncol = length(drug.names) - 1)
-  mat[lower.tri(mat, diag = T)] <- round(poss.comp$RI, 2)
+  mat[lower.tri(mat, diag = T)] <- poss.comp$RI
   colnames(mat) <- drug.names[1:(length(drug.names) - 1)]; rownames(mat) <- drug.names[2:length(drug.names)]
   mat.new <- melt(mat, na.rm = F)
 

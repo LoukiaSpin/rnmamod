@@ -34,14 +34,20 @@
 #' data("nma.liu2013.RData")
 #'
 #' # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
-#' res.sens <- run.sensitivity(full = res1, assumption = "IDE-ARM", var.misspar = 1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' res.sens <- run.sensitivity(full = res1,
+#'                             assumption = "IDE-ARM",
+#'                             var.misspar = 1,
+#'                             n.chains = 3,
+#'                             n.iter = 10000,
+#'                             n.burnin = 1000,
+#'                             n.thin = 1)
 #'
 #' # Calculate the robustness index
 #' robust <- robustness.index(sens = res.sens, primary.scenar = 13, threshold = 0.28)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol",
-#'                   "formoterol", "salmeterol", "tiotropium", "placebo")
+#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+#'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
 #'
 #' # Create the heatmap of robustness
 #' heatmap.robustness(robust = robust, drug.names = interv.names)
