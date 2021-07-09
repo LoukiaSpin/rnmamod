@@ -18,9 +18,9 @@ as they appear in \code{data} is used, instead.}
 \value{
 \code{balloon.plot.mod} A list of two enhanced balloon plots for one comparison (see 'Details' for the description of the enhanced balloon plot):
 \tabular{ll}{
- \strong{Plot.effect.size} \tab The enhanced balloon plot for the summary effect size of one pairwise comparison.\cr
+ \code{Plot.effect.size} \tab The enhanced balloon plot for the summary effect size of one pairwise comparison.\cr
  \tab \cr
- \strong{Plot.tau} \tab The enhanced balloon plot for \eqn{\tau}. When the fixed-effect model has been performed in \code{run.sensitivity}, the function will not return the \code{Plot.tau}.\cr
+ \code{Plot.tau} \tab The enhanced balloon plot for \eqn{\tau}. When the fixed-effect model has been performed in \code{run.sensitivity}, the function will not return the \code{Plot.tau}.\cr
 }
 }
 \description{
@@ -39,7 +39,7 @@ For the summary effect size of a pairwise comparison, the different colours and 
 
   The same enhanced balloon plot is created for \eqn{\tau}. However, filled bubbles indicate low extent of statistical heterogeneity,
   and crossed bubbles indicate considerable extent of statistical heterogeneity. Low extent implies that the posterior median of \eqn{\tau} is lower than
-  the median of the prior distribution for \eqn{\tau} (see, \code{\link{run.sensitivity}} and \code{\link{run.model}}); otherwise, there is considerable statistical heterogeneity,
+  the median of the prior distribution for the heterogeneity parameter (see, \code{\link{run.sensitivity}} and \code{\link{run.model}}); otherwise, there is considerable statistical heterogeneity.
 
   \code{heatmap.robustness} can be used only for a network of interventions and when missing participant outcome data have been extracted for at least one trial.
   Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.

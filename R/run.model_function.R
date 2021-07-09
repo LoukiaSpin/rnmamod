@@ -6,6 +6,9 @@
 #' @param measure Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio, mean difference,
 #'   standardised mean difference and ratio of means, respectively.
 #' @param model Character string indicating the analysis model with values \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model, respectively. The default argument is \code{"RE"}.
+#' @param covar.assumption Character string indicating the structure of the slope for the intervention by covariate interaction, as described in Cooper et al., (2009).
+#'  Set \code{covar.assumption} equal to one of the following: \code{"NO"}, when no meta-regression is performed; otherwise, \code{"exchangeable"} \code{"independent"}, and \code{"common"}.
+#'  See the \code{ru.metareg} function.
 #' @param assumption Character string indicating the structure of the informative missingness parameter.
 #'   Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.
 #'   The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"}, \code{"HIE"}, and \code{"IND"} stand for identical, hierarchical and independent, respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and uncorrelated, respectively.
@@ -143,6 +146,8 @@
 #'
 #' Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision making 2: a generalized linear modeling framework for pairwise and network meta-analysis of randomized controlled trials. \emph{Med Decis Making} 2013;\bold{33}(5):607--617. [\doi{10.1177/0272989X12458724}]
 #'
+#' Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study heterogeneity and inconsistency in mixed treatment comparisons: Application to stroke prevention treatments in individuals with non-rheumatic atrial fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81. [\doi{10.1002/sim.3594}]
+#'
 #' White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data in meta-analysis--part 1: two-stage methods. \emph{Stat Med} 2008;\bold{27}(5):711--727. [\doi{10.1002/sim.3008}]
 #'
 #' Lu G, Ades AE. Assessing evidence inconsistency in mixed treatment comparisons. \emph{J Am Stat Assoc} 2006;\bold{101}:447--459. [\doi{10.1198/016214505000001302}]
@@ -159,6 +164,7 @@
 #' run.model(data = nma.baker2009,
 #'           measure = "OR",
 #'           model = "RE",
+#'           covar.assumption = "NO",
 #'           assumption = "IDE-ARM",
 #'           heter.prior = list("halfnormal", 0, 1),
 #'           mean.misspar = 0,
@@ -170,7 +176,7 @@
 #'           n.thin = 1)
 #'
 #' @export
-run.model <- function(data, measure, model, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin) {
+run.model <- function(data, measure, model, covar.assumption, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin) {
 
 
   ## Turn off warning when variables in the 'data.jag' are not used
@@ -195,6 +201,13 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
     stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'", call. = F)
   } else {
     assumption
+  }
+  covar.assumption <- if (missing(covar.assumption)) {
+    "NO"
+  } else if (!is.element(covar.assumption,  c("NO", "exchangeable", "independent", "common"))) {
+    stop("Insert 'NO', 'exchangeable', 'independent', or 'common'", call. = F)
+  } else {
+    covar.assumption
   }
   D <- if (missing(D)) {
     stop("The argument 'D' needs to be defined", call. = F)
@@ -225,9 +238,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
                    "meand.phi" = mean.misspar,
                    "precd.phi" = 1/var.misspar,
                    "D" = D,
-                   "heter.prior" = heterog.prior,
-                   "eff.mod2" = matrix(0, nrow = item$ns, ncol = max(item$na)),
-                   "eff.mod" = rep(0, item$ns))
+                   "heter.prior" = heterog.prior)
 
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
@@ -255,7 +266,7 @@ run.model <- function(data, measure, model, assumption, heter.prior, mean.misspa
   ## Run the Bayesian analysis
   jagsfit <- jags(data = data.jag,
                   parameters.to.save = param.jags,
-                  model.file = textConnection(prepare.model(measure, model, assumption)),
+                  model.file = textConnection(prepare.model(measure, model, covar.assumption, assumption)),
                   n.chains = n.chains,
                   n.iter = n.iter,
                   n.burnin = n.burnin,

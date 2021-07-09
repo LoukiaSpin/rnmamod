@@ -37,6 +37,7 @@ run.model(
   measure,
   model,
   assumption,
+  covar.assumption,
   heter.prior,
   mean.misspar,
   var.misspar,
@@ -58,6 +59,10 @@ standardised mean difference and ratio of means, respectively.}
 \item{assumption}{Character string indicating the structure of the informative missingness parameter.
 Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.
 The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"}, \code{"HIE"}, and \code{"IND"} stand for identical, hierarchical and independent, respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and uncorrelated, respectively.}
+
+\item{covar.assumption}{Character string indicating the structure of the slope for the intervention by covariate interaction, as described in Cooper et al., (2009).
+Set \code{covar.assumption} equal to one of the following: \code{"NO"}, when no meta-regression is performed; otherwise, \code{"exchangeable"} \code{"independent"}, and \code{"common"}.
+See the \code{ru.metareg} function.}
 
 \item{heter.prior}{A list of three elements with the following order: 1) a character string indicating the distribution with (currently available) values \code{"halfnormal"},
 \code{"uniform"}, \code{"lognormal"}, or \code{"logt"}; 2) two numeric values that refer to the parameters of the selected distribution. For \code{"halfnormal"}, \code{"lognormal"}, and \code{"logt"}
@@ -172,6 +177,7 @@ run.model(data = nma.baker2009,
           measure = "OR",
           model = "RE",
           assumption = "IDE-ARM",
+          covar.assumption = "NO",
           heter.prior = list("halfnormal", 0, 1),
           mean.misspar = 0,
           var.misspar = 1,
@@ -194,6 +200,8 @@ Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for uncertaint
 Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account for uncertainty due to missing binary outcome data in pairwise meta-analysis. \emph{Stat Med} 2015;\bold{34}(12):2062--2080. [\doi{10.1002/sim.6475}]
 
 Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision making 2: a generalized linear modeling framework for pairwise and network meta-analysis of randomized controlled trials. \emph{Med Decis Making} 2013;\bold{33}(5):607--617. [\doi{10.1177/0272989X12458724}]
+
+Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study heterogeneity and inconsistency in mixed treatment comparisons: Application to stroke prevention treatments in individuals with non-rheumatic atrial fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81. [\doi{10.1002/sim.3594}]
 
 White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data in meta-analysis--part 1: two-stage methods. \emph{Stat Med} 2008;\bold{27}(5):711--727. [\doi{10.1002/sim.3008}]
 
