@@ -128,6 +128,7 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
   heter.prior <- full$heter.prior
   mean.misspar <- full$mean.misspar
   var.misspar <- full$var.misspar
+  D <- full$D
 
 
   ## Prepare the dataset for the R2jags
@@ -140,13 +141,6 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
   }
 
   ## Default arguments
-  model <- if (missing(model)) {
-    "RE"
-  } else if (!is.element(model, c("RE", "FE"))) {
-    stop("Insert 'RE', or 'FE'", call. = F)
-  } else {
-    model
-  }
   covar.assumption <- if (missing(covar.assumption)) {
     "NO"
   } else if (!is.element(covar.assumption,  c("NO", "exchangeable", "independent", "common"))) {
@@ -154,21 +148,6 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
   } else {
     covar.assumption
   }
-  assumption <- if (missing(assumption)) {
-    "IDE-ARM"
-  } else if (!is.element(assumption,  c("IDE-ARM", "IDE-TRIAL", "IDE-COMMON", "HIE-ARM", "HIE-TRIAL", "HIE-COMMON", "IND-CORR", "IND-UNCORR"))) {
-    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', 'IND-CORR', or 'IND-UNCORR'", call. = F)
-  } else {
-    assumption
-  }
-  D <- if (missing(D)) {
-    stop("The argument 'D' needs to be defined", call. = F)
-  } else {
-    D
-  }
-  mean.misspar <- missingness.param.prior(assumption, mean.misspar)
-  heter.prior <- heterogeneity.param.prior(measure, model, heter.prior)
-  var.misspar <- ifelse(missing(var.misspar) & (is.element(measure, c("OR", "MD", "SMD"))), 1, ifelse(missing(var.misspar) & measure == "ROM", 0.2^2, var.misspar))
   n.chains <- ifelse(missing(n.chains), 2, n.chains)
   n.iter <- ifelse(missing(n.iter), 10000, n.iter)
   n.burnin <- ifelse(missing(n.burnin), 1000, n.burnin)
@@ -248,7 +227,7 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
   # Between-trial standard deviation
   tau <- t(getResults %>% dplyr::select(starts_with("tau")))
 
-  # Regression coefficient for comparisons with the reference intervention
+  # Regression coefficient
   beta <- t(getResults %>% dplyr::select(starts_with("beta[") | starts_with("beta")))
 
   # SUrface under the Cumulative RAnking curve values
@@ -261,7 +240,11 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
   effectiveness <- t(getResults %>% dplyr::select(starts_with("effectiveness")))
 
   # Estimated missingness parameter
-  phi <- t(getResults %>% dplyr::select(starts_with("phi") | starts_with("mean.phi") | starts_with("mean.phi[") | starts_with("phi[")))
+  phi <- if (length(unique(unlist(item$m))) > 2) {
+    t(getResults %>% dplyr::select(starts_with("phi") | starts_with("mean.phi") | starts_with("mean.phi[") | starts_with("phi[")))
+  } else {
+    NA
+  }
 
   # Trial-arm deviance contribution for observed outcome
   dev.o <- t(getResults %>% dplyr::select(starts_with("dev.o")))
@@ -339,6 +322,8 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
                        model.assessment = model.assessment,
                        measure = measure,
                        model = model,
+                       covariate = covariate,
+                       covar.assumption = covar.assumption,
                        jagsfit = jagsfit)
     nma.results <- append(ma.results, list(EM.ref = EM.ref, pred.ref = pred.ref, SUCRA = SUCRA, effectiveness = effectiveness))
   } else {
@@ -352,6 +337,8 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
                        model.assessment = model.assessment,
                        measure = measure,
                        model = model,
+                       covariate = covariate,
+                       covar.assumption = covar.assumption,
                        jagsfit = jagsfit)
     nma.results <- append(ma.results, list(EM.ref = EM.ref, SUCRA = SUCRA, effectiveness = effectiveness))
   }

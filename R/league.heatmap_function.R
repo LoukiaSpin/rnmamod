@@ -1,4 +1,4 @@
-#' League heatmap for all possible comparisons
+#' League heatmap of all possible comparisons: estimation
 #'
 #' @description
 #' A function to create a heatmap with the estimated effects of all possible comparisons of interventions in the network.
@@ -166,13 +166,14 @@ league.heatmap <- function(full, drug.names){
          geom_tile(aes(fill = value.SUCRA)) +
          geom_fit_text(aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), label = value), reflow = T) +
          geom_fit_text(aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), label = value, fontface = ifelse(signif.status == "significant", "bold", "plain")), reflow = T) +
-         scale_fill_gradientn(colours = c("blue", "white", "red"),
+         scale_fill_gradientn(colours = c("blue", "white", "#D55E00"),
                               values = rescale(c(min(mat.new$value2, na.rm = T), ifelse(measure != "OR" & measure != "ROM", 0, 1), max(mat.new$value2, na.rm = T))),
                               limits = c(min(mat.new$value2, na.rm = T), max(mat.new$value2, na.rm = T))) +
          scale_x_discrete(position = "top") +
-         labs(x = "", y = "") +
+         labs(x = "", y = "", caption = "Posterior mean (95% credible interval)") +
          theme_bw() +
-         theme(legend.position = "none", axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0), axis.text.y = element_text(size = 12))
+         theme(legend.position = "none", axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0), axis.text.y = element_text(size = 12),
+               plot.caption = element_text(hjust = 0.01))
 
 
   return(p)

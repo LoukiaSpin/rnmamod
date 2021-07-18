@@ -57,10 +57,10 @@ This function performs a Bayesian network meta-analysis based on the unrelated m
   This is to prevent misspecifying the Bayesian model as it would make the comparison of the consistency model (via \code{run.model}) with the unrelated mean effects model meaningless.
   Instead, these arguments are contained in the argument \code{full} of the function. Therefore, the user needs first to apply \code{run.model}, and then use \code{run.UME} (see, 'Examples').
 
-  Initially, \code{run.nodesplit} calls the \code{improved.UME} function to identify the \emph{frail comparisons}, that is, comparisons between non-baseline interventions in multi-arm trials -- not investigated in any two-arm trial of the network (Spineli, 2021).
+  Initially, \code{run.UME} calls the \code{improved.UME} function to identify the \emph{frail comparisons}, that is, comparisons between non-baseline interventions in multi-arm trials -- not investigated in any two-arm trial of the network (Spineli, 2021).
   The 'original' model of Dias et al. (2013a) omits the frail comparisons from the estimation process. Consequently, the number of estimated summary effect sizes is less than those obtained by performing separate pairwise meta-analyses (see \code{run.series.meta}).
 
-  Then, to perform the Bayesian unrelated effect measures model, \code{run.nodesplit} calls the \code{prepare.UME} function which contains the WinBUGS code as written by Dias et al. (2013a) for binomial and normal likelihood to analyse binary and continuous outcome data, respectively.
+  Then, to perform the Bayesian unrelated effect measures model, \code{run.UME} calls the \code{prepare.UME} function which contains the WinBUGS code as written by Dias et al. (2013a) for binomial and normal likelihood to analyse binary and continuous outcome data, respectively.
   \code{prepare.UME} has been extended to incorporate the pattern-mixture model with informative missingness parameters for binary and continuous outcome data (see, 'Details' in \code{run.model}).
   \code{prepare.UME} has been also 'upgraded' to account for the multi-arm trials by assigning conditional univariate normal distributions on the basic parameters of these trials, that is, effect parameters between non-baseline and baseline arms (Dias et al., 2013b; Spineli, 2021).
 

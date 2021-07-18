@@ -60,10 +60,10 @@ intervalplot.panel.UME <- function(full, ume, drug.names) {
   # Create the data-frame
   data.set <- if (is.element(full$measur, c("OR", "ROM"))) {
     data.frame(round(exp(c(nma.mean, ume.mean)), 2), round(exp(c(nma.lower, ume.lower)), 2), round(exp(c(nma.upper, ume.upper)), 2), c(nma.stat.signif, ume.stat.signif),
-               rep(possible.comp$obs.comp[, 4], 2), rep(c("NMA model", "UME model"), each = length(obs.comp)), frail.comp.ind)
+               rep(possible.comp$obs.comp[, 4], 2), rep(c("NMA", "UME"), each = length(obs.comp)), frail.comp.ind)
   } else {
     data.frame(c(nma.mean, ume.mean), c(nma.lower, ume.lower), c(nma.upper, ume.upper), c(nma.stat.signif, ume.stat.signif),
-               rep(possible.comp$obs.comp[, 4], 2), rep(c("NMA model", "UME model"), each = length(obs.comp)), frail.comp.ind)
+               rep(possible.comp$obs.comp[, 4], 2), rep(c("NMA", "UME"), each = length(obs.comp)), frail.comp.ind)
   }
   colnames(data.set) <- c("mean", "lower", "upper", "stat.sign", "comp", "analysis", "frail")
 

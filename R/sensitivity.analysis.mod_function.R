@@ -182,7 +182,7 @@ run.sensitivity <- function(full, assumption, mean.scenarios, var.misspar, n.cha
     message(paste(i, "out of", length(mean.misspar[, 1]), "total scenarios"))
     jagsfit[[i]] <- jags(data = data.jag[[i]],
                          parameters.to.save = param.jags,
-                         model.file = textConnection(prepare.model(measure, model, assumption)),
+                         model.file = textConnection(prepare.model(measure, model, covar.assumption = "NO", assumption)),
                          n.chains = n.chains,
                          n.iter = n.iter,
                          n.burnin = n.burnin,

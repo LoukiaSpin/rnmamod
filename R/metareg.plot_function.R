@@ -1,31 +1,14 @@
 #' Plot the results from the meta-regression analysis
 #'
 #' @export
-metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
+metareg.plot <- function(full, metareg, covar.values, drug.names) {
 
 
   options(warn = -1)
 
-  ## The results on the following parameters will be used:
-  # Analysis model
-  model <- if (full$model != metareg$model) {
-    stop("The argument 'model' differs in 'run.model' and 'run.metareg'. Specify the same 'model' and run the analysis again", call. = F)
-  } else {
-    full$model
-  }
 
-  # Effect measure
-  measure <- if (full$measure != metareg$measure) {
-    stop("The argument 'measure' differs in 'run.model' and 'run.metareg'. Specify the same 'measure' and run the analysis again", call. = F)
-  }
-
-
-  covariate <- if (missing(covariate)) {
-    stop("The argument 'covariate' needs to be defined", call. = F)
-  } else {
-    na.omit(unlist(covariate))
-  }
-
+  model <- full$model
+  measure <- full$measure
 
   covar.values <- if (missing(covar.values)) {
     stop("The argument 'covar.values' needs to be defined", call. = F)
@@ -86,50 +69,55 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
 
 
   ## A data-frame with the effect estimates and regression coefficients of reference-comparisons from both analyses (Sort by NMA-SUCRA in decreasing order)
-  if (!is.character(covar.values[[1]]) & (!is.element(measure, c("Odds ratio", "Ratio of means")))) {
+  if (!is.character(covar.values[[1]]) & (!is.element(measure, c("OR", "ROM")))) {
 
 
-    ## Calculate the effect estimate at two other values of the metric covariate: one smaller and one larger than the mean
-    EM.meta.s <- round(EM.meta[, c(1, 3, 7)] + beta[, c(1, 3, 7)]*(covar.values[[1]] - mean(covariate)), 2)
-    EM.meta.l <- round(EM.meta[, c(1, 3, 7)] + beta[, c(1, 3, 7)]*(covar.values[[2]] - mean(covariate)), 2)
+    ## Calculate the effect estimate at two other values of the metric covariate
+    #EM.meta.s <- round(EM.meta[, c(1, 3, 7)] + beta[, c(1, 3, 7)]*(covar.values[[1]] - mean(covariate)), 2)
+    #EM.meta.l <- round(EM.meta[, c(1, 3, 7)] + beta[, c(1, 3, 7)]*(covar.values[[2]] - mean(covariate)), 2)
 
 
     ## Isolate the 95% CrI and indicate whether the evidence is string (*) or weak (no '*')
     CrI.full <- paste0("(", EM.full[, 3], ",", " ", EM.full[, 7], ")", ifelse(EM.full[, 3] > 0 | EM.full[, 7] < 0, "*", " "))
     CrI.meta <- paste0("(", EM.meta[, 3], ",", " ", EM.meta[, 7], ")", ifelse(EM.meta[, 3] > 0 | EM.meta[, 7] < 0, "*", " "))
-    CrI.meta.s <- paste0("(", EM.meta.s[, 2], ",", " ", EM.meta.s[, 3], ")", ifelse(EM.meta.s[, 2] > 0 | EM.meta.s[, 3] < 0, "*", " "))
-    CrI.meta.l <- paste0("(", EM.meta.l[, 2], ",", " ", EM.meta.l[, 3], ")", ifelse(EM.meta.l[, 2] > 0 | EM.meta.l[, 3] < 0, "*", " "))
+    #CrI.meta.s <- paste0("(", EM.meta.s[, 2], ",", " ", EM.meta.s[, 3], ")", ifelse(EM.meta.s[, 2] > 0 | EM.meta.s[, 3] < 0, "*", " "))
+    #CrI.meta.l <- paste0("(", EM.meta.l[, 2], ",", " ", EM.meta.l[, 3], ")", ifelse(EM.meta.l[, 2] > 0 | EM.meta.l[, 3] < 0, "*", " "))
     CrI.beta <- paste0("(", beta[, 3], ",", " ", beta[, 7], ")", ifelse(beta[, 3] > 0 | beta[, 7] < 0, "*", " "))
 
 
-    EM.both.models <- na.omit(data.frame(drug.names.sorted, EM.full[, 1], CrI.full, EM.meta.s[, 1], CrI.meta.s, EM.meta[, 1], CrI.meta, EM.meta.l[, 1], CrI.meta.l, beta[, 1], CrI.beta))
-    colnames(EM.both.models) <- c("Comparison", "Poster. mean NMA", "95% CrI NMA", "Poster. mean NMReg (< mean)", "95% CrI NMReg (< mean)",
-                                  "Poster. mean NMReg (at mean)", "95% CrI NMReg (at mean)", "Poster. mean NMReg (> mean)", "95% CrI NMReg (> mean)",
-                                  "Poster. mean beta", "95% CrI beta")
+    #EM.both.models <- na.omit(data.frame(drug.names.sorted, EM.full[, 1], CrI.full, EM.meta.s[, 1], CrI.meta.s, EM.meta[, 1], CrI.meta, EM.meta.l[, 1], CrI.meta.l, beta[, 1], CrI.beta))
+    #colnames(EM.both.models) <- c("Comparison", "Mean NMA", "95% CrI NMA", "Mean NMReg (< mean)", "95% CrI NMReg (< mean)",
+    #                              "Mean NMReg (at mean)", "95% CrI NMReg (at mean)", "Mean NMReg (> mean)", "95% CrI NMReg (> mean)",
+    #                              "Mean beta", "95% CrI beta")
+    EM.both.models <- na.omit(data.frame(drug.names.sorted, EM.full[, 1], CrI.full, EM.meta[, 1], CrI.meta, beta[, 1], CrI.beta))
+    colnames(EM.both.models) <- c("Comparison", "Mean NMA", "95% CrI NMA", "Mean NMReg (at mean)", "95% CrI NMReg (at mean)", "Mean beta", "95% CrI beta")
     rownames(EM.both.models) <- NULL
 
-  } else if (!is.character(covar.values[[1]]) & (is.element(measure, c("Odds ratio", "Ratio of means")))) {
+  } else if (!is.character(covar.values[[1]]) & (is.element(measure, c("OR", "ROM")))) {
 
     ## Calculate the effect estimate at two other values of the metric covariate: one smaller and one larger than the mean
-    EM.meta.s <- round(exp(EM.meta[, c(1, 3, 7)] + beta[, c(1, 3, 7)]*(covar.values[[1]] - mean(covariate))), 2)
-    EM.meta.l <- round(exp(EM.meta[, c(1, 3, 7)] + beta[, c(1, 3, 7)]*(covar.values[[2]] - mean(covariate))), 2)
+    #EM.meta.s <- round(exp(EM.meta[, c(1, 3, 7)] + beta[, c(1, 3, 7)]*(covar.values[[1]] - mean(covariate))), 2)
+    #EM.meta.l <- round(exp(EM.meta[, c(1, 3, 7)] + beta[, c(1, 3, 7)]*(covar.values[[2]] - mean(covariate))), 2)
 
 
     ## Isolate the 95% CrI and indicate whether the evidence is string (*) or weak (no '*')
     CrI.full <- paste0("(", round(exp(EM.full[, 3]), 2), ",", " ", round(exp(EM.full[, 7]), 2), ")", ifelse(EM.full[, 3] > 0 | EM.full[, 7] < 0, "*", " "))
     CrI.meta <- paste0("(", round(exp(EM.meta[, 3]), 2), ",", " ", round(exp(EM.meta[, 7]), 2), ")", ifelse(EM.meta[, 3] > 0 | EM.meta[, 7] < 0, "*", " "))
-    CrI.meta.s <- paste0("(", EM.meta.s[, 2], ",", " ", EM.meta.s[, 3], ")", ifelse(EM.meta.s[, 2] > 1 | EM.meta.s[, 3] < 1, "*", " "))
-    CrI.meta.l <- paste0("(", EM.meta.l[, 2], ",", " ", EM.meta.l[, 3], ")", ifelse(EM.meta.l[, 2] > 1 | EM.meta.l[, 3] < 1, "*", " "))
+    #CrI.meta.s <- paste0("(", EM.meta.s[, 2], ",", " ", EM.meta.s[, 3], ")", ifelse(EM.meta.s[, 2] > 1 | EM.meta.s[, 3] < 1, "*", " "))
+    #CrI.meta.l <- paste0("(", EM.meta.l[, 2], ",", " ", EM.meta.l[, 3], ")", ifelse(EM.meta.l[, 2] > 1 | EM.meta.l[, 3] < 1, "*", " "))
     CrI.beta <- paste0("(", round(exp(beta[, 3]), 2), ",", " ", round(exp(beta[, 7]), 2), ")", ifelse(beta[, 3] > 0 | beta[, 7] < 0, "*", " "))
 
-    EM.both.models <- na.omit(data.frame(drug.names.sorted, round(exp(EM.full[, 1]), 2), CrI.full, round(exp(EM.meta.s[, 1]), 2), CrI.meta.s, round(exp(EM.meta[, 1]), 2), CrI.meta,
-                                        round(exp(EM.meta.l[, 1]), 2), CrI.meta.l, round(exp(beta[, 1]), 2), CrI.beta))
-    colnames(EM.both.models) <- c("Comparison", "Poster. mean NMA", "95% CrI NMA", "Poster. mean NMReg (< mean)", "95% CrI NMReg (< mean)",
-                                  "Poster. mean NMReg (at mean)", "95% CrI NMReg (at mean)", "Poster. mean NMReg (> mean)", "95% CrI NMReg (> mean)",
-                                  "Poster. mean beta", "95% CrI beta")
+    #EM.both.models <- na.omit(data.frame(drug.names.sorted, round(exp(EM.full[, 1]), 2), CrI.full, round(exp(EM.meta.s[, 1]), 2), CrI.meta.s, round(exp(EM.meta[, 1]), 2), CrI.meta,
+    #                                    round(exp(EM.meta.l[, 1]), 2), CrI.meta.l, round(exp(beta[, 1]), 2), CrI.beta))
+    #colnames(EM.both.models) <- c("Comparison", "Mean NMA", "95% CrI NMA", "Mean NMReg (< mean)", "95% CrI NMReg (< mean)",
+    #                              "Mean NMReg (at mean)", "95% CrI NMReg (at mean)", "Mean NMReg (> mean)", "95% CrI NMReg (> mean)",
+    #                              "Mean beta", "95% CrI beta")
+    EM.both.models <- na.omit(data.frame(drug.names.sorted, round(exp(EM.full[, 1]), 2), CrI.full, round(exp(EM.meta[, 1]), 2), CrI.meta,
+                                        round(exp(beta[, 1]), 2), CrI.beta))
+    colnames(EM.both.models) <- c("Comparison", "Mean NMA", "95% CrI NMA", "Mean NMReg (at mean)", "95% CrI NMReg (at mean)", "Mean beta", "95% CrI beta")
     rownames(EM.both.models) <- NULL
 
-  } else if (is.character(covar.values[[1]]) & (!is.element(measure, c("Odds ratio", "Ratio of means")))) {
+  } else if (is.character(covar.values[[1]]) & (!is.element(measure, c("OR", "ROM")))) {
 
 
     ## Calculate the effect estimate at the non-reference level of the binary covariate
@@ -144,12 +132,12 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
 
     EM.both.models <- na.omit(data.frame(drug.names.sorted, round(EM.full[, 1], 2), CrI.full, round(EM.meta[, 1], 2), CrI.meta,
                                          round(EM.meta.nf[, 1], 2), CrI.meta.nf, round(beta[, 1], 2), CrI.beta))
-    colnames(EM.both.models) <- c("Comparison", "Poster. mean NMA", "95% CrI NMA", "Poster. mean NMReg (ref)", "95% CrI NMReg (ref)",
-                                  "Poster. mean NMReg (non-ref)", "95% CrI NMReg (non-ref)", "Poster. mean beta", "95% CrI beta")
+    colnames(EM.both.models) <- c("Comparison", "Mean NMA", "95% CrI NMA", "Mean NMReg (ref)", "95% CrI NMReg (ref)",
+                                  "Mean NMReg (non-ref)", "95% CrI NMReg (non-ref)", "Mean beta", "95% CrI beta")
     rownames(EM.both.models) <- NULL
 
 
-  } else if (is.character(covar.values[[1]]) & (is.element(measure, c("Odds ratio", "Ratio of means")))) {
+  } else if (is.character(covar.values[[1]]) & (is.element(measure, c("OR", "ROM")))) {
 
 
     ## Calculate the effect estimate at the non-reference level of the binary covariate
@@ -164,8 +152,8 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
 
     EM.both.models <- na.omit(data.frame(drug.names.sorted, round(exp(EM.full[, 1]), 2), CrI.full, round(exp(EM.meta[, 1]), 2), CrI.meta,
                                          EM.meta.nf[, 1], CrI.meta.nf, round(exp(beta[, 1]), 2), CrI.beta))
-    colnames(EM.both.models) <- c("Comparison", "Poster. mean NMA", "95% CrI NMA", "Poster. mean NMReg (ref)", "95% CrI NMReg (ref)",
-                                  "Poster. mean NMReg (non-ref)", "95% CrI NMReg (non-ref)", "Poster. mean beta", "95% CrI beta")
+    colnames(EM.both.models) <- c("Comparison", "Mean NMA", "95% CrI NMA", "Mean NMReg (ref)", "95% CrI NMReg (ref)",
+                                  "Mean NMReg (non-ref)", "95% CrI NMReg (non-ref)", "Mean beta", "95% CrI beta")
     rownames(EM.both.models) <- NULL
   }
 
@@ -185,10 +173,10 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
   ## A data-frame on the model assessment results and between-trial standard deviation under NMA & meta-regression
   if (model == "RE") {
     table.model.assess <- data.frame(c("Network meta-analysis", "Meta-regression"), rbind(model.assess.NMA[c(1, 3, 2)], model.assess.meta[c(1, 3, 2)]), rbind(cbind(tau.full[, 1], tau.full[, 2], CrI.tau.full), cbind(tau.meta[, 1], tau.meta[, 2], CrI.tau.meta)))
-    colnames(table.model.assess) <- c("Analysis", "DIC", "Post. mean Dev.", "pD", "Post. median tau", "Post, SD tau", "95% CrI tau")
+    colnames(table.model.assess) <- c("Analysis", "DIC", "Mean Dev.", "pD", "Median tau", "SD tau", "95% CrI tau")
   } else {
     table.model.assess <- data.frame(c("Network meta-analysis", "Meta-regression"), rbind(model.assess.NMA[c(1, 3, 2)], model.assess.meta[c(1, 3, 2)]))
-    colnames(table.model.assess) <- c("Analysis", "DIC", "Post. mean Dev.", "pD")
+    colnames(table.model.assess) <- c("Analysis", "DIC", "Mean Dev.", "pD")
   }
 
 
@@ -201,12 +189,15 @@ metareg.plot <- function(full, metareg, covariate, covar.values, drug.names) {
 
 
   ## Prepare data for ggplot2 (forest-plot)
-  if(!is.character(covar.values[[1]]) & !is.element(measure, c("Odds ratio", "Ratio of means"))) {
+  if(!is.character(covar.values[[1]]) & !is.element(measure, c("OR", "ROM"))) {
 
     ## Create a data-frame with effect estimates of basic parameters before and after adjustment
-    prepare.EM.metric <- data.frame(rep(length(drug.names):1, 4), rep(drug.names.sorted, 4), round(rbind(EM.full[, c(1, 3, 7)], EM.meta[, c(1, 3, 7)], EM.meta.s, EM.meta.l), 2),
-                                    rep(c("Unadjusted", "Mean value", paste("At", round(covar.values[[1]], 2), "(1rst quart.)"), paste("At", round(covar.values[[2]], 2), "(3rd quart.)")), each = length(drug.names)))
-    colnames(prepare.EM.metric) <- c("order", "comparison", "mean", "lower", "upper", "analysis")
+    #prepare.EM.metric <- data.frame(rep(length(drug.names):1, 4), rep(drug.names.sorted, 4), round(rbind(EM.full[, c(1, 3, 7)], EM.meta[, c(1, 3, 7)], EM.meta.s, EM.meta.l), 2),
+    #                                rep(c("Unadjusted", "Mean value", paste("At", round(covar.values[[1]], 2), "(1rst quart.)"), paste("At", round(covar.values[[2]], 2), "(3rd quart.)")), each = length(drug.names)))
+    #colnames(prepare.EM.metric) <- c("order", "comparison", "mean", "lower", "upper", "analysis")
+    #prepare.EM.metric <- data.frame(rep(length(drug.names):1, 4), rep(drug.names.sorted, 4), round(rbind(EM.full[, c(1, 3, 7)], EM.meta[, c(1, 3, 7)], EM.meta.s, EM.meta.l), 2),
+    #                                rep(c("Unadjusted", "Mean value", paste("At", round(covar.values[[1]], 2), "(1rst quart.)"), paste("At", round(covar.values[[2]], 2), "(3rd quart.)")), each = length(drug.names)))
+    #colnames(prepare.EM.metric) <- c("order", "comparison", "mean", "lower", "upper", "analysis")
     rownames(prepare.EM.metric) <- NULL
 
 

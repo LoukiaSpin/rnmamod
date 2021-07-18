@@ -2,30 +2,12 @@
 % Please edit documentation in R/run.metareg_function.R
 \name{run.metareg}
 \alias{run.metareg}
-\title{Perform network meta-regression for an aggregate binary or continuous outcome with missing participant data}
-\format{
-The columns of the data frame \code{data} refer to the following ordered elements for a continuous outcome:
-\describe{
- \item{\strong{t}}{An intervention identifier.}
- \item{\strong{y}}{The observed mean value of the outcome.}
- \item{\strong{sd}}{The observed standard deviation of the outcome.}
- \item{\strong{m}}{The number of missing outcome data.}
- \item{\strong{c}}{The number of participants completing the assigned intervention.}
- \item{\strong{na}}{The number of compared interventions.}
-}
-Apart from \strong{na}, all other elements appear in \code{data} as many times as the maximum number of interventions compared in a trial. See, 'Example'.
-}
+\title{Pairwise or network meta-regression with missing participant outcome data}
 \usage{
 run.metareg(
-  data,
+  full,
   covariate,
-  measure,
-  model,
-  assumption,
-  heter.prior,
-  mean.misspar,
-  var.misspar,
-  D,
+  covar.assumption,
   n.chains,
   n.iter,
   n.burnin,
@@ -33,48 +15,95 @@ run.metareg(
 )
 }
 \arguments{
-\item{data}{A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' for the specification of the columns.}
+\item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
 
-\item{measure}{Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"}.}
+\item{covariate}{A numeric vector or a matrix for a trial-specific covariate that is a potential effect modifier. See 'Details'.}
 
-\item{assumption}{Character string indicating the structure of the informative missingness parameter. Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.}
+\item{covar.assumption}{Character string indicating the structure of the slope for the intervention by covariate interaction, as described in Cooper et al., (2009).
+Set \code{covar.assumption} equal to one of the following: \code{"NO"}, when no meta-regression is performed; otherwise, \code{"exchangeable"} \code{"independent"}, and \code{"common"}.
+See the \code{ru.metareg} function.}
 
-\item{heter.prior}{A vector of length equal to two with the following values: \code{rep(1, 2)}, \code{rep(2, 2)}, and \code{rep(3, 2)} refers to half-normal distribution with variance 1 or 0.5, and uniform distribution with interval [0, 5], respectively,
-for the between-trial standard deviation. To indicate an empirically-based prior distribution for the between-trial variance, the first and second values of the vector should be the mean and precision
-of the selected prior distribution. The empirically-based prior distribution for the between-trial variance is applicable only when \code{"OR"} or \code{"SMD"} is considered.}
+\item{n.chains}{Positive integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+The default argument is 2.}
 
-\item{mean.misspar}{A positive non-zero number for the mean of the normal distribution of the informative missingness parameter.}
+\item{n.iter}{Positive integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+The default argument is 10000.}
 
-\item{var.misspar}{A positive non-zero number for the variance of the normal distribution of the informative missingness parameter.}
+\item{n.burnin}{Positive integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+The default argument is 1000.}
 
-\item{D}{A binary number for the direction of the outcome. Set \code{D = 1} for a positive outcome and \code{D = 0} for a negative outcome.}
-
-\item{n.chains}{Integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.}
-
-\item{n.iter}{Integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.}
-
-\item{n.burnin}{Integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.}
-
-\item{n.thin}{Integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function.}
+\item{n.thin}{Positive integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+The default argument is 1.}
 }
 \value{
-An R2jags output on the summaries of the posterior distribution, and the Gelman–Rubin convergence diagnostic of the following parameters:
-\describe{
- \item{\code{EM}}{The effect estimate of all possible comparisons of interventions.}
- \item{\code{SUCRA}}{The surface under the cumulative ranking curve for each intervention.}
- \item{\code{phi}}{The informative missingness parameter.}
- \item{\code{delta}}{The underlying trial-specific effect estimate. For a multi-arm trial, we estimate \emph{T-1} trial-specific effect estimates, where \emph{T} is the number of interventions in the trial.}
- \item{\code{tau}}{The between-trial standard deviation assumed to be common for all observed comparisons.}
+A list of R2jags outputs on the summaries of the posterior distribution, and the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the following monitored parameters for a fixed-effect PMA:
+\tabular{ll}{
+ \code{EM} \tab The estimated summary effect measure (according to the argument \code{measure}).\cr
+ \tab \cr
+ \code{dev.o} \tab The deviance contribution of each trial-arm based on the observed outcome.\cr
+ \tab \cr
+ \code{hat.par} \tab The fitted outcome at each trial-arm.\cr
+ \tab \cr
+ \code{phi} \tab The informative missingness parameter.\cr
 }
+
+For a random-effects PMA, the output additionally includes the following elements:
+\tabular{ll}{
+ \code{EM.pred} \tab The predicted summary effect measure (according to the argument \code{measure}).\cr
+ \tab \cr
+ \code{delta} \tab The estimated trial-specific effect measure (according to the argument \code{measure}).
+ For a multi-arm trial, we estimate \emph{T-1} effects, where \emph{T} is the number of interventions in the trial.\cr
+ \tab \cr
+ \code{tau} \tab The between-trial standard deviation.\cr
+}
+
+For a random-effects NMA, the output additionally includes:
+\tabular{ll}{
+ \code{EM.ref} \tab The estimated summary effect measure (according to the argument \code{measure}) of all comparisons with the reference intervention.\cr
+ \tab \cr
+ \code{pred.ref} \tab The predicted summary effect measure (according to the argument \code{measure}) of all comparisons with the reference intervention.\cr
+ \tab \cr
+ \code{SUCRA} \tab The surface under the cumulative ranking curve for each intervention.\cr
+ \tab \cr
+ \code{effectiveneness} \tab The ranking probability of each intervention for every rank.\cr
+}
+In NMA, \code{EM} and \code{EM.pred} refer to all possible pairwise comparisons of interventions in the network. Furthermore, \code{tau} is typically assumed to be common for all observed comparisons in the network.
+
+Furthermore, the output includes the following elements - the first three resulting from relevant monitored parameters:
+\tabular{ll}{
+ \code{leverage.o} \tab The leverage for the observed outcome at each trial-arm.\cr
+ \tab \cr
+ \code{sign.dev.o} \tab The sign of the difference between observed and fitted outcome at each trial-arm.\cr
+ \tab \cr
+ \code{model.assessment} \tab A data-frame on the measures of model assessment: deviance information criterion, number of effective parameters, and total residual deviance.\cr
+ \tab \cr
+ \code{jagsfit} \tab An object of S3 class \code{\link[R2jags]{jags}} with the posterior results on all monitored parameters to be used in the \code{mcmc.diagnostics} function.\cr
+}
+The \code{run.model} function also returns the arguments \code{data}, \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, \code{var.misspar}, and \code{D}
+as specified by the user to be considered in other functions of the package.
 }
 \description{
-Perform network meta-regression for an aggregate binary or continuous outcome with missing participant data
+This function performs a one-stage pairwise or network meta-regression while addressing aggregate binary or continuous missing participant outcome data via the pattern-mixture model.
+}
+\details{
+\code{run.metareg} does not contain the arguments \code{data}, \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, and \code{var.misspar} that are found in \code{run.model}.
+  This is to prevent misspecifying the Bayesian model as it would make the comparison of the consistency model with and a covariate meaningless.
+  Instead, these arguments are contained in the argument \code{full} of the function. Therefore, the user needs first to apply \code{run.model}, and then use \code{run.UME} (see, 'Examples').
+
+  The model as specified by the arguments of \code{run.model} runs in \code{JAGS} and the progress of the simulation appears in the R console.
+  The output of \code{run.model} is used as an S3 object by other functions of the package function to be processed further and provide an end-user-ready output.
+
+  The code of Spineli, (2019) and Spineli et al. (2021) has been extended to incorporate one \emph{study-level covariate} variable following the assumptions of Cooper et al. (2009) for the structure of the intervention by covariate interaction.
+  The covariate can be either a numeric vector or a matrix (the number of columns equals the maximum number of arms in the dataset).
 }
 \examples{
-data("nma.liu2013.RData")
+data("nma.baker2009")
 
-# Perform a random-effects network meta-analysis (consistency model)
-res1 <- run.model(data = nma.liu2013,
+# Show the first six trials of the dataset (one-trial-per-row format)
+View(nma.baker2009)
+
+# Perform a random-effects network meta-analysis
+res1 <- run.model(data = nma.baker2009,
                   measure = "OR",
                   model = "RE",
                   assumption = "IDE-ARM",
@@ -87,10 +116,28 @@ res1 <- run.model(data = nma.liu2013,
                   n.burnin = 1000,
                   n.thin = 1)
 
+# Perform a random-effects network meta-regression (exchangeable structure)
+run.metareg(full = res1,
+            covariate = nma.baker2009,
+            covar.assumption = "exchangeable",
+            n.chains = 3,
+            n.iter = 10000,
+            n.burnin = 1000,
+            n.thin = 1)
+
 }
 \references{
-Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. Stat Sci. 1992;7:457–472.
+Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome data in network meta-analysis: a one-stage pattern-mixture model approach. \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
+
+Spineli LM. An empirical comparison of Bayesian modelling strategies for missing binary outcome data in network meta-analysis. \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86. [\doi{10.1186/s12874-019-0731-y}]
+
+Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study heterogeneity and inconsistency in mixed treatment comparisons: Application to stroke prevention treatments in individuals with non-rheumatic atrial fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81. [\doi{10.1002/sim.3594}]
+
+Gelman A, Rubin DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457--472. [\doi{10.1214/ss/1177011136}]
 }
 \seealso{
-\href{https://CRAN.R-project.org/package=R2jags}{R2jags}
+\code{\link{run.model}}, \code{\link[R2jags]{jags}}
+}
+\author{
+{Loukia M. Spineli}
 }

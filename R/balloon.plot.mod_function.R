@@ -160,7 +160,7 @@ balloon.plot.mod <- function(sens, compar, drug.names){
      scale_size(range = c(0, 30)) +
      geom_text(colour = "black", fontface = "bold", size = 4.5) +
      geom_label(aes(median(order(scenarios)), median(order(scenarios)), label = round(exp(mat[median(1:(length(scenarios)^2)), 3]), 2)), colour = "black", fontface = "bold",  size = 4.5) +
-     scale_color_gradient(low = "deepskyblue", high = "brown1") +
+     scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
      scale_x_continuous(breaks = 1:length(scenarios), labels = as.character(fractions(exp(scenarios))), position = "bottom", expand = c(0.2, 0)) +
      scale_y_continuous(breaks = 1:length(scenarios), labels = as.character(fractions(exp(scenarios))), expand = c(0.2, 0)) +
      coord_cartesian(ylim = c(1, length(scenarios)), clip = 'off') +
@@ -180,7 +180,7 @@ balloon.plot.mod <- function(sens, compar, drug.names){
       scale_size(range = c(0, 30)) +
       geom_text(colour = "black", fontface = "bold", size = 4.5) +
       geom_label(aes(median(order(scenarios)), median(order(scenarios)), label = mat[median(1:(length(scenarios)^2)), 3]), colour = "black", fontface = "bold",  size = 4.5) +
-      scale_color_gradient(low = "deepskyblue", high = "brown1") +
+      scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
       scale_x_continuous(breaks = 1:length(scenarios), labels = as.character(scenarios), position = "bottom", expand = c(0.2, 0)) +
       scale_y_continuous(breaks = 1:length(scenarios), labels = as.character(scenarios), expand = c(0.2, 0)) +
       coord_cartesian(ylim = c(1, length(scenarios)), clip = 'off') +
@@ -236,7 +236,7 @@ balloon.plot.mod <- function(sens, compar, drug.names){
       scale_size(range = c(0, 30)) +
       geom_text(colour = "black", fontface = "bold", size = 4.5) +
       geom_label(aes(median(order(scenarios)), median(order(scenarios)), label = sprintf("%.2f", mat.tau[median(1:(length(scenarios)^2)), 3])), colour = "black", fontface = "bold",  size = 4.5) +
-      scale_color_gradient(low = "deepskyblue", high = "brown1") +
+      scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
       scale_x_continuous(breaks = 1:length(scenarios), labels = as.character(fractions(exp(scenarios))), position = "bottom", expand = c(0.2, 0)) +
       scale_y_continuous(breaks = 1:length(scenarios), labels = as.character(fractions(exp(scenarios))), expand = c(0.2, 0)) +
       coord_cartesian(ylim = c(1, length(scenarios)), clip = 'off') +

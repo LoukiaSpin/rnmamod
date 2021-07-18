@@ -148,7 +148,7 @@ run.series.meta <- function(full, n.chains, n.iter, n.burnin, n.thin) {
   meta <- list()
   for (i in 1:N.comp) {
     message(paste(i, "out of", N.comp, "observed comparisons"))
-    meta[[i]] <- run.model(data = pairwise.data[pairwise.data$arm1 == keep.comp[i, 1] & pairwise.data$arm2 == keep.comp[i, 2], ], measure, model, assumption, heter.prior = heterog.prior, mean.misspar, var.misspar, D = 1, n.chains, n.iter, n.burnin, n.thin) # 'D' does not matter in pairwise meta-analysis
+    meta[[i]] <- run.model(data = pairwise.data[pairwise.data$arm1 == keep.comp[i, 1] & pairwise.data$arm2 == keep.comp[i, 2], ], measure, model, covar.assumption = "NO", assumption, heter.prior = heterog.prior, mean.misspar, var.misspar, D = 1, n.chains, n.iter, n.burnin, n.thin) # 'D' does not matter in pairwise meta-analysis
   }
 
   EM <- data.frame(keep.comp, do.call(rbind, lapply(1:N.comp, function(i) meta[[i]]$EM)))

@@ -70,6 +70,8 @@ mcmc.diagnostics <- function(net, par){
 
   jagsfit <- net$jagsfit
 
+  item <- data.preparation(net$data, net$measure)
+
   ## Turn results into a data-frame to select model parameters (using 'dplyr')
   getResults <- as.data.frame(t(jagsfit$BUGSoutput$summary))
 
@@ -96,10 +98,15 @@ mcmc.diagnostics <- function(net, par){
 
 
   # Estimated missingness parameter
-  phi <- net$phi
+  #phi <- net$phi
+  phi <- if (length(unique(unlist(item$m))) > 2) {
+    t(getResults %>% dplyr::select(starts_with("phi") | starts_with("mean.phi") | starts_with("mean.phi[") | starts_with("phi[")))
+  } else {
+    NA
+  }
 
-  # Regression coefficient for comparisons with the reference intervention
-  beta <- t(getResults %>% dplyr::select(starts_with("beta[")))
+  # Regression coefficient
+  beta <- t(getResults %>% dplyr::select(starts_with("beta[") | starts_with("beta")))
 
 
   ## Turn 'R2jags' object into 'mcmc.plot' object
@@ -121,21 +128,41 @@ mcmc.diagnostics <- function(net, par){
 
 
   ## Keep results on the maximum Rhat for the selected monitored model parameters
-  if (is.null(dim(phi))) {
-    R.hat.max <- c(max(EM[, 8]), max(EM.pred[, 8]), max(delta[, 8]), tau[8], max(SUCRA[, 8]), max(effectiveness[, 8]), max(phi[8]), max(beta[, 8]))
-    #R.hat.max[c(2:4, 8)] <- ifelse(is.infinite(R.hat.max[c(2:4, 8)]), NA, R.hat.max[c(2:4, 8)])
-    #R.hat.max <- ifelse(is.infinite(R.hat.max), NA, R.hat.max)
-    for (i in 1:length(R.hat.max)) {
-      R.hat.max[i] <- ifelse(is.infinite(R.hat.max[i]), NA, R.hat.max[i])
-    }
+  phi.R.hat.max <- if (is.null(dim(phi))) {
+    phi[8]
   } else {
-    R.hat.max <- c(max(EM[, 8]), max(EM.pred[, 8]), max(delta[, 8]), tau[8], max(SUCRA[, 8]), max(effectiveness[, 8]), max(phi[, 8]), max(beta[, 8]))
+    max(phi[, 8])
+  }
+
+  beta.R.hat.max <- if (is.null(dim(beta))) {
+    beta[8]
+  } else {
+    max(beta[, 8])
+  }
+
+
+  R.hat.max <- c(max(EM[, 8]), max(EM.pred[, 8]), max(delta[, 8]), tau[8], max(SUCRA[, 8]), max(effectiveness[, 8]), phi.R.hat.max, beta.R.hat.max)
+  for (i in 1:length(R.hat.max)) {
+    R.hat.max[i] <- ifelse(is.infinite(R.hat.max[i]), NA, R.hat.max[i])
+  }
+
+
+
+  #if (is.null(dim(phi))) {
+  #  R.hat.max <- c(max(EM[, 8]), max(EM.pred[, 8]), max(delta[, 8]), tau[8], max(SUCRA[, 8]), max(effectiveness[, 8]), max(phi[8]), max(beta[, 8]))
     #R.hat.max[c(2:4, 8)] <- ifelse(is.infinite(R.hat.max[c(2:4, 8)]), NA, R.hat.max[c(2:4, 8)])
     #R.hat.max <- ifelse(is.infinite(R.hat.max), NA, R.hat.max)
-    for (i in 1:length(R.hat.max)) {
-      R.hat.max[i] <- ifelse(is.infinite(R.hat.max[i]), NA, R.hat.max[i])
-    }
-  }
+  #  for (i in 1:length(R.hat.max)) {
+  #    R.hat.max[i] <- ifelse(is.infinite(R.hat.max[i]), NA, R.hat.max[i])
+  #  }
+  #} else {
+  #  R.hat.max <- c(max(EM[, 8]), max(EM.pred[, 8]), max(delta[, 8]), tau[8], max(SUCRA[, 8]), max(effectiveness[, 8]), max(phi[, 8]), max(beta[, 8]))
+  #  #R.hat.max[c(2:4, 8)] <- ifelse(is.infinite(R.hat.max[c(2:4, 8)]), NA, R.hat.max[c(2:4, 8)])
+  #  #R.hat.max <- ifelse(is.infinite(R.hat.max), NA, R.hat.max)
+  #  for (i in 1:length(R.hat.max)) {
+  #    R.hat.max[i] <- ifelse(is.infinite(R.hat.max[i]), NA, R.hat.max[i])
+  #  }
+  #}
 
 
 

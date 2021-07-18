@@ -1,7 +1,7 @@
-#' League heatmap of all possible comparisons: estimations and predictions
+#' League heatmap of all possible comparisons: prediction
 #'
 #' @description
-#' A function to create a heatmap with the estimated and predicted effects of all possible comparisons of interventions in the network.
+#' A function to create a heatmap with the predicted effects of all possible comparisons of interventions in the network.
 #' \code{league.heatmap.pred} can be used only for a random-effects network meta-analysis.
 #' \code{league.heatmap.pred} is applied for one outcome only.
 #'
@@ -9,20 +9,18 @@
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
 #'
-#' @return A league heatmap of the posterior mean, 95\% credible and predictive interval of the effects for all possible comparisons in the off-diagonals, and the posterior mean of the SUCRA values in the diagonal.
+#' @return A league heatmap of the posterior mean, 95\% predictive interval of the effects for all possible comparisons in the off-diagonals, and the posterior mean of the SUCRA values in the diagonal.
 #'
 #' @details The rows and columns of the heatmap display the names of interventions which are sorted by decreasing order from the best to the worst
 #'   based on their SUCRA value (Salanti et al., 2011). The main diagonal contains the SUCRA values of the corresponding interventions.
 #'
-#'   The upper triangle contains the posterior mean and 95\% credible interval of the effect measure of the corresponding comparisons.
-#'   The lower triangle contains the posterior mean and 95\% predictive interval of the effect measure of the corresponding comparisons,
-#'   however, in the opposite direction after converting negative values into positive values (in absolute or logarithmic scale), and vice versa.
-#'   Darker shades of red and blue correspond to larger treatment effects in the upper and lower triangle, respectively.
+#'   Results in the lower triangle refer to comparisons in the opposite direction after converting negative values into positive values (in absolute or logarithmic scale), and vice versa.
+#'   Darker shades of red and green correspond to larger treatment effects in the upper and lower triangle, respectively.
 #'   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
 #'
 #'   Comparisons between interventions should be read from left to right.
 #'   Therefore, each cell refers to the corresponding row-defining intervention against the column-defining intervention. Results that indicate strong
-#'   evidence in favor of the row-defining intervention (i.e. the respective 95\% credible/predictive interval does not include the null value) are indicated in bold.
+#'   evidence in favor of the row-defining intervention (i.e. the respective 95\% predictive interval does not include the null value) are indicated in bold.
 #'
 #'   \code{league.heatmap.pred} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 #'   Similarly, when the function is executed for a fixed-effect network meta-analysis.
@@ -75,11 +73,7 @@ league.heatmap.pred <- function(full, drug.names){
   }
 
 
-  model <- if (full$model == "FE") {
-    stop("Prediction is *not* relevant in the fixed-effect model")
-  }
-
-  par.pred <- full$EM.pred; par <- full$EM; sucra <- full$SUCRA; measure <- full$measure
+  par <- full$EM.pred; sucra <- full$SUCRA; measure <- full$measure
 
 
   ## Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html
@@ -92,7 +86,7 @@ league.heatmap.pred <- function(full, drug.names){
 
   ## Matrix of effect measure for all possible comparisons
   # Lower triangle
-  point0 <- lower0 <- upper0 <- lower.pred0 <- upper.pred0 <- matrix(NA, nrow = length(drug.names), ncol = length(drug.names))
+  point0 <- lower0 <- upper0 <- matrix(NA, nrow = length(drug.names), ncol = length(drug.names))
   point0[lower.tri(point0, diag = F)] <- round(par[, 1], 2)
   # Incorporate upper triangle
   point1 <- reflect_triangle(point0, from = "lower")
@@ -109,17 +103,6 @@ league.heatmap.pred <- function(full, drug.names){
   upper1[lower.tri(upper1, diag = F)] <- round(par[, 4], 2)
 
 
-  ## Matrix of lower and upper bound of predictions for all possible comparisons
-  # Lower triangle
-  lower.pred0[lower.tri(lower.pred0, diag = F)] <- round(par.pred[, 3], 2)
-  upper.pred0[lower.tri(upper.pred0, diag = F)] <- round(par.pred[, 4], 2)
-  # Incorporate upper triangle
-  lower.pred1 <- reflect_triangle(upper.pred0, from = "lower")
-  lower.pred1[lower.tri(lower.pred1, diag = F)] <- round(par.pred[, 3], 2)
-  upper.pred1 <- reflect_triangle(lower.pred0, from = "lower")
-  upper.pred1[lower.tri(upper.pred1, diag = F)] <- round(par.pred[, 4], 2)
-
-
   ## Interventions order according to their SUCRA value (from best to worst)
   drug.order.col <- drug.order.row <- order(drug.names[order(-sucra[, 1])])
 
@@ -129,83 +112,50 @@ league.heatmap.pred <- function(full, drug.names){
 
 
   ## Symmetric matrix for effect measure and its bounds after ordering rows and columns from the best to the worst intervention
-  if (measure != "OR" & measure != "ROM") {
-    # Effect estimates
+  if(measure != "OR" & measure != "ROM") {
     point <- point1[order(drug.order.col), order(drug.order.row)]
     lower <- lower1[order(drug.order.col), order(drug.order.row)]
     upper <- upper1[order(drug.order.col), order(drug.order.row)]
-    # Predictions
-    lower.pred <- lower.pred1[order(drug.order.col), order(drug.order.row)]
-    upper.pred  <- upper.pred1[order(drug.order.col), order(drug.order.row)]
+
+
+    ## Spot the statistically significant comparisons (i.e. the 95% CrI does not include the value of no difference)
+    (signif.status <- melt(ifelse(upper < 0 | lower > 0, "significant", "non-significant"), na.rm = F)[3])
+    signif.status[is.na(signif.status)] <- 0
   } else {
-    # Effect estimates
     point <- round(exp(point1[order(drug.order.col), order(drug.order.row)]), 2)
     lower <- round(exp(lower1[order(drug.order.col), order(drug.order.row)]), 2)
     upper <- round(exp(upper1[order(drug.order.col), order(drug.order.row)]), 2)
-    # Predictions
-    lower.pred <- round(exp(lower.pred1[order(drug.order.col), order(drug.order.row)]), 2)
-    upper.pred  <- round(exp(upper.pred1[order(drug.order.col), order(drug.order.row)]), 2)
+
+
+    ## Spot the statistically significant comparisons (i.e. the 95% CrI does not include the value of no difference)
+    signif.status <- melt(ifelse(upper < 1 | lower > 1, "significant", "non-significant"), na.rm = F)[3]
+    signif.status[is.na(signif.status)] <- 1
   }
 
 
 
   ## Merge point estimate with 95% credible interval in a new symmetric matric
-  # Effect estimates
-  (final <- matrix(paste0(sprintf("%.2f", point),  "\n", "(", sprintf("%.2f", lower), ",", " ", sprintf("%.2f", upper), ")"), nrow = length(drug.names), ncol = length(drug.names)))
+  #(final <- matrix(paste0(point, signif.status, "\n", "(", lower, ",", " ", upper, ")"), nrow = length(drug.names), ncol = length(drug.names)))
+  final <- matrix(paste0(sprintf("%.2f", point),  "\n", "(", sprintf("%.2f", lower), ",", " ", sprintf("%.2f", upper), ")"), nrow = length(drug.names), ncol = length(drug.names))
   colnames(final) <- order.drug; rownames(final) <- order.drug
-  # Predictions
-  (final.pred <- matrix(paste0(sprintf("%.2f", point),  "\n", "(", sprintf("%.2f", lower.pred) , ",", " ", sprintf("%.2f", upper.pred) , ")"), nrow = length(drug.names), ncol = length(drug.names)))
-  colnames(final.pred) <- order.drug; rownames(final.pred) <- order.drug
 
 
   ## Include SUCRA values in the diagonal of the new matrix
-  diag(final) <- diag(final.pred) <- paste0(round(sort(sucra[, 1]*100, decreasing = T), 1), "%")
+  diag(final) <- paste0(round(sort(sucra[, 1]*100, decreasing = T), 1), "%")
 
 
   ## Preparing the dataset for the ggplot2
-  mat.new1 <- melt(final, na.rm = F); mat.new.pred1 <- melt(final.pred, na.rm = F)
+  mat.new1 <- melt(final, na.rm = F)
 
-
-  ## Upper triangle for effect estimates, lower triangle fro predictions
-  dummy <- melt(lower.tri(matrix(1:(length(drug.names)*length(drug.names)), nrow = length(drug.names), ncol = length(drug.names)), diag = T))
-  mat.final <- mat.new1
-  mat.final[, 3] <- ifelse(dummy[, 3] == T, mat.new.pred1[, 3], mat.new1[, 3])
-
-
-  ## Spot the statistically significant comparisons (i.e. the 95% CrI does not include the value of no difference)
-  if (measure != "OR" & measure != "ROM") {
-    # Effect estimate
-    (signif.status <- melt(ifelse(upper < 0 | lower > 0, "significant", "non-significant"), na.rm = F)[3])
-    signif.status[is.na(signif.status)] <- 0
-    # Prediction
-    (signif.status.pred <- melt(ifelse(upper.pred < 0 | lower.pred > 0, "significant", "non-significant"), na.rm = F)[3])
-    signif.status.pred[is.na(signif.status.pred)] <- 0
-  } else {
-    # Effect estimate
-    (signif.status <- melt(ifelse(upper < 1 | lower > 1, "significant", "non-significant"), na.rm = F)[3])
-    signif.status[is.na(signif.status)] <- 1
-    # Prediction
-    (signif.status.pred <- melt(ifelse(upper.pred < 1 | lower.pred > 1, "significant", "non-significant"), na.rm = F)[3])
-    signif.status.pred[is.na(signif.status.pred)] <- 1
-  }
-
-
-
-  ## Separate statistical significance for effect estiamte and prediction results
-  signif.status.final <- dummy[, 3]
-  signif.status.final<- ifelse(dummy[, 3] == T, signif.status.pred[, 1], signif.status[, 1])
-
-
-  ## Necessary sub-dataset to color the cells according to the value of the effect measure
-  # Reflect the upper triangle of the effect measure to the lower triangle
-  mat <- point
 
 
   ## Merge both datasets to be used for ggplot2
-  mat.new <- cbind(mat.final, melt(mat, na.rm = F)[, 3])
+  mat <- point
+  mat.new <- cbind(mat.new1, melt(mat, na.rm = F)[, 3])
   colnames(mat.new) <- c("Var1", "Var2", "value", "value2")
 
 
+  ## The final dataset for ggplot2
   diag(mat) <- NA
   final_col <- melt(mat)
   mat.new$value.SUCRA <- final_col$value
@@ -213,16 +163,18 @@ league.heatmap.pred <- function(full, drug.names){
 
   ## Hooray, the precious league table as a heatmap!
   p <- ggplot(mat.new, aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), fill = value2)) +
-         geom_tile(aes(fill = value.SUCRA)) +
-         geom_fit_text(aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), label = value), reflow = T) +
-         geom_fit_text(aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), label = value, fontface = ifelse(signif.status.final == "significant", "bold", "plain")), reflow = T) +
-         scale_fill_gradientn(colours = c("blue", "white", "red"),
-                              values = rescale(c(min(mat.new$value2, na.rm = T), ifelse(measure != "OR" & measure != "ROM", 0, 1), max(mat.new$value2, na.rm = T))),
-                              limits = c(min(mat.new$value2, na.rm = T), max(mat.new$value2, na.rm = T))) +
-         scale_x_discrete(position = "top") +
-         labs(x = "", y = "") +
-         theme_bw() +
-         theme(legend.position = "none", axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0), axis.text.y = element_text(size = 12))
+    geom_tile(aes(fill = value.SUCRA)) +
+    geom_fit_text(aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), label = value), reflow = T) +
+    geom_fit_text(aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), label = value, fontface = ifelse(signif.status == "significant", "bold", "plain")), reflow = T) +
+    scale_fill_gradientn(colours = c("#009E73", "white", "#D55E00"),
+                         values = rescale(c(min(mat.new$value2, na.rm = T), ifelse(measure != "OR" & measure != "ROM", 0, 1), max(mat.new$value2, na.rm = T))),
+                         limits = c(min(mat.new$value2, na.rm = T), max(mat.new$value2, na.rm = T))) +
+    scale_x_discrete(position = "top") +
+    labs(x = "", y = "", caption = "Posterior mean (95% predictive interval)") +
+    theme_bw() +
+    theme(legend.position = "none", axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0), axis.text.y = element_text(size = 12),
+          plot.caption = element_text(hjust = 0.01))
+
 
   return(p)
 
