@@ -85,7 +85,7 @@ Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed treatment
 Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616. [\doi{10.1111/1467-9868.00353}]
 }
 \seealso{
-\code{\link{run.model}}, \code{\link{run.nodepslit}}
+\code{\link{run.model}}, \code{\link{run.nodesplit}}
 }
 \author{
 {Loukia M. Spineli}

@@ -96,7 +96,7 @@ balloon.plot.mod <- function(sens, compar, drug.names){
 
 
   ## Indicate all possible comparisons (necessary for NMA)
-  comparison <- matrix(combn(drug.names, 2), nrow = length(combn(drug.names, 2))/2, ncol = 2, byrow = T)
+  comparison <- matrix(utils::combn(drug.names, 2), nrow = length(utils::combn(drug.names, 2))/2, ncol = 2, byrow = T)
   compar.id <- which(comparison[, 1] == compar[2] & comparison[, 2] == compar[1])
   experim <- comparison[compar.id, 2]
   control <- comparison[compar.id, 1]
@@ -153,45 +153,45 @@ balloon.plot.mod <- function(sens, compar, drug.names){
 
   ## Enhanced balloon plot for summary effect size of a pairwise comparison
   bubble.ES <- if (is.element(measure, c("OR", "ROM"))) {
-   ggplot(mat, aes(x = active, y = control, color = sd.value, label = sprintf("%.2f", round(exp(value), 2)))) +
-     geom_rect(mapping = aes(NULL, NULL, xmin = 1, xmax = length(scenarios)), ymin = 1, ymax = length(scenarios), color = "grey93", fill = "grey93", alpha = 0.1) +
-     geom_rect(mapping = aes(NULL, NULL, xmin = 2, xmax = length(scenarios) - 1), ymin = 2, ymax = length(scenarios) - 1, color = "grey100", fill = "grey100", alpha = 0.1) +
-     geom_point(aes(size = ES.normalised[, compar.id]), stroke = 2, shape = ifelse(signif[, compar.id] == "yes", "circle", "circle plus")) +
-     scale_size(range = c(0, 30)) +
-     geom_text(colour = "black", fontface = "bold", size = 4.5) +
-     geom_label(aes(median(order(scenarios)), median(order(scenarios)), label = round(exp(mat[median(1:(length(scenarios)^2)), 3]), 2)), colour = "black", fontface = "bold",  size = 4.5) +
-     scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
-     scale_x_continuous(breaks = 1:length(scenarios), labels = as.character(fractions(exp(scenarios))), position = "bottom", expand = c(0.2, 0)) +
-     scale_y_continuous(breaks = 1:length(scenarios), labels = as.character(fractions(exp(scenarios))), expand = c(0.2, 0)) +
-     coord_cartesian(ylim = c(1, length(scenarios)), clip = 'off') +
-     labs(x = paste("IMOR scenario in", experim), y = paste("IMOR scenario in", control), color = "") +
-     guides(shape = F, size = F) +
-     ggtitle(paste("Summary", effect.measure.name(measure))) +
-     theme_bw() +
-     theme(axis.text.x = element_text(size = 12, angle = 360, vjust = 0.8, hjust = 0.5), axis.text.y = element_text(size = 12, vjust = 0.5, hjust = 1),
-           axis.title.x = element_text(size = 12, face = "bold"), axis.title.y = element_text(size = 12, angle = 90, face = "bold"),
-           legend.position = "bottom", legend.text = element_text(size = 12), legend.key.width = unit(1.5, "cm"),
-           legend.title = element_text(size = 12, face = "bold"), panel.grid.minor = element_blank(), panel.background = element_rect(fill = "grey86"))
+   ggplot2::ggplot(mat, ggplot2::aes(x = active, y = control, color = sd.value, label = sprintf("%.2f", round(exp(value), 2)))) +
+      ggplot2::geom_rect(mapping = ggplot2::aes(NULL, NULL, xmin = 1, xmax = length(scenarios)), ymin = 1, ymax = length(scenarios), color = "grey93", fill = "grey93", alpha = 0.1) +
+      ggplot2::geom_rect(mapping = ggplot2::aes(NULL, NULL, xmin = 2, xmax = length(scenarios) - 1), ymin = 2, ymax = length(scenarios) - 1, color = "grey100", fill = "grey100", alpha = 0.1) +
+      ggplot2::geom_point(ggplot2::aes(size = ES.normalised[, compar.id]), stroke = 2, shape = ifelse(signif[, compar.id] == "yes", "circle", "circle plus")) +
+      ggplot2::scale_size(range = c(0, 30)) +
+      ggplot2::geom_text(colour = "black", fontface = "bold", size = 4.5) +
+      ggplot2::geom_label(ggplot2::aes(stats::median(order(scenarios)), stats::median(order(scenarios)), label = round(exp(mat[stats::median(1:(length(scenarios)^2)), 3]), 2)), colour = "black", fontface = "bold",  size = 4.5) +
+      ggplot2::scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
+      ggplot2::scale_x_continuous(breaks = 1:length(scenarios), labels = as.character(MASS::fractions(exp(scenarios))), position = "bottom", expand = c(0.2, 0)) +
+      ggplot2::scale_y_continuous(breaks = 1:length(scenarios), labels = as.character(MASS::fractions(exp(scenarios))), expand = c(0.2, 0)) +
+      ggplot2::coord_cartesian(ylim = c(1, length(scenarios)), clip = 'off') +
+      ggplot2::labs(x = paste("IMOR scenario in", experim), y = paste("IMOR scenario in", control), color = "") +
+      ggplot2::guides(shape = F, size = F) +
+      ggplot2::ggtitle(paste("Summary", effect.measure.name(measure))) +
+      ggplot2::theme_bw() +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(size = 12, angle = 360, vjust = 0.8, hjust = 0.5), axis.text.y = ggplot2::element_text(size = 12, vjust = 0.5, hjust = 1),
+           axis.title.x = ggplot2::element_text(size = 12, face = "bold"), axis.title.y = ggplot2::element_text(size = 12, angle = 90, face = "bold"),
+           legend.position = "bottom", legend.text = ggplot2::element_text(size = 12), legend.key.width = ggplot2::unit(1.5, "cm"),
+           legend.title = ggplot2::element_text(size = 12, face = "bold"), panel.grid.minor = ggplot2::element_blank(), panel.background = ggplot2::element_rect(fill = "grey86"))
   } else if (is.element(measure, c("MD", "SMD"))) {
-    ggplot(mat, aes(x = active, y = control, color = sd.value, label = sprintf("%.2f", round(value, 2)))) +
-      geom_rect(mapping = aes(NULL, NULL, xmin = 1, xmax = length(scenarios)), ymin = 1, ymax = length(scenarios), color = "grey93", fill = "grey93", alpha = 0.1) +
-      geom_rect(mapping = aes(NULL, NULL, xmin = 2, xmax = length(scenarios) - 1), ymin = 2, ymax = length(scenarios) - 1, color = "grey100", fill = "grey100", alpha = 0.1) +
-      geom_point(aes(size = ES.normalised[, compar.id]), stroke = 2, shape = ifelse(signif[, compar.id] == "yes", "circle", "circle plus")) +
-      scale_size(range = c(0, 30)) +
-      geom_text(colour = "black", fontface = "bold", size = 4.5) +
-      geom_label(aes(median(order(scenarios)), median(order(scenarios)), label = mat[median(1:(length(scenarios)^2)), 3]), colour = "black", fontface = "bold",  size = 4.5) +
-      scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
-      scale_x_continuous(breaks = 1:length(scenarios), labels = as.character(scenarios), position = "bottom", expand = c(0.2, 0)) +
-      scale_y_continuous(breaks = 1:length(scenarios), labels = as.character(scenarios), expand = c(0.2, 0)) +
-      coord_cartesian(ylim = c(1, length(scenarios)), clip = 'off') +
-      labs(x = paste("IMDoM scenario in", experim), y = paste("IMDoM scenario in", control), color = "") +
-      guides(shape = F, size = F) +
-      ggtitle(paste("Summary", effect.measure.name(measure))) +
-      theme_bw() +
-      theme(axis.text.x = element_text(size = 12, angle = 360, vjust = 0.8, hjust = 0.5), axis.text.y = element_text(size = 12, vjust = 0.5, hjust = 1),
-            axis.title.x = element_text(size = 12, face = "bold"), axis.title.y = element_text(size = 12, angle = 90, face = "bold"),
-            legend.position = "bottom", legend.text = element_text(size = 12), legend.key.width = unit(1.5, "cm"),
-            legend.title = element_text(size = 12, face = "bold"), panel.grid.minor = element_blank(), panel.background = element_rect(fill = "grey86"))
+    ggplot2::ggplot(mat, ggplot2::aes(x = active, y = control, color = sd.value, label = sprintf("%.2f", round(value, 2)))) +
+      ggplot2::geom_rect(mapping = ggplot2::aes(NULL, NULL, xmin = 1, xmax = length(scenarios)), ymin = 1, ymax = length(scenarios), color = "grey93", fill = "grey93", alpha = 0.1) +
+      ggplot2::geom_rect(mapping = ggplot2::aes(NULL, NULL, xmin = 2, xmax = length(scenarios) - 1), ymin = 2, ymax = length(scenarios) - 1, color = "grey100", fill = "grey100", alpha = 0.1) +
+      ggplot2::geom_point(ggplot2::aes(size = ES.normalised[, compar.id]), stroke = 2, shape = ifelse(signif[, compar.id] == "yes", "circle", "circle plus")) +
+      ggplot2::scale_size(range = c(0, 30)) +
+      ggplot2::geom_text(colour = "black", fontface = "bold", size = 4.5) +
+      ggplot2::geom_label(ggplot2::aes(stats::median(order(scenarios)), stats::median(order(scenarios)), label = mat[stats::median(1:(length(scenarios)^2)), 3]), colour = "black", fontface = "bold",  size = 4.5) +
+      ggplot2::scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
+      ggplot2::scale_x_continuous(breaks = 1:length(scenarios), labels = as.character(scenarios), position = "bottom", expand = c(0.2, 0)) +
+      ggplot2::scale_y_continuous(breaks = 1:length(scenarios), labels = as.character(scenarios), expand = c(0.2, 0)) +
+      ggplot2::coord_cartesian(ylim = c(1, length(scenarios)), clip = 'off') +
+      ggplot2::labs(x = paste("IMDoM scenario in", experim), y = paste("IMDoM scenario in", control), color = "") +
+      ggplot2::guides(shape = F, size = F) +
+      ggplot2::ggtitle(paste("Summary", effect.measure.name(measure))) +
+      ggplot2::theme_bw() +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(size = 12, angle = 360, vjust = 0.8, hjust = 0.5), axis.text.y = ggplot2::element_text(size = 12, vjust = 0.5, hjust = 1),
+            axis.title.x = ggplot2::element_text(size = 12, face = "bold"), axis.title.y = ggplot2::element_text(size = 12, angle = 90, face = "bold"),
+            legend.position = "bottom", legend.text = ggplot2::element_text(size = 12), legend.key.width = ggplot2::unit(1.5, "cm"),
+            legend.title = ggplot2::element_text(size = 12, face = "bold"), panel.grid.minor = ggplot2::element_blank(), panel.background = ggplot2::element_rect(fill = "grey86"))
   }
 
 
@@ -210,13 +210,13 @@ balloon.plot.mod <- function(sens, compar, drug.names){
 
   # Dummy variable to indicate the extent of tau2
   median.extent <- if (sens$heter[3] == 1) {
-    median(rhalfnorm(10000, theta = sens$heter[2]))
+    stats::median(BNPdensity::rhalfnorm(10000, theta = sens$heter[2]))
   } else if (sens$heter[3] == 2) {
-    median(runif(10000, 0, sens$heter[2]))
+    stats::median(stats::runif(10000, 0, sens$heter[2]))
   } else if (sens$heter[3] == 3) {
-    median(rlnorm(10000, sens$heter[1], sqrt(1/sens$heter[2])))
+    stats::median(stats::rlnorm(10000, sens$heter[1], sqrt(1/sens$heter[2])))
   } else if (sens$heter[3] == 4) {
-    exp(median(rt(1000, df = 5)*sqrt(1/sens$heter[2]) + sens$heter[1]))
+    exp(stats::median(stats::rt(1000, df = 5)*sqrt(1/sens$heter[2]) + sens$heter[1]))
   }
   extent.tau <- ifelse(tau < sqrt(median.extent), "low", "considerable")
 
@@ -229,25 +229,25 @@ balloon.plot.mod <- function(sens, compar, drug.names){
 
   ## Enhanced balloon plot for the between-trial standard deviation
   bubble.tau <- if (!is.null(sens$heter)) {
-    ggplot(mat.tau, aes(x = active, y = control, color = sd.value, label = sprintf("%.2f", value))) +
-      geom_rect(mapping = aes(NULL, NULL, xmin = 1, xmax = length(scenarios)), ymin = 1, ymax = length(scenarios), color = "grey93", fill = "grey93", alpha = 0.1) +
-      geom_rect(mapping = aes(NULL, NULL, xmin = 2, xmax = length(scenarios) - 1), ymin = 2, ymax = length(scenarios) - 1, color = "grey100", fill = "grey100", alpha = 0.1) +
-      geom_point(aes(size = tau.normalised), stroke = 2, shape = ifelse(mat.tau$extent == "low", "circle", "circle plus")) +
-      scale_size(range = c(0, 30)) +
-      geom_text(colour = "black", fontface = "bold", size = 4.5) +
-      geom_label(aes(median(order(scenarios)), median(order(scenarios)), label = sprintf("%.2f", mat.tau[median(1:(length(scenarios)^2)), 3])), colour = "black", fontface = "bold",  size = 4.5) +
-      scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
-      scale_x_continuous(breaks = 1:length(scenarios), labels = as.character(fractions(exp(scenarios))), position = "bottom", expand = c(0.2, 0)) +
-      scale_y_continuous(breaks = 1:length(scenarios), labels = as.character(fractions(exp(scenarios))), expand = c(0.2, 0)) +
-      coord_cartesian(ylim = c(1, length(scenarios)), clip = 'off') +
-      labs(x = paste("IMOR scenario in experimental"), y = paste("IMOR scenario in control"), color = "") +
-      guides(shape = F, size = F) +
-      ggtitle("Between-trial standard deviation") +
-      theme_bw() +
-      theme(axis.text.x = element_text(size = 12, angle = 360, vjust = 0.8, hjust = 0.5), axis.text.y = element_text(size = 12, vjust = 0.5, hjust = 1),
-            axis.title.x = element_text(size = 12, face = "bold"), axis.title.y = element_text(size = 12, angle = 90, face = "bold"),
-            legend.position = "bottom", legend.text = element_text(size = 12), legend.key.width = unit(1.5, "cm"),
-            legend.title = element_text(size = 12, face = "bold"), panel.grid.minor = element_blank(), panel.background = element_rect(fill = "grey86"))
+    ggplot2::ggplot(mat.tau, ggplot2::aes(x = active, y = control, color = sd.value, label = sprintf("%.2f", value))) +
+      ggplot2::geom_rect(mapping = ggplot2::aes(NULL, NULL, xmin = 1, xmax = length(scenarios)), ymin = 1, ymax = length(scenarios), color = "grey93", fill = "grey93", alpha = 0.1) +
+      ggplot2::geom_rect(mapping = ggplot2::aes(NULL, NULL, xmin = 2, xmax = length(scenarios) - 1), ymin = 2, ymax = length(scenarios) - 1, color = "grey100", fill = "grey100", alpha = 0.1) +
+      ggplot2::geom_point(ggplot2::aes(size = tau.normalised), stroke = 2, shape = ifelse(mat.tau$extent == "low", "circle", "circle plus")) +
+      ggplot2::scale_size(range = c(0, 30)) +
+      ggplot2::geom_text(colour = "black", fontface = "bold", size = 4.5) +
+      ggplot2::geom_label(ggplot2::aes(stats::median(order(scenarios)), stats::median(order(scenarios)), label = sprintf("%.2f", mat.tau[stats::median(1:(length(scenarios)^2)), 3])), colour = "black", fontface = "bold",  size = 4.5) +
+      ggplot2::scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
+      ggplot2::scale_x_continuous(breaks = 1:length(scenarios), labels = as.character(MASS::fractions(exp(scenarios))), position = "bottom", expand = c(0.2, 0)) +
+      ggplot2::scale_y_continuous(breaks = 1:length(scenarios), labels = as.character(MASS::fractions(exp(scenarios))), expand = c(0.2, 0)) +
+      ggplot2::coord_cartesian(ylim = c(1, length(scenarios)), clip = 'off') +
+      ggplot2::labs(x = paste("IMOR scenario in experimental"), y = paste("IMOR scenario in control"), color = "") +
+      ggplot2::ggtitle(shape = F, size = F) +
+      ggplot2::ggtitle("Between-trial standard deviation") +
+      ggplot2::theme_bw() +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(size = 12, angle = 360, vjust = 0.8, hjust = 0.5), axis.text.y = ggplot2::element_text(size = 12, vjust = 0.5, hjust = 1),
+            axis.title.x = ggplot2::element_text(size = 12, face = "bold"), axis.title.y = ggplot2::element_text(size = 12, angle = 90, face = "bold"),
+            legend.position = "bottom", legend.text = ggplot2::element_text(size = 12), legend.key.width = ggplot2::unit(1.5, "cm"),
+            legend.title = ggplot2::element_text(size = 12, face = "bold"), panel.grid.minor = ggplot2::element_blank(), panel.background = ggplot2::element_rect(fill = "grey86"))
   } else {
     NA
   }

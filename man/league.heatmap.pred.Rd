@@ -2,7 +2,7 @@
 % Please edit documentation in R/league.heatmap.pred_function.R
 \name{league.heatmap.pred}
 \alias{league.heatmap.pred}
-\title{League heatmap of all possible comparisons: estimations and predictions}
+\title{League heatmap of all possible comparisons: prediction}
 \usage{
 league.heatmap.pred(full, drug.names)
 }
@@ -13,10 +13,10 @@ league.heatmap.pred(full, drug.names)
 as they appear in \code{data} is used, instead.}
 }
 \value{
-A league heatmap of the posterior mean, 95\% credible and predictive interval of the effects for all possible comparisons in the off-diagonals, and the posterior mean of the SUCRA values in the diagonal.
+A league heatmap of the posterior mean, 95\% predictive interval of the effects for all possible comparisons in the off-diagonals, and the posterior mean of the SUCRA values in the diagonal.
 }
 \description{
-A function to create a heatmap with the estimated and predicted effects of all possible comparisons of interventions in the network.
+A function to create a heatmap with the predicted effects of all possible comparisons of interventions in the network.
 \code{league.heatmap.pred} can be used only for a random-effects network meta-analysis.
 \code{league.heatmap.pred} is applied for one outcome only.
 }
@@ -24,15 +24,13 @@ A function to create a heatmap with the estimated and predicted effects of all p
 The rows and columns of the heatmap display the names of interventions which are sorted by decreasing order from the best to the worst
   based on their SUCRA value (Salanti et al., 2011). The main diagonal contains the SUCRA values of the corresponding interventions.
 
-  The upper triangle contains the posterior mean and 95\% credible interval of the effect measure of the corresponding comparisons.
-  The lower triangle contains the posterior mean and 95\% predictive interval of the effect measure of the corresponding comparisons,
-  however, in the opposite direction after converting negative values into positive values (in absolute or logarithmic scale), and vice versa.
-  Darker shades of red and blue correspond to larger treatment effects in the upper and lower triangle, respectively.
+  Results in the lower triangle refer to comparisons in the opposite direction after converting negative values into positive values (in absolute or logarithmic scale), and vice versa.
+  Darker shades of red and green correspond to larger treatment effects in the upper and lower triangle, respectively.
   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
 
   Comparisons between interventions should be read from left to right.
   Therefore, each cell refers to the corresponding row-defining intervention against the column-defining intervention. Results that indicate strong
-  evidence in favor of the row-defining intervention (i.e. the respective 95\% credible/predictive interval does not include the null value) are indicated in bold.
+  evidence in favor of the row-defining intervention (i.e. the respective 95\% predictive interval does not include the null value) are indicated in bold.
 
   \code{league.heatmap.pred} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
   Similarly, when the function is executed for a fixed-effect network meta-analysis.

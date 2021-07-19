@@ -216,7 +216,7 @@ UME.plot <- function(full, ume, drug.names, threshold) {
 
 
   ## Bring together all four plots
-  scatterplots <- ggarrange(scatterplot.o, BA.observed, nrow = 1, ncol = 2)
+  scatterplots <- ggpubr::ggarrange(scatterplot.o, BA.observed, nrow = 1, ncol = 2)
 
 
   ## Leverage plots
@@ -229,7 +229,7 @@ UME.plot <- function(full, ume, drug.names, threshold) {
 
 
   ## Bring together the leverage plots for observed outcome
-  lev.plots <- ggarrange(lever.full.o, lever.ume.o, nrow = 1, ncol = 2, labels = c("A)",  "B)"))
+  lev.plots <- ggpubr::ggarrange(lever.full.o, lever.ume.o, nrow = 1, ncol = 2, labels = c("A)",  "B)"))
 
 
   intervalplots <- intervalplot.panel.UME(full, ume, drug.names)
@@ -239,7 +239,7 @@ UME.plot <- function(full, ume, drug.names, threshold) {
 
 
   ## Write the table with the EMs from both models as .xlsx
-  write_xlsx(EM.both.models, paste0("Table NMA vs UME.xlsx"))
+  writexl::write_xlsx(EM.both.models, paste0("Table NMA vs UME.xlsx"))
 
 
   ## Return results

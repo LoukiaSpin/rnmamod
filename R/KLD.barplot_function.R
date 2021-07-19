@@ -80,7 +80,7 @@ KLD.barplot <- function(robust, compar, drug.names){
 
 
   ## Indicate all possible comparisons (necessary for NMA)
-  comparison <- matrix(combn(drug.names, 2), nrow = length(combn(drug.names, 2))/2, ncol = 2, byrow = T)
+  comparison <- matrix(utils::combn(drug.names, 2), nrow = length(utils::combn(drug.names, 2))/2, ncol = 2, byrow = T)
   compar.id <- which(comparison[, 1] == compar[2] & comparison[, 2] == compar[1])
   experim <- comparison[compar.id, 2]
   control <- comparison[compar.id, 1]
@@ -96,8 +96,8 @@ KLD.barplot <- function(robust, compar, drug.names){
 
   ## Define the scenarios
   scenarios <- if (is.element(robust$measure, c("OR", "ROM"))) {
-    cbind(rep(as.character(fractions(exp(robust$scenarios))), each = length(robust$scenarios)),
-          rep(as.character(fractions(exp(robust$scenarios))), times = length(robust$scenarios)))
+    cbind(rep(as.character(MASS::fractions(exp(robust$scenarios))), each = length(robust$scenarios)),
+          rep(as.character(MASS::fractions(exp(robust$scenarios))), times = length(robust$scenarios)))
   } else if (is.element(robust$measure, c("MD", "SMD"))) {
     cbind(rep(robust$scenarios, each = length(robust$scenarios)),
           rep(robust$scenarios, times = length(robust$scenarios)))
@@ -128,17 +128,18 @@ KLD.barplot <- function(robust, compar, drug.names){
 
 
   ## In each facet, x-axis is sorted by KLD in descending order
-  barplot <- ggplot(dataset.new, aes(x = reorder(scenarios, -KLD), y = KLD, fill = distance)) +
-    geom_bar(stat = "identity", width = 0.5) +
-    scale_fill_manual(breaks = c("more distant", "less distant", "no distance"), values = c("#D55E00", "orange", "#009E73")) +
-    facet_grid(. ~  plausibility, scales = "free_x", space = "free") +
-    labs(x = "Scenarios (active vs control)", y = "Kullback-Leibler divergence measure", fill = "Distance between the scenarios") +
-    ylim(0, ifelse(max(dataset.new$KLD) > 0.3, max(dataset.new$KLD), 0.3)) +
-    ggtitle(paste(experim, "versus", control)) +
-    theme_classic() +
-    theme(axis.title = element_text(size = 12, face = "bold"), axis.text = element_text(size = 10.5), axis.text.x = element_text(size = 10.5, angle = 45, hjust = 1),
-          legend.position = "bottom", legend.title = element_text(size = 12, face = "bold"), legend.text = element_text(size = 12),
-          strip.text = element_text(size = 12), plot.title = element_text(size = 14, face = "bold", hjust = 0.5))
+  barplot <- ggplot2::ggplot(dataset.new, ggplot2::aes(x = stats::reorder(scenarios, -KLD), y = KLD, fill = distance)) +
+    ggplot2::geom_bar(stat = "identity", width = 0.5) +
+    ggplot2::scale_fill_manual(breaks = c("more distant", "less distant", "no distance"), values = c("#D55E00", "orange", "#009E73")) +
+    ggplot2::facet_grid(. ~  plausibility, scales = "free_x", space = "free") +
+    ggplot2::labs(x = "Scenarios (active vs control)", y = "Kullback-Leibler divergence measure", fill = "Distance between the scenarios") +
+    ggplot2::ylim(0, ifelse(max(dataset.new$KLD) > 0.3, max(dataset.new$KLD), 0.3)) +
+    ggplot2::ggtitle(paste(experim, "versus", control)) +
+    ggplot2::theme_classic() +
+    ggplot2::theme(axis.title = ggplot2::element_text(size = 12, face = "bold"), axis.text = ggplot2::element_text(size = 10.5),
+                   axis.text.x = ggplot2::element_text(size = 10.5, angle = 45, hjust = 1),
+          legend.position = "bottom", legend.title = ggplot2::element_text(size = 12, face = "bold"), legend.text = ggplot2::element_text(size = 12),
+          strip.text = ggplot2::element_text(size = 12), plot.title = ggplot2::element_text(size = 14, face = "bold", hjust = 0.5))
 
   return(barplot)
 }
