@@ -31,6 +31,8 @@
 #'   (see also 'Format' in \code{run.model}). Since all Bayesian models in the package consider the first column in \strong{t} to include the control arm for every trial, this sorting ensures that interventions with a lower identifier are consistently treated as the control arm in each trial. This case is relevant in
 #'   non-star-shaped networks.
 #'
+#' @importFrom magrittr %>%
+#'
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \href{https://CRAN.R-project.org/package=R2jags}{R2jags}, \code{\link{run.model}}
@@ -41,20 +43,20 @@ data.preparation <- function(data, measure) {
 
   measure <- if (missing(measure)) {
     stop("The argument 'measure' needs to be defined", call. = F)
-  } else if ((dim(data %>% dplyr::select(starts_with("r")))[2] > 0) & !is.element(measure, c("MD", "SMD", "ROM", "OR"))) {
+  } else if ((dim(data %>% dplyr::select(dplyr::starts_with("r")))[2] > 0) & !is.element(measure, c("MD", "SMD", "ROM", "OR"))) {
     stop("Insert 'OR'", call. = F)
-  } else if ((dim(data %>% dplyr::select(starts_with("r")))[2] == 0) & !is.element(measure, c("MD", "SMD", "ROM", "OR"))) {
+  } else if ((dim(data %>% dplyr::select(dplyr::starts_with("r")))[2] == 0) & !is.element(measure, c("MD", "SMD", "ROM", "OR"))) {
     stop("Insert 'MD', 'SMD' or 'ROM'", call. = F)
-  } else if ((dim(data %>% dplyr::select(starts_with("r")))[2] > 0) & is.element(measure, c("MD", "SMD", "ROM"))) {
+  } else if ((dim(data %>% dplyr::select(dplyr::starts_with("r")))[2] > 0) & is.element(measure, c("MD", "SMD", "ROM"))) {
     stop("Insert 'OR' because the outcome data are binary", call. = F)
-  } else if ((dim(data %>% dplyr::select(starts_with("r")))[2] == 0) & is.element(measure, "OR")) {
+  } else if ((dim(data %>% dplyr::select(dplyr::starts_with("r")))[2] == 0) & is.element(measure, "OR")) {
     stop("Insert 'MD', 'SMD' or 'ROM' because the outcome data are continuous", call. = F)
   } else {
     measure
   }
 
 
-  treat <- data %>% dplyr::select(starts_with("t"))                               # Intervention studied in each arm of every trial
+  treat <- data %>% dplyr::select(dplyr::starts_with("t"))                               # Intervention studied in each arm of every trial
   ns <- length(treat[, 1])                                                      # Total number of included trials per network
   na <- apply(treat, 1, function(x) length(which(!is.na(x))))                   # Number of interventions investigated in every trial per network
   nt <- length(table(as.matrix(treat)))                                         # Total number of interventions per network
@@ -62,11 +64,11 @@ data.preparation <- function(data, measure) {
 
 
   ## When no missing outcome data are collected
-  mod <- if (dim(data %>% dplyr::select(starts_with("m")))[2] == 0) {
+  mod <- if (dim(data %>% dplyr::select(dplyr::starts_with("m")))[2] == 0) {
     message("Missing participant outcome data have *not* been collected")
     as.data.frame(matrix(NA, nrow = nrow(treat), ncol = ncol(treat)))
   } else {
-    data %>% dplyr::select(starts_with("m"))                                    # Number of missing participants in each arm of every trial
+    data %>% dplyr::select(dplyr::starts_with("m"))                                    # Number of missing participants in each arm of every trial
   }
 
 
@@ -74,9 +76,9 @@ data.preparation <- function(data, measure) {
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
 
     ## Continuous: arm-level, wide-format dataset
-    y.obs <- data %>% dplyr::select(starts_with("y"))                             # Observed mean value in each arm of every trial
-    sd.obs <- data %>% dplyr::select(starts_with("sd"))                           # Observed standard deviation in each arm of every trial
-    rand <- data %>% dplyr::select(starts_with("n"))                              # Number randomised participants in each arm of every trial
+    y.obs <- data %>% dplyr::select(dplyr::starts_with("y"))                             # Observed mean value in each arm of every trial
+    sd.obs <- data %>% dplyr::select(dplyr::starts_with("sd"))                           # Observed standard deviation in each arm of every trial
+    rand <- data %>% dplyr::select(dplyr::starts_with("n"))                              # Number randomised participants in each arm of every trial
     se.obs <- sd.obs/sqrt(rand - mod)                                             # Observed standard error in each arm of every trial
 
 
@@ -96,8 +98,8 @@ data.preparation <- function(data, measure) {
 
 
     ## Binary: arm-level, wide-format dataset
-    event <- data %>% dplyr::select(starts_with("r"))                               # Number of observed events in each arm of every trial
-    rand <- data %>% dplyr::select(starts_with("n"))                                # Number randomised participants in each arm of every trial
+    event <- data %>% dplyr::select(dplyr::starts_with("r"))                               # Number of observed events in each arm of every trial
+    rand <- data %>% dplyr::select(dplyr::starts_with("n"))                                # Number randomised participants in each arm of every trial
 
 
     ## Order by 'id of t1' < 'id of t2' < 'id of t3', and so on
