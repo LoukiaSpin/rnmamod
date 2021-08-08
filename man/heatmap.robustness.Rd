@@ -47,7 +47,7 @@ res.sens <- run.sensitivity(full = res1,
                             n.thin = 1)
 
 # Calculate the robustness index
-robust <- robustness.index(sens = res.sens, primary.scenar = 13, threshold = 0.28)
+robust <- robustness.index(sens = res.sens, threshold = 0.28)
 
 # The names of the interventions in the order they appear in the dataset
 interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus

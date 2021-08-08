@@ -70,7 +70,7 @@ res.sens <- run.sensitivity(full = res1,
                             n.thin = 1)
 
 # Calculate the robustness index
-robustness.index(sens = res.sens, primary.scenar = 13, threshold = 0.28)
+robustness.index(sens = res.sens, threshold = 0.28)
 
 }
 \references{

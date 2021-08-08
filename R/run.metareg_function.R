@@ -105,9 +105,12 @@
 #'                   n.burnin = 1000,
 #'                   n.thin = 1)
 #'
+#' # Whether a trial is placebo-controlled.
+#' covar.binary <- ifelse(nma.baker2009[, "t1"] == 1, 1, 0)
+#'
 #' # Perform a random-effects network meta-regression (exchangeable structure)
 #' run.metareg(full = res1,
-#'             covariate = nma.baker2009,
+#'             covariate = covar.binary,
 #'             covar.assumption = "exchangeable",
 #'             n.chains = 3,
 #'             n.iter = 10000,

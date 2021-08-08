@@ -209,7 +209,7 @@ balloon.plot.mod <- function(sens, compar, drug.names){
 
   # Dummy variable to indicate the extent of tau2
   median.extent <- if (sens$heter[3] == 1) {
-    median(fdrtool::rhalfnorm(10000, theta = sqrt(1/sens$heter[2])))
+    median(fdrtool::rhalfnorm(10000, theta = 1/(sens$heter[2]^2)))
   } else if (sens$heter[3] == 2) {
     median(runif(10000, 0, sens$heter[2]))
   } else if (sens$heter[3] == 3) {
@@ -231,7 +231,7 @@ balloon.plot.mod <- function(sens, compar, drug.names){
     ggplot(mat.tau, aes(x = active, y = control, color = sd.value, label = sprintf("%.2f", value))) +
       geom_rect(mapping = aes(NULL, NULL, xmin = 1, xmax = length(scenarios)), ymin = 1, ymax = length(scenarios), color = "grey93", fill = "grey93", alpha = 0.1) +
       geom_rect(mapping = aes(NULL, NULL, xmin = 2, xmax = length(scenarios) - 1), ymin = 2, ymax = length(scenarios) - 1, color = "grey100", fill = "grey100", alpha = 0.1) +
-      geom_point(aes(size = tau.normalised), stroke = 2, shape = ifelse(mat.tau$extent == "low", "circle", "circle plus")) +
+      geom_point(aes(size = tau.normalised), stroke = 2, shape = ifelse(extent.tau == "low", "circle", "circle plus")) +
       scale_size(range = c(0, 30)) +
       geom_text(colour = "black", fontface = "bold", size = 4.5) +
       geom_label(aes(median(order(scenarios)), median(order(scenarios)), label = sprintf("%.2f", mat.tau[median(1:(length(scenarios)^2)), 3])), colour = "black", fontface = "bold",  size = 4.5) +
@@ -241,6 +241,7 @@ balloon.plot.mod <- function(sens, compar, drug.names){
       coord_cartesian(ylim = c(1, length(scenarios)), clip = 'off') +
       labs(x = paste("IMOR scenario in experimental"), y = paste("IMOR scenario in control"), color = "") +
       ggtitle("Between-trial standard deviation") +
+      guides(shape = F, size = F) +
       theme_bw() +
       theme(axis.text.x = element_text(size = 12, angle = 360, vjust = 0.8, hjust = 0.5), axis.text.y = element_text(size = 12, vjust = 0.5, hjust = 1),
             axis.title.x = element_text(size = 12, face = "bold"), axis.title.y = element_text(size = 12, angle = 90, face = "bold"),
