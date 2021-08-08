@@ -49,7 +49,7 @@
 #' Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616. [\doi{10.1111/1467-9868.00353}]
 #'
 #' @examples
-#' data("nma.baker2009.RData")
+#' data("nma.baker2009")
 #'
 #' # Perform a random-effects network meta-analysis
 #' res1 <- run.model(data = nma.baker2009,
@@ -147,15 +147,15 @@ nodesplit.plot <- function(full, node, drug.names) {
   comp <- paste(direct[, 1], "vs", direct[, 2])
   prepare <- data.frame(rep(comp, 3), rbind(direct[, c(3, 5:6)], indirect[, c(3, 5:6)], IF[, c(3, 5:6)]), rep(c("direct", "indirect", "IF"), each = length(direct[, 1])))
   colnames(prepare) <- c("node", "mean", "lower", "upper", "evidence")
-  prepare$stat.signif <- ifelse(prepare$lower > 0 | prepare$upper < 0  , "statistically significant", "statistically non-significant")
-  prepare$stat.signif <- ifelse(prepare$evidence != "IF", NA, prepare$stat.signif)
+  prepare$stat.sign <- ifelse(prepare$lower > 0 | prepare$upper < 0  , "statistically significant", "statistically non-significant")
+  prepare$stat.sign <- ifelse(prepare$evidence != "IF", NA, prepare$stat.sign)
   prepare$DIC <- sort(model.assess$DIC)
 
 
   ## Create the panel of interval plots
   if(length(unique(comp)) <= 30) {
 
-    p1 <- ggplot(data = prepare, aes(x = factor(evidence, levels = c("IF", "indirect", "direct")), y = mean, ymin = lower, ymax = upper, colour = stat.signif) ) +
+    p1 <- ggplot(data = prepare, aes(x = factor(evidence, levels = c("IF", "indirect", "direct")), y = mean, ymin = lower, ymax = upper, colour = stat.sign) ) +
             geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
             geom_hline(yintercept = 0, lty = 1, size = 1, col = "grey") +
             geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
@@ -176,11 +176,11 @@ nodesplit.plot <- function(full, node, drug.names) {
   } else {
 
     # Keep nodes with statistically significant inconsistency OR with inconsistent sign in the direct and indirect estimate
-    selection <- subset(prepare, stat.signif == "statistically significant" |
+    selection <- subset(prepare, stat.sign == "statistically significant" |
                (mean[evidence == "direct"] < 0 & mean[evidence == "indirect"] > 0) |
                (mean[evidence == "direct"] > 0 & mean[evidence == "indirect"] < 0))
 
-    p1 <- ggplot(data = selection, aes(x = factor(evidence, levels = c("IF", "indirect", "direct")), y = mean, ymin = lower, ymax = upper, colour = stat.signif) ) +
+    p1 <- ggplot(data = selection, aes(x = factor(evidence, levels = c("IF", "indirect", "direct")), y = mean, ymin = lower, ymax = upper, colour = stat.sign) ) +
             geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
             geom_hline(yintercept = 0, lty = 1, size = 1, col = "grey") +
             geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +

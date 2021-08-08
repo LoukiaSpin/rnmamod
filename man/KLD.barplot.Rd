@@ -29,7 +29,7 @@ The scenarios for the missingness parameter in compared interventions are split 
   \code{KLD.barplot} can be used only for when missing participant outcome data have been extracted for at least one trial. Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
 }
 \examples{
-data("nma.baker2009.RData")
+data("nma.baker2009")
 
 # Perform a random-effects network meta-analysis
 res1 <- run.model(data = nma.baker2009,

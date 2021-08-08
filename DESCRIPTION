@@ -19,36 +19,31 @@ Authors@R:
 Maintainer: <Spineli.Loukia@mh-hannover.de>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
+Depends: 
+    R (>= 3.5.0)
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
-    magrittr, 
-    Rdpack,
+    coda,
     dplyr,
-    tidyr,
-    reshape2,
+    fdrtool, 
+    gemtc,
+    ggfittext,
     ggplot2,
     ggpubr,
     ggrepel,
-    R2jags,
-    mcmcplots,
-    ggfittext,
-    netmeta,
-    gemtc,
-    pcnetmeta,
-    ggthemes,
-    stringr,
-    testit,
-    writexl,
-    scales,
-    MASS,
-    fdrtool,
     knitr,
-    BNPdensity
-Suggest: stats,
-         utils
-RdMacros: Rdpack
+    MASS,
+    mcmcplots,
+    netmeta,
+    pcnetmeta,
+    reshape2,
+    R2jags,
+    scales,
+    stats,
+    utils,
+    writexl
 SystemRequirements: JAGS (http://mcmc-jags.sourceforge.net)
 RoxygenNote: 7.1.1
 Language: en-US

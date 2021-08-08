@@ -33,7 +33,7 @@
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
 #'
 #' @examples
-#' data("nma.baker2009.RData")
+#' data("nma.baker2009")
 #'
 #' # Perform a random-effects network meta-analysis
 #' res1 <- run.model(data = nma.baker2009,
@@ -162,10 +162,10 @@ league.heatmap <- function(full, drug.names){
 
 
   ## Hooray, the precious league table as a heatmap!
-  p <- ggplot(mat.new, aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), fill = value2)) +
+  p <- ggplot(mat.new, aes(factor(Var2, levels = order.drug[1:length(order.drug)]), factor(Var1, levels = order.drug[length(order.drug):1]), fill = value2)) +
          geom_tile(aes(fill = value.SUCRA)) +
-         geom_fit_text(aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), label = value), reflow = T) +
-         geom_fit_text(aes(factor(Var2, level = order.drug[1:length(order.drug)]), factor(Var1, level = order.drug[length(order.drug):1]), label = value, fontface = ifelse(signif.status == "significant", "bold", "plain")), reflow = T) +
+         geom_fit_text(aes(factor(Var2, levels = order.drug[1:length(order.drug)]), factor(Var1, levels = order.drug[length(order.drug):1]), label = value), reflow = T) +
+         geom_fit_text(aes(factor(Var2, levels = order.drug[1:length(order.drug)]), factor(Var1, levels = order.drug[length(order.drug):1]), label = value, fontface = ifelse(signif.status == "significant", "bold", "plain")), reflow = T) +
          scale_fill_gradientn(colours = c("blue", "white", "#D55E00"),
                               values = rescale(c(min(mat.new$value2, na.rm = T), ifelse(measure != "OR" & measure != "ROM", 0, 1), max(mat.new$value2, na.rm = T))),
                               limits = c(min(mat.new$value2, na.rm = T), max(mat.new$value2, na.rm = T))) +

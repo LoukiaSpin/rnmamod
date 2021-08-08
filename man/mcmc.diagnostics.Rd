@@ -39,7 +39,7 @@ For each monitored parameter, \code{mcmc.diagnostics} considers the maximum R-ha
   If the monitored parameter is a matrix of the posterior results, there are as many R-hats as the number of rows for that parameter.
 }
 \examples{
-data("nma.baker2009.RData")
+data("nma.baker2009")
 
 # Perform a random-effects network meta-analysis
 res1 <- run.model(data = nma.baker2009,

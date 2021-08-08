@@ -35,7 +35,7 @@ The heatmap illustrates the robustness index for each possible pairwise comparis
   Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
 }
 \examples{
-data("nma.liu2013.RData")
+data("nma.liu2013")
 
 # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
 res.sens <- run.sensitivity(full = res1,

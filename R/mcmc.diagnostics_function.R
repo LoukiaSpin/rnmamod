@@ -35,7 +35,7 @@
 #' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457--472. [\doi{10.1214/ss/1177011136}]
 #'
 #' @examples
-#' data("nma.baker2009.RData")
+#' data("nma.baker2009")
 #'
 #' # Perform a random-effects network meta-analysis
 #' res1 <- run.model(data = nma.baker2009,
@@ -76,40 +76,40 @@ mcmc.diagnostics <- function(net, par){
   getResults <- as.data.frame(t(jagsfit$BUGSoutput$summary))
 
   # Effect size of all unique pairwise comparisons
-  EM <- t(getResults %>% dplyr::select(starts_with("EM[")))
+  EM <- t(getResults %>% select(starts_with("EM[")))
 
   # Predictive effects of all unique pairwise comparisons
-  EM.pred <- t(getResults %>% dplyr::select(starts_with("EM.pred[")))
+  EM.pred <- t(getResults %>% select(starts_with("EM.pred[")))
 
 
   # SUrface under the Cumulative RAnking curve values
-  SUCRA <- t(getResults %>% dplyr::select(starts_with("SUCRA")))
+  SUCRA <- t(getResults %>% select(starts_with("SUCRA")))
 
 
   # Within-trial effects size (multi-arm trials with T interventions provide T-1 such effect sizes)
-  delta <- t(getResults %>% dplyr::select(starts_with("delta") & !ends_with(",1]")))
+  delta <- t(getResults %>% select(starts_with("delta") & !ends_with(",1]")))
 
 
   # Ranking probability of each intervention for every rank
-  effectiveness <- t(getResults %>% dplyr::select(starts_with("effectiveness")))
+  effectiveness <- t(getResults %>% select(starts_with("effectiveness")))
 
   # Between-trial standard deviation
-  tau <- t(getResults %>% dplyr::select(starts_with("tau")))
+  tau <- t(getResults %>% select(starts_with("tau")))
 
 
   # Estimated missingness parameter
   #phi <- net$phi
   phi <- if (length(unique(unlist(item$m))) > 2) {
-    t(getResults %>% dplyr::select(starts_with("phi") | starts_with("mean.phi") | starts_with("mean.phi[") | starts_with("phi[")))
+    t(getResults %>% select(starts_with("phi") | starts_with("mean.phi") | starts_with("mean.phi[") | starts_with("phi[")))
   } else {
     NA
   }
 
   # Regression coefficient
-  beta <- t(getResults %>% dplyr::select(starts_with("beta[") | starts_with("beta")))
+  beta <- t(getResults %>% select(starts_with("beta[") | starts_with("beta")))
 
 
-  ## Turn 'R2jags' object into 'mcmc.plot' object
+  ## Turn 'R2jags' object into 'mcmc' object
   jagsfit.mcmc <- as.mcmc(jagsfit)
 
 

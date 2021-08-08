@@ -44,7 +44,21 @@ The user may consider the values 0.28 and 0.17 in the argument \code{threshold} 
   \code{robustness.index} can be used only for when missing participant outcome data have been extracted for at least one trial. Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
 }
 \examples{
-data("nma.liu2013.RData")
+data("nma.liu2013")
+
+# Perform a random-effects network meta-analysis
+res1 <- run.model(data = nma.liu2013,
+                  measure = "OR",
+                  model = "RE",
+                  assumption = "IDE-ARM",
+                  heter.prior = list("halfnormal", 0, 1),
+                  mean.misspar = 0,
+                  var.misspar = 1,
+                  D = 1,
+                  n.chains = 3,
+                  n.iter = 10000,
+                  n.burnin = 1000,
+                  n.thin = 1)
 
 # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
 res.sens <- run.sensitivity(full = res1,

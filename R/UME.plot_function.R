@@ -53,7 +53,7 @@
 #' Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616. [\doi{10.1111/1467-9868.00353}]
 #'
 #' @examples
-#' data("nma.baker2009.RData")
+#' data("nma.baker2009")
 #'
 #' # Perform a random-effects network meta-analysis
 #' res1 <- run.model(data = nma.baker2009,

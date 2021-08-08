@@ -23,6 +23,8 @@
 #' @return \code{heatmap.robustness} first prints on the R console a message on the threshold of robustness determined by the user in the \code{robustness.index} function.
 #'   Then, it returns a lower triangular heatmap matrix with the robustness index value of all possible pairwise comparisons.
 #'
+#' @import reshape2 ggplot2
+#'
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link{robustness.index}}, \code{\link{run.model}}
@@ -31,7 +33,7 @@
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
 #'
 #' @examples
-#' data("nma.liu2013.RData")
+#' data("nma.liu2013")
 #'
 #' # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
 #' res.sens <- run.sensitivity(full = res1,
@@ -101,9 +103,9 @@ heatmap.robustness <- function(robust, drug.names){
 
 
   ## Create the heatmap for one network of interventions
-  p <- ggplot(mat.new, aes(factor(Var2, level = drug.names[1:(length(drug.names) - 1)]), factor(Var1, level = drug.names[length(drug.names):2]), fill = ifelse(value < threshold, "high", "poor"))) +
+  p <- ggplot(mat.new, aes(factor(Var2, levels = drug.names[1:(length(drug.names) - 1)]), factor(Var1, levels = drug.names[length(drug.names):2]), fill = ifelse(value < threshold, "high", "poor"))) +
          geom_tile(colour = "white") +
-         geom_text(aes(factor(Var2, level = drug.names[1:(length(drug.names) - 1)]), factor(Var1, level = drug.names[length(drug.names):2]), label = value, fontface = "bold"), size = rel(4.5)) +
+         geom_text(aes(factor(Var2, levels = drug.names[1:(length(drug.names) - 1)]), factor(Var1, levels = drug.names[length(drug.names):2]), label = value, fontface = "bold"), size = rel(4.5)) +
          scale_fill_manual(breaks = c("high", "poor"), values = c("#009E73", "#D55E00")) +
          scale_x_discrete(position = "top") +
          labs(x = "", y = "") +

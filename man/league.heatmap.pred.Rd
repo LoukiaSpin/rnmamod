@@ -36,7 +36,7 @@ The rows and columns of the heatmap display the names of interventions which are
   Similarly, when the function is executed for a fixed-effect network meta-analysis.
 }
 \examples{
-data("nma.baker2009.RData")
+data("nma.baker2009")
 
 # Perform a random-effects network meta-analysis
 res1 <- run.model(data = nma.baker2009,

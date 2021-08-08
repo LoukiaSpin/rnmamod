@@ -45,7 +45,7 @@ For the summary effect size of a pairwise comparison, the different colours and 
   Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
 }
 \examples{
-data("nma.baker2009.RData")
+data("nma.baker2009")
 
 # Perform a random-effects network meta-analysis
 res1 <- run.model(data = nma.baker2009,

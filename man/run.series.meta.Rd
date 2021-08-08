@@ -45,7 +45,7 @@ This function performs a Bayesian pairwise meta-analysis separately for pairwise
   \code{run.series.meta} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 }
 \examples{
-data("nma.baker2009.RData")
+data("nma.baker2009")
 
 # Perform a random-effects network meta-analysis
 res1 <- run.model(data = nma.baker2009,

@@ -26,7 +26,7 @@
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
 #'
 #' @examples
-#' data("nma.baker2009.RData")
+#' data("nma.baker2009")
 #'
 #' # Perform a random-effects network meta-analysis
 #' res1 <- run.model(data = nma.baker2009,
@@ -53,8 +53,6 @@
 forestplot.ref <- function(full, drug.names) {
 
   options(warn = -1)
-
-  lower <- upper <- interval <- NULL
 
   drug.names <- if (missing(drug.names)) {
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
@@ -134,71 +132,71 @@ forestplot.ref <- function(full, drug.names) {
 
   ## Forest plots on credible/predictive intervals of comparisons with the reference
   p1 <- if (model == "RE") {
-    ggplot2::ggplot(data = prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), ], ggplot2::aes(x = order, y = mean, ymin = lower, ymax = upper, colour = interval)) +
-      ggplot2::geom_linerange(size = 2, position = ggplot2::position_dodge(width = 0.5)) +
-      ggplot2::geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], ggplot2::aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper), size = 2, position = ggplot2::position_dodge(width = 0.5), width = 0.0) +
-      ggplot2::geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 1, size = 1, col = "grey60") +
-      ggplot2::geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = ggplot2::position_dodge(width = 0.5)) +
-      ggplot2::geom_text(ggplot2::aes(x = order, y = mean, label = paste0(mean, " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")",
+    ggplot(data = prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), ], aes(x = order, y = mean, ymin = lower, ymax = upper, colour = interval)) +
+      geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
+      geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper), size = 2, position = position_dodge(width = 0.5), width = 0.0) +
+      geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 1, size = 1, col = "grey60") +
+      geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
+      geom_text(aes(x = order, y = mean, label = paste0(mean, " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")",
                                                         " ", "[", prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), 4], ",", " ", prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), 5], "]"),
-                    hjust = 0, vjust = -0.5), color = "black", size = 4.0, check_overlap = F, parse = F, position = ggplot2::position_dodge(width = 0.5), inherit.aes = T, na.rm = T) +
-      ggplot2::geom_text(ggplot2::aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", "Favours second arm")),
+                    hjust = 0, vjust = -0.5), color = "black", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T, na.rm = T) +
+      geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", "Favours second arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      ggplot2::geom_text(ggplot2::aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 1.2, 0.2), label = ifelse(full$D == 0, "Favours second arm", "Favours first arm")),
+      geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 1.2, 0.2), label = ifelse(full$D == 0, "Favours second arm", "Favours first arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      ggplot2::labs(x = "", y = measure, colour = "Analysis") +
-      ggplot2::scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
-      ggplot2::scale_color_manual(breaks = c("Credible interval", "Predictive interval"), values = c("black", "#D55E00")) +
-      ggplot2::geom_label(ggplot2::aes(x = as.factor(order)[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
-      ggplot2::scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
-      ggplot2::coord_flip() +
-      ggplot2::theme_classic() +
-      ggplot2:: theme(axis.text.x = ggplot2::element_text(color = "black", size = 12), axis.text.y = ggplot2::element_text(color = "black", size = 12),
-            axis.title.x = ggplot2::element_text(color = "black", face = "bold", size = 12), legend.position = "bottom", legend.justification = c(0.23, 0),
-            legend.text =  ggplot2::element_text(color = "black", size = 12), legend.title = ggplot2::element_text(color = "black", face = "bold", size = 12))
+      labs(x = "", y = measure, colour = "Analysis") +
+      scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
+      scale_color_manual(breaks = c("Credible interval", "Predictive interval"), values = c("black", "#D55E00")) +
+      geom_label(aes(x = as.factor(order)[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
+      scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
+      coord_flip() +
+      theme_classic() +
+       theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12),
+            axis.title.x = element_text(color = "black", face = "bold", size = 12), legend.position = "bottom", legend.justification = c(0.23, 0),
+            legend.text =  element_text(color = "black", size = 12), legend.title = element_text(color = "black", face = "bold", size = 12))
   } else {
-    ggplot2::ggplot(data = prepare.EM, ggplot2::aes(x = order, y = mean, ymin = lower, ymax = upper)) +
-      ggplot2::geom_linerange(size = 2, position = ggplot2::position_dodge(width = 0.5)) +
-      ggplot2::geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], ggplot2::aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper), size = 2, position = ggplot2::position_dodge(width = 0.5), colour = "black", width = 0.0) +
-      ggplot2::geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 2, size = 1.3, col = "grey53") +
-      ggplot2::geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = ggplot2::position_dodge(width = 0.5)) +
-      ggplot2::geom_text(ggplot2::aes(x = order, y = mean, label = paste0(mean, " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")"),
-                    hjust = 0, vjust = -0.5), color = "black", size = 4.0, check_overlap = F, parse = F, position = ggplot2::position_dodge(width = 0.5), inherit.aes = T, na.rm = T) +
-      ggplot2::geom_text(ggplot2::aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", "Favours second arm")),
+    ggplot(data = prepare.EM, aes(x = order, y = mean, ymin = lower, ymax = upper)) +
+      geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
+      geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper), size = 2, position = position_dodge(width = 0.5), colour = "black", width = 0.0) +
+      geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 2, size = 1.3, col = "grey53") +
+      geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
+      geom_text(aes(x = order, y = mean, label = paste0(mean, " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")"),
+                    hjust = 0, vjust = -0.5), color = "black", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T, na.rm = T) +
+      geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", "Favours second arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      ggplot2::geom_text(ggplot2::aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 1.2, 0.2), label = ifelse(full$D == 0, "Favours second arm", "Favours first arm")),
+      geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 1.2, 0.2), label = ifelse(full$D == 0, "Favours second arm", "Favours first arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      ggplot2::labs(x = "", y = measure) +
-      ggplot2::scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
-      ggplot2::geom_label(ggplot2::aes(x = as.factor(order)[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
-      ggplot2::scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
-      ggplot2::coord_flip(clip = "off") +
-      ggplot2::theme_classic() +
-      ggplot2::theme(axis.text.x = ggplot2::element_text(color = "black", size = 12), axis.text.y = ggplot2::element_text(color = "black", size = 12),
-            axis.title.x = ggplot2::element_text(color = "black", face = "bold", size = 12), legend.position = "bottom", legend.justification = c(0.23, 0),
-            legend.text =  ggplot2::element_text(color = "black", size = 12), legend.title =  ggplot2::element_text(color = "black", face = "bold", size = 12))
+      labs(x = "", y = measure) +
+      scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
+      geom_label(aes(x = as.factor(order)[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
+      scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
+      coord_flip(clip = "off") +
+      theme_classic() +
+      theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12),
+            axis.title.x = element_text(color = "black", face = "bold", size = 12), legend.position = "bottom", legend.justification = c(0.23, 0),
+            legend.text =  element_text(color = "black", size = 12), legend.title =  element_text(color = "black", face = "bold", size = 12))
   }
 
 
 
   ## Forest plots of SUCRA per intervention
-  p2 <- ggplot2::ggplot(data = prepare.sucra[1:length(drug.names), ], ggplot2::aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper)) +
-    ggplot2::geom_linerange(size = 2, position = ggplot2::position_dodge(width = 0.5)) +
-    ggplot2::geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = ggplot2::position_dodge(width = 0.5)) +
-    ggplot2::geom_text(ggplot2::aes(x = as.factor(order), y = round(mean, 2), label = paste0(round(mean*100, 0), " ", "(", round(lower*100, 0), ",", " ", round(upper*100, 0), ")" ),
-                        hjust = 0, vjust = -0.5), color = "black", size = 4.0, check_overlap = F, parse = F, position = ggplot2::position_dodge(width = 0.5), inherit.aes = T) +
-    ggplot2::labs(x = "", y = "Surface under the cumulative ranking curve value") +
-    ggplot2::scale_x_discrete(breaks = as.factor(1:length(drug.names)), labels = prepare.sucra$intervention[length(drug.names):1]) +
-    ggplot2::scale_y_continuous(labels = scales::percent) +
-    ggplot2::coord_flip() +
-    ggplot2::theme_classic() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(color = "black", size = 12), axis.text.y = ggplot2::element_text(color = "black", size = 12),
-                axis.title.x = ggplot2::element_text(color = "black", face = "bold", size = 12))
+  p2 <- ggplot(data = prepare.sucra[1:length(drug.names), ], aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper)) +
+    geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
+    geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
+    geom_text(aes(x = as.factor(order), y = round(mean, 2), label = paste0(round(mean*100, 0), " ", "(", round(lower*100, 0), ",", " ", round(upper*100, 0), ")" ),
+                        hjust = 0, vjust = -0.5), color = "black", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T) +
+    labs(x = "", y = "Surface under the cumulative ranking curve value") +
+    scale_x_discrete(breaks = as.factor(1:length(drug.names)), labels = prepare.sucra$intervention[length(drug.names):1]) +
+    scale_y_continuous(labels = percent) +
+    coord_flip() +
+    theme_classic() +
+    theme(axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12),
+                axis.title.x = element_text(color = "black", face = "bold", size = 12))
 
 
 
   ## Bring together both forest-plots
-  forest.plots <- ggpubr::ggarrange(p1, p2, nrow = 1, ncol = 2, labels = c("A)", "B)"), common.legend = T, legend = "bottom")
+  forest.plots <- ggarrange(p1, p2, nrow = 1, ncol = 2, labels = c("A)", "B)"), common.legend = T, legend = "bottom")
 
 
   return(forest.plots = forest.plots)

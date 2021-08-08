@@ -45,13 +45,13 @@
 heatmap.mod.trial <- function(data, trial.names, drug.names) {
 
 
-  m <- if (dim(data %>% dplyr::select(starts_with("m")))[2] == 0) {
+  m <- if (dim(data %>% select(starts_with("m")))[2] == 0) {
     stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
   } else {
-    data %>% dplyr::select(starts_with("m"))                                    # Number of missing participants in each arm of every trial
+    data %>% select(starts_with("m"))                                    # Number of missing participants in each arm of every trial
   }
-  n <- data %>% dplyr::select(starts_with("n"))   # Number randomised
-  t <- data %>% dplyr::select(starts_with("t"))
+  n <- data %>% select(starts_with("n"))   # Number randomised
+  t <- data %>% select(starts_with("t"))
   nt <- length(table(as.matrix(t)))
   ns <- length(m[, 1])
   na..  <- rep(0, length(m[, 1]))
@@ -110,7 +110,7 @@ heatmap.mod.trial <- function(data, trial.names, drug.names) {
   transform$m.prop <- round((transform$response/transform$sampleSize)*100, 0)
 
 
-  ## For more than 80 trialsm do not show text on tiles
+  ## For more than 80 trials do not show text on tiles
   if(ns < 80){
 
     #ggplot(transform, aes(treatment, factor(study, level = 1:ns), fill = ifelse(m.prop <= 5, "low", ifelse(m.prop > 20, "high", "moderate") ))) +

@@ -71,7 +71,7 @@ This function performs a Bayesian network meta-analysis based on the unrelated m
   \code{run.UME} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 }
 \examples{
-data("nma.liu2013.RData")
+data("nma.liu2013")
 
 # Perform a random-effects network meta-analysis (consistency model)
 res1 <- run.model(data = nma.liu2013,

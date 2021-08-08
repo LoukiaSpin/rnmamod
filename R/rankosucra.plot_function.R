@@ -21,7 +21,7 @@
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
 #'
 #' @examples
-#' data("nma.baker2009.RData")
+#' data("nma.baker2009")
 #'
 #' # Perform a random-effects network meta-analysis
 #' res1 <- run.model(data = nma.baker2009,
@@ -92,7 +92,7 @@ rankosucra.plot <- function(full, drug.names){
          geom_bar(stat = "identity", color = "#D55E00", fill = "#D55E00") +
          geom_line(aes(x = Order, y = value.cum), size = 1, color = "blue") +
          #facet_wrap(vars(Intervention)) +
-         facet_wrap(vars(factor(Intervention, level = drug.names.order[1:length(drug.names.order)]))) +
+         facet_wrap(vars(factor(Intervention, levels = drug.names.order[1:length(drug.names.order)]))) +
          geom_text(data = dat_text, aes(x = x, y = y, label = label), fontface = "bold") +
          labs(x = "Rank", y = "Probability (%)") +
          theme_classic() +

@@ -47,13 +47,13 @@ heatmap.mod.network <- function(data, drug.names){
 
 
   ## Obtain dataset
-  m <- if (dim(data %>% dplyr::select(starts_with("m")))[2] == 0) {
+  m <- if (dim(data %>% select(starts_with("m")))[2] == 0) {
     stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
   } else {
-    data %>% dplyr::select(starts_with("m"))                                    # Number of missing participants in each arm of every trial
+    data %>% select(starts_with("m"))                                    # Number of missing participants in each arm of every trial
   }
-  n <- data %>% dplyr::select(starts_with("n"))
-  t <- data %>% dplyr::select(starts_with("t"))
+  n <- data %>% select(starts_with("n"))
+  t <- data %>% select(starts_with("t"))
   nt <- length(table(as.matrix(t)))
   ns <- length(m[, 1])
 
@@ -103,7 +103,7 @@ heatmap.mod.network <- function(data, drug.names){
 
 
   ## Create the heatmap for one network of interventions
-  ggplot(mat.new, aes(Var2, factor(Var1, level = drug.names[length(drug.names):1]), fill = risk)) +
+  ggplot(mat.new, aes(Var2, factor(Var1, levels = drug.names[length(drug.names):1]), fill = risk)) +
     geom_tile(colour = "white") +
     geom_text(aes(Var2, Var1, label = paste0(value, "%"), fontface = "bold"), colour = ifelse(mat.new$value2 < 1, "black", "white"), size = rel(4.5)) +
     scale_fill_manual(breaks = c("low", "moderate", "high"), values = c("#009E73", "orange", "#D55E00")) +
