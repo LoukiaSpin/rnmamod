@@ -49,6 +49,10 @@
 #' # Create the league heatmap
 #' forestplot.ref(full = res1, drug.names = interv.names)
 #'
+#' \dontshow{
+#' closeAllConnections()
+#' }
+#'
 #' @export
 forestplot.ref <- function(full, drug.names) {
 

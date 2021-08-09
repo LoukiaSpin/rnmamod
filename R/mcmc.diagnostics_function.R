@@ -54,6 +54,10 @@
 #' # Obtain the diagnostic plots and check convergence for all monitored parameters using the R.hat
 #' mcmc.diagnostics(net = res1, par = c("tau", "EM[2,1]", "EM.pred[2,1]"))
 #'
+#' \dontshow{
+#' closeAllConnections()
+#' }
+#'
 #' @export
 mcmc.diagnostics <- function(net, par){
 

@@ -72,6 +72,10 @@
 #' # Create the enhanced balloon plot for the comparison 'tiotropium versus salmeterol'
 #' balloon.plot.mod(sens = res.sens, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
 #'
+#' \dontshow{
+#' closeAllConnections()
+#' }
+#'
 #' @export
 balloon.plot.mod <- function(sens, compar, drug.names){
 

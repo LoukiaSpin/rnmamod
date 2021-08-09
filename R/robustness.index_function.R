@@ -70,6 +70,10 @@
 #' # Calculate the robustness index
 #' robustness.index(sens = res.sens, threshold = 0.28)
 #'
+#' \dontshow{
+#' closeAllConnections()
+#' }
+#'
 #' @export
 robustness.index <- function(sens, threshold){
 

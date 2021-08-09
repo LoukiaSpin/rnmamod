@@ -77,6 +77,10 @@ res1 <- run.model(data = nma.liu2013,
 # Run random-effects network meta-analysis with node-splitting approach
 run.nodesplit(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 
+\dontshow{
+closeAllConnections()
+}
+
 }
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome data in network meta-analysis: a one-stage pattern-mixture model approach. \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]

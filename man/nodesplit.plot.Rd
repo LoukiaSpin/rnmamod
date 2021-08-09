@@ -78,6 +78,10 @@ interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fl
 # Plot the results from the consistency model and the node-splitting approach
 nodesplit.plot(full = res1, node = node1, drug.names = interv.names)
 
+\dontshow{
+closeAllConnections()
+}
+
 }
 \references{
 Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed treatment comparison meta-analysis. \emph{Stat Med} 2010;\bold{29}(7-8):932--44. [\doi{10.1002/sim.3767}]

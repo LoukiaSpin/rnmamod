@@ -49,6 +49,10 @@
 #' # Plot the results from both models
 #' series.meta.plot(full = res1, meta = meta1, drug.names = interv.names)
 #'
+#' \dontshow{
+#' closeAllConnections()
+#' }
+#'
 #' @export
 series.meta.plot <- function(full, meta, drug.names) {
 

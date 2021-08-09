@@ -58,6 +58,10 @@ res1 <- run.model(data = nma.baker2009,
 # Obtain the diagnostic plots and check convergence for all monitored parameters using the R.hat
 mcmc.diagnostics(net = res1, par = c("tau", "EM[2,1]", "EM.pred[2,1]"))
 
+\dontshow{
+closeAllConnections()
+}
+
 }
 \references{
 Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457--472. [\doi{10.1214/ss/1177011136}]

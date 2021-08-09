@@ -68,6 +68,10 @@
 #' # Create the heatmap of robustness
 #' heatmap.robustness(robust = robust, drug.names = interv.names)
 #'
+#' \dontshow{
+#' closeAllConnections()
+#' }
+#'
 #' @export
 heatmap.robustness <- function(robust, drug.names){
 

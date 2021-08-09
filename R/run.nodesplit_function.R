@@ -76,6 +76,10 @@
 #' # Run random-effects network meta-analysis with node-splitting approach
 #' run.nodesplit(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
+#' \dontshow{
+#' closeAllConnections()
+#' }
+#'
 #' @export
 run.nodesplit <- function(full, n.chains, n.iter, n.burnin, n.thin){
 

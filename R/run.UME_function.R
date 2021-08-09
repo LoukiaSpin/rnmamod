@@ -93,6 +93,10 @@
 #' # Run random-effects unrelated mean effects model
 #' run.UME(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
+#' \dontshow{
+#' closeAllConnections()
+#' }
+#'
 #' @export
 run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
 

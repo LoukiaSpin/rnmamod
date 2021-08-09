@@ -110,7 +110,7 @@ heatmap.mod.network <- function(data, drug.names){
 
 
   ## Create the heatmap for one network of interventions
-  ggplot(mat.new, aes(Var2, factor(Var1, levels = drug.names[length(drug.names):1]), fill = risk)) +
+  ggplot(mat.new, aes(as.factor(Var2), factor(Var1, levels = drug.names[length(drug.names):1]), fill = risk)) +
     geom_tile(colour = "white") +
     geom_text(aes(Var2, Var1, label = paste0(value, "%"), fontface = "bold"), colour = ifelse(mat.new$value2 < 1, "black", "white"), size = rel(4.5)) +
     scale_fill_manual(breaks = c("low", "moderate", "high"), values = c("#009E73", "orange", "#D55E00")) +

@@ -72,6 +72,10 @@ res.sens <- run.sensitivity(full = res1,
 # Calculate the robustness index
 robustness.index(sens = res.sens, threshold = 0.28)
 
+\dontshow{
+closeAllConnections()
+}
+
 }
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]

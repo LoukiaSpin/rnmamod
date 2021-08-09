@@ -41,8 +41,12 @@
 #' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
 #'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
 #'
-#' # Create the league heatmap
+#' # Create the integrated rankograms and SUCRA curves
 #' rankosucra.plot(full = res1, drug.names = interv.names)
+#'
+#' \dontshow{
+#' closeAllConnections()
+#' }
 #'
 #' @export
 rankosucra.plot <- function(full, drug.names){

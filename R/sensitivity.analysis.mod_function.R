@@ -97,6 +97,10 @@
 #'                 n.burnin = 1000,
 #'                 n.thin = 1)
 #'
+#' \dontshow{
+#' closeAllConnections()
+#' }
+#'
 #' @export
 run.sensitivity <- function(full, assumption, mean.scenarios, var.misspar, n.chains, n.iter, n.burnin, n.thin){
 

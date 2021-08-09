@@ -89,7 +89,7 @@
 #' data("nma.baker2009")
 #'
 #' # Show the first six trials of the dataset (one-trial-per-row format)
-#' View(nma.baker2009)
+#' head(nma.baker2009)
 #'
 #' # Perform a random-effects network meta-analysis
 #' res1 <- run.model(data = nma.baker2009,
@@ -116,6 +116,10 @@
 #'             n.iter = 10000,
 #'             n.burnin = 1000,
 #'             n.thin = 1)
+#'
+#' \dontshow{
+#' closeAllConnections()
+#' }
 #'
 #' @export
 run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.burnin, n.thin){

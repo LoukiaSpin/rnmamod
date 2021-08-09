@@ -61,6 +61,10 @@
 #' # Crate the barplot for the comparison 'tiotropium versus salmeterol'
 #' KLD.barplot(robust = robust, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
 #'
+#' \dontshow{
+#' closeAllConnections()
+#' }
+#'
 #' @export
 KLD.barplot <- function(robust, compar, drug.names){
 

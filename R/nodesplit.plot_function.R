@@ -75,6 +75,10 @@
 #' # Plot the results from the consistency model and the node-splitting approach
 #' nodesplit.plot(full = res1, node = node1, drug.names = interv.names)
 #'
+#' \dontshow{
+#' closeAllConnections()
+#' }
+#'
 #' @export
 nodesplit.plot <- function(full, node, drug.names) {
 

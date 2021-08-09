@@ -57,6 +57,10 @@ interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fl
 # Plot the results from both models
 series.meta.plot(full = res1, meta = meta1, drug.names = interv.names)
 
+\dontshow{
+closeAllConnections()
+}
+
 }
 \seealso{
 \code{\link{run.model}}, \code{\link{run.series.meta}}

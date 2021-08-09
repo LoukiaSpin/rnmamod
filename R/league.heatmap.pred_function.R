@@ -56,6 +56,10 @@
 #' # Create the league heatmap
 #' league.heatmap.pred(full = res1, drug.names = interv.names)
 #'
+#' \dontshow{
+#' closeAllConnections()
+#' }
+#'
 #' @export
 league.heatmap.pred <- function(full, drug.names){
 

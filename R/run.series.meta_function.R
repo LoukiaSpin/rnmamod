@@ -57,6 +57,10 @@
 #' # Run separate random-effects pairwise meta-analyses
 #' run.series.meta(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
+#' \dontshow{
+#' closeAllConnections()
+#' }
+#'
 #' @export
 run.series.meta <- function(full, n.chains, n.iter, n.burnin, n.thin) {
 

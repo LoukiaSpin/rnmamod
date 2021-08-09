@@ -106,6 +106,10 @@ run.sensitivity(full = res1,
                 n.burnin = 1000,
                 n.thin = 1)
 
+\dontshow{
+closeAllConnections()
+}
+
 }
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]

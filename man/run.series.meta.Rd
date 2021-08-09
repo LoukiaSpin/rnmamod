@@ -64,6 +64,10 @@ res1 <- run.model(data = nma.baker2009,
 # Run separate random-effects pairwise meta-analyses
 run.series.meta(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 
+\dontshow{
+closeAllConnections()
+}
+
 }
 \references{
 Gelman A, Rubin DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457--472. [\doi{10.1214/ss/1177011136}]

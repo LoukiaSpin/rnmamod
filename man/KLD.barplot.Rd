@@ -64,6 +64,10 @@ interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fl
 # Crate the barplot for the comparison 'tiotropium versus salmeterol'
 KLD.barplot(robust = robust, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
 
+\dontshow{
+closeAllConnections()
+}
+
 }
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
