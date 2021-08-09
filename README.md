@@ -35,7 +35,7 @@ Create the network plot:
 interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
                    salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
 
-netplot(data = nma.baker2009, drug.names = interv.names)
+netplot(data = nma.baker2009, drug.names = interv.names, text.cex = 1.5)
 ```
 
 <div style="text-align: center"> <img src="figures/Network Baker.png" width="650" height="500" align="center"></div>
