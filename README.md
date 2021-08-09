@@ -73,4 +73,4 @@ rankosucra.plot(full = res, drug.names = interv.names)
 
 <div style="text-align: center"> <img src="figures/Sucra Baker.png" width="750" height="600" align="center"></div>
 <br/>
-<div style="text-align: right"> <img src="figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="350" height="250" align="right"></div>
+<div style="text-align: right"> <img src="figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="150" height="150" align="right"></div>
