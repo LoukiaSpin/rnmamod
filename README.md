@@ -15,7 +15,7 @@ Run the following code to install rnmamod:
 
 ## Example
 
-We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that includes 21 trials comparing seven pharmacologic interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. The exacerbation of COPD is the analysed binary outcome.
+We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that includes 21 trials comparing seven pharmacologic interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. The prevention of COPD exacerbation is the analysed binary outcome.
 
 ``` r
 head(nma.baker2009)
