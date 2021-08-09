@@ -38,21 +38,27 @@ interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fl
 netplot(data = nma.baker2009, drug.names = interv.names)
 ```
 
-<img src="man/figures/network baker.png" align="right" width="120" />
-
-The following code performs a Bayesian random-effects network meta-analysis under the missing at random assumption and using intervention-specific informative missingness odds ratio in the logarithmic scale:
+The following code performs a Bayesian random-effects network meta-analysis under the missing at random assumption and using intervention-specific informative missingness odds ratio (`IDE-ARM´) in the logarithmic scale:
 
 ``` r
 run.model(data = nma.baker2009,
           measure = "OR",
-           model = "RE",
-           assumption = "IDE-ARM",
-           heter.prior = list("halfnormal", 0, 1),
-           mean.misspar = 0,
-           var.misspar = 1,
-           D = 1,
-           n.chains = 3,
-           n.iter = 10000,
-           n.burnin = 1000,
-           n.thin = 1)
+          model = "RE",
+          assumption = "IDE-ARM",
+          heter.prior = list("halfnormal", 0, 1),
+          mean.misspar = 0,
+          var.misspar = 1,
+          D = 0,
+          n.chains = 3,
+          n.iter = 10000,
+          n.burnin = 1000,
+          n.thin = 1)
 ```
+
+Illustrate all possible pairwise comparisons of the interventions using a league heatmap:
+
+``` r
+league.heatmap.pred(full = res1, drug.names = interv.names)
+```
+
+Illustrate the hierarchy of the interventions in the network using integrated rankograms and SUCRA (surfacw under the cumulative ranking) curves
