@@ -28,6 +28,16 @@ head(nma.baker2009)
 #>         Rennard, 2001  6  8 NA NA  72  65 NA NA 22 29 NA NA 132 135 NA NA
 ```
 
+Create the network plot:
+
+``` r
+# The names of the interventions in the order they appear in the dataset
+interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+                   salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
+
+netplot(data = nma.baker2009, drug.names = interv.names)
+```
+
 The following code performs a Bayesian random-effects network meta-analysis under the missing at random assumption and using intervention-specific informative missingness odds ratio in the logarithmic scale:
 
 ``` r
