@@ -23,7 +23,7 @@
 #' @seealso \code{\link{run.model}}, \code{\link{run.series.meta}}
 #'
 #' @examples
-#' data("nma.baker2009.RData")
+#' data("nma.baker2009")
 #'
 #' # Perform a random-effects network meta-analysis
 #' res1 <- run.model(data = nma.baker2009,

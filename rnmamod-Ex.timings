@@ -1,0 +1,7 @@
+name	user	system	elapsed
+KLD.barplot	628.70	  2.75	644.75	
+UME.plot	75.42	 0.65	79.73	
+balloon.plot.mod	846.32	  2.83	867.67	
+forestplot.ref	55.09	 0.92	56.86	
+heatmap.mod.network	0.44	0.03	3.05	
+heatmap.mod.trial	0.25	0.00	0.31	
