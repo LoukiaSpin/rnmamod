@@ -38,7 +38,7 @@ interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fl
 netplot(data = nma.baker2009, drug.names = interv.names)
 ```
 
-The following code performs a Bayesian random-effects network meta-analysis under the missing at random assumption and using intervention-specific informative missingness odds ratio (`IDE-ARM´) in the logarithmic scale:
+The following code performs a Bayesian random-effects network meta-analysis under the missing at random assumption and using intervention-specific informative missingness odds ratio (`IDE-ARM`) in the logarithmic scale:
 
 ``` r
 res <- run.model(data = nma.baker2009,
