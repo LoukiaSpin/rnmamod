@@ -49,13 +49,13 @@
 #'                   mean.misspar = 0,
 #'                   var.misspar = 1,
 #'                   D = 1,
-#'                   n.chains = 3,
-#'                   n.iter = 10000,
-#'                   n.burnin = 1000,
+#'                   n.chains = 2,
+#'                   n.iter = 1000,
+#'                   n.burnin = 100,
 #'                   n.thin = 1)
 #'
 #' # Run separate random-effects pairwise meta-analyses
-#' run.series.meta(full = res1, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
+#' run.series.meta(full = res1, n.chains = 2, n.iter = 1000, n.burnin = 100, n.thin = 1)
 #'
 #' \dontshow{
 #' closeAllConnections()

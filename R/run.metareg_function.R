@@ -100,9 +100,9 @@
 #'                   mean.misspar = 0,
 #'                   var.misspar = 1,
 #'                   D = 1,
-#'                   n.chains = 3,
-#'                   n.iter = 10000,
-#'                   n.burnin = 1000,
+#'                   n.chains = 2,
+#'                   n.iter = 1000,
+#'                   n.burnin = 100,
 #'                   n.thin = 1)
 #'
 #' # Whether a trial is placebo-controlled.
@@ -112,9 +112,9 @@
 #' run.metareg(full = res1,
 #'             covariate = covar.binary,
 #'             covar.assumption = "exchangeable",
-#'             n.chains = 3,
-#'             n.iter = 10000,
-#'             n.burnin = 1000,
+#'             n.chains = 2,
+#'             n.iter = 1000,
+#'             n.burnin = 100,
 #'             n.thin = 1)
 #'
 #' \dontshow{

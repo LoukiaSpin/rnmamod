@@ -46,9 +46,9 @@
 #'                   mean.misspar = 0,
 #'                   var.misspar = 1,
 #'                   D = 1,
-#'                   n.chains = 3,
-#'                   n.iter = 10000,
-#'                   n.burnin = 1000,
+#'                   n.chains = 2,
+#'                   n.iter = 1000,
+#'                   n.burnin = 100,
 #'                   n.thin = 1)
 #'
 #' # Obtain the diagnostic plots and check convergence for all monitored parameters using the R.hat
