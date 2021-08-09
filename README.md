@@ -61,4 +61,8 @@ Illustrate all possible pairwise comparisons of the interventions using a league
 league.heatmap.pred(full = res1, drug.names = interv.names)
 ```
 
-Illustrate the hierarchy of the interventions in the network using integrated rankograms and SUCRA (surfacw under the cumulative ranking) curves
+Illustrate the hierarchy of the interventions in the network using integrated rankograms and SUCRA (surfacw under the cumulative ranking) curves:
+
+``` r
+rankosucra.plot(full = res1, drug.names = interv.names)
+```
