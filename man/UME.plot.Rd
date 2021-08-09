@@ -53,6 +53,7 @@ The DIC of the consistency model is compared with the DIC of the unrelated mean 
   \code{UME.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 }
 \examples{
+
 data("nma.baker2009")
 
 # Perform a random-effects network meta-analysis
@@ -78,6 +79,10 @@ interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fl
 
 # Plot the results from the consistency model and the node-splitting approach
 UME.plot(full = res1, ume = ume1, drug.names = interv.names)
+
+\dontshow{
+closeAllConnections()
+}
 
 }
 \references{

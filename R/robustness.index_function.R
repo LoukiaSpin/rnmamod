@@ -80,7 +80,7 @@ robustness.index <- function(sens, threshold){
   n.scenar <- length(sens$scenarios)^2
   measure <- sens$measure
 
-  if (is.na(sens)) {
+  if (any(is.na(sens))) {
     stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
     return(NA)
   }

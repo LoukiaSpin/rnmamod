@@ -53,6 +53,7 @@
 #' Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616. [\doi{10.1111/1467-9868.00353}]
 #'
 #' @examples
+#'
 #' data("nma.baker2009")
 #'
 #' # Perform a random-effects network meta-analysis
@@ -78,6 +79,10 @@
 #'
 #' # Plot the results from the consistency model and the node-splitting approach
 #' UME.plot(full = res1, ume = ume1, drug.names = interv.names)
+#'
+#' \dontshow{
+#' closeAllConnections()
+#' }
 #'
 #' @export
 UME.plot <- function(full, ume, drug.names, threshold) {

@@ -65,7 +65,7 @@
 KLD.barplot <- function(robust, compar, drug.names){
 
 
-  if (is.na(robust)) {
+  if (any(is.na(robust))) {
     stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
   }
 

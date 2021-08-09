@@ -58,6 +58,13 @@ heatmap.mod.network <- function(data, drug.names){
   ns <- length(m[, 1])
 
 
+  drug.names <- if (missing(drug.names)) {
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in argument 'data' is used as intervention names", "\033[0m", "\n")))
+    as.character(1:nt)
+  } else {
+    drug.names
+  }
+
   ## Turn arm-level to contrast-level dataset
   (pair <- pairwise(as.list(t), event = as.list(m), n = as.list(n), data = cbind(t, m, n), studlab = 1:ns)[, c(3:6, 8, 7, 9)])
   colnames(pair) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")

@@ -75,7 +75,7 @@
 #' @export
 balloon.plot.mod <- function(sens, compar, drug.names){
 
-  if (is.na(sens)) {
+  if (any(is.na(sens))) {
     stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
   }
 
