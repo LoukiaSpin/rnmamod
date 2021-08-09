@@ -70,3 +70,5 @@ Illustrate the hierarchy of the interventions in the network using integrated ra
 ``` r
 rankosucra.plot(full = res, drug.names = interv.names)
 ```
+
+<div style="text-align: center"> <img src="figures/Sucra Baker.png" width="750" height="600" align="center"></div>
