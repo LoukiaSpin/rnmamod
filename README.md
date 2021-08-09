@@ -56,8 +56,7 @@ res <- run.model(data = nma.baker2009,
                  n.burnin = 1000,
                  n.thin = 1)
 ```
-<br/><br/>
-
+<br/>
 Illustrate all possible pairwise comparisons of the interventions using a league heatmap:
 
 ``` r
@@ -65,8 +64,8 @@ league.heatmap(full = res, drug.names = interv.names)
 ```
 
 <div style="text-align: center"> <img src="figures/League Baker.png" width="750" height="600" align="center"></div>
-
-Illustrate the hierarchy of the interventions in the network using integrated rankograms and SUCRA (surfacw under the cumulative ranking) curves:
+<br/>
+The following code illustrates the hierarchy of the interventions in the network using integrated rankograms and SUCRA (surfacw under the cumulative ranking) curves:
 
 ``` r
 rankosucra.plot(full = res, drug.names = interv.names)
