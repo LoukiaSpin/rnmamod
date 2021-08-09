@@ -15,5 +15,32 @@ Run the following code to install rnmamod:
 
 ## Example
 
+We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that includes 21 trials comparing seven pharmacologic interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. The exacerbation of COPD is the analysed binary outcome.
+
+``` r
+head(nma.baker2009)
+#>                 study t1 t2 t3 t4  r1  r2 r3 r4 m1 m2 m3 m4  n1  n2 n3 n4
+#> Llewellyn-Jones, 1996  3  8 NA NA   8   4 NA NA  0  1 NA NA   8   8 NA NA
+#>        Paggiaro, 1998  3  8 NA NA  78  61 NA NA 19 27 NA NA 142 139 NA NA
+#>          Mahler, 1999  6  8 NA NA  98  73 NA NA  9 23 NA NA 135 143 NA NA
+#>        Casaburi, 2000  7  8 NA NA 222 132 NA NA 12 18 NA NA 279 191 NA NA
+#>       van Noord, 2000  6  8 NA NA  29  24 NA NA  7  8 NA NA  47  50 NA NA
+#>         Rennard, 2001  6  8 NA NA  72  65 NA NA 22 29 NA NA 132 135 NA NA
+```
+
 The following code performs a Bayesian random-effects network meta-analysis under the missing at random assumption and using intervention-specific informative missingness odds ratio in the logarithmic scale:
 
+``` r
+run.model(data = nma.baker2009,
+          measure = "OR",
+           model = "RE",
+           assumption = "IDE-ARM",
+           heter.prior = list("halfnormal", 0, 1),
+           mean.misspar = 0,
+           var.misspar = 1,
+           D = 1,
+           n.chains = 3,
+           n.iter = 10000,
+           n.burnin = 1000,
+           n.thin = 1)
+```
