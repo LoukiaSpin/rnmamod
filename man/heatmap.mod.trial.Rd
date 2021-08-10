@@ -42,7 +42,9 @@ head(nma.schwingshackl2014)
 interv.names <- c("aerobic", "resistance", "combined training")
 
 # Create the heatmap
-heatmap.mod.trial(data = nma.schwingshackl2014, trial.names = nma.schwingshackl2014$study, drug.names = interv.names)
+heatmap.mod.trial(data = nma.schwingshackl2014,
+                  trial.names = nma.schwingshackl2014$study,
+                  drug.names = interv.names)
 
 }
 \references{

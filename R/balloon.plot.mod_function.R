@@ -72,7 +72,6 @@
 #' # Create the enhanced balloon plot for the comparison 'tiotropium versus salmeterol'
 #' balloon.plot.mod(sens = res.sens, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
 #' }
-#' balloon.plot.mod(sens = sens.res.baker2009, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
 #'
 #' @export
 balloon.plot.mod <- function(sens, compar, drug.names){

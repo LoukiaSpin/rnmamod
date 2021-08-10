@@ -61,13 +61,6 @@
 #' forestplot.ref(full = res, drug.names = interv.names)
 #' }
 #'
-#' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("placebo", "budesodine plus formoterol", "fluticasone", "fluticasone plus
-#'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "budesodine")
-#'
-#' # Create the league heatmap
-#' forestplot.ref(full = nma.res.baker2009, drug.names = interv.names)
-#'
 #' @export
 forestplot.ref <- function(full, drug.names) {
 
