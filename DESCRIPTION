@@ -18,7 +18,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-5732-4044")))
 Maintainer: <Spineli.Loukia@mh-hannover.de>
 Description: Perform pairwise and network meta-analysis for aggregate binary or continuous outcome
-data, while adjusting for missing participant outcome data.
+    data, while adjusting for missing participant outcome data.
 Depends: 
     R (>= 3.5.0)
 License: GPL-3 + file LICENSE
