@@ -23,34 +23,32 @@
 #' @seealso \code{\link{run.model}}, \code{\link{run.series.meta}}
 #'
 #' @examples
-#' data("nma.baker2009")
+#' data("nma.dogliotti2014")
 #'
+#' \dontrun{
 #' # Perform a random-effects network meta-analysis
-#' res1 <- run.model(data = nma.baker2009,
-#'                   measure = "OR",
-#'                   model = "RE",
-#'                   assumption = "IDE-ARM",
-#'                   heter.prior = list("halfnormal", 0, 1),
-#'                   mean.misspar = 0,
-#'                   var.misspar = 1,
-#'                   D = 1,
-#'                   n.chains = 2,
-#'                   n.iter = 1000,
-#'                   n.burnin = 100,
-#'                   n.thin = 1)
+#' res <- run.model(data = dogliotti2014,
+#'                  measure = "OR",
+#'                  model = "RE",
+#'                  assumption = "IDE-ARM",
+#'                  heter.prior = list("halfnormal", 0, 1),
+#'                  mean.misspar = 0,
+#'                  var.misspar = 1,
+#'                  D = 1,
+#'                  n.chains = 3,
+#'                  n.iter = 10000,
+#'                  n.burnin = 1000,
+#'                  n.thin = 1)
 #'
 #' # Run separate random-effects pairwise meta-analyses
-#' meta1 <- run.series.meta(full = res1, n.chains = 2, n.iter = 1000, n.burnin = 100, n.thin = 1)
+#' meta <- run.series.meta(full = res, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
-#'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
+#' interv.names <- c("placebo", "aspirin", "aspirin plus clopidogrel", "dabigatran 110 mg",
+#'                   "dabigatran 150 mg", "rivaroxaban", "vitamin K antagonist", "apixaban")
 #'
 #' # Plot the results from both models
-#' series.meta.plot(full = res1, meta = meta1, drug.names = interv.names)
-#'
-#' \dontshow{
-#' closeAllConnections()
+#' series.meta.plot(full = res, meta = meta, drug.names = interv.names)
 #' }
 #'
 #' @export

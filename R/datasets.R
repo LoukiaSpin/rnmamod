@@ -118,8 +118,8 @@ NULL
 #'
 #' @format A data frame with 29 rows of arm-based data and 11 columns (maximum number of 2 arms).
 #'
-#' @details The interventions have been coded as follows: 1, placebo plus levodopa; 2, dopamine agonist plus levodopa;
-#'   3, catechol-O-methyl transferase inhibitors plus levodopa; and 4, monoamine oxidase type B inhibitors plus levodopa.
+#' @details The interventions have been coded as follows: 1, placebo plus levodopa (PBO+LD); 2, dopamine agonist plus levodopa (DA+LD);
+#'   3, catechol-O-methyl transferase inhibitors plus levodopa (COMBI+LD); and 4, monoamine oxidase type B inhibitors plus levodopa (MAOBI+LD).
 #'
 #' @docType data
 #' @keywords datasets

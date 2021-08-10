@@ -57,27 +57,25 @@
 #' Gelman A, Rubin DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457--472. [\doi{10.1214/ss/1177011136}]
 #'
 #' @examples
-#' data("nma.liu2013")
+#' data("nma.baker2009")
 #'
-#' # Perform a random-effects network meta-analysis (consistency model)
-#' res1 <- run.model(data = nma.liu2013,
-#'                   measure = "OR",
-#'                   model = "RE",
-#'                   assumption = "IDE-ARM",
-#'                   heter.prior = list("halfnormal", 0, 1),
-#'                   mean.misspar = 0,
-#'                   var.misspar = 1,
-#'                   D = 1,
-#'                   n.chains = 2,
-#'                   n.iter = 1000,
-#'                   n.burnin = 100,
-#'                   n.thin = 1)
+#' \dontrun{
+#' # Perform a random-effects network meta-analysis
+#' res <- run.model(data = nma.baker2009,
+#'                  measure = "OR",
+#'                  model = "RE",
+#'                  assumption = "IDE-ARM",
+#'                  heter.prior = list("halfnormal", 0, 1),
+#'                  mean.misspar = 0,
+#'                  var.misspar = 1,
+#'                  D = 1,
+#'                  n.chains = 3,
+#'                  n.iter = 10000,
+#'                  n.burnin = 1000,
+#'                  n.thin = 1)
 #'
 #' # Run random-effects network meta-analysis with node-splitting approach
-#' run.nodesplit(full = res1, n.chains = 2, n.iter = 1000, n.burnin = 100, n.thin = 1)
-#'
-#' \dontshow{
-#' closeAllConnections()
+#' run.nodesplit(full = res, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #' }
 #'
 #' @export

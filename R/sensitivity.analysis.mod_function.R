@@ -69,18 +69,30 @@
 #' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. Stat Sci. 1992;7:457–472.
 #'
 #' @examples
-#' data("nma.res.baker2009")
+#' data("nma.baker2009")
+#'
+#' \dontrun{
+#' # Perform a random-effects network meta-analysis
+#' res <- run.model(data = nma.baker2009,
+#'                  measure = "OR",
+#'                  model = "RE",
+#'                  assumption = "IDE-ARM",
+#'                  heter.prior = list("halfnormal", 0, 1),
+#'                  mean.misspar = 0,
+#'                  var.misspar = 1,
+#'                  D = 1,
+#'                  n.chains = 3,
+#'                  n.iter = 10000,
+#'                  n.burnin = 1000,
+#'                  n.thin = 1)
 #'
 #' # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
-#' run.sensitivity(full = nma.res.baker2009,
+#' run.sensitivity(full = res,
 #'                 var.misspar = 1,
-#'                 n.chains = 2,
-#'                 n.iter = 1000,
-#'                 n.burnin = 100,
+#'                 n.chains = 3,
+#'                 n.iter = 10000,
+#'                 n.burnin = 1000,
 #'                 n.thin = 1)
-#'
-#' \dontshow{
-#' closeAllConnections()
 #' }
 #'
 #' @export

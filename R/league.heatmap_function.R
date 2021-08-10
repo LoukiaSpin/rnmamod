@@ -33,31 +33,29 @@
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
 #'
 #' @examples
-#' data("nma.baker2009")
+#' data("nma.liu2013")
 #'
+#' \dontrun{
 #' # Perform a random-effects network meta-analysis
-#' res1 <- run.model(data = nma.baker2009,
-#'                   measure = "OR",
-#'                   model = "RE",
-#'                   assumption = "IDE-ARM",
-#'                   heter.prior = list("halfnormal", 0, 1),
-#'                   mean.misspar = 0,
-#'                   var.misspar = 1,
-#'                   D = 1,
-#'                   n.chains = 2,
-#'                   n.iter = 1000,
-#'                   n.burnin = 100,
-#'                   n.thin = 1)
+#' res <- run.model(data = nma.liu2013,
+#'                  measure = "OR",
+#'                  model = "RE",
+#'                  assumption = "IDE-ARM",
+#'                  heter.prior = list("halfnormal", 0, 1),
+#'                  mean.misspar = 0,
+#'                  var.misspar = 1,
+#'                  D = 1,
+#'                  n.chains = 3,
+#'                  n.iter = 10000,
+#'                  n.burnin = 1000,
+#'                  n.thin = 1)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
-#'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
+#' interv.names <- c("placebo", "pramipexole", "serotonin–norepinephrine reuptake inhibitor",
+#'                   "serotonin reuptake inhibitor", "tricyclic antidepressant", "pergolide")
 #'
 #' # Create the league heatmap
-#' league.heatmap(full = res1, drug.names = interv.names)
-#'
-#' \dontshow{
-#' closeAllConnections()
+#' league.heatmap(full = res, drug.names = interv.names)
 #' }
 #'
 #' @export

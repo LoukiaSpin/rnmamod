@@ -24,23 +24,23 @@
 #' New York: Churchill Livingstone 1997. ISBN: 0-443-05686-2.
 #'
 #' @examples
-#' data("nma.liu2013")
+#' data("nma.stowe2011")
 #'
 #' # Return the first six trials of the dataset
-#' head(nma.liu2013)
-#' #            study t1 t2 t3 r1 r2 r3 m1 m2 m3  n1  n2 n3
-#' #    Richard, 2012  1  3  4 15 16 23  6  8  4  39  42 34
-#' #     Barone, 2010  1  2 NA 27 38 NA 19 20 NA 152 144 NA
-#' # Weinbtraub, 2010  1  3 NA  2  5 NA  6  6 NA  27  28 NA
-#' #      Menza, 2009  1  4  5  4  2  9  6  7  5  17  18 17
-#' #      Devos, 2008  1  4  5  4  8 11  0  2  1  16  15 17
-#' #   Antonini, 2006  4  5 NA 10  8 NA  4  4 NA  16  15 NA
+#' head(nma.stowe2011)
+#' #              study t1 t2    y1    y2  sd1  sd2 m1 m2  n1  n2
+#' #   DA (B): Interntl  1  2 -0.30 -1.20 4.36 4.32  7  3  83  84
+#' #      DA (C): Spain  1  2 -2.47 -3.33 3.91 3.48  8  9  20  23
+#' #         DA (C): UK  1  2 -0.70 -2.00 2.24 2.33  2  1  18  19
+#' #      DA (C): USA 1  1  2 -0.77 -2.08 3.32 3.21 19 34  65 123
+#' # DA (Pe): N America  1  2 -0.20 -1.80 4.79 4.81  0  0 187 189
+#' # DA (Pr): CLEOPATRA  1  2 -0.90 -2.80 5.00 2.83  1  1 101 201
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("placebo", "pramipexole", "SNRI", "SSRI", "TCA", "pergolide")
+#' interv.names <- c("PBO+LD", "DA+LD", "COMTI+LD", "MAOBI+LD")
 #'
 #' # Create the heatmap
-#' heatmap.mod.network(data = nma.liu2013, drug.names = interv.names)
+#' heatmap.mod.network(data = nma.stowe2011, drug.names = interv.names)
 #'
 #' @export
 heatmap.mod.network <- function(data, drug.names){

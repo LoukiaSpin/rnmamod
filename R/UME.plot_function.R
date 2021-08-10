@@ -53,35 +53,32 @@
 #' Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616. [\doi{10.1111/1467-9868.00353}]
 #'
 #' @examples
+#' data("nma.liu2013")
 #'
-#' data("nma.baker2009")
+#' \dontrun{
+#' # Perform a random-effects network meta-analysis (consistency model)
+#' res <- run.model(data = nma.liu2013,
+#'                  measure = "OR",
+#'                  model = "RE",
+#'                  assumption = "IDE-ARM",
+#'                  heter.prior = list("halfnormal", 0, 1),
+#'                  mean.misspar = 0,
+#'                  var.misspar = 1,
+#'                  D = 1,
+#'                  n.chains = 3,
+#'                  n.iter = 10000,
+#'                  n.burnin = 1000,
+#'                  n.thin = 1)
 #'
-#' # Perform a random-effects network meta-analysis
-#' res1 <- run.model(data = nma.baker2009,
-#'                   measure = "OR",
-#'                   model = "RE",
-#'                   assumption = "IDE-ARM",
-#'                   heter.prior = list("halfnormal", 0, 1),
-#'                   mean.misspar = 0,
-#'                   var.misspar = 1,
-#'                   D = 1,
-#'                   n.chains = 2,
-#'                   n.iter = 1000,
-#'                   n.burnin = 100,
-#'                   n.thin = 1)
-#'
-#' # Run random-effects network meta-analysis with node-splitting approachs
-#' ume1 <- run.UME(full = res1, n.chains = 2, n.iter = 1000, n.burnin = 100, n.thin = 1)
+#' # Run random-effects network meta-analysis with node-splitting approach
+#' ume <- run.UME(full = res, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
-#'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
+#' interv.names <- c("placebo", "pramipexole", "serotonin–norepinephrine reuptake inhibitor",
+#'                   "serotonin reuptake inhibitor", "tricyclic antidepressant", "pergolide")
 #'
 #' # Plot the results from the consistency model and the node-splitting approach
-#' UME.plot(full = res1, ume = ume1, drug.names = interv.names)
-#'
-#' \dontshow{
-#' closeAllConnections()
+#' UME.plot(full = res, ume = ume, drug.names = interv.names)
 #' }
 #'
 #' @export

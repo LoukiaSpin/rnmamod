@@ -26,31 +26,39 @@
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
 #'
 #' @examples
-#' data("nma.baker2009")
+#' data("nma.liu2013")
 #'
+#' # Show the first six trials of the dataset (one-trial-per-row format)
+#' head(nma.liu2013)
+#' #            study t1 t2 t3 r1 r2 r3 m1 m2 m3  n1  n2 n3
+#' #    Richard, 2012  1  3  4 15 16 23  6  8  4  39  42 34
+#' #     Barone, 2010  1  2 NA 27 38 NA 19 20 NA 152 144 NA
+#' # Weinbtraub, 2010  1  3 NA  2  5 NA  6  6 NA  27  28 NA
+#' #      Menza, 2009  1  4  5  4  2  9  6  7  5  17  18 17
+#' #      Devos, 2008  1  4  5  4  8 11  0  2  1  16  15 17
+#' #   Antonini, 2006  4  5 NA 10  8 NA  4  4 NA  16  15 NA
+#'
+#' \dontrun{
 #' # Perform a random-effects network meta-analysis
-#' res1 <- run.model(data = nma.baker2009,
-#'                   measure = "OR",
-#'                   model = "RE",
-#'                   assumption = "IDE-ARM",
-#'                   heter.prior = list("halfnormal", 0, 1),
-#'                   mean.misspar = 0,
-#'                   var.misspar = 1,
-#'                   D = 1,
-#'                   n.chains = 2,
-#'                   n.iter = 1000,
-#'                   n.burnin = 100,
-#'                   n.thin = 1)
+#' res <- run.model(data = nma.liu2013,
+#'                  measure = "OR",
+#'                  model = "RE",
+#'                  assumption = "IDE-ARM",
+#'                  heter.prior = list("halfnormal", 0, 1),
+#'                  mean.misspar = 0,
+#'                  var.misspar = 1,
+#'                  D = 1,
+#'                  n.chains = 3,
+#'                  n.iter = 10000,
+#'                  n.burnin = 1000,
+#'                  n.thin = 1)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
-#'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
+#' interv.names <- c("placebo", "pramipexole", "serotonin–norepinephrine reuptake inhibitor",
+#'                   "serotonin reuptake inhibitor", "tricyclic antidepressant", "pergolide")
 #'
 #' # Create the league heatmap
-#' forestplot.ref(full = res1, drug.names = interv.names)
-#'
-#' \dontshow{
-#' closeAllConnections()
+#' forestplot.ref(full = res, drug.names = interv.names)
 #' }
 #'
 #' @export

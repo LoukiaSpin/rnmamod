@@ -23,23 +23,23 @@
 #' New York: Churchill Livingstone 1997. ISBN: 0-443-05686-2.
 #'
 #' @examples
-#' data("nma.liu2013")
+#' data("nma.schwingshackl2014")
 #'
 #' # Return the first six trials of the dataset
-#' head(nma.liu2013)
-#' #            study t1 t2 t3 r1 r2 r3 m1 m2 m3  n1  n2 n3
-#' #    Richard, 2012  1  3  4 15 16 23  6  8  4  39  42 34
-#' #     Barone, 2010  1  2 NA 27 38 NA 19 20 NA 152 144 NA
-#' # Weinbtraub, 2010  1  3 NA  2  5 NA  6  6 NA  27  28 NA
-#' #      Menza, 2009  1  4  5  4  2  9  6  7  5  17  18 17
-#' #      Devos, 2008  1  4  5  4  8 11  0  2  1  16  15 17
-#' #   Antonini, 2006  4  5 NA 10  8 NA  4  4 NA  16  15 NA
+#' head(nma.schwingshackl2014)
+#' #          study t1 t2 t3    y1    y2 y3  sd1  sd2 sd3 m1 m2 m3 n1 n2 n3
+#' #   Bacchi, 2012  1  2 NA -0.40 -0.35 NA 0.44 0.48  NA  1  1 NA 20 20 NA
+#' #       Ku, 2010  1  2 NA -0.60 -0.30 NA 1.20 0.90  NA  0  0 NA 15 13 NA
+#' #      Moe, 2011  1  2 NA -0.53 -0.35 NA 0.45 0.40  NA  1  2 NA 13 13 NA
+#' #       Ng, 2010  1  2 NA -0.30 -0.40 NA 0.88 0.60  NA  0  0 NA 30 30 NA
+#' #   Sukala, 2012  1  2 NA -0.10 -0.10 NA 0.51 0.93  NA  4  4 NA 13 13 NA
+#' # Balducci, 2009  1  3 NA  6.34  6.65 NA 0.94 1.08  NA  0  0 NA 20 22 NA
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("placebo", "pramipexole", "SNRI", "SSRI", "TCA", "pergolide")
+#' interv.names <- c("aerobic", "resistance", "combined training")
 #'
 #' # Create the heatmap
-#' heatmap.mod.trial(data = nma.liu2013, trial.names = nma.liu2013$study, drug.names = interv.names)
+#' heatmap.mod.trial(data = nma.schwingshackl2014, trial.names = nma.schwingshackl2014$study, drug.names = interv.names)
 #'
 #' @export
 heatmap.mod.trial <- function(data, trial.names, drug.names) {

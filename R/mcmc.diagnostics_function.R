@@ -35,27 +35,25 @@
 #' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457--472. [\doi{10.1214/ss/1177011136}]
 #'
 #' @examples
-#' data("nma.baker2009")
+#' data("nma.liu2013")
 #'
+#' \dontrun{
 #' # Perform a random-effects network meta-analysis
-#' res1 <- run.model(data = nma.baker2009,
-#'                   measure = "OR",
-#'                   model = "RE",
-#'                   assumption = "IDE-ARM",
-#'                   heter.prior = list("halfnormal", 0, 1),
-#'                   mean.misspar = 0,
-#'                   var.misspar = 1,
-#'                   D = 1,
-#'                   n.chains = 2,
-#'                   n.iter = 1000,
-#'                   n.burnin = 100,
-#'                   n.thin = 1)
+#' res <- run.model(data = nma.liu2013,
+#'                  measure = "OR",
+#'                  model = "RE",
+#'                  assumption = "IDE-ARM",
+#'                  heter.prior = list("halfnormal", 0, 1),
+#'                  mean.misspar = 0,
+#'                  var.misspar = 1,
+#'                  D = 1,
+#'                  n.chains = 3,
+#'                  n.iter = 10000,
+#'                  n.burnin = 1000,
+#'                  n.thin = 1)
 #'
 #' # Obtain the diagnostic plots and check convergence for all monitored parameters using the R.hat
-#' mcmc.diagnostics(net = res1, par = c("tau", "EM[2,1]", "EM.pred[2,1]"))
-#'
-#' \dontshow{
-#' closeAllConnections()
+#' mcmc.diagnostics(net = res, par = c("tau", "EM[2,1]", "EM.pred[2,1]"))
 #' }
 #'
 #' @export

@@ -33,29 +33,29 @@
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
 #'
 #' @examples
-#' data("nma.liu2013")
+#' data("nma.baker2009")
 #'
+#' \dontrun{
 #' # Perform a random-effects network meta-analysis
-#' res1 <- run.model(data = nma.liu2013,
-#'                   measure = "OR",
-#'                   model = "RE",
-#'                   assumption = "IDE-ARM",
-#'                   heter.prior = list("halfnormal", 0, 1),
-#'                   mean.misspar = 0,
-#'                   var.misspar = 1,
-#'                   D = 1,
-#'                   n.chains = 2,
-#'                   n.iter = 1000,
-#'                   n.burnin = 100,
-#'                   n.thin = 1)
+#' res <- run.model(data = nma.baker2009,
+#'                  measure = "OR",
+#'                  model = "RE",
+#'                  assumption = "IDE-ARM",
+#'                  heter.prior = list("halfnormal", 0, 1),
+#'                  mean.misspar = 0,
+#'                  var.misspar = 1,
+#'                  D = 1,
+#'                  n.chains = 3,
+#'                  n.iter = 10000,
+#'                  n.burnin = 1000,
+#'                  n.thin = 1)
 #'
 #' # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
-#' res.sens <- run.sensitivity(full = res1,
-#'                             assumption = "IDE-ARM",
+#' res.sens <- run.sensitivity(full = res,
 #'                             var.misspar = 1,
-#'                             n.chains = 2,
-#'                             n.iter = 1000,
-#'                             n.burnin = 100,
+#'                             n.chains = 3,
+#'                             n.iter = 10000,
+#'                             n.burnin = 1000,
 #'                             n.thin = 1)
 #'
 #' # Calculate the robustness index
@@ -67,9 +67,6 @@
 #'
 #' # Create the heatmap of robustness
 #' heatmap.robustness(robust = robust, drug.names = interv.names)
-#'
-#' \dontshow{
-#' closeAllConnections()
 #' }
 #'
 #' @export
