@@ -17,8 +17,8 @@ Authors@R:
            role = "ctb",
            comment = c(ORCID = "0000-0002-5732-4044")))
 Maintainer: <Spineli.Loukia@mh-hannover.de>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Perform pairwise and network meta-analysis for aggregate binary or continuous outcome
+data, while adjusting for missing participant outcome data.
 Depends: 
     R (>= 3.5.0)
 License: GPL-3 + file LICENSE
@@ -44,7 +44,6 @@ Imports:
     stats,
     utils,
     writexl
-Suggests: future
 SystemRequirements: JAGS (http://mcmc-jags.sourceforge.net)
 RoxygenNote: 7.1.1
 Language: en-US
