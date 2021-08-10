@@ -181,6 +181,13 @@
 #'           n.iter = 10000,
 #'           n.burnin = 1000,
 #'           n.thin = 1)
+<<<<<<< HEAD
+=======
+#' }
+#'
+#' \dontshow{
+#' closeAllConnections()
+>>>>>>> ab668796f3bff73219aaf5409f17f5f0aa4e605a
 #' }
 #'
 #' @export
