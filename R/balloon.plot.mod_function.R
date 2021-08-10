@@ -40,41 +40,12 @@
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
 #'
 #' @examples
-#' data("nma.baker2009")
-#'
-#' # Perform a random-effects network meta-analysis
-#' res1 <- run.model(data = nma.baker2009,
-#'                   measure = "OR",
-#'                   model = "RE",
-#'                   assumption = "IDE-ARM",
-#'                   heter.prior = list("halfnormal", 0, 1),
-#'                   mean.misspar = 0,
-#'                   var.misspar = 1,
-#'                   D = 1,
-#'                   n.chains = 2,
-#'                   n.iter = 1000,
-#'                   n.burnin = 100,
-#'                   n.thin = 1)
-#'
-#' # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
-#' res.sens <- run.sensitivity(full = res1,
-#'                             assumption = "IDE-ARM",
-#'                             var.misspar = 1,
-#'                             n.chains = 2,
-#'                             n.iter = 1000,
-#'                             n.burnin = 100,
-#'                             n.thin = 1)
-#'
 #' # The names of the interventions in the order they appear in the dataset
 #' interv.names <- c("placebo", "budesodine plus formoterol", "fluticasone", "fluticasone plus
 #'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "budesodine")
 #'
 #' # Create the enhanced balloon plot for the comparison 'tiotropium versus salmeterol'
-#' balloon.plot.mod(sens = res.sens, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
-#'
-#' \dontshow{
-#' closeAllConnections()
-#' }
+#' balloon.plot.mod(sens = sens.res.baker2009, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
 #'
 #' @export
 balloon.plot.mod <- function(sens, compar, drug.names){

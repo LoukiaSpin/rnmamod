@@ -160,6 +160,7 @@
 #' # Show the first six trials of the dataset (one-trial-per-row format)
 #' head(nma.baker2009)
 #'
+#' \dontrun{
 #' # Perform a random-effects network meta-analysis
 #' run.model(data = nma.baker2009,
 #'           measure = "OR",
@@ -173,6 +174,7 @@
 #'           n.iter = 1000,
 #'           n.burnin = 100,
 #'           n.thin = 1)
+#' }
 #'
 #' \dontshow{
 #' closeAllConnections()
