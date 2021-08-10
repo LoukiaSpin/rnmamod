@@ -16,7 +16,7 @@ Authors@R:
            family = "Papadimitropoulou",
            role = "ctb",
            comment = c(ORCID = "0000-0002-5732-4044")))
-Maintainer: <Spineli.Loukia@mh-hannover.de>
+Maintainer: Loukia Spineli <Spineli.Loukia@mh-hannover.de>
 Description: Perform pairwise and network meta-analysis for aggregate binary or continuous outcome
     data, while adjusting for missing participant outcome data.
 Depends: 
@@ -44,6 +44,6 @@ Imports:
     stats,
     utils,
     writexl
-SystemRequirements: JAGS (http://mcmc-jags.sourceforge.net)
+SystemRequirements: JAGS 4.x.y (http://mcmc-jags.sourceforge.net)
 RoxygenNote: 7.1.1
 Language: en-US
