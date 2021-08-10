@@ -40,7 +40,6 @@
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of primary analysis results: A case study on missing outcome data in pairwise and network meta-analysis. \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
 #'
 #' @examples
-<<<<<<< HEAD
 #' data("nma.baker2009")
 #'
 #' \dontrun{
@@ -66,19 +65,14 @@
 #'                             n.burnin = 1000,
 #'                             n.thin = 1)
 #'
-=======
->>>>>>> ab668796f3bff73219aaf5409f17f5f0aa4e605a
 #' # The names of the interventions in the order they appear in the dataset
 #' interv.names <- c("placebo", "budesodine plus formoterol", "fluticasone", "fluticasone plus
 #'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "budesodine")
 #'
 #' # Create the enhanced balloon plot for the comparison 'tiotropium versus salmeterol'
-<<<<<<< HEAD
 #' balloon.plot.mod(sens = res.sens, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
 #' }
-=======
 #' balloon.plot.mod(sens = sens.res.baker2009, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
->>>>>>> ab668796f3bff73219aaf5409f17f5f0aa4e605a
 #'
 #' @export
 balloon.plot.mod <- function(sens, compar, drug.names){

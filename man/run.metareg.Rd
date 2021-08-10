@@ -99,37 +99,32 @@ This function performs a one-stage pairwise or network meta-regression while add
 \examples{
 data("nma.baker2009")
 
-# Show the first six trials of the dataset (one-trial-per-row format)
-head(nma.baker2009)
-
+\dontrun{
 # Perform a random-effects network meta-analysis
-res1 <- run.model(data = nma.baker2009,
-                  measure = "OR",
-                  model = "RE",
-                  assumption = "IDE-ARM",
-                  heter.prior = list("halfnormal", 0, 1),
-                  mean.misspar = 0,
-                  var.misspar = 1,
-                  D = 1,
-                  n.chains = 2,
-                  n.iter = 1000,
-                  n.burnin = 100,
-                  n.thin = 1)
+res <- run.model(data = nma.baker2009,
+                 measure = "OR",
+                 model = "RE",
+                 assumption = "IDE-ARM",
+                 heter.prior = list("halfnormal", 0, 1),
+                 mean.misspar = 0,
+                 var.misspar = 1,
+                 D = 1,
+                 n.chains = 3,
+                 n.iter = 10000,
+                 n.burnin = 1000,
+                 n.thin = 1)
 
 # Whether a trial is placebo-controlled.
 covar.binary <- ifelse(nma.baker2009[, "t1"] == 1, 1, 0)
 
 # Perform a random-effects network meta-regression (exchangeable structure)
-run.metareg(full = res1,
+run.metareg(full = res,
             covariate = covar.binary,
             covar.assumption = "exchangeable",
-            n.chains = 2,
-            n.iter = 1000,
-            n.burnin = 100,
+            n.chains = 3,
+            n.iter = 10000,
+            n.burnin = 1000,
             n.thin = 1)
-
-\dontshow{
-closeAllConnections()
 }
 
 }

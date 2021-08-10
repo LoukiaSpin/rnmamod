@@ -47,39 +47,37 @@ For the summary effect size of a pairwise comparison, the different colours and 
 \examples{
 data("nma.baker2009")
 
+\dontrun{
 # Perform a random-effects network meta-analysis
-res1 <- run.model(data = nma.baker2009,
-                  measure = "OR",
-                  model = "RE",
-                  assumption = "IDE-ARM",
-                  heter.prior = list("halfnormal", 0, 1),
-                  mean.misspar = 0,
-                  var.misspar = 1,
-                  D = 1,
-                  n.chains = 2,
-                  n.iter = 1000,
-                  n.burnin = 100,
-                  n.thin = 1)
+res <- run.model(data = nma.baker2009,
+                 measure = "OR",
+                 model = "RE",
+                 assumption = "IDE-ARM",
+                 heter.prior = list("halfnormal", 0, 1),
+                 mean.misspar = 0,
+                 var.misspar = 1,
+                 D = 1,
+                 n.chains = 3,
+                 n.iter = 10000,
+                 n.burnin = 1000,
+                 n.thin = 1)
 
 # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
-res.sens <- run.sensitivity(full = res1,
-                            assumption = "IDE-ARM",
+res.sens <- run.sensitivity(full = res,
                             var.misspar = 1,
-                            n.chains = 2,
-                            n.iter = 1000,
-                            n.burnin = 100,
+                            n.chains = 3,
+                            n.iter = 10000,
+                            n.burnin = 1000,
                             n.thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
-                  salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
+interv.names <- c("placebo", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+                  salmeterol", "formoterol", "salmeterol", "tiotropium", "budesodine")
 
 # Create the enhanced balloon plot for the comparison 'tiotropium versus salmeterol'
 balloon.plot.mod(sens = res.sens, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
-
-\dontshow{
-closeAllConnections()
 }
+balloon.plot.mod(sens = sens.res.baker2009, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
 
 }
 \references{

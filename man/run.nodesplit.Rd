@@ -58,27 +58,25 @@ This function performs a Bayesian network meta-analysis based on the node-splitt
   \code{run.nodesplit} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 }
 \examples{
-data("nma.liu2013")
+data("nma.baker2009")
 
-# Perform a random-effects network meta-analysis (consistency model)
-res1 <- run.model(data = nma.liu2013,
-                  measure = "OR",
-                  model = "RE",
-                  assumption = "IDE-ARM",
-                  heter.prior = list("halfnormal", 0, 1),
-                  mean.misspar = 0,
-                  var.misspar = 1,
-                  D = 1,
-                  n.chains = 2,
-                  n.iter = 1000,
-                  n.burnin = 100,
-                  n.thin = 1)
+\dontrun{
+# Perform a random-effects network meta-analysis
+res <- run.model(data = nma.baker2009,
+                 measure = "OR",
+                 model = "RE",
+                 assumption = "IDE-ARM",
+                 heter.prior = list("halfnormal", 0, 1),
+                 mean.misspar = 0,
+                 var.misspar = 1,
+                 D = 1,
+                 n.chains = 3,
+                 n.iter = 10000,
+                 n.burnin = 1000,
+                 n.thin = 1)
 
 # Run random-effects network meta-analysis with node-splitting approach
-run.nodesplit(full = res1, n.chains = 2, n.iter = 1000, n.burnin = 100, n.thin = 1)
-
-\dontshow{
-closeAllConnections()
+run.nodesplit(full = res, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 }
 
 }

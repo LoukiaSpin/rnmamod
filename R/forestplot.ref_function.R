@@ -26,7 +26,6 @@
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
 #'
 #' @examples
-<<<<<<< HEAD
 #' data("nma.liu2013")
 #'
 #' # Show the first six trials of the dataset (one-trial-per-row format)
@@ -61,7 +60,6 @@
 #' # Create the league heatmap
 #' forestplot.ref(full = res, drug.names = interv.names)
 #' }
-=======
 #'
 #' # The names of the interventions in the order they appear in the dataset
 #' interv.names <- c("placebo", "budesodine plus formoterol", "fluticasone", "fluticasone plus
@@ -69,7 +67,6 @@
 #'
 #' # Create the league heatmap
 #' forestplot.ref(full = nma.res.baker2009, drug.names = interv.names)
->>>>>>> ab668796f3bff73219aaf5409f17f5f0aa4e605a
 #'
 #' @export
 forestplot.ref <- function(full, drug.names) {

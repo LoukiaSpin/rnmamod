@@ -20,7 +20,7 @@ A dataset of 29 trials comparing three antiparkinsonian interventions with place
   The analysed continuous outcome is the change from baseline of patient off-time reduction.
 }
 \details{
-The interventions have been coded as follows: 1, placebo plus levodopa; 2, dopamine agonist plus levodopa;
-  3, catechol-O-methyl transferase inhibitors plus levodopa; and 4, monoamine oxidase type B inhibitors plus levodopa.
+The interventions have been coded as follows: 1, placebo plus levodopa (PBO+LD); 2, dopamine agonist plus levodopa (DA+LD);
+  3, catechol-O-methyl transferase inhibitors plus levodopa (COMBI+LD); and 4, monoamine oxidase type B inhibitors plus levodopa (MAOBI+LD).
 }
 \keyword{datasets}

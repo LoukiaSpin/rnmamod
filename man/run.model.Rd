@@ -171,7 +171,15 @@ data("nma.baker2009")
 
 # Show the first six trials of the dataset (one-trial-per-row format)
 head(nma.baker2009)
+#                 study t1 t2 t3 t4  r1  r2 r3 r4 m1 m2 m3 m4  n1  n2 n3 n4
+# Llewellyn-Jones, 1996  1  3 NA NA   4   8 NA NA  1  0 NA NA   8   8 NA NA
+#        Paggiaro, 1998  1  3 NA NA  61  78 NA NA 27 19 NA NA 139 142 NA NA
+#          Mahler, 1999  1  6 NA NA  73  98 NA NA 23  9 NA NA 143 135 NA NA
+#        Casaburi, 2000  1  7 NA NA 132 222 NA NA 18 12 NA NA 191 279 NA NA
+#       van Noord, 2000  1  6 NA NA  24  29 NA NA  8  7 NA NA  50  47 NA NA
+#         Rennard, 2001  1  6 NA NA  65  72 NA NA 29 22 NA NA 135 132 NA NA
 
+\dontrun{
 # Perform a random-effects network meta-analysis
 run.model(data = nma.baker2009,
           measure = "OR",
@@ -181,10 +189,11 @@ run.model(data = nma.baker2009,
           mean.misspar = 0,
           var.misspar = 1,
           D = 1,
-          n.chains = 2,
-          n.iter = 1000,
-          n.burnin = 100,
+          n.chains = 3,
+          n.iter = 10000,
+          n.burnin = 1000,
           n.thin = 1)
+}
 
 \dontshow{
 closeAllConnections()

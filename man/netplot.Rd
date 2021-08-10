@@ -26,24 +26,25 @@ A function to facilitate drawing the network plot via the \code{\link[pcnetmeta]
   of the R-package \href{https://CRAN.R-project.org/package=gemtc}{gemtc} is also used to convert \code{data} from the required one-trial-per-row format into the one-arm-per-row format.
 }
 \examples{
-data("nma.baker2009")
+data("nma.bottomley2011")
 
 # Return the first six trials of the dataset
-head(nma.baker2009)
-#                 study t1 t2 t3 t4  r1  r2 r3 r4 m1 m2 m3 m4  n1  n2 n3 n4
-# Llewellyn-Jones, 1996  3  8 NA NA   8   4 NA NA  0  1 NA NA   8   8 NA NA
-#        Paggiaro, 1998  3  8 NA NA  78  61 NA NA 19 27 NA NA 142 139 NA NA
-#          Mahler, 1999  6  8 NA NA  98  73 NA NA  9 23 NA NA 135 143 NA NA
-#        Casaburi, 2000  7  8 NA NA 222 132 NA NA 12 18 NA NA 279 191 NA NA
-#       van Noord, 2000  6  8 NA NA  29  24 NA NA  7  8 NA NA  47  50 NA NA
-#         Rennard, 2001  6  8 NA NA  72  65 NA NA 22 29 NA NA 132 135 NA NA
+head(nma.bottomley2011)
+#           study t1 t2 t3 t4  r1  r2 r3 r4 m1 m2 m3 m4  n1  n2 n3 n4
+#   Buckley, 2008  1  6 NA NA  67  79 NA NA  2  1 NA NA 110 108 NA NA
+#    Tyring, 2008  6  7 NA NA  74  12 NA NA  2  0 NA NA 135  42 NA NA
+# Kragballe, 2009  3  6 NA NA  19 114 NA NA  9  2 NA NA 105 207 NA NA
+#     Luger, 2008  3  6 NA NA 101 196 NA NA 44  9 NA NA 431 419 NA NA
+#    Klaber, 1994  2  3 NA NA 175 138 NA NA  2 11 NA NA 234 240 NA NA
+#   Barrett, 2005  3  4 NA NA  79  79 NA NA 19 18 NA NA 225 236 NA NA
 
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
-                  salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
+interv.names <- c("betamethasone dipropionate", "betamethasone valerate", "calcipotriol",
+                  "calcipotriol plus polytar", "capasal", "two-compound formulation gel",
+                  "placebo")
 
 # Create the network plot
-netplot(data = nma.baker2009, drug.names = interv.names)
+netplot(data = nma.bottomley2011, drug.names = interv.names)
 
 }
 \references{

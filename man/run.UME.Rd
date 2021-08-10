@@ -73,25 +73,23 @@ This function performs a Bayesian network meta-analysis based on the unrelated m
 \examples{
 data("nma.liu2013")
 
+\dontrun{
 # Perform a random-effects network meta-analysis (consistency model)
-res1 <- run.model(data = nma.liu2013,
-                  measure = "OR",
-                  model = "RE",
-                  assumption = "IDE-ARM",
-                  heter.prior = list("halfnormal", 0, 1),
-                  mean.misspar = 0,
-                  var.misspar = 1,
-                  D = 1,
-                  n.chains = 2,
-                  n.iter = 1000,
-                  n.burnin = 100,
-                  n.thin = 1)
+res <- run.model(data = nma.liu2013,
+                 measure = "OR",
+                 model = "RE",
+                 assumption = "IDE-ARM",
+                 heter.prior = list("halfnormal", 0, 1),
+                 mean.misspar = 0,
+                 var.misspar = 1,
+                 D = 1,
+                 n.chains = 3,
+                 n.iter = 10000,
+                 n.burnin = 1000,
+                 n.thin = 1)
 
 # Run random-effects unrelated mean effects model
-run.UME(full = res1, n.chains = 2, n.iter = 1000, n.burnin = 100, n.thin = 1)
-
-\dontshow{
-closeAllConnections()
+run.UME(full = res, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 }
 
 }

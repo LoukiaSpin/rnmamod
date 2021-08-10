@@ -31,27 +31,27 @@ The scenarios for the missingness parameter in compared interventions are split 
 \examples{
 data("nma.baker2009")
 
+\dontrun{
 # Perform a random-effects network meta-analysis
-res1 <- run.model(data = nma.baker2009,
-                  measure = "OR",
-                  model = "RE",
-                  assumption = "IDE-ARM",
-                  heter.prior = list("halfnormal", 0, 1),
-                  mean.misspar = 0,
-                  var.misspar = 1,
-                  D = 1,
-                  n.chains = 2,
-                  n.iter = 1000,
-                  n.burnin = 100,
-                  n.thin = 1)
+res <- run.model(data = nma.baker2009,
+                 measure = "OR",
+                 model = "RE",
+                 assumption = "IDE-ARM",
+                 heter.prior = list("halfnormal", 0, 1),
+                 mean.misspar = 0,
+                 var.misspar = 1,
+                 D = 1,
+                 n.chains = 3,
+                 n.iter = 10000,
+                 n.burnin = 1000,
+                 n.thin = 1)
 
 # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
-res.sens <- run.sensitivity(full = res1,
-                            assumption = "IDE-ARM",
+res.sens <- run.sensitivity(full = res,
                             var.misspar = 1,
-                            n.chains = 2,
-                            n.iter = 1000,
-                            n.burnin = 100,
+                            n.chains = 3,
+                            n.iter = 10000,
+                            n.burnin = 1000,
                             n.thin = 1)
 
 # Calculate the robustness index
@@ -63,9 +63,6 @@ interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fl
 
 # Crate the barplot for the comparison 'tiotropium versus salmeterol'
 KLD.barplot(robust = robust, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
-
-\dontshow{
-closeAllConnections()
 }
 
 }

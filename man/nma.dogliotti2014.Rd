@@ -19,7 +19,7 @@ A dataset of 16 trials comparing seven oral antithrombotics with each other and 
   in patients with atrial fibrillation. The analysed binary outcome is prevention of a stroke episode.
 }
 \details{
-The interventions have been coded as follows: 1, apixaban; 2, aspirin; 3, aspirin plus clopidogrel;
-  4, dabigatran 110 mg; 5, dabigatran 150 mg; 6, rivaroxaban; 7, vitamin K antagonist; and 8, placebo.
+The interventions have been coded as follows: 1, placebo; 2, aspirin; 3, aspirin plus clopidogrel;
+  4, dabigatran 110 mg; 5, dabigatran 150 mg; 6, rivaroxaban; 7, vitamin K antagonist; and 8, apixaban
 }
 \keyword{datasets}

@@ -6,7 +6,6 @@
 \usage{
 run.sensitivity(
   full,
-  assumption,
   mean.scenarios,
   var.misspar,
   n.chains,
@@ -17,10 +16,6 @@ run.sensitivity(
 }
 \arguments{
 \item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
-
-\item{assumption}{Character string indicating the structure of the informative missingness parameter.
-Set \code{assumption} equal to one of the following: \code{"HIE-ARM"}, or \code{"IDE-ARM"}.
-The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"}, and \code{"HIE"}, stand for identical, and hierarchical, respectively. See 'Details'.}
 
 \item{mean.scenarios}{A vector with numeric values for the mean of the normal distribution of the informative missingness parameter (see 'Details').
 The vector should have a length of 5 or larger \emph{positive odd integer}.
@@ -53,7 +48,7 @@ A list of R2jags outputs on the summaries of the posterior distribution, and the
 In a random-effects NMA, \code{EM} refer to all possible pairwise comparisons of interventions in the network. Furthermore, \code{tau} is typically assumed to be common for all observed comparisons in the network.
 }
 \description{
-This function performs sensitivity analysis by applying pairwise meata-analysis (PMA) or network meta-analysis (NMA) for a series of different scenarios about the informative missingness parameter,
+This function performs sensitivity analysis by applying pairwise meta-analysis (PMA) or network meta-analysis (NMA) for a series of different scenarios about the informative missingness parameter,
 }
 \details{
 The model as specified by the arguments of \code{run.sensitivity} and \code{run.model} (the latter via the argument \code{full}) runs in \code{JAGS} and the progress of the simulation appears in the R console.
@@ -81,33 +76,30 @@ The model as specified by the arguments of \code{run.sensitivity} and \code{run.
   \code{run.sensitivity} can be used only for when missing participant outcome data have been extracted for at least one trial. Otherwise, the execution of the function will be stopped and an error message will be printed in the R console.
 }
 \examples{
-data("nma.liu2013")
+data("nma.baker2009")
 
+\dontrun{
 # Perform a random-effects network meta-analysis
-res1 <- run.model(data = nma.liu2013,
-                  measure = "OR",
-                  model = "RE",
-                  assumption = "IDE-ARM",
-                  heter.prior = list("halfnormal", 0, 1),
-                  mean.misspar = 0,
-                  var.misspar = 1,
-                  D = 1,
-                  n.chains = 2,
-                  n.iter = 1000,
-                  n.burnin = 100,
-                  n.thin = 1)
+res <- run.model(data = nma.baker2009,
+                 measure = "OR",
+                 model = "RE",
+                 assumption = "IDE-ARM",
+                 heter.prior = list("halfnormal", 0, 1),
+                 mean.misspar = 0,
+                 var.misspar = 1,
+                 D = 1,
+                 n.chains = 3,
+                 n.iter = 10000,
+                 n.burnin = 1000,
+                 n.thin = 1)
 
 # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
-run.sensitivity(full = res1,
-                assumption = "IDE-ARM",
+run.sensitivity(full = res,
                 var.misspar = 1,
-                n.chains = 2,
-                n.iter = 1000,
-                n.burnin = 100,
+                n.chains = 3,
+                n.iter = 10000,
+                n.burnin = 1000,
                 n.thin = 1)
-
-\dontshow{
-closeAllConnections()
 }
 
 }
