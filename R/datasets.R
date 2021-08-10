@@ -43,8 +43,8 @@ NULL
 #'
 #' @format A data frame with 16 rows of arm-based data and 13 columns (maximum number of 3 arms).
 #'
-#' @details The interventions have been coded as follows: 1, apixaban; 2, aspirin; 3, aspirin plus clopidogrel;
-#'   4, dabigatran 110 mg; 5, dabigatran 150 mg; 6, rivaroxaban; 7, vitamin K antagonist; and 8, placebo.
+#' @details The interventions have been coded as follows: 1, placebo; 2, aspirin; 3, aspirin plus clopidogrel;
+#'   4, dabigatran 110 mg; 5, dabigatran 150 mg; 6, rivaroxaban; 7, vitamin K antagonist; and 8, apixaban
 #'
 #' @docType data
 #' @keywords datasets
