@@ -81,14 +81,13 @@ data.preparation <- function(data, measure) {
 
 
     ## Order by 'id of t1' < 'id of t1'
-    y0 <- sd0 <- se0 <- m <- N <- t <- t0 <- treat
+    y0 <- sd0 <- se0 <- m <- N <- t <- treat
     for (i in 1:ns) {
-      t0[i, ] <- order(treat[i, ], na.last = T)
-      y0[i, ] <- y.obs[i, order(t0[i, ], na.last = T)]
-      sd0[i, ] <- sd.obs[i, order(t0[i, ], na.last = T)]
-      se0[i, ] <- se.obs[i, order(t0[i, ], na.last = T)]
-      m[i, ] <- mod[i, order(t0[i, ], na.last = T)]
-      N[i, ] <- rand[i, order(t0[i, ], na.last = T)]
+      y0[i, ] <- y.obs[i, order(treat[i, ], na.last = T)]
+      sd0[i, ] <- sd.obs[i, order(treat[i, ], na.last = T)]
+      se0[i, ] <- se.obs[i, order(treat[i, ], na.last = T)]
+      m[i, ] <- mod[i, order(treat[i, ], na.last = T)]
+      N[i, ] <- rand[i, order(treat[i, ], na.last = T)]
       t[i, ] <- sort(treat[i, ], na.last = T)
     }
 
@@ -101,12 +100,11 @@ data.preparation <- function(data, measure) {
 
 
     ## Order by 'id of t1' < 'id of t2' < 'id of t3', and so on
-    r <- m <- N <- t <- t0 <- treat
+    r <- m <- N <- t <- treat
     for (i in 1:ns) {
-      t0[i, ] <- order(treat[i, ], na.last = T)
-      r[i, ] <- event[i, order(t0[i, ], na.last = T)]
-      m[i, ] <- mod[i, order(t0[i, ], na.last = T)]
-      N[i, ] <- rand[i, order(t0[i, ], na.last = T)]
+      r[i, ] <- event[i, order(treat[i, ], na.last = T)]
+      m[i, ] <- mod[i, order(treat[i, ], na.last = T)]
+      N[i, ] <- rand[i, order(treat[i, ], na.last = T)]
       t[i, ] <- sort(treat[i, ], na.last = T)
     }
 
