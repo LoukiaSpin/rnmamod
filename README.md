@@ -3,6 +3,7 @@
 # rnmamod: package to perform Bayesian network meta-analysis methods
 
   <!-- badges: start -->
+  
   [![R-CMD-check](https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
   <!-- badges: end -->
 
