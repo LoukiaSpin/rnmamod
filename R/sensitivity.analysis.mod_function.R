@@ -1,11 +1,8 @@
 #' Sensitivity analysis for aggregate missing outcome participant data
 #'
-#' @description This function performs sensitivity analysis by applying pairwise meata-analysis (PMA) or network meta-analysis (NMA) for a series of different scenarios about the informative missingness parameter,
+#' @description This function performs sensitivity analysis by applying pairwise meta-analysis (PMA) or network meta-analysis (NMA) for a series of different scenarios about the informative missingness parameter,
 #'
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
-#' @param assumption Character string indicating the structure of the informative missingness parameter.
-#'   Set \code{assumption} equal to one of the following: \code{"HIE-ARM"}, or \code{"IDE-ARM"}.
-#'   The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"}, and \code{"HIE"}, stand for identical, and hierarchical, respectively. See 'Details'.
 #' @param mean.scenarios A vector with numeric values for the mean of the normal distribution of the informative missingness parameter (see 'Details').
 #'   The vector should have a length of 5 or larger \emph{positive odd integer}.
 #'   The missing-at-random (MAR) assumption should be the median of the vector, so that the same number of informative scenarios appear before and after the MAR.
@@ -72,25 +69,10 @@
 #' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. Stat Sci. 1992;7:457–472.
 #'
 #' @examples
-#' data("nma.liu2013")
-#'
-#' # Perform a random-effects network meta-analysis
-#' res1 <- run.model(data = nma.liu2013,
-#'                   measure = "OR",
-#'                   model = "RE",
-#'                   assumption = "IDE-ARM",
-#'                   heter.prior = list("halfnormal", 0, 1),
-#'                   mean.misspar = 0,
-#'                   var.misspar = 1,
-#'                   D = 1,
-#'                   n.chains = 2,
-#'                   n.iter = 1000,
-#'                   n.burnin = 100,
-#'                   n.thin = 1)
+#' data("nma.res.baker2009")
 #'
 #' # Perform the sensitivity analysis (using the 'default' of the argument 'mean.scenarios')
-#' run.sensitivity(full = res1,
-#'                 assumption = "IDE-ARM",
+#' run.sensitivity(full = nma.res.baker2009,
 #'                 var.misspar = 1,
 #'                 n.chains = 2,
 #'                 n.iter = 1000,
@@ -102,7 +84,7 @@
 #' }
 #'
 #' @export
-run.sensitivity <- function(full, assumption, mean.scenarios, var.misspar, n.chains, n.iter, n.burnin, n.thin){
+run.sensitivity <- function(full, mean.scenarios, var.misspar, n.chains, n.iter, n.burnin, n.thin){
 
 
   ## Turn off warning when variables in the 'data.jag' are not used
@@ -110,6 +92,7 @@ run.sensitivity <- function(full, assumption, mean.scenarios, var.misspar, n.cha
 
   data <- full$data
   measure <- full$measure
+  assumption <- full$assumption
   model <- full$model
   heter.prior <- full$heter.prior
   D <- full$D
@@ -125,14 +108,7 @@ run.sensitivity <- function(full, assumption, mean.scenarios, var.misspar, n.cha
   }
 
 
-  ## Default arguments
-  assumption <- if (missing(assumption)) {
-    "IDE-ARM"
-  } else if (!is.element(assumption,  c("IDE-ARM", "HIE-ARM"))) {
-    stop("Insert 'IDE-ARM', or 'HIE-ARM'", call. = F)
-  } else {
-    assumption
-  }
+
   ## Scenarios for missingness mechanism in an intervention (PMID: 30223064)
   mean.scenarios <- if (missing(mean.scenarios) & is.element(measure, c("MD", "SMD"))) {
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The following vector of scenarios was considered by default: c(-2, -1, 0, 1, 2)", "\033[0m", "\n")))
