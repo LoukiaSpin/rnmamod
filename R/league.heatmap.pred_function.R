@@ -97,16 +97,16 @@ league.heatmap.pred <- function(full, drug.names){
   ## Matrix of lower and upper bound of effect measure for all possible comparisons
   # Lower triangle
   lower0[lower.tri(lower0, diag = F)] <- round(par[, 3], 2)
-  upper0[lower.tri(upper0, diag = F)] <- round(par[, 4], 2)
+  upper0[lower.tri(upper0, diag = F)] <- round(par[, 7], 2)
   # Incorporate upper triangle
   lower1 <- reflect_triangle(upper0, from = "lower")
   lower1[lower.tri(lower1, diag = F)] <- round(par[, 3], 2)
   upper1 <- reflect_triangle(lower0, from = "lower")
-  upper1[lower.tri(upper1, diag = F)] <- round(par[, 4], 2)
+  upper1[lower.tri(upper1, diag = F)] <- round(par[, 7], 2)
 
 
   ## Interventions order according to their SUCRA value (from best to worst)
-  drug.order.col <- drug.order.row <- order(drug.names[order(-sucra[, 1])])
+  drug.order.col <- drug.order.row <- order(-sucra[, 1])
 
 
   ## Order interventions according to their SUCRA value (from the best to the worst)
@@ -115,18 +115,18 @@ league.heatmap.pred <- function(full, drug.names){
 
   ## Symmetric matrix for effect measure and its bounds after ordering rows and columns from the best to the worst intervention
   if(measure != "OR" & measure != "ROM") {
-    point <- point1[order(drug.order.col), order(drug.order.row)]
-    lower <- lower1[order(drug.order.col), order(drug.order.row)]
-    upper <- upper1[order(drug.order.col), order(drug.order.row)]
+    point <- point1[drug.order.col, drug.order.row]
+    lower <- lower1[drug.order.col, drug.order.row]
+    upper <- upper1[drug.order.col, drug.order.row]
 
 
     ## Spot the statistically significant comparisons (i.e. the 95% CrI does not include the value of no difference)
     (signif.status <- melt(ifelse(upper < 0 | lower > 0, "significant", "non-significant"), na.rm = F)[3])
     signif.status[is.na(signif.status)] <- 0
   } else {
-    point <- round(exp(point1[order(drug.order.col), order(drug.order.row)]), 2)
-    lower <- round(exp(lower1[order(drug.order.col), order(drug.order.row)]), 2)
-    upper <- round(exp(upper1[order(drug.order.col), order(drug.order.row)]), 2)
+    point <- round(exp(point1[drug.order.col, drug.order.row]), 2)
+    lower <- round(exp(lower1[odrug.order.col, drug.order.row]), 2)
+    upper <- round(exp(upper1[drug.order.col, drug.order.row]), 2)
 
 
     ## Spot the statistically significant comparisons (i.e. the 95% CrI does not include the value of no difference)
