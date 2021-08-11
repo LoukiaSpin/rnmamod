@@ -183,10 +183,6 @@
 #'           n.thin = 1)
 #' }
 #'
-#' \dontshow{
-#' closeAllConnections()
-#' }
-#'
 #' @export
 run.model <- function(data, measure, model, covar.assumption, assumption, heter.prior, mean.misspar, var.misspar, D, n.chains, n.iter, n.burnin, n.thin) {
 

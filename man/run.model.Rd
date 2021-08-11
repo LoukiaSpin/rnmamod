@@ -195,10 +195,6 @@ run.model(data = nma.baker2009,
           n.thin = 1)
 }
 
-\dontshow{
-closeAllConnections()
-}
-
 }
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome data in network meta-analysis: a one-stage pattern-mixture model approach. \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
