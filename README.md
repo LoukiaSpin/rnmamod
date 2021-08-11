@@ -75,7 +75,7 @@ The following code presents the hierarchy of the interventions in the network us
 rankosucra.plot(full = res, drug.names = interv.names)
 ```
 
-<div style="text-align: center"> <img src="man/figures/Sucra_Baker.png" width="751" height="600" align="center"></div>
+<div style="text-align: center"> <img src="man/figures/Sucra_Baker.png" width="751" height="601" align="center"></div>
 
 ##
 The development of the **rnmamod** package is funded by the **German Research Foundation** (Deutsche Forschungsgemeinschaft) (grant no. [SP 1664/1-3](https://gepris.dfg.de/gepris/projekt/339420617)) <div style="text-align: right"> <img src="man/figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="340" height="150" align="right"></div>
