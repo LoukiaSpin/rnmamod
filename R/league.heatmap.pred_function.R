@@ -125,7 +125,7 @@ league.heatmap.pred <- function(full, drug.names){
     signif.status[is.na(signif.status)] <- 0
   } else {
     point <- round(exp(point1[drug.order.col, drug.order.row]), 2)
-    lower <- round(exp(lower1[odrug.order.col, drug.order.row]), 2)
+    lower <- round(exp(lower1[drug.order.col, drug.order.row]), 2)
     upper <- round(exp(upper1[drug.order.col, drug.order.row]), 2)
 
 
