@@ -208,17 +208,17 @@ balloon.plot.mod <- function(sens, compar, drug.names){
   # Upper bound of the 95% credible interval of the tau
   upper.tau <- tau.all[, 4]
 
-  # Dummy variable to indicate the extent of tau2
+  # Dummy variable to indicate the extent of tau
   median.extent <- if (sens$heter[3] == 1) {
-    median(fdrtool::rhalfnorm(10000, theta = 1/(sens$heter[2]^2)))
+    qhalfnorm(0.5, theta = (1/sens$heter[2])*sqrt(pi/2))
   } else if (sens$heter[3] == 2) {
-    median(runif(10000, 0, sens$heter[2]))
+    qunif(10000, 0, sens$heter[2])
   } else if (sens$heter[3] == 3) {
-    median(rlnorm(10000, sens$heter[1], sqrt(1/sens$heter[2])))
+   sqrt(qlnorm(0.5, sens$heter[1], sqrt(1/sens$heter[2])))
   } else if (sens$heter[3] == 4) {
-    exp(median(rt(1000, df = 5)*sqrt(1/sens$heter[2]) + sens$heter[1]))
+    sqrt(exp(qt(0.5, df = 5)*sqrt(1/sens$heter[2]) + sens$heter[1]))
   }
-  extent.tau <- ifelse(tau < sqrt(median.extent), "low", "considerable")
+  extent.tau <- ifelse(tau < median.extent, "low", "considerable")
 
   # Normalise tau2. We need this to weight the bubbles in the balloon plot
   tau.normalised <- (tau - min(tau))/(max(tau) - min(tau))
