@@ -65,8 +65,9 @@ Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{
 The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"}, \code{"HIE"}, and \code{"IND"} stand for identical, hierarchical and independent, respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and uncorrelated, respectively.}
 
 \item{heter.prior}{A list of three elements with the following order: 1) a character string indicating the distribution with (currently available) values \code{"halfnormal"},
-\code{"uniform"}, \code{"lognormal"}, or \code{"logt"}; 2) two numeric values that refer to the parameters of the selected distribution. For \code{"halfnormal"}, \code{"lognormal"}, and \code{"logt"}
-these numbers refer to the mean and precision, respectively. For \code{"uniform"}, these numbers refer to the minimum and maximum value of the distribution.
+\code{"uniform"}, \code{"lognormal"}, or \code{"logt"}; 2) two numeric values that refer to the parameters of the selected distribution.  For \code{"lognormal"}, and \code{"logt"}
+these numbers refer to the mean and precision, respectively. For \code{"halfnorm"}, these numbers refer to zero and the scale parameter (equal to 0.5 or 1).
+For \code{"uniform"}, these numbers refer to the minimum and maximum value of the distribution.
 See the function \code{\link{heterogeneity.param.prior}}.}
 
 \item{mean.misspar}{A numeric value or a vector of two numeric values for the mean of the normal distribution of the informative missingness parameter (see 'Details'). The default argument is 0 and corresponds to the missing-at-random assumption.

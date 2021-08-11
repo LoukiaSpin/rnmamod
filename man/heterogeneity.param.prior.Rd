@@ -13,8 +13,9 @@ standardised mean difference and ratio of means, respectively.}
 \item{model}{Character string indicating the analysis model with values \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model, respectively. The default argument is \code{"RE"}.}
 
 \item{heter.prior}{A list of three elements with the following order: 1) a character string indicating the distribution with (currently available) values \code{"halfnormal"},
-\code{"uniform"}, \code{"lognormal"}, or \code{"logt"}; 2) two numeric values that refer to the parameters of the selected distribution. For \code{"halfnormal"}, \code{"lognormal"}, and \code{"logt"}
-these numbers refer to the mean and precision, respectively. For \code{"uniform"}, these numbers refer to the minimum and maximum value of the distribution.}
+\code{"uniform"}, \code{"lognormal"}, or \code{"logt"}; 2) two numeric values that refer to the parameters of the selected distribution. For \code{"lognormal"}, and \code{"logt"}
+these numbers refer to the mean and precision, respectively. For \code{"halfnorm"}, these numbers refer to zero and the scale parameter (equal to 0.5 or 1).
+For \code{"uniform"}, these numbers refer to the minimum and maximum value of the distribution.}
 }
 \value{
 A value to be passed to \code{\link{run.model}}.
