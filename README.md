@@ -63,9 +63,9 @@ res <- run.model(data = nma.baker2009,
 <br/>
 Illustrate all possible pairwise comparisons of the interventions using a league heatmap:
 
-``` r
-league.heatmap(full = res, drug.names = interv.names)
-```
+#``` r
+#league.heatmap(full = res, drug.names = interv.names)
+#```
 
 <div style="text-align: center"> <img src="man/figures/League_Baker.png" width="750" height="600" align="center"></div>
 <br/>
