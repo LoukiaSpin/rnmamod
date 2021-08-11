@@ -15,7 +15,7 @@
 #' @importFrom netmeta pairwise
 #' @importFrom pcnetmeta nma.networkplot
 #' @importFrom reshape2 melt
-#' @importFrom rjags jags
+#' @importFrom R2jags jags
 #' @importFrom scales rescale percent
 #' @importFrom writexl write_xlsx
 #' @importFrom utils combn
