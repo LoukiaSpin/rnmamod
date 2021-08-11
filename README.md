@@ -2,6 +2,10 @@
 
 # rnmamod: package to perform Bayesian network meta-analysis methods
 
+  <!-- badges: start -->
+  [![R-CMD-check](https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
+  <!-- badges: end -->
+
 **rnmamod** is an R package to perform one-stage Bayesian fixed-effect or random-effects network meta-analysis while adjusting for *missing participant outcome data* using the pattern-mixture model. In the case of two inteventions, rnmamod performs one-stage Bayesian pairwise meta-analysis. The package handles a data-frame of binary or continuous outcome data in the arm-based format. The odds ratio, mean difference, standardised mean difference, and ratio of means are currently considered. The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. The package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Missing participant outcome data are addressed in all models of the rnmamod package. The rnmamod package also includes a rich suite of visualisation tools that aid the interpretation and accommodation of the results in the submitted research work for publication. 
 
 The rnmamod package is currently in development version.
@@ -32,8 +36,8 @@ Create the network plot:
 
 ``` r
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
-                   salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
+interv.names <- c("placebo", "budesodine plus formoterol", "fluticasone", "fluticasone plus
+                   salmeterol", "formoterol", "salmeterol", "tiotropium", "budesodine")
 
 netplot(data = nma.baker2009, drug.names = interv.names, text.cex = 1.5)
 ```
@@ -63,7 +67,7 @@ Illustrate all possible pairwise comparisons of the interventions using a league
 league.heatmap(full = res, drug.names = interv.names)
 ```
 
-<div style="text-align: center"> <img src="man/figures/League_Baker.png" width="750" height="600" align="center"></div>
+<div style="text-align: center"> <img src="man/figures/.png" width="750" height="600" align="center"></div>
 <br/>
 The following code presents the hierarchy of the interventions in the network using integrated rankograms and SUCRA (surfacw under the cumulative ranking) curves:
 
@@ -71,7 +75,7 @@ The following code presents the hierarchy of the interventions in the network us
 rankosucra.plot(full = res, drug.names = interv.names)
 ```
 
-<div style="text-align: center"> <img src="man/figures/Sucra_Baker.png" width="751" height="600" align="center"></div>
+<div style="text-align: center"> <img src="man/figures/Sucra_Baker.png" width="751" height="601" align="center"></div>
 
 ##
 The development of the **rnmamod** package is funded by the **German Research Foundation** (Deutsche Forschungsgemeinschaft) (grant no. [SP 1664/1-3](https://gepris.dfg.de/gepris/projekt/339420617)) <div style="text-align: right"> <img src="man/figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="340" height="150" align="right"></div>
