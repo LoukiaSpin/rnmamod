@@ -39,7 +39,7 @@
 #'                  n.thin = 1)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("placebo", "pramipexole", "serotonin–norepinephrine reuptake inhibitor",
+#' interv.names <- c("placebo", "pramipexole", "serotonin-norepinephrine reuptake inhibitor",
 #'                   "serotonin reuptake inhibitor", "tricyclic antidepressant", "pergolide")
 #'
 #' # Create the integrated rankograms and SUCRA curves
