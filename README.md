@@ -36,8 +36,7 @@ Create the network plot:
 
 ``` r
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("placebo", "budesodine plus formoterol", "fluticasone", "fluticasone plus
-                   salmeterol", "formoterol", "salmeterol", "tiotropium", "budesodine")
+interv.names <- c("placebo", "budesodine plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium", "budesodine")
 
 netplot(data = nma.baker2009, drug.names = interv.names, text.cex = 1.5)
 ```
