@@ -41,7 +41,7 @@ interv.names <- c("placebo", "budesodine plus formoterol", "fluticasone", "fluti
 netplot(data = nma.baker2009, drug.names = interv.names, text.cex = 1.5)
 ```
 
-<div style="text-align: center"> <img src="man/figures/network_Baker.png" width="700" height="550" align="center"></div>
+<div style="text-align: center"> <img src="man/figures/network_Baker.png" width="750" height="550" align="center"></div>
 
 The following code performs a Bayesian random-effects network meta-analysis under the missing at random assumption and using intervention-specific informative missingness odds ratio (`assumption = "IDE-ARM"`) in the logarithmic scale:
 
