@@ -41,7 +41,7 @@ interv.names <- c("placebo", "budesodine plus formoterol", "fluticasone", "fluti
 netplot(data = nma.baker2009, drug.names = interv.names, text.cex = 1.5)
 ```
 
-<div style="text-align: center"> <img src="man/figures/Network_Baker.png" width="650" height="500" align="center"></div>
+<div style="text-align: center"> <img src="man/figures/network_Baker.png" width="650" height="500" align="center"></div>
 
 The following code performs a Bayesian random-effects network meta-analysis under the missing at random assumption and using intervention-specific informative missingness odds ratio (`assumption = "IDE-ARM"`) in the logarithmic scale:
 
@@ -66,7 +66,7 @@ Illustrate all possible pairwise comparisons of the interventions using a league
 league.heatmap(full = res, drug.names = interv.names)
 ```
 
-<div style="text-align: center"> <img src="man/figures/League_Baker.png" width="750" height="600" align="center"></div>
+<div style="text-align: center"> <img src="man/figures/league_Baker.png" width="750" height="600" align="center"></div>
 <br/>
 The following code presents the hierarchy of the interventions in the network using integrated rankograms and SUCRA (surfacw under the cumulative ranking) curves:
 
@@ -74,7 +74,7 @@ The following code presents the hierarchy of the interventions in the network us
 rankosucra.plot(full = res, drug.names = interv.names)
 ```
 
-<div style="text-align: center"> <img src="man/figures/Sucra_Baker.png" width="751" height="601" align="center"></div>
+<div style="text-align: center"> <img src="man/figures/sucra_Baker.png" width="751" height="601" align="center"></div>
 
 ##
 The development of the **rnmamod** package is funded by the **German Research Foundation** (Deutsche Forschungsgemeinschaft) (grant no. [SP 1664/1-3](https://gepris.dfg.de/gepris/projekt/339420617)) <div style="text-align: right"> <img src="man/figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="340" height="150" align="right"></div>
