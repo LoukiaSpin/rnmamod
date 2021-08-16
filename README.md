@@ -60,7 +60,7 @@ res <- run.model(data = nma.baker2009,
                  n.thin = 1)
 ```
 <br/>
-Illustrate all possible pairwise comparisons of the interventions using a league heatmap:
+Illustrate all possible pairwise comparisons of the interventions using a league heatmap. Interventions are sorted in decreasing order by their posterior mean SUCRA value in the main diagonal:
 
 ``` r
 league.heatmap(full = res, drug.names = interv.names)
