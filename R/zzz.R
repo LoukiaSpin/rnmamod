@@ -1,6 +1,6 @@
 .onLoad <- function(libname, pkgname) {
   invisible(suppressPackageStartupMessages(
-    sapply(c("rjags", "coda", "R2jags"),
+    sapply(c("mcmcplots", "R2jags"),
            requireNamespace, quietly = TRUE)
   ))
 }
