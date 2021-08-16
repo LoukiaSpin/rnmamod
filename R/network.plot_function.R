@@ -49,6 +49,7 @@
 #' @export
 netplot <- function(data, drug.names, ...){
 
+  options(warn = -1)
 
   if (missing(drug.names)) {
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in argument 'data' is used as intervention names", "\033[0m", "\n")))
@@ -56,7 +57,7 @@ netplot <- function(data, drug.names, ...){
 
 
   ## Obtain dataset
-  r <- data %>% dplyr::select(starts_with("r") | starts_with("y"))
+  r <- data %>% dplyr::select(starts_with("r") | starts_with("y")) # It does not matter whether the outcome is binary or continuous
   n <- data %>% dplyr::select(starts_with("n"))
   t <- data %>% dplyr::select(starts_with("t"))
   nt <- length(table(as.matrix(t)))
@@ -81,6 +82,42 @@ netplot <- function(data, drug.names, ...){
   ## Obtain network plot
   nma.networkplot(study, treatment1, data = transform, trtname = drug.names, multi.show = T, ...)
 
+
+  if(dim(data %>% dplyr::select(starts_with("r")))[2] > 0) {
+    measure <- "OR"
+  } else {
+    measure <- "MD"
+  }
+
+  dat <- describe.network(data, drug.names, measure)
+
+  characteristics <- c("Interventions", "Possible comparisons", "Direct comparisons", "Indirect comparisons",
+                       "Trials", "Two-arm trials", "Multi-arm trials", "Randomised participants", "Completers Participants",
+                       "Trials with at least one zero event", "Trials with all zero events")
+   value <- c(nt,
+              dim(combn(nt, 2))[2],
+              dat$direct.comp,
+              dim(combn(nt, 2))[2] - dat$direct.comp,
+              ns,
+              dat$two.arm.ns,
+              dat$multi.arm.ns,
+              dat$total.rand.network,
+              dat$total.obs.network,
+              trial.zero.event,
+              trial.all.zero.event)
+
+  results <- data.frame(characteristics, value)
+  colnames(results) <- c("Characteristic", "Total number of")
+
+  results <- if (measure != "OR") {
+    results[-c(10:11), ]
+  } else {
+    results
+  }
+
+  return(list(Network.description = knitr::kable(results),
+              Table.interventions = dat$Table.interventions,
+              Table.comparisons = dat$Table.comparisons))
 }
 
 
