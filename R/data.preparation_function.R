@@ -91,6 +91,14 @@ data.preparation <- function(data, measure) {
       t[i, ] <- sort(treat[i, ], na.last = T)
     }
 
+    names(y0) <- paste0("y", 1:length(y0[1, ]))
+    names(sd0) <- paste0("sd", 1:length(sd0[1, ]))
+    names(se0) <- paste0("se", 1:length(se0[1, ]))
+    names(m) <- paste0("m", 1:length(m[1, ]))
+    names(N) <- paste0("n", 1:length(N[1, ]))
+    names(t) <- paste0("t", 1:length(t[1, ]))
+
+
   } else {
 
 
@@ -107,6 +115,11 @@ data.preparation <- function(data, measure) {
       N[i, ] <- rand[i, order(treat[i, ], na.last = T)]
       t[i, ] <- sort(treat[i, ], na.last = T)
     }
+
+    names(r) <- paste0("r", 1:length(r[1, ]))
+    names(m) <- paste0("m", 1:length(m[1, ]))
+    names(N) <- paste0("n", 1:length(N[1, ]))
+    names(t) <- paste0("t", 1:length(t[1, ]))
 
   }
 
@@ -133,6 +146,8 @@ data.preparation <- function(data, measure) {
       }
     }
   }
+
+  names(I) <- paste0("I", 1:length(I[1, ]))
 
   ## Return results
   results <- list(m = m.new,
