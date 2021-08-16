@@ -103,8 +103,8 @@ netplot <- function(data, drug.names, ...){
               dat$multi.arm.ns,
               dat$total.rand.network,
               dat$total.obs.network,
-              trial.zero.event,
-              trial.all.zero.event)
+              dat$trial.zero.event,
+              dat$trial.all.zero.event)
 
   results <- data.frame(characteristics, value)
   colnames(results) <- c("Characteristic", "Total number of")
