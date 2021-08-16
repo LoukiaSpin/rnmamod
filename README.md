@@ -59,7 +59,7 @@ res <- run.model(data = nma.baker2009,
                  n.burnin = 1000,
                  n.thin = 1)
 ```
-<br/>
+
 Illustrate all possible pairwise comparisons of the interventions using a league heatmap. Interventions are sorted in decreasing order by their posterior mean SUCRA value in the main diagonal:
 
 ``` r
