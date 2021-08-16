@@ -6,7 +6,7 @@
   [![R-CMD-check](https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
   <!-- badges: end -->
 
-**rnmamod** is an R package to perform one-stage Bayesian fixed-effect or random-effects network meta-analysis while adjusting for *missing participant outcome data* using the pattern-mixture model. In the case of two inteventions, rnmamod performs one-stage Bayesian pairwise meta-analysis. The package handles a data-frame of binary or continuous outcome data in the arm-based format. The odds ratio, mean difference, standardised mean difference, and ratio of means are currently considered. The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. The package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Missing participant outcome data are addressed in all models of the rnmamod package. The rnmamod package also includes a rich suite of visualisation tools that aid the interpretation and accommodation of the results in the submitted research work for publication. 
+**rnmamod** is an R package to perform one-stage Bayesian fixed-effect or random-effects network meta-analysis while adjusting for *missing participant outcome data* using the pattern-mixture model. In the case of two interventions, rnmamod performs one-stage Bayesian pairwise meta-analysis. The package handles a data-frame of binary or continuous outcome data in the arm-based format. The odds ratio, mean difference, standardised mean difference, and ratio of means are currently considered. The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. The package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Missing participant outcome data are addressed in all models of the rnmamod package. The rnmamod package also includes a rich suite of visualisation tools that aid the interpretation and accommodation of the results in the submitted research work for publication. 
 
 The rnmamod package is currently in development version.
 
@@ -32,7 +32,7 @@ head(nma.baker2009)
 #>         Rennard, 2001  1  6 NA NA  65  72 NA NA 29 22 NA NA 135 132 NA NA
 ```
 
-Create the network plot:
+Create the network plot using the *nma.networkplot* function of the [pcnetmeta](https://cran.r-project.org/web/packages/pcnetmeta/index.html) R package:
 
 ``` r
 # The names of the interventions in the order they appear in the dataset
@@ -59,16 +59,17 @@ res <- run.model(data = nma.baker2009,
                  n.burnin = 1000,
                  n.thin = 1)
 ```
-<br/>
-Illustrate all possible pairwise comparisons of the interventions using a league heatmap:
+
+Illustrate all possible pairwise comparisons of the interventions using a league heatmap. Interventions are sorted in decreasing order by their posterior mean SUCRA (surface under the cumulative ranking) value in the main diagonal:
 
 ``` r
 league.heatmap(full = res, drug.names = interv.names)
 ```
 
-<div style="text-align: center"> <img src="man/figures/league_Baker.png" width="800" height="600" align="center"></div>
+<div style="text-align: center"> <img src="man/figures/league_Baker.png" width="950" height="700" align="center"></div>
 <br/>
-The following code presents the hierarchy of the interventions in the network using integrated rankograms and SUCRA (surfacw under the cumulative ranking) curves:
+
+The following code presents the hierarchy of the interventions in the network using integrated rankograms and SUCRA curves:
 
 ``` r
 rankosucra.plot(full = res, drug.names = interv.names)
