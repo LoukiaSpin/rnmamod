@@ -92,25 +92,23 @@ netplot <- function(data, drug.names, ...){
   dat <- describe.network(data, drug.names, measure)
 
   characteristics <- c("Interventions", "Possible comparisons", "Direct comparisons", "Indirect comparisons",
-                       "Trials", "Two-arm trials", "Multi-arm trials", "Randomised participants", "Completers Participants",
-                       "Trials with at least one zero event", "Trials with all zero events")
-   value <- c(nt,
-              dim(combn(nt, 2))[2],
-              dat$direct.comp,
-              dim(combn(nt, 2))[2] - dat$direct.comp,
-              ns,
-              dat$two.arm.ns,
-              dat$multi.arm.ns,
-              dat$total.rand.network,
-              dat$total.obs.network,
-              dat$trial.zero.event,
-              dat$trial.all.zero.event)
+                       "Trials", "Two-arm trials", "Multi-arm trials", "Randomised participants", "Completers Participants")
+  value <- c(nt,
+             dim(combn(nt, 2))[2],
+             dat$direct.comp,
+             dim(combn(nt, 2))[2] - dat$direct.comp,
+             ns,
+             dat$two.arm.ns,
+             dat$multi.arm.ns,
+             dat$total.rand.network,
+             dat$total.obs.network)
 
   results <- data.frame(characteristics, value)
-  colnames(results) <- c("Characteristic", "Total number of")
+  colnames(results) <- c("Characteristic", "Total number")
 
-  results <- if (measure != "OR") {
-    results[-c(10:11), ]
+  if (measure == "OR") {
+    results[10, ] <- rbind("Trials with at least one zero event", dat$trial.all.zero.event)
+    results[11, ] <- rbind("Trials with all zero events", dat$trial.all.zero.event)
   } else {
     results
   }
