@@ -53,3 +53,5 @@ utils::globalVariables(c("active",
                          "Var2",
                          "x",
                          "y"))
+
+Sys.setenv(`_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_` = "false")
