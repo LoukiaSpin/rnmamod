@@ -66,7 +66,7 @@ Illustrate all possible pairwise comparisons of the interventions using a league
 league.heatmap(full = res, drug.names = interv.names)
 ```
 
-<div style="text-align: center"> <img src="man/figures/league_Baker.png" width="800" height="600" align="center"></div>
+<div style="text-align: center"> <img src="man/figures/league_Baker.png" width="850" height="650" align="center"></div>
 <br/>
 The following code presents the hierarchy of the interventions in the network using integrated rankograms and SUCRA (surfacw under the cumulative ranking) curves:
 
