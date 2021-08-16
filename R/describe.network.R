@@ -37,7 +37,7 @@ describe.network <- function(data, drug.names, measure) {
     arm.risk <- dat$r/(dat$N - dat$m)
     rule <- apply(ifelse(arm.risk == 0.0, 1, 0), 1, sum, na.rm = T)
     trial.zero.event <- ifelse(length(which(rule > 0)) == 0, 0, which(rule > 0))
-    trial.all.zero.event <- ifelse(length(which(is.element(rule, data$na) == T)) == 0, 0, which(is.element(rule, data$na) == T))
+    trial.all.zero.event <- ifelse(length(which(is.element(rule, dat$na) == T)) == 0, 0, which(is.element(rule, dat$na) == T))
 
     total.event.network <- sum(unlist(dat$r), na.rm = T)
 
@@ -91,7 +91,7 @@ describe.network <- function(data, drug.names, measure) {
     colnames(table.interv.con) <- c("Interventions", "Total trials", "Total randomised", "Total completers", "Minimum y/se", "Median y/se", "Maximum y/se")
 
 
-    pair.con <- pairwise(as.list(dat$t),  n = as.list(dat$N), mean = as.list(dat$y0), sd = as.list(dat$se0),data = cbind(dat$t, dat$N, dat$y0, dat$se0), studlab = 1:data$ns)[, c(3:5, 7, 10, 8, 11, 6, 9)]
+    pair.con <- pairwise(as.list(dat$t),  n = as.list(dat$N), mean = as.list(dat$y0), sd = as.list(dat$se0), data = cbind(dat$t, dat$N, dat$y0, dat$se0), studlab = 1:dat$ns)[, c(3:5, 7, 10, 8, 11, 6, 9)]
     colnames(pair.con) <- c("study", "t1", "t2", "y1", "y2", "se1", "se2","n1", "n2")
 
     min.t.comp <- round(aggregate((pair.con$y2 - pair.con$y1)/(pair.con$se2 + pair.con$se1), by = list(comp), min)[, 2], 2)
