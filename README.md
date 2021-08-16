@@ -68,6 +68,7 @@ league.heatmap(full = res, drug.names = interv.names)
 
 <div style="text-align: center"> <img src="man/figures/league_Baker.png" width="950" height="700" align="center"></div>
 <br/>
+
 The following code presents the hierarchy of the interventions in the network using integrated rankograms and SUCRA curves:
 
 ``` r
