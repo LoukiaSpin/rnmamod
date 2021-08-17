@@ -74,11 +74,6 @@ netplot <- function(data, drug.names, save.xls, ...){
 
   options(warn = -1)
 
-  if (missing(drug.names)) {
-    message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in argument 'data' is used as intervention names", "\033[0m", "\n")))
-  }
-
-
   save.xls <- if (missing(save.xls)) {
     FALSE
   } else {
@@ -95,6 +90,14 @@ netplot <- function(data, drug.names, save.xls, ...){
   na..  <- rep(0, length(r[, 1]))
   for(i in 1:length(r[, 1])){
     na..[i] <- table(!is.na(t[i, ]))["TRUE"]
+  }
+
+
+  drug.names <- if (missing(drug.names)) {
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in argument 'data' is used as intervention names", "\033[0m", "\n")))
+    as.character(1:nt)
+  } else {
+    drug.names
   }
 
 

@@ -17,7 +17,7 @@ as they appear in \code{data} is used, instead.}
 standardised mean difference and ratio of means, respectively.}
 }
 \value{
-A list of scalar results and four data-frames to be passed to \code{\link[rnmamod]{network.plot}}. The scalar results include:
+A list of scalar results and four data-frames to be passed to \code{\link[rnmamod]{netplot}}. The scalar results include:
   \tabular{ll}{
    \code{direct.comp} \tab The number of observed comparisons in the network. \cr
    \tab \cr
@@ -37,19 +37,19 @@ A list of scalar results and four data-frames to be passed to \code{\link[rnmamo
   }
 
   The four data-frames include \code{Table.interventions.Missing}, \code{Table.comparisons.Missing}, \code{Table.interventions} and \code{Table.comparisons}.
-  See 'Value' in \code{\link[rnmamod]{network.plot}} that describes these data-frames in detail.
+  See 'Value' in \code{\link[rnmamod]{netplot}} that describes these data-frames in detail.
 }
 \description{
 This function calculates the necessary elements to describe a network, such as
   the number of interventions, trials, randomised participants, and so on. Furthermore, this function provides
   summary statistics of the missing participants and the analysed outcome per intervention and observed comparison in a tabulated format.
-  See 'Value' in the \code{\link[rnmamod]{network.plot}} function for more details.
+  See 'Value' in the \code{\link[rnmamod]{netplot}} function for more details.
 }
 \details{
 \code{describe.network} calls the \code{data.preparation} function to facilitate the calculations.
 }
 \seealso{
-\code{\link[rnmamod]{network.plot}}, \code{\link[rnmamod]{run.model}}, \code{\link[rnmamod]{data.preparation}}
+\code{\link[rnmamod]{netplot}}, \code{\link[rnmamod]{run.model}}, \code{\link[rnmamod]{data.preparation}}
 }
 \author{
 {Loukia M. Spineli}
