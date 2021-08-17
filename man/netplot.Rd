@@ -23,7 +23,7 @@ A network plot with coloured closed-loops informed by multi-arm trials. Each nod
   The edges are proportionally to the number of direct treatment comparisons, unless specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function).
   the node size is weighted by the total number of direct treatment comparisons of the corresponding treatment, unless specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function).
 
-  \code{UME.plot} also returns five data-frames that describe the network under investigation:
+  \code{netplot} also returns five data-frames that describe the network under investigation:
   \tabular{ll}{
    \code{Network.description} \tab Number of interventions, possible comparisons, direct and indirect comparisons, number of trials in total, number of two-arm and multi-arm trials,
    number of randomised participants, proportion of participants completing the trial (completers), and proportion of missing participants. When the outcome is binary, the number of trials with at least one zero event,
@@ -32,7 +32,7 @@ A network plot with coloured closed-loops informed by multi-arm trials. Each nod
    \code{Table.interventions} \tab For each interventions, the data-frame presents the number of trials, number of randomised participants, proportion of completers, and thr proportion of missing participants.
    When the outcome is binary, the data-frame also presents the proportion of observed events, the minimum, median and maximum proportion of observed events across the corresponding trials.
    However, when the outcome is continuous, the data-frame also presents the minimum, median and maximum t-statistic across the corresponding trials. The t-statistic is calculated as the ratio of
-   the extracted mean outcome, \code{y}, to the standard error, \code{see}. See the \code{data.preparation} function. \cr
+   the extracted mean outcome, \code{y}, to the standard error, \code{se} (see the \code{data.preparation} function). \cr
    \tab \cr
    \code{Table.comparisons} \tab The data-frame has the same structure with the \code{Table.interventions}; however, the summary results are illustrated for each observed comparison in the network
    When the outcome is continuous, the t-statistic refers to the standardised mean difference defined as the ratio of mean difference to the standard error of mean difference. \cr
@@ -42,6 +42,15 @@ A network plot with coloured closed-loops informed by multi-arm trials. Each nod
    \tab \cr
    \code{Table.comparisons.Missing} \tab The data-frame presents the summary results on the proportion of missing participants for each observed comparison in the network.
    It has the same structure with \code{Table.comparisons} for the binary outcome. \cr
+  }
+
+  Last but not least, \code{netplot} exports two heatmaps:
+  \tabular{ll}{
+   \code{Heatmap.missing.network} \tab It illustrates the distribution of the proportion of missing participants across the interventions and
+   observed comparisons of the network. See \code{\link[rnmamod]{heatmap.missing.network}} function for more details. \cr
+   \tab \cr
+   \code{Heatmap.outcome.network} \tab It illustrates the distribution of the outcome across the interventions and
+   observed comparisons of the network. See \code{\link[rnmamod]{heatmap.outcome.network}} function for more details. \cr
   }
 }
 \description{
@@ -79,7 +88,8 @@ Gert van Valkenhoef and Joel Kuiper. gemtc: Network Meta-Analysis Using Bayesian
 2021. \url{https://CRAN.R-project.org/package=gemtc}
 }
 \seealso{
-\code{\link[rnmamod]{run.model}}, \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta} and \href{https://CRAN.R-project.org/package=gemtc}{gemtc}.
+\code{\link[rnmamod]{run.model}}, \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta} and \href{https://CRAN.R-project.org/package=gemtc}{gemtc},
+\code{\link[rnmamod]{data.preparation}}, \code{\link[rnmamod]{heatmap.missing.network}}, \code{\link[rnmamod]{heatmap.outcome.network}}.
 }
 \author{
 {Loukia M. Spineli}

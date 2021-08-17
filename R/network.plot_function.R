@@ -16,7 +16,7 @@
 #'   The edges are proportionally to the number of direct treatment comparisons, unless specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function).
 #'   the node size is weighted by the total number of direct treatment comparisons of the corresponding treatment, unless specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function).
 #'
-#'   \code{UME.plot} also returns five data-frames that describe the network under investigation:
+#'   \code{netplot} also returns five data-frames that describe the network under investigation:
 #'   \tabular{ll}{
 #'    \code{Network.description} \tab Number of interventions, possible comparisons, direct and indirect comparisons, number of trials in total, number of two-arm and multi-arm trials,
 #'    number of randomised participants, proportion of participants completing the trial (completers), and proportion of missing participants. When the outcome is binary, the number of trials with at least one zero event,
@@ -25,7 +25,7 @@
 #'    \code{Table.interventions} \tab For each interventions, the data-frame presents the number of trials, number of randomised participants, proportion of completers, and thr proportion of missing participants.
 #'    When the outcome is binary, the data-frame also presents the proportion of observed events, the minimum, median and maximum proportion of observed events across the corresponding trials.
 #'    However, when the outcome is continuous, the data-frame also presents the minimum, median and maximum t-statistic across the corresponding trials. The t-statistic is calculated as the ratio of
-#'    the extracted mean outcome, \code{y}, to the standard error, \code{see}. See the \code{data.preparation} function. \cr
+#'    the extracted mean outcome, \code{y}, to the standard error, \code{se} (see the \code{data.preparation} function). \cr
 #'    \tab \cr
 #'    \code{Table.comparisons} \tab The data-frame has the same structure with the \code{Table.interventions}; however, the summary results are illustrated for each observed comparison in the network
 #'    When the outcome is continuous, the t-statistic refers to the standardised mean difference defined as the ratio of mean difference to the standard error of mean difference. \cr
@@ -37,7 +37,17 @@
 #'    It has the same structure with \code{Table.comparisons} for the binary outcome. \cr
 #'   }
 #'
-#' @seealso \code{\link[rnmamod]{run.model}}, \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta} and \href{https://CRAN.R-project.org/package=gemtc}{gemtc}.
+#'   Last but not least, \code{netplot} exports two heatmaps:
+#'   \tabular{ll}{
+#'    \code{Heatmap.missing.network} \tab It illustrates the distribution of the proportion of missing participants across the interventions and
+#'    observed comparisons of the network. See \code{\link[rnmamod]{heatmap.missing.network}} function for more details. \cr
+#'    \tab \cr
+#'    \code{Heatmap.outcome.network} \tab It illustrates the distribution of the outcome across the interventions and
+#'    observed comparisons of the network. See \code{\link[rnmamod]{heatmap.outcome.network}} function for more details. \cr
+#'   }
+#'
+#' @seealso \code{\link[rnmamod]{run.model}}, \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta} and \href{https://CRAN.R-project.org/package=gemtc}{gemtc},
+#' \code{\link[rnmamod]{data.preparation}}, \code{\link[rnmamod]{heatmap.missing.network}}, \code{\link[rnmamod]{heatmap.outcome.network}}.
 #'
 #' @references
 #' Lifeng Lin, Jing Zhang, James S. Hodges, Haitao Chu. Performing Arm-Based Network Meta-Analysis in R
@@ -125,7 +135,7 @@ netplot <- function(data, drug.names, save.xls, ...){
   dat <- describe.network(data, drug.names, measure)
 
   characteristics <- c("Interventions", "Possible comparisons", "Direct comparisons", "Indirect comparisons",
-                       "Trials", "Two-arm trials", "Multi-arm trials", "Randomised participants", "Completers Participants")
+                       "Trials", "Two-arm trials", "Multi-arm trials", "Randomised participants", "Proportion of completers")
   value <- c(nt,
              dim(combn(nt, 2))[2],
              dat$direct.comp,
@@ -141,7 +151,7 @@ netplot <- function(data, drug.names, save.xls, ...){
   colnames(results) <- c("Characteristic", "Total number")
 
   if (measure == "OR") {
-    results[10, ] <- rbind("Proportion of observed events", dat$pro.event.network)
+    results[10, ] <- rbind("Proportion of observed events", dat$prop.event.network)
     results[11, ] <- rbind("Trials with at least one zero event", dat$trial.all.zero.event)
     results[12, ] <- rbind("Trials with all zero events", dat$trial.all.zero.event)
   } else {
@@ -160,7 +170,9 @@ netplot <- function(data, drug.names, save.xls, ...){
               Table.interventions = dat$Table.interventions,
               Table.comparisons = dat$Table.comparisons,
               Table.interventions.Missing = dat$Table.interventions.Missing,
-              Table.comparisons.Missing = dat$Table.comparisons.Missing))
+              Table.comparisons.Missing = dat$Table.comparisons.Missing,
+              Heatmap.missing.network = heatmap.missing.network(data, drug.names),
+              Heatmap.outcome.network = heatmap.outcome.network(data, drug.names)))
 }
 
 
