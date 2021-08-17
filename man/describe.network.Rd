@@ -17,7 +17,7 @@ as they appear in \code{data} is used, instead.}
 standardised mean difference and ratio of means, respectively.}
 }
 \value{
-A list of scalar results and four data-frames to be passed to \code{\link{network.plot}}. The scalar results include:
+A list of scalar results and four data-frames to be passed to \code{\link[rnmamod]{network.plot}}. The scalar results include:
   \tabular{ll}{
    \code{direct.comp} \tab The number of observed comparisons in the network. \cr
    \tab \cr
