@@ -67,7 +67,7 @@
 #'                   "placebo")
 #'
 #' # Create the network plot
-#' netplot(data = nma.bottomley2011, drug.names = interv.names, save.xls = F)
+#' netplot(data = nma.bottomley2011, drug.names = interv.names, save.xls = FALSE)
 #'
 #' @export
 netplot <- function(data, drug.names, save.xls, ...){
@@ -147,8 +147,8 @@ netplot <- function(data, drug.names, save.xls, ...){
 
   ## Write the tables as .xlsx
   if (save.xls == TRUE) {
-    writexl::write_xlsx(table.interv.bin, paste0("Table.interventions.xlsx"))
-    writexl::write_xlsx(table.comp.bin, paste0("Table.comparisons.xlsx"))
+    writexl::write_xlsx(dat$Table.interventions, paste0("Table.interventions.xlsx"))
+    writexl::write_xlsx(dat$Table.comparisons, paste0("Table.comparisons.xlsx"))
   }
 
 

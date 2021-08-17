@@ -1,4 +1,6 @@
-## A function to describe the network
+#' A function to describe a network of interventions
+#'
+#'
 
 describe.network <- function(data, drug.names, measure) {
 
@@ -71,7 +73,7 @@ describe.network <- function(data, drug.names, measure) {
   total.obs.partic.comp <- aggregate(apply(pair.mod[, c("n1", "n2")] - pair.mod[, c("m1", "m2")], 1, sum), by = list(comp), sum)[, 2]
 
   # Proportion of completers per observed comparison (in %)
-  total.obs.partic.comp <- round(total.obs.partic.comp/total.rand.partic.comp, 2)*100
+  prop.obs.partic.comp <- round(total.obs.partic.comp/total.rand.partic.comp, 2)*100
 
   # Proportion of MOD per observed comparison (in %)
   prop.mod.comp <- 100 - prop.obs.partic.comp

@@ -58,7 +58,7 @@ standardised mean difference and ratio of means, respectively.}
 
 \item{covar.assumption}{Character string indicating the structure of the slope for the intervention by covariate interaction, as described in Cooper et al., (2009).
 Set \code{covar.assumption} equal to one of the following: \code{"NO"}, when no meta-regression is performed; otherwise, \code{"exchangeable"} \code{"independent"}, and \code{"common"}.
-See the \code{ru.metareg} function.}
+See the \code{run.metareg} function.}
 
 \item{assumption}{Character string indicating the structure of the informative missingness parameter.
 Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.
