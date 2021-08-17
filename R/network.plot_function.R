@@ -138,8 +138,9 @@ netplot <- function(data, drug.names, save.xls, ...){
   colnames(results) <- c("Characteristic", "Total number")
 
   if (measure == "OR") {
-    results[10, ] <- rbind("Trials with at least one zero event", dat$trial.all.zero.event)
-    results[11, ] <- rbind("Trials with all zero events", dat$trial.all.zero.event)
+    results[10, ] <- rbind("Proportion of observed events", dat$pro.event.network)
+    results[11, ] <- rbind("Trials with at least one zero event", dat$trial.all.zero.event)
+    results[12, ] <- rbind("Trials with all zero events", dat$trial.all.zero.event)
   } else {
     results
   }

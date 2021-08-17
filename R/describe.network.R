@@ -1,7 +1,46 @@
 #' A function to describe a network of interventions
 #'
+#' @description This function calculates the necessary elements to describe a network, such as
+#'   the number of interventions, trials, randomised participants, and so on. Furthermore, this function provides
+#'   summary statistics of the missing participants and the analysed outcome per intervention and observed comparison in a tabulated format.
+#'   See 'Value' in the \code{\link[rnmamod]{network.plot}} function for more details.
 #'
-
+#' @param data A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models.
+#'   See 'Format' in \code{\link[rnmamod]{run.model}} function for the specification of the columns.
+#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data}. If the argument \code{drug.names} is not defined, the order of the interventions
+#'   as they appear in \code{data} is used, instead.
+#' @param measure Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio, mean difference,
+#'   standardised mean difference and ratio of means, respectively.
+#'
+#' @return A list of scalar results and four data-frames to be passed to \code{\link{network.plot}}. The scalar results include:
+#'   \tabular{ll}{
+#'    \code{direct.comp} \tab The number of observed comparisons in the network. \cr
+#'    \tab \cr
+#'    \code{two.arm.ns} \tab The number of two-arm trials in the network. \cr
+#'    \tab \cr
+#'    \code{multi.arm.ns} \tab The number of multi-arm trials in the network. \cr
+#'    \tab \cr
+#'    \code{total.rand.network} \tab The total number of randomised participants in the network. \cr
+#'    \tab \cr
+#'    \code{prop.obs.network} \tab The proportion of participants who completed the trial. \cr
+#'    \tab \cr
+#'    \code{prop.event.network} \tab The proportion of observed events in the network. When the outcome is continuous, this element is omitted. \cr
+#'    \tab \cr
+#'    \code{trial.zero.event} \tab The number of trials with at least one arm with zero events. When the outcome is continuous, this element is omitted. \cr
+#'    \tab \cr
+#'    \code{trial.all.zero.event} \tab The number of trials with zero events in all arms. When the outcome is continuous, this element is omitted. \cr
+#'   }
+#'
+#'   The four data-frames include \code{Table.interventions.Missing}, \code{Table.comparisons.Missing}, \code{Table.interventions} and \code{Table.comparisons}.
+#'   See 'Value' in \code{\link[rnmamod]{network.plot}} that describes these data-frames in detail.
+#'
+#' @details \code{describe.network} calls the \code{data.preparation} function to facilitate the calculations.
+#'
+#' @seealso \code{\link[rnmamod]{network.plot}}, \code{\link[rnmamod]{run.model}}, \code{\link[rnmamod]{data.preparation}}
+#'
+#' @author {Loukia M. Spineli}
+#'
+#' @export
 describe.network <- function(data, drug.names, measure) {
 
   options(warn = -1)
@@ -140,7 +179,7 @@ describe.network <- function(data, drug.names, measure) {
     trial.all.zero.event <- ifelse(length(which(is.element(rule, dat$na) == T)) == 0, 0, which(is.element(rule, dat$na) == T))
 
     # Total number of events in the network
-    total.event.network <- sum(unlist(dat$r), na.rm = T)
+    prop.event.network <- round(sum(unlist(dat$r), na.rm = T)/sum(unlist(dat$N) - unlist(dat$m), na.rm = T), 2)*100
 
     # Number of events per intervention
     total.event.interv <- aggregate(unlist(dat$r), by = list(unlist(dat$t)), sum)[, 2]
@@ -300,7 +339,7 @@ describe.network <- function(data, drug.names, measure) {
                   Table.comparisons.Missing = knitr::kable(table.comp.mod))
 
   results <- if (measure == "OR") {
-    append(results, list(total.event.network = total.event.network,
+    append(results, list(prop.event.network = prop.event.network,
                          trial.zero.event = trial.zero.event,
                          trial.all.zero.event = trial.all.zero.event,
                          Table.interventions = knitr::kable(table.interv.bin),
