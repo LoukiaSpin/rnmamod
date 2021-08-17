@@ -148,7 +148,7 @@ netplot <- function(data, drug.names, save.xls, ...){
              dat$prop.mod.network)
 
   results <- data.frame(characteristics, value)
-  colnames(results) <- c("Characteristic", "Total number")
+  colnames(results) <- c("Characteristic", "Total")
 
   if (measure == "OR") {
     results[10, ] <- rbind("Proportion of observed events", dat$prop.event.network)

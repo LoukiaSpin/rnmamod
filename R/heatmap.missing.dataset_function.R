@@ -1,4 +1,4 @@
-#' Heatmap of the risk of bias associated with missing participant outcome data in each trial-arm
+#' Heatmap of the risk of bias associated with missing participant outcome data in the dataset
 #'
 #' @description This function illustrates the risk of bias associated with missing participant outcome data (MOD) in each arm of every trial in the dataset.
 #'
@@ -39,12 +39,12 @@
 #' interv.names <- c("aerobic", "resistance", "combined training")
 #'
 #' # Create the heatmap
-#' heatmap.mod.trial(data = nma.schwingshackl2014,
-#'                   trial.names = nma.schwingshackl2014$study,
-#'                   drug.names = interv.names)
+#' heatmap.missing.dataset(data = nma.schwingshackl2014,
+#'                         trial.names = nma.schwingshackl2014$study,
+#'                         drug.names = interv.names)
 #'
 #' @export
-heatmap.mod.trial <- function(data, trial.names, drug.names) {
+heatmap.missing.dataset <- function(data, trial.names, drug.names) {
 
 
   m <- if (dim(data %>% select(starts_with("m")))[2] == 0) {
@@ -85,7 +85,7 @@ heatmap.mod.trial <- function(data, trial.names, drug.names) {
 
 
   ## Turn one row per trial to one row per trial-arm
-  (transform <- mtc.data.studyrow(cbind(t, m, n, na..), armVars = c('treatment'= 't', 'response'='m', 'sampleSize'='n'), nArmsVar='na'))
+  transform <- mtc.data.studyrow(cbind(t, m, n, na..), armVars = c('treatment'= 't', 'response'='m', 'sampleSize'='n'), nArmsVar='na')
 
 
   ## Turn all columns into numeric
@@ -103,10 +103,8 @@ heatmap.mod.trial <- function(data, trial.names, drug.names) {
 
   ## Rename trials
   for(i in 1:length(unique(transform$study))){
-
     transform[transform$study == i, 1] <- trial.names[i]
   }
-
 
   ## Calculate percentage of MOD in trial-arm
   transform$m.prop <- round((transform$response/transform$sampleSize)*100, 0)
@@ -116,9 +114,9 @@ heatmap.mod.trial <- function(data, trial.names, drug.names) {
   if(ns < 80){
 
     #ggplot(transform, aes(treatment, factor(study, level = 1:ns), fill = ifelse(m.prop <= 5, "low", ifelse(m.prop > 20, "high", "moderate") ))) +
-    ggplot(transform, aes(factor(treatment, levels = drug.names), study, fill = ifelse(m.prop <= 5, "low", ifelse(m.prop > 20, "high", "moderate") ))) +
+    ggplot(transform, aes(factor(treatment, levels = drug.names), factor(study, levels = trial.names), fill = ifelse(m.prop <= 5, "low", ifelse(m.prop > 20, "high", "moderate") ))) +
       geom_tile(colour = "white") +
-      geom_text(aes(factor(treatment, levels = drug.names), study, label = paste0(m.prop, "%"), fontface = "plain"), size = rel(3.8)) +
+      geom_text(aes(factor(treatment, levels = drug.names), factor(study, levels = trial.names), label = paste0(m.prop, "%"), fontface = "plain"), size = rel(3.8)) +
       scale_fill_manual(breaks = c("low", "moderate", "high"), values = c("#009E73", "orange", "#D55E00")) +
       scale_x_discrete(position = "top") +
       labs(x = "", y = "", fill = "Risk of bias due to missingness") +
@@ -128,7 +126,7 @@ heatmap.mod.trial <- function(data, trial.names, drug.names) {
 
   } else {
 
-    ggplot(transform, aes(factor(treatment, levels = drug.names), study, fill = ifelse(m.prop <= 5, "low", ifelse(m.prop > 20, "high", "moderate") ))) +
+    ggplot(transform, aes(factor(treatment, levels = drug.names), factor(study, levels = trial.names), fill = ifelse(m.prop <= 5, "low", ifelse(m.prop > 20, "high", "moderate") ))) +
       geom_tile(colour = "white") +
       scale_fill_manual(breaks = c("low", "moderate", "high"), values = c("green3", "orange", "firebrick1")) +
       scale_x_discrete(position = "top") +

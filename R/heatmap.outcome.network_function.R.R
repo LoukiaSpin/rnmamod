@@ -7,7 +7,7 @@
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in the argument \code{data} is used, instead.
 #'
-#' @return A heatmap on the summarise outcome in each intervention and observed comparison of the network.
+#' @return A heatmap on the summarised outcome in each intervention and observed comparison of the network.
 #'   Each cell presents the median, minimum and maximum (in parenthesis) outcome across the corresponding trials.
 #'   When the outcome is binary, first, the proportion of observed events in each trial-arm of the network is calculated to obtain the aforementioned summary statistics for each intervention.
 #'   Then, the total proportion of observed events in each pairwise comparison of each trial is calculated to obtain the aforementioned summary statistics for each observed comparison of the network.
