@@ -8,11 +8,34 @@
 #'   See 'Format' in \code{\link[rnmamod]{run.model}} function for the specification of the columns.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
+#' @param save.xls Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+#'   The default is \code{FALSE} (do not export to an Excel format).
 #' @param ... Additional arguments of the \code{\link[pcnetmeta]{nma.networkplot}} function of the R-package \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}.
 #'
 #' @return A network plot with coloured closed-loops informed by multi-arm trials. Each node refers to the intervention and each link refers to the observed pairwise comparison.
 #'   The edges are proportionally to the number of direct treatment comparisons, unless specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function).
 #'   the node size is weighted by the total number of direct treatment comparisons of the corresponding treatment, unless specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function).
+#'
+#'   \code{UME.plot} also returns five data-frames that describe the network under investigation:
+#'   \tabular{ll}{
+#'    \code{Network.description} \tab Number of interventions, possible comparisons, direct and indirect comparisons, number of trials in total, number of two-arm and multi-arm trials,
+#'    number of randomised participants, proportion of participants completing the trial (completers), and proportion of missing participants. When the outcome is binary, the number of trials with at least one zero event,
+#'    and the number of trials with all zero events are also presented. \cr
+#'    \tab \cr
+#'    \code{Table.interventions} \tab For each interventions, the data-frame presents the number of trials, number of randomised participants, proportion of completers, and thr proportion of missing participants.
+#'    When the outcome is binary, the data-frame also presents the proportion of observed events, the minimum, median and maximum proportion of observed events across the corresponding trials.
+#'    However, when the outcome is continuous, the data-frame also presents the minimum, median and maximum t-statistic across the corresponding trials. The t-statistic is calculated as the ratio of
+#'    the extracted mean outcome, \code{y}, to the standard error, \code{see}. See the \code{data.preparation} function. \cr
+#'    \tab \cr
+#'    \code{Table.comparisons} \tab The data-frame has the same structure with the \code{Table.interventions}; however, the summary results are illustrated for each observed comparison in the network
+#'    When the outcome is continuous, the t-statistic refers to the standardised mean difference defined as the ratio of mean difference to the standard error of mean difference. \cr
+#'    \tab \cr
+#'    \code{Table.interventions.Missing} \tab The data-frame presents the summary results on the proportion of missing participants for each intervention.
+#'    It has the same structure with \code{Table.interventions} for the binary outcome. \cr
+#'    \tab \cr
+#'    \code{Table.comparisons.Missing} \tab The data-frame presents the summary results on the proportion of missing participants for each observed comparison in the network.
+#'    It has the same structure with \code{Table.comparisons} for the binary outcome. \cr
+#'   }
 #'
 #' @seealso \code{\link[rnmamod]{run.model}}, \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta} and \href{https://CRAN.R-project.org/package=gemtc}{gemtc}.
 #'
@@ -44,15 +67,22 @@
 #'                   "placebo")
 #'
 #' # Create the network plot
-#' netplot(data = nma.bottomley2011, drug.names = interv.names)
+#' netplot(data = nma.bottomley2011, drug.names = interv.names, save.xls = F)
 #'
 #' @export
-netplot <- function(data, drug.names, ...){
+netplot <- function(data, drug.names, save.xls, ...){
 
   options(warn = -1)
 
   if (missing(drug.names)) {
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in argument 'data' is used as intervention names", "\033[0m", "\n")))
+  }
+
+
+  save.xls <- if (missing(save.xls)) {
+    FALSE
+  } else {
+    save.xls
   }
 
 
@@ -101,7 +131,8 @@ netplot <- function(data, drug.names, ...){
              dat$two.arm.ns,
              dat$multi.arm.ns,
              dat$total.rand.network,
-             dat$total.obs.network)
+             dat$prop.obs.network,
+             dat$prop.mod.network)
 
   results <- data.frame(characteristics, value)
   colnames(results) <- c("Characteristic", "Total number")
@@ -113,9 +144,19 @@ netplot <- function(data, drug.names, ...){
     results
   }
 
+
+  ## Write the tables as .xlsx
+  if (save.xls == TRUE) {
+    writexl::write_xlsx(table.interv.bin, paste0("Table.interventions.xlsx"))
+    writexl::write_xlsx(table.comp.bin, paste0("Table.comparisons.xlsx"))
+  }
+
+
   return(list(Network.description = knitr::kable(results),
               Table.interventions = dat$Table.interventions,
-              Table.comparisons = dat$Table.comparisons))
+              Table.comparisons = dat$Table.comparisons,
+              Table.interventions.Missing = dat$Table.interventions.Missing,
+              Table.comparisons.Missing = dat$Table.comparisons.Missing))
 }
 
 

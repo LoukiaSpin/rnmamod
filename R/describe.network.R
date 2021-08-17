@@ -4,110 +4,288 @@ describe.network <- function(data, drug.names, measure) {
 
   options(warn = -1)
 
+  # Use the 'data.preparation' function
   dat <- data.preparation(data, measure)
 
+  # Number of two-arm trian
   two.arm.ns <- length(which(dat$na < 3))
 
+  # Number of multi-arm trials
   multi.arm.ns <- length(which(dat$na > 2))
 
+  # Number of randomised per intervention
   total.rand.partic.interv <- aggregate(unlist(dat$N), by = list(unlist(dat$t)), sum)[, 2]
 
+  # Number of completers per intervention
   total.obs.partic.interv <- aggregate(unlist(dat$N - dat$m), by = list(unlist(dat$t)), sum)[, 2]
 
-  pair.mod <- pairwise(as.list(dat$t), event = as.list(dat$m), n = as.list(dat$N), data = cbind(dat$t, dat$m, dat$N), studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
+  # Proportion of completers per intervention (in %)
+  prop.obs.partic.interv <- round(total.obs.partic.interv/total.rand.partic.interv, 2)*100
+
+  # Proportion of missing outcome data (MOD) per intervention (in %)
+  prop.mod.interv <- 100 - prop.obs.partic.interv
+
+  # Proportion of MOD per trial-arm
+  arm.mod <- dat$m/dat$N
+
+  # Minimum proportion of MOD per intervention in % (across the corresponding trials)
+  min.mod.interv <- round(aggregate(unlist(arm.mod), by = list(unlist(dat$t)), min)[, 2], 2)*100
+
+  # Median proportion of MOD per intervention in % (across the corresponding trials)
+  median.mod.interv <- round(aggregate(unlist(arm.mod), by = list(unlist(dat$t)), median)[, 2], 2)*100
+
+  # Max proportion of MOD per intervention in % (across the corresponding trials)
+  max.mod.interv <- round(aggregate(unlist(arm.mod), by = list(unlist(dat$t)), max)[, 2], 2)*100
+
+  # Turn into long format using the 'pairwise' function (netmeta): MOD
+  pair.mod <- pairwise(as.list(dat$t),
+                       event = as.list(dat$m),
+                       n = as.list(dat$N),
+                       data = cbind(dat$t, dat$m, dat$N),
+                       studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
   colnames(pair.mod) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
 
+  # Name the interventions in each arm
   pair.mod[, 2] <- drug.names[pair.mod$t1]
-
   pair.mod[, 3] <- drug.names[pair.mod$t2]
 
+  # The comparison between the second and first arms of each trial
   comp <- paste(pair.mod[, "t2"], "vs", pair.mod[, "t1"])
 
+  # Number of direct comparison
   direct.comp <- length(unique(comp))
 
-  total.rand.network <- sum(apply(pair.mod[, c("n1", "n2")], 1, sum))
+  # Total number of randomised in the network
+  total.rand.network <- sum(pair.mod[, c("n1", "n2")])
 
+  # Proportion of completers in the network (in %)
+  prop.obs.network <- round((sum(pair.mod[, c("n1", "n2")] - pair.mod[, c("m1", "m2")])/total.rand.network), 2)*100
+
+  # Proportion of missing outcome data (MOD) in the network (in %)
+  prop.mod.network <- 100 - prop.obs.network
+
+  # Number of randomised per observed comparison
   total.rand.partic.comp <- aggregate(apply(pair.mod[, c("n1", "n2")], 1, sum), by = list(comp), sum)[, 2]
 
-  total.obs.network <- sum(apply(pair.mod[, c("n1", "n2")] - pair.mod[, c("m1", "m2")], 1, sum))
-
+  # Number of completers per observed comparison
   total.obs.partic.comp <- aggregate(apply(pair.mod[, c("n1", "n2")] - pair.mod[, c("m1", "m2")], 1, sum), by = list(comp), sum)[, 2]
 
+  # Proportion of completers per observed comparison (in %)
+  total.obs.partic.comp <- round(total.obs.partic.comp/total.rand.partic.comp, 2)*100
+
+  # Proportion of MOD per observed comparison (in %)
+  prop.mod.comp <- 100 - prop.obs.partic.comp
+
+  # Proportion of MOD per trial-comparison
+  trial.mod <- apply(pair.mod[, c("m1", "m2")], 1, sum)/apply(pair.mod[, c("n1", "n2")], 1, sum)
+
+  # Minimum proportion of MOD per observed comparison in % (across the corresponding trials)
+  min.mod.comp <- round(aggregate(trial.mod, by = list(comp), min)[, 2], 2)*100
+
+  # Median proportion of MOD per observed comparison in % (across the corresponding trials)
+  median.mod.comp <- round(aggregate(trial.mod, by = list(comp), median)[, 2], 2)*100
+
+  # Maximum proportion of MOD per observed comparison in % (across the corresponding trials)
+  max.mod.comp <- round(aggregate(trial.mod, by = list(comp), max)[, 2], 2)*100
+
+  # Tabulate summary statistics per observed comparison: MOD
+  table.comp.mod <- data.frame(as.data.frame(table(comp))[, 1],
+                               as.data.frame(table(comp))[, 2],
+                               total.rand.partic.comp,
+                               prop.obs.partic.comp,
+                               prop.mod.comp,
+                               min.mod.comp,
+                               median.mod.comp,
+                               max.mod.comp)
+  colnames(table.comp.mod) <- c("Comparisons",
+                                "Total trials",
+                                "Total randomised",
+                                "Completers (%)",
+                                "Missing participants (%)",
+                                "Min. missing (%)",
+                                "Median missing (%)",
+                                "Max. missing (%)")
+
+  # Tabulate summary statistics per intervention: MOD
+  table.interv.mod <- data.frame(drug.names,
+                                 as.data.frame(table(unlist(dat$t)))[, 2],
+                                 total.rand.partic.interv,
+                                 prop.obs.partic.interv,
+                                 prop.mod.interv,
+                                 min.mod.interv,
+                                 median.mod.interv,
+                                 max.mod.interv)
+  colnames(table.interv.mod) <- c("Interventions",
+                                  "Total trials",
+                                  "Total randomised",
+                                  "Completers (%)",
+                                  "Missing participants (%)",
+                                  "Min. missing (%)",
+                                  "Median missing (%)",
+                                  "Max. missing (%)")
+
   if (measure == "OR") {
+    # Proportion of observed events per trial-arm
     arm.risk <- dat$r/(dat$N - dat$m)
+
+    # For each trial calculate the number of arms with zero events
     rule <- apply(ifelse(arm.risk == 0.0, 1, 0), 1, sum, na.rm = T)
+
+    # Number of trials with at least one arm with zero events
     trial.zero.event <- ifelse(length(which(rule > 0)) == 0, 0, which(rule > 0))
+
+    # Number of trials with zero events in *all* arms
     trial.all.zero.event <- ifelse(length(which(is.element(rule, dat$na) == T)) == 0, 0, which(is.element(rule, dat$na) == T))
 
+    # Total number of events in the network
     total.event.network <- sum(unlist(dat$r), na.rm = T)
 
+    # Number of events per intervention
     total.event.interv <- aggregate(unlist(dat$r), by = list(unlist(dat$t)), sum)[, 2]
 
-    total.risk.interv <- round(total.event.interv/total.obs.partic.interv, 2)
+    # Proportion of observed events per intervention (in %)
+    total.risk.interv <- round(total.event.interv/total.obs.partic.interv, 2)*100
 
-    min.risk.interv <- round(aggregate(unlist(dat$r)/unlist(dat$N - dat$m), by = list(unlist(dat$t)), min)[, 2], 2)
+    # Minimum proportion of observed events per intervention in % (across the corresponding trials)
+    min.risk.interv <- round(aggregate(unlist(arm.risk), by = list(unlist(dat$t)), min)[, 2], 2)*100
 
-    median.risk.interv <- round(aggregate(unlist(dat$r)/unlist(dat$N - dat$m), by = list(unlist(dat$t)), median)[, 2], 2)
+    # Median proportion of observed events per intervention in % (across the corresponding trials)
+    median.risk.interv <- round(aggregate(unlist(arm.risk), by = list(unlist(dat$t)), median)[, 2], 2)*100
 
-    max.risk.interv <- round(aggregate(unlist(dat$r)/unlist(dat$N - dat$m), by = list(unlist(dat$t)), max)[, 2], 2)
+    # Max proportion of observed events per intervention in % (across the corresponding trials)
+    max.risk.interv <- round(aggregate(unlist(arm.risk), by = list(unlist(dat$t)), max)[, 2], 2)*100
 
-    table.interv.bin <- data.frame(drug.names, as.data.frame(table(unlist(dat$t)))[, 2], total.rand.partic.interv, total.obs.partic.interv, total.event.interv,
-                                   total.risk.interv, min.risk.interv, median.risk.interv, max.risk.interv)
-    colnames(table.interv.bin) <- c("Interventions", "Total trials", "Total randomised", "Total completers", "Total events", "Total events (%)",
-                                    "Minimum % events", "Median % events", "Maximum % events")
+    # Tabulate summary statistics per intervention
+    table.interv.bin <- data.frame(drug.names,
+                                   as.data.frame(table(unlist(dat$t)))[, 2],
+                                   total.rand.partic.interv,
+                                   prop.obs.partic.interv,
+                                   prop.mod.interv,
+                                   total.risk.interv,
+                                   min.risk.interv,
+                                   median.risk.interv,
+                                   max.risk.interv)
+    colnames(table.interv.bin) <- c("Interventions",
+                                    "Total trials",
+                                    "Total randomised",
+                                    "Completers (%)",
+                                    "Missing participants (%)",
+                                    "Total events (%)",
+                                    "Min. events (%)",
+                                    "Median events (%)",
+                                    "Max. events (%)")
 
-
-    pair.bin <- pairwise(as.list(dat$t), event = as.list(dat$r), n = as.list(dat$N), data = cbind(dat$t, dat$r, dat$N), studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
+    # Turn into long format using the 'pairwise' function (netmeta): binary outcome
+    pair.bin <- pairwise(as.list(dat$t),
+                         event = as.list(dat$r),
+                         n = as.list(dat$N),
+                         data = cbind(dat$t, dat$r, dat$N),
+                         studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
     colnames(pair.bin) <- c("study", "t1", "t2", "r1", "r2", "n1", "n2")
 
+    # Proportion of observed events per trial-comparison
+    trial.risk <- apply(pair.bin[, c("r1", "r2")], 1, sum)/(apply(pair.bin[, c("n1", "n2")], 1, sum) - apply(pair.mod[, c("m1", "m2")], 1, sum))
+
+    # Number of events per observed comparison
     total.event.comp <- aggregate(apply(pair.bin[, c("r1", "r2")], 1, sum), by = list(comp), sum)[, 2]
 
-    total.risk.comp <- round(total.event.comp/total.obs.partic.comp, 2)
+    # Proportion of observed events per observed comparison (in %)
+    total.risk.comp <- round(total.event.comp/total.obs.partic.comp, 2)*100
 
-    min.risk.comp <- round(aggregate(apply(pair.bin[, c("r1", "r2")], 1, sum)/(apply(pair.bin[, c("n1", "n2")], 1, sum) - apply(pair.mod[, c("m1", "m2")], 1, sum)), by = list(comp), min)[, 2], 2)
+    # Minimum proportion of observed events per observed comparison in % (across the corresponding trials)
+    min.risk.comp <- round(aggregate(trial.risk, by = list(comp), min)[, 2], 2)*100
 
-    median.risk.comp <- round(aggregate(apply(pair.bin[, c("r1", "r2")], 1, sum)/(apply(pair.bin[, c("n1", "n2")], 1, sum) - apply(pair.mod[, c("m1", "m2")], 1, sum)), by = list(comp), median)[, 2], 2)
+    # Median proportion of observed events per observed comparison in % (across the corresponding trials)
+    median.risk.comp <- round(aggregate(trial.risk, by = list(comp), median)[, 2], 2)*100
 
-    max.risk.comp <- round(aggregate(apply(pair.bin[, c("r1", "r2")], 1, sum)/(apply(pair.bin[, c("n1", "n2")], 1, sum) - apply(pair.mod[, c("m1", "m2")], 1, sum)), by = list(comp), max)[, 2], 2)
+    # Maximum proportion of observed events per observed comparison in % (across the corresponding trials)
+    max.risk.comp <- round(aggregate(trial.risk, by = list(comp), max)[, 2], 2)*100
 
-    table.comp.bin <- data.frame(as.data.frame(table(comp))[, 1], as.data.frame(table(comp))[, 2], total.rand.partic.comp, total.obs.partic.comp, total.event.comp,
-                                 total.risk.comp, min.risk.comp, median.risk.comp, max.risk.comp)
-    colnames(table.comp.bin) <- c("Comparisons", "Total trials", "Total randomised", "Total completers", "Total events", "Total events (%)",
-                                  "Minimum % events", "Median % events", "Maximum % events")
-
-    ## Write the tables as .xlsx
-    writexl::write_xlsx(table.interv.bin, paste0("Table.interventions.xlsx"))
-    writexl::write_xlsx(table.comp.bin, paste0("Table.comparisons.xlsx"))
+    # Tabulate summary statistics per observed comparison
+    table.comp.bin <- data.frame(as.data.frame(table(comp))[, 1],
+                                 as.data.frame(table(comp))[, 2],
+                                 total.rand.partic.comp,
+                                 prop.obs.partic.comp,
+                                 prop.mod.comp,
+                                 total.risk.comp,
+                                 min.risk.comp,
+                                 median.risk.comp,
+                                 max.risk.comp)
+    colnames(table.comp.bin) <- c("Comparisons",
+                                  "Total trials",
+                                  "Total randomised",
+                                  "Completers (%)",
+                                  "Missing participants (%)",
+                                  "Total events (%)",
+                                  "Min. events (%)",
+                                  "Median events (%)",
+                                  "Max. events (%)")
   } else {
-
+    # Minimum t-statistic per intervention (across the corresponding trials)
     min.t.interv <- round(aggregate(unlist(dat$y0)/unlist(dat$se0), by = list(unlist(dat$t)), min)[, 2], 2)
 
+    # Median t-statistic per intervention (across the corresponding trials)
     median.t.interv <- round(aggregate(unlist(dat$y0)/unlist(dat$se0), by = list(unlist(dat$t)), median)[, 2], 2)
 
+    # Maximum t-statistic per intervention (across the corresponding trials)
     max.t.interv <- round(aggregate(unlist(dat$y0)/unlist(dat$se0), by = list(unlist(dat$t)), max)[, 2], 2)
 
-    table.interv.con <- data.frame(drug.names, as.data.frame(table(unlist(dat$t)))[, 2], total.rand.partic.interv, total.obs.partic.interv,
-                                   min.t.interv, median.t.interv, max.t.interv)
-    colnames(table.interv.con) <- c("Interventions", "Total trials", "Total randomised", "Total completers", "Minimum y/se", "Median y/se", "Maximum y/se")
+    # Tabulate summary statistics per intervention
+    table.interv.con <- data.frame(drug.names,
+                                   as.data.frame(table(unlist(dat$t)))[, 2],
+                                   total.rand.partic.interv,
+                                   prop.obs.partic.interv,
+                                   prop.mod.interv,
+                                   min.t.interv,
+                                   median.t.interv,
+                                   max.t.interv)
+    colnames(table.interv.con) <- c("Interventions",
+                                    "Total trials",
+                                    "Total randomised",
+                                    "Completers (%)",
+                                    "Missing participants (%)",
+                                    "Min. t-statistic",
+                                    "Median t-statistic",
+                                    "Max. t-statistic")
 
-
-    pair.con <- pairwise(as.list(dat$t),  n = as.list(dat$N), mean = as.list(dat$y0), sd = as.list(dat$se0), data = cbind(dat$t, dat$N, dat$y0, dat$se0), studlab = 1:dat$ns)[, c(3:5, 7, 10, 8, 11, 6, 9)]
+    # Turn into long format using the 'pairwise' function (netmeta): continuous outcome
+    pair.con <- pairwise(as.list(dat$t),
+                         n = as.list(dat$N),
+                         mean = as.list(dat$y0),
+                         sd = as.list(dat$se0),
+                         data = cbind(dat$t, dat$N, dat$y0, dat$se0),
+                         studlab = 1:dat$ns)[, c(3:5, 7, 10, 8, 11, 6, 9)]
     colnames(pair.con) <- c("study", "t1", "t2", "y1", "y2", "se1", "se2","n1", "n2")
 
-    min.t.comp <- round(aggregate((pair.con$y2 - pair.con$y1)/(pair.con$se2 + pair.con$se1), by = list(comp), min)[, 2], 2)
+    # t-statistic (t2 versus t1) per trial-comparison
+    t.stat.trial <- (pair.con$y2 - pair.con$y1)/sqrt((pair.con$se2)^2 + (pair.con$se1)^2)
 
-    median.t.comp <- round(aggregate((pair.con$y2 - pair.con$y1)/(pair.con$se2 + pair.con$se1), by = list(comp), median)[, 2], 2)
+    # Minimum t-statistic per observed comparison (across the corresponding trials)
+    min.t.comp <- round(aggregate(t.stat.trial, by = list(comp), min)[, 2], 2)
 
-    max.t.comp <- round(aggregate((pair.con$y2 - pair.con$y1)/(pair.con$se2 + pair.con$se1), by = list(comp), max)[, 2], 2)
+    # Median t-statistic per observed comparison (across the corresponding trials)
+    median.t.comp <- round(aggregate(t.stat.trial, by = list(comp), median)[, 2], 2)
 
-    table.comp.con <- data.frame(as.data.frame(table(comp))[, 1], as.data.frame(table(comp))[, 2], total.rand.partic.comp, total.obs.partic.comp,
-                                 min.t.comp, median.t.comp, max.t.comp)
-    colnames(table.comp.con) <- c("Comparisons", "Total trials", "Total randomised", "Total completers", "Minimum MD/se", "Median MD/se", "Maximum MD/se")
+    # Maximum t-statistic per observed comparison (across the corresponding trials)
+    max.t.comp <- round(aggregate(t.stat.trial, by = list(comp), max)[, 2], 2)
 
-    ## Write the tables as .xlsx
-    writexl::write_xlsx(table.interv.con, paste0("Table.interventions.xlsx"))
-    writexl::write_xlsx(table.comp.con, paste0("Table.comparisons.xlsx"))
-
+    # Tabulate summary statistics per observed comparison
+    table.comp.con <- data.frame(as.data.frame(table(comp))[, 1],
+                                 as.data.frame(table(comp))[, 2],
+                                 total.rand.partic.comp,
+                                 prop.obs.partic.comp,
+                                 prop.mod.comp,
+                                 min.t.comp,
+                                 median.t.comp,
+                                 max.t.comp)
+    colnames(table.comp.con) <- c("Comparisons",
+                                  "Total trials",
+                                  "Total randomised",
+                                  "Completers (%)",
+                                  "Missing participants (%)",
+                                  "Min. t-statistic",
+                                  "Median t-statistic",
+                                  "Max. t-statistic")
   }
 
 
@@ -115,7 +293,9 @@ describe.network <- function(data, drug.names, measure) {
                   two.arm.ns = two.arm.ns,
                   multi.arm.ns = multi.arm.ns,
                   total.rand.network = total.rand.network,
-                  total.obs.network = total.obs.network)
+                  prop.obs.network = prop.obs.network,
+                  Table.interventions.Missing = knitr::kable(table.interv.mod),
+                  Table.comparisons.Missing = knitr::kable(table.comp.mod))
 
   results <- if (measure == "OR") {
     append(results, list(total.event.network = total.event.network,
