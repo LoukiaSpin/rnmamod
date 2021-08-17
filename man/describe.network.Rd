@@ -42,11 +42,11 @@ A list of scalar results and four data-frames to be passed to \code{\link{networ
 \description{
 This function calculates the necessary elements to describe a network, such as
   the number of interventions, trials, randomised participants, and so on. Furthermore, this function provides
-  summary statistics of the analysed outcome per intervention and observed comparison in a tabulated format.
+  summary statistics of the missing participants and the analysed outcome per intervention and observed comparison in a tabulated format.
   See 'Value' in the \code{\link[rnmamod]{network.plot}} function for more details.
 }
 \details{
-\code{describe.network} call the \code{data.preparation} function to facilitate the calculations.
+\code{describe.network} calls the \code{data.preparation} function to facilitate the calculations.
 }
 \seealso{
 \code{\link[rnmamod]{network.plot}}, \code{\link[rnmamod]{run.model}}, \code{\link[rnmamod]{data.preparation}}

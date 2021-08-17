@@ -12,7 +12,7 @@
 #' @param measure Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio, mean difference,
 #'   standardised mean difference and ratio of means, respectively.
 #'
-#' @return A list of scalar results and four data-frames to be passed to \code{\link{network.plot}}. The scalar results include:
+#' @return A list of scalar results and four data-frames to be passed to \code{\link[rnmamod]{network.plot}}. The scalar results include:
 #'   \tabular{ll}{
 #'    \code{direct.comp} \tab The number of observed comparisons in the network. \cr
 #'    \tab \cr
