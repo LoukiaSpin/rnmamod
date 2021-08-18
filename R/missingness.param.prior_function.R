@@ -40,28 +40,38 @@ missingness.param.prior <- function(assumption, mean.misspar) {
 
 
   ## Condition regarding the specification of the prior mean ('mean.misspar') for the missingness parameter
-  if (missing(mean.misspar) & (is.element(assumption, c("HIE-ARM", "IDE-ARM" )))) {
+  if (!is.element(assumption, c("IDE-ARM", "IDE-TRIAL", "IDE-COMMON", "HIE-ARM", "HIE-TRIAL", "HIE-COMMON", "IND-CORR", "IND-UNCORR"))) {
+
+    stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL', 'HIE-COMMON', or 'IND-CORR', 'IND-UNCORR' ", call. = F)
+
+  } else if (is.element(assumption, c("HIE-ARM", "IDE-ARM" )) & missing(mean.misspar)) {
 
     mean.misspar <- rep(0.0001, 2)
 
-  }  else if (missing(mean.misspar) & (!is.element(assumption, c("HIE-ARM", "IDE-ARM")))) {
+  } else if (is.element(assumption, c("IDE-TRIAL", "IDE-COMMON", "HIE-TRIAL", "HIE-COMMON", "IND-CORR", "IND-UNCORR")) & missing(mean.misspar)) {
 
     mean.misspar <- 0.0001
 
-  }  else if (!missing(mean.misspar) & (is.element(assumption, c("HIE-ARM", "IDE-ARM"))) & is.null(dim(mean.misspar))) {
+  } else if (is.element(assumption, c("HIE-ARM", "IDE-ARM")) & (length(mean.misspar) != 2)) {
 
-    mean.misspar <- rep(ifelse(mean.misspar == 0, 0.0001, mean.misspar), 2)
+    stop("'mean.misspar' must be a vector of two numeric values", call. = F)
 
-  } else if (!missing(mean.misspar) & (is.element(assumption, c("HIE-ARM", "IDE-ARM"))) & !is.null(dim(mean.misspar))) {
+  } else if (is.element(assumption, c("HIE-ARM", "IDE-ARM")) & (length(mean.misspar) == 2)) {
 
     mean.misspar <- as.vector(mean.misspar)
     mean.misspar[1] <- ifelse(mean.misspar[1] == 0, 0.0001, mean.misspar[1])
     mean.misspar[2] <- ifelse(mean.misspar[2] == 0, 0.0001, mean.misspar[2])
 
+  } else if (is.element(assumption, c("IDE-TRIAL", "IDE-COMMON", "HIE-TRIAL", "HIE-COMMON", "IND-CORR", "IND-UNCORR")) & (length(mean.misspar) > 1)) {
+
+    stop("'mean.misspar' must be a scalar", call. = F)
+
   } else {
 
     mean.misspar <- mean.misspar
-
   }
 
+  return(mean.misspar)
+
 }
+
