@@ -8,7 +8,18 @@
   
 ## Description 
 
-**rnmamod** is an R package to perform one-stage Bayesian fixed-effect or random-effects network meta-analysis while adjusting for *missing participant outcome data* using the pattern-mixture model. In the case of two interventions, rnmamod performs one-stage Bayesian pairwise meta-analysis. The package handles a data-frame of binary or continuous outcome data in the *arm-based format*. The odds ratio, mean difference, standardised mean difference, and ratio of means are currently considered. The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. The package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Missing participant outcome data are addressed in all models of the rnmamod package. The rnmamod package also includes a rich suite of visualisation tools that aid the interpretation and accommodation of the results in the submitted research work for publication. 
+**rnmamod** is an R package to perform one-stage Bayesian fixed-effect or random-effects network meta-analysis while adjusting for *missing participant outcome data* using the pattern-mixture model. In the case of two interventions, rnmamod performs one-stage Bayesian pairwise meta-analysis. 
+
+The package handles data inputs in *arm-based format*:
+- binary data (effect size: odds ratio)  
+- continuous data (effect size: raw and standardised mean differences, ratio of means).
+
+<!--- The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. --->
+
+The package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Also includes a rich suite of visualisation tools to aid in interpretation of the results and preparation of NMA manuscript submission. 
+Missing participant outcome data are addressed in all models of the rnmamod package.
+
+<!---that aid the interpretation and accommodation of the results in the submitted research work for publication. --->
 
 The rnmamod package is currently in development version.
 
@@ -21,7 +32,8 @@ Run the following code to install rnmamod:
 
 ## Example
 
-We will use the dataset of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that includes 21 trials comparing seven pharmacologic interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. The prevention of COPD exacerbation (beneficial outcome) is the analysed binary outcome.
+<!--- We will use the dataset of --->
+[Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) comprising 21 trials comparing seven pharmacologic interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. The prevention of COPD exacerbation (beneficial outcome) is the analysed binary outcome.
 
 ``` r
 head(nma.baker2009)
@@ -43,7 +55,9 @@ interv.names <- c("placebo", "budesodine", "budesodine plus formoterol", "flutic
 netplot(data = nma.baker2009, drug.names = interv.names, text.cex = 1.5)
 ```
 
-<div style="text-align: center"> <img src="man/figures/network_Baker.png" width="800" height="550" align="center"></div>
+<div style="text-align: center"> 
+<img src="man/figures/network_Baker.png" width="800" height="550" align="center">
+</div>
 
 The following code performs a Bayesian random-effects network meta-analysis under the missing at random assumption and using intervention-specific informative missingness odds ratio (`assumption = "IDE-ARM"`) in the logarithmic scale:
 
