@@ -59,7 +59,6 @@
 #' @export
 mcmc.diagnostics <- function(net, par){
 
-
   options(warn = -1)
 
 
@@ -113,16 +112,6 @@ mcmc.diagnostics <- function(net, par){
 
   ## Turn 'R2jags' object into 'mcmc' object
   jagsfit.mcmc <- as.mcmc(jagsfit)
-
-
-  ## A panel of autocorrelation plots for each chain and every monitored parameter
-  #n.chains <- res1$jagsfit$BUGSoutput$n.chains
-  #autocorrelation <- par(mfrow = c(3, n.chains))
-  #for (i in 1:n.chains) {
-  #  autplot1(jagsfit.mcmc[, par[1]], chain = i, main = paste(par[1], "-", "chain", i))
-  #  autplot1(jagsfit.mcmc[, par[2]], chain = i, main = paste(par[2], "-","chain", i))
-  #  autplot1(jagsfit.mcmc[, par[3]], chain = i, main = paste(par[3], "-","chain", i))
-  #}
 
 
   ## An HTML file with a panel of diagnostic plots per monitored parameter

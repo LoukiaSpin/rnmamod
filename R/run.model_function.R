@@ -408,6 +408,7 @@ run.model <- function(data, measure, model, covar.assumption, assumption, heter.
                        data = data,
                        measure = measure,
                        model = model,
+                       assumption = assumption,
                        mean.misspar = mean.misspar,
                        var.misspar = var.misspar,
                        D = D,

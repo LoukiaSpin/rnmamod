@@ -131,7 +131,7 @@ prepare.nodesplit <- function(measure, model, assumption) {
                        "\n\t\t}")
 
   code <- if (assumption == "HIE-ARM") {
-    code <- paste0(code, "\n\tfor (i in 1:ns) {",
+    paste0(code, "\n\tfor (i in 1:ns) {",
                          "\n\t\tfor(k in 1:na[i]){",
                          "\n\t\t\tphi.m[i, k] <- phi[i, k]",
                          "\n\t\t\tphi[i, k] ~ dnorm(mean.phi[t[i, k]], prec.phi[t[i, k]])",
@@ -151,7 +151,7 @@ prepare.nodesplit <- function(measure, model, assumption) {
                          "\n\t\t}",
                          "\n\tpsi.phi <- pow(precd.phi, -2)")
   } else if (assumption == "HIE-TRIAL") {
-    code <- paste0(code, "\n\tfor (i in 1:ns) {",
+    paste0(code, "\n\tfor (i in 1:ns) {",
                          "\n\t\tfor(k in 1:na[i]){",
                          "\n\t\t\tphi.m[i, k] <- phi[i, k]",
                          "\n\t\t\tphi[i, k] ~ dnorm(mean.phi[i], prec.phi[i])",
@@ -163,7 +163,7 @@ prepare.nodesplit <- function(measure, model, assumption) {
                          "\n\t\t}",
                          "\n\tpsi.phi <- pow(precd.phi, -2)")
   } else if (assumption == "HIE-COMMON") {
-    code <- paste0(code, "\n\tfor (i in 1:ns) {",
+    paste0(code, "\n\tfor (i in 1:ns) {",
                          "\n\t\tfor(k in 1:na[i]){",
                          "\n\t\t\tphi.m[i, k] <- phi[i, k]",
                          "\n\t\t\tphi[i, k] ~ dnorm(mean.phi, prec.phi)",
@@ -173,7 +173,7 @@ prepare.nodesplit <- function(measure, model, assumption) {
                          "\n\tsd.phi ~ dunif(0, psi.phi)",
                          "\n\tpsi.phi <- pow(precd.phi, -2)")
   } else if (assumption == "IDE-ARM") {
-    code <- paste0(code, "\n\tfor (i in 1:ns) {",
+    paste0(code, "\n\tfor (i in 1:ns) {",
                          "\n\t\tfor(k in 1:na[i]){",
                          "\n\t\t\tphi.m[i, k] <- phi[t[i, k]]",
                          "\n\t\t\t}}",
@@ -185,7 +185,7 @@ prepare.nodesplit <- function(measure, model, assumption) {
                          "\n\t\tphi[t] ~ dnorm(meand.phi[1], precd.phi)",
                          "\n\t\t}")
   } else if (assumption == "IDE-TRIAL") {
-    code <- paste0(code, "\n\tfor (i in 1:ns) {",
+    paste0(code, "\n\tfor (i in 1:ns) {",
                          "\n\t\tfor(k in 1:na[i]){",
                          "\n\t\t\tphi.m[i, k] <- phi[i]",
                          "\n\t\t\t}}",
@@ -193,13 +193,13 @@ prepare.nodesplit <- function(measure, model, assumption) {
                          "\n\t\tphi[i] ~ dnorm(meand.phi, precd.phi)",
                          "\n\t\t}")
   } else if (assumption == "IDE-COMMON") {
-    code <- paste0(code, "\n\tfor (i in 1:ns) {",
+    paste0(code, "\n\tfor (i in 1:ns) {",
                          "\n\t\tfor(k in 1:na[i]){",
                          "\n\t\t\tphi.m[i, k] <- phi",
                          "\n\t\t\t}}",
                          "\n\t\tphi ~ dnorm(meand.phi, precd.phi)")
   } else if (assumption == "IND-CORR") {
-    code <- paste0(code, "\n\tfor (i in 1:ns) {",
+    paste0(code, "\n\tfor (i in 1:ns) {",
                          "\n\t\tfor (k in 1:na[i]) {",
                          "\n\t\t\tphi.m[i, k] <- phi[i, k]",
                          "\n\t\t\tfor (l in 1:na[i]) {",
@@ -209,7 +209,7 @@ prepare.nodesplit <- function(measure, model, assumption) {
                          "\n\t\tphi[i, 1:na[i]] ~ dmnorm(M[i, 1:na[i]], Omega[i, 1:na[i], 1:na[i]])",
                          "\n\t\t}")
   } else if (assumption == "IND-UNCORR") {
-    code <- paste0(code, "\n\tfor (i in 1:ns) {",
+    paste0(code, "\n\tfor (i in 1:ns) {",
                          "\n\t\tfor (k in 1:na[i]) {",
                          "\n\t\t\tphi.m[i, k] <- phi[i, k]",
                          "\n\t\t\tphi[i, k] ~ dnorm(meand.phi, precd.phi)",
