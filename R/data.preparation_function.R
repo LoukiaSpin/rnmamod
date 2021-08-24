@@ -38,6 +38,7 @@
 #' @export
 data.preparation <- function(data, measure) {
 
+  options(warn = -1)
 
   measure <- if (missing(measure)) {
     stop("The argument 'measure' needs to be defined", call. = F)

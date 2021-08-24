@@ -82,7 +82,6 @@
 #' @export
 netplot <- function(data, drug.names, save.xls, ...){
 
-  options(warn = -1)
 
   save.xls <- if (missing(save.xls)) {
     FALSE
