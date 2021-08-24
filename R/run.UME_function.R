@@ -173,8 +173,8 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
     indic.multi <- unique(t(do.call(cbind, indic.multi0)))
     t1.indic.multi <- indic.multi[, 1]
     t2.indic.multi <- indic.multi[, 2]
-    N.obs.multi <- length(t1.indic.multi)
     t.indic.multi <- unique(c(t1.indic.multi, t2.indic.multi))[-improved.UME(t, m, N, item$ns, na)$ref.base]
+    N.obs.multi <- length(t1.indic.multi)
   }
 
 
@@ -223,12 +223,12 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
                                       "t2.m" = t2.indic.multi,
                                       "N.obs.multi" = N.obs.multi,
                                       "ns.multi" = ns.multi,
-                                      "t1.bn" = 0,
-                                      "t2.bn" = 0,
+                                      "t1.bn" = t1.indic,     # Pseudo-vector so that the model runs
+                                      "t2.bn" = t1.indic,     # Pseudo-vector so that the model runs
                                       #"base" = 0,
-                                      "ref.base" = 0,
-                                      "N.t.m" = 0,
-                                      "t.m" = t.indic.multi,
+                                      "ref.base" = 1,         # Pseudo-number so that the model runs
+                                      "N.t.m" = length(2:5),  # Pseudo-number so that the model runs
+                                      "t.m" = 2:5,            # Pseudo-vector so that the model runs
                                       "nbase.multi" = 0))
   }
 
