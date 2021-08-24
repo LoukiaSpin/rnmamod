@@ -174,6 +174,7 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
     t1.indic.multi <- indic.multi[, 1]
     t2.indic.multi <- indic.multi[, 2]
     N.obs.multi <- length(t1.indic.multi)
+    t.indic.multi <- unique(c(t1.indic.multi, t2.indic.multi))[-improved.UME(t, m, N, item$ns, na)$ref.base]
   }
 
 
@@ -212,7 +213,10 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
                                       "ns.multi" = ns.multi,
                                       "t1.bn" = impr.UME$t1.bn,
                                       "t2.bn" = impr.UME$t2.bn,
-                                      "base" = impr.UME$base,
+                                      #"base" = impr.UME$base,
+                                      "ref.base" = impr.UME$ref.base,
+                                      "N.t.m" = length(t.indic.multi),
+                                      "t.m" = t.indic.multi,
                                       "nbase.multi" = impr.UME$nbase.multi))
   } else if (max(na) < 3 || is.null(improved.UME(t, m, N, item$ns, na)$nbase.multi)) {
     data.jag <- append(data.jag, list("t1.m" = t1.indic.multi,
@@ -221,7 +225,10 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
                                       "ns.multi" = ns.multi,
                                       "t1.bn" = 0,
                                       "t2.bn" = 0,
-                                      "base" = 0,
+                                      #"base" = 0,
+                                      "ref.base" = 0,
+                                      "N.t.m" = length(t.indic.multi),
+                                      "t.m" = t.indic.multi,
                                       "nbase.multi" = 0))
   }
 

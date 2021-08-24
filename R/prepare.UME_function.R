@@ -165,23 +165,32 @@ prepare.UME <- function(measure, model, assumption) {
 
   code <- if (model == "RE") {
     paste0(code, "\n\t\t\tdelta.m[i, k] ~ dnorm(md.m[i, k], precd.m[i, k])",
-                 "\n\t\t\tmd.m[i, k] <- EM.m[t[i, k], t[i, 1]] + sw.m[i, k]",
-                 "\n\t\t\tw.m[i, k] <- delta.m[i, k] - EM.m[t[i, k], t[i, 1]]",
+                 #"\n\t\t\tmd.m[i, k] <- EM.m[t[i, k], t[i, 1]] + sw.m[i, k]",
+                 "\n\t\t\tmd.m[i, k] <- d.m[t[i, k]] - d.m[t[i, 1]] + sw.m[i, k]",
+                 #"\n\t\t\tw.m[i, k] <- delta.m[i, k] - EM.m[t[i, k], t[i, 1]]",
+                 "\n\t\t\tw.m[i, k] <- delta.m[i, k] - (d.m[t[i, k]] - d.m[t[i, 1]])",
                  "\n\t\t\tprecd.m[i, k] <- 2*(k - 1)*prec/k",
                  "\n\t\t\tsw.m[i, k] <- sum(w.m[i, 1:(k - 1)])/(k - 1)")
   } else {
-    paste0(code, "\n\t\t\tdelta.m[i, k] <- EM.m[t[i, k], t[i, 1]]")
+    #paste0(code, "\n\t\t\tdelta.m[i, k] <- EM.m[t[i, k], t[i, 1]]")
+    paste0(code, "\n\t\t\tdelta.m[i, k] <- d.m[t[i, k]] - d.m[t[i, 1]]")
   }
 
   code <- paste0(code, "\n\t\t\t}}",
                        "\n\tfor (i in 1:nbase.multi) {",
-                       "\n\t\tEM[t2.bn[i], t1.bn[i]] <- EM.m[t2.bn[i], base[i]] - EM.m[t1.bn[i], base[i]]",
+                       #"\n\t\tEM[t2.bn[i], t1.bn[i]] <- EM.m[t2.bn[i], base[i]] - EM.m[t1.bn[i], base[i]]",
+                       "\n\t\tEM[t2.bn[i], t1.bn[i]] <- d.m[t2.bn[i]] - d.m[t1.bn[i]]",
                        "\n\t\t}",
                        "\n\tfor (i in 1:N.obs) {",
                        "\n\t\tEM[t2[i], t1[i]] ~ dnorm(0, .0001)",
                        "\n\t\t}",
+                       "\n\td.m[ref.base] <- 0",
+                       "\n\tfor (i in 1:N.t.m) {",
+                       "\n\t\td.m[t.m[i]] ~ dnorm(0, .0001)",
+                       "\n\t\t}",
                        "\n\tfor (i in 1:N.obs.multi) {",
-                       "\n\t\tEM.m[t2.m[i], t1.m[i]] ~ dnorm(0, .0001)",
+                       #"\n\t\tEM.m[t2.m[i], t1.m[i]] ~ dnorm(0, .0001)"
+                       "\n\t\tEM.m[t2.m[i], t1.m[i]] <- d.m[t2.m[i]] - d.m[t1.m[i]]",
                        "\n\t\t}")
 
   if (assumption == "HIE-ARM") {
