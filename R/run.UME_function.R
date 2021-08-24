@@ -227,7 +227,7 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
                                       "t2.bn" = 0,
                                       #"base" = 0,
                                       "ref.base" = 0,
-                                      "N.t.m" = length(t.indic.multi),
+                                      "N.t.m" = 0,
                                       "t.m" = t.indic.multi,
                                       "nbase.multi" = 0))
   }

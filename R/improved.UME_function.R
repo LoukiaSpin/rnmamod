@@ -67,9 +67,9 @@ improved.UME <- function(t, m, N, ns, na){
 
   ## Turn 'tab.comp.arms0' into a data-frame
   #if(dim(tab.comp.arms0)[2] == 1 || (length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 1)) {
-  tab.comp.arms <- if (unique(wide.format$arms == "multi-arm")[1] == T) {
+  tab.comp.arms <- if (unique(wide.format$arms == "multi-arm")[1] == TRUE) {
     data.frame(names(tab.comp.arms0[, 1]), tab.comp.arms0[, 1], rep(0, dim(tab.comp.arms0)[1]))
-  } else if (unique(wide.format$arms == "two-arm")[2] == T) {
+  } else if (unique(wide.format$arms == "two-arm")[1] == TRUE) {
     data.frame(names(tab.comp.arms0[, 1]), rep(0, dim(tab.comp.arms0)[1]), tab.comp.arms0[, 1])
   #} else if(dim(tab.comp.arms0)[2] > 1 & length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 2) {
   } else {
@@ -80,7 +80,7 @@ improved.UME <- function(t, m, N, ns, na){
 
 
   ## Keep only those comparisons not studied in two-arm trials
-  if (unique((wide.format$arms == "multi-arm")) == TRUE || unique((wide.format$arms == "two-arm")) != TRUE) {
+  if (unique((wide.format$arms == "multi-arm"))[1] == TRUE || unique((wide.format$arms == "two-arm"))[1] == FALSE) {
     tab.comp.arms$select <- ifelse(tab.comp.arms$two == 0 & tab.comp.arms$multi != 0, T, F)
     subs <- subset(tab.comp.arms, select == T, select = comp)
 
@@ -158,7 +158,7 @@ improved.UME <- function(t, m, N, ns, na){
     #return(list(nbase.multi = nbase.multi, t1.bn = final$t1, t2.bn = final$t2, base = final$base, obs.comp = tab.comp.arms))
 
   #}
-  if (unique(wide.format$arms == "multi-arm")[1] == T || unique(wide.format$arms == "two-arm")[2] == T) {
+  if (unique(wide.format$arms == "multi-arm")[1] == FALSE || unique(wide.format$arms == "two-arm")[1] == TRUE) {
     return(list(obs.comp = tab.comp.arms))
   } else {
     return(list(nbase.multi = length(final[, 1]), t1.bn = final$t1, t2.bn = final$t2, ref.base = min(final$base), obs.comp = tab.comp.arms))
