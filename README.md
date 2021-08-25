@@ -1,6 +1,8 @@
 *** 
 
-# rnmamod: package to perform Bayesian network meta-analysis methods
+<!---# rnmamod: package to perform Bayesian network meta-analysis methods--->
+# rnmamod: A Bayesian network meta-analysis package for R 
+
 
   <!-- badges: start -->
   [![R-CMD-check](https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
@@ -8,7 +10,7 @@
   
 ## Description 
 
-**rnmamod** is an R package to perform one-stage Bayesian fixed-effect or random-effects network meta-analysis while adjusting for *missing participant outcome data* using the pattern-mixture model. In the case of two interventions, rnmamod performs one-stage Bayesian pairwise meta-analysis. 
+The `rnmamod` package performs one-stage fixed-effect or random-effects Bayesian network meta-analysis while adjusting for *missing participant outcome data* using the pattern-mixture model. In the case of two interventions, the package performs one-stage Bayesian pairwise meta-analysis. 
 
 The package handles data inputs in *arm-based format*:
 - binary data (effect size: odds ratio)  
@@ -16,19 +18,19 @@ The package handles data inputs in *arm-based format*:
 
 <!--- The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. --->
 
-The package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Also includes a rich suite of visualisation tools to aid in interpretation of the results and preparation of NMA manuscript submission. 
+The `rnmamod` package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Also includes a rich suite of visualisation tools to aid in interpretation of the results and preparation of NMA manuscript submission. 
 Missing participant outcome data are addressed in all models of the rnmamod package.
 
 <!---that aid the interpretation and accommodation of the results in the submitted research work for publication. --->
 
-The rnmamod package is currently in development version.
+The `rnmamod` package is currently in development version.
 
 ## Getting started
 
-Run the following code to install rnmamod:
+Run the following code to install the development version of the package:
 
+    install.packages("devtools")
     devtools::install_github("LoukiaSpin/rnmamod")
-    library(rnmamod)
 
 ## Example
 
