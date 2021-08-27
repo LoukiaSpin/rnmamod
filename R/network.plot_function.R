@@ -37,7 +37,7 @@
 #'    It has the same structure with \code{Table.comparisons} for the binary outcome. \cr
 #'   }
 #'
-#'   Last but not least, \code{netplot} exports two heatmaps:
+#'   Additionally, \code{netplot} exports two heatmaps:
 #'   \tabular{ll}{
 #'    \code{Heatmap.missing.network} \tab It illustrates the distribution of the proportion of missing participants across the interventions and
 #'    observed comparisons of the network. See \code{\link[rnmamod]{heatmap.missing.network}} function for more details. \cr
@@ -82,13 +82,11 @@
 #' @export
 netplot <- function(data, drug.names, save.xls, ...){
 
-
   save.xls <- if (missing(save.xls)) {
     FALSE
   } else {
     save.xls
   }
-
 
   ## Obtain dataset
   r <- data %>% dplyr::select(starts_with("r") | starts_with("y")) # It does not matter whether the outcome is binary or continuous
@@ -101,7 +99,6 @@ netplot <- function(data, drug.names, save.xls, ...){
     na..[i] <- table(!is.na(t[i, ]))["TRUE"]
   }
 
-
   drug.names <- if (missing(drug.names)) {
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in argument 'data' is used as intervention names", "\033[0m", "\n")))
     as.character(1:nt)
@@ -109,21 +106,17 @@ netplot <- function(data, drug.names, save.xls, ...){
     drug.names
   }
 
-
   ## Rename columns to agree with gemtc
   names(r) <- paste0("r..", 1:length(r[1, ]), ".")
   names(n) <- paste0("n..", 1:length(n[1, ]), ".")
   names(t) <- paste0("t..", 1:length(t[1, ]), ".")
 
-
   ## one row per study arm
   transform <- mtc.data.studyrow(cbind(t, r, n, na..), armVars = c('treatment'= 't', 'response'='r', 'sampleSize'='n'), nArmsVar='na')
   transform$treatment1 <- as.numeric(as.character(transform$treatment))
 
-
   ## Obtain network plot
   nma.networkplot(study, treatment1, data = transform, trtname = drug.names, multi.show = T, ...)
-
 
   if(dim(data %>% dplyr::select(starts_with("r")))[2] > 0) {
     measure <- "OR"
@@ -167,9 +160,9 @@ netplot <- function(data, drug.names, save.xls, ...){
 
   return(list(Network.description = knitr::kable(results),
               Table.interventions = dat$Table.interventions,
-              Table.comparisons = dat$Table.comparisons,
+              Table.comparisons   = dat$Table.comparisons,
               Table.interventions.Missing = dat$Table.interventions.Missing,
-              Table.comparisons.Missing = dat$Table.comparisons.Missing,
+              Table.comparisons.Missing   = dat$Table.comparisons.Missing,
               Heatmap.missing.network = heatmap.missing.network(data, drug.names),
               Heatmap.outcome.network = heatmap.outcome.network(data, drug.names)))
 }
