@@ -1,6 +1,8 @@
 *** 
 
-# rnmamod: package to perform Bayesian network meta-analysis methods
+<!---# rnmamod: package to perform Bayesian network meta-analysis methods--->
+# rnmamod: A Bayesian network meta-analysis package for R 
+
 
   <!-- badges: start -->
   [![R-CMD-check](https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
@@ -8,7 +10,7 @@
   
 ## Description 
 
-**rnmamod** is an R package to perform one-stage Bayesian fixed-effect or random-effects network meta-analysis while adjusting for *missing participant outcome data* using the pattern-mixture model. In the case of two interventions, rnmamod performs one-stage Bayesian pairwise meta-analysis. 
+The `rnmamod` package performs one-stage fixed-effect or random-effects Bayesian network meta-analysis while adjusting for *missing participant outcome data* using the pattern-mixture model. In the case of two interventions, the package performs one-stage Bayesian pairwise meta-analysis. 
 
 The package handles data inputs in *arm-based format*:
 - binary data (effect size: odds ratio)  
@@ -16,19 +18,19 @@ The package handles data inputs in *arm-based format*:
 
 <!--- The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. --->
 
-The package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Also includes a rich suite of visualisation tools to aid in interpretation of the results and preparation of NMA manuscript submission. 
+The `rnmamod` package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Also includes a rich suite of visualisation tools to aid in interpretation of the results and preparation of NMA manuscript submission. 
 Missing participant outcome data are addressed in all models of the rnmamod package.
 
 <!---that aid the interpretation and accommodation of the results in the submitted research work for publication. --->
 
-The rnmamod package is currently in development version.
+The `rnmamod` package is currently in development version.
 
 ## Getting started
 
-Run the following code to install rnmamod:
+Run the following code to install the development version of the package:
 
+    install.packages("devtools")
     devtools::install_github("LoukiaSpin/rnmamod")
-    library(rnmamod)
 
 ## Example
 
@@ -59,7 +61,7 @@ netplot(data = nma.baker2009, drug.names = interv.names, text.cex = 1.5)
 <img src="man/figures/network_Baker.png" width="800" height="550" align="center">
 </div>
 
-The following code performs a Bayesian random-effects network meta-analysis under the missing at random assumption and using intervention-specific informative missingness odds ratio (`assumption = "IDE-ARM"`) in the logarithmic scale:
+The following code performs a Bayesian random-effects network meta-analysis under the *missing at random assumption* while using an intervention-specific informative missingness odds ratio (`assumption = "IDE-ARM"`) in the logarithmic scale:
 
 ``` r
 res <- run.model(data = nma.baker2009,
@@ -67,7 +69,8 @@ res <- run.model(data = nma.baker2009,
                  model = "RE",
                  assumption = "IDE-ARM",
                  heter.prior = list("halfnormal", 0, 1),
-                 mean.misspar = 0,
+                 #mean.misspar = 0,
+                 mean.misspar = c(0,0), 
                  var.misspar = 1,
                  D = 1,
                  n.chains = 3,
@@ -82,7 +85,10 @@ Illustrate all possible pairwise comparisons of the interventions using a league
 league.heatmap(full = res, drug.names = interv.names)
 ```
 
-<div style="text-align: center"> <img src="man/figures/league_Baker.png" width="950" height="700" align="center"></div>
+<div style="text-align: center"> 
+<!--- <img src="man/figures/league_Baker.png" width="950" height="700" align="center"> --->
+<img src="man/figures/league_Baker.png" width="70%" height="70%" align="center">  
+</div>
 <br/>
 
 The following code presents the hierarchy of the interventions in the network using integrated rankograms and SUCRA curves:
@@ -91,7 +97,10 @@ The following code presents the hierarchy of the interventions in the network us
 rankosucra.plot(full = res, drug.names = interv.names)
 ```
 
-<div style="text-align: center"> <img src="man/figures/sucra_Baker.png" width="800" height="600" align="center"></div>
+<div style="text-align: center"> 
+<!--- <img src="man/figures/sucra_Baker.png" width="800" height="600" align="center"> --->
+<img src="man/figures/sucra_Baker.png" width="70%" height="70%" align="center">
+</div>
 
 ##
 The development of the **rnmamod** package is funded by the **German Research Foundation** (Deutsche Forschungsgemeinschaft) (grant no. [SP 1664/1-3](https://gepris.dfg.de/gepris/projekt/339420617)) <div style="text-align: right"> <img src="man/figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="340" height="150" align="right"></div>
