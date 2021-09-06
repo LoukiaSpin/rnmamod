@@ -326,7 +326,8 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
                        model = model,
                        covariate = covariate,
                        covar.assumption = covar.assumption,
-                       jagsfit = jagsfit)
+                       jagsfit = jagsfit,
+                       data = data)
     nma.results <- append(ma.results, list(EM.ref = EM.ref, pred.ref = pred.ref, SUCRA = SUCRA, effectiveness = effectiveness))
   } else {
     ma.results <- list(EM = EM,
@@ -341,7 +342,8 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
                        model = model,
                        covariate = covariate,
                        covar.assumption = covar.assumption,
-                       jagsfit = jagsfit)
+                       jagsfit = jagsfit,
+                       data = data)
     nma.results <- append(ma.results, list(EM.ref = EM.ref, SUCRA = SUCRA, effectiveness = effectiveness))
   }
 
