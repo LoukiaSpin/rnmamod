@@ -35,7 +35,7 @@ Run the following code to install the development version of the package:
 ## Example
 
 <!--- We will use the dataset of --->
-[Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) comprising 21 trials comparing seven pharmacologic interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. The exacerbation of COPD (negative outcome) is the analysed binary outcome.
+[Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) comprising 21 trials comparing seven pharmacologic interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. The exacerbation of COPD (harmful outcome) is the analysed binary outcome.
 
 ``` r
 head(nma.baker2009)
@@ -69,8 +69,7 @@ res <- run.model(data = nma.baker2009,
                  model = "RE",
                  assumption = "IDE-ARM",
                  heter.prior = list("halfnormal", 0, 1),
-                 #mean.misspar = 0,
-                 mean.misspar = c(0,0), 
+                 mean.misspar = c(0, 0), 
                  var.misspar = 1,
                  D = 0,
                  n.chains = 3,
@@ -88,7 +87,7 @@ league.heatmap(full = res, drug.names = interv.names)
 <div style="text-align: center"> 
 <!--- <img src="man/figures/League_Baker.png" width="950" height="700" align="center"> --->
 <!--- <img src="man/figures/League_Baker.png" width="70%" height="70%" align="center"> --->  
-<img src="man/figures/League_Baker.png" width="90%" height="90%" align="center"> 
+<img src="man/figures/League_Baker.png" width="70%" height="90%" align="center"> 
 </div>
 <br/>
 
@@ -101,7 +100,7 @@ rankosucra.plot(full = res, drug.names = interv.names)
 <div style="text-align: center"> 
 <!--- <img src="man/figures/Sucra_Baker.png" width="800" height="600" align="center"> --->
 <!--- <img src="man/figures/Sucra_Baker.png" width="70%" height="70%" align="center"> --->
-<img src="man/figures/Sucra_Baker.png" width="90%" height="90%" align="center">
+<img src="man/figures/Sucra_Baker.png" width="70%" height="90%" align="center">
 </div>
 
 ##
