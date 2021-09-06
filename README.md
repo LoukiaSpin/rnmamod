@@ -58,7 +58,7 @@ netplot(data = nma.baker2009, drug.names = interv.names, text.cex = 1.5)
 ```
 
 <div style="text-align: center"> 
-<img src="man/figures/network_Baker.png" width="800" height="550" align="center">
+<img src="man/figures/network_Baker.png" width="800" height="551" align="center">
 </div>
 
 The following code performs a Bayesian random-effects network meta-analysis under the *missing at random assumption* while using an intervention-specific informative missingness odds ratio (`assumption = "IDE-ARM"`) in the logarithmic scale:
