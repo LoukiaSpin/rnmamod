@@ -77,35 +77,47 @@ robustness.index <- function(sens, threshold){
 
   options(warn = -1)
 
-  ES.mat <- sens$EM
-  n.scenar <- length(sens$scenarios)^2
-  measure <- sens$measure
+  if (is.list(sens)) {
+    ES.mat <- sens[[1]]
+    measure <- sens[[2]]
+    n.scenar <- sens[[3]]
+    primary.scenar <- 1
 
-  if (any(is.na(sens))) {
-    stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
-    return(NA)
+  } else {
+    ES.mat <- sens$EM
+
+    measure <- sens$measure
+
+    n.scenar <- length(sens$scenarios)^2
+
+    if (any(is.na(sens))) {
+      stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
+      return(NA)
+    }
+
+    primary.scenar <- median(1:n.scenar)
   }
 
 
-  primary.scenar <- median(1:n.scenar)
+  nt <- (1 + sqrt(1 + 8*(length(ES.mat[, 1])/sqrt(n.scenar)^2)))/2  # The quadratic formula for the roots of the general quadratic equation
+
 
 
   if (missing(threshold) & is.element(measure, "OR")) {
     threshold <- 0.28
     #message("The value 0.28 was assigned on 'threshold' by default")
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The value 0.28 was assigned on 'threshold' by default", "\033[0m", "\n")))
-  } else if (missing(threshold) & is.element(sens$measure, c("MD", "SMD", "ROM"))) {
+  } else if (missing(threshold) & is.element(measure, c("MD", "SMD", "ROM"))) {
     threshold <- 0.17
     #message("The value 0.17 was assigned on 'threshold' by default")
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The value 0.17 was assigned on 'threshold' by default", "\033[0m", "\n")))
   } else {
     threshold <- threshold
     #message(paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(full$measure)))
-    message(cat(paste0("\033[0;", col = 32, "m", txt = paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(sens$measure)), "\033[0m", "\n")))
+    message(cat(paste0("\033[0;", col = 32, "m", txt = paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(measure)), "\033[0m", "\n")))
   }
 
 
-  nt <- (1 + sqrt(1 + 8*(length(ES.mat[, 1])/sqrt(n.scenar)^2)))/2  # The quadratic formula for the roots of the general quadratic equation
 
 
   ## Function for the Kullback-Leibler Divergence (comparing two univariate normal distributions)
@@ -120,42 +132,43 @@ robustness.index <- function(sens, threshold){
 
 
   ## A matrix of effect estimates of MCMC standard deviations (or standard errors) for all possible comparisons under each scenario
-  sd <- mean <- matrix(NA, nrow = n.scenar, ncol = nt*(nt - 1)/2)
+  sd.mat <- mean.mat <- matrix(NA, nrow = n.scenar, ncol = (nt*(nt - 1))/2)
 
   for(i in 1:n.scenar){
 
-    for(j in 1:(nt*(nt - 1)/2)){
+    for(j in 1:((nt*(nt - 1))/2)){
 
-      mean[i, j] <- ES.mat[j + (nt*(nt - 1)/2)*(i - 1), 1]
+      mean.mat[i, j] <- ES.mat[j + ((nt*(nt - 1))/2)*(i - 1), 1]
 
-      sd[i, j] <- ES.mat[j + (nt*(nt - 1)/2)*(i - 1), 2]
+      sd.mat[i, j] <- ES.mat[j + ((nt*(nt - 1))/2)*(i - 1), 2]
 
     }
   }
 
   kldxy <- list()
 
-  RI <- nt*(nt - 1)/2
+  RI <- rep(NA, (nt*(nt - 1))/2)
 
-  for(i in 1:(nt*(nt - 1)/2)){ ## We are interested in all possible pairwise comparisons of the network
+  for(i in 1:(nt*(nt - 1))/2){ ## We are interested in all possible pairwise comparisons of the network
 
     kldxy[[i]] <- rep(NA, n.scenar)
 
-    for(j in (1:n.scenar)[-primary.scenar]){
+    for(j in 1:n.scenar){ #for(j in (1:n.scenar)[-primary.scenar])
 
 
       ## Returns the KLD of informative scenario j when compared with the primary analysis for comparison i
-      kldxy[[i]][j] <- KLD.measure.univ(mean[j, i], sd[j, i], mean[primary.scenar, i], sd[primary.scenar, i])[[1]]
+      kldxy[[i]][j] <- KLD.measure.univ(mean.mat[j, i], sd.mat[j, i], mean.mat[primary.scenar, i], sd.mat[primary.scenar, i])[[1]]
 
     }
     kldxy[[i]][primary.scenar] <- 0  ## This refers to the primary analysis
 
     ## Returns the Robustness Index of comparison i across all informative scenarios
-    RI[i] <- sqrt(round(t(kldxy[[i]][-primary.scenar]) %*% kldxy[[i]][-primary.scenar], 3))
+    RI[i] <- sqrt(round(t(kldxy[[i]]) %*% kldxy[[i]], 3))
+    #RI[i] <- sqrt(round(t(kldxy[[i]][-primary.scenar]) %*% kldxy[[i]][-primary.scenar], 3))
 
   }
 
-  KLD <- matrix(unlist(kldxy), nrow = (nt*(nt - 1)/2), ncol = n.scenar, byrow = T)
+  KLD <- matrix(unlist(kldxy), nrow = (nt*(nt - 1))/2, ncol = n.scenar, byrow = T)
 
 
   robust <- ifelse(RI < threshold, "robust", "frail")
