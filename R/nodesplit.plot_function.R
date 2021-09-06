@@ -8,6 +8,8 @@
 #' @param node An object of S3 class \code{\link{run.nodesplit}}. See 'Value' in \code{\link{run.nodesplit}}.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
+#' @param save.xls Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+#'   The default is \code{FALSE} (do not export to an Excel format).
 #'
 #' @return \code{nodesplit.plot} returns the following list of elements:
 #' \tabular{ll}{
@@ -78,7 +80,14 @@
 #' }
 #'
 #' @export
-nodesplit.plot <- function(full, node, drug.names) {
+nodesplit.plot <- function(full, node, drug.names, save.xls) {
+
+
+  save.xls <- if (missing(save.xls)) {
+    FALSE
+  } else {
+    save.xls
+  }
 
 
   data <- full$data
@@ -270,8 +279,10 @@ nodesplit.plot <- function(full, node, drug.names) {
 
 
   ## Write the table with the EMs from both models as .xlsx
-  write_xlsx(table.EM, paste0("Table NMA vs Node-Split.xlsx"))
-  write_xlsx(table.assess, paste0("Table assesssment Node-Split.xlsx"))
+  if (save.xls == TRUE) {
+    write_xlsx(table.EM, paste0("Table NMA vs Node-Split", ".xlsx"))
+    write_xlsx(table.assess, paste0("Table assesssment Node-Split", ".xlsx"))
+  }
 
 
   ## Return results

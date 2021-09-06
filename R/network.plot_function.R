@@ -153,8 +153,8 @@ netplot <- function(data, drug.names, save.xls, ...){
 
   ## Write the tables as .xlsx
   if (save.xls == TRUE) {
-    writexl::write_xlsx(dat$Table.interventions, paste0("Table.interventions.xlsx"))
-    writexl::write_xlsx(dat$Table.comparisons, paste0("Table.comparisons.xlsx"))
+    writexl::write_xlsx(dat$Table.interventions, "Table.interventions.xlsx")
+    writexl::write_xlsx(dat$Table.comparisons, "Table.comparisons.xlsx")
   }
 
 

@@ -8,6 +8,8 @@
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
 #' @param threshold A number indicating the threshold of similarity. See 'Details' below.
+#' @param save.xls Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+#'   The default is \code{FALSE} (do not export to an Excel format).
 #'
 #' @return \code{UME.plot} prints on the R console two messages: (1) the threshold of similarity determined by the user in green text, (2) and followed by the most parsimonious model (if any) based on the deviance information criterion (DIC; in red text).
 #' Then, the function returns the following list of elements:
@@ -82,7 +84,14 @@
 #' }
 #'
 #' @export
-UME.plot <- function(full, ume, drug.names, threshold) {
+UME.plot <- function(full, ume, drug.names, threshold, save.xls) {
+
+
+  save.xls <- if (missing(save.xls)) {
+    FALSE
+  } else {
+    save.xls
+  }
 
 
   model <- full$model
@@ -241,7 +250,9 @@ UME.plot <- function(full, ume, drug.names, threshold) {
 
 
   ## Write the table with the EMs from both models as .xlsx
-  writexl::write_xlsx(EM.both.models, paste0("Table NMA vs UME.xlsx"))
+  if (save.xls == TRUE) {
+    write_xlsx(EM.both.models, paste0("Table NMA vs UME", ".xlsx"))
+  }
 
 
   ## Return results

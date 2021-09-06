@@ -4,7 +4,7 @@
 \alias{prepare.UME}
 \title{The WinBUGS code for Bayesian unrelated mean effects model}
 \usage{
-prepare.UME(measure, model, assumption)
+prepare.UME(measure, model, assumption, connected)
 }
 \arguments{
 \item{measure}{Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio, mean difference,
@@ -15,6 +15,8 @@ standardised mean difference and ratio of means, respectively.}
 \item{assumption}{Character string indicating the structure of the informative missingness parameter.
 Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.
 The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"}, \code{"HIE"}, and \code{"IND"} stand for identical, hierarchical and independent, respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and uncorrelated, respectively.}
+
+\item{connected}{An integer equal to one or larger that indicates the number of subnetworks.}
 }
 \value{
 An R character vector object to be passed to \code{\link{run.UME}} through the \code{\link[base]{textconnections}} function as the argument \code{object}.

@@ -44,7 +44,7 @@ A network plot with coloured closed-loops informed by multi-arm trials. Each nod
    It has the same structure with \code{Table.comparisons} for the binary outcome. \cr
   }
 
-  Last but not least, \code{netplot} exports two heatmaps:
+  Additionally, \code{netplot} exports two heatmaps:
   \tabular{ll}{
    \code{Heatmap.missing.network} \tab It illustrates the distribution of the proportion of missing participants across the interventions and
    observed comparisons of the network. See \code{\link[rnmamod]{heatmap.missing.network}} function for more details. \cr

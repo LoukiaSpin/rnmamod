@@ -8,6 +8,8 @@
 #' @param meta An object of S3 class \code{\link{run.series.meta}}. See 'Value' in \code{\link{run.series.meta}}.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
+#' @param save.xls Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+#'   The default is \code{FALSE} (do not export to an Excel format).
 #'
 #' @return \code{series.meta.plot} returns a panel of two forest plots: (1) a forest plot on the posterior mean and 95\% credible interval of the effect of the observed comparisons under the consistency model and the corresponding pairwise meta-analyses,
 #'   and (2) a forest plot on the posterior median and 95\% credible interval of the between-trial standard deviation (\eqn{\tau}) for the observed comparisons. The estimated \eqn{\tau} from the consistency model appears as a rectangle in the forest plot.
@@ -52,7 +54,14 @@
 #' }
 #'
 #' @export
-series.meta.plot <- function(full, meta, drug.names) {
+series.meta.plot <- function(full, meta, drug.names, save.xls) {
+
+
+  save.xls <- if (missing(save.xls)) {
+    FALSE
+  } else {
+    save.xls
+  }
 
 
   drug.names <- if (missing(drug.names)) {
@@ -228,7 +237,9 @@ series.meta.plot <- function(full, meta, drug.names) {
 
 
   ## Write the table as .xlsx
-  write_xlsx(EM.both.models, paste0("Table NMA vs PMA.xlsx"))
+  if (save.xls == TRUE) {
+    write_xlsx(EM.both.models,paste0("Table.NMA.vs.PMA", ".xlsx"))
+  }
 
 
   return(list(Tabulated.results = knitr::kable(EM.both.models), forest.plots = forest.plots))

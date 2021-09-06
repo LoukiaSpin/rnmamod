@@ -4,7 +4,7 @@
 \alias{UME.plot}
 \title{End-user-ready results: consistency model versus unrelated mean effects model}
 \usage{
-UME.plot(full, ume, drug.names, threshold)
+UME.plot(full, ume, drug.names, threshold, save.xls)
 }
 \arguments{
 \item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
@@ -15,6 +15,9 @@ UME.plot(full, ume, drug.names, threshold)
 as they appear in \code{data} is used, instead.}
 
 \item{threshold}{A number indicating the threshold of similarity. See 'Details' below.}
+
+\item{save.xls}{Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+The default is \code{FALSE} (do not export to an Excel format).}
 }
 \value{
 \code{UME.plot} prints on the R console two messages: (1) the threshold of similarity determined by the user in green text, (2) and followed by the most parsimonious model (if any) based on the deviance information criterion (DIC; in red text).
@@ -62,7 +65,7 @@ res <- run.model(data = nma.liu2013,
                  model = "RE",
                  assumption = "IDE-ARM",
                  heter.prior = list("halfnormal", 0, 1),
-                 mean.misspar = 0,
+                 mean.misspar = c(0, 0),
                  var.misspar = 1,
                  D = 1,
                  n.chains = 3,

@@ -12,7 +12,7 @@
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom knitr kable
 #' @importFrom mcmcplots mcmcplot
-#' @importFrom netmeta pairwise
+#' @importFrom netmeta pairwise netconnection
 #' @importFrom pcnetmeta nma.networkplot
 #' @importFrom reshape2 melt
 #' @importFrom R2jags jags
@@ -43,6 +43,9 @@ utils::globalVariables(c("active",
                          "study",
                          "treatment",
                          "treatment1",
+                         "treat1",
+                         "treat2",
+                         "studlab",
                          "upper",
                          "value",
                          "value2",

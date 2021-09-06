@@ -4,7 +4,7 @@
 \alias{nodesplit.plot}
 \title{End-user-ready results: consistency model versus node-splitting approach}
 \usage{
-nodesplit.plot(full, node, drug.names)
+nodesplit.plot(full, node, drug.names, save.xls)
 }
 \arguments{
 \item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
@@ -13,6 +13,9 @@ nodesplit.plot(full, node, drug.names)
 
 \item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 as they appear in \code{data} is used, instead.}
+
+\item{save.xls}{Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+The default is \code{FALSE} (do not export to an Excel format).}
 }
 \value{
 \code{nodesplit.plot} returns the following list of elements:
@@ -61,7 +64,7 @@ res <- run.model(data = nma.baker2009,
                  model = "RE",
                  assumption = "IDE-ARM",
                  heter.prior = list("halfnormal", 0, 1),
-                 mean.misspar = 0,
+                 mean.misspar = c(0, 0),
                  var.misspar = 1,
                  D = 1,
                  n.chains = 3,

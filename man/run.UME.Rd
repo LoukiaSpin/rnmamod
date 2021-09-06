@@ -4,19 +4,19 @@
 \alias{run.UME}
 \title{A function to perform Bayesian unrelated mean effects model}
 \usage{
-run.UME(full, n.chains, n.iter, n.burnin, n.thin)
+run.UME(full, n.iter, n.burnin, n.chains, n.thin)
 }
 \arguments{
 \item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
-
-\item{n.chains}{Positive integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
-The default argument is 2.}
 
 \item{n.iter}{Positive integer specifying the number of Markov chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 10000.}
 
 \item{n.burnin}{Positive integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1000.}
+
+\item{n.chains}{Positive integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+The default argument is 2.}
 
 \item{n.thin}{Positive integer specifying the thinning rate for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1.}
@@ -26,13 +26,13 @@ An R2jags output on the summaries of the posterior distribution, and the Gelman-
 \tabular{ll}{
  \code{EM} \tab The summary effect estimate for each pairwise comparison observed in the network.\cr
  \tab \cr
- \code{EM.m} \tab The summary effect estimate for each pairwise comparison observed in multi-arm trials. Only multi-arm trials are considered for the estimation of the corresponding summary effects.\cr
- \tab \cr
  \code{dev.o} \tab The deviance contribution of each trial-arm based on the observed outcome.\cr
  \tab \cr
  \code{hat.par} \tab The fitted outcome at each trial-arm.\cr
  \tab \cr
- \code{tau} \tab The between-trial standard deviation (assumed common across the observed pairwise comparisons), when a random-effects model has been specified.\cr
+ \code{tau} \tab The between-trial standard deviation (assumed common across the observed pairwise comparisons) for the whole network, when a random-effects model has been specified.\cr
+ \tab \cr
+ \code{m.tau} \tab The between-trial standard deviation (assumed common across the observed pairwise comparisons) for the subset of multi-arm trials, when a random-effects model has been specified.\cr
 }
 
 The output also includes the following elements - the first three resulting from relevant monitored parameters:
@@ -80,7 +80,7 @@ res <- run.model(data = nma.liu2013,
                  model = "RE",
                  assumption = "IDE-ARM",
                  heter.prior = list("halfnormal", 0, 1),
-                 mean.misspar = 0,
+                 mean.misspar = c(0, 0),
                  var.misspar = 1,
                  D = 1,
                  n.chains = 3,

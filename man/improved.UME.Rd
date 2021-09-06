@@ -4,12 +4,10 @@
 \alias{improved.UME}
 \title{A function to detect the frail comparisons in multi-arm trials}
 \usage{
-improved.UME(t, m, N, ns, na)
+improved.UME(t, N, ns, na)
 }
 \arguments{
 \item{t}{A data-frame of the one-trial-per-row format containing the intervention identifier in each arm of every trial (see 'Details' below, and 'Arguments' in \code{run.model}).}
-
-\item{m}{A data-frame of the one-trial-per-row format containing the number of missing participant outcome data (MOD) in each arm of every trial (see 'Details' below, and 'Arguments' in \code{run.model}).}
 
 \item{N}{A data-frame of the one-trial-per-row format containing the number of participants randomised on the assigned intervention in each arm of every trial (see 'Details' below, and 'Arguments' in \code{run.model}).}
 
