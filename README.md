@@ -87,7 +87,8 @@ league.heatmap(full = res, drug.names = interv.names)
 
 <div style="text-align: center"> 
 <!--- <img src="man/figures/League_Baker.png" width="950" height="700" align="center"> --->
-<img src="man/figures/League_Baker.png" width="70%" height="70%" align="center">  
+<!--- <img src="man/figures/League_Baker.png" width="70%" height="70%" align="center"> --->  
+<img src="man/figures/League_Baker.png" width="90%" height="90%" align="center"> 
 </div>
 <br/>
 
@@ -99,7 +100,8 @@ rankosucra.plot(full = res, drug.names = interv.names)
 
 <div style="text-align: center"> 
 <!--- <img src="man/figures/Sucra_Baker.png" width="800" height="600" align="center"> --->
-<img src="man/figures/Sucra_Baker.png" width="80%" height="100%" align="center">
+<!--- <img src="man/figures/Sucra_Baker.png" width="70%" height="70%" align="center"> --->
+<img src="man/figures/Sucra_Baker.png" width="90%" height="90%" align="center">
 </div>
 
 ##
