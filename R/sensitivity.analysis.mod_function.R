@@ -78,7 +78,7 @@
 #'                  model = "RE",
 #'                  assumption = "IDE-ARM",
 #'                  heter.prior = list("halfnormal", 0, 1),
-#'                  mean.misspar = 0,
+#'                  mean.misspar = c(0, 0),
 #'                  var.misspar = 1,
 #'                  D = 1,
 #'                  n.chains = 3,

@@ -5,7 +5,6 @@
 #'   Consequently, their posterior distribution coincides with the prior distribution yielding implausible posterior standard deviations.
 #'
 #' @param t A data-frame of the one-trial-per-row format containing the intervention identifier in each arm of every trial (see 'Details' below, and 'Arguments' in \code{run.model}).
-#' @param m A data-frame of the one-trial-per-row format containing the number of missing participant outcome data (MOD) in each arm of every trial (see 'Details' below, and 'Arguments' in \code{run.model}).
 #' @param N A data-frame of the one-trial-per-row format containing the number of participants randomised on the assigned intervention in each arm of every trial (see 'Details' below, and 'Arguments' in \code{run.model}).
 #' @param ns A scale parameter on the number trials.
 #' @param na A vector of length equal to \code{ns} with the number of arms in each trial.
@@ -36,12 +35,12 @@
 #' Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis for decision making 4: inconsistency in networks of evidence based on randomized controlled trials. \emph{Med Decis Making} 2013;\bold{33}(5):641--56. [\doi{10.1177/0272989X12455847}]
 #'
 #' @export
-improved.UME <- function(t, m, N, ns, na){
+improved.UME <- function(t, N, ns, na){
 
 
   ## Turn into contrast-level data: one row per possible comparison in each trial ('netmeta')
-  wide.format <- pairwise(as.list(t), event = as.list(m), n = as.list(N), data = cbind(t, m, N), studlab = 1:ns)[, c(3:6, 8, 7, 9)]
-  colnames(wide.format) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
+  wide.format <- pairwise(as.list(t), event = as.list(N), n = as.list(N), data = cbind(t, N, N), studlab = 1:ns)[, c(3:6, 8, 7, 9)]
+  colnames(wide.format) <- c("study", "t1", "t2", "n1", "n2", "n1", "n2")
 
 
   ## Create a vector with the pairwise comparisons of each row
@@ -64,16 +63,19 @@ improved.UME <- function(t, m, N, ns, na){
   ## The frequency of each observed comparisons in two-arm and multi-arm trials
   tab.comp.arms0 <- xtabs(~ comp + arms, data = wide.format)
 
-
   ## Turn 'tab.comp.arms0' into a data-frame
-  #if(dim(tab.comp.arms0)[2] == 1 || (length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 1)) {
   tab.comp.arms <- if (dim(unique(as.data.frame(tab.comp.arms0)["arms"]))[1] == 1 & levels(unlist(as.data.frame(tab.comp.arms0)["arms"]))[1] == "multi-arm") {
+
     data.frame(names(tab.comp.arms0[, 1]), tab.comp.arms0[, 1], rep(0, dim(tab.comp.arms0)[1]))
+
   } else if (dim(unique(as.data.frame(tab.comp.arms0)["arms"]))[1] == 1 & levels(unlist(as.data.frame(tab.comp.arms0)["arms"]))[1] == "two-arm") {
+
     data.frame(names(tab.comp.arms0[, 1]), rep(0, dim(tab.comp.arms0)[1]), tab.comp.arms0[, 1])
-  #} else if(dim(tab.comp.arms0)[2] > 1 & length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 2) {
+
   } else if (dim(unique(as.data.frame(tab.comp.arms0)["arms"]))[1] == 2) {
+
     data.frame(names(tab.comp.arms0[, 1]), tab.comp.arms0[, 1], tab.comp.arms0[, 2])
+
   }
   colnames(tab.comp.arms) <- c("comp", "multi", "two")
   rownames(tab.comp.arms) <- NULL
@@ -90,14 +92,6 @@ improved.UME <- function(t, m, N, ns, na){
       pairwise.n0[[i]] <- wide.format[which(wide.format$comp == unlist(subs)[i]), 1:3]
     }
     pairwise.n1 <- do.call(rbind, pairwise.n0)
-
-
-    ## When more studies correspond to a comparison, remove the duplicated rows
-    #pairwise.n <- pairwise.n1[!duplicated(pairwise.n1[, 2:3]), ]
-
-
-    ## Sort by the study id in increasing order
-    #final0 <- pairwise.n[order(pairwise.n$study), ]
     final0 <- pairwise.n1[order(pairwise.n1$study), ]
 
 
@@ -109,15 +103,6 @@ improved.UME <- function(t, m, N, ns, na){
     (indic <- unique(t(do.call(cbind, indic0))))
     t1.indic <- indic[, 1]    # Baseline interventions at the corresponding comparisons
     t2.indic <- indic[, 2]    # Non-baseline interventions at the corresponding comparisons
-  #}
-
-
-  ## Finally, reduce to comparisons between non-baseline interventions
-  #if (dim(tab.comp.arms0)[2] == 1 || length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 1) {
-
-  #  final <- NA
-
-  #} else if(dim(tab.comp.arms0)[2] > 1 & length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 2) {
 
     pre.final <- final0[!is.element(paste0(final0[, 2], "vs", final0[, 3]), paste0(t1.indic, "vs", t2.indic)), ]
 
@@ -131,37 +116,10 @@ improved.UME <- function(t, m, N, ns, na){
   }
 
 
-
-  ## Add also the baseline treatment for each selected trial
-  #if (dim(tab.comp.arms0)[2] == 1 || length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 1) {
-  #
-  #  base <- nbase.multi <- NA
-
-  #} else if(dim(tab.comp.arms0)[2] > 1 & length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 2) {
-
-  #  base <- rep(NA, length(final[, 1]))   # Baseline interventions in the selected trials in 'final'
-
-  #  for(i in 1:length(final[, 1])){
-   #   final$base[i] <- unique(t[final$study[i], 1])
-   # }
-
-    #nbase.multi <- dim(final[!duplicated(final[, 2:4]), 2:4])[1] # *Unique* non-baseline interventions in the selected trials in 'final'
-  #}
-
-
-  #if (dim(tab.comp.arms0)[2] == 1 || length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 1) {
-
-  #  return(list(obs.comp = tab.comp.arms))
-
-  #} else if(dim(tab.comp.arms0)[2] > 1 & length(unique(ifelse(as.matrix(tab.comp.arms0)[, 2] == 0 & as.matrix(tab.comp.arms0)[, 1] != 0, T, F))) == 2) {
-
-    #return(list(nbase.multi = nbase.multi, t1.bn = final$t1, t2.bn = final$t2, base = final$base, obs.comp = tab.comp.arms))
-
-  #}
   if (dim(unique(as.data.frame(tab.comp.arms0)["arms"]))[1] == 1 & levels(unlist(as.data.frame(tab.comp.arms0)["arms"]))[1] == "two-arm") {
     return(list(obs.comp = tab.comp.arms))
   } else {
-    return(list(nbase.multi = length(final[, 1]), t1.bn = final$t1, t2.bn = final$t2, ref.base = min(final$base), obs.comp = tab.comp.arms))
+    return(list(nbase.multi = length(final[, 1]), t1.bn = final$t1, t2.bn = final$t2, ref.base = min(final$base), base = final$base, obs.comp = tab.comp.arms))
   }
 
 }

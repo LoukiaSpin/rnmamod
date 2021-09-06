@@ -27,9 +27,8 @@
 #' @export
 prepare.nodesplit <- function(measure, model, assumption) {
 
-  code <- paste0("model\n{")
-
-  code <- paste0(code, "\n\tfor (i in 1:ns) {")
+  code <- paste0("model\n{",
+                 "\n\tfor (i in 1:ns) {")
 
   code <- if (model == "RE"){
     paste0(code, "\n\t\tdelta[i, 1] <- 0",
@@ -41,17 +40,17 @@ prepare.nodesplit <- function(measure, model, assumption) {
   }
 
 
-  if (measure == "SMD") {
-    code <- paste0(code, "\n\t\ttheta[i, 1] <- u[i]",
+  code <- if (measure == "SMD") {
+    paste0(code, "\n\t\ttheta[i, 1] <- u[i]",
                          "\n\t\tsigma[i] <- sqrt(sum(nom[i, 1:na[i]])/(sum(c[i, 1:na[i]]) - na[i]))",
                          "\n\t\ta[i] <- sum(N[i, 1:na[i]] - 1)/2",
                          "\n\t\tb[i] <- sum(N[i, 1:na[i]] - 1)/(2*sigma[i]*sigma[i])",
                          "\n\t\tvar.pooled[i] ~ dgamma(a[i], b[i])",
                          "\n\t\tsd.pooled[i] <- sqrt(var.pooled[i])")
   } else if (measure == "MD" || measure == "ROM") {
-    code <- paste0(code, "\n\t\ttheta[i, 1] <- u[i]")
+    paste0(code, "\n\t\ttheta[i, 1] <- u[i]")
   } else if (measure == "OR") {
-    code <- paste0(code, "\n\t\tlogit(p[i, 1]) <- u[i]")
+    paste0(code, "\n\t\tlogit(p[i, 1]) <- u[i]")
   }
 
   code <- paste0(code, "\n\t\tfor (k in 1:na[i]) {")
@@ -83,11 +82,11 @@ prepare.nodesplit <- function(measure, model, assumption) {
                        "\n\t\t\tm[i, k] ~ dbin(q0[i, k], N[i, k])",
                        "\n\t\t\tq0[i, k] ~ dunif(0, 1)")
 
-  if (measure == "MD" || measure == "SMD" || measure == "ROM") {
-    code <- paste0(code, "\n\t\t\that.par[i, k] <- theta.o[i, k]",
+  code <- if (measure == "MD" || measure == "SMD" || measure == "ROM") {
+    paste0(code, "\n\t\t\that.par[i, k] <- theta.o[i, k]",
                          "\n\t\t\tdev.o[i, k] <- (y.o[i, k] - theta.o[i, k])*(y.o[i, k] - theta.o[i, k])*prec.o[i, k]")
   } else if (measure == "OR") {
-    code <- paste0(code, "\n\t\t\that.par[i, k] <- rhat[i, k]",
+    paste0(code, "\n\t\t\that.par[i, k] <- rhat[i, k]",
                          "\n\t\t\trhat[i, k] <- p_o[i, k]*obs[i, k]",
                          "\n\t\t\tdev.o[i, k] <- 2*(r[i, k]*(log(r[i, k]) - log(rhat[i, k])) + (obs[i, k] - r[i, k])*(log(obs[i, k] - r[i, k]) - log(obs[i, k] - rhat[i, k])))")
   }
@@ -119,9 +118,8 @@ prepare.nodesplit <- function(measure, model, assumption) {
     paste0(code, "\n\t\t\tdelta[i, k] <- (d[si[i, k]] - d[bi[i]])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]")
   }
 
-  code <- paste0(code, "\n\t\t\t}}")
-
-  code <- paste0(code, "\n\ttotresdev.o <- sum(resdev.o[])",
+  code <- paste0(code, "\n\t\t\t}}",
+                       "\n\ttotresdev.o <- sum(resdev.o[])",
                        "\n\td[ref] <- 0",
                        "\n\tfor (t in 1:(ref - 1)) {",
                        "\n\t\td[t] ~ dnorm(0, 0.0001)",
@@ -239,7 +237,6 @@ prepare.nodesplit <- function(measure, model, assumption) {
   code <- paste0(code, "\n}")
 
   return(code)
-
 }
 
 

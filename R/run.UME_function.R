@@ -17,13 +17,13 @@
 #' \tabular{ll}{
 #'  \code{EM} \tab The summary effect estimate for each pairwise comparison observed in the network.\cr
 #'  \tab \cr
-#'  \code{EM.m} \tab The summary effect estimate for each pairwise comparison observed in multi-arm trials. Only multi-arm trials are considered for the estimation of the corresponding summary effects.\cr
-#'  \tab \cr
 #'  \code{dev.o} \tab The deviance contribution of each trial-arm based on the observed outcome.\cr
 #'  \tab \cr
 #'  \code{hat.par} \tab The fitted outcome at each trial-arm.\cr
 #'  \tab \cr
-#'  \code{tau} \tab The between-trial standard deviation (assumed common across the observed pairwise comparisons), when a random-effects model has been specified.\cr
+#'  \code{tau} \tab The between-trial standard deviation (assumed common across the observed pairwise comparisons) for the whole network, when a random-effects model has been specified.\cr
+#'  \tab \cr
+#'  \code{m.tau} \tab The between-trial standard deviation (assumed common across the observed pairwise comparisons) for the subset of multi-arm trials, when a random-effects model has been specified.\cr
 #' }
 #'
 #' The output also includes the following elements - the first three resulting from relevant monitored parameters:
@@ -83,7 +83,7 @@
 #'                  model = "RE",
 #'                  assumption = "IDE-ARM",
 #'                  heter.prior = list("halfnormal", 0, 1),
-#'                  mean.misspar = 0,
+#'                  mean.misspar = c(0, 0),
 #'                  var.misspar = 1,
 #'                  D = 1,
 #'                  n.chains = 3,
@@ -96,9 +96,14 @@
 #' }
 #'
 #' @export
-run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
+run.UME <- function(full, n.iter, n.burnin, n.chains, n.thin) {
 
 
+  ## Turn off warning when variables in the 'data.jag' are not used
+  options(warn = -1)
+
+
+  ## Default arguments
   data <- full$data
   measure <- full$measure
   model <- full$model
@@ -106,10 +111,6 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
   heter.prior <- full$heter.prior
   mean.misspar <- full$mean.misspar
   var.misspar <- full$var.misspar
-
-
-  ## Turn off warning when variables in the 'data.jag' are not used
-  options(warn = -1)
 
 
   ## Prepare the dataset for the R2jags
@@ -126,22 +127,24 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
   n.thin <- ifelse(missing(n.thin), 1, n.thin)
 
 
-  ## Unique comparisons with the baseline intervention
-  ## A function to extract numbers from a character. Source: http://stla.github.io/stlapblog/posts/Numextract.html
-  Numextract <- function(string) {
-    unlist(regmatches(string,gregexpr("[[:digit:]]+\\.*[[:digit:]]*", string)))
-  }
-
-
-  ## Sort by the number of arms in ascending order
+  ## Move multi-arm trials at the bottom
   t <- item$t[order(item$na, na.last = T), ]
   m <- item$m[order(item$na, na.last = T), ]
   N <- item$N[order(item$na, na.last = T), ]
   na <- sort(item$na)
+  ns <- item$ns
+
+
+  ## Unique comparisons with the baseline intervention
+  ## A function to extract numbers from a character. Source: http://stla.github.io/stlapblog/posts/Numextract.html
+  Numextract <- function(string){
+    unlist(regmatches(string,gregexpr("[[:digit:]]+\\.*[[:digit:]]*",string)))
+  }
 
 
   ## Observed comparisons in the network
-  observed.comp0 <- improved.UME(t, m, N, item$ns, na)$obs.comp
+  impr.UME <- improved.UME(t, N, ns, na)
+  observed.comp0 <- impr.UME$obs.comp
   observed.comp <- matrix(Numextract(observed.comp0[, 1]), nrow = length(observed.comp0[, 1]), ncol = 2, byrow = T)
   t1.obs.com <- as.numeric(as.character(observed.comp[, 1]))
   t2.obs.com <- as.numeric(as.character(observed.comp[, 2]))
@@ -150,10 +153,8 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
 
   ## Keep only comparisons with the baseline intervention
   indic0 <- list()
-  for(i in 1:item$ns) {
-    indic0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(na[i] - 1)]
-  }
-  (indic <- unique(t(do.call(cbind, indic0))))
+  for (i in 1:ns) {indic0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(na[i] - 1)]}
+  indic <- unique(t(do.call(cbind, indic0)))
   t1.indic <- indic[, 1]
   t2.indic <- indic[, 2]
   N.obs <- length(t1.indic)
@@ -167,14 +168,40 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
     t2.indic.multi <- 0
   } else {
     indic.multi0 <- list()
-    for(i in (item$ns - ns.multi + 1):item$ns) {
-      indic.multi0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(na[i] - 1)]
-    }
+    for (i in (ns - ns.multi + 1):ns) {indic.multi0[[i]] <- combn(t(na.omit(t(t[i, ]))), 2)[, 1:(na[i] - 1)]}
     indic.multi <- unique(t(do.call(cbind, indic.multi0)))
     t1.indic.multi <- indic.multi[, 1]
     t2.indic.multi <- indic.multi[, 2]
-    t.indic.multi <- unique(c(t1.indic.multi, t2.indic.multi))[-improved.UME(t, m, N, item$ns, na)$ref.base]
+    t.indic.multi <- unique(c(t1.indic.multi, t2.indic.multi))[-impr.UME$ref.base]
+    t.indic.multi2 <- unique(c(t1.indic.multi, t2.indic.multi))
     N.obs.multi <- length(t1.indic.multi)
+
+    ## Is the subset of multi-arm trials a connected network?
+    multi.network <- pairwise(as.list(t[(ns - ns.multi + 1):ns, ]), mean = as.list(N[(ns - ns.multi + 1):ns, ]), sd = as.list(N[(ns - ns.multi + 1):ns, ]), n = as.list(N[(ns - ns.multi + 1):ns, ]), data = cbind(t[(ns - ns.multi + 1):ns, ], N[(ns - ns.multi + 1):ns, ], N[(ns - ns.multi + 1):ns, ], N[(ns - ns.multi + 1):ns, ]), studlab = 1:ns.multi)
+    connected <- netconnection(treat1, treat2, studlab, data = multi.network)$n.subnets
+
+    ## For the case of a disconnected network of multi-arm trials
+    if (connected > 1) {
+      dist.mat <- netconnection(treat1, treat2, studlab, data = multi.network)$D.matrix
+      group0 <- apply(dist.mat, 2, function(x) length(which(!is.infinite(x))))
+      group <- data.frame("treat" = attributes(group0)$names, "freq" = group0)
+
+      if (length(unique(group$freq)) < 2) {
+        find.groups <- split(group[, 1], sort(rep_len(1:(length(group$freq)/unique(group$freq)), length(group[, 1]))))
+        t.m2 <- data.frame("t.m1" = as.numeric(group[, 1]), "t.m2" = as.numeric(unlist(lapply(1:(length(group$freq)/unique(group$freq)), function(i) rep(min(as.numeric(find.groups[[i]])), unique(group$freq))))))
+        #find.groups <- split(group[, 1], sort(rep_len(1:unique(group$freq), length(group[, 1]))))
+        #t.m2 <- data.frame("t.m1" = as.numeric(group[, 1]), "t.m2" = as.numeric(unlist(lapply(1:unique(group$freq), function(i) rep(min(as.numeric(find.groups[[i]])),  unique(group$freq)[i])))))
+      } else {
+        find.groups <- split(group[, 1], rep(1:length(unique(group$freq)), unique(group$freq)))
+        t.m2 <- data.frame("t.m1" = as.numeric(group[, 1]), "t.m2" = as.numeric(unlist(lapply(1:length(unique(group$freq)), function(i) rep(min(as.numeric(find.groups[[i]])),  unique(group$freq)[i])))))
+      }
+
+      ref.m <- rep(NA, ns)
+      for (i in (ns - ns.multi + 1):ns) {ref.m[i] <- t.m2[is.element(t.m2[, 1], t[i, 1]), 2]}
+
+      ref.nbase.multi <- rep(NA, impr.UME$nbase.multi)
+      for (i in 1:impr.UME$nbase.multi) {ref.nbase.multi[i] <- t.m2[is.element(t.m2[, 1], cbind(impr.UME$t1.bn[i], impr.UME$t2.bn[i]) ), 2]}
+    }
   }
 
 
@@ -184,7 +211,7 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
                    "t" = t,
                    "na" = na,
                    "nt" = item$nt,
-                   "ns" = item$ns,
+                   "ns" = ns,
                    "ref" = ifelse(is.element(assumption, c("HIE-ARM", "IDE-ARM")), item$ref, NA),
                    "I" = item$I[order(item$na, na.last = T), ],
                    "M" = ifelse(!is.na(m), mean.misspar, NA),
@@ -199,72 +226,71 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
 
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
-    data.jag <- append(data.jag, list("y.o" = item$y0[order(item$na, na.last = T), ], "se.o" = item$se0[order(item$na, na.last = T), ], "y.m" = item$y0[order(item$na, na.last = T), ]))
+    data.jag <- append(data.jag, list("y" = item$y0[order(item$na, na.last = T), ], "se" = item$se0[order(item$na, na.last = T), ], "y.m" = item$y0[order(item$na, na.last = T), ]))
   } else if (measure == "OR") {
     data.jag <- append(data.jag, list("r" = item$r[order(item$na, na.last = T), ], "r.m"= item$r[order(item$na, na.last = T), ]))
   }
 
 
-  if (max(na) > 2 & !is.null(improved.UME(t, m, N, item$ns, na)$nbase.multi)) {
-    impr.UME <- improved.UME(t, m, N, item$ns, na)
-    data.jag <- append(data.jag, list("t1.m" = t1.indic.multi,
-                                      "t2.m" = t2.indic.multi,
-                                      "N.obs.multi" = N.obs.multi,
-                                      "ns.multi" = ns.multi,
-                                      "t1.bn" = impr.UME$t1.bn,
-                                      "t2.bn" = impr.UME$t2.bn,
-                                      #"base" = impr.UME$base,
-                                      "ref.base" = impr.UME$ref.base,
-                                      "N.t.m" = length(t.indic.multi),
-                                      "t.m" = t.indic.multi,
-                                      "nbase.multi" = impr.UME$nbase.multi))
-  } else if (max(na) < 3 || is.null(improved.UME(t, m, N, item$ns, na)$nbase.multi)) {
-    data.jag <- append(data.jag, list("t1.m" = t1.indic.multi,
-                                      "t2.m" = t2.indic.multi,
-                                      "N.obs.multi" = N.obs.multi,
-                                      "ns.multi" = ns.multi,
-                                      "t1.bn" = t1.indic,     # Pseudo-vector so that the model runs
-                                      "t2.bn" = t1.indic,     # Pseudo-vector so that the model runs
-                                      #"base" = 0,
-                                      "ref.base" = 1,         # Pseudo-number so that the model runs
-                                      "N.t.m" = length(2:5),  # Pseudo-number so that the model runs
-                                      "t.m" = 2:5,            # Pseudo-vector so that the model runs
-                                      "nbase.multi" = 0))
-  }
+  data.jag <- if (max(na) > 2 & !is.null(impr.UME$nbase.multi)) {
+    append(data.jag, list("ns.multi" = ns.multi,
+                          "t1.bn" = impr.UME$t1.bn,
+                          "t2.bn" = impr.UME$t2.bn,
+                          "nbase.multi" = impr.UME$nbase.multi,
+                          "ref.base" = impr.UME$ref.base,                                     # For connected network of multi-arm trials
+                          "N.t.m" = length(t.indic.multi),                                    # For connected network of multi-arm trials
+                          "t.m" = t.indic.multi,                                              # For connected network of multi-arm trials
+                          "ref.m" = if (connected > 1) {ref.m} else {1},                      # For *dis*connected network of multi-arm trials
+                          "ref.nbase.multi" = if (connected > 1) {ref.nbase.multi} else {1},  # For *dis*connected network of multi-arm trials
+                          "N.t.m2" = ifelse(connected > 1, length(t.indic.multi2), 1),        # For *dis*connected network of multi-arm trials
+                          "t.m2" = if (connected > 1) {t.m2} else {t.indic.multi}))           # For *dis*connected network of multi-arm trials
+    } else if (max(na) < 3 || is.null(impr.UME$nbase.multi)) {
+      append(data.jag, list("ns.multi" = ns.multi,
+                            "t1.bn" = t1.indic,            # Pseudo-vector (so that the model runs)
+                            "t2.bn" = t1.indic,            # Pseudo-vector
+                            "nbase.multi" = 0,             # Pseudo-number
+                            "ref.base" = 1,                # Pseudo-number - connected network of multi-arm trials
+                            "N.t.m" = length(2:5),         # Pseudo-number - connected network of multi-arm trials
+                            "t.m" = 2:5,                   # Pseudo-vector - connected network of multi-arm trials
+                            "ref.m" = 1,                   # Pseudo-number - *dis*connected network of multi-arm trials
+                            "ref.nbase.multi" = 1,         # Pseudo-number - *dis*connected network of multi-arm trials
+                            "N.t.m2" = 1,                  # Pseudo-number - *dis*connected network of multi-arm trials
+                            "t.m2" = 2:5))                 # Pseudo-vector - *dis*connected network of multi-arm trials
+    }
 
 
   ## Define the nodes to be monitored
   param.jags <- if (model == "RE") {
-    c("EM", "EM.m", "dev.o", "resdev.o", "totresdev.o", "tau", "hat.par")
+    c("EM", "dev.o", "resdev.o", "totresdev.o", "tau", "m.tau", "hat.par")
   } else {
-    c("EM", "EM.m", "dev.o", "resdev.o", "totresdev.o", "hat.par")
+    c("EM", "dev.o", "resdev.o", "totresdev.o", "hat.par")
   }
+
 
 
   ## Run the Bayesian analysis
   jagsfit <- jags(data = data.jag,
                   parameters.to.save = param.jags,
-                  model.file = textConnection(prepare.UME(measure, model, assumption)),
+                  model.file = textConnection(prepare.UME(measure, model, assumption, connected)),
                   n.chains = n.chains,
                   n.iter = n.iter,
                   n.burnin = n.burnin,
-                  n.thin = n.thin)
+                  n.thin = n.thin,
+                  DIC = F)
 
 
   ## Turn summary of posterior results (R2jags object) into a data-frame to select model parameters (using 'dplyr')
   getResults <- as.data.frame(t(jagsfit$BUGSoutput$summary))
 
-  # Effect size of all observed pairwise comparisons
+  # Effect size of all unique pairwise comparisons
   EM <- t(getResults %>% dplyr::select(starts_with("EM[")))
-
-  # Effect size of observed pairwise comparisons with the baseline intervention in multi-arm trials
-  EM.m <- t(getResults %>% dplyr::select(starts_with("EM.m[")))
 
   # Between-trial standard deviation
   tau <- t(getResults %>% dplyr::select(starts_with("tau")))
+  m.tau <- t(getResults %>% dplyr::select(starts_with("m.tau"))) # For the subnetwork of multi-arm trials
 
   # Trial-arm deviance contribution for observed outcome
-  dev.o <- t(getResults %>% dplyr::select(starts_with("dev.o")))
+  dev.o <- t(getResults %>% dplyr::select(starts_with("dev.o[")))
 
   # Fitted/predicted outcome
   hat.par <- t(getResults %>% dplyr::select(starts_with("hat.par")))
@@ -273,16 +299,13 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
   dev <- jagsfit$BUGSoutput$summary["totresdev.o", "mean"]
 
 
-
   ## Calculate the deviance at posterior mean of fitted values
-  # Turn 'number of observed' and 'm' into a vector (first column, followed by second column, and so on)
+  # Turn 'number of observed' into a vector (first column, followed by second column, and so on)
   m.new <- suppressMessages({as.vector(na.omit(melt(m)[, 2]))})
   N.new <- suppressMessages({as.vector(na.omit(melt(N)[, 2]))})
   obs <- N.new - m.new
 
-
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
-
     # Turn 'y0', 'se0'into a vector (first column, followed by second column, and so on)
     y0.new <- suppressMessages({as.vector(na.omit(melt(item$y0[order(item$na, na.last = T), ])[, 2]))})
     se0.new <- suppressMessages({as.vector(na.omit(melt(item$se0[order(item$na, na.last = T), ])[, 2]))})
@@ -294,7 +317,6 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
     sign.dev.o <- sign(y0.new - as.vector(hat.par[, 1]))
 
   } else {
-
     # Turn 'r' and number of observed into a vector (first column, followed by second column, and so on)
     r.new <- suppressMessages({as.vector(na.omit(melt(item$r[order(item$na, na.last = T), ])[, 2]))})
 
@@ -306,23 +328,26 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
 
     # Sign of the difference between observed and fitted response
     sign.dev.o <- sign(r0 - as.vector(hat.par[, 1]))
-
   }
 
 
   ## Obtain the leverage for observed outcomes
   leverage.o <- as.vector(dev.o[, 1]) - dev.post.o
 
-  # Number of effective parameters
+
+  ## Number of effective parameters
   pD <- dev - sum(dev.post.o)
 
-  # Deviance information criterion
+
+  ## Deviance information criterion
   DIC <- pD + dev
 
-  # A data-frame on the measures of model assessment: DIC, pD, and total residual deviance
+
+  ## A data-frame on the measures of model assessment: DIC, pD, and total residual deviance
   model.assessment <- data.frame(DIC, pD, dev)
 
-  # Collect the minimum results at common
+
+  ## Collect the minimum results at common
   results <- if (model == "RE") {
     list(EM = EM,
          dev.o = dev.o,
@@ -344,12 +369,12 @@ run.UME <- function(full, n.chains, n.iter, n.burnin, n.thin) {
          jagsfit = jagsfit)
   }
 
-  # Return different list of results according to a condition
-  if (is.null(improved.UME(t, m, N, item$ns, na)$nbase.multi)) {
+
+  ## Return different list of results according to a condition
+  if (is.null(impr.UME$nbase.multi)) {
     return(results)
   } else {
-    return(append(results, list(EM.m = EM.m, frail.comp = paste0(impr.UME$t2.bn, "vs", impr.UME$t1.bn))))
+    return(append(results, list(m.tau = m.tau, frail.comp = paste0(impr.UME$t2.bn, "vs", impr.UME$t1.bn))))
   }
-
 }
 
