@@ -99,7 +99,7 @@ robustness.index <- function(sens, threshold){
       return(NA)
     }
 
-    primary.scenar <- median(1:n.scenar)
+    primary.scenar <- median(1:length(scenarios))
   }
 
 
