@@ -16,7 +16,7 @@
 #'   of the corresponding comparisons. The main diagonal contains the SUCRA values of the corresponding interventions.
 #'
 #'   Results in the lower triangle refer to comparisons in the opposite direction after converting negative values into positive values (in absolute or logarithmic scale), and vice versa.
-#'   Darker shades of red and blue correspond to larger treatment effects in the upper and lower triangle, respectively.
+#'   Darker shades of red and blue correspond to larger treatment effects in the upper and lower triangle, respectively, for a beneficial outcome, and the other way around for a harmful outcome.
 #'   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
 #'
 #'   Comparisons between interventions should be read from left to right.

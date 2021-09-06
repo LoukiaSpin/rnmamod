@@ -116,7 +116,7 @@ netplot <- function(data, drug.names, save.xls, ...){
   transform$treatment1 <- as.numeric(as.character(transform$treatment))
 
   ## Obtain network plot
-  nma.networkplot(study, treatment1, data = transform, trtname = drug.names, multi.show = T, ...)
+  network.plot <- nma.networkplot(study, treatment1, data = transform, trtname = drug.names, multi.show = T, ...)
 
   if(dim(data %>% dplyr::select(starts_with("r")))[2] > 0) {
     measure <- "OR"
@@ -158,11 +158,12 @@ netplot <- function(data, drug.names, save.xls, ...){
   }
 
 
-  return(list(Network.description = knitr::kable(results),
+  return(list(Network.plot = network.plot,
+              Network.description = knitr::kable(results),
               Table.interventions = dat$Table.interventions,
               Table.comparisons   = dat$Table.comparisons,
               Table.interventions.Missing = dat$Table.interventions.Missing,
-              Table.comparisons.Missing   = dat$Table.comparisons.Missing,
+              Table.comparisons.Missing = dat$Table.comparisons.Missing,
               Heatmap.missing.network = heatmap.missing.network(data, drug.names),
               Heatmap.outcome.network = heatmap.outcome.network(data, drug.names)))
 }
