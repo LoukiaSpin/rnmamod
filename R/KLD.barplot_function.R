@@ -55,8 +55,8 @@
 #' robust <- robustness.index(sens = res.sens, threshold = 0.28)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("budesodine", "budesodine plus formoterol", "fluticasone", "fluticasone plus
-#'                   salmeterol", "formoterol", "salmeterol", "tiotropium", "placebo")
+#' interv.names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus
+#'                   salmeterol", "formoterol", "salmeterol", "tiotropium")
 #'
 #' # Crate the barplot for the comparison 'tiotropium versus salmeterol'
 #' KLD.barplot(robust = robust, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)

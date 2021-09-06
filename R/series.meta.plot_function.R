@@ -29,7 +29,7 @@
 #'
 #' \dontrun{
 #' # Perform a random-effects network meta-analysis
-#' res <- run.model(data = dogliotti2014,
+#' res <- run.model(data = nmadogliotti2014,
 #'                  measure = "OR",
 #'                  model = "RE",
 #'                  assumption = "IDE-ARM",
