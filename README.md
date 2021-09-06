@@ -58,7 +58,7 @@ netplot(data = nma.baker2009, drug.names = interv.names, text.cex = 1.5)
 ```
 
 <div style="text-align: center"> 
-<img src="man/figures/network_Baker.png" width="800" height="551" align="center">
+<img src="man/figures/Network_Baker.png" width="800" height="551" align="center">
 </div>
 
 The following code performs a Bayesian random-effects network meta-analysis under the *missing at random assumption* while using an intervention-specific informative missingness odds ratio (`assumption = "IDE-ARM"`) in the logarithmic scale:
@@ -86,8 +86,8 @@ league.heatmap(full = res, drug.names = interv.names)
 ```
 
 <div style="text-align: center"> 
-<!--- <img src="man/figures/league_Baker.png" width="950" height="700" align="center"> --->
-<img src="man/figures/league_Baker.png" width="70%" height="70%" align="center">  
+<!--- <img src="man/figures/League_Baker.png" width="950" height="700" align="center"> --->
+<img src="man/figures/League_Baker.png" width="70%" height="70%" align="center">  
 </div>
 <br/>
 
@@ -98,8 +98,8 @@ rankosucra.plot(full = res, drug.names = interv.names)
 ```
 
 <div style="text-align: center"> 
-<!--- <img src="man/figures/sucra_Baker.png" width="800" height="600" align="center"> --->
-<img src="man/figures/sucra_Baker.png" width="70%" height="70%" align="center">
+<!--- <img src="man/figures/Sucra_Baker.png" width="800" height="600" align="center"> --->
+<img src="man/figures/Sucra_Baker.png" width="70%" height="70%" align="center">
 </div>
 
 ##
