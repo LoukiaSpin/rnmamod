@@ -10,7 +10,7 @@
   
 ## Description 
 
-The `rnmamod` package performs one-stage fixed-effect or random-effects Bayesian network meta-analysis while adjusting for *missing participant outcome data* using the pattern-mixture model. In the case of two interventions, the package performs one-stage Bayesian pairwise meta-analysis. 
+The `rnmamod` package performs one-stage fixed-effect or random-effects Bayesian network meta-analysis (NMA) while adjusting for *missing participant outcome data* using the pattern-mixture model. In the case of two interventions, the package performs one-stage Bayesian pairwise meta-analysis. 
 
 The package handles data inputs in *arm-based format*:
 - binary data (effect size: odds ratio)  
