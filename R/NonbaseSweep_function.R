@@ -11,8 +11,10 @@ NonbaseSweep <- function(index, na)
   out <- matrix(nrow=N, ncol=C)
   for (i in 1:N) {
     for (k in 2:na[i]) {
-      out[i,k] <- k - (index[i,"b"] >= k)
+      #out[i,k] <- k - (index[i,"b"] >= k)
+      out[i,k] <- ifelse(k == index[i,"b"], 1, ifelse(k < index[i,"b"], k + 1, k))  # Refinement when the third arm is the baseline
     }
   }
   out
 }
+
