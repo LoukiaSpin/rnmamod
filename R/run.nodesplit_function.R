@@ -165,32 +165,64 @@ run.nodesplit <- function(full, n.chains, n.iter, n.burnin, n.thin){
 
     ## Define necessary model components
     jagsfit <- data.jag <- checkPair <- bi <- si <- m <- list()
+    checkPair.new <- t.new <- N.new <- m.new <- y.new <- se.new <- r.new <- I.sign <- list()
 
 
     for (i in 1:length(pair[, 1])) {
 
       ## Calculate split (1 if node to split is present) and b (baseline position)
-      checkPair[[i]] <- PairXY(as.matrix(item$t), pair[i, ])
+      checkPair.new[[i]] <- checkPair[[i]] <- PairXY(as.matrix(item$t), pair[i, ])
+
+      r.new[[i]] <- se.new[[i]] <- y.new[[i]] <- m.new[[i]] <- N.new[[i]] <- t.new[[i]] <- item$t
+      I.sign[[i]] <- matrix(nrow = item$ns, ncol = max(na..))
+      for(j in 1:item$ns){
+        t.new[[i]][j, 1] <- item$t[j, checkPair[[i]][j,"b"]]
+        t.new[[i]][j, 2:max(na..)] <- unique(item$t[j, -checkPair[[i]][j,"b"]])
+        N.new[[i]][j, 1] <- item$N[j, checkPair[[i]][j,"b"]]
+        N.new[[i]][j, 2:max(na..)] <- item$N[j, -checkPair[[i]][j,"b"]]
+        m.new[[i]][j, 1] <- item$m[j, checkPair[[i]][j,"b"]]
+        m.new[[i]][j, 2:max(na..)] <- item$m[j, -checkPair[[i]][j,"b"]]
+
+        if (is.element(measure, c("MD", "SMD", "ROM"))) {
+          y.new[[i]][j, 1] <- item$y0[j, checkPair[[i]][j,"b"]]
+          y.new[[i]][j, 2:max(na..)] <- item$y0[j, -checkPair[[i]][j,"b"]]
+          se.new[[i]][j, 1] <- item$se0[j, checkPair[[i]][j,"b"]]
+          se.new[[i]][j, 2:max(na..)] <- item$se0[j, -checkPair[[i]][j,"b"]]
+        } else {
+          r.new[[i]][j, 1] <- item$r[j, checkPair[[i]][j,"b"]]
+          r.new[[i]][j, 2:max(na..)] <- item$r[j, -checkPair[[i]][j,"b"]]
+        }
+
+        for(k in 2:max(na..)){
+          I.sign[[i]][j, k] <- ifelse(t.new[[i]][j, 1] > t.new[[i]][j, k], -1, 1)
+        }
+      }
+
+      checkPair.new[[i]][,"b"] <- ifelse(checkPair[[i]][,"b"] > 1, 1, checkPair[[i]][,"b"])
 
       ## Build vector bi[i] with baseline treatment: t[i, b[i]]
-      bi[[i]] <- Basetreat(as.matrix(item$t), checkPair[[i]][,"b"])
+      #bi[[i]] <- Basetreat(as.matrix(item$t), checkPair[[i]][,"b"])
+      bi[[i]] <- Basetreat(as.matrix(t.new[[i]]), checkPair.new[[i]][,"b"])
 
       ## Indexes to sweep non-baseline arms only
-      m[[i]] <- NonbaseSweep(checkPair[[i]], na..)
+      #m[[i]] <- NonbaseSweep(checkPair[[i]], na..)
+      m[[i]] <- NonbaseSweep(checkPair.new[[i]], na..)
 
       ## Build matrix si[i,k] with non-baseline treatments: t[i, m[i,k]]
-      si[[i]] <- Sweeptreat(as.matrix(item$t), m[[i]])
+      #si[[i]] <- Sweeptreat(as.matrix(item$t), m[[i]])
+      si[[i]] <- Sweeptreat(as.matrix(t.new[[i]]), m[[i]])
 
 
       ## Data in list format for R2jags
-      data.jag[[i]] <- list("mod" = item$m,
-                            "N" = item$N,
-                            "t" = item$t,
+      data.jag[[i]] <- list("mod" = m.new[[i]], # item$m
+                            "N" = N.new[[i]],   # item$N
+                            "t" = t.new[[i]],   # item$t
                             "na" = na..,
                             "nt" = item$nt,
                             "ns" = item$ns,
                             "ref" = item$ref,
                             "I" = item$I,
+                            "I.sign" = I.sign[[i]],
                             "M" = ifelse(!is.na(item$m), mean.misspar, NA),
                             "cov.phi" = 0.5*var.misspar,
                             "var.phi" = var.misspar,
@@ -205,11 +237,10 @@ run.nodesplit <- function(full, n.chains, n.iter, n.burnin, n.thin){
 
 
       if (is.element(measure, c("MD", "SMD", "ROM"))) {
-        data.jag[[i]]  <- append(data.jag[[i]] , list("y.o" = item$y0, "se.o" = item$se0))
+        data.jag[[i]]  <- append(data.jag[[i]] , list("y.o" = y.new[[i]], "se.o" = se.new[[i]])) # list("y.o" = item$y0, "se.o" = item$se0)
       } else if (measure == "OR") {
-        data.jag[[i]]  <- append(data.jag[[i]] , list("r" = item$r))
+        data.jag[[i]]  <- append(data.jag[[i]] , list("r" = r.new[[i]])) #list("r" = item$r)
       }
-
 
 
       ## Run the Bayesian analysis
