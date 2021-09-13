@@ -93,7 +93,6 @@ run.series.meta <- function(full, n.chains, n.iter, n.burnin, n.thin) {
   } else if (model == "FE") {
     NA
   }
- # heterog.prior <- list(heter.prior0[[3]], heter.prior0[[1]], heter.prior0[[2]])
   heterog.prior <- if (model == "FE") {
     list(NA, NA, NA)
   } else if (model == "RE") {
