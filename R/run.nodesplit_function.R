@@ -228,7 +228,7 @@ run.nodesplit <- function(full, n.chains, n.iter, n.burnin, n.thin){
                             "var.phi" = var.misspar,
                             "meand.phi" = mean.misspar,
                             "precd.phi" = 1/var.misspar,
-                            "split" = checkPair[[i]][, "split"],
+                            "split" = checkPair.new[[i]][, "split"], # checkPair[[i]][, "split"]
                             "m" = m[[i]],
                             "bi" = bi[[i]],
                             "si" = si[[i]],
