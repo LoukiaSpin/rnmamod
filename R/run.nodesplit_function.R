@@ -154,7 +154,6 @@ run.nodesplit <- function(full, n.chains, n.iter, n.burnin, n.thin){
     }
 
 
-
     ## Parameters to save
     param.jags <- if (model == "RE") {
       c("EM", "direct", "diff", "tau", "totresdev.o", "hat.par")
@@ -165,58 +164,56 @@ run.nodesplit <- function(full, n.chains, n.iter, n.burnin, n.thin){
 
     ## Define necessary model components
     jagsfit <- data.jag <- checkPair <- bi <- si <- m <- list()
-    checkPair.new <- t.new <- N.new <- m.new <- y.new <- se.new <- r.new <- I.sign <- list()
-
+    checkPair.node <- t.node <- N.node <- m.node <- y.node <- se.node <- r.node <- I.sign <- list()
 
     for (i in 1:length(pair[, 1])) {
-
       ## Calculate split (1 if node to split is present) and b (baseline position)
-      checkPair.new[[i]] <- checkPair[[i]] <- PairXY(as.matrix(item$t), pair[i, ])
+      checkPair.node[[i]] <- checkPair[[i]] <- PairXY(as.matrix(item$t), pair[i, ])
+      r.node[[i]] <- se.node[[i]] <- y.node[[i]] <- m.node[[i]] <- matrix(nrow = item$ns, ncol = max(na..))
+      N.node[[i]] <- t.node[[i]] <- I.sign[[i]] <- matrix(nrow = item$ns, ncol = max(na..))
 
-      r.new[[i]] <- se.new[[i]] <- y.new[[i]] <- m.new[[i]] <- N.new[[i]] <- t.new[[i]] <- item$t
-      I.sign[[i]] <- matrix(nrow = item$ns, ncol = max(na..))
       for(j in 1:item$ns){
-        t.new[[i]][j, 1] <- item$t[j, checkPair[[i]][j,"b"]]
-        t.new[[i]][j, 2:max(na..)] <- unique(item$t[j, -checkPair[[i]][j,"b"]])
-        N.new[[i]][j, 1] <- item$N[j, checkPair[[i]][j,"b"]]
-        N.new[[i]][j, 2:max(na..)] <- item$N[j, -checkPair[[i]][j,"b"]]
-        m.new[[i]][j, 1] <- item$m[j, checkPair[[i]][j,"b"]]
-        m.new[[i]][j, 2:max(na..)] <- item$m[j, -checkPair[[i]][j,"b"]]
+        t.node[[i]][j, 1] <- item$t[j, checkPair[[i]][j,"b"]]
+        t.node[[i]][j, 2:max(na..)] <- unlist(item$t[j, -checkPair[[i]][j,"b"]])
+        N.node[[i]][j, 1] <- item$N[j, checkPair[[i]][j,"b"]]
+        N.node[[i]][j, 2:max(na..)] <- unlist(item$N[j, -checkPair[[i]][j,"b"]])
+        m.node[[i]][j, 1] <- item$m[j, checkPair[[i]][j,"b"]]
+        m.node[[i]][j, 2:max(na..)] <- unlist(item$m[j, -checkPair[[i]][j,"b"]])
 
         if (is.element(measure, c("MD", "SMD", "ROM"))) {
-          y.new[[i]][j, 1] <- item$y0[j, checkPair[[i]][j,"b"]]
-          y.new[[i]][j, 2:max(na..)] <- item$y0[j, -checkPair[[i]][j,"b"]]
-          se.new[[i]][j, 1] <- item$se0[j, checkPair[[i]][j,"b"]]
-          se.new[[i]][j, 2:max(na..)] <- item$se0[j, -checkPair[[i]][j,"b"]]
+          y.node[[i]][j, 1] <- item$y0[j, checkPair[[i]][j,"b"]]
+          y.node[[i]][j, 2:max(na..)] <- unlist(item$y0[j, -checkPair[[i]][j,"b"]])
+          se.node[[i]][j, 1] <- item$se0[j, checkPair[[i]][j,"b"]]
+          se.node[[i]][j, 2:max(na..)] <- unlist(item$se0[j, -checkPair[[i]][j,"b"]])
         } else {
-          r.new[[i]][j, 1] <- item$r[j, checkPair[[i]][j,"b"]]
-          r.new[[i]][j, 2:max(na..)] <- item$r[j, -checkPair[[i]][j,"b"]]
+          r.node[[i]][j, 1] <- item$r[j, checkPair[[i]][j,"b"]]
+          r.node[[i]][j, 2:max(na..)] <- unlist(item$r[j, -checkPair[[i]][j,"b"]])
         }
 
         for(k in 2:max(na..)){
-          I.sign[[i]][j, k] <- ifelse(t.new[[i]][j, 1] > t.new[[i]][j, k], -1, 1)
+          I.sign[[i]][j, k] <- ifelse(t.node[[i]][j, 1] > t.node[[i]][j, k], -1, 1)
         }
       }
 
-      checkPair.new[[i]][,"b"] <- ifelse(checkPair[[i]][,"b"] > 1, 1, checkPair[[i]][,"b"])
+      checkPair.node[[i]][,"b"] <- ifelse(checkPair[[i]][,"b"] > 1, 1, checkPair[[i]][,"b"])
 
       ## Build vector bi[i] with baseline treatment: t[i, b[i]]
       #bi[[i]] <- Basetreat(as.matrix(item$t), checkPair[[i]][,"b"])
-      bi[[i]] <- Basetreat(as.matrix(t.new[[i]]), checkPair.new[[i]][,"b"])
+      bi[[i]] <- Basetreat(as.matrix(t.node[[i]]), checkPair.node[[i]][,"b"])
 
       ## Indexes to sweep non-baseline arms only
       #m[[i]] <- NonbaseSweep(checkPair[[i]], na..)
-      m[[i]] <- NonbaseSweep(checkPair.new[[i]], na..)
+      m[[i]] <- NonbaseSweep(checkPair.node[[i]], na..)
 
       ## Build matrix si[i,k] with non-baseline treatments: t[i, m[i,k]]
       #si[[i]] <- Sweeptreat(as.matrix(item$t), m[[i]])
-      si[[i]] <- Sweeptreat(as.matrix(t.new[[i]]), m[[i]])
+      si[[i]] <- Sweeptreat(as.matrix(t.node[[i]]), m[[i]])
 
 
       ## Data in list format for R2jags
-      data.jag[[i]] <- list("mod" = m.new[[i]], # item$m
-                            "N" = N.new[[i]],   # item$N
-                            "t" = t.new[[i]],   # item$t
+      data.jag[[i]] <- list("mod" = m.node[[i]], # item$m
+                            "N" = N.node[[i]],   # item$N
+                            "t" = t.node[[i]],   # item$t
                             "na" = na..,
                             "nt" = item$nt,
                             "ns" = item$ns,
@@ -228,7 +225,7 @@ run.nodesplit <- function(full, n.chains, n.iter, n.burnin, n.thin){
                             "var.phi" = var.misspar,
                             "meand.phi" = mean.misspar,
                             "precd.phi" = 1/var.misspar,
-                            "split" = checkPair.new[[i]][, "split"], # checkPair[[i]][, "split"]
+                            "split" = checkPair.node[[i]][, "split"], # checkPair[[i]][, "split"]
                             "m" = m[[i]],
                             "bi" = bi[[i]],
                             "si" = si[[i]],
@@ -237,9 +234,9 @@ run.nodesplit <- function(full, n.chains, n.iter, n.burnin, n.thin){
 
 
       if (is.element(measure, c("MD", "SMD", "ROM"))) {
-        data.jag[[i]]  <- append(data.jag[[i]] , list("y.o" = y.new[[i]], "se.o" = se.new[[i]])) # list("y.o" = item$y0, "se.o" = item$se0)
+        data.jag[[i]]  <- append(data.jag[[i]] , list("y.o" = y.node[[i]], "se.o" = se.node[[i]])) # list("y.o" = item$y0, "se.o" = item$se0)
       } else if (measure == "OR") {
-        data.jag[[i]]  <- append(data.jag[[i]] , list("r" = r.new[[i]])) #list("r" = item$r)
+        data.jag[[i]]  <- append(data.jag[[i]] , list("r" = r.node[[i]])) #list("r" = item$r)
       }
 
 
@@ -279,7 +276,7 @@ run.nodesplit <- function(full, n.chains, n.iter, n.burnin, n.thin){
   }
 
 
-  getResults <- hat.par <- list()
+  obs <- N.new <- m.new <- getResults <- hat.par <- r0 <- r.new <- se0.new <- y0.new <- dev.post.o <- list()
   dev <- rep(NA, length(pair[, 1]))
   for (i in 1:length(pair[, 1])) {
     getResults[[i]] <- as.data.frame(t(jagsfit[[i]]$BUGSoutput$summary))
@@ -289,50 +286,38 @@ run.nodesplit <- function(full, n.chains, n.iter, n.burnin, n.thin){
 
     # Fitted/predicted number of observed data (hat.par")
     hat.par[[i]] <- t(getResults[[i]] %>% dplyr::select(starts_with("hat.par[")))
-  }
 
+    ## Calculate the deviance at posterior mean of fitted values
+    # Turn 'number of observed' and 'm' into a vector (first column, followed by second column, and so on)
+    m.new[[i]] <- suppressMessages({as.vector(na.omit(melt(m.node[[i]])[, 3]))})
+    N.new[[i]] <- suppressMessages({as.vector(na.omit(melt(N.node[[i]])[, 3]))})
+    obs[[i]] <- N.new[[i]] - m.new[[i]]
 
+    if (is.element(measure, c("MD", "SMD", "ROM"))) {
 
-  ## Calculate the deviance at posterior mean of fitted values
-  # Turn 'number of observed' and 'm' into a vector (first column, followed by second column, and so on)
-  m.new <- suppressMessages({as.vector(na.omit(melt(item$m)[, 2]))})
-  N.new <- suppressMessages({as.vector(na.omit(melt(item$N)[, 2]))})
-  obs <- N.new - m.new
-
-  if (is.element(measure, c("MD", "SMD", "ROM"))) {
-
-    # Turn 'y0', 'se0'into a vector (first column, followed by second column, and so on)
-    y0.new <- suppressMessages({as.vector(na.omit(melt(item$y0)[, 2]))})
-    se0.new <- suppressMessages({as.vector(na.omit(melt(item$se0)[, 2]))})
-
-    dev.post.o <- list()
-    for (i in 1:length(pair[, 1])) {
+      # Turn 'y0', 'se0'into a vector (first column, followed by second column, and so on)
+      y0.new[[i]] <- suppressMessages({as.vector(na.omit(melt(y.node[[i]])[, 3]))})
+      se0.new[[i]] <- suppressMessages({as.vector(na.omit(melt(se.node[[i]])[, 3]))})
       # Deviance at the posterior mean of the fitted mean outcome
-      dev.post.o[[i]] <- (y0.new - as.vector(hat.par[[i]][, 1]))*(y0.new - as.vector(hat.par[[i]][, 1]))*(1/se0.new^2)
-    }
+      dev.post.o[[i]] <- (y0.new[[i]] - as.vector(hat.par[[i]][, 1]))*(y0.new[[i]] - as.vector(hat.par[[i]][, 1]))*(1/(se0.new[[i]]^2))
 
-  } else {
+    } else {
 
-    # Turn 'r' and number of observed into a vector (first column, followed by second column, and so on)
-    r.new <- suppressMessages({as.vector(na.omit(melt(item$r)[, 2]))})
-
-    # Correction for zero events in trial-arm
-    r0 <- ifelse(r.new == 0, r.new + 0.01, ifelse(r.new == obs, r.new - 0.01, r.new))
-
-    dev.post.o <- list()
-    for (i in 1:length(pair[, 1])) {
+      # Turn 'r' and number of observed into a vector (first column, followed by second column, and so on)
+      r.new[[i]] <- suppressMessages({as.vector(na.omit(melt(r.node[[i]])[, 3]))})
+      # Correction for zero events in trial-arm
+      r0[[i]] <- ifelse(r.new[[i]] == 0, r.new[[i]] + 0.01, ifelse(r.new[[i]] == obs[[i]], r.new[[i]] - 0.01, r.new[[i]]))
       # Deviance at the posterior mean of the fitted mean outcome
-      dev.post.o[[i]] <- 2*(r0*(log(r0) - log(as.vector(hat.par[[i]][, 1]))) + (obs - r0)*(log(obs - r0) - log(obs - as.vector(hat.par[[i]][, 1]))))
+      dev.post.o[[i]] <- 2*(r0[[i]]*(log(r0[[i]]) - log(as.vector(hat.par[[i]][, 1]))) + (obs[[i]] - r0[[i]])*(log(obs[[i]] - r0[[i]]) - log(obs[[i]] - as.vector(hat.par[[i]][, 1]))))
     }
   }
 
 
   # Number of effective parameters
-  pD <- do.call(rbind, lapply(1:length(pair[, 1]), function(i) dev[[i]] - sum(dev.post.o[[i]])))
-
+  pD <- as.vector(do.call(rbind, lapply(1:length(pair[, 1]), function(i) dev[i] - sum(dev.post.o[[i]]))))
 
   # Deviance information criterion
-  DIC <- do.call(rbind, lapply(1:length(pair[, 1]), function(i) pD[[i]] + dev[[i]]))
+  DIC <- as.vector(do.call(rbind, lapply(1:length(pair[, 1]), function(i) pD[i] + dev[i])))
 
   # A data-frame on the measures of model assessment: DIC, pD, and total residual deviance
   model.assessment <- data.frame(pair[, 2], pair[, 1], DIC, unlist(dev), pD)
