@@ -39,3 +39,4 @@ test_that("The summary log ORs and between-trial sd agree (no missing outcome da
   #expect_equal( as.vector(res.re$tau[1:2]), as.vector(summary(gemtc.re)$summaries$statistics[3, 1:2]), tolerance = 4e-2)
 })
 
+# All three passed

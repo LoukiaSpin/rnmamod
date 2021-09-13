@@ -77,17 +77,28 @@ run.series.meta <- function(full, n.chains, n.iter, n.burnin, n.thin) {
   measure <- full$measure
   model <- full$model
   assumption <- full$assumption
-  heter.prior0 <- as.list(full$heter.prior)
-  heter.prior0[[3]] <- if (heter.prior0[[3]] == 1) {
-    "halfnormal"
-  } else if (heter.prior0[[3]] == 2) {
-    "uniform"
-  } else if (heter.prior0[[3]] == 3) {
-    "lognormal"
-  } else if (heter.prior0[[3]] == 4) {
-    "logt"
+  heter.prior0 <- if (model == "FE") {
+    list(NA, NA, NA)
+  } else {
+    as.list(full$heter.prior)
   }
-  heterog.prior <- list(heter.prior0[[3]], heter.prior0[[1]], heter.prior0[[2]])
+  heter.prior0[[3]] <- if (model == "RE" & heter.prior0[[3]] == 1) {
+    "halfnormal"
+  } else if (model == "RE" & heter.prior0[[3]] == 2) {
+    "uniform"
+  } else if (model == "RE" & heter.prior0[[3]] == 3) {
+    "lognormal"
+  } else if (model == "RE" & heter.prior0[[3]] == 4) {
+    "logt"
+  } else if (model == "FE") {
+    NA
+  }
+ # heterog.prior <- list(heter.prior0[[3]], heter.prior0[[1]], heter.prior0[[2]])
+  heterog.prior <- if (model == "FE") {
+    list(NA, NA, NA)
+  } else if (model == "RE") {
+    list(heter.prior0[[3]], heter.prior0[[1]], heter.prior0[[2]])
+  }
   mean.misspar <- full$mean.misspar
   var.misspar <- full$var.misspar
 
