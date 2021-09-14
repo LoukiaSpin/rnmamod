@@ -108,11 +108,11 @@ prepare.nodesplit <- function(measure, model, assumption) {
   }
 
   code <- if (model == "RE") {
-    paste0(code,  "\n\t\t\tdelta[i, k] ~ dnorm(md[i, k], precd[i, k])",
+    paste0(code, "\n\t\t\tdelta[i, k] ~ dnorm(md[i, k], precd[i, k])",
                  "\n\t\t\tmd[i, k] <- ((d[si[i, k]] - d[bi[i]])*I.sign[i, k] + sw[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]",
                  "\n\t\t\tj[i, k] <- k - (equals(1, split[i])*step(k - 3))",
                  "\n\t\t\tprecd[i, k] <- prec*2*(j[i, k] - 1)/j[i, k]",
-                 "\n\t\t\tw[i, k] <- ((delta[i, k] - (d[si[i, k]] - d[bi[i]]))*I.sign[i, k])*(1 - index[i, k]) ",
+                 "\n\t\t\tw[i, k] <- ((delta[i, k] - (d[si[i, k]] - d[bi[i]]))*I.sign[i, k])*(1 - index[i, k])",
                  "\n\t\t\tsw[i, k] <- sum(w[i, 1:(k - 1)])/(j[i, k] - 1)")
   } else {
     paste0(code, "\n\t\t\tdelta[i, k] <- ((d[si[i, k]] - d[bi[i]])*I.sign[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]")
