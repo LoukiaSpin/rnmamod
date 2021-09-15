@@ -214,8 +214,8 @@ prepare.nodesplit <- function(measure, model, assumption) {
                          "\n\t\t\t}}")
   }
 
-  code <- paste0(code, "\n\tfor (c in 1:nt) {",
-                       "\n\t\tfor (k in 1:nt) {",
+  code <- paste0(code, "\n\tfor (c in 1:(nt - 1)) {",
+                       "\n\t\tfor (k in (c + 1):nt) {",
                        "\n\t\t\tEM[k, c] <- d[k] - d[c]",
                        "\n\t\t\t}}",
                        "\n\tdirect ~ dnorm(0, .0001)",
