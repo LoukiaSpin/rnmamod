@@ -58,3 +58,6 @@ utils::globalVariables(c("active",
                          "y"))
 
 
+suppressMessages({"Registered S3 method overwritten by 'mcmcplots':
+                    method        from
+                   as.mcmc.rjags R2jags"})
