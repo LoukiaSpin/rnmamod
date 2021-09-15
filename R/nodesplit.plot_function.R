@@ -37,13 +37,15 @@
 #'   If the difference in DIC exceeds 5, the consistency model is preferred; if the difference in DIC is less than -5,
 #'   the model after split node is preferred; otherwise, there is little to choose between the compared models.
 #'
+#'   The split nodes have been automatically selected via the the \code{mtc.nodesplit.comparisons} function of the \code{\link{gemtc}} package. See 'Details' in  \code{run.nodesplit}.
+#'
 #'   Furthermore, \code{nodesplit.plot} exports both data-frames to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 #'
 #'   \code{nodesplit.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run.model}}, \code{\link{run.nodesplit}}
+#' @seealso \code{\link{run.model}}, \code{\link{run.nodesplit}}, \code{\link[gemtc]{mtc.nodesplit.comparisons}}
 #'
 #' @references
 #' Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed treatment comparison meta-analysis. \emph{Stat Med} 2010;\bold{29}(7-8):932--44. [\doi{10.1002/sim.3767}]
