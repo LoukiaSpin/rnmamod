@@ -13,7 +13,7 @@
 #'
 #' @details This functions creates the model in the JAGS dialect of the BUGS language. The output of this function constitutes the argument \code{model.file} of \code{\link[R2jags]{jags}} via the \code{\link[base]{textconnections}} function.
 #'
-#'   The split nodes have been automatically selected via the the \code{mtc.nodesplit.comparisons} function of the \code{\link{gemtc}} package. See 'Details' in  \code{run.nodesplit}.
+#'   The split nodes have been automatically selected via the \code{mtc.nodesplit.comparisons} function of the \code{\link{gemtc}} package. See 'Details' in  \code{run.nodesplit}.
 #'
 #' @author {Loukia M. Spineli}
 #'

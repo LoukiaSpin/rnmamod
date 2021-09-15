@@ -39,9 +39,9 @@
 #'   \code{run.nodesplit} runs Bayesian network meta-analysis based on the node-splitting approach in \code{JAGS}. The progress of the simulation appears in the R console. The number of times \code{run.nodesplit} is used
 #'   appears in the R console as a text in red and it equals the number of split nodes (see 'Examples'). If there are no split nodes in the network, the execution of the function will be stopped and an error message will be printed in the R console.
 #'
-#'   \code{run.nodesplit} uses the decision rule of van Valkenhoef et al. (2016) to select the nodes to split. The function uses the \code{mtc.nodesplit.comparisons} function of the \code{\link{gemtc}} package to obtain the nodes to split.
-#'   The function uses the option (1) in van Valkenhoef et al. (2016) to parameterise multi-arm trials that contain the node-to-split. In contrast, the \code{mtc.nodesplit} function of the \code{\link{gemtc}} uses the option (3) in van Valkenhoef et al. (2016).
-#'   Specifically, option (1) keeps the baseline arm of the node-to-split in the corresponding multi-arms, whilst option (3) excludes both arms of the node-to-split from the corresponding multi-arm trials.
+#'   \code{run.nodesplit} uses the \code{mtc.nodesplit.comparisons} function of the \code{\link{gemtc}} package to  obtain automatically the nodes to split based on the decision rule of van Valkenhoef et al. (2016).
+#'   \code{run.nodesplit} uses the option (1) in van Valkenhoef et al. (2016) to parameterise multi-arm trials that contain the node-to-split. In contrast, the \code{mtc.nodesplit} function of the \code{\link{gemtc}} package uses the option (3) in van Valkenhoef et al. (2016).
+#'   Option (1) keeps the baseline arm of the node-to-split in the corresponding multi-arms. Option (3) excludes both arms of the node-to-split from the corresponding multi-arm trials.
 #'   Hence, the corresponding subnetworks obtained after splitting the node differ, and by extend, the results that correspond to split nodes found in multi-arm trials.
 #'
 #'   The output of \code{run.nodesplit} is not end-user-ready. The \code{nodesplit.plot} function uses the output of \code{run.nodesplit} as an S3 object and processes it further to provide an end-user-ready output.
