@@ -25,7 +25,7 @@ The rows and columns of the heatmap display the names of interventions which are
   based on their SUCRA value (Salanti et al., 2011). The main diagonal contains the SUCRA values of the corresponding interventions.
 
   Results in the lower triangle refer to comparisons in the opposite direction after converting negative values into positive values (in absolute or logarithmic scale), and vice versa.
-  Darker shades of red and green correspond to larger treatment effects in the upper and lower triangle, respectively.
+  Darker shades of red and green correspond to larger treatment effects in the upper and lower triangle, respectively, for a beneficial outcome, and the other way around for a harmful outcome.
   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
 
   Comparisons between interventions should be read from left to right.

@@ -1,13 +1,13 @@
-
-
-data <- nma.baker2009
-measure <-"OR"
-mean.value <- 0
-var.value <- 1
-rho <- 0
-
-
+#'
+#' @export
 unrelated.effects.plot <- function(data, measure, mean.value, var.value, rho) {
+
+
+  data <- nma.baker2009
+  measure <-"OR"
+  mean.value <- 0
+  var.value <- 1
+  rho <- 0
 
 
   # Default arguments
@@ -60,40 +60,40 @@ unrelated.effects.plot <- function(data, measure, mean.value, var.value, rho) {
   contrast0 <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
     Taylor.IMDoM.IMRoM(pairwise.data, measure, mean.value, var.value, rho)
   } else {
-    Taylor.IMOR(pairwise.data, measure, mean.value, var.value, rho)
+    Taylor.IMOR(pairwise.data, delta1 = mean.value, delta2 = mean.value, var.delta1 = var.value, var.delta2 = var.value, rho)
   }
 
-  contrast <- contrast0[, c(1, 16:19)]
-  contrast$LROM <- ifelse(contrast$t2 == "Control", (-1)*contrast$LROM,  contrast$LROM)
+  #contrast <- contrast0[, c(1, 16:19)]
+  #contrast$LROM <- ifelse(contrast$t2 == "Control", (-1)*contrast$LROM,  contrast$LROM)
 
-  (contrast$lower <- contrast$LROM - 1.95*contrast$SE.LROM)
-  (contrast$upper <- contrast$LROM + 1.95*contrast$SE.LROM)
-  (contrast$studlab <- sub("_", " ", rep(primary[, 1], na)))
-  contrast$ROM <- exp(ifelse(contrast$t2 == "Control", (-1)*contrast$LROM,  contrast$LROM)) # EDW!!!!
-  (contrast$ROM.lower <- exp(contrast$LROM - 1.95*contrast$SE.LROM))
-  (contrast$ROM.upper <- exp(contrast$LROM + 1.95*contrast$SE.LROM))
-  (contrast$comp <- paste(contrast$t2, "versus", contrast$t1))
-  (contrast$design <- rep(primary[, 2], na))
-  (contrast$bcount <- rep(primary[, 4], na))
-  (contrast$rob <- rep(primary[, 37], na))
+  #(contrast$lower <- contrast$LROM - 1.95*contrast$SE.LROM)
+  #(contrast$upper <- contrast$LROM + 1.95*contrast$SE.LROM)
+  #(contrast$studlab <- sub("_", " ", rep(primary[, 1], na)))
+  #contrast$ROM <- exp(ifelse(contrast$t2 == "Control", (-1)*contrast$LROM,  contrast$LROM)) # EDW!!!!
+  #(contrast$ROM.lower <- exp(contrast$LROM - 1.95*contrast$SE.LROM))
+  #(contrast$ROM.upper <- exp(contrast$LROM + 1.95*contrast$SE.LROM))
+  #(contrast$comp <- paste(contrast$t2, "versus", contrast$t1))
+  #(contrast$design <- rep(primary[, 2], na))
+  #(contrast$bcount <- rep(primary[, 4], na))
+  #(contrast$rob <- rep(primary[, 37], na))
 
 
+  #ggplot(contrast, aes(x = exp(LROM), y = studlab, xmin = exp(lower), xmax = exp(upper), color = design, linetype = bcount, shape = rob)) +
+  #  geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
+  #  geom_vline(xintercept = 1, lty = 1, col = "grey") +
+  #  geom_point(size = 3, color = "black") +
+  #  geom_text(aes(x = exp(LROM), y = studlab, label = round(exp(LROM), 2)), color = "black", hjust = -0.3, vjust = -0.1, size = 3.5,
+  #            check_overlap = F, parse = F, position = position_dodge(width = 0.8), inherit.aes = T) +
+  #  scale_color_manual(breaks = c("NRCT", "RCT"), values = c("grey", "grey47")) +
+  #  facet_wrap(vars(comp), scales = "free_x") +
+  #  labs(y = "", x = "Ratio of ratio of means in total bacterial", color = "Design", linetype = "Bacterial count", shape = " Risk of bias") +
+  #  theme_classic() +
+  #  scale_x_continuous(trans = 'log10') +
+  #  theme(axis.title.x = element_text(color = "black", size = 12, face = "bold"),
+  #        axis.text.x = element_text(color = "black", size = 11), axis.text.y = element_text(color = "black", size = 12),
+  #        strip.text = element_text(size = 12), legend.position = "bottom", legend.text = element_text(color = "black", size = 12), legend.title = element_text(color = "black", size = 12, face = "bold"))
 
 
 }
 
 
-ggplot(contrast, aes(x = exp(LROM), y = studlab, xmin = exp(lower), xmax = exp(upper), color = design, linetype = bcount, shape = rob)) +
-  geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-  geom_vline(xintercept = 1, lty = 1, col = "grey") +
-  geom_point(size = 3, color = "black") +
-  geom_text(aes(x = exp(LROM), y = studlab, label = round(exp(LROM), 2)), color = "black", hjust = -0.3, vjust = -0.1, size = 3.5,
-            check_overlap = F, parse = F, position = position_dodge(width = 0.8), inherit.aes = T) +
-  scale_color_manual(breaks = c("NRCT", "RCT"), values = c("grey", "grey47")) +
-  facet_wrap(vars(comp), scales = "free_x") +
-  labs(y = "", x = "Ratio of ratio of means in total bacterial", color = "Design", linetype = "Bacterial count", shape = " Risk of bias") +
-  theme_classic() +
-  scale_x_continuous(trans = 'log10') +
-  theme(axis.title.x = element_text(color = "black", size = 12, face = "bold"),
-        axis.text.x = element_text(color = "black", size = 11), axis.text.y = element_text(color = "black", size = 12),
-        strip.text = element_text(size = 12), legend.position = "bottom", legend.text = element_text(color = "black", size = 12), legend.title = element_text(color = "black", size = 12, face = "bold"))

@@ -19,7 +19,7 @@ A dataset of 21 trials comparing seven pharmacologic interventions with each oth
   pulmonary disease (COPD) patients. The exacerbation of COPD is the analysed binary outcome.
 }
 \details{
-The interventions have been coded as follows: 1, placebo; 2, budesodine; 3, budesodine plus formoterol;
+The interventions have been coded as follows: 1, placebo; 2, budesonide; 3, budesonide plus formoterol;
   4, fluticasone; 5, fluticasone plus salmeterol; 6, formoterol; 7, salmeterol; and 8, tiotropium.
 }
 \keyword{datasets}

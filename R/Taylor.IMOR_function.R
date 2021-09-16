@@ -1,4 +1,5 @@
-# Function to obtain logORs and SEs using the Taylor-series alongside a pattern-mixture model with IMOR (Strategy 2.1.3)
+#' Function to obtain logORs and SEs using the Taylor-series alongside a pattern-mixture model with IMOR (Strategy 2.1.3)
+#' @export
 Taylor.IMOR <- function(data, delta1, delta2, var.delta1, var.delta2, rho){
 
   for(i in 1:length(data[, 1])){
