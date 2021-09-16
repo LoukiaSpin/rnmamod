@@ -1,16 +1,22 @@
 #'
 #' @export
-unrelated.effects.plot <- function(data, measure, mean.value, var.value, rho) {
+unrelated.effects.plot <- function(data, measure, trial.names, mean.value, var.value, rho) {
 
 
-  data <- nma.baker2009
-  measure <-"OR"
-  mean.value <- 0
-  var.value <- 1
-  rho <- 0
+  #data <- nma.baker2009
+  #measure <-"OR"
+  #mean.value <- 0
+  #var.value <- 1
+  #rho <- 0
 
 
   # Default arguments
+  trial.names <- if (missing(trial.names)) {
+    message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'trial.names' has not been defined. The trial ID, as specified in the argument 'data' is used as trial names", "\033[0m", "\n")))
+    as.character(1:ns)
+  } else {
+    trial.names
+  }
   mean.value <- ifelse(missing(mean.value), 0, mean.value)  # MAR assumption
   var.value <- ifelse(missing(var.value) & (is.element(measure, c("OR", "MD", "SMD"))), 1, ifelse(missing(var.value) & measure == "ROM", 0.2^2, var.value))
   rho <- ifelse(missing(rho), 0, rho)                       # Uncorrelated within-trial missingness parameters
@@ -57,22 +63,20 @@ unrelated.effects.plot <- function(data, measure, mean.value, var.value, rho) {
   pairwise.data <- data.frame(pairwise.observed, pairwise.mod)
 
 
-  contrast0 <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
-    Taylor.IMDoM.IMRoM(pairwise.data, measure, mean.value, var.value, rho)
+ if (is.element(measure, c("MD", "SMD", "ROM"))) {
+   contrast <- Taylor.IMDoM.IMRoM(pairwise.data, measure, mean.value, var.value, rho)
+   colnames(contrast) <- c("id", "mean1", "mean2", "sd1", "sd2", "m1", "m2", "c1", "c2", "t1", "t2", "EM", "se.EM")
   } else {
-    Taylor.IMOR(pairwise.data, delta1 = mean.value, delta2 = mean.value, var.delta1 = var.value, var.delta2 = var.value, rho)
+    contrast <- Taylor.IMOR(pairwise.data, mean.value, var.value, rho)
+    colnames(contrast) <- c("id", "e1", "e2", "m1", "m2", "n1", "n2", "t1", "t2", "EM", "se.EM")
   }
 
-  #contrast <- contrast0[, c(1, 16:19)]
-  #contrast$LROM <- ifelse(contrast$t2 == "Control", (-1)*contrast$LROM,  contrast$LROM)
-
-  #(contrast$lower <- contrast$LROM - 1.95*contrast$SE.LROM)
-  #(contrast$upper <- contrast$LROM + 1.95*contrast$SE.LROM)
-  #(contrast$studlab <- sub("_", " ", rep(primary[, 1], na)))
-  #contrast$ROM <- exp(ifelse(contrast$t2 == "Control", (-1)*contrast$LROM,  contrast$LROM)) # EDW!!!!
+  contrast$lower <- contrast$EM - 1.95*contrast$se.EM
+  contrast$upper <- contrast$EM + 1.95*contrast$se.EM
+  contrast$id <- rep(trial.names, na)
   #(contrast$ROM.lower <- exp(contrast$LROM - 1.95*contrast$SE.LROM))
   #(contrast$ROM.upper <- exp(contrast$LROM + 1.95*contrast$SE.LROM))
-  #(contrast$comp <- paste(contrast$t2, "versus", contrast$t1))
+  contrast$comp <- paste(contrast$t2, "versus", contrast$t1)
   #(contrast$design <- rep(primary[, 2], na))
   #(contrast$bcount <- rep(primary[, 4], na))
   #(contrast$rob <- rep(primary[, 37], na))

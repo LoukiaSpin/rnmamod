@@ -1,7 +1,5 @@
-#'
-#'
-#'                  Function to obtain MDs and SEs using the Taylor-series
-#'               (Pattern-mixture model with IMDoM and IMRoM; PMID: 25393541)
+#' Function to obtain MDs and SEs using the Taylor-series
+#' (Pattern-mixture model with IMDoM and IMRoM; PMID: 25393541)
 #'
 #' @export
 Taylor.IMDoM.IMRoM <- function(data, measure, mean.value, var.value, rho){
