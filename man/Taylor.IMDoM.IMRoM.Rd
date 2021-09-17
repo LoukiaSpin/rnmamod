@@ -4,7 +4,7 @@
 \alias{Taylor.IMDoM.IMRoM}
 \title{Pattern-mixture model with Taylor series for continuous outcomes}
 \format{
-The columns of the data-frame in the argument \code{data} refer to the following ordered elements for a binary outcome:
+The columns of the data-frame in the argument \code{data} refer to the following ordered elements for a continuous outcome:
 \tabular{ll}{
  \strong{id} \tab A unique identifier for each trial.\cr
  \tab \cr
@@ -33,7 +33,7 @@ The columns of the data-frame in the argument \code{data} refer to the following
 Taylor.IMDoM.IMRoM(data, measure, mean.value, var.value, rho)
 }
 \arguments{
-\item{data}{A data-frame in the long arm-based format containing. Two arm-trials occupy one row in the data-frame. Multi-arm trials, occupy as
+\item{data}{A data-frame in the long arm-based format. Two arm-trials occupy one row in the data-frame. Multi-arm trials occupy as
 many rows as the number of possible comparisons among the interventions. See 'Format' for the specification of the columns.}
 
 \item{measure}{Character string indicating the effect measure with values \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the mean difference,
@@ -62,7 +62,7 @@ The function applies pattern-mixture model under a specific assumption about the
   missing participant outcome data (MOD) and uses the Taylor series to obtain the effect size and standard error for each trial.
 }
 \details{
-The \code{Taylor.IMDoM.IMRoM} found is found in the \code{\link[rnmamod]{unrelated.effects.plot}} function. The latter uses the
+The \code{Taylor.IMDoM.IMRoM} function is found in the \code{\link[rnmamod]{unrelated.effects.plot}} function. The latter uses the
   the \code{\link[netmeta]{pairwise}} function from the package \href{https://cran.r-project.org/web/packages/netmeta/netmeta.pdf}{netmeta}
   to transform the dataset from the wide arm-based format (see, 'Arguments' for \code{data} in \code{\link[rnmamod]{unrelated.effects.plot}})
   into the long-arm based format.

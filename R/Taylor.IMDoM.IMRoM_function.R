@@ -1,9 +1,9 @@
 #' Pattern-mixture model with Taylor series for continuous outcomes
 #'
 #' @description The function applies pattern-mixture model under a specific assumption about the missingness parameter in trial-arms with
-#'   missing participant outcome data (MOD) and uses the Taylor series to obtain the effect size and standard error for each trial.
+#'  \bold{continuous} missing participant outcome data (MOD) and uses the Taylor series to obtain the effect size and standard error for each trial (Mavridis et al., 2015).
 #'
-#' @param data A data-frame in the long arm-based format containing. Two arm-trials occupy one row in the data-frame. Multi-arm trials, occupy as
+#' @param data A data-frame in the long arm-based format. Two arm-trials occupy one row in the data-frame. Multi-arm trials occupy as
 #'   many rows as the number of possible comparisons among the interventions. See 'Format' for the specification of the columns.
 #' @param measure Character string indicating the effect measure with values \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the mean difference,
 #'   standardised mean difference and ratio of means, respectively.
@@ -15,7 +15,7 @@
 #' @param rho A numeric value in the interval [-1, 1] that indicates the correlation coefficient between two missingness parameters in a trial. The same value is considered across all trials of the dataset.
 #' The default argument is 0 and corresponds to uncorrelated missingness parameters.
 #'
-#' @format The columns of the data-frame in the argument \code{data} refer to the following ordered elements for a binary outcome:
+#' @format The columns of the data-frame in the argument \code{data} refer to the following ordered elements for a continuous outcome:
 #' \tabular{ll}{
 #'  \strong{id} \tab A unique identifier for each trial.\cr
 #'  \tab \cr
@@ -47,7 +47,7 @@
 #'  \strong{se.EM} \tab The standard error of the effect size for MOD and obtained using the Taylor series.\cr
 #' }
 #'
-#' @details The \code{Taylor.IMDoM.IMRoM} found is found in the \code{\link[rnmamod]{unrelated.effects.plot}} function. The latter uses the
+#' @details The \code{Taylor.IMDoM.IMRoM} function is found in the \code{\link[rnmamod]{unrelated.effects.plot}} function. The latter uses the
 #'   the \code{\link[netmeta]{pairwise}} function from the package \href{https://cran.r-project.org/web/packages/netmeta/netmeta.pdf}{netmeta}
 #'   to transform the dataset from the wide arm-based format (see, 'Arguments' for \code{data} in \code{\link[rnmamod]{unrelated.effects.plot}})
 #'   into the long-arm based format.
@@ -55,8 +55,8 @@
 #' @seealso \code{\link[rnmamod]{run.model}}, \code{\link[rnmamod]{unrelated.effects.plot}}, \code{\link[netmeta]{pairwise}}
 #'
 #' @references
-#' White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data in meta-analysis--part 1: two-stage methods.
-#' \emph{Stat Med} 2008;\bold{27}(5):711--27. [\doi{10.1002/sim.3008}]
+#' Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for uncertainty due to missing continuous outcome data
+#' in pairwise and network meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--41. [\doi{10.1002/sim.6365}]
 #'
 #' @author {Loukia M. Spineli}
 #'

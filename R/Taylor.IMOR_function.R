@@ -1,13 +1,13 @@
 #' Pattern-mixture model with Taylor series for binary outcomes
 #'
 #' @description The function applies pattern-mixture model under a specific assumption about the missingness parameter in trial-arms with
-#'   missing participant outcome data (MOD) and uses the Taylor series to obtain the effect size and standard error for each trial.
+#'   \bold{binary} missing participant outcome data (MOD) and uses the Taylor series to obtain the effect size and standard error for each trial (White et al., 2008).
 #'
-#' @param data A data-frame in the long arm-based format containing. Two arm-trials occupy one row in the data-frame. Multi-arm trials, occupy as
+#' @param data A data-frame in the long arm-based format. Two arm-trials occupy one row in the data-frame. Multi-arm trials occupy as
 #'   many rows as the number of possible comparisons among the interventions. See 'Format' for the specification of the columns.
 #' @param mean.value A numeric value for the mean of the normal distribution of the informative missingness odds ratio in the logarithmic scale. The same value is considered for all trial-arms of the dataset.
 #'   The default argument is 0 and corresponds to the missing-at-random assumption.
-#' @param var.value A positive non-zero number for the variance of the normal distribution of the informative missingness odds ratio. The default argument is 1.
+#' @param var.value A positive non-zero number for the variance of the normal distribution of the informative missingness odds ratio in the logarithmic scale. The default argument is 1.
 #' @param rho A numeric value in the interval [-1, 1] that indicates the correlation coefficient between two missingness parameters in a trial. The same value is considered across all trials of the dataset.
 #'   The default argument is 0 and corresponds to uncorrelated missingness parameters.
 #'
@@ -39,7 +39,7 @@
 #'  \strong{se.EM} \tab The standard error of the log OR adjusted for MOD and obtained using the Taylor series.\cr
 #' }
 #'
-#' @details The \code{Taylor.IMOR} found is found in the \code{\link[rnmamod]{unrelated.effects.plot}} function. The latter uses the
+#' @details The \code{Taylor.IMOR} function is found in the \code{\link[rnmamod]{unrelated.effects.plot}} function. The latter uses the
 #'   the \code{\link[netmeta]{pairwise}} function from the package \href{https://cran.r-project.org/web/packages/netmeta/netmeta.pdf}{netmeta}
 #'   to transform the dataset from the wide arm-based format (see, 'Arguments' for \code{data} in \code{\link[rnmamod]{unrelated.effects.plot}})
 #'   into the long-arm based format.
