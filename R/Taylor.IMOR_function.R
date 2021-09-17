@@ -1,4 +1,10 @@
-#' Function to obtain logORs and SEs using the Taylor-series with IMOR
+#' Pattern-mixture model with Taylor series for binary outcomes
+#'
+#' @description Apply pattern-mixture model under a specific assumption about the missingness parameter in trial-arms with
+#' missing participant outcome data (MOD) and uses the Taylor series to obtain the effect size and standard error for each trial.
+#'
+#' @param data
+#'
 #' @export
 Taylor.IMOR <- function(data, mean.value, var.value, rho){
 

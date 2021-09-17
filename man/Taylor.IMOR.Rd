@@ -2,10 +2,10 @@
 % Please edit documentation in R/Taylor.IMOR_function.R
 \name{Taylor.IMOR}
 \alias{Taylor.IMOR}
-\title{Function to obtain logORs and SEs using the Taylor-series alongside a pattern-mixture model with IMOR (Strategy 2.1.3)}
+\title{Function to obtain logORs and SEs using the Taylor-series with IMOR}
 \usage{
-Taylor.IMOR(data, delta1, delta2, var.delta1, var.delta2, rho)
+Taylor.IMOR(data, mean.value, var.value, rho)
 }
 \description{
-Function to obtain logORs and SEs using the Taylor-series alongside a pattern-mixture model with IMOR (Strategy 2.1.3)
+Function to obtain logORs and SEs using the Taylor-series with IMOR
 }

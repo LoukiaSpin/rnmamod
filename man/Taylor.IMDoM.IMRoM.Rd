@@ -3,11 +3,11 @@
 \name{Taylor.IMDoM.IMRoM}
 \alias{Taylor.IMDoM.IMRoM}
 \title{Function to obtain MDs and SEs using the Taylor-series
-              (Pattern-mixture model with IMDoM and IMRoM; PMID: 25393541)}
+(Pattern-mixture model with IMDoM and IMRoM; PMID: 25393541)}
 \usage{
 Taylor.IMDoM.IMRoM(data, measure, mean.value, var.value, rho)
 }
 \description{
 Function to obtain MDs and SEs using the Taylor-series
-              (Pattern-mixture model with IMDoM and IMRoM; PMID: 25393541)
+(Pattern-mixture model with IMDoM and IMRoM; PMID: 25393541)
 }

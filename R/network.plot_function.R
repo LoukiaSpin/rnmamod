@@ -167,6 +167,3 @@ netplot <- function(data, drug.names, save.xls, ...){
               Heatmap.missing.network = heatmap.missing.network(data, drug.names),
               Heatmap.outcome.network = heatmap.outcome.network(data, drug.names)))
 }
-
-
-
