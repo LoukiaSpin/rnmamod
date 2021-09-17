@@ -8,9 +8,9 @@ The columns of the data-frame in the argument \code{data} refer to the following
 \tabular{ll}{
  \strong{id} \tab A unique identifier for each trial.\cr
  \tab \cr
- \strong{r1} \tab The observed observed number of events in the first arm of the comparison.\cr
+ \strong{r1} \tab The observed  number of events in the first arm of the comparison.\cr
  \tab \cr
- \strong{r2} \tab The observed observed number of events in the second arm of the comparison.\cr
+ \strong{r2} \tab The observed  number of events in the second arm of the comparison.\cr
  \tab \cr
  \strong{m1} \tab The number of MOD in the first arm of the comparison.\cr
  \tab \cr
@@ -29,7 +29,7 @@ The columns of the data-frame in the argument \code{data} refer to the following
 Taylor.IMOR(data, mean.value, var.value, rho)
 }
 \arguments{
-\item{data}{A data-frame in the long arm-based format containing. Two arm-trial, occupy one row in the data-frame. Multi-arm trials, occupy as
+\item{data}{A data-frame in the long arm-based format containing. Two arm-trials occupy one row in the data-frame. Multi-arm trials, occupy as
 many rows as the number of possible comparisons among the interventions. See 'Format' for the specification of the columns.}
 
 \item{mean.value}{A numeric value for the mean of the normal distribution of the informative missingness odds ratio in the logarithmic scale. The same value is considered for all trial-arms of the dataset.
