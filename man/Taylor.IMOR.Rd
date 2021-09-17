@@ -50,7 +50,7 @@ A data-frame that additionally includes the following elements:
 }
 \description{
 The function applies pattern-mixture model under a specific assumption about the missingness parameter in trial-arms with
-  missing participant outcome data (MOD) and uses the Taylor series to obtain the effect size and standard error for each trial.
+  \bold{binary} missing participant outcome data (MOD) and uses the Taylor series to obtain the effect size and standard error for each trial (White et al., 2008).
 }
 \details{
 The \code{Taylor.IMOR} function is found in the \code{\link[rnmamod]{unrelated.effects.plot}} function. The latter uses the

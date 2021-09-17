@@ -59,7 +59,7 @@ A data-frame that additionally includes the following elements:
 }
 \description{
 The function applies pattern-mixture model under a specific assumption about the missingness parameter in trial-arms with
-  missing participant outcome data (MOD) and uses the Taylor series to obtain the effect size and standard error for each trial.
+ \bold{continuous} missing participant outcome data (MOD) and uses the Taylor series to obtain the effect size and standard error for each trial (Mavridis et al., 2015).
 }
 \details{
 The \code{Taylor.IMDoM.IMRoM} function is found in the \code{\link[rnmamod]{unrelated.effects.plot}} function. The latter uses the
@@ -68,8 +68,8 @@ The \code{Taylor.IMDoM.IMRoM} function is found in the \code{\link[rnmamod]{unre
   into the long-arm based format.
 }
 \references{
-White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data in meta-analysis--part 1: two-stage methods.
-\emph{Stat Med} 2008;\bold{27}(5):711--27. [\doi{10.1002/sim.3008}]
+Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for uncertainty due to missing continuous outcome data
+in pairwise and network meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--41. [\doi{10.1002/sim.6365}]
 }
 \seealso{
 \code{\link[rnmamod]{run.model}}, \code{\link[rnmamod]{unrelated.effects.plot}}, \code{\link[netmeta]{pairwise}}
