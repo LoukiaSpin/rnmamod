@@ -2,7 +2,7 @@
 % Please edit documentation in R/unrelated.effects.plot_function.R.R
 \name{unrelated.effects.plot}
 \alias{unrelated.effects.plot}
-\title{Unrelated trials effects model: panel of interval plots}
+\title{Unrelated trials effects model: a panel of interval plots}
 \usage{
 unrelated.effects.plot(
   data,
@@ -31,21 +31,24 @@ as they appear in \code{data} is used, instead.}
 \item{trial.names}{A vector of labels with the name of the trials in the order they appear in the argument \code{data}. If the argument \code{drug.names} is not defined, the order of the interventions
 as they appear in \code{data} is used, instead.}
 
-\item{mean.value}{A numeric value for the mean of the normal distribution of the informative missingness parameter (common for all trial-arms).
-The default argument is 0 and corresponds to the missing-at-random assumption.}
+\item{mean.value}{A numeric value for the mean of the normal distribution of the informative missingness parameter. The same value is considered for all trial-arms of the dataset.
+The default argument is 0 and corresponds to the missing-at-random assumption.
+For the informative missingness odds ratio and the informative missingness ratio of means, the mean value is defined in the logarithmic scale.}
 
 \item{var.value}{A positive non-zero number for the variance of the normal distribution of the informative missingness parameter. When the \code{measure} is \code{"OR"}, \code{"MD"}, or \code{"SMD"}
 the default argument is 1; When the \code{measure} is \code{"ROM"} the default argument is 0.04}
 
-\item{rho}{A numeric value in the interval [-1, 1] that indicates the correlation coefficients of the within-trial missingness parameters.}
+\item{rho}{A numeric value in the interval [-1, 1] that indicates the correlation coefficient between two missingness parameters in a trial. The same value is considered across all trials of the dataset.
+The default argument is 0 and corresponds to uncorrelated missingness parameters.}
 
 \item{save.xls}{Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 The default is \code{FALSE} (do not export to an Excel format).}
 }
 \value{
-A panel of interval plots for each observed comparison, when there are up to 21 trials in the \code{data}.
- Otherwise, an Excel file with the arm-level data of each trial, the corresponding effect measure and 95% confidence interval (lower, upper),
- the intervention compared, and the three characteristics (as defined in \code{char}).
+A panel of interval plots for each observed comparison in the network, when there are up to 21 trials in the \code{data}.
+ Otherwise, an Excel file with the arm-level data of each trial, the corresponding effect measure and 95\% confidence interval (lower, upper),
+ the intervention compared, and the three characteristics (as defined in \code{char}). For larger datasets, the plot becomes cluttered and it
+ is difficult to identify the trial names. Hence, exporting the results in an Excel file is an viable alternative.
 }
 \description{
 Perform the unrelated trial effects model and create a panel of interval plots on
@@ -54,14 +57,14 @@ Perform the unrelated trial effects model and create a panel of interval plots o
 \details{
 The unrelated trial effects model may be an alternative to network meta-analysis, when the latter is not deemed appropriate (e.g., considerable
   statistical heterogeneity, or substantial intransitivity). In the presence of missing participant outcome data (MOD), the effect size and standard error are adjusted
-  by applying the pattern-mixture model with Taylor series in trial-arms with MOD (White et al., 2008; Mavridis et al., 2015). \code{unrelated.effects.plot} calls
+  by applying the pattern-mixture model with Taylor series in trial-arms with MOD (White et al., 2008; Mavridis et al., 2015). The \code{unrelated.effects.plot} function calls
   the \code{Taylor.IMOR} and \code{Taylor.IMDoM.IMRoM} functions (for binary and continuous outcome, respectively) to employ pattern-mixture model with Taylor series.
   The \code{unrelated.effects.plot} function considers the informative missingness odds ratio in the logarithmic scale
   for binary outcome data (White et al., 2008), the informative missingness difference of means when \code{measure} is \code{"MD"} or \code{"SMD"},
   and the informative missingness ratio of means in the logarithmic scale when \code{"ROM"} is the effect measure (Mavridis et al., 2015).
 
-  The number of interval plots equals the number of observed comparisons in the network.In each interval plot, the y-axis refers to all trials of the network and x-axis refers to
-  the selected effect measure. The odds ratio and ratio of means are calculated in the logatithmic scale but they are reported in their original scale.
+  The number of interval plots equals the number of observed comparisons in the network. In each interval plot, the y-axis refers to all trials of the network and x-axis refers to
+  the selected effect measure. The odds ratio and ratio of means are calculated in the logarithmic scale but they are reported in their original scale.
 
   \code{unrelated.effects.plot} depicts all three characteristics for each trial using different colours, line-types and point-shapes for the corresponding interval and point estimate.
   Ideally, each characterstic should have no more than three categories; otherwise, the plot becomes cluttered.
@@ -75,7 +78,7 @@ White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data in m
 \emph{Stat Med} 2008;\bold{27}(5):711--27. [\doi{10.1002/sim.3008}]
 }
 \seealso{
-\code{\link[rnmamod]{Taylor.IMDoM.IMRoM}}, \code{\link[rnmamod]{Taylor.IMOR}}
+\code{\link[rnmamod]{run.model}}, \code{\link[rnmamod]{Taylor.IMDoM.IMRoM}}, \code{\link[rnmamod]{Taylor.IMOR}}
 }
 \author{
 {Loukia M. Spineli}
