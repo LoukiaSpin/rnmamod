@@ -9,10 +9,13 @@ forestplot(full, compar, cov.value = NULL, drug.names)
 \arguments{
 \item{full}{An object of S3 class \code{\link{run.model}} or \code{\link{run.metareg}}. See 'Value' in \code{\link{run.model}} and \code{\link{run.metareg}}.}
 
+\item{compar}{A character to indicate the comparator intervention. it must be any name found in \code{drug.names}.}
+
+\item{cov.value}{A vector of two elements in the following order: a number that corresponds to a value of the covariate considered in \code{\link{run.metareg}},
+and a character object to indicate the name of the covariate.}
+
 \item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 as they appear in \code{data} is used, instead.}
-
-\item{comp}{A character to indicate the comparator intervention. it must be any name found in \code{drug.names}.}
 }
 \value{
 A panel of two forest plots: (1) a forest plot on the effect estimates and predictions of comparisons with the selected intervention of the network, and

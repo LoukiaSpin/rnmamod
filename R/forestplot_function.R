@@ -3,7 +3,9 @@
 #' @description This function illustrates a forest plot of the posterior mean and 95\% credible and predictive interval of comparisons with the selected intervention of the network.
 #'
 #' @param full An object of S3 class \code{\link{run.model}} or \code{\link{run.metareg}}. See 'Value' in \code{\link{run.model}} and \code{\link{run.metareg}}.
-#' @param comp A character to indicate the comparator intervention. it must be any name found in \code{drug.names}.
+#' @param compar A character to indicate the comparator intervention. it must be any name found in \code{drug.names}.
+#' @param cov.value A vector of two elements in the following order: a number that corresponds to a value of the covariate considered in \code{\link{run.metareg}},
+#'   and a character object to indicate the name of the covariate.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
 #'

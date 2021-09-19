@@ -1,11 +1,14 @@
 #' Plot the results from the meta-regression analysis
 #'
-#' @param full sth
-#' @param metareg sth
-#' @param compar sth
-#' @param cov.value
-#' @param drug.names
-#' @param save.xls
+#' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
+#' @param metareg An object of S3 class  \code{\link{run.metareg}}. See 'Value' in \code{\link{run.metareg}}.
+#' @param compar A character to indicate the comparator intervention. it must be any name found in \code{drug.names}.
+#' @param cov.value A vector of two elements in the following order: a number that corresponds to a value of the covariate considered in \code{\link{run.metareg}},
+#'   and a character object to indicate the name of the covariate.
+#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
+#'   as they appear in \code{data} is used, instead.
+#' @param save.xls Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+#'   The default is \code{FALSE} (do not export to an Excel format).
 #'
 #'
 #' @export
@@ -37,7 +40,7 @@ metareg.plot <- function(full, metareg, compar, cov.value, drug.names, save.xls)
   }
 
   covariate <- if (length(unique(metareg$covariate)) < 3) {
-    as.factor(metareg$covariate)
+    unique(metareg$covariate)
   } else {
     metareg$covariate
   }
@@ -295,8 +298,8 @@ metareg.plot <- function(full, metareg, compar, cov.value, drug.names, save.xls)
   EM.metareg <- EM.metareg0[order(sucra.full.new, decreasing = T), ]
   rownames(EM.metareg) <- NULL
 
-  covar <- if (length(unique(metareg$covariate)) < 3) {
-    covariate
+  covar <- if (length(unique(covariate)) < 3) {
+    unique(covariate)
   } else {
     covariate - mean(covariate)
   }
@@ -307,13 +310,15 @@ metareg.plot <- function(full, metareg, compar, cov.value, drug.names, save.xls)
     EM.meta.lower <- na.omit(rep(EM.metareg[, 2], each = length(covariate)) + (rep(beta[, 2], each = length(covariate))*covar ))
     EM.meta.upper <- na.omit(rep(EM.metareg[, 3], each = length(covariate)) + (rep(beta[, 3], each = length(covariate))*covar ))
     slope <- paste0("slope, (95% CrI):", " ", beta[-length(drug.names), 1], ", (", beta[-length(drug.names), 2], ",", beta[-length(drug.names), 3], ")")
-    intercept <- na.omit(rep(EM.metareg[, 1], each = length(covariate)))
+    #intercept <- na.omit(rep(EM.metareg[, 1], each = length(covariate)))
+    intercept <- na.omit(EM.metareg[, 1])
   } else {
     EM.meta.mean <- round(exp(na.omit(rep(EM.metareg[, 1], each = length(covariate)) + (rep(beta[, 1], each = length(covariate))*covar ))), 2)
     EM.meta.lower <- round(exp(na.omit(rep(EM.metareg[, 2], each = length(covariate)) + (rep(beta[, 2], each = length(covariate))*covar ))), 2)
     EM.meta.upper <- round(exp(na.omit(rep(EM.metareg[, 3], each = length(covariate)) + (rep(beta[, 3], each = length(covariate))*covar ))), 2)
     slope <- round(exp(rep(beta[-length(drug.names), 1], each = length(covariate))), 2)
-    intercept <- round(exp(na.omit(rep(EM.metareg[, 1], each = length(covariate)))), 2)
+    #intercept <- round(exp(na.omit(rep(EM.metareg[, 1], each = length(covariate)))), 2)
+    intercept <- round(exp(na.omit(EM.metareg[, 1])), 2)
   }
 
   prepare <- data.frame(paste(rep(drug.names.sorted[-length(drug.names)], each = length(covariate)), "versus", na.omit(drug.names.sorted[is.na(EM.full)])),
