@@ -252,6 +252,7 @@ UME.plot <- function(full, ume, drug.names, threshold, save.xls) {
   ## Write the table with the EMs from both models as .xlsx
   if (save.xls == TRUE) {
     write_xlsx(EM.both.models, paste0("Table NMA vs UME", ".xlsx"))
+    write_xlsx(model.assessment, paste0("Table Model Assessment_NMA vs UME", ".xlsx"))
   }
 
 

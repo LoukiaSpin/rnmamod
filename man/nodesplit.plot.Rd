@@ -78,8 +78,9 @@ res <- run.model(data = nma.baker2009,
 node <- run.nodesplit(full = res, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus
-                  salmeterol", "formoterol", "salmeterol", "tiotropium")
+interv.names <- c("placebo", "budesonide", "budesonide plus formoterol",
+                  "fluticasone", "fluticasone plus salmeterol",
+                  "formoterol", "salmeterol", "tiotropium")
 
 # Plot the results from the consistency model and the node-splitting approach
 nodesplit.plot(full = res, node = node, drug.names = interv.names)

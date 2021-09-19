@@ -156,17 +156,32 @@ prepare.model <- function(measure, model, covar.assumption, assumption) {
                  "\n\t\t}",
                  "\n\tmean.B ~ dnorm(0, .0001)",
                  "\n\tprec.B <- 1/pow(beta.SD,2)",
-                 "\n\tbeta.SD ~ dnorm(0, 1)I(0, )")
+                 "\n\tbeta.SD ~ dnorm(0, 1)I(0, )",
+                 "\n\tfor (c in 1:(nt - 1)) {",
+                 "\n\t\tfor (k in (c + 1):nt) {",
+                 "\n\t\t\tbeta.all[k, c] <- beta[k] - beta[c]",
+                 "\n\t\t\t}}")
   } else if (covar.assumption == "independent") {
     code <- paste0(code, "\n\tbeta[ref] <- 0",
-                 "\n\tfor (t in 1:(ref - 1)) {",
-                 "\n\t\tbeta[t] ~ dnorm(0, 0.0001)",
-                 "\n\t\t}",
-                 "\n\tfor (t in (ref + 1):nt) {",
-                 "\n\t\tbeta[t] ~ dnorm(0, 0.0001)",
-                 "\n\t\t}")
+                         "\n\tfor (t in 1:(ref - 1)) {",
+                         "\n\t\tbeta[t] ~ dnorm(0, 0.0001)",
+                         "\n\t\t}",
+                         "\n\tfor (t in (ref + 1):nt) {",
+                         "\n\t\tbeta[t] ~ dnorm(0, 0.0001)",
+                         "\n\t\t}",
+                         "\n\tfor (c in 1:(nt - 1)) {",
+                         "\n\t\tfor (k in (c + 1):nt) {",
+                         "\n\t\t\tbeta.all[k, c] <- beta[k] - beta[c]",
+                         "\n\t\t\t}}")
   } else if (covar.assumption == "common") {
-    code <- paste0(code, "\n\tbeta ~ dnorm(0, 0.0001)")
+    code <- paste0(code, "\n\tbeta ~ dnorm(0, 0.0001)",
+                         "\n\tfor (c in 1:(nt - 1)) {",
+                         "\n\t\tfor (k in (c + 1):nt) {",
+                         "\n\t\t\tbeta.all[k, c] <- 0",
+                         "\n\t\t\t}}",
+                         "\n\tfor (t in (ref + 1):nt) {",   # t > ref
+                         "\n\t\tbeta.all[t, ref] <- beta",
+                         "\n\t\t}")
   }
 
   code <- if (assumption == "HIE-ARM") {

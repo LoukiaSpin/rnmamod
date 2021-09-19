@@ -62,8 +62,9 @@
 #' robust <- robustness.index(sens = res.sens, threshold = 0.28)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus
-#'                   salmeterol", "formoterol", "salmeterol", "tiotropium")
+#' interv.names <- c("placebo", "budesonide", "budesonide plus formoterol",
+#'                   "fluticasone", "fluticasone plus salmeterol",
+#'                   "formoterol", "salmeterol", "tiotropium")
 #'
 #' # Create the heatmap of robustness
 #' heatmap.robustness(robust = robust, drug.names = interv.names)

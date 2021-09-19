@@ -2,10 +2,11 @@
 #'
 #' @description
 #' A function to create a heatmap with the predicted effects of all possible comparisons of interventions in the network.
-#' \code{league.heatmap.pred} can be used only for a random-effects network meta-analysis.
+#' \code{league.heatmap.pred} can be used only for a random-effects network meta-analysis and network meta-regression.
 #' \code{league.heatmap.pred} is applied for one outcome only.
 #'
-#' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
+#' @param full An object of S3 class \code{\link{run.model}} for network meta-analysis or \code{\link{run.metareg}} for network meta-regression. See 'Value' in \code{\link{run.model}} and \code{\link{run.metareg}}.
+#' @param cov.value A vector of two elements in the following order: a number for the covariate value of interest and a character for the name of the covariate.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
 #'
@@ -27,7 +28,7 @@
 #'
 #' @author {Loukia M. Spineli}, {Chrysostomos Kalyvas}, {Katerina Papadimitropoulou}
 #'
-#' @seealso \code{\link{run.model}}
+#' @seealso \code{\link{run.model}}, \code{\link{run.metareg}}
 #'
 #' @references
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
@@ -59,7 +60,7 @@
 #' }
 #'
 #' @export
-league.heatmap.pred <- function(full, drug.names){
+league.heatmap.pred <- function(full, cov.value = NULL, drug.names){
 
 
   drug.names <- if (missing(drug.names)) {
@@ -69,13 +70,28 @@ league.heatmap.pred <- function(full, drug.names){
     drug.names
   }
 
-
   if(length(drug.names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
   }
 
 
-  par <- full$EM.pred; sucra <- full$SUCRA; measure <- full$measure
+  cov.value <- if (!is.null(full$beta.all) & missing(cov.value)) {
+    stop("The argument 'cov.value' has not been defined", call. = F)
+  } else if (!is.null(full$beta.all) & length(cov.value) < 2) {
+    stop("The argument 'cov.value' must be a vector with elements a number and a character", call. = F)
+  } else if (!is.null(full$beta.all) & length(cov.value) == 2) {
+    cov.value
+  }
+
+  if (is.null(full$beta.all)) {
+    par <- full$EM
+    sucra <- full$SUCRA
+    measure <- full$measure
+  } else {
+    par <- reg$EM + reg$beta.all*as.numeric(cov.value[1])
+    sucra <- reg$SUCRA
+    measure <- reg$measure
+  }
 
 
   ## Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html
@@ -172,7 +188,8 @@ league.heatmap.pred <- function(full, drug.names){
                          values = rescale(c(min(mat.new$value2, na.rm = T), ifelse(measure != "OR" & measure != "ROM", 0, 1), max(mat.new$value2, na.rm = T))),
                          limits = c(min(mat.new$value2, na.rm = T), max(mat.new$value2, na.rm = T))) +
     scale_x_discrete(position = "top") +
-    labs(x = "", y = "", caption = "Posterior mean (95% predictive interval)") +
+    labs(x = "", y = "", caption = ifelse(!is.null(full$beta.all), paste("Posterior mean (95% predible interval) for", cov.value[2], "equal to", cov.value[1]),
+                                          "Posterior mean (95% predible interval)") ) +
     theme_bw() +
     theme(legend.position = "none", axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0), axis.text.y = element_text(size = 12),
           plot.caption = element_text(hjust = 0.01))
