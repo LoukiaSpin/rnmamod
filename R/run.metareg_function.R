@@ -183,11 +183,18 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
 
   ## Center covariate if metric and not arm-specific
   ## Whether covariate is a vector (trial-specific) or matrix (arm-specific)
-  if (!is.factor(covariate) & is.vector(covariate)) {
+  #if (!is.factor(covariate) & is.vector(covariate)) {
+  #  data.jag <- append(data.jag, list("cov.vector" = covariate - mean(covariate), "cov.matrix" = matrix(0, nrow = item$ns, ncol = max(item$na))))
+  #} else if (is.factor(covariate) & is.vector(covariate)) {
+  #  data.jag <- append(data.jag, list("cov.vector" = covariate, "cov.matrix" = matrix(0, nrow = item$ns, ncol = max(item$na))))
+  #} else if (!is.vector(covariate) & !is.factor(covariate)) {
+  #  data.jag <- append(data.jag, list("cov.vector" = rep(0, item$ns), "cov.matrix" = covariate))
+  #}
+  if (length(unique(covariate)) > 2) {
     data.jag <- append(data.jag, list("cov.vector" = covariate - mean(covariate), "cov.matrix" = matrix(0, nrow = item$ns, ncol = max(item$na))))
-  } else if (is.factor(covariate) & is.vector(covariate)) {
+  } else if (length(unique(covariate)) < 3) {
     data.jag <- append(data.jag, list("cov.vector" = covariate, "cov.matrix" = matrix(0, nrow = item$ns, ncol = max(item$na))))
-  } else if (!is.vector(covariate) & !is.factor(covariate)) {
+  } else if (!is.vector(covariate)) {
     data.jag <- append(data.jag, list("cov.vector" = rep(0, item$ns), "cov.matrix" = covariate))
   }
 
@@ -331,7 +338,7 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
                        covar.assumption = covar.assumption,
                        jagsfit = jagsfit,
                        data = data)
-    nma.results <- append(ma.results, list(EM.ref = EM.ref, pred.ref = pred.ref, beta.all = beta.all, SUCRA = SUCRA, effectiveness = effectiveness))
+    nma.results <- append(ma.results, list(EM.ref = EM.ref, pred.ref = pred.ref, beta.all = beta.all, SUCRA = SUCRA, effectiveness = effectiveness, D = full$D))
   } else {
     ma.results <- list(EM = EM,
                        beta = beta,
@@ -347,7 +354,7 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
                        covar.assumption = covar.assumption,
                        jagsfit = jagsfit,
                        data = data)
-    nma.results <- append(ma.results, list(EM.ref = EM.ref, beta.all = beta.all, SUCRA = SUCRA, effectiveness = effectiveness))
+    nma.results <- append(ma.results, list(EM.ref = EM.ref, beta.all = beta.all, SUCRA = SUCRA, effectiveness = effectiveness, D = full$D))
   }
 
   ifelse(item$nt > 2, return(nma.results), return(ma.results))

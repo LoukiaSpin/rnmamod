@@ -88,7 +88,7 @@ league.heatmap.pred <- function(full, cov.value = NULL, drug.names){
     sucra <- full$SUCRA
     measure <- full$measure
   } else {
-    par <- reg$EM + reg$beta.all*as.numeric(cov.value[1])
+    par <- reg$EM + reg$beta.all*ifelse(length(unique(reg$covariate)) < 3, as.numeric(cov.value[1]), as.numeric(cov.value[1]) - mean(reg$covariate))
     sucra <- reg$SUCRA
     measure <- reg$measure
   }

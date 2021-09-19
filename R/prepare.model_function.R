@@ -175,7 +175,7 @@ prepare.model <- function(measure, model, covar.assumption, assumption) {
                          "\n\t\t\t}}")
   } else if (covar.assumption == "common") {
     code <- paste0(code, "\n\tbeta ~ dnorm(0, 0.0001)",
-                         "\n\tfor (c in 1:(nt - 1)) {",
+                         "\n\tfor (c in (ref + 1):(nt - 1)) {",
                          "\n\t\tfor (k in (c + 1):nt) {",
                          "\n\t\t\tbeta.all[k, c] <- 0",
                          "\n\t\t\t}}",

@@ -62,7 +62,7 @@
 #' }
 #'
 #' @export
-forestplot.ref <- function(full, drug.names) {
+forestplot.ref <- function(full, compar, cov.value = NULL, drug.names) {
 
   options(warn = -1)
 
@@ -80,58 +80,97 @@ forestplot.ref <- function(full, drug.names) {
   }
 
 
-  ## The results on the following parameters will be used:
-  # Effect measure
-  measure <- effect.measure.name(full$measure)
-
-  # Analysis model
-  model <- full$model
-
-  # Posterior results on the SUCRA of each intervention
-  sucra <- full$SUCRA
-
-  # Posterior results on the effect estimates of comparisons with the reference intervention of the network
-  EM.ref0 <- rbind(rep(NA, 3), full$EM.ref[, c(1, 3, 7)])
-
-
-  # Sort by SUCRA in decreasing order and remove the reference intervention (number 1)
-  EM.ref <- EM.ref0[order(sucra[, 1], decreasing = T), ]
-
-  # Posterior results on the predicted estimates of comparisons with the reference intervention of the network
-  pred.ref0 <- if (model == "RE") {
-    rbind(rep(NA, 3), full$pred.ref[, c(1, 3, 7)])
+  compar <- if(length(compar) == 2) {
+    stop("The argument 'compar' has not been defined", call. = F)
   } else {
+    compar
+  }
+
+  cov.value <- if (!is.null(full$beta.all) & missing(cov.value)) {
+    stop("The argument 'cov.value' has not been defined", call. = F)
+  } else if (!is.null(full$beta.all) & length(cov.value) < 2) {
+    stop("The argument 'cov.value' must be a vector with elements a number and a character", call. = F)
+  } else if (!is.null(full$beta.all) & length(cov.value) == 2) {
+    cov.value
+  }
+
+
+  poss.pair.comp1 <- data.frame(exp = t(combn(drug.names, 2))[, 2], comp = t(combn(drug.names, 2))[, 1])
+  poss.pair.comp2 <- data.frame(exp = t(combn(drug.names, 2))[, 1], comp = t(combn(drug.names, 2))[, 2])
+  poss.pair.comp <- rbind(poss.pair.comp1, poss.pair.comp2)
+
+
+  if (is.null(full$beta.all)) {
+    measure <- effect.measure.name(full$measure)
+    model <- full$model
+    sucra <- full$SUCRA
+    EM.ref00 <- cbind(rbind(data.frame(mean = full$EM[, 1], lower = full$EM[, 3], upper = full$EM[, 7]),
+                            data.frame(mean = full$EM[, 1]*(-1), lower = full$EM[, 7]*(-1), upper = full$EM[, 3]*(-1))),
+                      poss.pair.comp)
+  } else {
+    measure <- effect.measure.name(full$measure)
+    model <- full$model
+    sucra <- full$SUCRA
+    cov.val <- ifelse(length(unique(full$covariate)) < 3, as.numeric(cov.value[1]), as.numeric(cov.value[1]) - mean(full$covariate))
+    EM.ref00 <- cbind(rbind(data.frame(mean = full$EM[, 1], lower = full$EM[, 3], upper = full$EM[, 7]) +
+                            (data.frame(mean = full$beta.all[, 1], lower = full$beta.all[, 3], upper = full$beta.all[, 7])*cov.val),
+                            data.frame(mean = full$EM[, 1]*(-1), lower = full$EM[, 7]*(-1), upper = full$EM[, 3]*(-1)) +
+                            (data.frame(mean = full$beta.all[, 1]*(-1), lower = full$beta.all[, 7]*(-1), upper = full$beta.all[, 3]*(-1))*cov.val)),
+                      poss.pair.comp)
+  }
+  EM.subset <- subset(EM.ref00, EM.ref00[5] == compar)
+  EM.ref0 <- rbind(EM.subset[, 1:3], c(rep(NA, 3)))
+
+  sucra.new <- data.frame(sucra[, 1], drug.names)[order(match(data.frame(sucra[, 1], drug.names)[, 2], EM.subset[, 4])), 1]
+  EM.ref <- EM.ref0[order(sucra.new, decreasing = T), ]
+  rownames(EM.ref) <- NULL
+
+
+  # Posterior results on the predicted estimates of comparisons with the selected comparator as reference
+  pred.ref00 <- if (model == "RE" & is.null(full$beta.all)) {
+    cbind(rbind(data.frame(mean = full$EM.pred[, 1], lower = full$EM.pred[, 3], upper = full$EM.pred[, 7]),
+          data.frame(mean = full$EM.pred[, 1]*(-1), lower = full$EM.pred[, 7]*(-1), upper = full$EM.pred[, 3]*(-1))),
+          poss.pair.comp)
+  } else if (model == "RE" & !is.null(full$beta.all)) {
+    cbind(rbind(data.frame(mean = full$EM.pred[, 1], lower = full$EM.pred[, 3], upper = full$EM.pred[, 7]) +
+                (data.frame(mean = full$beta.all[, 1], lower = full$beta.all[, 3], upper = full$beta.all[, 7])*cov.val),
+                data.frame(mean = full$EM.pred[, 1]*(-1), lower = full$EM.pred[, 7]*(-1), upper = full$EM.pred[, 3]*(-1)) +
+                (data.frame(mean = full$beta.all[, 1]*(-1), lower = full$beta.all[, 7]*(-1), upper = full$beta.all[, 3]*(-1))*cov.val)),
+          poss.pair.comp)
+  } else if (model != "RE") {
     NA
   }
+  pred.subset <- subset(pred.ref00, pred.ref00[5] == compar)
+  pred.ref0 <- rbind(pred.subset[, 1:3], c(rep(NA, 3)))
+
 
   # Sort by SUCRA in decreasing order and remove the reference intervention (number 1)
   pred.ref <- if (model == "RE") {
-    pred.ref0[order(sucra[, 1], decreasing = T), ]
+    pred.ref0[order(sucra.new, decreasing = T), ]
   } else {
     NA
   }
+  rownames(pred.ref) <- NULL
 
 
   # Sort the drugs by their SUCRA in decreasing order and remove the reference intervention (number 1)
   drug.names.sorted <- drug.names[order(sucra[, 1], decreasing = T)]
 
 
-
   ## Create a data-frame with credible and predictive intervals of comparisons with the reference intervention
   if (!is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
-    prepare.EM <- data.frame(rep(length(drug.names):1, 2), rep(drug.names.sorted, 2), round(rbind(EM.ref, pred.ref), 2), rep(c("Credible interval", "Predictive interval"), each = length(drug.names)))
+    prepare.EM <- data.frame(as.factor(rep(length(drug.names):1, 2)), rep(drug.names.sorted, 2), round(rbind(EM.ref, pred.ref), 2), rep(c("Credible interval", "Predictive interval"), each = length(drug.names)))
     colnames(prepare.EM) <- c("order", "comparison", "mean", "lower", "upper", "interval")
   } else if (is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
-    prepare.EM <- data.frame(rep(length(drug.names):1, 2), rep(drug.names.sorted, 2), round(rbind(exp(EM.ref), exp(pred.ref)), 2), rep(c("Credible interval", "Predictive interval"), each = length(drug.names)))
+    prepare.EM <- data.frame(as.factor(rep(length(drug.names):1, 2)), rep(drug.names.sorted, 2), round(rbind(exp(EM.ref), exp(pred.ref)), 2), rep(c("Credible interval", "Predictive interval"), each = length(drug.names)))
     colnames(prepare.EM) <- c("order", "comparison", "mean", "lower", "upper", "interval")
   } else if (!is.element(measure, c("Odds ratio", "Ratio of means")) & model == "FE") {
-    prepare.EM <- data.frame(length(drug.names):1, drug.names.sorted, round(EM.ref, 2))
+    prepare.EM <- data.frame(as.factor(length(drug.names):1), drug.names.sorted, round(EM.ref, 2))
     colnames(prepare.EM) <- c("order", "comparison", "mean", "lower", "upper")
   } else if (is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
-    prepare.EM <- data.frame(length(drug.names):1, drug.names.sorted, round(exp(EM.ref), 2))
+    prepare.EM <- data.frame(as.factor(length(drug.names):1), drug.names.sorted, round(exp(EM.ref), 2))
     colnames(prepare.EM) <- c("order", "comparison", "mean", "lower", "upper")
   }
-  rownames(prepare.EM) <- NULL
 
 
 
@@ -146,7 +185,7 @@ forestplot.ref <- function(full, drug.names) {
   p1 <- if (model == "RE") {
     ggplot(data = prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), ], aes(x = order, y = mean, ymin = lower, ymax = upper, colour = interval)) +
       geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-      geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper), size = 2, position = position_dodge(width = 0.5), width = 0.0) +
+      geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], aes(x = order, y = mean, ymin = lower, ymax = upper), size = 2, position = position_dodge(width = 0.5), width = 0.0) +
       geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 1, size = 1, col = "grey60") +
       geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
       geom_text(aes(x = order, y = mean, label = paste0(mean, " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")",
@@ -159,7 +198,7 @@ forestplot.ref <- function(full, drug.names) {
       labs(x = "", y = measure, colour = "Analysis") +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
       scale_color_manual(breaks = c("Credible interval", "Predictive interval"), values = c("black", "#D55E00")) +
-      geom_label(aes(x = as.factor(order)[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
+      geom_label(aes(x = order[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
       coord_flip() +
       theme_classic() +
@@ -169,7 +208,7 @@ forestplot.ref <- function(full, drug.names) {
   } else {
     ggplot(data = prepare.EM, aes(x = order, y = mean, ymin = lower, ymax = upper)) +
       geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-      geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper), size = 2, position = position_dodge(width = 0.5), colour = "black", width = 0.0) +
+      geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], aes(x = order, y = mean, ymin = lower, ymax = upper), size = 2, position = position_dodge(width = 0.5), colour = "black", width = 0.0) +
       geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 2, size = 1.3, col = "grey53") +
       geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
       geom_text(aes(x = order, y = mean, label = paste0(mean, " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")"),
@@ -180,7 +219,7 @@ forestplot.ref <- function(full, drug.names) {
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
       labs(x = "", y = measure) +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
-      geom_label(aes(x = as.factor(order)[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
+      geom_label(aes(x = order[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
       coord_flip(clip = "off") +
       theme_classic() +
