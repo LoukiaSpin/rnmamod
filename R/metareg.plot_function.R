@@ -1,6 +1,11 @@
 #' Plot the results from the meta-regression analysis
 #'
+#' @param full sth
+#' @param metareg sth
+#' @param compar sth
 #' @param cov.value
+#' @param drug.names
+#' @param save.xls
 #'
 #'
 #' @export
