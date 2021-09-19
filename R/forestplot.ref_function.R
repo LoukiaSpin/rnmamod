@@ -80,9 +80,11 @@ forestplot.ref <- function(full, compar, cov.value = NULL, drug.names) {
   }
 
 
-  compar <- if(length(compar) == 2) {
+  compar <- if(missing(compar)) {
     stop("The argument 'compar' has not been defined", call. = F)
-  } else {
+  } else if(!is.element(compar, drug.names)) {
+    stop("The value of 'compar' is not found in the 'drug.names'", call. = F)
+  } else if(is.element(compar, drug.names)) {
     compar
   }
 
@@ -118,10 +120,13 @@ forestplot.ref <- function(full, compar, cov.value = NULL, drug.names) {
                             (data.frame(mean = full$beta.all[, 1]*(-1), lower = full$beta.all[, 7]*(-1), upper = full$beta.all[, 3]*(-1))*cov.val)),
                       poss.pair.comp)
   }
+
   EM.subset <- subset(EM.ref00, EM.ref00[5] == compar)
+
   EM.ref0 <- rbind(EM.subset[, 1:3], c(rep(NA, 3)))
 
   sucra.new <- data.frame(sucra[, 1], drug.names)[order(match(data.frame(sucra[, 1], drug.names)[, 2], EM.subset[, 4])), 1]
+
   EM.ref <- EM.ref0[order(sucra.new, decreasing = T), ]
   rownames(EM.ref) <- NULL
 
@@ -140,7 +145,9 @@ forestplot.ref <- function(full, compar, cov.value = NULL, drug.names) {
   } else if (model != "RE") {
     NA
   }
+
   pred.subset <- subset(pred.ref00, pred.ref00[5] == compar)
+
   pred.ref0 <- rbind(pred.subset[, 1:3], c(rep(NA, 3)))
 
 
@@ -173,12 +180,10 @@ forestplot.ref <- function(full, compar, cov.value = NULL, drug.names) {
   }
 
 
-
   ## Create a data-frame with the SUCRA values
   prepare.sucra <- data.frame(length(drug.names):1, drug.names[order(sucra[, 1], decreasing = T)], sucra[order(sucra[, 1], decreasing = T), c(1, 3, 7)])
   colnames(prepare.sucra) <- c("order", "intervention", "mean", "lower", "upper")
   rownames(prepare.sucra) <- NULL
-
 
 
   ## Forest plots on credible/predictive intervals of comparisons with the reference
@@ -251,5 +256,4 @@ forestplot.ref <- function(full, compar, cov.value = NULL, drug.names) {
 
 
   return(forest.plots = forest.plots)
-
 }
