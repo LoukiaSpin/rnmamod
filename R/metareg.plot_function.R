@@ -1,10 +1,10 @@
 #' Plot the results from the meta-regression analysis
 #'
-#' @param covariate.name A factor is the covariate is metric. A factor vector of three elements, if the covariate is binary:
-#'   the first element is the name of the covariate, and the last two elements are levels of the covariate (sorted as the reference, and non-reference level)
+#' @param cov.value
+#'
 #'
 #' @export
-metareg.plot <- function(full, metareg, covariate.name, drug.names, save.xls) {
+metareg.plot <- function(full, metareg, cov.value, drug.names, save.xls) {
 
 
   options(warn = -1)
@@ -70,9 +70,7 @@ metareg.plot <- function(full, metareg, covariate.name, drug.names, save.xls) {
   EM.meta.all <- round(full$EM[, c(1, 3, 7)], 3)
 
   # Posterior mean of regression coefficients for all unique pairwise comparisons
-  beta.all <- if (is.element(metareg$covar.assumption, c("exchangeable", "independent")) ) {
-    round(metareg$beta.all[, c(1, 3, 7)], 3)
-  }
+  beta.all <- round(metareg$beta.all[, c(1, 3, 7)], 3)
 
   # Posterior results on between-trial standard deviation under NMA
   tau.full <- if (model == "RE") {

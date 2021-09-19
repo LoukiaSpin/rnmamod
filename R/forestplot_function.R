@@ -1,26 +1,27 @@
-#' Forest-plot of comparisons with the reference intervention
+#' Forest-plot of comparisons with the selected intervention
 #'
-#' @description This function illustrates a forest plot of the posterior mean and 95\% credible and predictive interval of comparisons with the reference intervention of the network.
+#' @description This function illustrates a forest plot of the posterior mean and 95\% credible and predictive interval of comparisons with the selected intervention of the network.
 #'
-#' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
+#' @param full An object of S3 class \code{\link{run.model}} or \code{\link{run.metareg}}. See 'Value' in \code{\link{run.model}} and \code{\link{run.metareg}}.
+#' @param comp A character to indicate the comparator intervention. it must be any name found in \code{drug.names}.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
 #'
-#' @return A panel of two forest plots: (1) a forest plot on the effect estimates and predictions of comparisons with the reference intervention of the network, and
+#' @return A panel of two forest plots: (1) a forest plot on the effect estimates and predictions of comparisons with the selected intervention of the network, and
 #' (2) a forest plot on the posterior mean and 95\% credible interval of SUCRA values of the interventions (Salanti et al., 2011).
 #'
-#' @details The x-axis in the forest plot of effect sizes displays all interventions in the network; the reference intervention is indicated in the plot with a homonymous label.
-#'   For each comparison with the reference intervention, the 95\% credible and predictive intervals are displayed as overlapping lines with different colours. When the between-trial variance is very low, these two intervals become indiscernible.
+#' @details The x-axis in the forest plot of effect sizes displays all interventions in the network; the selected intervention that comprises the \code{compar} is indicated in the plot with a homonymous label.
+#'   For each comparison with the selected intervention, the 95\% credible and predictive intervals are displayed as overlapping lines with different colours. When the between-trial variance is very low, these two intervals become indiscernible.
 #'   Furthermore, the corresponding numerical results are displayed above each line: 95\% credible intervals are found in parentheses, and 95\% predictive intervals are found in brackets.
 #'   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
 #'
 #'   The interventions are sorted in the descending order of their SUCRA values.
 #'
-#'   \code{forestplot.ref} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+#'   \code{forestplot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run.model}}
+#' @seealso \code{\link{run.model}}, \code{\link{run.metareg}}
 #'
 #' @references
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
@@ -58,11 +59,11 @@
 #'                   "serotonin reuptake inhibitor", "tricyclic antidepressant", "pergolide")
 #'
 #' # Create the league heatmap
-#' forestplot.ref(full = res, drug.names = interv.names)
+#' forestplot(full = res, compar = "placebo", drug.names = interv.names)
 #' }
 #'
 #' @export
-forestplot.ref <- function(full, compar, cov.value = NULL, drug.names) {
+forestplot <- function(full, compar, cov.value = NULL, drug.names) {
 
   options(warn = -1)
 
@@ -196,14 +197,14 @@ forestplot.ref <- function(full, compar, cov.value = NULL, drug.names) {
       geom_text(aes(x = order, y = mean, label = paste0(mean, " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")",
                                                         " ", "[", prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), 4], ",", " ", prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), 5], "]"),
                     hjust = 0, vjust = -0.5), color = "black", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T, na.rm = T) +
-      geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", "Favours second arm")),
+      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", "Favours second arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 1.2, 0.2), label = ifelse(full$D == 0, "Favours second arm", "Favours first arm")),
+      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2), label = ifelse(full$D == 0, "Favours second arm", "Favours first arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
       labs(x = "", y = measure, colour = "Analysis") +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
       scale_color_manual(breaks = c("Credible interval", "Predictive interval"), values = c("black", "#D55E00")) +
-      geom_label(aes(x = order[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
+      geom_label(aes(x = order[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Comparator intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
       coord_flip() +
       theme_classic() +
@@ -218,13 +219,13 @@ forestplot.ref <- function(full, compar, cov.value = NULL, drug.names) {
       geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
       geom_text(aes(x = order, y = mean, label = paste0(mean, " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")"),
                     hjust = 0, vjust = -0.5), color = "black", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T, na.rm = T) +
-      geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", "Favours second arm")),
+      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", "Favours second arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 1.2, 0.2), label = ifelse(full$D == 0, "Favours second arm", "Favours first arm")),
+      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2), label = ifelse(full$D == 0, "Favours second arm", "Favours first arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
       labs(x = "", y = measure) +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
-      geom_label(aes(x = order[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
+      geom_label(aes(x = order[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Comparator intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
       coord_flip(clip = "off") +
       theme_classic() +
