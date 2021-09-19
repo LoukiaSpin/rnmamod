@@ -4,7 +4,10 @@
 \alias{metareg.plot}
 \title{Plot the results from the meta-regression analysis}
 \usage{
-metareg.plot(full, metareg, covar.values, drug.names)
+metareg.plot(full, metareg, cov.value, drug.names, save.xls)
+}
+\arguments{
+\item{cov.value}{}
 }
 \description{
 Plot the results from the meta-regression analysis

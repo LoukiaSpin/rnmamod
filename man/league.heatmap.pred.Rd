@@ -4,10 +4,12 @@
 \alias{league.heatmap.pred}
 \title{League heatmap of all possible comparisons: prediction}
 \usage{
-league.heatmap.pred(full, drug.names)
+league.heatmap.pred(full, cov.value = NULL, drug.names)
 }
 \arguments{
-\item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
+\item{full}{An object of S3 class \code{\link{run.model}} for network meta-analysis or \code{\link{run.metareg}} for network meta-regression. See 'Value' in \code{\link{run.model}} and \code{\link{run.metareg}}.}
+
+\item{cov.value}{A vector of two elements in the following order: a number for the covariate value of interest and a character for the name of the covariate.}
 
 \item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 as they appear in \code{data} is used, instead.}
@@ -17,7 +19,7 @@ A league heatmap of the posterior mean, 95\% predictive interval of the effects 
 }
 \description{
 A function to create a heatmap with the predicted effects of all possible comparisons of interventions in the network.
-\code{league.heatmap.pred} can be used only for a random-effects network meta-analysis.
+\code{league.heatmap.pred} can be used only for a random-effects network meta-analysis and network meta-regression.
 \code{league.heatmap.pred} is applied for one outcome only.
 }
 \details{
@@ -66,7 +68,7 @@ league.heatmap.pred(full = res, drug.names = interv.names)
 Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
 }
 \seealso{
-\code{\link{run.model}}
+\code{\link{run.model}}, \code{\link{run.metareg}}
 }
 \author{
 {Loukia M. Spineli}, {Chrysostomos Kalyvas}, {Katerina Papadimitropoulou}
