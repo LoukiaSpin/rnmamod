@@ -98,6 +98,7 @@ forestplot <- function(full, compar, cov.value = NULL, drug.names) {
   }
 
 
+  ## A matrix with all possible comparisons in the network
   poss.pair.comp1 <- data.frame(exp = t(combn(drug.names, 2))[, 2], comp = t(combn(drug.names, 2))[, 1])
   poss.pair.comp2 <- data.frame(exp = t(combn(drug.names, 2))[, 1], comp = t(combn(drug.names, 2))[, 2])
   poss.pair.comp <- rbind(poss.pair.comp1, poss.pair.comp2)
@@ -197,9 +198,9 @@ forestplot <- function(full, compar, cov.value = NULL, drug.names) {
       geom_text(aes(x = order, y = mean, label = paste0(mean, " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")",
                                                         " ", "[", prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), 4], ",", " ", prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), 5], "]"),
                     hjust = 0, vjust = -0.5), color = "black", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T, na.rm = T) +
-      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", "Favours second arm")),
+      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", paste("Favours", compar))),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2), label = ifelse(full$D == 0, "Favours second arm", "Favours first arm")),
+      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2), label = ifelse(full$D == 0, paste("Favours", compar), "Favours first arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
       labs(x = "", y = measure, colour = "Analysis") +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
@@ -219,9 +220,9 @@ forestplot <- function(full, compar, cov.value = NULL, drug.names) {
       geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
       geom_text(aes(x = order, y = mean, label = paste0(mean, " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")"),
                     hjust = 0, vjust = -0.5), color = "black", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T, na.rm = T) +
-      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", "Favours second arm")),
+      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", paste("Favours", compar))),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2), label = ifelse(full$D == 0, "Favours second arm", "Favours first arm")),
+      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2), label = ifelse(full$D == 0, paste("Favours", compar), "Favours first arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
       labs(x = "", y = measure) +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
