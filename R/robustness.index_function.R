@@ -81,29 +81,27 @@ robustness.index <- function(sens, threshold){
 
   options(warn = -1)
 
-  if (is.list(sens)) {
+  if (is.null(sens$EM)) {
     ES.mat <- sens[[1]]
     measure <- sens[[2]]
     scenarios <- sens[[3]]
     primary.scenar <- 1
-
+    n.scenar <- length(scenarios)
   } else {
     ES.mat <- sens$EM
-
     measure <- sens$measure
-
     scenarios <- sens$scenarios
+    primary.scenar <- median(1:length(scenarios))
+    n.scenar <- length(scenarios)^2
 
     if (any(is.na(sens))) {
       stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
       return(NA)
     }
-
-    primary.scenar <- median(1:length(scenarios))
   }
 
 
-  n.scenar <- length(scenarios)^2
+
   nt <- (1 + sqrt(1 + 8*(length(ES.mat[, 1])/sqrt(n.scenar)^2)))/2  # The quadratic formula for the roots of the general quadratic equation
   poss.comp <- (nt*(nt - 1))/2
 

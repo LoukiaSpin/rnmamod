@@ -306,29 +306,25 @@ metareg.plot <- function(full, metareg, compar, cov.value, drug.names, save.xls)
 
 
   if (!is.element(measure, c("Odds ratio", "Ratio of means"))) {
-    EM.meta.mean <- na.omit(rep(EM.metareg[, 1], each = length(covariate)) + (rep(beta[, 1], each = length(covariate))*covar ))
-    EM.meta.lower <- na.omit(rep(EM.metareg[, 2], each = length(covariate)) + (rep(beta[, 2], each = length(covariate))*covar ))
-    EM.meta.upper <- na.omit(rep(EM.metareg[, 3], each = length(covariate)) + (rep(beta[, 3], each = length(covariate))*covar ))
-    slope <- paste0("slope, (95% CrI):", " ", beta[-length(drug.names), 1], ", (", beta[-length(drug.names), 2], ",", beta[-length(drug.names), 3], ")")
-    #intercept <- na.omit(rep(EM.metareg[, 1], each = length(covariate)))
-    intercept <- na.omit(EM.metareg[, 1])
+    EM.meta.mean <- na.omit(rep(EM.metareg[, 1], each = length(covar)) + (rep(beta[, 1], each = length(covar))*covar ))
+    EM.meta.lower <- na.omit(rep(EM.metareg[, 2], each = length(covar)) + (rep(beta[, 2], each = length(covar))*covar ))
+    EM.meta.upper <- na.omit(rep(EM.metareg[, 3], each = length(covar)) + (rep(beta[, 3], each = length(covar))*covar ))
+    EM.interc <- rep(na.omit(EM.full[, 1]), each = length(covar))
   } else {
-    EM.meta.mean <- round(exp(na.omit(rep(EM.metareg[, 1], each = length(covariate)) + (rep(beta[, 1], each = length(covariate))*covar ))), 2)
-    EM.meta.lower <- round(exp(na.omit(rep(EM.metareg[, 2], each = length(covariate)) + (rep(beta[, 2], each = length(covariate))*covar ))), 2)
-    EM.meta.upper <- round(exp(na.omit(rep(EM.metareg[, 3], each = length(covariate)) + (rep(beta[, 3], each = length(covariate))*covar ))), 2)
-    slope <- round(exp(rep(beta[-length(drug.names), 1], each = length(covariate))), 2)
-    #intercept <- round(exp(na.omit(rep(EM.metareg[, 1], each = length(covariate)))), 2)
-    intercept <- round(exp(na.omit(EM.metareg[, 1])), 2)
+    EM.meta.mean <- round(exp(na.omit(rep(EM.metareg[, 1], each = length(covar)) + (rep(beta[, 1], each = length(covar))*covar ))), 2)
+    EM.meta.lower <- round(exp(na.omit(rep(EM.metareg[, 2], each = length(covar)) + (rep(beta[, 2], each = length(covar))*covar ))), 2)
+    EM.meta.upper <- round(exp(na.omit(rep(EM.metareg[, 3], each = length(covar)) + (rep(beta[, 3], each = length(covar))*covar ))), 2)
+    EM.interc <- rep(round(exp(na.omit(EM.full[, 1])), 2), each = length(covar))
+    #intercept <- round(exp(na.omit(EM.full[, 1])), 2)
   }
 
-  prepare <- data.frame(paste(rep(drug.names.sorted[-length(drug.names)], each = length(covariate)), "versus", na.omit(drug.names.sorted[is.na(EM.full)])),
-                        rep(covariate, length(drug.names) - 1),
+  prepare <- data.frame(paste(rep(drug.names.sorted[drug.names.sorted != compar], each = length(covar)), "versus", compar),
+                        rep(covar, length(drug.names) - 1),
                         EM.meta.mean,
                         EM.meta.lower,
                         EM.meta.upper,
-                        slope,
-                        intercept)
-  colnames(prepare) <- c("comparison", "covariate", "mean", "lower", "upper", "slope", "intercept")
+                        EM.interc)
+  colnames(prepare) <- c("comparison", "covariate", "mean", "lower", "upper", "intercept")
 
 
   ## Keep nodes with mean SUCRA > 0.20
@@ -343,7 +339,7 @@ metareg.plot <- function(full, metareg, compar, cov.value, drug.names, save.xls)
             geom_errorbar(colour = "#D55E00", size = 1, position = position_dodge(width = 0.5), width = 0.1) +
             geom_point(size = 1.5, colour = "black") +
             geom_line(aes(y = mean), size = 1, color = "#009E73") +
-            geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), EM.full[, 1], exp(EM.full[, 1])), lty = 1, size = 1, col = "black") +
+            geom_hline(yintercept = intercept, lty = 1, size = 1, col = "black") +
             geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 2, size = 1, col = "grey") +
             #geom_label(aes(x = min(covariate), y = 0, hjust = 0, vjust = 1, label = paste(intercept, ifelse(slope > 0, "+", "-"), abs(slope), "*covariate")), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
             facet_wrap(vars(factor(comparison, levels = unique(prepare$comparison))), scales = "free_y") +
@@ -357,7 +353,7 @@ metareg.plot <- function(full, metareg, compar, cov.value, drug.names, save.xls)
             geom_errorbar(colour = "#D55E00", size = 1, position = position_dodge(width = 0.5), width = 0.1) +
             geom_point(size = 1.5, colour = "black") +
             geom_line(aes(y = mean), size = 1, color = "#009E73") +
-            geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), EM.full[, 1], exp(EM.full[, 1])), lty = 1, size = 1, col = "black") +
+            geom_hline(yintercept = intercept, lty = 1, size = 1, col = "black") +
             geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 2, size = 1.5, col = "grey") +
            # geom_label(aes(x = min(covariate), y = 0, hjust = 0, vjust = 1, label = paste(intercept, ifelse(slope > 0, "+", "-"), abs(slope), "*covariate")), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
             facet_wrap(vars(factor(comparison, levels = unique(prepare$comparison))), scales = "free_y") +
