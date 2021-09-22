@@ -163,6 +163,8 @@ unrelated.effects.plot <- function(data, measure, char, drug.names, trial.names,
   contrast$char2 <- rep(char[, 2], na)
   contrast$char3 <- rep(char[, 3], na)
 
+  table.UTE <- contrast[, c(14, 8:9, 2:7, 10:13, 16:18)]
+
 
   ## Write the table with the EMs from both models as .xlsx
   if (save.xls == TRUE) {
@@ -189,7 +191,8 @@ unrelated.effects.plot <- function(data, measure, char, drug.names, trial.names,
     write_xlsx(contrast[, c(14, 8:9, 2:7, 19, 12, 13, 16:18)], paste0("Table Unrelated Trial Effects", ".xlsx"))
   }
 
-  return(results)
+  return(list(Table.unrelated.effects = knitr::kable(table.UTE),
+              Panel.intervalplots = results))
  }
 
 

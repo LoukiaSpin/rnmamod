@@ -72,6 +72,11 @@ KLD.barplot <- function(robust, compar, drug.names){
   }
 
 
+  if (dim(robust$KLD)[2] < 25) {
+    stop("This function shall be used *only* for different scenarios about the missingness parameter.", call. = F)
+  }
+
+
   drug.names <- if (missing(drug.names)) {
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
     nt <- (1 + sqrt(1 + 8*length(robust$robust)))/2
