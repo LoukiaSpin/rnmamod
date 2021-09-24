@@ -43,15 +43,6 @@ A network plot with coloured closed-loops informed by multi-arm trials. Each nod
    \code{Table.comparisons.Missing} \tab The data-frame presents the summary results on the proportion of missing participants for each observed comparison in the network.
    It has the same structure with \code{Table.comparisons} for the binary outcome. \cr
   }
-
-  Additionally, \code{netplot} exports two heatmaps:
-  \tabular{ll}{
-   \code{Heatmap.missing.network} \tab It illustrates the distribution of the proportion of missing participants across the interventions and
-   observed comparisons of the network. See \code{\link[rnmamod]{heatmap.missing.network}} function for more details. \cr
-   \tab \cr
-   \code{Heatmap.outcome.network} \tab It illustrates the distribution of the outcome across the interventions and
-   observed comparisons of the network. See \code{\link[rnmamod]{heatmap.outcome.network}} function for more details. \cr
-  }
 }
 \description{
 A function to facilitate drawing the network plot via the \code{\link[pcnetmeta]{nma.networkplot}} function
@@ -89,7 +80,7 @@ Gert van Valkenhoef and Joel Kuiper. gemtc: Network Meta-Analysis Using Bayesian
 }
 \seealso{
 \code{\link[rnmamod]{run.model}}, \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta} and \href{https://CRAN.R-project.org/package=gemtc}{gemtc},
-\code{\link[rnmamod]{data.preparation}}, \code{\link[rnmamod]{heatmap.missing.network}}, \code{\link[rnmamod]{heatmap.outcome.network}}.
+\code{\link[rnmamod]{data.preparation}}.
 }
 \author{
 {Loukia M. Spineli}

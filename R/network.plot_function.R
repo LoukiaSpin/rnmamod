@@ -37,17 +37,8 @@
 #'    It has the same structure with \code{Table.comparisons} for the binary outcome. \cr
 #'   }
 #'
-#'   Additionally, \code{netplot} exports two heatmaps:
-#'   \tabular{ll}{
-#'    \code{Heatmap.missing.network} \tab It illustrates the distribution of the proportion of missing participants across the interventions and
-#'    observed comparisons of the network. See \code{\link[rnmamod]{heatmap.missing.network}} function for more details. \cr
-#'    \tab \cr
-#'    \code{Heatmap.outcome.network} \tab It illustrates the distribution of the outcome across the interventions and
-#'    observed comparisons of the network. See \code{\link[rnmamod]{heatmap.outcome.network}} function for more details. \cr
-#'   }
-#'
 #' @seealso \code{\link[rnmamod]{run.model}}, \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta} and \href{https://CRAN.R-project.org/package=gemtc}{gemtc},
-#' \code{\link[rnmamod]{data.preparation}}, \code{\link[rnmamod]{heatmap.missing.network}}, \code{\link[rnmamod]{heatmap.outcome.network}}.
+#' \code{\link[rnmamod]{data.preparation}}.
 #'
 #' @references
 #' Lifeng Lin, Jing Zhang, James S. Hodges, Haitao Chu. Performing Arm-Based Network Meta-Analysis in R
@@ -144,7 +135,7 @@ netplot <- function(data, drug.names, save.xls, ...){
 
   if (measure == "OR") {
     results[10, ] <- rbind("Proportion of observed events", dat$prop.event.network)
-    results[11, ] <- rbind("Trials with at least one zero event", dat$trial.all.zero.event)
+    results[11, ] <- rbind("Trials with at least one zero event", dat$trial.zero.event)
     results[12, ] <- rbind("Trials with all zero events", dat$trial.all.zero.event)
   } else {
     results
@@ -163,7 +154,5 @@ netplot <- function(data, drug.names, save.xls, ...){
               Table.interventions = dat$Table.interventions,
               Table.comparisons   = dat$Table.comparisons,
               Table.interventions.Missing = dat$Table.interventions.Missing,
-              Table.comparisons.Missing = dat$Table.comparisons.Missing,
-              Heatmap.missing.network = heatmap.missing.network(data, drug.names),
-              Heatmap.outcome.network = heatmap.outcome.network(data, drug.names)))
+              Table.comparisons.Missing = dat$Table.comparisons.Missing))
 }

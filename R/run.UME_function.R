@@ -357,7 +357,9 @@ run.UME <- function(full, n.iter, n.burnin, n.chains, n.thin) {
          tau = tau,
          model.assessment = model.assessment,
          obs.comp = obs.comp,
-         jagsfit = jagsfit)
+         jagsfit = jagsfit,
+         data = data,
+         measure = measure)
   } else {
     list(EM = EM,
          dev.o = dev.o,
@@ -366,7 +368,9 @@ run.UME <- function(full, n.iter, n.burnin, n.chains, n.thin) {
          sign.dev.o = sign.dev.o,
          model.assessment = model.assessment,
          obs.comp = obs.comp,
-         jagsfit = jagsfit)
+         jagsfit = jagsfit,
+         data = data,
+         measure = measure)
   }
 
 
