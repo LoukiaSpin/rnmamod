@@ -12,7 +12,7 @@
 #'
 #'
 #' @export
-metareg.plot <- function(full, metareg, compar, cov.value, drug.names, save.xls) {
+metareg.plot <- function(full, reg, compar, cov.value, drug.names, save.xls) {
 
 
   options(warn = -1)
@@ -39,13 +39,13 @@ metareg.plot <- function(full, metareg, compar, cov.value, drug.names, save.xls)
     cov.value
   }
 
-  covariate <- if (length(unique(metareg$covariate)) < 3) {
-    unique(metareg$covariate)
+  covariate <- if (length(unique(reg$covariate)) < 3) {
+    unique(reg$covariate)
   } else {
-    metareg$covariate
+    reg$covariate
   }
 
-  cov.val <- ifelse(length(unique(covariate)) < 3, as.numeric(cov.value[1]), as.numeric(cov.value[1]) - mean(metareg$covariate))
+  cov.val <- ifelse(length(unique(covariate)) < 3, as.numeric(cov.value[1]), as.numeric(cov.value[1]) - mean(covariate))
 
   drug.names <- if (missing(drug.names)) {
     message(cat(paste0("\033[0;", col = 32, "m", txt = "The argument 'drug.names' has not been defined. The intervention ID, as specified in 'data' is used as intervention names", "\033[0m", "\n")))
@@ -65,8 +65,8 @@ metareg.plot <- function(full, metareg, compar, cov.value, drug.names, save.xls)
   drug.names.sorted <- drug.names[order(sucra.full[, 1], decreasing = T)]
 
   # Posterior results on the SUCRA value under meta-regression
-  sucra.meta <- round(metareg$SUCRA, 2)
-  sucra.meta.order <- round(metareg$SUCRA, 2)[order(sucra.full[, 1], decreasing = T), ]
+  sucra.meta <- round(reg$SUCRA, 2)
+  sucra.meta.order <- round(reg$SUCRA, 2)[order(sucra.full[, 1], decreasing = T), ]
 
   ## A matrix with all possible comparisons in the network
   poss.pair.comp1 <- data.frame(exp = t(combn(drug.names, 2))[, 2], comp = t(combn(drug.names, 2))[, 1])
@@ -78,7 +78,7 @@ metareg.plot <- function(full, metareg, compar, cov.value, drug.names, save.xls)
                            data.frame(mean = full$EM[, 1]*(-1), lower = full$EM[, 7]*(-1), upper = full$EM[, 3]*(-1))),
                      poss.pair.comp)
 
-  EM.full.subset <- subset(EM.full00, EM.ref00[5] == compar)
+  EM.full.subset <- subset(EM.full00, EM.full00[5] == compar)
 
   EM.full0 <- rbind(EM.full.subset[, 1:3], c(rep(NA, 3)))
 
@@ -88,29 +88,45 @@ metareg.plot <- function(full, metareg, compar, cov.value, drug.names, save.xls)
   rownames(EM.full) <- NULL
 
   # Posterior mean of regression coefficients for all unique pairwise comparisons
-  beta00 <- cbind(rbind(data.frame(mean = metareg$beta.all[, 1], lower = metareg$beta.all[, 3], upper = metareg$beta.all[, 7]),
-                        data.frame(mean = metareg$beta.all[, 1]*(-1), lower = metareg$beta.all[, 7]*(-1), upper = metareg$beta.all[, 3]*(-1))),
+  beta00 <- cbind(rbind(data.frame(mean = reg$beta.all[, 5], lower = reg$beta.all[, 3], upper = reg$beta.all[, 7]),
+                        data.frame(mean = reg$beta.all[, 5]*(-1), lower = reg$beta.all[, 7]*(-1), upper = reg$beta.all[, 3]*(-1))),
                   poss.pair.comp)
 
-  beta.all.subset <- subset(EM.meta00, EM.meta00[5] == compar)
+  beta.all.subset <- subset(beta00, beta00[5] == compar)
 
   beta0 <- rbind(beta.all.subset[, 1:3], c(rep(NA, 3)))
 
   beta <- beta0[order(sucra.full.new, decreasing = T), ]
+  rownames(beta) <- NULL
 
   ## Posterior results on effect size for comparisons with the selected intervention (network meta-regression)
-  EM.meta00 <- cbind(rbind(data.frame(mean = metareg$EM[, 1], lower = metareg$EM[, 3], upper = metareg$EM[, 7]) +
-                          (data.frame(mean = metareg$beta.all[, 1], lower = metareg$beta.all[, 3], upper = metareg$beta.all[, 7])*cov.val),
-                          data.frame(mean = metareg$EM[, 1]*(-1), lower = metareg$EM[, 7]*(-1), upper = metareg$EM[, 3]*(-1)) +
-                          (data.frame(mean = metareg$beta.all[, 1]*(-1), lower = metareg$beta.all[, 7]*(-1), upper = metareg$beta.all[, 3]*(-1))*cov.val)),
-                     poss.pair.comp)
+  EM.meta <- rbind(data.frame(mean = EM.full[, 1] + beta[, 1]*cov.val,
+                              lower = EM.full[, 2] + beta[, 2]*cov.val,
+                              upper = EM.full[, 3] + beta[, 3]*cov.val))
 
-  EM.meta.subset <- subset(EM.meta00, EM.meta00[5] == compar)
+  ## Posterior results on the predicted estimates of comparisons with the selected comparator as reference
+  if (model == "RE") {
+    pred.ref00.nma <- cbind(rbind(data.frame(mean = full$EM.pred[, 1], lower = full$EM.pred[, 3], upper = full$EM.pred[, 7]),
+                                  data.frame(mean = full$EM.pred[, 1]*(-1), lower = full$EM.pred[, 7]*(-1), upper = full$EM.pred[, 3]*(-1))),
+                            poss.pair.comp)
 
-  EM.meta0 <- rbind(EM.meta.subset[, 1:3], c(rep(NA, 3)))
+    pred.subset.nma <- subset(pred.ref00.nma, pred.ref00.nma[5] == compar)
 
-  EM.meta <- EM.meta0[order(sucra.full.new, decreasing = T), ]
-  rownames(EM.meta) <- NULL
+    pred.ref0.nma <- rbind(pred.subset.nma[, 1:3], c(rep(NA, 3)))
+  } else if (model != "RE") {
+    pred.ref00.nma <- NA
+  }
+
+
+  # Sort by SUCRA in decreasing order and remove the reference intervention (number 1)
+  if (model == "RE") {
+    pred.ref.nma <- pred.ref0.nma[order(sucra.full.new, decreasing = T), ]
+    pred.ref.nmr <- pred.ref.nma + beta*cov.val
+  } else {
+    NA
+  }
+  rownames(pred.ref.nma) <- rownames(pred.ref.nmr) <- NULL
+
 
   # Posterior results on between-trial standard deviation under NMA
   tau.full <- if (model == "RE") {
@@ -301,25 +317,24 @@ metareg.plot <- function(full, metareg, compar, cov.value, drug.names, save.xls)
   covar <- if (length(unique(covariate)) < 3) {
     unique(covariate)
   } else {
-    covariate - mean(covariate)
+    unique(covariate) - mean(unique(covariate))
   }
 
 
   if (!is.element(measure, c("Odds ratio", "Ratio of means"))) {
-    EM.meta.mean <- na.omit(rep(EM.metareg[, 1], each = length(covar)) + (rep(beta[, 1], each = length(covar))*covar ))
-    EM.meta.lower <- na.omit(rep(EM.metareg[, 2], each = length(covar)) + (rep(beta[, 2], each = length(covar))*covar ))
-    EM.meta.upper <- na.omit(rep(EM.metareg[, 3], each = length(covar)) + (rep(beta[, 3], each = length(covar))*covar ))
+    EM.meta.mean <- na.omit(rep(EM.metareg[, 1], each = length(covar))) + na.omit(rep(beta[, 1], each = length(covar)))*rep(covar, length(drug.names) - 1)
+    EM.meta.lower <- na.omit(rep(EM.metareg[, 2], each = length(covar))) + na.omit(rep(beta[, 2], each = length(covar)))*rep(covar, length(drug.names) - 1)
+    EM.meta.upper <- na.omit(rep(EM.metareg[, 3], each = length(covar))) + na.omit(rep(beta[, 3], each = length(covar)))*rep(covar, length(drug.names) - 1)
     EM.interc <- rep(na.omit(EM.full[, 1]), each = length(covar))
   } else {
-    EM.meta.mean <- round(exp(na.omit(rep(EM.metareg[, 1], each = length(covar)) + (rep(beta[, 1], each = length(covar))*covar ))), 2)
-    EM.meta.lower <- round(exp(na.omit(rep(EM.metareg[, 2], each = length(covar)) + (rep(beta[, 2], each = length(covar))*covar ))), 2)
-    EM.meta.upper <- round(exp(na.omit(rep(EM.metareg[, 3], each = length(covar)) + (rep(beta[, 3], each = length(covar))*covar ))), 2)
+    EM.meta.mean <- round(exp(na.omit(rep(EM.metareg[, 1], each = length(covar)) + (rep(beta[, 1], each = length(covar))*rep(covar, length(drug.names) - 1) ))), 2)
+    EM.meta.lower <- round(exp(na.omit(rep(EM.metareg[, 2], each = length(covar)) + (rep(beta[, 2], each = length(covar))*rep(covar, length(drug.names) - 1) ))), 2)
+    EM.meta.upper <- round(exp(na.omit(rep(EM.metareg[, 3], each = length(covar)) + (rep(beta[, 3], each = length(covar))*rep(covar, length(drug.names) - 1) ))), 2)
     EM.interc <- rep(round(exp(na.omit(EM.full[, 1])), 2), each = length(covar))
-    #intercept <- round(exp(na.omit(EM.full[, 1])), 2)
   }
 
   prepare <- data.frame(paste(rep(drug.names.sorted[drug.names.sorted != compar], each = length(covar)), "versus", compar),
-                        rep(covar, length(drug.names) - 1),
+                        rep(unique(covariate), length(drug.names) - 1),
                         EM.meta.mean,
                         EM.meta.lower,
                         EM.meta.upper,
@@ -339,9 +354,8 @@ metareg.plot <- function(full, metareg, compar, cov.value, drug.names, save.xls)
             geom_errorbar(colour = "#D55E00", size = 1, position = position_dodge(width = 0.5), width = 0.1) +
             geom_point(size = 1.5, colour = "black") +
             geom_line(aes(y = mean), size = 1, color = "#009E73") +
-            geom_hline(yintercept = intercept, lty = 1, size = 1, col = "black") +
+            geom_hline(yintercept = prepare$intercept, lty = 1, size = 1, col = "black") +
             geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 2, size = 1, col = "grey") +
-            #geom_label(aes(x = min(covariate), y = 0, hjust = 0, vjust = 1, label = paste(intercept, ifelse(slope > 0, "+", "-"), abs(slope), "*covariate")), fill = "beige", colour = "black", fontface = "plain", size = 3.1) +
             facet_wrap(vars(factor(comparison, levels = unique(prepare$comparison))), scales = "free_y") +
             labs(x = cov.value[2], y = measure) +
             scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
@@ -381,5 +395,4 @@ metareg.plot <- function(full, metareg, compar, cov.value, drug.names, save.xls)
               Table.regression.coeffients = knitr::kable(reg.coeff),
               Interval.plots = forest.plots,
               Scatterplots = p3))
-
 }

@@ -4,12 +4,10 @@
 \alias{metareg.plot}
 \title{Plot the results from the meta-regression analysis}
 \usage{
-metareg.plot(full, metareg, compar, cov.value, drug.names, save.xls)
+metareg.plot(full, reg, compar, cov.value, drug.names, save.xls)
 }
 \arguments{
 \item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
-
-\item{metareg}{An object of S3 class  \code{\link{run.metareg}}. See 'Value' in \code{\link{run.metareg}}.}
 
 \item{compar}{A character to indicate the comparator intervention. it must be any name found in \code{drug.names}.}
 
@@ -21,6 +19,8 @@ as they appear in \code{data} is used, instead.}
 
 \item{save.xls}{Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 The default is \code{FALSE} (do not export to an Excel format).}
+
+\item{metareg}{An object of S3 class  \code{\link{run.metareg}}. See 'Value' in \code{\link{run.metareg}}.}
 }
 \description{
 Plot the results from the meta-regression analysis
