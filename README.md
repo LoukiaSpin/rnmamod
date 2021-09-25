@@ -6,6 +6,7 @@
 
   <!-- badges: start -->
   [![R-CMD-check](https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
+  https://img.shields.io/github/license/LoukiaSpin/rnmamod.svg
   <!-- badges: end -->
   
 ## Description 
