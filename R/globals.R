@@ -1,6 +1,5 @@
 #' @import
 #'   ggplot2
-#'   rjags
 #'   stats
 #'
 #' @importFrom coda as.mcmc
