@@ -169,11 +169,19 @@ UME.plot <- function(full, ume, drug.names, save.xls) {
 
 
   ## Keep only the 95% credible intervals (CrI) according to the 'poss.pair.comp.clean' - Consistency model
-  CrI.full.clean <- paste0("(", EM.full.clean[, 3], ",", " ", EM.full.clean[, 4], ")", ifelse(as.numeric(EM.full.clean[, 3]) > 0 | as.numeric(EM.full.clean[, 4]) < 0, "*", " "))
+  CrI.full.clean <- if (is.element(measure, c("OR", "ROM"))) {
+    paste0("(", EM.full.clean[, 3], ",", " ", EM.full.clean[, 4], ")", ifelse(as.numeric(EM.full.clean[, 3]) > 1 | as.numeric(EM.full.clean[, 4]) < 1, "*", " "))
+  } else {
+    paste0("(", EM.full.clean[, 3], ",", " ", EM.full.clean[, 4], ")", ifelse(as.numeric(EM.full.clean[, 3]) > 0 | as.numeric(EM.full.clean[, 4]) < 0, "*", " "))
+  }
 
 
   ## Keep only the 95% credible intervals (CrI) according to the 'poss.pair.comp.clean' - UME model
-  CrI.ume.clean <- paste0("(", EM.ume.clean[, 3], ",", " ", EM.ume.clean[, 4], ")", ifelse(as.numeric(EM.ume.clean[, 3]) > 0 | as.numeric(EM.ume.clean[, 4]) < 0, "*", " "))
+  CrI.ume.clean <- if (is.element(measure, c("OR", "ROM"))) {
+    paste0("(", EM.ume.clean[, 3], ",", " ", EM.ume.clean[, 4], ")", ifelse(as.numeric(EM.ume.clean[, 3]) > 1 | as.numeric(EM.ume.clean[, 4]) < 1, "*", " "))
+  } else {
+    paste0("(", EM.ume.clean[, 3], ",", " ", EM.ume.clean[, 4], ")", ifelse(as.numeric(EM.ume.clean[, 3]) > 0 | as.numeric(EM.ume.clean[, 4]) < 0, "*", " "))
+  }
 
 
   ## Create a data-frame with effect estimates on both models
