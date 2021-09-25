@@ -197,7 +197,6 @@ balloon.plot.mod <- function(sens, compar, drug.names){
   }
 
 
-
   # Posterior mean of tau
   tau <- tau.all[, 1]
 
