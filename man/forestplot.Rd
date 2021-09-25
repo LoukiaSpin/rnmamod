@@ -4,15 +4,12 @@
 \alias{forestplot}
 \title{Forest-plot of comparisons with the selected intervention}
 \usage{
-forestplot(full, compar, cov.value = NULL, drug.names)
+forestplot(full, compar, drug.names)
 }
 \arguments{
-\item{full}{An object of S3 class \code{\link{run.model}} or \code{\link{run.metareg}}. See 'Value' in \code{\link{run.model}} and \code{\link{run.metareg}}.}
+\item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
 
 \item{compar}{A character to indicate the comparator intervention. it must be any name found in \code{drug.names}.}
-
-\item{cov.value}{A vector of two elements in the following order: a number that corresponds to a value of the covariate considered in \code{\link{run.metareg}},
-and a character object to indicate the name of the covariate.}
 
 \item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 as they appear in \code{data} is used, instead.}
@@ -75,7 +72,7 @@ forestplot(full = res, compar = "placebo", drug.names = interv.names)
 Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
 }
 \seealso{
-\code{\link{run.model}}, \code{\link{run.metareg}}
+\code{\link{run.model}}
 }
 \author{
 {Loukia M. Spineli}

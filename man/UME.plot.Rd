@@ -4,7 +4,7 @@
 \alias{UME.plot}
 \title{End-user-ready results: consistency model versus unrelated mean effects model}
 \usage{
-UME.plot(full, ume, drug.names, threshold, save.xls)
+UME.plot(full, ume, drug.names, save.xls)
 }
 \arguments{
 \item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
@@ -14,13 +14,11 @@ UME.plot(full, ume, drug.names, threshold, save.xls)
 \item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 as they appear in \code{data} is used, instead.}
 
-\item{threshold}{A number indicating the threshold of similarity. See 'Details' below.}
-
 \item{save.xls}{Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 The default is \code{FALSE} (do not export to an Excel format).}
 }
 \value{
-\code{UME.plot} prints on the R console two messages: (1) the threshold of similarity determined by the user in green text, (2) and followed by the most parsimonious model (if any) based on the deviance information criterion (DIC; in red text).
+\code{UME.plot} prints on the R console a message on the most parsimonious model (if any) based on the deviance information criterion (DIC; in red text).
 Then, the function returns the following list of elements:
 \tabular{ll}{
  \code{Table.effect.size} \tab The posterior mean, posterior standard deviation, and 95\% credible interval of the summary effect size for each pairwise comparison observed in the network under the consistency model and the unrelated mean effects model.\cr
