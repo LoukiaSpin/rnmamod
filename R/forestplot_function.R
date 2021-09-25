@@ -2,10 +2,8 @@
 #'
 #' @description This function illustrates a forest plot of the posterior mean and 95\% credible and predictive interval of comparisons with the selected intervention of the network.
 #'
-#' @param full An object of S3 class \code{\link{run.model}} or \code{\link{run.metareg}}. See 'Value' in \code{\link{run.model}} and \code{\link{run.metareg}}.
+#' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
 #' @param compar A character to indicate the comparator intervention. it must be any name found in \code{drug.names}.
-#' @param cov.value A vector of two elements in the following order: a number that corresponds to a value of the covariate considered in \code{\link{run.metareg}},
-#'   and a character object to indicate the name of the covariate.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
 #'
@@ -23,7 +21,7 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run.model}}, \code{\link{run.metareg}}
+#' @seealso \code{\link{run.model}}
 #'
 #' @references
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
@@ -65,7 +63,7 @@
 #' }
 #'
 #' @export
-forestplot <- function(full, compar, cov.value = NULL, drug.names) {
+forestplot <- function(full, compar,  drug.names) {
 
   options(warn = -1)
 
@@ -86,18 +84,11 @@ forestplot <- function(full, compar, cov.value = NULL, drug.names) {
   compar <- if(missing(compar)) {
     stop("The argument 'compar' has not been defined", call. = F)
   } else if(!is.element(compar, drug.names)) {
-    stop("The value of 'compar' is not found in the 'drug.names'", call. = F)
+    stop("The value of 'compar' is not found in the argument 'drug.names'", call. = F)
   } else if(is.element(compar, drug.names)) {
     compar
   }
 
-  cov.value <- if (!is.null(full$beta.all) & missing(cov.value)) {
-    stop("The argument 'cov.value' has not been defined", call. = F)
-  } else if (!is.null(full$beta.all) & length(cov.value) < 2) {
-    stop("The argument 'cov.value' must be a vector with elements a number and a character", call. = F)
-  } else if (!is.null(full$beta.all) & length(cov.value) == 2) {
-    cov.value
-  }
 
 
   ## A matrix with all possible comparisons in the network
@@ -106,25 +97,12 @@ forestplot <- function(full, compar, cov.value = NULL, drug.names) {
   poss.pair.comp <- rbind(poss.pair.comp1, poss.pair.comp2)
 
 
-  if (is.null(full$beta.all)) {
-    measure <- effect.measure.name(full$measure)
-    model <- full$model
-    sucra <- full$SUCRA
-    EM.ref00 <- cbind(rbind(data.frame(mean = full$EM[, 1], lower = full$EM[, 3], upper = full$EM[, 7]),
-                            data.frame(mean = full$EM[, 1]*(-1), lower = full$EM[, 7]*(-1), upper = full$EM[, 3]*(-1))),
-                      poss.pair.comp)
-  } else {
-    measure <- effect.measure.name(full$measure)
-    model <- full$model
-    sucra <- full$SUCRA
-    cov.val <- ifelse(length(unique(full$covariate)) < 3, as.numeric(cov.value[1]), as.numeric(cov.value[1]) - mean(full$covariate))
-    EM.ref00 <- cbind(rbind(data.frame(mean = full$EM[, 1], lower = full$EM[, 3], upper = full$EM[, 7]) +
-                            (data.frame(mean = full$beta.all[, 1], lower = full$beta.all[, 3], upper = full$beta.all[, 7])*cov.val),
-                            data.frame(mean = full$EM[, 1]*(-1), lower = full$EM[, 7]*(-1), upper = full$EM[, 3]*(-1)) +
-                            (data.frame(mean = full$beta.all[, 1]*(-1), lower = full$beta.all[, 7]*(-1), upper = full$beta.all[, 3]*(-1))*cov.val)),
-                      poss.pair.comp)
-  }
-
+  measure <- effect.measure.name(full$measure)
+  model <- full$model
+  sucra <- full$SUCRA
+  EM.ref00 <- cbind(rbind(data.frame(mean = full$EM[, 1], lower = full$EM[, 3], upper = full$EM[, 7]),
+                          data.frame(mean = full$EM[, 1]*(-1), lower = full$EM[, 7]*(-1), upper = full$EM[, 3]*(-1))),
+                    poss.pair.comp)
   EM.subset <- subset(EM.ref00, EM.ref00[5] == compar)
 
   EM.ref0 <- rbind(EM.subset[, 1:3], c(rep(NA, 3)))
@@ -136,19 +114,9 @@ forestplot <- function(full, compar, cov.value = NULL, drug.names) {
 
 
   # Posterior results on the predicted estimates of comparisons with the selected comparator as reference
-  pred.ref00 <- if (model == "RE" & is.null(full$beta.all)) {
-    cbind(rbind(data.frame(mean = full$EM.pred[, 1], lower = full$EM.pred[, 3], upper = full$EM.pred[, 7]),
-          data.frame(mean = full$EM.pred[, 1]*(-1), lower = full$EM.pred[, 7]*(-1), upper = full$EM.pred[, 3]*(-1))),
-          poss.pair.comp)
-  } else if (model == "RE" & !is.null(full$beta.all)) {
-    cbind(rbind(data.frame(mean = full$EM.pred[, 1], lower = full$EM.pred[, 3], upper = full$EM.pred[, 7]) +
-                (data.frame(mean = full$beta.all[, 1], lower = full$beta.all[, 3], upper = full$beta.all[, 7])*cov.val),
-                data.frame(mean = full$EM.pred[, 1]*(-1), lower = full$EM.pred[, 7]*(-1), upper = full$EM.pred[, 3]*(-1)) +
-                (data.frame(mean = full$beta.all[, 1]*(-1), lower = full$beta.all[, 7]*(-1), upper = full$beta.all[, 3]*(-1))*cov.val)),
-          poss.pair.comp)
-  } else if (model != "RE") {
-    NA
-  }
+  pred.ref00 <- cbind(rbind(data.frame(mean = full$EM.pred[, 1], lower = full$EM.pred[, 3], upper = full$EM.pred[, 7]),
+                           data.frame(mean = full$EM.pred[, 1]*(-1), lower = full$EM.pred[, 7]*(-1), upper = full$EM.pred[, 3]*(-1))),
+                      poss.pair.comp)
 
   pred.subset <- subset(pred.ref00, pred.ref00[5] == compar)
 
