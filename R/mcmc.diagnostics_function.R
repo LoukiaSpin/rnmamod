@@ -90,7 +90,7 @@ mcmc.diagnostics <- function(net, par){
 
     # Effect size of all unique pairwise comparisons
     EM0 <- t(getResults %>% select(starts_with("EM[")))
-    EM <- max(EM[, 8])
+    EM <- max(EM0[, 8])
 
     # Predictive effects of all unique pairwise comparisons
     EM.pred <- t(getResults %>% select(starts_with("EM.pred[")))
@@ -133,7 +133,6 @@ mcmc.diagnostics <- function(net, par){
       # ... for split node
       max(net$EM[, 5])
     }
-
 
     # Predictive effects of all unique pairwise comparisons
     EM.pred <- NULL
