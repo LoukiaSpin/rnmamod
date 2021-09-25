@@ -102,6 +102,7 @@ balloon.plot.mod <- function(sens, compar, drug.names){
   experim <- comparison[compar.id, 2]
   control <- comparison[compar.id, 1]
 
+
   compar <- if (length(drug.names) > 2 & missing(compar)) {
     stop("The argument 'compar' needs to be defined", call. = F)
   } else if (length(drug.names) < 3 & missing(compar)) {
