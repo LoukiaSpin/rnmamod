@@ -36,9 +36,6 @@ Then, the function returns the following list of elements:
  \tab \cr
  \code{Intervalplots} \tab A panel of interval plots on the summary effect size under the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
   See 'Details' and 'Value' in \code{\link{intervalplot.panel.UME}}.\cr
- \tab \cr
- \code{Heatmap} \tab A heatmap of similarity in the posterior distribution of summary effect size between the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
-  See 'Details' and 'Value' in \code{\link{heatmap.similarity.UME}} and \code{\link{similarity.index.UME}}.\cr
 }
 }
 \description{
@@ -93,7 +90,7 @@ Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis for
 Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616. [\doi{10.1111/1467-9868.00353}]
 }
 \seealso{
-\code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{BlandAltman.plot}}, \code{link{BlandAltman.plot}}, \code{\link{leverage.plot}}, \code{\link{intervalplot.panel.UME}}, \code{\link{similarity.index.UME}}, \code{\link{heatmap.similarity.UME}}
+\code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{BlandAltman.plot}}, \code{link{BlandAltman.plot}}, \code{\link{leverage.plot}}, \code{\link{intervalplot.panel.UME}}
 }
 \author{
 {Loukia M. Spineli}

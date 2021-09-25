@@ -28,9 +28,6 @@
 #'  \tab \cr
 #'  \code{Intervalplots} \tab A panel of interval plots on the summary effect size under the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
 #'   See 'Details' and 'Value' in \code{\link{intervalplot.panel.UME}}.\cr
-#'  \tab \cr
-#'  \code{Heatmap} \tab A heatmap of similarity in the posterior distribution of summary effect size between the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
-#'   See 'Details' and 'Value' in \code{\link{heatmap.similarity.UME}} and \code{\link{similarity.index.UME}}.\cr
 #' }
 #'
 #' @details The DIC of the consistency model is compared with the DIC of the unrelated mean effects model (Dias et al. (2013)). If the difference in DIC exceeds 5, the unrelated mean effects model is preferred; if the difference in DIC is less than -5,
@@ -42,7 +39,7 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{BlandAltman.plot}}, \code{link{BlandAltman.plot}}, \code{\link{leverage.plot}}, \code{\link{intervalplot.panel.UME}}, \code{\link{similarity.index.UME}}, \code{\link{heatmap.similarity.UME}}
+#' @seealso \code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{BlandAltman.plot}}, \code{link{BlandAltman.plot}}, \code{\link{leverage.plot}}, \code{\link{intervalplot.panel.UME}}
 #'
 #' @references
 #' Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
