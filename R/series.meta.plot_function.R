@@ -109,7 +109,6 @@ series.meta.plot <- function(full, meta, drug.names, save.xls) {
   EM.full.clean <- format(round(EM.full, 2), nsmall = 2)
 
 
-
   ## Effect estimate of separate RE-MAs
   EM.meta <- round(EM.meta0[, c(3:5, 9)], 2)
   EM.meta[, c(1, 3:4)] <- if (is.element(full$measure, c("OR", "ROM"))) {
@@ -129,15 +128,20 @@ series.meta.plot <- function(full, meta, drug.names, save.xls) {
   }
 
 
-
   ## Keep only the 95% credible intervals (CrI) according to the 'poss.pair.comp.clean' - Consistency model
-  CrI.full.clean <- paste0("(", EM.full.clean[, 3], ",", " ", EM.full.clean[, 4], ")", ifelse(as.numeric(EM.full.clean[, 3]) > 0 | as.numeric(EM.full.clean[, 4]) < 0, "*", " "))
-
+  CrI.full.clean <- if (is.element(full$measure, c("OR", "ROM"))) {
+    paste0("(", EM.full.clean[, 3], ",", " ", EM.full.clean[, 4], ")", ifelse(as.numeric(EM.full.clean[, 3]) > 1 | as.numeric(EM.full.clean[, 4]) < 1, "*", " "))
+  } else {
+    paste0("(", EM.full.clean[, 3], ",", " ", EM.full.clean[, 4], ")", ifelse(as.numeric(EM.full.clean[, 3]) > 0 | as.numeric(EM.full.clean[, 4]) < 0, "*", " "))
+  }
 
 
   ## The 95% CrIs of the effect estimate of separate RE-MAs
-  CrI.meta.clean <- paste0("(", EM.meta.clean[, 3], ",", " ", EM.meta.clean[, 4], ")", ifelse(as.numeric(EM.meta.clean[, 3]) > 0 | as.numeric(EM.meta.clean[, 4]) < 0, "*", " "))
-
+  CrI.meta.clean <- if (is.element(full$measure, c("OR", "ROM"))) {
+    paste0("(", EM.meta.clean[, 3], ",", " ", EM.meta.clean[, 4], ")", ifelse(as.numeric(EM.meta.clean[, 3]) > 1 | as.numeric(EM.meta.clean[, 4]) < 1, "*", " "))
+  } else {
+    paste0("(", EM.meta.clean[, 3], ",", " ", EM.meta.clean[, 4], ")", ifelse(as.numeric(EM.meta.clean[, 3]) > 0 | as.numeric(EM.meta.clean[, 4]) < 0, "*", " "))
+  }
 
 
   ## The 95% CrIs of the between-trial standard deviation of separate RE-MAs

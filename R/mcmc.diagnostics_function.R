@@ -126,9 +126,9 @@ mcmc.diagnostics <- function(net, par){
   } else {
 
     # Effect size of pairwise comparisons with at least two trials
-    EM <- if(length(net$tau[1, ]) == 11) {
+    EM <- if(length(net$EM[1, ]) == 11) {
       #... for each pairwise comparison with at least two trials
-      max(net$EM[, 3:11])
+      max(net$EM[, 10])
     } else {
       # ... for split node
       max(net$EM[, 5])
@@ -180,7 +180,6 @@ mcmc.diagnostics <- function(net, par){
   } else {
     max(beta[, 8])
   }
-
 
 
   if (!is.null(net$jagsfit)) {
