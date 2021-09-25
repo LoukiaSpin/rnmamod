@@ -60,7 +60,7 @@ res <- run.model(data = nma.liu2013,
                  n.thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("placebo", "pramipexole", "serotoninâ€“norepinephrine reuptake inhibitor",
+interv.names <- c("placebo", "pramipexole", "serotonin–norepinephrine reuptake inhibitor",
                   "serotonin reuptake inhibitor", "tricyclic antidepressant", "pergolide")
 
 # Create the league heatmap

@@ -72,7 +72,7 @@ res <- run.model(data = nma.liu2013,
 ume <- run.UME(full = res, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("placebo", "pramipexole", "serotoninâ€“norepinephrine reuptake inhibitor",
+interv.names <- c("placebo", "pramipexole", "serotonin–norepinephrine reuptake inhibitor",
                   "serotonin reuptake inhibitor", "tricyclic antidepressant", "pergolide")
 
 # Plot the results from the consistency model and the node-splitting approach

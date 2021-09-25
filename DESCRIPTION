@@ -45,7 +45,7 @@ Imports:
     stats,
     utils,
     writexl
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Language: en-US
 Suggests: 
     testthat (>= 3.0.0)
