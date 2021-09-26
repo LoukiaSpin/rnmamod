@@ -68,6 +68,7 @@
 #' @export
 mcmc.diagnostics <- function(net, par){
 
+
   options(warn = -1)
 
 
