@@ -68,4 +68,4 @@ suppressMessages({"Registered S3 method overwritten by 'mcmcplots':
                     method        from
                    as.mcmc.rjags R2jags"})
 
-Sys.setenv(JAVA_HOME='C:\\Program Files\\Java\\jre1.8.0_144')
+
