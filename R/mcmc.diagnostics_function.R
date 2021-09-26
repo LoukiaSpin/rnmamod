@@ -191,7 +191,6 @@ mcmc.diagnostics <- function(net, par){
   }
 
 
-
   R.hat.max <- c(EM, max(EM.pred[, 8]), max(delta[, 8]), tau, max(direct), max(indirect), max(diff), phi.R.hat.max, beta.R.hat.max)
   for (i in 1:length(R.hat.max)) {
     R.hat.max[i] <- ifelse(is.infinite(R.hat.max[i]), NA, R.hat.max[i])
