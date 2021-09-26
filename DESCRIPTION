@@ -40,7 +40,6 @@ Imports:
     netmeta,
     pcnetmeta,
     reshape2,
-    rjags,
     R2jags,
     scales,
     stats,

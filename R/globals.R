@@ -1,7 +1,6 @@
 #' @import
 #'   ggplot2
 #'   stats
-#'   rjags
 #'
 #' @importFrom coda as.mcmc
 #' @importFrom dplyr select starts_with ends_with %>%
