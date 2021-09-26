@@ -183,7 +183,6 @@ mcmc.diagnostics <- function(net, par){
 
 
   if (!is.null(net$jagsfit)) {
-
     ## Turn 'R2jags' object into 'mcmc' object
     jagsfit.mcmc <- as.mcmc(jagsfit)
 
