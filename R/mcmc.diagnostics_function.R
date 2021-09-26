@@ -71,7 +71,6 @@ mcmc.diagnostics <- function(net, par){
 
   options(warn = -1)
 
-
   par <- if (!is.null(net$jagsfit) & missing(par)) {
     stop("The argument 'par' needs to be defined", call. = F)
   } else if (is.null(net$jagsfit)) {
