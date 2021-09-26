@@ -227,7 +227,6 @@ balloon.plot.mod <- function(sens, compar, drug.names){
   # Prepare dataset for the ggplot2
   mat.tau <- data.frame(missp, tau, sd.tau, extent.tau); colnames(mat.tau) <- c("active", "control", "value", "sd.value", "extent")
 
-
   ## Enhanced balloon plot for the between-trial standard deviation
   bubble.tau <- if (!is.null(sens$heter)) {
     ggplot(mat.tau, aes(x = active, y = control, color = sd.value, label = sprintf("%.2f", value))) +
