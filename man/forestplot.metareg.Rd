@@ -9,7 +9,7 @@ forestplot.metareg(full, reg, compar, cov.value, drug.names)
 \arguments{
 \item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
 
-\item{reg}{An object of S3 class  \code{\link{run.metareg}}. See 'Value' in \code{\link{run.metareg}}.}
+\item{reg}{An object of S3 class \code{\link{run.metareg}}. See 'Value' in \code{\link{run.metareg}}.}
 
 \item{compar}{A character to indicate the comparator intervention. It must be any name found in \code{drug.names}.}
 
@@ -21,15 +21,15 @@ as they appear in \code{data} is used, instead.}
 }
 \value{
 A panel of two forest plots: (1) a forest plot on the estimated effect size of comparisons with the selected intervention of the network, and
-(2) a forest plot predicted effect size of comparisons with the selected intervention of the network. Both panels illustrate the results from network meta-analysis and meta-regression.
+  (2) a forest plot predicted effect size of comparisons with the selected intervention of the network.
+  Both panels illustrate the results from network meta-analysis and meta-regression using different colours.
 }
 \description{
 This function illustrates a forest plot of the posterior mean and 95\% credible and predictive interval of comparisons with the selected intervention of the network.
 }
 \details{
-The x-axis in the forest plot of effect sizes displays all interventions in the network; the selected intervention that comprises the \code{compar} is indicated in the plot with a homonymous label.
-  For each comparison with the selected intervention, the 95\% credible and predictive intervals are displayed as overlapping lines with different colours. When the between-trial variance is very low, these two intervals become indiscernible.
-  Furthermore, the corresponding numerical results are displayed above each line: 95\% credible intervals are found in parentheses, and 95\% predictive intervals are found in brackets.
+The y-axis displays all interventions in the network; the selected intervention that comprises the \code{compar} is indicated in the plot with a homonymous label.
+  The numerical results are displayed above each line.
   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
 
   The interventions are sorted in the descending order of their SUCRA values obtain via network meta-analysis.

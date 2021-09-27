@@ -33,13 +33,13 @@
 #' @details The DIC of the consistency model is compared with the DIC of the unrelated mean effects model (Dias et al. (2013)). If the difference in DIC exceeds 5, the unrelated mean effects model is preferred; if the difference in DIC is less than -5,
 #'   the consistency is preferred; otherwise, there is little to choose between the compared models.
 #'
-#'   Furthermore, \code{UME.plot} exports \code{EM.both.models} to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+#'   Furthermore, \code{UME.plot} exports \code{Table.effect.size} and \code{Table.model.assessment} to separate Excel 'xlsx' formats (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 #'
 #'   \code{UME.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{BlandAltman.plot}}, \code{link{BlandAltman.plot}}, \code{\link{leverage.plot}}, \code{\link{intervalplot.panel.UME}}
+#' @seealso \code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{BlandAltman.plot}}, \code{\link{leverage.plot}}, \code{\link{intervalplot.panel.UME}}
 #'
 #' @references
 #' Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
@@ -83,6 +83,11 @@
 UME.plot <- function(full, ume, drug.names, save.xls) {
 
 
+  if(length(drug.names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
+  }
+
+
   save.xls <- if (missing(save.xls)) {
     FALSE
   } else {
@@ -102,10 +107,6 @@ UME.plot <- function(full, ume, drug.names, save.xls) {
     drug.names
   }
 
-
-  if(length(drug.names) < 3) {
-    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
-  }
 
   # Posterior results on the effect estimates under consistency model
   EM.full <- full$EM[, c(1:3, 7)]
@@ -185,10 +186,6 @@ UME.plot <- function(full, ume, drug.names, save.xls) {
   EM.both.models <- data.frame(possible.comp$obs.comp[, 4], EM.full.clean[, 1:2], CrI.full.clean, EM.ume.clean[, 1:2], CrI.ume.clean)
   colnames(EM.both.models) <- c("Comparison", "Mean NMA", "SD NMA", "95% CrI NMA", "Mean UME", "SD UME", "95% CrI UME")
   rownames(EM.both.models) <- NULL
-
-
-  ## Center the columns of the 'data.frame'
-  #EM.both.models <- format(EM.both.models, width = max(sapply(names(EM.both.models), nchar)), justify = "centre")
 
 
   ## A data-frame with the measures on model assessment

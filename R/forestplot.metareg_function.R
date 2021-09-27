@@ -3,7 +3,7 @@
 #' @description This function illustrates a forest plot of the posterior mean and 95\% credible and predictive interval of comparisons with the selected intervention of the network.
 #'
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
-#' @param reg An object of S3 class  \code{\link{run.metareg}}. See 'Value' in \code{\link{run.metareg}}.
+#' @param reg An object of S3 class \code{\link{run.metareg}}. See 'Value' in \code{\link{run.metareg}}.
 #' @param compar A character to indicate the comparator intervention. It must be any name found in \code{drug.names}.
 #' @param cov.value A vector of two elements in the following order: a number that corresponds to a value of the covariate considered in \code{\link{run.metareg}},
 #'   and a character object to indicate the name of the covariate.
@@ -11,11 +11,11 @@
 #'   as they appear in \code{data} is used, instead.
 #'
 #' @return A panel of two forest plots: (1) a forest plot on the estimated effect size of comparisons with the selected intervention of the network, and
-#' (2) a forest plot predicted effect size of comparisons with the selected intervention of the network. Both panels illustrate the results from network meta-analysis and meta-regression.
+#'   (2) a forest plot predicted effect size of comparisons with the selected intervention of the network.
+#'   Both panels illustrate the results from network meta-analysis and meta-regression using different colours.
 #'
-#' @details The x-axis in the forest plot of effect sizes displays all interventions in the network; the selected intervention that comprises the \code{compar} is indicated in the plot with a homonymous label.
-#'   For each comparison with the selected intervention, the 95\% credible and predictive intervals are displayed as overlapping lines with different colours. When the between-trial variance is very low, these two intervals become indiscernible.
-#'   Furthermore, the corresponding numerical results are displayed above each line: 95\% credible intervals are found in parentheses, and 95\% predictive intervals are found in brackets.
+#' @details The y-axis displays all interventions in the network; the selected intervention that comprises the \code{compar} is indicated in the plot with a homonymous label.
+#'   The numerical results are displayed above each line.
 #'   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
 #'
 #'   The interventions are sorted in the descending order of their SUCRA values obtain via network meta-analysis.
@@ -234,7 +234,7 @@ forestplot.metareg <- function(full, reg, compar, cov.value, drug.names) {
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
       geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2), label = ifelse(full$D == 0, paste("Favours", compar), "Favours first arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      labs(x = "", y = measure, colour = "Analysis") +
+      labs(x = "", y = measure, colour = "Analysis", subtitle = paste("Results for", cov.value[2], cov.value[1])) +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
       scale_color_manual(breaks = c("Network meta-analysis", "Network meta-regression"), values = c("black", "#D55E00")) +
       geom_label(aes(x = unique(order[is.na(mean)]), y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Comparator intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +

@@ -1,7 +1,9 @@
-#' Plot the results from the meta-regression analysis
+#' End-user-ready results: network meta-analysis versus network meta-regression analysis
+#'
+#' @description XX
 #'
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
-#' @param reg An object of S3 class  \code{\link{run.metareg}}. See 'Value' in \code{\link{run.metareg}}.
+#' @param reg An object of S3 class \code{\link{run.metareg}}. See 'Value' in \code{\link{run.metareg}}.
 #' @param compar A character to indicate the comparator intervention. It must be any name found in \code{drug.names}.
 #' @param cov.value A vector of two elements in the following order: a number that corresponds to a value of the covariate considered in \code{\link{run.metareg}},
 #'   and a character object to indicate the name of the covariate.
@@ -10,12 +12,93 @@
 #' @param save.xls Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 #'   The default is \code{FALSE} (do not export to an Excel format).
 #'
+#' @return \code{metareg.plot} prints on the R console a message on the most parsimonious model (if any) based on the deviance information criterion (DIC; in red text).
+#' Furthermore, the function returns the following list of elements:
+#' \tabular{ll}{
+#'  \code{Table.estimates} \tab The posterior mean, and 95\% credible interval of the summary effect size for each comparison with the selected intervention under network meta-analysis and meta-regression.\cr
+#'  \tab \cr
+#'  \code{Table.predictions} \tab The posterior mean, and 95\% predictive interval of the summary effect size for each comparison with the selected intervention under network meta-analysis and meta-regression.\cr
+#'  \tab \cr
+#'  \code{Table.model.assessment} \tab The DIC, total residual deviance, number of effective parameters, and the posterior mean and 95% credible interval of between-trial standard deviation (\eqn{\tau}) under each model (Spiegelhalter et al. (2002)).
+#'   When a fixed-effect model has been performed, \code{metareg.plot} does not return results on \eqn{\tau}.\cr
+#'  \tab \cr
+#'  \code{Table.regression.coeffients} \tab The posterior mean and 95\% credible interval of the regression coefficient(s).\cr
+#'  \tab \cr
+#'  \code{Interval.plots} \tab The panel of forest-plots on estimated and predicted effect sizes of comparisons with the selected intervention under network meta-analysis and meta-regression.
+#'   See 'Details' and 'Value' in \code{\link{forestplot.metareg}}.\cr
+#' }
+#'
+#' @details The DIC of the network meta-analysis model is compared with the DIC of the network meta-regression model. If the difference in DIC exceeds 5, the network meta-regression model is preferred;
+#'   if the difference in DIC is less than -5, the network meta-analysis model is preferred; otherwise, there is little to choose between the compared models.
+#'
+#'   Furthermore, \code{metareg.plot} exports all tabulated results to separate Excel 'xlsx' formats (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+#'
+#'   \code{metareg.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+#'
+#' @author {Loukia M. Spineli}
+#'
+#' @seealso \code{\link{run.model}}, \code{\link{run.metareg}}, \code{\link{forestplot.metareg}}
+#'
+#' @references
+#' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
+#'
+#' Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616. [\doi{10.1111/1467-9868.00353}]
+#'
+#' @examples
+#' data("nma.baker2009")
+#'
+#' \dontrun{
+#' # Perform a random-effects network meta-analysis
+#' res <- run.model(data = nma.baker2009,
+#'                  measure = "OR",
+#'                  model = "RE",
+#'                  assumption = "IDE-ARM",
+#'                  heter.prior = list("halfnormal", 0, 1),
+#'                  mean.misspar = c(0, 0),
+#'                  var.misspar = 1,
+#'                  D = 0,
+#'                  n.chains = 3,
+#'                  n.iter = 10000,
+#'                  n.burnin = 1000,
+#'                  n.thin = 1)
+#'
+#' # Publicatiom year
+#' pub.year <- c(1996, 1998, 1999, 2000, 2000, 2001, rep(2002, 5), 2003, 2003,
+#'               rep(2005, 4), 2006, 2006, 2007, 2007)
+#'
+#' # Perform a random-effects network meta-regression (exchangeable structure)
+#' reg <- run.metareg(full = res,
+#'                    covariate = pub.year,
+#'                    covar.assumption = "exchangeable",
+#'                    n.chains = 3,
+#'                    n.iter = 10000,
+#'                    n.burnin = 1000,
+#'                    n.thin = 1)
+#'
+#' # The names of the interventions in the order they appear in the dataset
+#' interv.names <- c("placebo", "budesonide", "budesonide plus formoterol",
+#'                   "fluticasone", "fluticasone plus salmeterol",
+#'                   "formoterol", "salmeterol", "tiotropium")
+#'
+#' # Plot the results from the network meta-analysis and meta-regression publication year 2000
+#' # For comparisons with salmeterol
+#' metareg.plot(full = res,
+#'              reg = reg,
+#'              compar = "salmeterol",
+#'              cov.value = c(2000, "publication year"),
+#'              drug.names = interv.names)
+#' }
 #'
 #' @export
 metareg.plot <- function(full, reg, compar, cov.value, drug.names, save.xls) {
 
 
   options(warn = -1)
+
+  if(length(drug.names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
+  }
+
 
  if (length(unique(reg$covariate)) < 3 & !is.element(cov.value[1], reg$covariate)) {
    stop("The first element of the argument 'cov.value' is out of the value range of the analysed covariate", call. = F)
@@ -99,26 +182,30 @@ metareg.plot <- function(full, reg, compar, cov.value, drug.names, save.xls) {
     beta <- beta0[order(sucra.full.new, decreasing = T), ]
     rownames(beta) <- NULL
   } else {
-    beta <- reg$beta[c(1, 3, 7)]
+    beta <- reg$beta[1, c(1, 3, 7)]
   }
 
 
   ## Effect size of all possible pairwise comparisons (NMR)
-  if (is.element(reg$covar.assumption, c("exchangeable", "independent"))) {
-    par.mean <- as.vector(c(reg$EM[, 1] + reg$beta.all[, 1]*cov.val,
-                            (reg$EM[, 1]*(-1)) + (reg$beta.all[, 1]*(-1)*cov.val)))
-    par.sd <- as.vector(c(sqrt(((reg$EM[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2)),
-                          sqrt(((reg$EM[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2))))
-  } else {
-    par.mean <- as.vector(c(reg$EM[, 1], reg$EM[, 1]*(-1)))
-    par.sd <- as.vector(c(reg$EM[, 2], reg$EM[, 2]))
-
-    # Correcting for comparisons with the reference intervention of the network
-    par.mean[1:(length(drug.names) - 1)] <- as.vector(c(reg$EM[1:(length(drug.names) - 1), 1] + reg$beta[1]*cov.val,
-                                                        (reg$EM[1:(length(drug.names) - 1), 1]*(-1)) + (reg$beta[1]*(-1)*cov.val)))
-    par.sd[1:(length(drug.names) - 1)] <- as.vector(c(sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2)),
-                                                      sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2))))
-  }
+  par.mean <- as.vector(c(reg$EM[, 1] + reg$beta.all[, 1]*cov.val,
+                          (reg$EM[, 1]*(-1)) + (reg$beta.all[, 1]*(-1)*cov.val)))
+  par.sd <- as.vector(c(sqrt(((reg$EM[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2)),
+                        sqrt(((reg$EM[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2))))
+  #if (is.element(reg$covar.assumption, c("exchangeable", "independent"))) {
+  #  par.mean <- as.vector(c(reg$EM[, 1] + reg$beta.all[, 1]*cov.val,
+  #                          (reg$EM[, 1]*(-1)) + (reg$beta.all[, 1]*(-1)*cov.val)))
+  #  par.sd <- as.vector(c(sqrt(((reg$EM[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2)),
+  #                        sqrt(((reg$EM[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2))))
+  #} else {
+  #  par.mean <- as.vector(c(reg$EM[, 1], reg$EM[, 1]*(-1)))
+  #  par.sd <- as.vector(c(reg$EM[, 2], reg$EM[, 2]))
+  #
+  #  # Correcting for comparisons with the reference intervention of the network
+  #  par.mean[1:(length(drug.names) - 1)] <- as.vector(c(reg$EM[1:(length(drug.names) - 1), 1] + reg$beta[1]*cov.val,
+  #                                                      (reg$EM[1:(length(drug.names) - 1), 1]*(-1)) + (reg$beta[1]*(-1)*cov.val)))
+  #  par.sd[1:(length(drug.names) - 1)] <- as.vector(c(sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2)),
+  #                                                    sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2))))
+  #}
 
   EM.ref00.nmr <- cbind(mean = par.mean, lower = par.mean - 1.96*par.sd, upper = par.mean + 1.96*par.sd,
                         poss.pair.comp)
@@ -136,20 +223,26 @@ metareg.plot <- function(full, reg, compar, cov.value, drug.names, save.xls) {
     pred.subset.nma <- subset(pred.ref00.nma, pred.ref00.nma[5] == compar)
     pred.ref0.nma <- rbind(pred.subset.nma[, 1:3], c(rep(NA, 3)))
 
-    if (is.element(reg$covar.assumption, c("exchangeable", "independent"))) {
-      par.mean <- as.vector(c(reg$EM.pred[, 1] + reg$beta.all[, 1]*cov.val,
-                              (reg$EM.pred[, 1]*(-1)) + (reg$beta.all[, 1]*(-1)*cov.val)))
-      par.sd <- as.vector(c(sqrt(((reg$EM.pred[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2)),
-                            sqrt(((reg$EM.pred[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2))))
-    } else {
-      par.mean <- as.vector(c(reg$EM.pred[, 1], reg$EM.pred[, 1]*(-1)))
-      par.sd <- as.vector(c(reg$EM.pred[, 2], reg$EM.pred[, 2]))
-      # Correcting for comparisons with the reference intervention of the network
-      par.mean[1:(length(drug.names) - 1)] <- as.vector(c(reg$EM[1:(length(drug.names) - 1), 1] + reg$beta[1]*cov.val,
-                                                          (reg$EM[1:(length(drug.names) - 1), 1]*(-1)) + (reg$beta[1]*(-1)*cov.val)))
-      par.sd[1:(length(drug.names) - 1)] <- as.vector(c(sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2)),
-                                                        sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2))))
-    }
+    par.mean <- as.vector(c(reg$EM.pred[, 1] + reg$beta.all[, 1]*cov.val,
+                            (reg$EM.pred[, 1]*(-1)) + (reg$beta.all[, 1]*(-1)*cov.val)))
+    par.sd <- as.vector(c(sqrt(((reg$EM.pred[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2)),
+                          sqrt(((reg$EM.pred[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2))))
+
+    #if (is.element(reg$covar.assumption, c("exchangeable", "independent"))) {
+    #  par.mean <- as.vector(c(reg$EM.pred[, 1] + reg$beta.all[, 1]*cov.val,
+    #                          (reg$EM.pred[, 1]*(-1)) + (reg$beta.all[, 1]*(-1)*cov.val)))
+    #  par.sd <- as.vector(c(sqrt(((reg$EM.pred[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2)),
+    #                        sqrt(((reg$EM.pred[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2))))
+    #} else {
+    #  par.mean <- as.vector(c(reg$EM.pred[, 1], reg$EM.pred[, 1]*(-1)))
+    #  par.sd <- as.vector(c(reg$EM.pred[, 2], reg$EM.pred[, 2]))
+    #
+    #  # Correcting for comparisons with the reference intervention of the network
+    #  par.mean[1:(length(drug.names) - 1)] <- as.vector(c(reg$EM[1:(length(drug.names) - 1), 1] + reg$beta[1]*cov.val,
+    #                                                      (reg$EM[1:(length(drug.names) - 1), 1]*(-1)) + (reg$beta[1]*(-1)*cov.val)))
+    #  par.sd[1:(length(drug.names) - 1)] <- as.vector(c(sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2)),
+    #                                                    sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2))))
+    #}
 
     pred.ref00.nmr <-  cbind(data.frame(mean = par.mean, lower = par.mean - 1.96*par.sd, upper = par.mean + 1.96*par.sd),
                              poss.pair.comp)
@@ -206,9 +299,6 @@ metareg.plot <- function(full, reg, compar, cov.value, drug.names, save.xls) {
   # Posterior mean of model assessment measures under meta-regression
   model.assess.meta <- round(reg$model.assessment, 2)
 
-  # Effect measure name
-  measure <- effect.measure.name(full$measure)
-
 
   ## The 95% CrIs of the between-trial standard deviation under NMA and meta-regression
   if (model == "RE") {
@@ -234,6 +324,9 @@ metareg.plot <- function(full, reg, compar, cov.value, drug.names, save.xls) {
                                            model.assess.meta[c(1, 3, 2)]))
     colnames(table.model.assess) <- c("Analysis", "DIC", "Mean deviance", "pD")
   }
+  message(ifelse(model.assess.NMA[1] - model.assess.meta[1] > 5, "The network meta-regression model may be preferred when accounting for model fit and complexity",
+                 ifelse(model.assess.NMA[1] - model.assess.meta[1] < -5, "The network meta-analysis model may be preferred when accounting for model fit and complexity",
+                        "There is little to choose between the two models")))
 
 
   ## A data-frame with the effect estimates and regression coefficients of reference-comparisons from both analyses (Sort by NMA-SUCRA in decreasing order)
@@ -245,7 +338,7 @@ metareg.plot <- function(full, reg, compar, cov.value, drug.names, save.xls) {
     CrI.beta <- if (is.element(reg$covar.assumption, c("exchangeable", "independent"))) {
       paste0("(", round(beta[, 2], 2), ",", " ", round(beta[, 3], 2), ")", ifelse(beta[, 2] > 0 | beta[, 3] < 0, "*", " "))
     } else {
-      paste0("(", round(reg$beta[3], 2), ",", " ", round(reg$beta[7], 2), ")", ifelse(reg$beta[3] > 0 | reg$beta[7] < 0, "*", " "))
+      paste0("(", round(reg$beta[2], 2), ",", " ", round(reg$beta[3], 2), ")", ifelse(reg$beta[2] > 0 | reg$beta[3] < 0, "*", " "))
     }
   } else {
     CrI.est.nma <- paste0("(", round(EM.ref.nma[, 2], 2), ",", " ", round(EM.ref.nma[, 3], 2), ")", ifelse(EM.ref.nma[, 2] > 1 | EM.ref.nma[, 3] < 1, "*", " "))
@@ -288,7 +381,7 @@ metareg.plot <- function(full, reg, compar, cov.value, drug.names, save.xls) {
 
   ## Forest plots of reference-comparisons on effect estimate
   forest.plots <- forestplot.metareg(full, reg, compar, cov.value, drug.names)
-
+  SUCRA.scatterplot <- scatteplot.sucra(full, reg, cov.value, drug.names)
 
   ## Write all tables as .xlsx
   if (save.xls == TRUE) {
@@ -307,5 +400,6 @@ metareg.plot <- function(full, reg, compar, cov.value, drug.names, save.xls) {
               Table.predictions = knitr::kable(Pred.both.models),
               Table.model.assessment = knitr::kable(table.model.assess),
               Table.regression.coeffients = knitr::kable(reg.coeff),
-              Interval.plots = forest.plots))
+              Interval.plots = forest.plots,
+              SUCRA.scatterplot = SUCRA.scatterplot))
 }
