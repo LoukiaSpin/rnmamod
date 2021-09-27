@@ -18,14 +18,16 @@ as they appear in \code{data} is used, instead.}
 A league heatmap of the posterior mean and 95\% credible interval of all possible comparisons in the off-diagonals, and the posterior mean of the SUCRA values in the diagonal.
 }
 \description{
-A function to create a heatmap with the estimated effects of all possible comparisons of interventions in the network.
+A function to create a heatmap with the estimated effect size of all possible comparisons of interventions in the network.
 \code{league.heatmap} can be used for a random-effects or fixed-effect network meta-analysis and network meta-regression.
 \code{league.heatmap} is applied for one outcome only.
 }
 \details{
 The rows and columns of the heatmap display the names of interventions which are sorted by decreasing order from the best to the worst
   based on their SUCRA value (Salanti et al., 2011). The off-diagonals contain the posterior mean and 95\% credible interval of the effect measure
-  of the corresponding comparisons. The main diagonal contains the SUCRA values of the corresponding interventions.
+  of the corresponding comparisons. The main diagonal contains the SUCRA values of the corresponding interventions when the argument \code{full} refers to the \code{\link{run.model}} function.
+  When the argument \code{full} refers to the \code{\link{run.metareg}} function, the p-score (Rücker and Schwarzer, 2015) is calculated for each intervention while taking into account the covariate value in
+  the argument \code{cov.value}. P-score is the 'frequentist analogue to SUCRA' (Rücker and Schwarzer, 2015).
 
   Results in the lower triangle refer to comparisons in the opposite direction after converting negative values into positive values (in absolute or logarithmic scale), and vice versa.
   Darker shades of red and blue correspond to larger treatment effects in the upper and lower triangle, respectively, for a beneficial outcome, and the other way around for a harmful outcome.
@@ -65,6 +67,8 @@ league.heatmap(full = res, drug.names = interv.names)
 
 }
 \references{
+Rücker G, Schwarzer G. Ranking treatments in frequentist network meta-analysis works without resampling methods. \emph{BMC Med Res Methodol} 2015;\bold{15}:58. [\doi{10.1186/s12874-015-0060-8}]
+
 Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
 }
 \seealso{
