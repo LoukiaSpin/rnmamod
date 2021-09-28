@@ -12,9 +12,6 @@ on:
 
 name: R-CMD-check
 
-r_packages:
-  - rjags
-
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
