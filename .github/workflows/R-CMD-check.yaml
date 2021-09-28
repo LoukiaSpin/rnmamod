@@ -69,6 +69,10 @@ jobs:
           wjags.exe /S
           del wjags.exe
         shell: cmd
+        
+      - name: Install rjags (windows-latest)
+        r_packages:
+          - rjags
 
       - name: Install jags (macOS-latest)
         if: runner.os == 'macOS'
