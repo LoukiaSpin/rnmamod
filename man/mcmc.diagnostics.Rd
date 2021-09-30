@@ -7,10 +7,13 @@
 mcmc.diagnostics(net, par)
 }
 \arguments{
-\item{net}{An object of S3 class \code{\link{run.model}} and \code{\link{run.metareg}}. See 'Value' in \code{\link{run.model}}.}
+\item{net}{An object of S3 class \code{\link{run.model}}, \code{\link{run.series.meta}}, \code{\link{run.nodesplit}}, \code{\link{run.UME}},
+\code{\link{run.sensitivity}} and \code{\link{run.metareg}}. See 'Value' in the functions above.}
 
-\item{par}{A vector of three character strings that refer to three monitored parameters in \code{jagsfit} which is an object of S3 class \code{\link{run.model}} and \code{\link{run.metareg}}.
-These three selected parameters will be considered in the diagnostic plots (see 'Value').}
+\item{par}{A vector of three character strings that refer to three monitored parameters in \code{jagsfit} which is an object of S3 class
+\code{\link{run.model}}, \code{\link{run.UME}} and \code{\link{run.metareg}}.
+These three selected parameters will be considered in the diagnostic plots (see 'Value').
+This argument will be ignored for objects of S3 class \code{\link{run.series.meta}}, \code{\link{run.nodesplit}}, or \code{\link{run.sensitivity}}.}
 }
 \value{
 This function returns a data-frame that contains the Gelman-Rubin convergence diagnostic, R-hat, and convergence status of the following monitored parameters:
@@ -21,7 +24,13 @@ This function returns a data-frame that contains the Gelman-Rubin convergence di
  \tab \cr
  \code{delta} \tab The estimated trial-specific effect measure.\cr
  \tab \cr
- \code{effectiveneness} \tab The ranking probability of each intervention for every rank.\cr
+ \code{tau} \tab The between-trial standard deviation.\cr
+ \tab \cr
+ \code{direct} \tab The direct estimate of the split node (see 'Value' \code{\link{run.nodesplit}}).\cr
+ \tab \cr
+ \code{indirect} \tab The indirect estimate of the split node (see 'Value' \code{\link{run.nodesplit}}).\cr
+ \tab \cr
+ \code{IF} \tab The inconsistency factor of the split node (see 'Value' \code{\link{run.nodesplit}}).\cr
  \tab \cr
  \code{phi} \tab The informative missingness parameter.\cr
  \tab \cr
@@ -65,7 +74,7 @@ mcmc.diagnostics(net = res, par = c("tau", "EM[2,1]", "EM.pred[2,1]"))
 Gelman, A, Rubin, DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457--472. [\doi{10.1214/ss/1177011136}]
 }
 \seealso{
-\code{\link[mcmcplots]{mcmcplot}}, \code{\link{run.model}}, \code{\link{run.metareg}}
+\code{\link[mcmcplots]{mcmcplot}}, \code{\link{run.model}}, \code{\link{run.series.meta}}, \code{\link{run.nodesplit}}, \code{\link{run.UME}}, \code{\link{run.UME}}, \code{\link{run.metareg}}
 }
 \author{
 {Loukia M. Spineli}

@@ -66,8 +66,9 @@
 #'                             n.thin = 1)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus
-#'                   salmeterol", "formoterol", "salmeterol", "tiotropium")
+#' interv.names <- c("placebo", "budesonide", "budesonide plus formoterol",
+#'                   "fluticasone", "fluticasone plus salmeterol",
+#'                   "formoterol", "salmeterol", "tiotropium")
 #'
 #' # Create the enhanced balloon plot for the comparison 'tiotropium versus salmeterol'
 #' balloon.plot.mod(sens = res.sens, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
@@ -75,6 +76,7 @@
 #'
 #' @export
 balloon.plot.mod <- function(sens, compar, drug.names){
+
 
   if (any(is.na(sens))) {
     stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
@@ -195,7 +197,6 @@ balloon.plot.mod <- function(sens, compar, drug.names){
   }
 
 
-
   # Posterior mean of tau
   tau <- tau.all[, 1]
 
@@ -225,7 +226,6 @@ balloon.plot.mod <- function(sens, compar, drug.names){
 
   # Prepare dataset for the ggplot2
   mat.tau <- data.frame(missp, tau, sd.tau, extent.tau); colnames(mat.tau) <- c("active", "control", "value", "sd.value", "extent")
-
 
   ## Enhanced balloon plot for the between-trial standard deviation
   bubble.tau <- if (!is.null(sens$heter)) {

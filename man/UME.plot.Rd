@@ -4,7 +4,7 @@
 \alias{UME.plot}
 \title{End-user-ready results: consistency model versus unrelated mean effects model}
 \usage{
-UME.plot(full, ume, drug.names, threshold, save.xls)
+UME.plot(full, ume, drug.names, save.xls)
 }
 \arguments{
 \item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
@@ -14,13 +14,11 @@ UME.plot(full, ume, drug.names, threshold, save.xls)
 \item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 as they appear in \code{data} is used, instead.}
 
-\item{threshold}{A number indicating the threshold of similarity. See 'Details' below.}
-
 \item{save.xls}{Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 The default is \code{FALSE} (do not export to an Excel format).}
 }
 \value{
-\code{UME.plot} prints on the R console two messages: (1) the threshold of similarity determined by the user in green text, (2) and followed by the most parsimonious model (if any) based on the deviance information criterion (DIC; in red text).
+\code{UME.plot} prints on the R console a message on the most parsimonious model (if any) based on the deviance information criterion (DIC; in red text).
 Then, the function returns the following list of elements:
 \tabular{ll}{
  \code{Table.effect.size} \tab The posterior mean, posterior standard deviation, and 95\% credible interval of the summary effect size for each pairwise comparison observed in the network under the consistency model and the unrelated mean effects model.\cr
@@ -38,9 +36,6 @@ Then, the function returns the following list of elements:
  \tab \cr
  \code{Intervalplots} \tab A panel of interval plots on the summary effect size under the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
   See 'Details' and 'Value' in \code{\link{intervalplot.panel.UME}}.\cr
- \tab \cr
- \code{Heatmap} \tab A heatmap of similarity in the posterior distribution of summary effect size between the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
-  See 'Details' and 'Value' in \code{\link{heatmap.similarity.UME}} and \code{\link{similarity.index.UME}}.\cr
 }
 }
 \description{
@@ -51,7 +46,7 @@ This function hosts a toolkit of functions that facilitates the comparison of th
 The DIC of the consistency model is compared with the DIC of the unrelated mean effects model (Dias et al. (2013)). If the difference in DIC exceeds 5, the unrelated mean effects model is preferred; if the difference in DIC is less than -5,
   the consistency is preferred; otherwise, there is little to choose between the compared models.
 
-  Furthermore, \code{UME.plot} exports \code{EM.both.models} to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+  Furthermore, \code{UME.plot} exports \code{Table.effect.size} and \code{Table.model.assessment} to separate Excel 'xlsx' formats (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 
   \code{UME.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 }
@@ -77,7 +72,7 @@ res <- run.model(data = nma.liu2013,
 ume <- run.UME(full = res, n.chains = 3, n.iter = 10000, n.burnin = 1000, n.thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("placebo", "pramipexole", "serotoninâ€“norepinephrine reuptake inhibitor",
+interv.names <- c("placebo", "pramipexole", "serotonin–norepinephrine reuptake inhibitor",
                   "serotonin reuptake inhibitor", "tricyclic antidepressant", "pergolide")
 
 # Plot the results from the consistency model and the node-splitting approach
@@ -95,7 +90,7 @@ Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis for
 Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616. [\doi{10.1111/1467-9868.00353}]
 }
 \seealso{
-\code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{BlandAltman.plot}}, \code{link{BlandAltman.plot}}, \code{\link{leverage.plot}}, \code{\link{intervalplot.panel.UME}}, \code{\link{similarity.index.UME}}, \code{\link{heatmap.similarity.UME}}
+\code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{BlandAltman.plot}}, \code{\link{leverage.plot}}, \code{\link{intervalplot.panel.UME}}
 }
 \author{
 {Loukia M. Spineli}

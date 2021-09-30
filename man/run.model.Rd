@@ -27,9 +27,10 @@ For a binary outcome, the columns of the data-frame in the argument \code{data} 
  \tab \cr
  \strong{n} \tab The number of participants randomised on the assigned intervention in each arm.\cr
 }
-The number of rows in \code{data} equals the number of collected trials. Each element appears in \code{data} as many times as the maximum number of interventions compared in a trial of the dataset. In pairwise meta-analysis (PMA), the maximum number of arms is inherently two.
+The number of rows in \code{data} equals the number of collected trials. Each element appears in \code{data} as many times as the maximum number of interventions compared in a trial of the dataset.
+In pairwise meta-analysis (PMA), the maximum number of arms is inherently two.
 The same holds for NMA without multi-arm trials. In the case of NMA with multi-arm trials, the maximum number of arms exceeds two. See 'Examples' that illustrates the structure of \code{data} for a network with a maximum number of four arms.
-In this example, the multi-arm trials appear at the bottom of the dataset; however, this structure is not necessary prerequisite \code{run.model}.
+It is not necessary prerequisite of \code{run.model} that the multi-arm trials appear at the bottom of the dataset.
 }
 \usage{
 run.model(
@@ -172,13 +173,13 @@ data("nma.baker2009")
 
 # Show the first six trials of the dataset (one-trial-per-row format)
 head(nma.baker2009)
-#                 study t1 t2 t3 t4  r1  r2 r3 r4 m1 m2 m3 m4  n1  n2 n3 n4
-# Llewellyn-Jones, 1996  1  3 NA NA   4   8 NA NA  1  0 NA NA   8   8 NA NA
-#        Paggiaro, 1998  1  3 NA NA  61  78 NA NA 27 19 NA NA 139 142 NA NA
-#          Mahler, 1999  1  6 NA NA  73  98 NA NA 23  9 NA NA 143 135 NA NA
-#        Casaburi, 2000  1  7 NA NA 132 222 NA NA 18 12 NA NA 191 279 NA NA
-#       van Noord, 2000  1  6 NA NA  24  29 NA NA  8  7 NA NA  50  47 NA NA
-#         Rennard, 2001  1  6 NA NA  65  72 NA NA 29 22 NA NA 135 132 NA NA
+#                 study t1 t2 t3 t4 r1 r2 r3 r4 m1 m2 m3 m4  n1  n2 n3 n4
+# Llewellyn-Jones, 1996  1  4 NA NA  3  0 NA NA  1  0 NA NA   8   8 NA NA
+#        Paggiaro, 1998  1  4 NA NA 51 45 NA NA 27 19 NA NA 139 142 NA NA
+#          Mahler, 1999  1  7 NA NA 47 28 NA NA 23  9 NA NA 143 135 NA NA
+#        Casaburi, 2000  1  8 NA NA 41 45 NA NA 18 12 NA NA 191 279 NA NA
+#       van Noord, 2000  1  7 NA NA 18 11 NA NA  8  7 NA NA  50  47 NA NA
+#         Rennard, 2001  1  7 NA NA 41 38 NA NA 29 22 NA NA 135 132 NA NA
 
 \dontrun{
 # Perform a random-effects network meta-analysis

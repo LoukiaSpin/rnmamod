@@ -55,8 +55,9 @@
 #' robust <- robustness.index(sens = res.sens, threshold = 0.28)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus
-#'                   salmeterol", "formoterol", "salmeterol", "tiotropium")
+#' interv.names <- c("placebo", "budesonide", "budesonide plus formoterol",
+#'                   "fluticasone", "fluticasone plus salmeterol",
+#'                   "formoterol", "salmeterol", "tiotropium")
 #'
 #' # Crate the barplot for the comparison 'tiotropium versus salmeterol'
 #' KLD.barplot(robust = robust, compar = c("tiotropium", "salmeterol"), drug.names = interv.names)
@@ -68,6 +69,11 @@ KLD.barplot <- function(robust, compar, drug.names){
 
   if (any(is.na(robust))) {
     stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
+  }
+
+
+  if (dim(robust$KLD)[2] < 25) {
+    stop("This function shall be used *only* for different scenarios about the missingness parameter.", call. = F)
   }
 
 

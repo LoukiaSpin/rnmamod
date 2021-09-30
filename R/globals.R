@@ -23,8 +23,14 @@
 
 utils::globalVariables(c("active",
                          "analysis",
-                         "DIC",
+                         "char1",
+                         "char2",
+                         "char3",
                          "comp",
+                         "comparison",
+                         "DIC",
+                         "EM",
+                         "EM.ref00",
                          "evidence",
                          "frail",
                          "interval",
@@ -41,20 +47,25 @@ utils::globalVariables(c("active",
                          "signed.dev.o",
                          "stat.sign",
                          "study",
+                         "studlab",
                          "treatment",
                          "treatment1",
                          "treat1",
                          "treat2",
-                         "studlab",
                          "upper",
                          "value",
                          "value2",
-                         "value.SUCRA",
-                         "value.rank",
                          "value.cum",
+                         "value.rank",
+                         "value.SUCRA",
                          "Var1",
                          "Var2",
                          "x",
                          "y"))
+
+
+suppressMessages({"Registered S3 method overwritten by 'mcmcplots':
+                    method        from
+                   as.mcmc.rjags R2jags"})
 
 

@@ -7,11 +7,10 @@
 #' @param ume An object of S3 class \code{\link{run.UME}}. See 'Value' in \code{\link{run.UME}}.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
-#' @param threshold A number indicating the threshold of similarity. See 'Details' below.
 #' @param save.xls Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 #'   The default is \code{FALSE} (do not export to an Excel format).
 #'
-#' @return \code{UME.plot} prints on the R console two messages: (1) the threshold of similarity determined by the user in green text, (2) and followed by the most parsimonious model (if any) based on the deviance information criterion (DIC; in red text).
+#' @return \code{UME.plot} prints on the R console a message on the most parsimonious model (if any) based on the deviance information criterion (DIC; in red text).
 #' Then, the function returns the following list of elements:
 #' \tabular{ll}{
 #'  \code{Table.effect.size} \tab The posterior mean, posterior standard deviation, and 95\% credible interval of the summary effect size for each pairwise comparison observed in the network under the consistency model and the unrelated mean effects model.\cr
@@ -29,21 +28,18 @@
 #'  \tab \cr
 #'  \code{Intervalplots} \tab A panel of interval plots on the summary effect size under the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
 #'   See 'Details' and 'Value' in \code{\link{intervalplot.panel.UME}}.\cr
-#'  \tab \cr
-#'  \code{Heatmap} \tab A heatmap of similarity in the posterior distribution of summary effect size between the consistency model and the unrelated mean effects model for each pairwise comparison observed in the network.
-#'   See 'Details' and 'Value' in \code{\link{heatmap.similarity.UME}} and \code{\link{similarity.index.UME}}.\cr
 #' }
 #'
 #' @details The DIC of the consistency model is compared with the DIC of the unrelated mean effects model (Dias et al. (2013)). If the difference in DIC exceeds 5, the unrelated mean effects model is preferred; if the difference in DIC is less than -5,
 #'   the consistency is preferred; otherwise, there is little to choose between the compared models.
 #'
-#'   Furthermore, \code{UME.plot} exports \code{EM.both.models} to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+#'   Furthermore, \code{UME.plot} exports \code{Table.effect.size} and \code{Table.model.assessment} to separate Excel 'xlsx' formats (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 #'
 #'   \code{UME.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{BlandAltman.plot}}, \code{link{BlandAltman.plot}}, \code{\link{leverage.plot}}, \code{\link{intervalplot.panel.UME}}, \code{\link{similarity.index.UME}}, \code{\link{heatmap.similarity.UME}}
+#' @seealso \code{\link{run.model}}, \code{\link{run.UME}}, \code{\link{BlandAltman.plot}}, \code{\link{leverage.plot}}, \code{\link{intervalplot.panel.UME}}
 #'
 #' @references
 #' Spineli LM. A novel framework to evaluate the consistency assumption globally in a network of interventions. \emph{submitted} 2021.
@@ -84,7 +80,12 @@
 #' }
 #'
 #' @export
-UME.plot <- function(full, ume, drug.names, threshold, save.xls) {
+UME.plot <- function(full, ume, drug.names, save.xls) {
+
+
+  if(length(drug.names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
+  }
 
 
   save.xls <- if (missing(save.xls)) {
@@ -107,30 +108,21 @@ UME.plot <- function(full, ume, drug.names, threshold, save.xls) {
   }
 
 
-  if(length(drug.names) < 3) {
-    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
-  }
-
-
-  if (missing(threshold) & is.element(measure, "OR")) {
-    threshold <- 0.28
-    #message("The value 0.28 was assigned on 'threshold' by default")
-    message(cat(paste0("\033[0;", col = 32, "m", txt = "The value 0.28 was assigned on 'threshold' by default", "\033[0m", "\n")))
-  } else if (missing(threshold) & is.element(measure, c("MD", "SMD", "ROM"))) {
-    threshold <- 0.17
-    #message("The value 0.17 was assigned on 'threshold' by default")
-    message(cat(paste0("\033[0;", col = 32, "m", txt = "The value 0.17 was assigned on 'threshold' by default", "\033[0m", "\n")))
-  } else {
-    threshold <- threshold
-    #message(paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(full$measure)))
-    message(cat(paste0("\033[0;", col = 32, "m", txt = paste("The value", threshold, "was assigned on 'threshold' for", effect.measure.name(measure)), "\033[0m", "\n")))
-  }
-
   # Posterior results on the effect estimates under consistency model
-  EM.full <- full$EM
+  EM.full <- full$EM[, c(1:3, 7)]
+  EM.full[, c(1, 3, 4)] <- if (is.element(measure, c("OR", "ROM"))) {
+    exp(EM.full[, c(1, 3, 4)])
+  } else {
+    EM.full[, c(1, 3, 4)]
+  }
 
   # Posterior results on the effect estimates under UME model
-  EM.ume <- ume$EM
+  EM.ume <- ume$EM[, c(1:3, 7)]
+  EM.ume[, c(1, 3, 4)] <- if (is.element(measure, c("OR", "ROM"))) {
+    exp(EM.ume[, c(1, 3, 4)])
+  } else {
+    EM.ume[, c(1, 3, 4)]
+  }
 
   # Posterior results on between-trial standard deviation under consistency model
   tau.full <- if (model == "RE") {
@@ -167,35 +159,33 @@ UME.plot <- function(full, ume, drug.names, threshold, save.xls) {
 
 
   ## Keep only the effect estimates according to the 'poss.pair.comp.clean' - Consistency model
-  EM.full.clean <- format(round(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), c(1:3, 7)], 2), nsmall = 2)
-
+  EM.full.clean <- format(round(EM.full[is.element(possible.comp$poss.comp[, 4], obs.comp), ], 2), nsmall = 2)
 
 
   ## Keep only the effect estimates according to the 'poss.pair.comp.clean' - UME model
-  EM.ume.clean <- format(round(EM.ume[, 1:4], 2), nsmall = 2)
-
+  EM.ume.clean <- format(round(EM.ume[, ], 2), nsmall = 2)
 
 
   ## Keep only the 95% credible intervals (CrI) according to the 'poss.pair.comp.clean' - Consistency model
-  CrI.full.clean <- paste0("(", EM.full.clean[, 3], ",", " ", EM.full.clean[, 4], ")", ifelse(as.numeric(EM.full.clean[, 3]) > 0 | as.numeric(EM.full.clean[, 4]) < 0, "*", " "))
-
+  CrI.full.clean <- if (is.element(measure, c("OR", "ROM"))) {
+    paste0("(", EM.full.clean[, 3], ",", " ", EM.full.clean[, 4], ")", ifelse(as.numeric(EM.full.clean[, 3]) > 1 | as.numeric(EM.full.clean[, 4]) < 1, "*", " "))
+  } else {
+    paste0("(", EM.full.clean[, 3], ",", " ", EM.full.clean[, 4], ")", ifelse(as.numeric(EM.full.clean[, 3]) > 0 | as.numeric(EM.full.clean[, 4]) < 0, "*", " "))
+  }
 
 
   ## Keep only the 95% credible intervals (CrI) according to the 'poss.pair.comp.clean' - UME model
-  CrI.ume.clean <- paste0("(", EM.ume.clean[, 3], ",", " ", EM.ume.clean[, 4], ")", ifelse(as.numeric(EM.ume.clean[, 3]) > 0 | as.numeric(EM.ume.clean[, 4]) < 0, "*", " "))
-
+  CrI.ume.clean <- if (is.element(measure, c("OR", "ROM"))) {
+    paste0("(", EM.ume.clean[, 3], ",", " ", EM.ume.clean[, 4], ")", ifelse(as.numeric(EM.ume.clean[, 3]) > 1 | as.numeric(EM.ume.clean[, 4]) < 1, "*", " "))
+  } else {
+    paste0("(", EM.ume.clean[, 3], ",", " ", EM.ume.clean[, 4], ")", ifelse(as.numeric(EM.ume.clean[, 3]) > 0 | as.numeric(EM.ume.clean[, 4]) < 0, "*", " "))
+  }
 
 
   ## Create a data-frame with effect estimates on both models
   EM.both.models <- data.frame(possible.comp$obs.comp[, 4], EM.full.clean[, 1:2], CrI.full.clean, EM.ume.clean[, 1:2], CrI.ume.clean)
   colnames(EM.both.models) <- c("Comparison", "Mean NMA", "SD NMA", "95% CrI NMA", "Mean UME", "SD UME", "95% CrI UME")
   rownames(EM.both.models) <- NULL
-
-
-
-  ## Center the columns of the 'data.frame'
-  EM.both.models <- format(EM.both.models, width = max(sapply(names(EM.both.models), nchar)), justify = "centre")
-
 
 
   ## A data-frame with the measures on model assessment
@@ -206,7 +196,6 @@ UME.plot <- function(full, ume, drug.names, threshold, save.xls) {
                         "There is little to choose between the two models")))
 
 
-
   ## A data-frame with the posterior median and 95% CrI on between-trial standard deviation
   if (model == "RE") {
     between.trial.SD <- rbind(tau.full[c(5, 3, 7)], tau.ume[c(5, 3, 7)])
@@ -215,7 +204,6 @@ UME.plot <- function(full, ume, drug.names, threshold, save.xls) {
   } else {
     between.trial.SD <- NA
   }
-
 
 
   ## Scatterplot on the deviance contribution of consistency versus UME models
@@ -246,12 +234,10 @@ UME.plot <- function(full, ume, drug.names, threshold, save.xls) {
   intervalplots <- intervalplot.panel.UME(full, ume, drug.names)
 
 
-  heatmap <- heatmap.similarity.UME(full, ume, drug.names, threshold)
-
-
   ## Write the table with the EMs from both models as .xlsx
   if (save.xls == TRUE) {
     write_xlsx(EM.both.models, paste0("Table NMA vs UME", ".xlsx"))
+    write_xlsx(model.assessment, paste0("Table Model Assessment_NMA vs UME", ".xlsx"))
   }
 
 
@@ -262,17 +248,13 @@ UME.plot <- function(full, ume, drug.names, threshold, save.xls) {
          Table.tau = knitr::kable(between.trial.SD),
          Scatterplots = scatterplots,
          Levarage.plots = lev.plots,
-         Intervalplots = intervalplots,
-         Heatmap = heatmap,
-         threshold = threshold)
+         Intervalplots = intervalplots)
   } else {
     list(Table.effect.size = knitr::kable(EM.both.models),
          Table.model.assessment = knitr::kable(model.assessment),
          Scatterplots = scatterplots,
          Levarage.plots = lev.plots,
-         Intervalplots = intervalplots,
-         Heatmap = heatmap,
-         threshold = threshold)
+         Intervalplots = intervalplots)
   }
 
   return(results)

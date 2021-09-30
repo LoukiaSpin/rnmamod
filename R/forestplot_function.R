@@ -1,22 +1,23 @@
-#' Forest-plot of comparisons with the reference intervention
+#' Forest-plot of comparisons with the selected intervention
 #'
-#' @description This function illustrates a forest plot of the posterior mean and 95\% credible and predictive interval of comparisons with the reference intervention of the network.
+#' @description This function illustrates a forest plot of the posterior mean and 95\% credible and predictive interval of comparisons with the selected intervention of the network.
 #'
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
+#' @param compar A character to indicate the comparator intervention. it must be any name found in \code{drug.names}.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
 #'
-#' @return A panel of two forest plots: (1) a forest plot on the effect estimates and predictions of comparisons with the reference intervention of the network, and
+#' @return A panel of two forest plots: (1) a forest plot on the effect estimates and predictions of comparisons with the selected intervention of the network, and
 #' (2) a forest plot on the posterior mean and 95\% credible interval of SUCRA values of the interventions (Salanti et al., 2011).
 #'
-#' @details The x-axis in the forest plot of effect sizes displays all interventions in the network; the reference intervention is indicated in the plot with a homonymous label.
-#'   For each comparison with the reference intervention, the 95\% credible and predictive intervals are displayed as overlapping lines with different colours. When the between-trial variance is very low, these two intervals become indiscernible.
+#' @details The x-axis in the forest plot of effect sizes displays all interventions in the network; the selected intervention that comprises the \code{compar} is indicated in the plot with a homonymous label.
+#'   For each comparison with the selected intervention, the 95\% credible and predictive intervals are displayed as overlapping lines with different colours. When the between-trial variance is very low, these two intervals become indiscernible.
 #'   Furthermore, the corresponding numerical results are displayed above each line: 95\% credible intervals are found in parentheses, and 95\% predictive intervals are found in brackets.
 #'   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
 #'
 #'   The interventions are sorted in the descending order of their SUCRA values.
 #'
-#'   \code{forestplot.ref} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+#'   \code{forestplot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -58,11 +59,11 @@
 #'                   "serotonin reuptake inhibitor", "tricyclic antidepressant", "pergolide")
 #'
 #' # Create the league heatmap
-#' forestplot.ref(full = res, drug.names = interv.names)
+#' forestplot(full = res, compar = "placebo", drug.names = interv.names)
 #' }
 #'
 #' @export
-forestplot.ref <- function(full, drug.names) {
+forestplot <- function(full, compar,  drug.names) {
 
   options(warn = -1)
 
@@ -80,59 +81,75 @@ forestplot.ref <- function(full, drug.names) {
   }
 
 
-  ## The results on the following parameters will be used:
-  # Effect measure
-  measure <- effect.measure.name(full$measure)
-
-  # Analysis model
-  model <- full$model
-
-  # Posterior results on the SUCRA of each intervention
-  sucra <- full$SUCRA
-
-  # Posterior results on the effect estimates of comparisons with the reference intervention of the network
-  EM.ref0 <- rbind(rep(NA, 3), full$EM.ref[, c(1, 3, 7)])
-
-
-  # Sort by SUCRA in decreasing order and remove the reference intervention (number 1)
-  EM.ref <- EM.ref0[order(sucra[, 1], decreasing = T), ]
-
-  # Posterior results on the predicted estimates of comparisons with the reference intervention of the network
-  pred.ref0 <- if (model == "RE") {
-    rbind(rep(NA, 3), full$pred.ref[, c(1, 3, 7)])
-  } else {
-    NA
+  compar <- if(missing(compar)) {
+    stop("The argument 'compar' has not been defined", call. = F)
+  } else if(!is.element(compar, drug.names)) {
+    stop("The value of 'compar' is not found in the argument 'drug.names'", call. = F)
+  } else if(is.element(compar, drug.names)) {
+    compar
   }
+
+
+
+  ## A matrix with all possible comparisons in the network
+  poss.pair.comp1 <- data.frame(exp = t(combn(drug.names, 2))[, 2], comp = t(combn(drug.names, 2))[, 1])
+  poss.pair.comp2 <- data.frame(exp = t(combn(drug.names, 2))[, 1], comp = t(combn(drug.names, 2))[, 2])
+  poss.pair.comp <- rbind(poss.pair.comp1, poss.pair.comp2)
+
+
+  measure <- effect.measure.name(full$measure)
+  model <- full$model
+  sucra <- full$SUCRA
+  EM.ref00 <- cbind(rbind(data.frame(mean = full$EM[, 1], lower = full$EM[, 3], upper = full$EM[, 7]),
+                          data.frame(mean = full$EM[, 1]*(-1), lower = full$EM[, 7]*(-1), upper = full$EM[, 3]*(-1))),
+                    poss.pair.comp)
+  EM.subset <- subset(EM.ref00, EM.ref00[5] == compar)
+
+  EM.ref0 <- rbind(EM.subset[, 1:3], c(rep(NA, 3)))
+
+  sucra.new <- data.frame(sucra[, 1], drug.names)[order(match(data.frame(sucra[, 1], drug.names)[, 2], EM.subset[, 4])), 1]
+
+  EM.ref <- EM.ref0[order(sucra.new, decreasing = T), ]
+  rownames(EM.ref) <- NULL
+
+
+  # Posterior results on the predicted estimates of comparisons with the selected comparator as reference
+  pred.ref00 <- cbind(rbind(data.frame(mean = full$EM.pred[, 1], lower = full$EM.pred[, 3], upper = full$EM.pred[, 7]),
+                           data.frame(mean = full$EM.pred[, 1]*(-1), lower = full$EM.pred[, 7]*(-1), upper = full$EM.pred[, 3]*(-1))),
+                      poss.pair.comp)
+
+  pred.subset <- subset(pred.ref00, pred.ref00[5] == compar)
+
+  pred.ref0 <- rbind(pred.subset[, 1:3], c(rep(NA, 3)))
+
 
   # Sort by SUCRA in decreasing order and remove the reference intervention (number 1)
   pred.ref <- if (model == "RE") {
-    pred.ref0[order(sucra[, 1], decreasing = T), ]
+    pred.ref0[order(sucra.new, decreasing = T), ]
   } else {
     NA
   }
+  rownames(pred.ref) <- NULL
 
 
   # Sort the drugs by their SUCRA in decreasing order and remove the reference intervention (number 1)
   drug.names.sorted <- drug.names[order(sucra[, 1], decreasing = T)]
 
 
-
   ## Create a data-frame with credible and predictive intervals of comparisons with the reference intervention
   if (!is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
-    prepare.EM <- data.frame(rep(length(drug.names):1, 2), rep(drug.names.sorted, 2), round(rbind(EM.ref, pred.ref), 2), rep(c("Credible interval", "Predictive interval"), each = length(drug.names)))
+    prepare.EM <- data.frame(as.factor(rep(length(drug.names):1, 2)), rep(drug.names.sorted, 2), round(rbind(EM.ref, pred.ref), 2), rep(c("Credible interval", "Predictive interval"), each = length(drug.names)))
     colnames(prepare.EM) <- c("order", "comparison", "mean", "lower", "upper", "interval")
   } else if (is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
-    prepare.EM <- data.frame(rep(length(drug.names):1, 2), rep(drug.names.sorted, 2), round(rbind(exp(EM.ref), exp(pred.ref)), 2), rep(c("Credible interval", "Predictive interval"), each = length(drug.names)))
+    prepare.EM <- data.frame(as.factor(rep(length(drug.names):1, 2)), rep(drug.names.sorted, 2), round(rbind(exp(EM.ref), exp(pred.ref)), 2), rep(c("Credible interval", "Predictive interval"), each = length(drug.names)))
     colnames(prepare.EM) <- c("order", "comparison", "mean", "lower", "upper", "interval")
   } else if (!is.element(measure, c("Odds ratio", "Ratio of means")) & model == "FE") {
-    prepare.EM <- data.frame(length(drug.names):1, drug.names.sorted, round(EM.ref, 2))
+    prepare.EM <- data.frame(as.factor(length(drug.names):1), drug.names.sorted, round(EM.ref, 2))
     colnames(prepare.EM) <- c("order", "comparison", "mean", "lower", "upper")
   } else if (is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
-    prepare.EM <- data.frame(length(drug.names):1, drug.names.sorted, round(exp(EM.ref), 2))
+    prepare.EM <- data.frame(as.factor(length(drug.names):1), drug.names.sorted, round(exp(EM.ref), 2))
     colnames(prepare.EM) <- c("order", "comparison", "mean", "lower", "upper")
   }
-  rownames(prepare.EM) <- NULL
-
 
 
   ## Create a data-frame with the SUCRA values
@@ -141,25 +158,24 @@ forestplot.ref <- function(full, drug.names) {
   rownames(prepare.sucra) <- NULL
 
 
-
   ## Forest plots on credible/predictive intervals of comparisons with the reference
   p1 <- if (model == "RE") {
     ggplot(data = prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), ], aes(x = order, y = mean, ymin = lower, ymax = upper, colour = interval)) +
-      geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-      geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper), size = 2, position = position_dodge(width = 0.5), width = 0.0) +
       geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 1, size = 1, col = "grey60") +
+      geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
+      geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], aes(x = order, y = mean, ymin = lower, ymax = upper), size = 2, position = position_dodge(width = 0.5), width = 0.0) +
       geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
       geom_text(aes(x = order, y = mean, label = paste0(mean, " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")",
                                                         " ", "[", prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), 4], ",", " ", prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), 5], "]"),
                     hjust = 0, vjust = -0.5), color = "black", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T, na.rm = T) +
-      geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", "Favours second arm")),
+      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", paste("Favours", compar))),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 1.2, 0.2), label = ifelse(full$D == 0, "Favours second arm", "Favours first arm")),
+      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2), label = ifelse(full$D == 0, paste("Favours", compar), "Favours first arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
       labs(x = "", y = measure, colour = "Analysis") +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
       scale_color_manual(breaks = c("Credible interval", "Predictive interval"), values = c("black", "#D55E00")) +
-      geom_label(aes(x = as.factor(order)[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
+      geom_label(aes(x = order[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Comparator intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
       coord_flip() +
       theme_classic() +
@@ -168,19 +184,19 @@ forestplot.ref <- function(full, drug.names) {
             legend.text =  element_text(color = "black", size = 12), legend.title = element_text(color = "black", face = "bold", size = 12))
   } else {
     ggplot(data = prepare.EM, aes(x = order, y = mean, ymin = lower, ymax = upper)) +
-      geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-      geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], aes(x = as.factor(order), y = mean, ymin = lower, ymax = upper), size = 2, position = position_dodge(width = 0.5), colour = "black", width = 0.0) +
       geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 2, size = 1.3, col = "grey53") +
+      geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
+      geom_errorbar(data = prepare.EM[1:length(drug.names.sorted), ], aes(x = order, y = mean, ymin = lower, ymax = upper), size = 2, position = position_dodge(width = 0.5), colour = "black", width = 0.0) +
       geom_point(size = 1.5,  colour = "white", stroke = 0.3, position = position_dodge(width = 0.5)) +
       geom_text(aes(x = order, y = mean, label = paste0(mean, " ", "(", prepare.EM[1:length(drug.names.sorted), 4], ",", " ", prepare.EM[1:length(drug.names.sorted), 5], ")"),
                     hjust = 0, vjust = -0.5), color = "black", size = 4.0, check_overlap = F, parse = F, position = position_dodge(width = 0.5), inherit.aes = T, na.rm = T) +
-      geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", "Favours second arm")),
+      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2), label = ifelse(full$D == 0, "Favours first arm", paste("Favours", compar))),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      geom_text(aes(x = 0.45, y = ifelse(is.element(full$measure, c("OR", "ROM")), 1.2, 0.2), label = ifelse(full$D == 0, "Favours second arm", "Favours first arm")),
+      geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2), label = ifelse(full$D == 0, paste("Favours", compar), "Favours first arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
       labs(x = "", y = measure) +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
-      geom_label(aes(x = as.factor(order)[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Reference intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
+      geom_label(aes(x = order[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Comparator intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
       coord_flip(clip = "off") +
       theme_classic() +
@@ -212,5 +228,4 @@ forestplot.ref <- function(full, drug.names) {
 
 
   return(forest.plots = forest.plots)
-
 }

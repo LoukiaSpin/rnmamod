@@ -114,12 +114,13 @@ res <- run.model(data = nma.baker2009,
                  n.burnin = 1000,
                  n.thin = 1)
 
-# Whether a trial is placebo-controlled.
-covar.binary <- ifelse(nma.baker2009[, "t1"] == 1, 1, 0)
+# Publicatiom year
+pub.year <- c(1996, 1998, 1999, 2000, 2000, 2001, rep(2002, 5), 2003, 2003,
+              rep(2005, 4), 2006, 2006, 2007, 2007)
 
 # Perform a random-effects network meta-regression (exchangeable structure)
 run.metareg(full = res,
-            covariate = covar.binary,
+            covariate = pub.year,
             covar.assumption = "exchangeable",
             n.chains = 3,
             n.iter = 10000,

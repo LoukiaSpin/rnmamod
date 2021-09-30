@@ -4,10 +4,12 @@
 \alias{league.heatmap}
 \title{League heatmap of all possible comparisons: estimation}
 \usage{
-league.heatmap(full, drug.names)
+league.heatmap(full, cov.value = NULL, drug.names)
 }
 \arguments{
-\item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
+\item{full}{An object of S3 class \code{\link{run.model}} for network meta-analysis or \code{\link{run.metareg}} for network meta-regression. See 'Value' in \code{\link{run.model}} and \code{\link{run.metareg}}.}
+
+\item{cov.value}{A vector of two elements in the following order: a number for the covariate value of interest and a character for the name of the covariate.}
 
 \item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 as they appear in \code{data} is used, instead.}
@@ -16,17 +18,19 @@ as they appear in \code{data} is used, instead.}
 A league heatmap of the posterior mean and 95\% credible interval of all possible comparisons in the off-diagonals, and the posterior mean of the SUCRA values in the diagonal.
 }
 \description{
-A function to create a heatmap with the estimated effects of all possible comparisons of interventions in the network.
-\code{league.heatmap} can be used for a random-effects or fixed-effect network meta-analysis.
+A function to create a heatmap with the estimated effect size of all possible comparisons of interventions in the network.
+\code{league.heatmap} can be used for a random-effects or fixed-effect network meta-analysis and network meta-regression.
 \code{league.heatmap} is applied for one outcome only.
 }
 \details{
 The rows and columns of the heatmap display the names of interventions which are sorted by decreasing order from the best to the worst
   based on their SUCRA value (Salanti et al., 2011). The off-diagonals contain the posterior mean and 95\% credible interval of the effect measure
-  of the corresponding comparisons. The main diagonal contains the SUCRA values of the corresponding interventions.
+  of the corresponding comparisons. The main diagonal contains the SUCRA values of the corresponding interventions when the argument \code{full} refers to the \code{\link{run.model}} function.
+  When the argument \code{full} refers to the \code{\link{run.metareg}} function, the p-score (Rücker and Schwarzer, 2015) is calculated for each intervention while taking into account the covariate value in
+  the argument \code{cov.value}. P-score is the 'frequentist analogue to SUCRA' (Rücker and Schwarzer, 2015).
 
   Results in the lower triangle refer to comparisons in the opposite direction after converting negative values into positive values (in absolute or logarithmic scale), and vice versa.
-  Darker shades of red and blue correspond to larger treatment effects in the upper and lower triangle, respectively.
+  Darker shades of red and blue correspond to larger treatment effects in the upper and lower triangle, respectively, for a beneficial outcome, and the other way around for a harmful outcome.
   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
 
   Comparisons between interventions should be read from left to right.
@@ -54,7 +58,7 @@ res <- run.model(data = nma.liu2013,
                  n.thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("placebo", "pramipexole", "serotoninâ€“norepinephrine reuptake inhibitor",
+interv.names <- c("placebo", "pramipexole", "serotonin–norepinephrine reuptake inhibitor",
                   "serotonin reuptake inhibitor", "tricyclic antidepressant", "pergolide")
 
 # Create the league heatmap
@@ -63,10 +67,12 @@ league.heatmap(full = res, drug.names = interv.names)
 
 }
 \references{
+Rücker G, Schwarzer G. Ranking treatments in frequentist network meta-analysis works without resampling methods. \emph{BMC Med Res Methodol} 2015;\bold{15}:58. [\doi{10.1186/s12874-015-0060-8}]
+
 Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
 }
 \seealso{
-\code{\link{run.model}}
+\code{\link{run.model}}, \code{\link{run.metareg}}
 }
 \author{
 {Loukia M. Spineli}, {Chrysostomos Kalyvas}, {Katerina Papadimitropoulou}

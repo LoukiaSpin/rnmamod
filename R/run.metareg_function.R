@@ -103,12 +103,13 @@
 #'                  n.burnin = 1000,
 #'                  n.thin = 1)
 #'
-#' # Whether a trial is placebo-controlled.
-#' covar.binary <- ifelse(nma.baker2009[, "t1"] == 1, 1, 0)
+#' # Publicatiom year
+#' pub.year <- c(1996, 1998, 1999, 2000, 2000, 2001, rep(2002, 5), 2003, 2003,
+#'               rep(2005, 4), 2006, 2006, 2007, 2007)
 #'
 #' # Perform a random-effects network meta-regression (exchangeable structure)
 #' run.metareg(full = res,
-#'             covariate = covar.binary,
+#'             covariate = pub.year,
 #'             covar.assumption = "exchangeable",
 #'             n.chains = 3,
 #'             n.iter = 10000,
@@ -183,16 +184,23 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
 
   ## Center covariate if metric and not arm-specific
   ## Whether covariate is a vector (trial-specific) or matrix (arm-specific)
-  if (!is.factor(covariate) & is.vector(covariate)) {
+  #if (!is.factor(covariate) & is.vector(covariate)) {
+  #  data.jag <- append(data.jag, list("cov.vector" = covariate - mean(covariate), "cov.matrix" = matrix(0, nrow = item$ns, ncol = max(item$na))))
+  #} else if (is.factor(covariate) & is.vector(covariate)) {
+  #  data.jag <- append(data.jag, list("cov.vector" = covariate, "cov.matrix" = matrix(0, nrow = item$ns, ncol = max(item$na))))
+  #} else if (!is.vector(covariate) & !is.factor(covariate)) {
+  #  data.jag <- append(data.jag, list("cov.vector" = rep(0, item$ns), "cov.matrix" = covariate))
+  #}
+  if (length(unique(covariate)) > 2) {
     data.jag <- append(data.jag, list("cov.vector" = covariate - mean(covariate), "cov.matrix" = matrix(0, nrow = item$ns, ncol = max(item$na))))
-  } else if (is.factor(covariate) & is.vector(covariate)) {
+  } else if (length(unique(covariate)) < 3) {
     data.jag <- append(data.jag, list("cov.vector" = covariate, "cov.matrix" = matrix(0, nrow = item$ns, ncol = max(item$na))))
-  } else if (!is.vector(covariate) & !is.factor(covariate)) {
+  } else if (!is.vector(covariate)) {
     data.jag <- append(data.jag, list("cov.vector" = rep(0, item$ns), "cov.matrix" = covariate))
   }
 
 
-  param.jags <- c("delta", "EM", "EM.ref", "EM.pred", "pred.ref", "tau", "beta", "SUCRA",  "effectiveness", "dev.o", "totresdev.o", "hat.par")
+  param.jags <- c("delta", "EM", "EM.ref", "EM.pred", "pred.ref", "tau", "beta", "beta.all", "SUCRA", "effectiveness", "dev.o", "totresdev.o", "hat.par")
   if (is.element(assumption, c("HIE-COMMON", "HIE-TRIAL", "HIE-ARM"))) {
     param.jags <- append(param.jags, "mean.phi")
   } else {
@@ -229,8 +237,11 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
   # Between-trial standard deviation
   tau <- t(getResults %>% dplyr::select(starts_with("tau")))
 
-  # Regression coefficient
+  # Regression coefficient for all comparisons with the reference intervention
   beta <- t(getResults %>% dplyr::select(starts_with("beta[") | starts_with("beta")))
+
+  # Regression coefficient for all unique pairwise comparisons (not applicable for 'common' covar.assumption)
+  beta.all <- t(getResults %>% dplyr::select(starts_with("beta.all[")))
 
   # SUrface under the Cumulative RAnking curve values
   SUCRA <- t(getResults %>% dplyr::select(starts_with("SUCRA")))
@@ -328,7 +339,7 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
                        covar.assumption = covar.assumption,
                        jagsfit = jagsfit,
                        data = data)
-    nma.results <- append(ma.results, list(EM.ref = EM.ref, pred.ref = pred.ref, SUCRA = SUCRA, effectiveness = effectiveness))
+    nma.results <- append(ma.results, list(EM.ref = EM.ref, pred.ref = pred.ref, beta.all = beta.all, SUCRA = SUCRA, effectiveness = effectiveness, D = full$D))
   } else {
     ma.results <- list(EM = EM,
                        beta = beta,
@@ -344,7 +355,7 @@ run.metareg <- function(full, covariate, covar.assumption, n.chains, n.iter, n.b
                        covar.assumption = covar.assumption,
                        jagsfit = jagsfit,
                        data = data)
-    nma.results <- append(ma.results, list(EM.ref = EM.ref, SUCRA = SUCRA, effectiveness = effectiveness))
+    nma.results <- append(ma.results, list(EM.ref = EM.ref, beta.all = beta.all, SUCRA = SUCRA, effectiveness = effectiveness, D = full$D))
   }
 
   ifelse(item$nt > 2, return(nma.results), return(ma.results))

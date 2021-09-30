@@ -13,9 +13,11 @@
 #'
 #' @details This functions creates the model in the JAGS dialect of the BUGS language. The output of this function constitutes the argument \code{model.file} of \code{\link[R2jags]{jags}} via the \code{\link[base]{textconnections}} function.
 #'
+#'   The split nodes have been automatically selected via the \code{mtc.nodesplit.comparisons} function of the \code{\link{gemtc}} package. See 'Details' in  \code{run.nodesplit}.
+#'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run.nodesplit}}, \code{\link[base]{textconnections}}, \code{\link[R2jags]{jags}}
+#' @seealso \code{\link{run.nodesplit}}, \code{\link[base]{textconnections}}, \code{\link[R2jags]{jags}}, \code{\link[gemtc]{mtc.nodesplit.comparisons}}
 #'
 #' @references
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome data in network meta-analysis: a one-stage pattern-mixture model approach. \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
@@ -108,11 +110,11 @@ prepare.nodesplit <- function(measure, model, assumption) {
   }
 
   code <- if (model == "RE") {
-    paste0(code,  "\n\t\t\tdelta[i, k] ~ dnorm(md[i, k], precd[i, k])",
+    paste0(code, "\n\t\t\tdelta[i, k] ~ dnorm(md[i, k], precd[i, k])",
                  "\n\t\t\tmd[i, k] <- ((d[si[i, k]] - d[bi[i]])*I.sign[i, k] + sw[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]",
                  "\n\t\t\tj[i, k] <- k - (equals(1, split[i])*step(k - 3))",
                  "\n\t\t\tprecd[i, k] <- prec*2*(j[i, k] - 1)/j[i, k]",
-                 "\n\t\t\tw[i, k] <- ((delta[i, k] - (d[si[i, k]] - d[bi[i]]))*I.sign[i, k])*(1 - index[i, k]) ",
+                 "\n\t\t\tw[i, k] <- ((delta[i, k] - (d[si[i, k]] - d[bi[i]]))*I.sign[i, k])*(1 - index[i, k])",
                  "\n\t\t\tsw[i, k] <- sum(w[i, 1:(k - 1)])/(j[i, k] - 1)")
   } else {
     paste0(code, "\n\t\t\tdelta[i, k] <- ((d[si[i, k]] - d[bi[i]])*I.sign[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]")
@@ -214,8 +216,8 @@ prepare.nodesplit <- function(measure, model, assumption) {
                          "\n\t\t\t}}")
   }
 
-  code <- paste0(code, "\n\tfor (c in 1:nt) {",
-                       "\n\t\tfor (k in 1:nt) {",
+  code <- paste0(code, "\n\tfor (c in 1:(nt - 1)) {",
+                       "\n\t\tfor (k in (c + 1):nt) {",
                        "\n\t\t\tEM[k, c] <- d[k] - d[c]",
                        "\n\t\t\t}}",
                        "\n\tdirect ~ dnorm(0, .0001)",

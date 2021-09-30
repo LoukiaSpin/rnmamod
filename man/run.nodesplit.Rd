@@ -53,6 +53,11 @@ This function performs a Bayesian network meta-analysis based on the node-splitt
   \code{run.nodesplit} runs Bayesian network meta-analysis based on the node-splitting approach in \code{JAGS}. The progress of the simulation appears in the R console. The number of times \code{run.nodesplit} is used
   appears in the R console as a text in red and it equals the number of split nodes (see 'Examples'). If there are no split nodes in the network, the execution of the function will be stopped and an error message will be printed in the R console.
 
+  \code{run.nodesplit} uses the \code{mtc.nodesplit.comparisons} function of the \code{\link{gemtc}} package to  obtain automatically the nodes to split based on the decision rule of van Valkenhoef et al. (2016).
+  \code{run.nodesplit} uses the option (1) in van Valkenhoef et al. (2016) to parameterise multi-arm trials that contain the node-to-split. In contrast, the \code{mtc.nodesplit} function of the \code{\link{gemtc}} package uses the option (3) in van Valkenhoef et al. (2016).
+  Option (1) keeps the baseline arm of the node-to-split in the corresponding multi-arms. Option (3) excludes both arms of the node-to-split from the corresponding multi-arm trials.
+  Hence, the corresponding subnetworks obtained after splitting the node differ, and by extend, the results that correspond to split nodes found in multi-arm trials.
+
   The output of \code{run.nodesplit} is not end-user-ready. The \code{nodesplit.plot} function uses the output of \code{run.nodesplit} as an S3 object and processes it further to provide an end-user-ready output.
 
   \code{run.nodesplit} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
@@ -88,9 +93,11 @@ Spineli LM. An empirical comparison of Bayesian modelling strategies for missing
 Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed treatment comparison meta-analysis. \emph{Stat Med} 2010;\bold{29}(7-8):932--44. [\doi{10.1002/sim.3767}]
 
 Gelman A, Rubin DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457--472. [\doi{10.1214/ss/1177011136}]
+
+van Valkenhoef G, Dias S, Ades AE, Welton NJ. Automated generation of node-splitting models for assessment of inconsistency in network meta-analysis. \emph{Res Synth Methods} 2016;\bold{7}(1):80--93. [\doi{doi: 10.1002/jrsm.1167}]
 }
 \seealso{
-\code{\link{run.model}}, \code{\link{nodesplit.plot}}, \code{\link{prepare.nodesplit}}, \code{\link[R2jags]{jags}}
+\code{\link{run.model}}, \code{\link{nodesplit.plot}}, \code{\link{prepare.nodesplit}}, \code{\link[R2jags]{jags}}, \code{\link[gemtc]{mtc.nodesplit.comparisons}}, \code{\link[gemtc]{mtc.nodesplit}}
 }
 \author{
 {Loukia M. Spineli}

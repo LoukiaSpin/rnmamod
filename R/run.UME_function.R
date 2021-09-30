@@ -136,7 +136,7 @@ run.UME <- function(full, n.iter, n.burnin, n.chains, n.thin) {
 
 
   ## Unique comparisons with the baseline intervention
-  ## A function to extract numbers from a character. Source: http://stla.github.io/stlapblog/posts/Numextract.html
+  # A function to extract numbers from a character. Source: http://stla.github.io/stlapblog/posts/Numextract.html
   Numextract <- function(string){
     unlist(regmatches(string,gregexpr("[[:digit:]]+\\.*[[:digit:]]*",string)))
   }
@@ -357,7 +357,9 @@ run.UME <- function(full, n.iter, n.burnin, n.chains, n.thin) {
          tau = tau,
          model.assessment = model.assessment,
          obs.comp = obs.comp,
-         jagsfit = jagsfit)
+         jagsfit = jagsfit,
+         data = data,
+         measure = measure)
   } else {
     list(EM = EM,
          dev.o = dev.o,
@@ -366,7 +368,9 @@ run.UME <- function(full, n.iter, n.burnin, n.chains, n.thin) {
          sign.dev.o = sign.dev.o,
          model.assessment = model.assessment,
          obs.comp = obs.comp,
-         jagsfit = jagsfit)
+         jagsfit = jagsfit,
+         data = data,
+         measure = measure)
   }
 
 

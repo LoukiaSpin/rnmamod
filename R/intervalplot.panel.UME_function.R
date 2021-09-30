@@ -41,8 +41,8 @@ intervalplot.panel.UME <- function(full, ume, drug.names) {
 
 
   # Calculate bounds of 95% CrI
-  ume.lower <- EM.ume[, 1] - 1.96*EM.ume[, 2]
-  ume.upper <- EM.ume[, 1] + 1.96*EM.ume[, 2]
+  ume.lower <- EM.ume[, 3]
+  ume.upper <- EM.ume[, 7]
 
 
   ## Keep only the effect estimates according to the 'poss.pair.comp.clean' - Consistency model

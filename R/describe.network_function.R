@@ -97,10 +97,11 @@ describe.network <- function(data, drug.names, measure) {
   direct.comp <- length(unique(comp))
 
   # Total number of randomised in the network
-  total.rand.network <- sum(pair.mod[, c("n1", "n2")])
+  total.rand.network <- sum(apply(dat$N, 1, sum, na.rm = T))
 
   # Proportion of completers in the network (in %)
-  prop.obs.network <- round((sum(pair.mod[, c("n1", "n2")] - pair.mod[, c("m1", "m2")])/total.rand.network), 2)*100
+  prop.obs.network <- round(((total.rand.network - sum(apply(dat$m, 1, sum, na.rm = T)))/total.rand.network)*100, 0)
+  #round((sum(pair.mod[, c("n1", "n2")] - pair.mod[, c("m1", "m2")])/total.rand.network), 2)*100
 
   # Proportion of missing outcome data (MOD) in the network (in %)
   prop.mod.network <- 100 - prop.obs.network
@@ -132,16 +133,16 @@ describe.network <- function(data, drug.names, measure) {
   # Tabulate summary statistics per observed comparison: MOD
   table.comp.mod <- data.frame(as.data.frame(table(comp))[, 1],
                                as.data.frame(table(comp))[, 2],
-                               total.rand.partic.comp,
-                               prop.obs.partic.comp,
+                               #total.rand.partic.comp,
+                               #prop.obs.partic.comp,
                                prop.mod.comp,
                                min.mod.comp,
                                median.mod.comp,
                                max.mod.comp)
   colnames(table.comp.mod) <- c("Comparisons",
                                 "Total trials",
-                                "Total randomised",
-                                "Completers (%)",
+                                #"Total randomised",
+                                #"Completers (%)",
                                 "Missing participants (%)",
                                 "Min. missing (%)",
                                 "Median missing (%)",
@@ -150,16 +151,16 @@ describe.network <- function(data, drug.names, measure) {
   # Tabulate summary statistics per intervention: MOD
   table.interv.mod <- data.frame(drug.names,
                                  as.data.frame(table(unlist(dat$t)))[, 2],
-                                 total.rand.partic.interv,
-                                 prop.obs.partic.interv,
+                                 #total.rand.partic.interv,
+                                 #prop.obs.partic.interv,
                                  prop.mod.interv,
                                  min.mod.interv,
                                  median.mod.interv,
                                  max.mod.interv)
   colnames(table.interv.mod) <- c("Interventions",
                                   "Total trials",
-                                  "Total randomised",
-                                  "Completers (%)",
+                                  #"Total randomised",
+                                  #"Completers (%)",
                                   "Missing participants (%)",
                                   "Min. missing (%)",
                                   "Median missing (%)",
@@ -170,15 +171,17 @@ describe.network <- function(data, drug.names, measure) {
     arm.risk <- dat$r/(dat$N - dat$m)
 
     # For each trial calculate the number of arms with zero events
-    rule <- apply(ifelse(arm.risk == 0.0, 1, 0), 1, sum, na.rm = T)
+    rule <- apply(t(apply(arm.risk, 1, function(x) {ifelse(x == 0, 1, 0)})), 1, sum, na.rm = T)
+    #apply(ifelse(arm.risk == 0.0, 1, 0), 1, sum, na.rm = T)
 
     # Number of trials with at least one arm with zero events
     trial.zero.event <- ifelse(length(which(rule > 0)) == 0, 0, which(rule > 0))
 
     # Number of trials with zero events in *all* arms
-    trial.all.zero.event <- ifelse(length(which(is.element(rule, dat$na) == T)) == 0, 0, which(is.element(rule, dat$na) == T))
+    trial.all.zero.event <- ifelse(length(which(rule == dat$na)) == 0, 0, which(rule == dat$na))
+    #ifelse(length(which(is.element(rule, dat$na) == T)) == 0, 0, which(is.element(rule, dat$na) == T))
 
-    # Total number of events in the network
+    # Proportion of total events in the network
     prop.event.network <- round(sum(unlist(dat$r), na.rm = T)/sum(unlist(dat$N) - unlist(dat$m), na.rm = T), 2)*100
 
     # Number of events per intervention
@@ -201,7 +204,7 @@ describe.network <- function(data, drug.names, measure) {
                                    as.data.frame(table(unlist(dat$t)))[, 2],
                                    total.rand.partic.interv,
                                    prop.obs.partic.interv,
-                                   prop.mod.interv,
+                                   #prop.mod.interv,
                                    total.risk.interv,
                                    min.risk.interv,
                                    median.risk.interv,
@@ -210,7 +213,7 @@ describe.network <- function(data, drug.names, measure) {
                                     "Total trials",
                                     "Total randomised",
                                     "Completers (%)",
-                                    "Missing participants (%)",
+                                    #"Missing participants (%)",
                                     "Total events (%)",
                                     "Min. events (%)",
                                     "Median events (%)",
@@ -247,7 +250,7 @@ describe.network <- function(data, drug.names, measure) {
                                  as.data.frame(table(comp))[, 2],
                                  total.rand.partic.comp,
                                  prop.obs.partic.comp,
-                                 prop.mod.comp,
+                                 #prop.mod.comp,
                                  total.risk.comp,
                                  min.risk.comp,
                                  median.risk.comp,
@@ -256,7 +259,7 @@ describe.network <- function(data, drug.names, measure) {
                                   "Total trials",
                                   "Total randomised",
                                   "Completers (%)",
-                                  "Missing participants (%)",
+                                  #"Missing participants (%)",
                                   "Total events (%)",
                                   "Min. events (%)",
                                   "Median events (%)",
@@ -276,14 +279,14 @@ describe.network <- function(data, drug.names, measure) {
                                    as.data.frame(table(unlist(dat$t)))[, 2],
                                    total.rand.partic.interv,
                                    prop.obs.partic.interv,
-                                   prop.mod.interv,
+                                   #prop.mod.interv,
                                    min.t.interv,
                                    median.t.interv,
                                    max.t.interv)
     colnames(table.interv.con) <- c("Interventions",
                                     "Total trials",
                                     "Total randomised",
-                                    "Completers (%)",
+                                    #"Completers (%)",
                                     "Missing participants (%)",
                                     "Min. t-statistic",
                                     "Median t-statistic",
@@ -315,7 +318,7 @@ describe.network <- function(data, drug.names, measure) {
                                  as.data.frame(table(comp))[, 2],
                                  total.rand.partic.comp,
                                  prop.obs.partic.comp,
-                                 prop.mod.comp,
+                                 #prop.mod.comp,
                                  min.t.comp,
                                  median.t.comp,
                                  max.t.comp)
@@ -323,7 +326,7 @@ describe.network <- function(data, drug.names, measure) {
                                   "Total trials",
                                   "Total randomised",
                                   "Completers (%)",
-                                  "Missing participants (%)",
+                                  #"Missing participants (%)",
                                   "Min. t-statistic",
                                   "Median t-statistic",
                                   "Max. t-statistic")
