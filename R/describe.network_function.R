@@ -281,9 +281,6 @@ describe.network <- function(data, drug.names, measure) {
                          trial.all.zero.event = trial.all.zero.event,
                          Table.interventions = knitr::kable(table.interv.bin),
                          Table.comparisons = knitr::kable(table.comp.bin)))
-  } else {
-    append(results, list(Table.interventions = knitr::kable(table.interv.con),
-                         Table.comparisons = knitr::kable(table.comp.con)))
   }
 
   return(results)
