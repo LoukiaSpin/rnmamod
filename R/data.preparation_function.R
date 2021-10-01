@@ -40,6 +40,19 @@ data.preparation <- function(data, measure) {
 
   options(warn = -1)
 
+
+
+  treat <- if (dim(data %>% select(starts_with("t")))[2] == 0) {
+    stop("The information on the individual arms is missing", call. = F)
+  } else {
+    data %>% select(starts_with("t"))                                           # Intervention studied in each arm of every trial
+  }
+  ns <- length(treat[, 1])                                                      # Total number of included trials per network
+  na <- apply(treat, 1, function(x) length(which(!is.na(x))))                   # Number of interventions investigated in every trial per network
+  nt <- length(table(as.matrix(treat)))                                         # Total number of interventions per network
+  ref <- 1                                                                      # The first intervention (t1 = 1) is the reference of the network
+
+
   measure <- if (missing(measure)) {
     stop("The argument 'measure' needs to be defined", call. = F)
   } else if ((dim(data %>% select(starts_with("r")))[2] > 0) & !is.element(measure, c("MD", "SMD", "ROM", "OR"))) {
@@ -53,13 +66,6 @@ data.preparation <- function(data, measure) {
   } else {
     measure
   }
-
-
-  treat <- data %>% select(starts_with("t"))                               # Intervention studied in each arm of every trial
-  ns <- length(treat[, 1])                                                      # Total number of included trials per network
-  na <- apply(treat, 1, function(x) length(which(!is.na(x))))                   # Number of interventions investigated in every trial per network
-  nt <- length(table(as.matrix(treat)))                                         # Total number of interventions per network
-  ref <- 1                                                                      # The first intervention (t1 = 1) is the reference of the network
 
 
   ## When no missing outcome data are collected
@@ -78,7 +84,15 @@ data.preparation <- function(data, measure) {
     y.obs <- data %>% select(starts_with("y"))                             # Observed mean value in each arm of every trial
     sd.obs <- data %>% select(starts_with("sd"))                           # Observed standard deviation in each arm of every trial
     rand <- data %>% select(starts_with("n"))                              # Number randomised participants in each arm of every trial
-    se.obs <- sd.obs/sqrt(rand - mod)                                             # Observed standard error in each arm of every trial
+    se.obs <- sd.obs/sqrt(rand - mod)                                      # Observed standard error in each arm of every trial
+
+    if ((dim(y.obs)[2] != max(na)) | (dim(sd.obs)[2] != max(na)) | (dim(mod)[2] != max(na)) | (dim(rand)[2] != max(na))) {
+      stop("All elements in the argument 'data' (e.g. information on the interventions arms) must have the same dimension", call. = F)
+    }
+
+    if ((dim(y.obs)[1] != ns) | (dim(sd.obs)[1] != ns) |(dim(mod)[1] != ns) | (dim(rand)[1] != ns)) {
+      stop("The elements in the argument 'data' (e.g. information on the interventions arms) must have the same dimension", call. = F)
+    }
 
 
     ## Order by 'id of t1' < 'id of t1'
@@ -106,6 +120,15 @@ data.preparation <- function(data, measure) {
     ## Binary: arm-level, wide-format dataset
     event <- data %>% select(starts_with("r"))                               # Number of observed events in each arm of every trial
     rand <- data %>% select(starts_with("n"))                                # Number randomised participants in each arm of every trial
+
+
+    if ((dim(event)[2] != max(na)) | (dim(mod)[2] != max(na)) | (dim(rand)[2] != max(na))) {
+      stop("The elements in the argument 'data' (e.g. information on the interventions arms) must have the same dimension", call. = F)
+    }
+
+    if ((dim(event)[1] != ns) | (dim(mod)[1] != ns) | (dim(rand)[1] != ns)) {
+      stop("The elements in the argument 'data' (e.g. information on the interventions arms) must have the same dimension", call. = F)
+    }
 
 
     ## Order by 'id of t1' < 'id of t2' < 'id of t3', and so on

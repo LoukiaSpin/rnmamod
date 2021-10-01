@@ -65,6 +65,12 @@ heatmap.missing.network <- function(data, drug.names){
     drug.names
   }
 
+  ## Unique comparisons with the baseline intervention
+  # A function to extract numbers from a character. Source: http://stla.github.io/stlapblog/posts/Numextract.html
+  Numextract <- function(string){
+    unlist(regmatches(string,gregexpr("[[:digit:]]+\\.*[[:digit:]]*",string)))
+  }
+
   # Proportion of MOD per trial-arm
   arm.mod <- dat$m/dat$N
 
@@ -101,10 +107,13 @@ heatmap.missing.network <- function(data, drug.names){
   max.mod.comp <- round(aggregate(trial.mod, by = list(comp), max)[, 2], 2)*100
 
   # Lower triangular heatmap matrix - Comparisons are read from the left to the right
+  unique.comp0 <- aggregate(trial.mod, by = list(comp), max)[, 1]
+  unique.comp <- matrix(as.numeric(Numextract(unique.comp0)), nrow = length(unique.comp0), ncol = 2, byrow = T)
   median.mat <- min.mat <- max.mat <- matrix(NA, nrow = length(drug.names), ncol = length(drug.names))
-  median.mat[cbind(pair.mod$t2, pair.mod$t1)] <- median.mod.comp
-  min.mat[cbind(pair.mod$t2, pair.mod$t1)] <- min.mod.comp
-  max.mat[cbind(pair.mod$t2, pair.mod$t1)] <- max.mod.comp
+  median.mat[unique.comp] <- median.mod.comp
+  min.mat[unique.comp] <- min.mod.comp
+  max.mat[unique.comp] <- max.mod.comp
+
 
   # 'Paste' the median with the minimum and maximum (the latter two in a parenthesis)
   final <- matrix(paste0(median.mat,  "\n", "(", min.mat, ",", " ", max.mat, ")"), nrow = length(drug.names), ncol = length(drug.names))
@@ -130,7 +139,7 @@ heatmap.missing.network <- function(data, drug.names){
     scale_fill_manual(breaks = c("low", "moderate", "high"), values = c("#009E73", "orange", "#D55E00")) +
     scale_x_discrete(position = "top") +
     labs(x = "", y = "", caption = "Proportion of missing participants: median (minimum, maximum)",
-         fill = "Risk due to missing participant outcome data") +
+         fill = "Risk of bias due to missing participants") +
     theme_classic() +
     theme(legend.position = "bottom", axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12),
           legend.title = element_text(size = 12, face = "bold"), legend.text = element_text(size = 12))
