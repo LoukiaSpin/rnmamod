@@ -61,6 +61,7 @@ jobs:
           do
             eval sudo $cmd
           done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "20.04"), sep = "\n")')
+          
       - name: Install jags (windows-latest)
         if: runner.os == 'Windows'
         run: |
@@ -74,6 +75,7 @@ jobs:
         run : |
               rm '/usr/local/bin/gfortran'
               brew install jags
+                        
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
