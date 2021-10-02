@@ -134,13 +134,13 @@ league.heatmap <- function(full, cov.value = NULL, drug.names){
 
   ## Matrix of lower and upper bound of effect measure for all possible comparisons
   # Lower triangle
-  lower0[lower.tri(lower0, diag = F)] <- round(par[, 2], 2)
-  upper0[lower.tri(upper0, diag = F)] <- round(par[, 3], 2)
+  lower0[lower.tri(lower0, diag = F)] <- round(par[, 3], 2)
+  upper0[lower.tri(upper0, diag = F)] <- round(par[, 7], 2)
   # Incorporate upper triangle
   lower1 <- reflect_triangle(upper0, from = "lower")
-  lower1[lower.tri(lower1, diag = F)] <- round(par[, 2], 2)
+  lower1[lower.tri(lower1, diag = F)] <- round(par[, 3], 2)
   upper1 <- reflect_triangle(lower0, from = "lower")
-  upper1[lower.tri(upper1, diag = F)] <- round(par[, 3], 2)
+  upper1[lower.tri(upper1, diag = F)] <- round(par[, 7], 2)
 
 
   ## Interventions order according to their SUCRA value (from best to worst)
@@ -186,7 +186,6 @@ league.heatmap <- function(full, cov.value = NULL, drug.names){
 
   ## Preparing the dataset for the ggplot2
   mat.new1 <- melt(final, na.rm = F)
-
 
 
   ## Merge both datasets to be used for ggplot2

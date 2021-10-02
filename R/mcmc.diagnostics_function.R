@@ -206,7 +206,15 @@ mcmc.diagnostics <- function(net, par){
 
   ## A data-frame with results on convergence for all monitored parameters using the Rhat
   convergence <- data.frame(R.hat.max, conv)
-  rownames(convergence) <- c("EM", "Pred", "delta", "tau", "direct", "indirect", "IF", "phi", "beta")
+  rownames(convergence) <- c("Effect estimates (EM)",
+                             "Predictions (EM.pred)",
+                             "Within-trial estimates (delta)",
+                             "Between-trial standard deviation (tau)",
+                             "Direct effects (node-splitting; direct)",
+                             "Indirect effect(s) (node-splitting; indirect)",
+                             "Inconsistency factor(s) (node-splitting; IF)",
+                             "Informative missingness parameter(s) (phi)",
+                             "Regression coefficient(s) (beta)")
   colnames(convergence) <- c("R.hat max", "convergence status")
 
 
