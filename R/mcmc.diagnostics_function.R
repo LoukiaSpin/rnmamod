@@ -212,7 +212,7 @@ mcmc.diagnostics <- function(net, par){
                              "Between-trial standard deviation (tau)",
                              "Direct effects (node-splitting; direct)",
                              "Indirect effect(s) (node-splitting; indirect)",
-                             "Inconsistency factor(s) (node-splitting; IF)",
+                             "Inconsistency factor(s) (node-splitting; diff)",
                              "Informative missingness parameter(s) (phi)",
                              "Regression coefficient(s) (beta)")
   colnames(convergence) <- c("R.hat max", "convergence status")
