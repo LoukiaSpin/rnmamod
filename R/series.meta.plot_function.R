@@ -122,7 +122,7 @@ series.meta.plot <- function(full, meta, drug.names, save.xls) {
 
   ## Between-trial standard deviation of separate RE-MAs
   if (model == "RE") {
-    tau.meta.clean <- format(round(tau.meta[, c(3:5, 9)], 2), nsmall = 2)
+    tau.meta.clean <- format(round(tau.meta[, c(7, 4:5, 9)], 2), nsmall = 2)
   } else {
     tau.meta.clean <- NA
   }
