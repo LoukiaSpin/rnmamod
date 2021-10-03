@@ -210,7 +210,7 @@ league.heatmap.pred <- function(full, cov.value = NULL, drug.names){
                          values = rescale(c(min(mat.new$value2, na.rm = T), ifelse(measure != "OR" & measure != "ROM", 0, 1), max(mat.new$value2, na.rm = T))),
                          limits = c(min(mat.new$value2, na.rm = T), max(mat.new$value2, na.rm = T))) +
     scale_x_discrete(position = "top") +
-    labs(x = "", y = "", caption = ifelse(!is.null(full$beta.all), paste("Posterior mean (95% predible interval) for", cov.value[2], "equal to", cov.value[1]),
+    labs(x = "", y = "", caption = ifelse(!is.null(full$beta.all), paste("Posterior mean (95% predible interval) for", cov.value[2], cov.value[1]),
                                           "Posterior mean (95% predible interval)") ) +
     theme_bw() +
     theme(legend.position = "none", axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0), axis.text.y = element_text(size = 12),
