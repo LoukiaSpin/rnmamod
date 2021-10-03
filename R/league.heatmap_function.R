@@ -110,7 +110,7 @@ league.heatmap <- function(full, cov.value = NULL, drug.names){
     par.sd <- sqrt(((full$EM[, 2])^2) + ((full$beta.all[, 2]*covar)^2))
     par.lower <- par.mean - 1.96*par.sd
     par.upper <- par.mean + 1.96*par.sd
-    par <- data.frame(par.mean, par.lower, par.upper)
+    par <- data.frame(par.mean, par.sd, par.lower, full$EM[, 4:6], par.upper)
     z.test <- par.mean/par.sd
     z.test.mat <- matrix(NA, nrow = length(drug.names), ncol = length(drug.names))
     z.test.mat[lower.tri(z.test.mat, diag = F)] <- z.test*(-1)
