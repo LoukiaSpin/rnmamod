@@ -82,18 +82,17 @@ robustness.index <- function(sens, threshold){
   options(warn = -1)
 
   if (is.null(sens$EM)) {
-    ES.mat <- sens[[1]]
+    ES.mat <- as.matrix(sens[[1]])
     measure <- sens[[2]]
     scenarios <- sens[[3]]
-    primary.scenar <- 1
     n.scenar <- length(scenarios)
+    primary.scenar <- 1
   } else {
     ES.mat <- sens$EM
     measure <- sens$measure
     scenarios <- sens$scenarios
     n.scenar <- length(scenarios)^2
     primary.scenar <- median(1:n.scenar)
-
 
     if (any(is.na(sens))) {
       stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
@@ -136,15 +135,15 @@ robustness.index <- function(sens, threshold){
 
 
   ## A matrix of effect estimates of MCMC standard deviations (or standard errors) for all possible comparisons under each scenario
-  sd.mat <- mean.mat <- matrix(1:(poss.comp*n.scenar), nrow = n.scenar)
+  sd.mat <- mean.mat <- matrix(rep(NA, n.scenar*poss.comp), nrow = n.scenar) # 1:(poss.comp*n.scenar)
 
   for(i in 1:n.scenar){
 
-    for(j in 1:poss.comp){
+    for(j in 1:dim(combn(4, 2))[2]){
 
-      mean.mat[i, j] <- ES.mat[j + poss.comp*(i - 1), 1]
+      mean.mat[i, j] <- ES.mat[j + dim(combn(4, 2))[2]*(i - 1), 1]
 
-      sd.mat[i, j] <- ES.mat[j + poss.comp*(i - 1), 2]
+      sd.mat[i, j] <- ES.mat[j + dim(combn(4, 2))[2]*(i - 1), 2]
 
     }
   }
@@ -172,7 +171,7 @@ robustness.index <- function(sens, threshold){
 
   }
 
-  KLD <- matrix(unlist(kldxy), nrow = poss.comp, ncol = n.scenar, byrow = T)
+  KLD <- matrix(unlist(kldxy), nrow = dim(combn(4, 2))[2], ncol = n.scenar, byrow = T)
 
 
   robust <- ifelse(RI < threshold, "robust", "frail")
