@@ -1,8 +1,8 @@
 ---
-title: "rnmamod"
+title: "Description of the network"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{rnmamod}
+  %\VignetteIndexEntry{Description of the network}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
