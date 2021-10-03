@@ -91,8 +91,9 @@ robustness.index <- function(sens, threshold){
     ES.mat <- sens$EM
     measure <- sens$measure
     scenarios <- sens$scenarios
-    primary.scenar <- median(1:length(scenarios))
     n.scenar <- length(scenarios)^2
+    primary.scenar <- median(1:n.scenar)
+
 
     if (any(is.na(sens))) {
       stop("Missing participant outcome data have *not* been collected. This function cannot be used.", call. = F)
