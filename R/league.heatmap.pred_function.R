@@ -111,7 +111,10 @@ league.heatmap.pred <- function(full, cov.value = NULL, drug.names){
     par.lower <- par.mean - 1.96*par.sd
     par.upper <- par.mean + 1.96*par.sd
     par <- data.frame(par.mean, par.sd, par.lower, full$EM.pred[, 4:6], par.upper)
-    z.test <- par.mean/par.sd
+
+    par.mean.EM <- full$EM[, 1] + full$beta.all[, 1]*covar
+    par.sd.EM <- sqrt(((full$EM[, 2])^2) + ((full$beta.all[, 2]*covar)^2))
+    z.test <- par.mean.EM/par.sd.EM
     z.test.mat <- matrix(NA, nrow = length(drug.names), ncol = length(drug.names))
     z.test.mat[lower.tri(z.test.mat, diag = F)] <- z.test*(-1)
     z.test.mat <- reflect_triangle(z.test.mat, from = "lower")
