@@ -2,9 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
-.Renviron
-<<<<<<< HEAD
-=======
-inst/doc
->>>>>>> 484a8e70b284c3b2bafa4384e5c0b74fe6559c01
-DESCRIPTION
+
+
