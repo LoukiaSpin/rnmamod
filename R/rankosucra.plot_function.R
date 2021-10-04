@@ -1,17 +1,16 @@
-#' Integrated rankograms and SUCRA curves
+#' Rankograms and SUCRA curves
 #'
-#' @description \code{rankosucra.plot} returns a panel of rankograms with integrated SUCRA curves for each intervention of the network.
+#' @description Returns a panel of rankograms with integrated SUCRA curves for each intervention in the network.
 #'
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
-#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
-#'   as they appear in \code{data} is used, instead.
+#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the interventions are ordered as they appear in \code{data}.
 #'
-#' @return A panel of rankograms with integrated SUCRA curves for each intervention of the network (Salanti et al., 2011). The x-axis of each panel refers to the ranking, and the y-axis refers to the ranking probability in percent.
+#' @return A panel of rankograms with integrated SUCRA curves for each intervention of the network (Salanti et al., 2011). The x-axis of each panel refers to the ranking, and the y-axis refers to the ranking probability expressed in percentage.
 #'
 #' @details Interventions are sorted in the descending order of their SUCRA value.
-#'   The SUCRA value in percent appears on the top left corner of each panel.
+#'   The SUCRA value expressed in percentage appears on the top left corner of each panel.
 #'
-#'   \code{rankosucra.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+#'   \code{rankosucra.plot} can be used only for a network of interventions.
 #'
 #' @author {Loukia M. Spineli}, {Chrysostomos Kalyvas}, {Katerina Papadimitropoulou}
 #'
