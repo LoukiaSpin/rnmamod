@@ -1,6 +1,6 @@
 #' A series of Bayesian pairwise meta-analyses from a network of interventions
 #'
-#' @description This function performs a Bayesian pairwise meta-analysis separately for pairwise comparisons with at least two trials observed in the investigated network of interventions.
+#' @description Performs separate Bayesian pairwise meta-analysis for each pairwise comparison with at least two trials in the network.
 #'
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
 #' @param n.chains Integer specifying the number of chains for the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
@@ -19,16 +19,17 @@
 #'  \code{tau} \tab The between-trial standard deviation for pairwise comparisons with at least two trials, when the random-effects model has been specified.\cr
 #' }
 #'
-#' @details \code{run.series.meta} does not contain the arguments \code{data}, \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, and \code{var.misspar} that are found in \code{run.model}.
-#'   This is to prevent misspecifying the Bayesian model as it would make the comparison of the consistency model (via \code{run.model}) with the separate pairwise meta-analyses for the observed comparisons meaningless.
-#'   Instead, these arguments are contained in the argument \code{full} of the function. Therefore, the user needs first to apply \code{run.model}, and then use \code{run.series.meta} (see, 'Examples').
+#' @details \code{run.series.meta} inherits the arguments \code{data}, \code{measure}, \code{model}, \code{assumption}, \code{heter.prior}, \code{mean.misspar}, and \code{var.misspar} from
+#' from \code{run.model}, now contained in the argument \code{full}.
+#' This prevents misspecifying the Bayesian model as it would make the comparison of the consistency model (via \code{run.model}) with the separate pairwise meta-analyses for the observed comparisons meaningless.
+#' The user needs first to execute \code{run.model}, and then execute \code{run.series.meta} (see, 'Examples').
 #'
-#'   \code{run.series.meta} runs Bayesian pairwise meta-analysis in \code{JAGS}. The progress of the simulation appears in the R console. The number of times \code{run.series.meta} is used appears in the R console as a text in red
-#'   and it equals the number of pairwise comparisons observed in the network of interventions (see 'Examples').
+#'   \code{run.series.meta} performs Bayesian pairwise meta-analysis in \code{JAGS}. The progress of the simulation appears in the R console. The number of times a pairwise meta-analysis
+#'                          is fitted is also printed in the console (in red) and is equal to the number of pairwise comparisons available in the network (see 'Examples').
 #'
 #'   The output of \code{run.series.meta} is not end-user-ready. The \code{series.meta.plot} function uses the output of \code{run.series.meta} as an S3 object and processes it further to provide an end-user-ready output.
 #'
-#'   \code{run.series.meta} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+#'   \code{run.series.meta} can be used only for a network of interventions.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -73,9 +74,9 @@
 run.series.meta <- function(full, n.chains, n.iter, n.burnin, n.thin) {
 
 
-  data <- full$data
+  data    <- full$data
   measure <- full$measure
-  model <- full$model
+  model   <- full$model
   assumption <- full$assumption
   heter.prior0 <- if (model == "FE") {
     list(NA, NA, NA)
