@@ -273,7 +273,7 @@ describe.network <- function(data, drug.names, measure) {
                   total.rand.network = total.rand.network,
                   prop.obs.network = prop.obs.network)
 
-  if (length(unique(na.omit(unlist(data.preparation(data = data1, measure = "OR")$m)))) > 1) {
+  if (length(unique(na.omit(unlist(data.preparation(data, measure)$m)))) > 1) {
     results <- append(results, list(Table.interventions.Missing = knitr::kable(table.interv.mod),
                                     Table.comparisons.Missing = knitr::kable(table.comp.mod)))
   } else {
