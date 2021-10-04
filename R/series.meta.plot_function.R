@@ -1,24 +1,27 @@
-#' End-user-ready results: consistency model versus series of pairwise meta-analyses
+#' Forest plot of results: consistency model versus series of pairwise meta-analyses
 #'
-#' @description \code{series.meta.plot} facilitates the comparison of the estimated effects and between-trial standard deviation (where applicable) from .
-#'   Hence, the user can detect any inconsistencies in the estimated effects from the compared models and explore the gains in their precision by applying the consistency model.
-#'   Furthermore, the user can investigate the plausibility of the common between-trial heterogeneity assumption which is typically considered in the consistency model.
+#' @description Facilitates the comparison of the estimated effects and between-trial standard deviation (where applicable) from the network meta-analysis versus the results from the pairwise meta-analyses.
+#'
 #'
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
 #' @param meta An object of S3 class \code{\link{run.series.meta}}. See 'Value' in \code{\link{run.series.meta}}.
-#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
-#'   as they appear in \code{data} is used, instead.
-#' @param save.xls Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
-#'   The default is \code{FALSE} (do not export to an Excel format).
+#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the 
+#'  argument \code{drug.names} is not defined, the interventions are ordered as they appear in \code{data}.
+#'
+#' @param save.xls Logical to indicate whether to export the tabulated results in Excel 'xlsx' format at the working directory of the user.
+#'   The default is \code{FALSE} (do not export in Excel format).
 #'
 #' @return \code{series.meta.plot} returns a panel of two forest plots: (1) a forest plot on the posterior mean and 95\% credible interval of the effect of the observed comparisons under the consistency model and the corresponding pairwise meta-analyses,
 #'   and (2) a forest plot on the posterior median and 95\% credible interval of the between-trial standard deviation (\eqn{\tau}) for the observed comparisons. The estimated \eqn{\tau} from the consistency model appears as a rectangle in the forest plot.
-#'   When a fixed-effect model has been performed, only the forest plot on the estimated effects is shown.
+#'   When a fixed-effect model has been fitted, only the forest plot on the estimated effects is shown.
 #'
 #'   The R console prints the data-frame with the estimated effects of the observed comparisons under both models and the data-frame on the estimated (\eqn{\tau})s from the pairwise meta-analyses.
-#'   Furthermore, \code{series.meta.plot} exports both data-frames to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+#'   Furthermore, \code{series.meta.plot} exports both data-frames in Excel 'xlsx' format at the working directory of the user.
 #'
-#' @details \code{series.meta.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+#' @details \code{series.meta.plot} can be used only for a network of interventions. 
+#' The user can detect any inconsistencies in the estimated effects from the compared models and explore the gains in their precision by applying the consistency model.
+#' Furthermore, the user can investigate the plausibility of the common between-trial heterogeneity assumption which is typically considered in the consistency model.
+
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -81,7 +84,7 @@ series.meta.plot <- function(full, meta, drug.names, save.xls) {
   # Posterior results on the effect estimates under NMA
   EM.full0 <- full$EM
 
-  # Posterior results on the effect estimates under separate random-effect pairwise meta-analysis (RE-MAs)
+  # Posterior results on the effect estimates under separate random-effects pairwise meta-analysis (RE-MAs)
   EM.meta0 <- meta$EM
 
   # Posterior results on between-trial standard deviation under NMA
