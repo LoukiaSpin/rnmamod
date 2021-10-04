@@ -139,11 +139,11 @@ robustness.index <- function(sens, threshold){
 
   for(i in 1:n.scenar){
 
-    for(j in 1:dim(combn(4, 2))[2]){
+    for(j in 1:dim(combn(nt, 2))[2]){
 
-      mean.mat[i, j] <- ES.mat[j + dim(combn(4, 2))[2]*(i - 1), 1]
+      mean.mat[i, j] <- ES.mat[j + dim(combn(nt, 2))[2]*(i - 1), 1]
 
-      sd.mat[i, j] <- ES.mat[j + dim(combn(4, 2))[2]*(i - 1), 2]
+      sd.mat[i, j] <- ES.mat[j + dim(combn(nt, 2))[2]*(i - 1), 2]
 
     }
   }
@@ -171,7 +171,7 @@ robustness.index <- function(sens, threshold){
 
   }
 
-  KLD <- matrix(unlist(kldxy), nrow = dim(combn(4, 2))[2], ncol = n.scenar, byrow = T)
+  KLD <- matrix(unlist(kldxy), nrow = dim(combn(nt, 2))[2], ncol = n.scenar, byrow = T)
 
 
   robust <- ifelse(RI < threshold, "robust", "frail")
