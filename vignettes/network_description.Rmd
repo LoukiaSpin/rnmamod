@@ -1,0 +1,29 @@
+---
+title: "Description of the network"
+author: Loukia M. Spineli
+date: "Latest version: `r Sys.Date()`"
+source: vignettes/network_description.Rmd
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{Description of the network}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include = FALSE}
+library(rnmamod)
+```
+
+## Introduction
+
+This vignette aims to illustrate the toolkit of the **rnmamod** to create the network plot and summarise the corresponding outcome data by intervention and observed comparison. If missing participant outcome data have been

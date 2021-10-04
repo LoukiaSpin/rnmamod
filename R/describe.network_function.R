@@ -271,16 +271,23 @@ describe.network <- function(data, drug.names, measure) {
                   two.arm.ns = two.arm.ns,
                   multi.arm.ns = multi.arm.ns,
                   total.rand.network = total.rand.network,
-                  prop.obs.network = prop.obs.network,
-                  Table.interventions.Missing = knitr::kable(table.interv.mod),
-                  Table.comparisons.Missing = knitr::kable(table.comp.mod))
+                  prop.obs.network = prop.obs.network)
 
-  results <- if (measure == "OR") {
-    append(results, list(prop.event.network = prop.event.network,
-                         trial.zero.event = trial.zero.event,
-                         trial.all.zero.event = trial.all.zero.event,
-                         Table.interventions = knitr::kable(table.interv.bin),
-                         Table.comparisons = knitr::kable(table.comp.bin)))
+  if (length(unique(na.omit(unlist(data.preparation(data = data1, measure = "OR")$m)))) > 1) {
+    results <- append(results, list(Table.interventions.Missing = knitr::kable(table.interv.mod),
+                                    Table.comparisons.Missing = knitr::kable(table.comp.mod)))
+  } else {
+    results
+  }
+
+  if (measure == "OR") {
+    results <- append(results, list(prop.event.network = prop.event.network,
+                                    trial.zero.event = trial.zero.event,
+                                    trial.all.zero.event = trial.all.zero.event,
+                                    Table.interventions = knitr::kable(table.interv.bin),
+                                    Table.comparisons = knitr::kable(table.comp.bin)))
+  } else {
+    results
   }
 
   return(results)

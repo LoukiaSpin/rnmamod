@@ -115,7 +115,7 @@ netplot <- function(data, drug.names, save.xls, ...){
     measure <- "MD"
   }
 
-  dat <- describe.network(data, drug.names, measure)
+  dat <- suppressMessages({describe.network(data, drug.names, measure)})
 
   characteristics <- c("Interventions", "Possible comparisons", "Direct comparisons", "Indirect comparisons",
                        "Trials", "Two-arm trials", "Multi-arm trials", "Randomised participants", "Proportion of completers")
@@ -148,11 +148,17 @@ netplot <- function(data, drug.names, save.xls, ...){
     writexl::write_xlsx(dat$Table.comparisons, "Table.comparisons.xlsx")
   }
 
+  results <- list(Network.plot = network.plot,
+                  Network.description = knitr::kable(results),
+                  Table.interventions = dat$Table.interventions,
+                  Table.comparisons   = dat$Table.comparisons)
 
-  return(list(Network.plot = network.plot,
-              Network.description = knitr::kable(results),
-              Table.interventions = dat$Table.interventions,
-              Table.comparisons   = dat$Table.comparisons,
-              Table.interventions.Missing = dat$Table.interventions.Missing,
-              Table.comparisons.Missing = dat$Table.comparisons.Missing))
+  if (length(unique(na.omit(unlist(data.preparation(data = data1, measure = "OR")$m)))) > 1) {
+    results <- append(results, list(Table.interventions.Missing = dat$Table.interventions.Missing,
+                                    Table.comparisons.Missing = dat$Table.comparisons.Missing))
+  } else {
+    results
+  }
+
+  return(results)
 }
