@@ -7,6 +7,8 @@ output:
   rmarkdown::html_vignette:
     toc: true
     toc_depth: 3
+params:
+  EVAL: !r identical(Sys.getenv("NOT_CRAN"), "true")
 vignette: >
   %\VignetteIndexEntry{Description of the network}
   %\VignetteEngine{knitr::rmarkdown}
@@ -60,6 +62,8 @@ netplot(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+"
 
 The intervention names in `drug.names` have been sorted in the ascending order of their identifier. Hence, `1` in the item `t` refers to `PBO` (placebo), `2` to `BUD` (budesonide), `3` to `BUD+` (budesonide plus formoterol) and so on. 
 
+### Network characteristics
+
 `netplot` also produces a table with the characteristics of the network, such as the number of interventions, number of possible comparisons, number of direct comparisons (i.e., comparisons of interventions informed by at least one trial), and so on:
 
 ```{r, echo = FALSE, fig.show = "hide"}
@@ -67,22 +71,38 @@ net <- netplot(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU",
 net$Network.description
 ```
 
-Furthermore, the function returns a table that summarises the number of trials, number of randomised participants and the proportion of completers (participants who completed the trial) per intervention. In the case of a binary outcome, the table additionally illustrates the distribution of the outcome as proportion: 
+### Distribution of the outcome
+
+Furthermore, `netplot` returns a table that summarises the number of trials, number of randomised participants and the proportion of completers (participants who completed the trial) **per intervention**. In the case of a binary outcome, the table additionally illustrates the distribution of the outcome as proportion: 
 
 ```{r, echo = FALSE, fig.show = "hide"}
 net$Table.interventions
 ```
 
-An identical table is returned for the observed comparisons in the network:
+An identical table is returned for the **observed comparisons** in the network:
 
 ```{r, echo = FALSE, fig.show = "hide"}
 net$Table.comparisons
 ```
 
-When missing participants have been reported for each intervention arm of at least one trial, `netplot` returns a table with the distribution of proportion of missing participants per intervention:
+
+### Distribution of missing participants 
+
+When missing participants have been reported for each intervention arm of at least one trial, `netplot` returns a table with the distribution of the proportion of missing participants **per intervention**:
 
 ```{r, echo = FALSE, fig.show = "hide"}
-net$Table.comparisons
+net$Table.interventions.Missing
 ```
 
-and per observed comparison in the network:
+and **per observed comparison** in the network:
+
+```{r, echo = FALSE, fig.show = "hide"}
+net$Table.comparisons.Missing
+```
+
+The users can export all tables in Excel 'xlsx' format at the working directory of their project by adding the argument `save.xls = TRUE` in the function.
+
+## References
+
+Lifeng Lin, Jing Zhang, James S. Hodges, Haitao Chu. Performing Arm-Based Network Meta-Analysis in R
+with the pcnetmeta Package. \emph{J Stat Softw} 2017;\bold{80}(5): 1--25. [doi: 10.18637/jss.v080.i05](https://www.jstatsoft.org/article/view/v080i05)
