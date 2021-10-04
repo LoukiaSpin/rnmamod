@@ -14,7 +14,7 @@ forestplot.metareg(full, reg, compar, cov.value, drug.names)
 \item{compar}{A character to indicate the comparator intervention. It must be any name found in \code{drug.names}.}
 
 \item{cov.value}{A vector of two elements in the following order: a number that corresponds to a value of the covariate considered in \code{\link{run.metareg}},
-and a character object to indicate the name of the covariate.}
+and a character object to indicate the name of the covariate. See also 'Details'.}
 
 \item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 as they appear in \code{data} is used, instead.}
@@ -31,6 +31,8 @@ This function illustrates a forest plot of the posterior mean and 95\% credible 
 The y-axis displays all interventions in the network; the selected intervention that comprises the \code{compar} is indicated in the plot with a homonymous label.
   The numerical results are displayed above each line.
   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
+
+  When the covariate is binary, specify in the second element of \code{cov.value} the name of the level for which the forest plot will be created.
 
   The interventions are sorted in the descending order of their SUCRA values obtain via network meta-analysis.
 

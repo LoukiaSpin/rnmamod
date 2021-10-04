@@ -14,7 +14,7 @@ metareg.plot(full, reg, compar, cov.value, drug.names, save.xls)
 \item{compar}{A character to indicate the comparator intervention. It must be any name found in \code{drug.names}.}
 
 \item{cov.value}{A vector of two elements in the following order: a number that corresponds to a value of the covariate considered in \code{\link{run.metareg}},
-and a character object to indicate the name of the covariate.}
+and a character object to indicate the name of the covariate. See also 'Details'.}
 
 \item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 as they appear in \code{data} is used, instead.}
@@ -40,11 +40,13 @@ Furthermore, the function returns the following list of elements:
 }
 }
 \description{
-XX
+This function illustrates the effect estimates, predictions and regression coefficients of comparisons with a specified comparator and also exports these results in an Excel format.
 }
 \details{
 The DIC of the network meta-analysis model is compared with the DIC of the network meta-regression model. If the difference in DIC exceeds 5, the network meta-regression model is preferred;
   if the difference in DIC is less than -5, the network meta-analysis model is preferred; otherwise, there is little to choose between the compared models.
+
+  When the covariate is binary, specify in the second element of \code{cov.value} the name of the level for which the scatterplot will be created.
 
   Furthermore, \code{metareg.plot} exports all tabulated results to separate Excel 'xlsx' formats (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 

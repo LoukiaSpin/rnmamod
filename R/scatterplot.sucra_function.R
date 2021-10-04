@@ -1,13 +1,36 @@
 #' Scatterplot of surface under the cumulative ranking curve (SUCRA) values for two models
 #'
-#' @description XX
+#' @description This function creates a scatterplot of the SUCRA values under the network meta-analysis and the network meta-regression for a specific level or value of the investigated covariate.
 #'
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
 #' @param reg An object of S3 class \code{\link{run.metareg}}. See 'Value' in \code{\link{run.metareg}}.
 #' @param cov.value A vector of two elements in the following order: a number that corresponds to a value of the covariate considered in \code{\link{run.metareg}},
-#'   and a character object to indicate the name of the covariate.
-#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
+#'   and a character object to indicate the name of the covariate. See also 'Details'.
+#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}.
+#'   If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
+#'
+#' @return A scatterplot of the SUCRA values under the network meta-analysis (y-axis) against the SUCRA values
+#'   under the network meta-regression (x-axis) for a specific level or value of the investigated covariate. The names of the interventions appear at the corresponding points.
+#'   Three coloured rectangulars appear in the scatterplot: a red rectangular refer to SUCRA values up to 50%, a yellow rectangular refer to SUCRA values between 50% and 80%,
+#'   and a green rectangular refers to SUCRA values over 80%. Interventions falling at the green area are considered as the highest ranked interventions, whilst
+#'   interventions falling at the red area are considered as the lowest ranked interventions.
+#'
+#'
+#' @details The y-axis displays all interventions in the network; the selected intervention that comprises the \code{compar} is indicated in the plot with a homonymous label.
+#'   The numerical results are displayed above each line.
+#'   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
+#'
+#'   When the covariate is binary, specify in the second element of \code{cov.value} the name of the level for which the scatterplot will be created.
+#'
+#'   \code{scatteplot.sucra} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+#'
+#' @author {Loukia M. Spineli}
+#'
+#' @seealso \code{\link{run.model}}, \code{\link{run.metareg}}
+#'
+#' @references
+#' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
 #'
 #' @export
 scatteplot.sucra <- function(full, reg, cov.value, drug.names) {
@@ -27,6 +50,10 @@ scatteplot.sucra <- function(full, reg, cov.value, drug.names) {
     as.character(1:nt)
   } else {
     drug.names
+  }
+
+  if(length(drug.names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
   }
 
   cov.value <- if (!is.null(reg$beta.all) & missing(cov.value)) {
@@ -81,7 +108,7 @@ scatteplot.sucra <- function(full, reg, cov.value, drug.names) {
     scale_x_continuous(expand = c(0, 0), limits = c(0, 100)) +
     scale_y_continuous(expand = c(0, 0), limits = c(0, 100)) +
     labs(x = "Network meta-regression SUCRA values (%)", y = "Network meta-analysis SUCRA values (%)",
-         caption = paste("Results for", cov.value[2], cov.value[1])) +
+         caption = paste("Results for", cov.value[2], ifelse(length(unique(reg$covariate)) < 3, " ", cov.value[1]))) +
     theme_classic() +
     theme(axis.title = element_text(color = "black", face = "bold", size = 12),
           axis.text = element_text(color = "black", size = 12),

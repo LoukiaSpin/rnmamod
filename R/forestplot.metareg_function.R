@@ -6,7 +6,7 @@
 #' @param reg An object of S3 class \code{\link{run.metareg}}. See 'Value' in \code{\link{run.metareg}}.
 #' @param compar A character to indicate the comparator intervention. It must be any name found in \code{drug.names}.
 #' @param cov.value A vector of two elements in the following order: a number that corresponds to a value of the covariate considered in \code{\link{run.metareg}},
-#'   and a character object to indicate the name of the covariate.
+#'   and a character object to indicate the name of the covariate. See also 'Details'.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
 #'
@@ -17,6 +17,8 @@
 #' @details The y-axis displays all interventions in the network; the selected intervention that comprises the \code{compar} is indicated in the plot with a homonymous label.
 #'   The numerical results are displayed above each line.
 #'   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
+#'
+#'   When the covariate is binary, specify in the second element of \code{cov.value} the name of the level for which the forest plot will be created.
 #'
 #'   The interventions are sorted in the descending order of their SUCRA values obtain via network meta-analysis.
 #'
@@ -46,6 +48,10 @@ forestplot.metareg <- function(full, reg, compar, cov.value, drug.names) {
     as.character(1:nt)
   } else {
     drug.names
+  }
+
+  if(length(drug.names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis", call. = F)
   }
 
   # Sort the drugs by their SUCRA in decreasing order and remove the reference intervention (number 1)
@@ -219,7 +225,7 @@ forestplot.metareg <- function(full, reg, compar, cov.value, drug.names) {
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
       geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2), label = ifelse(full$D == 0, paste("Favours", compar), "Favours first arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      labs(x = "", y = measure, colour = "Analysis", subtitle = paste("Results for", cov.value[2], cov.value[1])) +
+      labs(x = "", y = measure, colour = "Analysis", subtitle = paste("Results for", cov.value[2], ifelse(length(unique(reg$covariate)) < 3, " ", cov.value[1]))) +
       facet_wrap(~ interval, ncol = 2, scales = "fixed") +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
       scale_color_manual(breaks = c("Network meta-analysis", "Network meta-regression"), values = c("black", "#D55E00")) +
@@ -243,7 +249,7 @@ forestplot.metareg <- function(full, reg, compar, cov.value, drug.names) {
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
       geom_text(aes(x = 0.45, y = ifelse(is.element(measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2), label = ifelse(full$D == 0, paste("Favours", compar), "Favours first arm")),
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      labs(x = "", y = measure, colour = "Analysis", subtitle = paste("Results for", cov.value[2], cov.value[1])) +
+      labs(x = "", y = measure, colour = "Analysis", subtitle = paste("Results for", cov.value[2], ifelse(length(unique(reg$covariate)) < 3, " ", cov.value[1]))) +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
       scale_color_manual(breaks = c("Network meta-analysis", "Network meta-regression"), values = c("black", "#D55E00")) +
       geom_label(aes(x = unique(order[is.na(mean)]), y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Comparator intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +

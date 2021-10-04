@@ -1,12 +1,12 @@
 #' End-user-ready results: network meta-analysis versus network meta-regression analysis
 #'
-#' @description XX
+#' @description This function illustrates the effect estimates, predictions and regression coefficients of comparisons with a specified comparator and also exports these results in an Excel format.
 #'
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
 #' @param reg An object of S3 class \code{\link{run.metareg}}. See 'Value' in \code{\link{run.metareg}}.
 #' @param compar A character to indicate the comparator intervention. It must be any name found in \code{drug.names}.
 #' @param cov.value A vector of two elements in the following order: a number that corresponds to a value of the covariate considered in \code{\link{run.metareg}},
-#'   and a character object to indicate the name of the covariate.
+#'   and a character object to indicate the name of the covariate. See also 'Details'.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
 #' @param save.xls Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
@@ -30,6 +30,8 @@
 #'
 #' @details The DIC of the network meta-analysis model is compared with the DIC of the network meta-regression model. If the difference in DIC exceeds 5, the network meta-regression model is preferred;
 #'   if the difference in DIC is less than -5, the network meta-analysis model is preferred; otherwise, there is little to choose between the compared models.
+#'
+#'   When the covariate is binary, specify in the second element of \code{cov.value} the name of the level for which the scatterplot will be created.
 #'
 #'   Furthermore, \code{metareg.plot} exports all tabulated results to separate Excel 'xlsx' formats (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
 #'
