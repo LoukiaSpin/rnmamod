@@ -1,6 +1,6 @@
-#' A function to perform Bayesian node-splitting approach
+#' Bayesian node-splitting approach to explore (in)consistency
 #'
-#' @description This function performs a Bayesian network meta-analysis based on the node-splitting approach of Dias et al. (2010) extended to address aggregate binary and continuous participant outcome data via the pattern-mixture model
+#' @description Performs a Bayesian network meta-analysis based on the node-splitting approach of Dias et al. (2010) extended to address aggregate binary and continuous participant outcome data via the pattern-mixture model
 #'   (Spineli, 2019; Spineli et al., 2021). This model offers a local evaluation of the plausibility of the consistency assumption in the network (Dias et al. (2010)).
 #'
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
