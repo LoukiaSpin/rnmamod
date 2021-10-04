@@ -1,23 +1,22 @@
-#' Forest-plot of comparisons with the selected intervention
+#' Forest plot of NMA results with a selected intervention
 #'
-#' @description This function illustrates a forest plot of the posterior mean and 95\% credible and predictive interval of comparisons with the selected intervention of the network.
+#' @description Provides a forest plot with the posterior mean and 95\% credible and prediction intervals for comparisons with the selected intervention in the network.
 #'
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.
 #' @param compar A character to indicate the comparator intervention. it must be any name found in \code{drug.names}.
-#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
-#'   as they appear in \code{data} is used, instead.
+#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the interventions are ordered as they appear in \code{data}.
 #'
-#' @return A panel of two forest plots: (1) a forest plot on the effect estimates and predictions of comparisons with the selected intervention of the network, and
+#' @return A panel of two forest plots: (1) a forest plot on the effect estimates and predictions of comparisons with the selected intervention in the network, and
 #' (2) a forest plot on the posterior mean and 95\% credible interval of SUCRA values of the interventions (Salanti et al., 2011).
 #'
-#' @details The x-axis in the forest plot of effect sizes displays all interventions in the network; the selected intervention that comprises the \code{compar} is indicated in the plot with a homonymous label.
-#'   For each comparison with the selected intervention, the 95\% credible and predictive intervals are displayed as overlapping lines with different colours. When the between-trial variance is very low, these two intervals become indiscernible.
-#'   Furthermore, the corresponding numerical results are displayed above each line: 95\% credible intervals are found in parentheses, and 95\% predictive intervals are found in brackets.
-#'   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
+#' @details The y-axis of the plot displays the labels of the interventions in the network; the selected intervention that comprises the \code{compar} argument is annotated in the plot with the label 'Comparator intervention'.
+#'   For each comparison with the selected intervention, the 95\% credible and prediction intervals are displayed as overlapping lines in different colours.
+#'   The corresponding numerical results are displayed above each line: 95\% credible intervals are found in parentheses, and 95\% predictive intervals are found in brackets.
+#'   Odds ratios and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
 #'
-#'   The interventions are sorted in the descending order of their SUCRA values.
+#'   The interventions are sorted in descending order of their SUCRA values.
 #'
-#'   \code{forestplot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+#'   \code{forestplot} can be used only for a network of interventions.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -94,7 +93,7 @@ forestplot <- function(full, compar,  drug.names) {
   ## A matrix with all possible comparisons in the network
   poss.pair.comp1 <- data.frame(exp = t(combn(drug.names, 2))[, 2], comp = t(combn(drug.names, 2))[, 1])
   poss.pair.comp2 <- data.frame(exp = t(combn(drug.names, 2))[, 1], comp = t(combn(drug.names, 2))[, 2])
-  poss.pair.comp <- rbind(poss.pair.comp1, poss.pair.comp2)
+  poss.pair.comp  <- rbind(poss.pair.comp1, poss.pair.comp2)
 
 
   measure <- effect.measure.name(full$measure)
@@ -136,12 +135,12 @@ forestplot <- function(full, compar,  drug.names) {
   drug.names.sorted <- drug.names[order(sucra[, 1], decreasing = T)]
 
 
-  ## Create a data-frame with credible and predictive intervals of comparisons with the reference intervention
+  ## Create a data-frame with credible and prediction intervals of comparisons with the reference intervention
   if (!is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
-    prepare.EM <- data.frame(as.factor(rep(length(drug.names):1, 2)), rep(drug.names.sorted, 2), round(rbind(EM.ref, pred.ref), 2), rep(c("Credible interval", "Predictive interval"), each = length(drug.names)))
+    prepare.EM <- data.frame(as.factor(rep(length(drug.names):1, 2)), rep(drug.names.sorted, 2), round(rbind(EM.ref, pred.ref), 2), rep(c("Credible interval", "Prediction interval"), each = length(drug.names)))
     colnames(prepare.EM) <- c("order", "comparison", "mean", "lower", "upper", "interval")
   } else if (is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
-    prepare.EM <- data.frame(as.factor(rep(length(drug.names):1, 2)), rep(drug.names.sorted, 2), round(rbind(exp(EM.ref), exp(pred.ref)), 2), rep(c("Credible interval", "Predictive interval"), each = length(drug.names)))
+    prepare.EM <- data.frame(as.factor(rep(length(drug.names):1, 2)), rep(drug.names.sorted, 2), round(rbind(exp(EM.ref), exp(pred.ref)), 2), rep(c("Credible interval", "Prediction interval"), each = length(drug.names)))
     colnames(prepare.EM) <- c("order", "comparison", "mean", "lower", "upper", "interval")
   } else if (!is.element(measure, c("Odds ratio", "Ratio of means")) & model == "FE") {
     prepare.EM <- data.frame(as.factor(length(drug.names):1), drug.names.sorted, round(EM.ref, 2))
@@ -158,7 +157,7 @@ forestplot <- function(full, compar,  drug.names) {
   rownames(prepare.sucra) <- NULL
 
 
-  ## Forest plots on credible/predictive intervals of comparisons with the reference
+  ## Forest plots on credible/prediction intervals of comparisons with the reference
   p1 <- if (model == "RE") {
     ggplot(data = prepare.EM[(length(drug.names.sorted) + 1):(length(drug.names.sorted)*2), ], aes(x = order, y = mean, ymin = lower, ymax = upper, colour = interval)) +
       geom_hline(yintercept = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), 0, 1), lty = 1, size = 1, col = "grey60") +
@@ -174,7 +173,7 @@ forestplot <- function(full, compar,  drug.names) {
                 size = 3.5, vjust = 0, hjust = 0, color = "black") +
       labs(x = "", y = measure, colour = "Analysis") +
       scale_x_discrete(breaks = as.factor(1:length(drug.names.sorted)), labels = drug.names.sorted[length(drug.names.sorted):1]) +
-      scale_color_manual(breaks = c("Credible interval", "Predictive interval"), values = c("black", "#D55E00")) +
+      scale_color_manual(breaks = c("Credible interval", "Prediction interval"), values = c("black", "#D55E00")) +
       geom_label(aes(x = order[is.na(mean)], y = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65), hjust = 0, vjust = 1, label = "Comparator intervention"), fill = "beige", colour = "black", fontface = "plain", size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
       coord_flip() +

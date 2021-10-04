@@ -1,29 +1,29 @@
-#' League heatmap of all possible comparisons: estimation
+#' Heatmap of league table of NMA results
 #'
 #' @description
-#' A function to create a heatmap with the estimated effect size of all possible comparisons of interventions in the network.
+#' Provides a heatmap of the estimated effect measures for all possible comparisons of interventions in the network.
 #' \code{league.heatmap} can be used for a random-effects or fixed-effect network meta-analysis and network meta-regression.
-#' \code{league.heatmap} is applied for one outcome only.
+#' It is applied for one outcome only.
 #'
 #' @param full An object of S3 class \code{\link{run.model}} for network meta-analysis or \code{\link{run.metareg}} for network meta-regression. See 'Value' in \code{\link{run.model}} and \code{\link{run.metareg}}.
 #' @param cov.value A vector of two elements in the following order: a number for the covariate value of interest and a character for the name of the covariate. See also 'Details'.
-#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
-#'   as they appear in \code{data} is used, instead.
+#' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. 
+#' If the argument \code{drug.names} is not defined, the interventions are ordered as they appear in \code{data}.
 #'
-#' @return A league heatmap of the posterior mean and 95\% credible interval of all possible comparisons in the off-diagonals, and the posterior mean of the SUCRA values in the diagonal.
+#' @return A heatmap of the league table showing the posterior mean and 95\% credible interval for all possible comparisons in the off-diagonals, and the posterior mean of the SUCRA values in the diagonal.
 #'
-#' @details The rows and columns of the heatmap display the names of interventions which are sorted by decreasing order from the best to the worst
+#' @details The rows and columns of the heatmap display the names of interventions  sorted by decreasing order from the best to the worst
 #'   based on their SUCRA value (Salanti et al., 2011). The off-diagonals contain the posterior mean and 95\% credible interval of the effect measure
 #'   of the corresponding comparisons. The main diagonal contains the SUCRA values of the corresponding interventions when the argument \code{full} refers to the \code{\link{run.model}} function.
 #'   When the argument \code{full} refers to the \code{\link{run.metareg}} function, the p-score (Rücker and Schwarzer, 2015) is calculated for each intervention while taking into account the covariate value in
 #'   the argument \code{cov.value}. P-score is the 'frequentist analogue to SUCRA' (Rücker and Schwarzer, 2015).
 #'
 #'   Results in the lower triangle refer to comparisons in the opposite direction after converting negative values into positive values (in absolute or logarithmic scale), and vice versa.
-#'   Darker shades of red and blue correspond to larger treatment effects in the upper and lower triangle, respectively, for a beneficial outcome, and the other way around for a harmful outcome.
-#'   Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
+#'   Darker shades of red and blue correspond to larger treatment effects in the upper and lower triangle, respectively, for a beneficial outcome, and vice versa for a harmful outcome.
+#'   Odds ratios and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
 #'
 #'   Comparisons between interventions should be read from left to right.
-#'   Therefore, each cell refers to the corresponding row-defining intervention against the column-defining intervention. Results that indicate strong
+#'   Results that indicate strong
 #'   evidence in favor of the row-defining intervention (i.e. the respective 95\% credible interval does not include the null value) are indicated in bold.
 #'
 #'   In the case of network meta-regression, when the covariate is binary, specify in the second element of \code{cov.value} the name of the level for which the scatterplot will be created.
