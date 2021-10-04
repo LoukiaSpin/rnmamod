@@ -315,8 +315,8 @@ metareg.plot <- function(full, reg, compar, cov.value, drug.names, save.xls) {
     table.model.assess <- data.frame(c("Network meta-analysis", "Meta-regression"),
                                      rbind(model.assess.NMA[c(1, 3, 2)],
                                            model.assess.meta[c(1, 3, 2)]),
-                                     rbind(cbind(tau.full[, 1], tau.full[, 2], CrI.tau.full),
-                                           cbind(tau.meta[, 1], tau.meta[, 2], CrI.tau.meta)))
+                                     rbind(cbind(tau.full[, 5], tau.full[, 2], CrI.tau.full),
+                                           cbind(tau.meta[, 5], tau.meta[, 2], CrI.tau.meta)))
     colnames(table.model.assess) <- c("Analysis", "DIC", "Mean deviance", "pD", "Median tau", "SD tau", "95% CrI tau")
   } else {
     table.model.assess <- data.frame(c("Network meta-analysis", "Meta-regression"),

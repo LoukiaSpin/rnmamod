@@ -88,21 +88,25 @@ forestplot.metareg <- function(full, reg, compar, cov.value, drug.names) {
   EM.ref.nma <- EM.ref0.nma[order(sucra.new, decreasing = T), ]
 
   ## Effect size of all possible pairwise comparisons (NMR)
- if (is.element(reg$covar.assumption, c("exchangeable", "independent"))) {
-   par.mean <- as.vector(c(reg$EM[, 1] + reg$beta.all[, 1]*cov.val,
-                           (reg$EM[, 1]*(-1)) + (reg$beta.all[, 1]*(-1)*cov.val)))
-   par.sd <- as.vector(c(sqrt(((reg$EM[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2)),
-                         sqrt(((reg$EM[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2))))
- } else {
-   par.mean <- as.vector(c(reg$EM[, 1], reg$EM[, 1]*(-1)))
-   par.sd <- as.vector(c(reg$EM[, 2], reg$EM[, 2]))
-
-   # Correcting for comparisons with the reference intervention of the network
-   par.mean[1:(length(drug.names) - 1)] <- as.vector(c(reg$EM[1:(length(drug.names) - 1), 1] + reg$beta[1]*cov.val,
-                                                      (reg$EM[1:(length(drug.names) - 1), 1]*(-1)) + (reg$beta[1]*(-1)*cov.val)))
-   par.sd[1:(length(drug.names) - 1)] <- as.vector(c(sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2)),
-                                                     sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2))))
- }
+ #if (is.element(reg$covar.assumption, c("exchangeable", "independent"))) {
+ # par.mean <- as.vector(c(reg$EM[, 1] + reg$beta.all[, 1]*cov.val,
+ #                         (reg$EM[, 1]*(-1)) + (reg$beta.all[, 1]*(-1)*cov.val)))
+  # par.sd <- as.vector(c(sqrt(((reg$EM[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2)),
+  #                       sqrt(((reg$EM[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2))))
+ #} else {
+#   par.mean <- as.vector(c(reg$EM[, 1], reg$EM[, 1]*(-1)))
+#   par.sd <- as.vector(c(reg$EM[, 2], reg$EM[, 2]))
+#
+#   # Correcting for comparisons with the reference intervention of the network
+#   par.mean[1:(length(drug.names) - 1)] <- as.vector(c(reg$EM[1:(length(drug.names) - 1), 1] + reg$beta[1]*cov.val,
+#                                                      (reg$EM[1:(length(drug.names) - 1), 1]*(-1)) + (reg$beta[1]*(-1)*cov.val)))
+#   par.sd[1:(length(drug.names) - 1)] <- as.vector(c(sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2)),
+#                                                     sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2))))
+# }
+  par.mean <- as.vector(c(reg$EM[, 1] + reg$beta.all[, 1]*cov.val,
+                          (reg$EM[, 1]*(-1)) + (reg$beta.all[, 1]*(-1)*cov.val)))
+  par.sd <- as.vector(c(sqrt(((reg$EM[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2)),
+                        sqrt(((reg$EM[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2))))
 
   EM.ref00.nmr <- cbind(mean = par.mean, lower = par.mean - 1.96*par.sd, upper = par.mean + 1.96*par.sd,
                         poss.pair.comp)
@@ -120,20 +124,25 @@ forestplot.metareg <- function(full, reg, compar, cov.value, drug.names) {
     pred.subset.nma <- subset(pred.ref00.nma, pred.ref00.nma[5] == compar)
     pred.ref0.nma <- rbind(pred.subset.nma[, 1:3], c(rep(NA, 3)))
 
-    if (is.element(reg$covar.assumption, c("exchangeable", "independent"))) {
-      par.mean <- as.vector(c(reg$EM.pred[, 1] + reg$beta.all[, 1]*cov.val,
-                              (reg$EM.pred[, 1]*(-1)) + (reg$beta.all[, 1]*(-1)*cov.val)))
-      par.sd <- as.vector(c(sqrt(((reg$EM.pred[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2)),
-                            sqrt(((reg$EM.pred[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2))))
-    } else {
-      par.mean <- as.vector(c(reg$EM.pred[, 1], reg$EM.pred[, 1]*(-1)))
-      par.sd <- as.vector(c(reg$EM.pred[, 2], reg$EM.pred[, 2]))
-      # Correcting for comparisons with the reference intervention of the network
-      par.mean[1:(length(drug.names) - 1)] <- as.vector(c(reg$EM[1:(length(drug.names) - 1), 1] + reg$beta[1]*cov.val,
-                                                          (reg$EM[1:(length(drug.names) - 1), 1]*(-1)) + (reg$beta[1]*(-1)*cov.val)))
-      par.sd[1:(length(drug.names) - 1)] <- as.vector(c(sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2)),
-                                                        sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2))))
-    }
+    #if (is.element(reg$covar.assumption, c("exchangeable", "independent"))) {
+    #  par.mean <- as.vector(c(reg$EM.pred[, 1] + reg$beta.all[, 1]*cov.val,
+    #                          (reg$EM.pred[, 1]*(-1)) + (reg$beta.all[, 1]*(-1)*cov.val)))
+    #  par.sd <- as.vector(c(sqrt(((reg$EM.pred[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2)),
+    #                        sqrt(((reg$EM.pred[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2))))
+    #} else {
+    #  par.mean <- as.vector(c(reg$EM.pred[, 1], reg$EM.pred[, 1]*(-1)))
+    #  par.sd <- as.vector(c(reg$EM.pred[, 2], reg$EM.pred[, 2]))
+    #  # Correcting for comparisons with the reference intervention of the network
+    #  par.mean[1:(length(drug.names) - 1)] <- as.vector(c(reg$EM[1:(length(drug.names) - 1), 1] + reg$beta[1]*cov.val,
+    #                                                      (reg$EM[1:(length(drug.names) - 1), 1]*(-1)) + (reg$beta[1]*(-1)*cov.val)))
+    #  par.sd[1:(length(drug.names) - 1)] <- as.vector(c(sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2)),
+    #                                                    sqrt(((reg$EM[1:(length(drug.names) - 1), 2])^2) + ((reg$beta[2]*cov.val)^2))))
+    #}
+
+    par.mean <- as.vector(c(reg$EM.pred[, 1] + reg$beta.all[, 1]*cov.val,
+                            (reg$EM.pred[, 1]*(-1)) + (reg$beta.all[, 1]*(-1)*cov.val)))
+    par.sd <- as.vector(c(sqrt(((reg$EM.pred[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2)),
+                          sqrt(((reg$EM.pred[, 2])^2) + ((reg$beta.all[, 2]*cov.val)^2))))
 
     pred.ref00.nmr <-  cbind(data.frame(mean = par.mean, lower = par.mean - 1.96*par.sd, upper = par.mean + 1.96*par.sd),
                            poss.pair.comp)
