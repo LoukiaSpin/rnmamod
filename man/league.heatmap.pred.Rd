@@ -9,7 +9,7 @@ league.heatmap.pred(full, cov.value = NULL, drug.names)
 \arguments{
 \item{full}{An object of S3 class \code{\link{run.model}} for network meta-analysis or \code{\link{run.metareg}} for network meta-regression. See 'Value' in \code{\link{run.model}} and \code{\link{run.metareg}}.}
 
-\item{cov.value}{A vector of two elements in the following order: a number for the covariate value of interest and a character for the name of the covariate.}
+\item{cov.value}{A vector of two elements in the following order: a number for the covariate value of interest and a character for the name of the covariate. See also 'Details'.}
 
 \item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 as they appear in \code{data} is used, instead.}
@@ -35,6 +35,8 @@ The rows and columns of the heatmap display the names of interventions which are
   Comparisons between interventions should be read from left to right.
   Therefore, each cell refers to the corresponding row-defining intervention against the column-defining intervention. Results that indicate strong
   evidence in favor of the row-defining intervention (i.e. the respective 95\% predictive interval does not include the null value) are indicated in bold.
+
+  In the case of network meta-regression, when the covariate is binary, specify in the second element of \code{cov.value} the name of the level for which the scatterplot will be created.
 
   \code{league.heatmap.pred} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
   Similarly, when the function is executed for a fixed-effect network meta-analysis.

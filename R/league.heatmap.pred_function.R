@@ -6,7 +6,7 @@
 #' \code{league.heatmap.pred} is applied for one outcome only.
 #'
 #' @param full An object of S3 class \code{\link{run.model}} for network meta-analysis or \code{\link{run.metareg}} for network meta-regression. See 'Value' in \code{\link{run.model}} and \code{\link{run.metareg}}.
-#' @param cov.value A vector of two elements in the following order: a number for the covariate value of interest and a character for the name of the covariate.
+#' @param cov.value A vector of two elements in the following order: a number for the covariate value of interest and a character for the name of the covariate. See also 'Details'.
 #' @param drug.names A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
 #'   as they appear in \code{data} is used, instead.
 #'
@@ -24,6 +24,8 @@
 #'   Comparisons between interventions should be read from left to right.
 #'   Therefore, each cell refers to the corresponding row-defining intervention against the column-defining intervention. Results that indicate strong
 #'   evidence in favor of the row-defining intervention (i.e. the respective 95\% predictive interval does not include the null value) are indicated in bold.
+#'
+#'   In the case of network meta-regression, when the covariate is binary, specify in the second element of \code{cov.value} the name of the level for which the scatterplot will be created.
 #'
 #'   \code{league.heatmap.pred} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
 #'   Similarly, when the function is executed for a fixed-effect network meta-analysis.
@@ -204,6 +206,15 @@ league.heatmap.pred <- function(full, cov.value = NULL, drug.names){
   mat.new$value.SUCRA <- final_col$value
 
 
+  caption <- if (!is.null(full$beta.all) & length(unique(full$covariate)) > 2) {
+    paste("Posterior mean (95% predictive interval) for", cov.value[2], cov.value[1])
+  } else if (!is.null(full$beta.all) & length(unique(full$covariate)) < 3) {
+    paste("Posterior mean (95% predictive interval) for", cov.value[2])
+  } else if (is.null(full$beta.all)) {
+    paste("Posterior mean (95% predictive interval)")
+  }
+
+
   ## Hooray, the precious league table as a heatmap!
   p <- ggplot(mat.new, aes(factor(Var2, levels = order.drug[1:length(order.drug)]), factor(Var1, levels = order.drug[length(order.drug):1]), fill = value2)) +
     geom_tile(aes(fill = value.SUCRA)) +
@@ -213,8 +224,7 @@ league.heatmap.pred <- function(full, cov.value = NULL, drug.names){
                          values = rescale(c(min(mat.new$value2, na.rm = T), ifelse(measure != "OR" & measure != "ROM", 0, 1), max(mat.new$value2, na.rm = T))),
                          limits = c(min(mat.new$value2, na.rm = T), max(mat.new$value2, na.rm = T))) +
     scale_x_discrete(position = "top") +
-    labs(x = "", y = "", caption = ifelse(!is.null(full$beta.all), paste("Posterior mean (95% predible interval) for", cov.value[2], cov.value[1]),
-                                          "Posterior mean (95% predible interval)") ) +
+    labs(x = "", y = "", caption = caption) +
     theme_bw() +
     theme(legend.position = "none", axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0), axis.text.y = element_text(size = 12),
           plot.caption = element_text(hjust = 0.01))
