@@ -34,7 +34,11 @@
 #'    Identical structure to \code{Table.comparisons} for the binary outcome. \cr
 #'   }
 #'
-#' @details
+#' @details The proportion of total missing participants per intervention has been calculated as the total number of missing participants in an intervention to the total number of randomised
+#'   participants in that intervention. Similarly, for the proportion of total missing participants per observed comparison,
+#'
+#'   The median proportion of missing participants in an intervention is the median of the proportion of missing participants across the trials that investigated that intervention. Similarly, for the minimum, and
+#'   the maximum proportion of missing participants in an intervention. The concept is similar for the minimum, median, and maximum proportion of missing participants per observed comparison.
 #'
 #' @seealso \code{\link[rnmamod]{run.model}}, \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta} and \href{https://CRAN.R-project.org/package=gemtc}{gemtc},
 #' \code{\link[rnmamod]{data.preparation}}.
