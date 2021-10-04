@@ -26,4 +26,20 @@ library(rnmamod)
 
 ## Introduction
 
-This vignette aims to illustrate the toolkit of the **rnmamod** to create the network plot and summarise the corresponding outcome data by intervention and observed comparison. If missing participant outcome data have been
+This vignette aims to illustrate the toolkit of the **rnmamod** package for the creation of the network plot and summarisation of the corresponding outcome data by intervention and observed comparison using tables. If missing participant outcome data have been extracted, they will also be summarised by intervention and observed comparison.
+
+## Example on a binary outcome 
+
+We will use the systematic review of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that comprises 21 trials comparing seven pharmacologic interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. The exacerbation of COPD (harmful outcome) is the analysed *binary* outcome. 
+
+```{r comment = NA}
+nma.baker2009
+```
+
+The dataset has the one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. For a binary outcome, the dataset must have a minimum of three items: 
+
+- item `t` that refers to the intervention identifier for the corresponing intervention arm;
+- item `r` for the number of observed events in the corresponding intervention arm. 
+- item `n` for the number of randomised participants in the corresponding intervention arm.
+
+If a trial reports the total number of missing participants, we indicate the corresponding intervention arms with `NA`.
