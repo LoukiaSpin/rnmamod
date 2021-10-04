@@ -1,7 +1,7 @@
 #' Markov Chain Monte Carlo Diagnostics
 #'
-#' @description This function evaluates whether convergence has been achieved for the monitored parameters of the Bayesian models.
-#'   The Gelman-Rubin convergence diagnostic and relevant diagnostic plots are applied for that purpose.
+#' @description Evaluates whether convergence has been achieved for the monitored parameters of the Bayesian models.
+#'   The Gelman-Rubin convergence diagnostic and relevant diagnostic plots are applied.
 #'
 #' @param net An object of S3 class \code{\link{run.model}}, \code{\link{run.series.meta}}, \code{\link{run.nodesplit}}, \code{\link{run.UME}},
 #'   \code{\link{run.sensitivity}} and \code{\link{run.metareg}}. See 'Value' in the functions above.
