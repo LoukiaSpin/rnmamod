@@ -124,7 +124,7 @@ robustness.index <- function(sens, threshold){
 
 
   ## Function for the Kullback-Leibler Divergence (comparing two univariate normal distributions)
-  KLD.measure.univ <- function(mean.y, sd.y, mean.x, sd.x){
+  KLD.measure.univ <- function(mean.y, sd.y, mean.x, sd.x) {
 
     # x is the 'truth' (e.g. the MAR assumption)
     KLD.xy <- 0.5*(((sd.x/sd.y)^2) + ((mean.y - mean.x)^2)/(sd.y^2) - 1 + 2*log(sd.y/sd.x))
@@ -139,11 +139,11 @@ robustness.index <- function(sens, threshold){
 
   for(i in 1:n.scenar){
 
-    for(j in 1:dim(combn(nt, 2))[2]){
+    for(j in 1:poss.comp){
 
-      mean.mat[i, j] <- ES.mat[j + dim(combn(nt, 2))[2]*(i - 1), 1]
+      mean.mat[i, j] <- ES.mat[j + poss.comp*(i - 1), 1]
 
-      sd.mat[i, j] <- ES.mat[j + dim(combn(nt, 2))[2]*(i - 1), 2]
+      sd.mat[i, j] <- ES.mat[j + poss.comp*(i - 1), 2]
 
     }
   }
@@ -156,7 +156,7 @@ robustness.index <- function(sens, threshold){
 
     kldxy[[i]] <- rep(NA, n.scenar)
 
-    for(j in 1:n.scenar){ #for(j in (1:n.scenar)[-primary.scenar])
+    for(j in 1:n.scenar){
 
 
       ## Returns the KLD of informative scenario j when compared with the primary analysis for comparison i
@@ -167,11 +167,9 @@ robustness.index <- function(sens, threshold){
 
     ## Returns the Robustness Index of comparison i across all informative scenarios
     RI[i] <- sqrt(round(t(kldxy[[i]]) %*% kldxy[[i]], 3))
-    #RI[i] <- sqrt(round(t(kldxy[[i]][-primary.scenar]) %*% kldxy[[i]][-primary.scenar], 3))
-
   }
 
-  KLD <- matrix(unlist(kldxy), nrow = dim(combn(nt, 2))[2], ncol = n.scenar, byrow = T)
+  KLD <- matrix(unlist(kldxy), ncol = n.scenar, byrow = T)
 
 
   robust <- ifelse(RI < threshold, "robust", "frail")
