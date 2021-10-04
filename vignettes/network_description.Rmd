@@ -30,16 +30,45 @@ This vignette aims to illustrate the toolkit of the **rnmamod** package for the 
 
 ## Example on a binary outcome 
 
+### Dataset preparation
+
 We will use the systematic review of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that comprises 21 trials comparing seven pharmacologic interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. The exacerbation of COPD (harmful outcome) is the analysed *binary* outcome. 
 
 ```{r comment = NA}
 nma.baker2009
 ```
 
-The dataset has the one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. For a binary outcome, the dataset must have a minimum of three items: 
+The dataset has the one-trial-per-row format containing arm-level data for each trial. This format is widely used for BUGS models. For a binary outcome, the dataset must have a minimum of three items: 
 
-- item `t` that refers to the intervention identifier for the corresponing intervention arm;
-- item `r` for the number of observed events in the corresponding intervention arm. 
-- item `n` for the number of randomised participants in the corresponding intervention arm.
+- item `t` that refers to the intervention identifier for the corresponding intervention arm;
+- item `r` that refers to the number of observed events in the corresponding intervention arm. 
+- item `n` that refers to the number of randomised participants in the corresponding intervention arm.
 
-If a trial reports the total number of missing participants, we indicate the corresponding intervention arms with `NA`.
+If there is at least one trial that reports the number of missing participants per intervention arm, we also include the item `m` in the dataset. If a trial reports the *total* number of missing participants rather than the number of missing participants per intervention arm, we indicate with `NA` in the item `m` the intervention arms of the corresponding trial.
+
+### The network plot
+
+The function `netplot` (see ?netplot for help) creates the network plot using only two arguments: the `data` for the dataset (in one-trial-per-row format) and `drug.names` for the names of each intervention in the dataset.
+
+```{r, results = "hide", fig.show = "hide"}
+netplot(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+```
+
+```{r, echo = FALSE, results = "hide", fig.width = 5, fig.height = 5, fig.align = "center"}
+netplot(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+```
+
+The intervention names in `drug.names` have been sorted in the ascending order of their identifier. Hence, `1` in the item `t` refers to `PBO` (placebo), `2` to `BUD` (budesonide), `3` to `BUD+` (budesonide plus formoterol) and so on. 
+
+`netplot` also produces a table with the characteristics of the network, such as the number of interventions, number of possible comparisons, number of direct comparisons (i.e., comparisons of interventions informed by at least one trial), and so on:
+
+```{r, echo = FALSE, fig.show = "hide"}
+net <- netplot(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+net$Network.description
+```
+
+Furthermore, the function returns a table that summarises the number of trials, number of randomised participants and the proportion of completers (participants who completed the trial) per interventions
+
+```{r, echo = FALSE, fig.show = "hide"}
+net$Table.interventions
+```

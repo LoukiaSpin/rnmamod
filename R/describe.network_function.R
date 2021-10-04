@@ -199,26 +199,6 @@ describe.network <- function(data, drug.names, measure) {
     # Max proportion of observed events per intervention in % (across the corresponding trials)
     max.risk.interv <- round(aggregate(unlist(arm.risk), by = list(unlist(dat$t)), max)[, 2], 2)*100
 
-    # Tabulate summary statistics per intervention
-    table.interv.bin <- data.frame(drug.names,
-                                   as.data.frame(table(unlist(dat$t)))[, 2],
-                                   total.rand.partic.interv,
-                                   prop.obs.partic.interv,
-                                   #prop.mod.interv,
-                                   total.risk.interv,
-                                   min.risk.interv,
-                                   median.risk.interv,
-                                   max.risk.interv)
-    colnames(table.interv.bin) <- c("Interventions",
-                                    "Total trials",
-                                    "Total randomised",
-                                    "Completers (%)",
-                                    #"Missing participants (%)",
-                                    "Total events (%)",
-                                    "Min. events (%)",
-                                    "Median events (%)",
-                                    "Max. events (%)")
-
     # Turn into long format using the 'pairwise' function (netmeta): binary outcome
     pair.bin <- pairwise(as.list(dat$t),
                          event = as.list(dat$r),
@@ -244,34 +224,77 @@ describe.network <- function(data, drug.names, measure) {
 
     # Maximum proportion of observed events per observed comparison in % (across the corresponding trials)
     max.risk.comp <- round(aggregate(trial.risk, by = list(comp), max)[, 2], 2)*100
+  }
+
+
+  if (measure == "OR") {
+    # Tabulate summary statistics per intervention
+    table.interv <- data.frame(drug.names,
+                               as.data.frame(table(unlist(dat$t)))[, 2],
+                               total.rand.partic.interv,
+                               prop.obs.partic.interv,
+                               total.risk.interv,
+                               min.risk.interv,
+                               median.risk.interv,
+                               max.risk.interv)
+    colnames(table.interv) <- c("Interventions",
+                                "Total trials",
+                                "Total randomised",
+                                "Completers (%)",
+                                "Total events (%)",
+                                "Min. events (%)",
+                                "Median events (%)",
+                                "Max. events (%)")
 
     # Tabulate summary statistics per observed comparison
-    table.comp.bin <- data.frame(as.data.frame(table(comp))[, 1],
-                                 as.data.frame(table(comp))[, 2],
-                                 total.rand.partic.comp,
-                                 prop.obs.partic.comp,
-                                 #prop.mod.comp,
-                                 total.risk.comp,
-                                 min.risk.comp,
-                                 median.risk.comp,
-                                 max.risk.comp)
-    colnames(table.comp.bin) <- c("Comparisons",
-                                  "Total trials",
-                                  "Total randomised",
-                                  "Completers (%)",
-                                  #"Missing participants (%)",
-                                  "Total events (%)",
-                                  "Min. events (%)",
-                                  "Median events (%)",
-                                  "Max. events (%)")
+    table.comp <- data.frame(as.data.frame(table(comp))[, 1],
+                             as.data.frame(table(comp))[, 2],
+                             total.rand.partic.comp,
+                             prop.obs.partic.comp,
+                             total.risk.comp,
+                             min.risk.comp,
+                             median.risk.comp,
+                             max.risk.comp)
+    colnames(table.comp) <- c("Comparisons",
+                              "Total trials",
+                              "Total randomised",
+                              "Completers (%)",
+                              "Total events (%)",
+                              "Min. events (%)",
+                              "Median events (%)",
+                              "Max. events (%)")
+  } else {
+    # Tabulate summary statistics per intervention
+    table.interv <- data.frame(drug.names,
+                               as.data.frame(table(unlist(dat$t)))[, 2],
+                               total.rand.partic.interv,
+                               prop.obs.partic.interv)
+    colnames(table.interv) <- c("Interventions",
+                                "Total trials",
+                                "Total randomised",
+                                "Completers (%)")
+
+    # Tabulate summary statistics per observed comparison
+    table.comp <- data.frame(as.data.frame(table(comp))[, 1],
+                             as.data.frame(table(comp))[, 2],
+                             total.rand.partic.comp,
+                             prop.obs.partic.comp)
+    colnames(table.comp) <- c("Comparisons",
+                              "Total trials",
+                              "Total randomised",
+                              "Completers (%)")
   }
+
+
 
 
   results <- list(direct.comp = direct.comp,
                   two.arm.ns = two.arm.ns,
                   multi.arm.ns = multi.arm.ns,
                   total.rand.network = total.rand.network,
-                  prop.obs.network = prop.obs.network)
+                  prop.obs.network = prop.obs.network,
+                  Table.interventions = knitr::kable(table.interv),
+                  Table.comparisons = knitr::kable(table.comp))
 
   if (length(unique(na.omit(unlist(data.preparation(data, measure)$m)))) > 1) {
     results <- append(results, list(Table.interventions.Missing = knitr::kable(table.interv.mod),
@@ -283,9 +306,7 @@ describe.network <- function(data, drug.names, measure) {
   if (measure == "OR") {
     results <- append(results, list(prop.event.network = prop.event.network,
                                     trial.zero.event = trial.zero.event,
-                                    trial.all.zero.event = trial.all.zero.event,
-                                    Table.interventions = knitr::kable(table.interv.bin),
-                                    Table.comparisons = knitr::kable(table.comp.bin)))
+                                    trial.all.zero.event = trial.all.zero.event))
   } else {
     results
   }
