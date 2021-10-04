@@ -2,7 +2,7 @@
 % Please edit documentation in R/run.nodesplit_function.R
 \name{run.nodesplit}
 \alias{run.nodesplit}
-\title{A function to perform Bayesian node-splitting approach}
+\title{Bayesian node-splitting approach to explore (in)consistency}
 \usage{
 run.nodesplit(full, n.chains, n.iter, n.burnin, n.thin)
 }
@@ -39,7 +39,7 @@ Furthermore, the output includes the following element:
 }
 }
 \description{
-This function performs a Bayesian network meta-analysis based on the node-splitting approach of Dias et al. (2010) extended to address aggregate binary and continuous participant outcome data via the pattern-mixture model
+Performs a Bayesian network meta-analysis based on the node-splitting approach of Dias et al. (2010) extended to address aggregate binary and continuous participant outcome data via the pattern-mixture model
   (Spineli, 2019; Spineli et al., 2021). This model offers a local evaluation of the plausibility of the consistency assumption in the network (Dias et al. (2010)).
 }
 \details{

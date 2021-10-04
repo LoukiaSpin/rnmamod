@@ -2,7 +2,7 @@
 % Please edit documentation in R/series.meta.plot_function.R
 \name{series.meta.plot}
 \alias{series.meta.plot}
-\title{End-user-ready results: consistency model versus series of pairwise meta-analyses}
+\title{Forest plot of results: consistency model versus series of pairwise meta-analyses}
 \usage{
 series.meta.plot(full, meta, drug.names, save.xls)
 }
@@ -11,27 +11,27 @@ series.meta.plot(full, meta, drug.names, save.xls)
 
 \item{meta}{An object of S3 class \code{\link{run.series.meta}}. See 'Value' in \code{\link{run.series.meta}}.}
 
-\item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
-as they appear in \code{data} is used, instead.}
+\item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the 
+argument \code{drug.names} is not defined, the interventions are ordered as they appear in \code{data}.}
 
-\item{save.xls}{Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
-The default is \code{FALSE} (do not export to an Excel format).}
+\item{save.xls}{Logical to indicate whether to export the tabulated results in Excel 'xlsx' format at the working directory of the user.
+The default is \code{FALSE} (do not export in Excel format).}
 }
 \value{
 \code{series.meta.plot} returns a panel of two forest plots: (1) a forest plot on the posterior mean and 95\% credible interval of the effect of the observed comparisons under the consistency model and the corresponding pairwise meta-analyses,
   and (2) a forest plot on the posterior median and 95\% credible interval of the between-trial standard deviation (\eqn{\tau}) for the observed comparisons. The estimated \eqn{\tau} from the consistency model appears as a rectangle in the forest plot.
-  When a fixed-effect model has been performed, only the forest plot on the estimated effects is shown.
+  When a fixed-effect model has been fitted, only the forest plot on the estimated effects is shown.
 
   The R console prints the data-frame with the estimated effects of the observed comparisons under both models and the data-frame on the estimated (\eqn{\tau})s from the pairwise meta-analyses.
-  Furthermore, \code{series.meta.plot} exports both data-frames to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
+  Furthermore, \code{series.meta.plot} exports both data-frames in Excel 'xlsx' format at the working directory of the user.
 }
 \description{
-\code{series.meta.plot} facilitates the comparison of the estimated effects and between-trial standard deviation (where applicable) from .
-  Hence, the user can detect any inconsistencies in the estimated effects from the compared models and explore the gains in their precision by applying the consistency model.
-  Furthermore, the user can investigate the plausibility of the common between-trial heterogeneity assumption which is typically considered in the consistency model.
+Facilitates the comparison of the estimated effects and between-trial standard deviation (where applicable) from the network meta-analysis versus the results from the pairwise meta-analyses.
 }
 \details{
-\code{series.meta.plot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+\code{series.meta.plot} can be used only for a network of interventions. 
+The user can detect any inconsistencies in the estimated effects from the compared models and explore the gains in their precision by applying the consistency model.
+Furthermore, the user can investigate the plausibility of the common between-trial heterogeneity assumption which is typically considered in the consistency model.
 }
 \examples{
 data("nma.dogliotti2014")

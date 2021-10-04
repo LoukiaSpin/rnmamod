@@ -7,47 +7,51 @@
 netplot(data, drug.names, save.xls, ...)
 }
 \arguments{
-\item{data}{A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models.
+\item{data}{A data-frame of a one-trial-per-row format containing arm-level data of each trial.
 See 'Format' in \code{\link[rnmamod]{run.model}} function for the specification of the columns.}
 
-\item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data}. If the argument \code{drug.names} is not defined, the order of the interventions
-as they appear in \code{data} is used, instead.}
+\item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data}. If the argument \code{drug.names} is not defined, the interventions are ordered
+as they appear in \code{data}.}
 
-\item{save.xls}{Logical to indicate whether to export the tabulated results to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the working directory of the user.
-The default is \code{FALSE} (do not export to an Excel format).}
+\item{save.xls}{Logical to indicate whether to export the tabulated results in Excel 'xlsx' format at the working directory of the user.
+The default is \code{FALSE} (do not export in Excel format).}
 
 \item{...}{Additional arguments of the \code{\link[pcnetmeta]{nma.networkplot}} function of the R-package \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}.}
 }
 \value{
-A network plot with coloured closed-loops informed by multi-arm trials. Each node refers to the intervention and each link refers to the observed pairwise comparison.
-  The edges are proportionally to the number of direct treatment comparisons, unless specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function).
-  the node size is weighted by the total number of direct treatment comparisons of the corresponding treatment, unless specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function).
+A network plot with coloured closed-loops informed by multi-arm trials. Each node indicates an intervention and each link an observed pairwise comparison.
+  The edge thickness is proportional to the number of direct treatment comparisons, unless specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function).
+  The size of the node is weighted by the total number of direct treatment comparisons of the corresponding treatment, unless specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function).
 
-  \code{netplot} also returns five data-frames that describe the network under investigation:
+  \code{netplot} also returns five data-frames that describe characteristics of the network:
   \tabular{ll}{
-   \code{Network.description} \tab Number of interventions, possible comparisons, direct and indirect comparisons, number of trials in total, number of two-arm and multi-arm trials,
+   \code{Network.description} \tab The number of: interventions, possible comparisons, direct and indirect comparisons, number of trials in total, number of two-arm and multi-arm trials,
    number of randomised participants, proportion of participants completing the trial (completers), and proportion of missing participants. When the outcome is binary, the number of trials with at least one zero event,
    and the number of trials with all zero events are also presented. \cr
    \tab \cr
-   \code{Table.interventions} \tab For each interventions, the data-frame presents the number of trials, number of randomised participants, proportion of completers, and thr proportion of missing participants.
-   When the outcome is binary, the data-frame also presents the proportion of observed events, the minimum, median and maximum proportion of observed events across the corresponding trials.
-   However, when the outcome is continuous, the data-frame also presents the minimum, median and maximum t-statistic across the corresponding trials. The t-statistic is calculated as the ratio of
-   the extracted mean outcome, \code{y}, to the standard error, \code{se} (see the \code{data.preparation} function). \cr
+   \code{Table.interventions} \tab For each intervention, the number of trials, number of randomised participants, proportion of completers and of missing participants.
+   When the outcome is binary, the data-frame presents also the proportion of total observed events, the minimum, median and maximum proportion of observed events across the corresponding trials. \cr
    \tab \cr
-   \code{Table.comparisons} \tab The data-frame has the same structure with the \code{Table.interventions}; however, the summary results are illustrated for each observed comparison in the network
-   When the outcome is continuous, the t-statistic refers to the standardised mean difference defined as the ratio of mean difference to the standard error of mean difference. \cr
+   \code{Table.comparisons} \tab Identical structure to \code{Table.interventions} but for each observed comparison in the network. \cr
    \tab \cr
-   \code{Table.interventions.Missing} \tab The data-frame presents the summary results on the proportion of missing participants for each intervention.
-   It has the same structure with \code{Table.interventions} for the binary outcome. \cr
+   \code{Table.interventions.Missing} \tab The summary results on the proportion of missing participants for each intervention. See also 'Details'.
+   Identical structure to \code{Table.interventions} for the binary outcome. \cr
    \tab \cr
-   \code{Table.comparisons.Missing} \tab The data-frame presents the summary results on the proportion of missing participants for each observed comparison in the network.
-   It has the same structure with \code{Table.comparisons} for the binary outcome. \cr
+   \code{Table.comparisons.Missing} \tab The summary results on the proportion of missing participants for each observed comparison in the network. See also 'Details'.
+   Identical structure to \code{Table.comparisons} for the binary outcome. \cr
   }
 }
 \description{
-A function to facilitate drawing the network plot via the \code{\link[pcnetmeta]{nma.networkplot}} function
+Draws the network plot using the \code{\link[pcnetmeta]{nma.networkplot}} function
   of the R-package \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}. The \code{\link[gemtc]{mtc.data.studyrow}} function
-  of the R-package \href{https://CRAN.R-project.org/package=gemtc}{gemtc} is also used to convert \code{data} from the required one-trial-per-row format into the one-arm-per-row format.
+  of the R-package \href{https://CRAN.R-project.org/package=gemtc}{gemtc} is additionally used to convert \code{data} from the required one-trial-per-row format into the one-arm-per-row format.
+}
+\details{
+The proportion of total missing participants per intervention has been calculated as the total number of missing participants in an intervention to the total number of randomised
+  participants in that intervention. Similarly, for the proportion of total missing participants per observed comparison,
+
+  The median proportion of missing participants in an intervention is the median of the proportion of missing participants across the trials that investigated that intervention. Similarly, for the minimum, and
+  the maximum proportion of missing participants in an intervention. The concept is similar for the minimum, median, and maximum proportion of missing participants per observed comparison.
 }
 \examples{
 data("nma.bottomley2011")

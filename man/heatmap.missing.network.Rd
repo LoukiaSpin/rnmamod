@@ -7,24 +7,22 @@
 heatmap.missing.network(data, drug.names)
 }
 \arguments{
-\item{data}{A data-frame of a one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models.
+\item{data}{A data-frame of a one-trial-per-row format containing arm-level data of each trial.
 See 'Format' in \code{\link[rnmamod]{run.model}} function for the specification of the columns.}
 
-\item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data}. If the argument \code{drug.names} is not defined, the order of the interventions
-as they appear in the argument \code{data} is used, instead.}
+\item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data}. If the argument \code{drug.names} is not defined, the interventions are ordered
+as they appear in the argument \code{data}.}
 }
 \value{
-A heatmap on the proportion of MOD in each intervention and observed comparison of the network.
-  Each cell presents the median, minimum and maximum (in parenthesis) proportion of MOD across the corresponding trials.
-  The proportion of MOD in each intervention and observed comparison are depicted using white and black colour in the main diagonal and lower off-diagonal, respectively, of the heatmap.
-  First, the proportion of MOD in each trial-arm of the network is calculated to obtain the aforementioned summary statistics for each intervention.
-  Then, the total proportion of MOD in each pairwise comparison of each trial is calculated to obtain the aforementioned summary statistics for each observed comparison of the network.
-  The pairwise comparisons are read from left to right. We used the 'five-and-twenty' rule of Sackett and colleagues to characterise the \bold{median} proportion of MOD as being associated with low (up to 5\%),
+A heatmap on the proportion of MOD in each intervention and observed comparison in the network.
+  Each cell annotates the median, minimum and maximum (in parenthesis) proportion of MOD across the corresponding trials.
+  The proportion of MOD in each intervention and observed comparison are depicted in white and black colour in the main diagonal and lower off-diagonal, of the heatmap, respectively, 
+  The pairwise comparisons are read from left to right.  The 'five-and-twenty' rule of Sackett and colleagues is used to characterise the \bold{median} proportion of MOD as being associated with low (up to 5\%),
   moderate (more than 5\% and up to 20\%), and high risk of attrition bias (more than 20\%). Low, moderate, and high risk of bias associated with MOD is indicated using green, orange, and red colour, respectively.
   The function is redundant for a pairwise meta-analysis.
 }
 \description{
-This function illustrates the distribution of and the risk of bias associated with missing participant outcome data (MOD) for each intervention and observed comparison of the network.
+Illustrates the distribution of and the risk of bias associated with missing participant outcome data (MOD) for each intervention and observed comparison in the network.
 }
 \examples{
 data("nma.stowe2011")

@@ -67,8 +67,22 @@ net <- netplot(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU",
 net$Network.description
 ```
 
-Furthermore, the function returns a table that summarises the number of trials, number of randomised participants and the proportion of completers (participants who completed the trial) per interventions
+Furthermore, the function returns a table that summarises the number of trials, number of randomised participants and the proportion of completers (participants who completed the trial) per intervention. In the case of a binary outcome, the table additionally illustrates the distribution of the outcome as proportion: 
 
 ```{r, echo = FALSE, fig.show = "hide"}
 net$Table.interventions
 ```
+
+An identical table is returned for the observed comparisons in the network:
+
+```{r, echo = FALSE, fig.show = "hide"}
+net$Table.comparisons
+```
+
+When missing participants have been reported for each intervention arm of at least one trial, `netplot` returns a table with the distribution of proportion of missing participants per intervention:
+
+```{r, echo = FALSE, fig.show = "hide"}
+net$Table.comparisons
+```
+
+and per observed comparison in the network:

@@ -2,7 +2,7 @@
 % Please edit documentation in R/forestplot_function.R
 \name{forestplot}
 \alias{forestplot}
-\title{Forest-plot of comparisons with the selected intervention}
+\title{Forest plot of NMA results with a selected intervention}
 \usage{
 forestplot(full, compar, drug.names)
 }
@@ -11,25 +11,24 @@ forestplot(full, compar, drug.names)
 
 \item{compar}{A character to indicate the comparator intervention. it must be any name found in \code{drug.names}.}
 
-\item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the order of the interventions
-as they appear in \code{data} is used, instead.}
+\item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the interventions are ordered as they appear in \code{data}.}
 }
 \value{
-A panel of two forest plots: (1) a forest plot on the effect estimates and predictions of comparisons with the selected intervention of the network, and
+A panel of two forest plots: (1) a forest plot on the effect estimates and predictions of comparisons with the selected intervention in the network, and
 (2) a forest plot on the posterior mean and 95\% credible interval of SUCRA values of the interventions (Salanti et al., 2011).
 }
 \description{
-This function illustrates a forest plot of the posterior mean and 95\% credible and predictive interval of comparisons with the selected intervention of the network.
+Provides a forest plot with the posterior mean and 95\% credible and prediction intervals for comparisons with the selected intervention in the network.
 }
 \details{
-The x-axis in the forest plot of effect sizes displays all interventions in the network; the selected intervention that comprises the \code{compar} is indicated in the plot with a homonymous label.
-  For each comparison with the selected intervention, the 95\% credible and predictive intervals are displayed as overlapping lines with different colours. When the between-trial variance is very low, these two intervals become indiscernible.
-  Furthermore, the corresponding numerical results are displayed above each line: 95\% credible intervals are found in parentheses, and 95\% predictive intervals are found in brackets.
-  Odds ratio and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
+The y-axis of the plot displays the labels of the interventions in the network; the selected intervention that comprises the \code{compar} argument is annotated in the plot with the label 'Comparator intervention'.
+  For each comparison with the selected intervention, the 95\% credible and prediction intervals are displayed as overlapping lines in different colours.
+  The corresponding numerical results are displayed above each line: 95\% credible intervals are found in parentheses, and 95\% predictive intervals are found in brackets.
+  Odds ratios and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
 
-  The interventions are sorted in the descending order of their SUCRA values.
+  The interventions are sorted in descending order of their SUCRA values.
 
-  \code{forestplot} can be used only for a network of interventions. In the case of two interventions, the execution of the function will be stopped and an error message will be printed in the R console.
+  \code{forestplot} can be used only for a network of interventions.
 }
 \examples{
 data("nma.liu2013")

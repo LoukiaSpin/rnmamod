@@ -30,7 +30,7 @@ For a binary outcome, the columns of the data-frame in the argument \code{data} 
 The number of rows in \code{data} equals the number of collected trials. Each element appears in \code{data} as many times as the maximum number of interventions compared in a trial of the dataset.
 In pairwise meta-analysis (PMA), the maximum number of arms is inherently two.
 The same holds for NMA without multi-arm trials. In the case of NMA with multi-arm trials, the maximum number of arms exceeds two. See 'Examples' that illustrates the structure of \code{data} for a network with a maximum number of four arms.
-It is not necessary prerequisite of \code{run.model} that the multi-arm trials appear at the bottom of the dataset.
+It is not a prerequisite of \code{run.model} that the multi-arm trials appear at the bottom of the dataset.
 }
 \usage{
 run.model(
@@ -50,7 +50,7 @@ run.model(
 )
 }
 \arguments{
-\item{data}{A data-frame of the one-trial-per-row format containing arm-level data of each trial. This format is widely used for BUGS models. See 'Format' for the specification of the columns.}
+\item{data}{A data-frame of the one-trial-per-row format containing arm-level data of each trial. See 'Format' for the specification of the columns.}
 
 \item{measure}{Character string indicating the effect measure with values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio, mean difference,
 standardised mean difference and ratio of means, respectively.}
@@ -92,7 +92,7 @@ The default argument is 1000.}
 The default argument is 1.}
 }
 \value{
-A list of R2jags outputs on the summaries of the posterior distribution, and the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the following monitored parameters for a fixed-effect PMA:
+A list of R2jags output on the summaries of the posterior distribution, and the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the following monitored parameters for a fixed-effect PMA:
 \tabular{ll}{
  \code{EM} \tab The estimated summary effect measure (according to the argument \code{measure}).\cr
  \tab \cr
@@ -139,21 +139,21 @@ The \code{run.model} function also returns the arguments \code{data}, \code{meas
 as specified by the user to be considered in other functions of the package.
 }
 \description{
-This function performs a one-stage pairwise or network meta-analysis while addressing aggregate binary or continuous missing participant outcome data via the pattern-mixture model.
+Performs a one-stage pairwise or network meta-analysis while addressing aggregate binary or continuous missing participant outcome data via the pattern-mixture model.
 }
 \details{
 The model as specified by the arguments of \code{run.model} runs in \code{JAGS} and the progress of the simulation appears in the R console.
-  The output of \code{run.model} is used as an S3 object by other functions of the package function to be processed further and provide an end-user-ready output.
+  The output of \code{run.model} is used as an S3 object by other functions of the package and can be processed further and provide an end-user-ready output.
 
-  The \code{data.preparation} function is called to prepare the data for the Bayesian analysis. The data preparation includes the following actions. First, \code{data.preparation} checks
-  whether the element \strong{m} exists in \code{data}. If this element is missing, the \code{data.preparation} function creates a pseudo-data-frame for \code{m} that has the zero value for the observed trial-arms, and \code{NA} for the unobserved trial-arms,
-  and the pseudo-data-frame \code{I} that has the same values with the pseudo-data-frame for \code{m}. If the element \strong{m} exists in \code{data} and has values only for some trials, the pseudo-data-frame for \code{m} has the same values with
+  The \code{data.preparation} function is called to prepare the data for the Bayesian analysis. The data preparation includes the following steps. First, \code{data.preparation} checks
+  whether the element \strong{m} exists in the \code{data}. If this element is missing, the \code{data.preparation} function creates a pseudo-data-frame for \code{m} that has the zero value for the observed trial-arms, and \code{NA} for the unobserved trial-arms,
+  and the pseudo-data-frame \code{I} that has the same values with the pseudo-data-frame for \code{m}. If the element \strong{m} exists in the \code{data} and has values only for some trials, the pseudo-data-frame for \code{m} has the same values with
   \code{m} for the corresponding trial-arms, and the pseudo-data-frame \code{I} has the value one for these trial-arms. Both pseudo-data-frames aim to retain the trials without information on MOD in \code{data} and allow running the Bayesian analysis via the \code{prepare.model}
   function when MOD have not been extracted for any trial of the dataset. Second, the \code{data.preparation} function sorts the interventions across the arms of each trial in an ascending order and correspondingly sorts within each trial the remaining elements in \code{data} (see 'Format').
   Since the \code{prepare.model} function considers the first column in \strong{t} to include the control arm for every trial, this sorting ensures that interventions with a lower identifier are consistently treated as the control arm in each trial. This case is relevant in
   non-star-shaped networks. By default, \code{run.model} function treats the intervention with identifier equal to one as the reference intervention of the network.
 
-  To perform the Bayesian PMA or NMA, the \code{prepare.model} function is called which contains the WinBUGS code as written by Dias et al. (2013) for binomial and normal likelihood to analyse binary and continuous outcome data, respectively. \code{prepare.model} uses consistency models (as
+  To perform a Bayesian PMA or NMA, the \code{prepare.model} function is called which contains the WinBUGS code as written by Dias et al. (2013) for binomial and normal likelihood to analyse binary and continuous outcome data, respectively. \code{prepare.model} uses consistency models (as
   described in Lu and Ades (2006)) to estimate all possible comparisons in the network. It also accounts for the multi-arm trials by assigning conditional univariate normal distributions on the basic parameters of these trials, that is, effect parameters between non-baseline and baseline arms (Dias et al., 2013).
 
   The code of Dias et al. (2013) has been extended to incorporate the pattern-mixture model to adjust the underlying outcome in each arm of every trial for MOD (Turner et al., 2015; Spineli et al., 2021). Assumptions about the missingness parameter is specified using the arguments \code{mean.misspar} and \code{var.misspar}.

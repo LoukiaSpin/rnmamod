@@ -23,9 +23,9 @@
 #'    and the number of trials with all zero events are also presented. \cr
 #'    \tab \cr
 #'    \code{Table.interventions} \tab For each intervention, the number of trials, number of randomised participants, proportion of completers and of missing participants.
-#'    When the outcome is binary, the data-frame presents also the proportion of total observed events, the minimum, median and maximum proportion of observed events across the corresponding trials.
+#'    When the outcome is binary, the data-frame presents also the proportion of total observed events, the minimum, median and maximum proportion of observed events across the corresponding trials. \cr
 #'    \tab \cr
-#'    \code{Table.comparisons} \tab Identical structure to \code{Table.interventions} but for each observed comparison in the network.
+#'    \code{Table.comparisons} \tab Identical structure to \code{Table.interventions} but for each observed comparison in the network. \cr
 #'    \tab \cr
 #'    \code{Table.interventions.Missing} \tab The summary results on the proportion of missing participants for each intervention. See also 'Details'.
 #'    Identical structure to \code{Table.interventions} for the binary outcome. \cr

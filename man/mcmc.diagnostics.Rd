@@ -39,8 +39,8 @@ This function returns a data-frame that contains the Gelman-Rubin convergence di
 \code{mcmc.diagnostics} also uses the \code{\link[mcmcplots]{mcmcplot}} function to create an HTML file with a panel of diagnostic plots (trace, density, and autocorrelation) for each monitored parameter.
 }
 \description{
-This function evaluates whether convergence has been achieved for the monitored parameters of the Bayesian models.
-  The Gelman-Rubin convergence diagnostic and relevant diagnostic plots are applied for that purpose.
+Evaluates whether convergence has been achieved for the monitored parameters of the Bayesian models.
+  The Gelman-Rubin convergence diagnostic and relevant diagnostic plots are applied.
 }
 \details{
 For each monitored parameter, \code{mcmc.diagnostics} considers the maximum R-hat and compares it with the threshold 1.1: convergence is achieved for the monitored parameter, when the maximum R-hat
