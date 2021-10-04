@@ -24,18 +24,17 @@
 #'    \tab \cr
 #'    \code{Table.interventions} \tab For each intervention, the number of trials, number of randomised participants, proportion of completers and of missing participants.
 #'    When the outcome is binary, the data-frame presents the proportion of observed events, the minimum, median and maximum proportion of observed events across the corresponding trials.
-#'    When the outcome is continuous, the data-frame presents the minimum, median and maximum t-statistic across the corresponding trials. The t-statistic is calculated as the ratio of
-#'    the extracted mean outcome, \code{y}, to the standard error, \code{se} (see the \code{data.preparation} function). \cr
 #'    \tab \cr
 #'    \code{Table.comparisons} \tab Identical structure to \code{Table.interventions} but for each observed comparison in the network.
-#'    When the outcome is continuous, the t-statistic refers to the standardised mean difference defined as the ratio of mean difference to the standard error of mean difference. \cr
 #'    \tab \cr
-#'    \code{Table.interventions.Missing} \tab The summary results on the proportion of missing participants for each intervention.
+#'    \code{Table.interventions.Missing} \tab The summary results on the proportion of missing participants for each intervention. See also 'Details'.
 #'    Identical structure to \code{Table.interventions} for the binary outcome. \cr
 #'    \tab \cr
-#'    \code{Table.comparisons.Missing} \tab The summary results on the proportion of missing participants for each observed comparison in the network.
+#'    \code{Table.comparisons.Missing} \tab The summary results on the proportion of missing participants for each observed comparison in the network. See also 'Details'.
 #'    Identical structure to \code{Table.comparisons} for the binary outcome. \cr
 #'   }
+#'
+#' @details
 #'
 #' @seealso \code{\link[rnmamod]{run.model}}, \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta} and \href{https://CRAN.R-project.org/package=gemtc}{gemtc},
 #' \code{\link[rnmamod]{data.preparation}}.
