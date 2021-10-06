@@ -67,7 +67,6 @@ jobs:
         run: |
           curl.exe -o wjags.exe --url https://deac-fra.dl.sourceforge.net/project/mcmc-jags/JAGS/4.x/Windows/JAGS-4.3.0.exe
           wjags.exe /S
-          del wjags.exe
         shell: cmd
 
       - name: Install jags (macOS-latest)
