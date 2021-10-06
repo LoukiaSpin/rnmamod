@@ -28,13 +28,13 @@ library(rnmamod)
 
 ## Introduction
 
-This vignette aims to illustrate the toolkit of the **rnmamod** package for the creation of the network plot and summarisation of the corresponding outcome data by intervention and observed comparison using tables. If missing participant outcome data have been extracted, they will also be summarised by intervention and observed comparison.
+This vignette aims to illustrate the toolkits of the **rnmamod** package for the creation of the network plot and summarisation of the corresponding outcome data. If missing participant outcome data (MOD) have been extracted for all trials of the dataset, the **rnmamod** package facilitates visualising the proportion of MOD across the network and dataset.
 
 ## Example on a binary outcome 
 
 ### Dataset preparation
 
-We will use the systematic review of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that comprises 21 trials comparing seven pharmacologic interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. The exacerbation of COPD (harmful outcome) is the analysed *binary* outcome. 
+We will use the systematic review of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that comprises 21 trials comparing seven pharmacological interventions with each other and placebo in patients with chronic obstructive pulmonary disease (COPD). The exacerbation of COPD (harmful outcome) is the analysed *binary* outcome. 
 
 ```{r comment = NA}
 nma.baker2009
@@ -60,7 +60,7 @@ netplot(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+"
 netplot(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
 ```
 
-The intervention names in `drug.names` have been sorted in the ascending order of their identifier. Hence, `1` in the item `t` refers to `PBO` (placebo), `2` to `BUD` (budesonide), `3` to `BUD+` (budesonide plus formoterol) and so on. 
+The intervention names in `drug.names` must be sorted in the ascending order of their identifier. Hence, `1` in the item `t` refers to `PBO` (placebo), `2` to `BUD` (budesonide), `3` to `BUD+` (budesonide plus formoterol) and so on. See the 'Details' in ?nma.baker2009 for names of the interventions.
 
 ### Network characteristics
 
@@ -85,22 +85,30 @@ An identical table is returned for the **observed comparisons** in the network:
 net$Table.comparisons
 ```
 
+The users can export all tables in Excel 'xlsx' format at the working directory of their project by adding the argument `save.xls = TRUE` in the `netplot` function.
 
 ### Distribution of missing participants 
 
-When missing participants have been reported for each intervention arm of at least one trial, `netplot` returns a table with the distribution of the proportion of missing participants **per intervention**:
+When missing participants have been reported for each intervention arm of at least one trial, we use the `heatmap.missing.network` function to illustrate the proportion of missing participants **per intervention** (main diagonal) and **observed comparison** (lower off-diagonal) in the network:
 
-```{r, echo = FALSE, fig.show = "hide"}
-net$Table.interventions.Missing
+```{r, results = "hide", fig.show = "hide"}
+heatmap.missing.network(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
 ```
 
-and **per observed comparison** in the network:
-
-```{r, echo = FALSE, fig.show = "hide"}
-net$Table.comparisons.Missing
+```{r, echo = FALSE, results = "hide", fig.width = 7, fig.height = 7, fig.align = "center"}
+heatmap.missing.network(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
 ```
 
-The users can export all tables in Excel 'xlsx' format at the working directory of their project by adding the argument `save.xls = TRUE` in the function.
+The `heatmap.missing.dataset` function illustrates the proportion of missing participants for each arm of every trial in the dataset:
+
+```{r, results = "hide", fig.show = "hide"}
+heatmap.missing.dataset(data = nma.baker2009, trial.names = nma.baker2009$study, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+```
+
+```{r, echo = FALSE, results = "hide", fig.width = 7, fig.height = 7, fig.align = "center"}
+heatmap.missing.dataset(data = nma.baker2009, trial.names = nma.baker2009$study, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+```
+
 
 ## References
 
