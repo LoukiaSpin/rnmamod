@@ -156,12 +156,12 @@ netplot <- function(data, drug.names, save.xls, ...){
                   Table.interventions = dat$Table.interventions,
                   Table.comparisons   = dat$Table.comparisons)
 
-  if (length(unique(na.omit(unlist(data.preparation(data, measure)$m)))) > 1) {
-    results <- append(results, list(Table.interventions.Missing = dat$Table.interventions.Missing,
-                                    Table.comparisons.Missing = dat$Table.comparisons.Missing))
-  } else {
-    results
-  }
+  #if (length(unique(na.omit(unlist(data.preparation(data, measure)$m)))) > 1) {
+  #  results <- append(results, list(Table.interventions.Missing = dat$Table.interventions.Missing,
+  #                                  Table.comparisons.Missing = dat$Table.comparisons.Missing))
+  #} else {
+  #  results
+  #}
 
   return(results)
 }
