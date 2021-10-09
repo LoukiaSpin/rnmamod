@@ -17,11 +17,11 @@ Authors@R:
            role = "ctb",
            comment = c(ORCID = "0000-0002-5732-4044")))
 Maintainer: Loukia Spineli <Spineli.Loukia@mh-hannover.de>
-Description: Perform pairwise and network meta-analysis for aggregate binary or continuous outcome
-    data, while adjusting for missing participant outcome data.
+Description: Perform pairwise and network meta-analysis with aggregate binary or continuous missing 
+    participant outcome data.
 Depends: 
     R (>= 4.0.0),
-    rjags (>= 4.0.0)
+    R2jags
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -40,7 +40,6 @@ Imports:
     netmeta,
     pcnetmeta,
     reshape2,
-    R2jags,
     scales,
     stats,
     utils,

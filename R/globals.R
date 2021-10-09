@@ -1,6 +1,6 @@
 #' @import
 #'   ggplot2
-#'   rjags
+#'   R2jags
 #'   stats
 #'
 #' @importFrom coda as.mcmc
@@ -16,7 +16,6 @@
 #' @importFrom netmeta pairwise netconnection
 #' @importFrom pcnetmeta nma.networkplot
 #' @importFrom reshape2 melt
-#' @importFrom R2jags jags
 #' @importFrom scales rescale percent
 #' @importFrom writexl write_xlsx
 #' @importFrom utils combn
@@ -66,7 +65,7 @@ utils::globalVariables(c("active",
 
 
 suppressMessages({"Registered S3 method overwritten by 'mcmcplots':
-                    method        from
-                   as.mcmc.rjags R2jags"})
+                     method        from
+                     as.mcmc.rjags R2jags"})
 
 
