@@ -20,7 +20,8 @@ Maintainer: Loukia Spineli <Spineli.Loukia@mh-hannover.de>
 Description: Perform pairwise and network meta-analysis for aggregate binary or continuous outcome
     data, while adjusting for missing participant outcome data.
 Depends: 
-    R (>= 4.0.0)
+    R (>= 4.0.0),
+    rjags (>= 4.0.0)
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
