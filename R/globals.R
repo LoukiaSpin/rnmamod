@@ -1,6 +1,5 @@
 #' @import
 #'   ggplot2
-#'   R2jags
 #'   stats
 #'
 #' @importFrom coda as.mcmc
@@ -16,6 +15,7 @@
 #' @importFrom netmeta pairwise netconnection
 #' @importFrom pcnetmeta nma.networkplot
 #' @importFrom reshape2 melt
+#' @importFrom R2jags jags
 #' @importFrom scales rescale percent
 #' @importFrom writexl write_xlsx
 #' @importFrom utils combn

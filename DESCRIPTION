@@ -20,8 +20,7 @@ Maintainer: Loukia Spineli <Spineli.Loukia@mh-hannover.de>
 Description: Perform pairwise and network meta-analysis with aggregate binary or continuous missing 
     participant outcome data.
 Depends: 
-    R (>= 4.0.0),
-    R2jags
+    R (>= 4.0.0)
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -40,6 +39,7 @@ Imports:
     netmeta,
     pcnetmeta,
     reshape2,
+    R2jags
     scales,
     stats,
     utils,
