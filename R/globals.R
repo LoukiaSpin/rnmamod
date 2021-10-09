@@ -64,8 +64,7 @@ utils::globalVariables(c("active",
                          "y"))
 
 Sys.setenv(`_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_` = "false")
-suppressMessages({"Registered S3 method overwritten by 'mcmcplots':
-                     method        from
-                     as.mcmc.rjags R2jags"})
+Sys.setenv(JAGS_HOME="C:\\Program Files\\JAGS\\JAGS-4.2.0")
+
 
 
