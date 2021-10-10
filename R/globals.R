@@ -66,5 +66,5 @@ utils::globalVariables(c("active",
 Sys.setenv("_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_" = "false")
 Sys.setenv("JAGS_HOME"="C:\\Program Files\\JAGS\\JAGS-4.2.0\\")
 options(devtools.install.args = "--no-multiarch")
-Sys.setenv("R_LIBS_USER"="C:\\Program Files\\R\\R-4.1.1\\library")
+
 
