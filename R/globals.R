@@ -66,5 +66,5 @@ utils::globalVariables(c("active",
 Sys.setenv(`_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_` = "false")
 Sys.setenv(`JAGS_HOME`="C:\\Program Files\\JAGS\\JAGS-4.2.0\\x64\\bin")
 options(devtools.install.args = "--no-multiarch")
-
+Sys.setenv(PATH = paste(Sys.getenv("PATH"), "C:\\Users\\Loukia\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin", sep=.Platform$path.sep))
 
