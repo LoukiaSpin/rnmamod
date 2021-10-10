@@ -44,6 +44,8 @@ Imports:
     stats,
     utils,
     writexl
+Suggests: 
+    rjags
 RoxygenNote: 7.1.2
 Language: en-US
 Suggests: 
