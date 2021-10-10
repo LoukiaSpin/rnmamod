@@ -22,7 +22,6 @@ Description: Perform pairwise and network meta-analysis with aggregate binary or
 Depends: 
     R (>= 4.0.0)
 License: GPL-3 + file LICENSE
-SystemRequirements:	JAGS (http://mcmc-jags.sourceforge.net)
 Encoding: UTF-8
 LazyData: true
 Imports: 
