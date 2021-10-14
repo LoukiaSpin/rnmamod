@@ -51,7 +51,7 @@ head(nma.baker2009)
 #>         Rennard, 2001  1  7 NA NA 41 38 NA NA 29 22 NA NA 135 132 NA NA
 ```
 
-Create the network plot using the *nma.networkplot* function of the [pcnetmeta](https://cran.r-project.org/web/packages/pcnetmeta/index.html) R package:
+Create the network plot using the *nma.networkplot* function of the [pcnetmeta](https://CRAN.R-project.org/package=netmeta) R package:
 
 ``` r
 # The names of the interventions in the order they appear in the dataset

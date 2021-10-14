@@ -1,6 +1,6 @@
 Package: rnmamod
 Type: Package
-Title: Addressing missing participants with aggregate binary or continuous outcome data in network meta-analysis
+Title: Addressing Missing Participants with Aggregate Binary or Continuous Outcome Data in Network Meta-Analysis
 Version: 0.1.0
 Authors@R: 
   c(person(given = "Loukia",

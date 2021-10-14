@@ -54,7 +54,7 @@ The function applies pattern-mixture model under a specific assumption about the
 }
 \details{
 The \code{Taylor.IMOR} function is found in the \code{\link[rnmamod]{unrelated.effects.plot}} function. The latter uses the
-  the \code{\link[netmeta]{pairwise}} function from the package \href{https://cran.r-project.org/web/packages/netmeta/netmeta.pdf}{netmeta}
+  the \code{\link[netmeta]{pairwise}} function from the package \href{https://CRAN.R-project.org/package=netmeta}{netmeta}
   to transform the dataset from the wide arm-based format (see, 'Arguments' for \code{data} in \code{\link[rnmamod]{unrelated.effects.plot}})
   into the long-arm based format.
 }

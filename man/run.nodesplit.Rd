@@ -94,7 +94,7 @@ Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed treatment
 
 Gelman A, Rubin DB. Inference from iterative simulation using multiple sequences. \emph{Stat Sci} 1992;\bold{7}:457--472. [\doi{10.1214/ss/1177011136}]
 
-van Valkenhoef G, Dias S, Ades AE, Welton NJ. Automated generation of node-splitting models for assessment of inconsistency in network meta-analysis. \emph{Res Synth Methods} 2016;\bold{7}(1):80--93. [\doi{doi: 10.1002/jrsm.1167}]
+van Valkenhoef G, Dias S, Ades AE, Welton NJ. Automated generation of node-splitting models for assessment of inconsistency in network meta-analysis. \emph{Res Synth Methods} 2016;\bold{7}(1):80--93. [\doi{10.1002/jrsm.1167}]
 }
 \seealso{
 \code{\link{run.model}}, \code{\link{nodesplit.plot}}, \code{\link{prepare.nodesplit}}, \code{\link[R2jags]{jags}}, \code{\link[gemtc]{mtc.nodesplit.comparisons}}, \code{\link[gemtc]{mtc.nodesplit}}
