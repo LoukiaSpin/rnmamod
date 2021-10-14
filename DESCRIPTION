@@ -44,6 +44,7 @@ Imports:
     stats,
     utils,
     writexl
+SystemRequirements: JAGS 4.x.y (http://mcmc-jags.sourceforge.net)
 RoxygenNote: 7.1.2
 Language: en-US
 Suggests: 
