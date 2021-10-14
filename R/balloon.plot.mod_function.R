@@ -224,7 +224,7 @@ balloon.plot.mod <- function(sens, compar, drug.names){
   # Normalise tau2. We need this to weight the bubbles in the balloon plot
   tau.normalised <- (tau - min(tau))/(max(tau) - min(tau))
 
-  # Prepare dataset for the ggplot2
+  ## Prepare dataset for the ggplot2
   mat.tau <- data.frame(missp, tau, sd.tau, extent.tau); colnames(mat.tau) <- c("active", "control", "value", "sd.value", "extent")
 
   ## Enhanced balloon plot for the between-trial standard deviation
