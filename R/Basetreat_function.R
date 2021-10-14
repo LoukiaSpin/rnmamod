@@ -4,7 +4,7 @@
 #####################################################################################
 #
 Basetreat <- function(treat, b)
-  # Builds vector with baseline treatments
+ # Builds vector with baseline treatments
 {
   N <- nrow(treat)
   out <- rep(0,N)
