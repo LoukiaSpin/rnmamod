@@ -20,21 +20,21 @@ If the argument \code{drug_names} is not defined, the order of the interventions
 as they appear in \code{data} is used, instead.}
 }
 \value{
-\code{balloon_plot_mod} A list of two enhanced balloon plots for one comparison
+\code{balloon_plot} A list of two enhanced balloon plots for one comparison
   (see 'Details' for the description of the enhanced balloon plot):
   \tabular{ll}{
    \code{Plot_effect_size} \tab The enhanced balloon plot for the
    summary effect size of one pairwise comparison.\cr
    \tab \cr
    \code{Plot_tau} \tab The enhanced balloon plot for \eqn{\tau}. When the
-   fixed-effect model has been performed in \code{run.sensitivity},
-   the function will not return the \code{Plot.tau}.\cr
+   fixed-effect model has been performed in \code{run_sensitivity},
+   the function will not return the \code{Plot_tau}.\cr
 }
 }
 \description{
 Creates the enhanced balloon plot for the summary effect size and between-trial
   standard deviation, \eqn{\tau}, under different scenarios about the missingness
-  parameter for a pair of interventions. \code{balloon_plot_mod} uses the scenarios
+  parameter for a pair of interventions. \code{balloon_plot} uses the scenarios
   considered in \code{\link{run_sensitivity}}.
 }
 \details{
@@ -48,7 +48,7 @@ For the summary effect size of the selected pairwise comparison, the different
   inconclusive evidence (the 95\% credible interval includes the null value).
   The missing-at-random assumption (primary analysis) is labeled in a white frame.
   Both axes illustrate the scenarios as specified in the argument
-  \code{mean.scenarios} of the \code{run_sensitivity} function:
+  \code{mean_scenarios} of the \code{run_sensitivity} function:
   the x-axis refers to the 'experimental' intervention, and the y-axis refers to
   the 'control' intervention.
 
@@ -74,22 +74,22 @@ res <- run_model(data = nma.baker2009,
                  measure = "OR",
                  model = "RE",
                  assumption = "IDE-ARM",
-                 heter.prior = list("halfnormal", 0, 1),
-                 mean.misspar = c(0, 0),
-                 var.misspar = 1,
+                 heter_prior = list("halfnormal", 0, 1),
+                 mean_misspar = c(0, 0),
+                 var_misspar = 1,
                  D = 1,
-                 n.chains = 3,
-                 n.iter = 10000,
-                 n.burnin = 1000,
-                 n.thin = 1)
+                 n_chains = 3,
+                 n_iter = 10000,
+                 n_burnin = 1000,
+                 n_thin = 1)
 
 # Perform the sensitivity analysis (missing-at-random assumption)
 res.sens <- run_sensitivity(full = res,
-                            var.misspar = 1,
-                            n.chains = 3,
-                            n.iter = 10000,
-                            n.burnin = 1000,
-                            n.thin = 1)
+                            var_misspar = 1,
+                            n_chains = 3,
+                            n_iter = 10000,
+                            n_burnin = 1000,
+                            n_thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
 interv.names <- c("placebo", "budesonide", "budesonide plus formoterol",
@@ -98,18 +98,18 @@ interv.names <- c("placebo", "budesonide", "budesonide plus formoterol",
 
 # Create the enhanced balloon plot for 'tiotropium versus salmeterol'
 balloon_plot(sens = res.sens,
-                 compar = c("tiotropium", "salmeterol"),
-                 drug_names = interv.names)
+             compar = c("tiotropium", "salmeterol"),
+             drug_names = interv.names)
 }
 }
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
-primary analysis results: A case study on missing outcome data in pairwise
-and network meta-analysis. \emph{Res Synth Methods}
-2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
+  primary analysis results: A case study on missing outcome data in pairwise
+  and network meta-analysis. \emph{Res Synth Methods}
+  2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
 }
 \seealso{
-\code{\link{run.sensitivity}}, \code{\link{run.model}}
+\code{\link{run_sensitivity}}, \code{\link{run_model}}
 }
 \author{
 {Loukia M. Spineli}

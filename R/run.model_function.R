@@ -395,10 +395,10 @@ run_model <- function(data,
                    "ref" = item$ref,
                    "I" = item$I,
                    "M" = ifelse(!is.na(item$m), mean_misspar, NA),
-                   "cov.phi" = 0.5*var_misspar,
+                   "cov.phi" = 0.5 * var_misspar,
                    "var.phi" = var_misspar,
                    "meand.phi" = mean_misspar,
-                   "precd.phi" = 1/var_misspar,
+                   "precd.phi" = 1 / var_misspar,
                    "D" = D,
                    "heter.prior" = heterog_prior)
 
@@ -420,10 +420,10 @@ run_model <- function(data,
                   "totresdev.o",
                   "hat.par")
 
-  if (is.element(assumption, c("HIE-COMMON", "HIE-TRIAL", "HIE-ARM"))) {
-    param_jags <- append(param_jags, "mean.phi")
+  param_jags <- if (is.element(assumption, c("HIE-COMMON", "HIE-TRIAL", "HIE-ARM"))) {
+    append(param_jags, "mean.phi")
   } else {
-    param_jags <- append(param_jags, "phi")
+    append(param_jags, "phi")
   }
 
   param_jags <- if (model == "RE") {
@@ -445,7 +445,7 @@ run_model <- function(data,
                   n.thin = n_thin)
 
 
-  ## Turn R2jags object into a data-frame
+  # Turn R2jags object into a data-frame
   getResults <- as.data.frame(t(jagsfit$BUGSoutput$summary))
 
   # Effect size of all unique pairwise comparisons
