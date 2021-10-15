@@ -58,7 +58,10 @@
 #'   MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function
 #'   of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 #'   The default argument is 10000.
-#' @param n_burnin Positive integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#' @param n_burnin Positive integer specifying the number of iterations to
+#'   discard at the beginning of the MCMC sampling; an argument of the
+#'   \code{\link[R2jags]{jags}} function of the R-package
+#'   \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 #'   The default argument is 1000.
 #' @param n_thin Positive integer specifying the thinning rate for the
 #'   MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function
@@ -108,10 +111,10 @@
 #'    \code{EM} \tab The estimated summary effect measure (according to the
 #'    argument \code{measure}).\cr
 #'    \tab \cr
-#'    \code{dev.o} \tab The deviance contribution of each trial-arm based
+#'    \code{dev_o} \tab The deviance contribution of each trial-arm based
 #'    on the observed outcome.\cr
 #'    \tab \cr
-#'    \code{hat.par} \tab The fitted outcome at each trial-arm.\cr
+#'    \code{hat_par} \tab The fitted outcome at each trial-arm.\cr
 #'    \tab \cr
 #'    \code{phi} \tab The informative missingness parameter.\cr
 #'   }
@@ -119,7 +122,7 @@
 #'   For a random-effects PMA, the output additionally includes the
 #'   following elements:
 #'   \tabular{ll}{
-#'    \code{EM.pred} \tab The predicted summary effect measure
+#'    \code{EM_pred} \tab The predicted summary effect measure
 #'    (according to the argument \code{measure}).\cr
 #'    \tab \cr
 #'    \code{delta} \tab The estimated trial-specific effect measure
@@ -132,11 +135,11 @@
 #'
 #'   For a random-effects model, the output additionally includes:
 #'   \tabular{ll}{
-#'    \code{EM.ref} \tab The estimated summary effect measure
+#'    \code{EM_ref} \tab The estimated summary effect measure
 #'    (according to the argument \code{measure}) of all comparisons
 #'    with the reference intervention.\cr
 #'    \tab \cr
-#'    \code{pred.ref} \tab The predicted summary effect measure
+#'    \code{pred_ref} \tab The predicted summary effect measure
 #'    (according to the argument \code{measure}) of all comparisons
 #'    with the reference intervention.\cr
 #'    \tab \cr
@@ -146,7 +149,7 @@
 #'    \code{effectiveneness} \tab The ranking probability of each intervention
 #'     for every rank.\cr
 #'   }
-#'   In NMA, \code{EM} and \code{EM.pred} refer to all possible pairwise comparisons
+#'   In NMA, \code{EM} and \code{EM_pred} refer to all possible pairwise comparisons
 #'   of interventions in the network. Furthermore, \code{tau} is typically assumed
 #'   to be common for all observed comparisons in the network.
 #'

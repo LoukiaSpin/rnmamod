@@ -9,15 +9,15 @@
 #'   Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.
 #'   The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"}, \code{"HIE"}, and \code{"IND"} stand for identical, hierarchical and independent, respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and uncorrelated, respectively.
 #'
-#' @return An R character vector object to be passed to \code{\link{run.nodesplit}} through the \code{\link[base]{textconnections}} function as the argument \code{object}.
+#' @return An R character vector object to be passed to \code{\link{run_nodesplit}} through the \code{\link[base]{textconnections}} function as the argument \code{object}.
 #'
 #' @details This functions creates the model in the JAGS dialect of the BUGS language. The output of this function constitutes the argument \code{model.file} of \code{\link[R2jags]{jags}} via the \code{\link[base]{textconnections}} function.
 #'
-#'   The split nodes have been automatically selected via the \code{mtc.nodesplit.comparisons} function of the \code{\link{gemtc}} package. See 'Details' in  \code{run.nodesplit}.
+#'   The split nodes have been automatically selected via the \code{mtc.nodesplit.comparisons} function of the \code{\link{gemtc}} package. See 'Details' in  \code{run_nodesplit}.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run.nodesplit}}, \code{\link[base]{textconnections}}, \code{\link[R2jags]{jags}}, \code{\link[gemtc]{mtc.nodesplit.comparisons}}
+#' @seealso \code{\link{run_nodesplit}}, \code{\link[base]{textconnections}}, \code{\link[R2jags]{jags}}, \code{\link[gemtc]{mtc.nodesplit.comparisons}}
 #'
 #' @references
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome data in network meta-analysis: a one-stage pattern-mixture model approach. \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
@@ -27,7 +27,7 @@
 #' Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed treatment comparison meta-analysis. \emph{Stat Med} 2010;\bold{29}(7-8):932--44. [\doi{10.1002/sim.3767}]
 #'
 #' @export
-prepare.nodesplit <- function(measure, model, assumption) {
+prepare_nodesplit <- function(measure, model, assumption) {
 
   code <- paste0("model\n{",
                  "\n\tfor (i in 1:ns) {")
