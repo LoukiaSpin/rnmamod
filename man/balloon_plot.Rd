@@ -14,14 +14,16 @@ See 'Value' in \code{\link{run_sensitivity}}.}
 comparison of interest. The first element refers to the 'experimental'
 and the second element to the 'control' intervention of the comparison.}
 
-\item{drug_names}{A vector of labels with the name of the interventions in the order
-they appear in the argument \code{data} of \code{\link{run_model}}.
-If the argument \code{drug_names} is not defined, the order of the interventions
-as they appear in \code{data} is used, instead.}
+\item{drug_names}{A vector of labels with the name of the interventions
+in the order they appear in the argument \code{data} of
+\code{\link{run_model}}. If the argument \code{drug_names} is not defined,
+the order of the interventions as they appear in
+\code{data} is used, instead.}
 }
 \value{
-\code{balloon_plot} A list of two enhanced balloon plots for one comparison
-  (see 'Details' for the description of the enhanced balloon plot):
+\code{balloon_plot} A list of two enhanced balloon plots for one
+  comparison (see 'Details' for the description of the enhanced
+  balloon plot):
   \tabular{ll}{
    \code{Plot_effect_size} \tab The enhanced balloon plot for the
    summary effect size of one pairwise comparison.\cr
@@ -32,38 +34,40 @@ as they appear in \code{data} is used, instead.}
 }
 }
 \description{
-Creates the enhanced balloon plot for the summary effect size and between-trial
-  standard deviation, \eqn{\tau}, under different scenarios about the missingness
-  parameter for a pair of interventions. \code{balloon_plot} uses the scenarios
-  considered in \code{\link{run_sensitivity}}.
+Creates the enhanced balloon plot for the summary effect size and
+  between-trial standard deviation, \eqn{\tau}, under different scenarios
+  about the missingness parameter for a pair of interventions.
+  \code{balloon_plot} uses the scenarios considered in
+  \code{\link{run_sensitivity}}.
 }
 \details{
-For the summary effect size of the selected pairwise comparison, the different
-  colour and size of the bubbles reflect the posterior standard deviation and the
-  magnitude of the posterior mean, respectively.
+For the summary effect size of the selected pairwise comparison,
+  the different colour and size of the bubbles reflect the posterior
+  standard deviation and the magnitude of the posterior mean, respectively.
   A colour key appears below the plot.
   The size of the bubble is proportional to the corresponding posterior mean.
-  Crossed bubbles indicate scenarios with conclusive evidence (the 95\% credible
-  interval excludes the null value), and filled bubbles indicate scenarios with
-  inconclusive evidence (the 95\% credible interval includes the null value).
-  The missing-at-random assumption (primary analysis) is labeled in a white frame.
+  Crossed bubbles indicate scenarios with conclusive evidence (the 95\%
+  credible interval excludes the null value), and filled bubbles indicate
+  scenarios with inconclusive evidence (the 95\% credible interval includes
+  the null value). The missing-at-random assumption (primary analysis) is
+  labeled in a white frame.
   Both axes illustrate the scenarios as specified in the argument
   \code{mean_scenarios} of the \code{run_sensitivity} function:
-  the x-axis refers to the 'experimental' intervention, and the y-axis refers to
-  the 'control' intervention.
+  the x-axis refers to the 'experimental' intervention, and the y-axis refers
+  to the 'control' intervention.
 
   The same enhanced balloon plot is created for \eqn{\tau}.
-  However, filled bubbles indicate low statistical heterogeneity (the posterior
-  median of \eqn{\tau} is lower than the median of the prior distribution
-  for the heterogeneity parameter),
+  However, filled bubbles indicate low statistical heterogeneity
+  (the posterior median of \eqn{\tau} is lower than the median of the
+  prior distribution for the heterogeneity parameter),
   and crossed bubbles indicate considerable statistical heterogeneity
   (the posterior median of \eqn{\tau} exceeds the median of the prior
   distribution).
 
   \code{balloon_plot_mod} can be used only for a network of interventions
   and when missing outcome data have been extracted for at least one trial.
-  Otherwise, the execution of the function will be stopped and an error message
-  will be printed in the R console.
+  Otherwise, the execution of the function will be stopped and an error
+  message will be printed in the R console.
 }
 \examples{
 data("nma.baker2009")

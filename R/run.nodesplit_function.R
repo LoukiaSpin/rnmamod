@@ -4,8 +4,8 @@
 #'   Performs a Bayesian network meta-analysis based on the node-splitting
 #'   approach of Dias et al. (2010) extended to address aggregate binary
 #'   and continuous participant outcome data via the pattern-mixture model
-#'   (Spineli, 2019; Spineli et al., 2021). This model offers a local evaluation of
-#'   the plausibility of the consistency assumption in the network
+#'   (Spineli, 2019; Spineli et al., 2021). This model offers a local evaluation
+#'   of the plausibility of the consistency assumption in the network
 #'   (Dias et al. (2010)).
 #'
 #' @param full An object of S3 class \code{\link{run_model}}.
@@ -56,19 +56,20 @@
 #'
 #' @details \code{run_nodesplit} does not contain the arguments \code{data},
 #'   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
-#'   \code{mean_misspar}, and \code{var.misspar} that are found in \code{run_model}.
-#'   This is to prevent misspecifying the Bayesian model that has been considered
-#'   in \code{run_model}. Instead, these arguments are contained in the argument
-#'   \code{full} of the function. Therefore, the user needs first to apply
-#'   \code{run_model}, and then use \code{run_nodesplit} (see, 'Examples').
+#'   \code{mean_misspar}, and \code{var.misspar} that are found in
+#'   \code{run_model}. This is to prevent misspecifying the Bayesian model that
+#'   has been considered in \code{run_model}. Instead, these arguments are
+#'   contained in the argument \code{full} of the function. Therefore, the user
+#'   needs first to apply \code{run_model}, and then use \code{run_nodesplit}
+#'   (see, 'Examples').
 #'
-#'   To perform the Bayesian node-splitting approach, the \code{prepare_nodesplit}
-#'   function is called which contains the WinBUGS code as written by
-#'   Dias et al. (2010) for binomial and normal likelihood to analyse binary
-#'   and continuous outcome data, respectively.
-#'   \code{prepare_nodesplit} has been extended to incorporate the pattern-mixture
-#'   model with informative missingness parameters for binary and continuous
-#'   outcome data (see, 'Details' in \code{run_model}).
+#'   To perform the Bayesian node-splitting approach, the
+#'   \code{prepare_nodesplit} function is called which contains the WinBUGS
+#'   code as written by Dias et al. (2010) for binomial and normal likelihood
+#'   to analyse binary and continuous outcome data, respectively.
+#'   \code{prepare_nodesplit} has been extended to incorporate the
+#'   pattern-mixture model with informative missingness parameters for binary
+#'   and continuous outcome data (see, 'Details' in \code{run_model}).
 #'
 #'   \code{run_nodesplit} runs Bayesian network meta-analysis based on the
 #'   node-splitting approach in \code{JAGS}. The progress of the simulation
@@ -87,13 +88,14 @@
 #'   package uses the option (3) in van Valkenhoef et al. (2016).
 #'   Option (1) keeps the baseline arm of the node-to-split in the corresponding
 #'   multi-arms. Option (3) excludes both arms of the node-to-split from the
-#'   corresponding multi-arm trials. Hence, the corresponding subnetworks obtained
-#'   after splitting the node differ, and by extend, the results that correspond
-#'   to split nodes found in multi-arm trials.
+#'   corresponding multi-arm trials. Hence, the corresponding subnetworks
+#'   obtained after splitting the node differ, and by extend, the results that
+#'   correspond to split nodes found in multi-arm trials.
 #'
 #'   The output of \code{run_nodesplit} is not end-user-ready.
 #'   The \code{nodesplit_plot} function uses the output of \code{run_nodesplit}
-#'   as an S3 object and processes it further to provide an end-user-ready output.
+#'   as an S3 object and processes it further to provide an end-user-ready
+#'   output.
 #'
 #'   \code{run_nodesplit} can be used only for a network of interventions.
 #'   In the case of two interventions, the execution of the function will
@@ -107,8 +109,8 @@
 #' \code{\link[gemtc]{mtc.nodesplit}}
 #'
 #' @references
-#'   Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome data
-#'   in network meta-analysis: a one-stage pattern-mixture model approach.
+#'   Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
+#'   data in network meta-analysis: a one-stage pattern-mixture model approach.
 #'   \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
 #'
 #'   Spineli LM. An empirical comparison of Bayesian modelling strategies for
@@ -194,8 +196,15 @@ run_nodesplit <- function(full,
     na.. <- item$na
 
     # Convert to one-arm-per-row as required in GeMTC
-    transform <- mtc.data.studyrow(cbind(item$t, item$y0, item$se0, item$N, na..),
-                                   armVars = c('treatment'= 't', 'mean'='y', 'std.error'='se', 'sampleSize'='n'),
+    transform <- mtc.data.studyrow(cbind(item$t,
+                                         item$y0,
+                                         item$se0,
+                                         item$N,
+                                         na..),
+                                   armVars = c('treatment'= 't',
+                                               'mean'='y',
+                                               'std.error'='se',
+                                               'sampleSize'='n'),
                                    nArmsVar='na')
   } else {
     # Rename columns to agree with gemtc
@@ -205,8 +214,13 @@ run_nodesplit <- function(full,
     na.. <- item$na
 
     # Convert to one-arm-per-row as required in GeMTC
-    transform <- mtc.data.studyrow(cbind(item$t, item$r, item$N, na..),
-                                   armVars = c('treatment'= 't', 'response'='r', 'sampleSize'='n'),
+    transform <- mtc.data.studyrow(cbind(item$t,
+                                         item$r,
+                                         item$N,
+                                         na..),
+                                   armVars = c('treatment'= 't',
+                                               'response'='r',
+                                               'sampleSize'='n'),
                                    nArmsVar='na')
   }
 
@@ -239,8 +253,9 @@ run_nodesplit <- function(full,
     y_node <- se_node <- r_node <- I_sign <- m
 
     for (i in seq_len(length(pair[, 1]))) {
-      ## Calculate split (1 if node to split is present) and b (baseline position)
-      checkPair_node[[i]] <- checkPair[[i]] <- PairXY(as.matrix(item$t), pair[i, ])
+      # Calculate split (1 if present node to split) and b (baseline position)
+      checkPair[[i]] <- PairXY(as.matrix(item$t), pair[i, ])
+      checkPair_node[[i]] <- checkPair[[i]]
       r_node[[i]] <- matrix(nrow = item$ns, ncol = max(na..))
       se_node[[i]] <- y_node[[i]] <- m_node[[i]] <- r_node[[i]]
       N_node[[i]] <- t_node[[i]] <- I_sign[[i]] <- r_node[[i]]
@@ -326,9 +341,7 @@ run_nodesplit <- function(full,
                    pair[, 1],
                    do.call(rbind,
                            lapply(seq_len(length(pair[, 1])),
-                                  function(i) jagsfit[[i]]$BUGSoutput$summary[paste0("EM[", pair[i, 2],
-                                                                                     ",",
-                                                                                     pair[i, 1], "]"),
+                                  function(i) jagsfit[[i]]$BUGSoutput$summary[paste0("EM[", pair[i, 2], ",", pair[i, 1], "]"),
                                                                               c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")])))
   colnames(EM) <- c("treat1",
                     "treat2",
@@ -377,8 +390,7 @@ run_nodesplit <- function(full,
                       pair[, 1],
                       do.call(rbind,
                               lapply(seq_len(length(pair[, 1])),
-                                     function(i) jagsfit[[i]]$BUGSoutput$summary["tau",
-                                                                                 c("50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff")])))
+                                     function(i) jagsfit[[i]]$BUGSoutput$summary["tau", c("50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff")])))
     colnames(tau) <- c("treat1",
                        "treat2",
                        "50%",

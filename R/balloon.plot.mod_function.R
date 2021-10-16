@@ -1,51 +1,55 @@
 #' Enhanced balloon plot (missing participant outcome data)
 #'
 #' @description
-#'   Creates the enhanced balloon plot for the summary effect size and between-trial
-#'   standard deviation, \eqn{\tau}, under different scenarios about the missingness
-#'   parameter for a pair of interventions. \code{balloon_plot} uses the scenarios
-#'   considered in \code{\link{run_sensitivity}}.
+#'   Creates the enhanced balloon plot for the summary effect size and
+#'   between-trial standard deviation, \eqn{\tau}, under different scenarios
+#'   about the missingness parameter for a pair of interventions.
+#'   \code{balloon_plot} uses the scenarios considered in
+#'   \code{\link{run_sensitivity}}.
 #'
 #' @param sens An object of S3 class \code{\link{run_sensitivity}}.
 #'   See 'Value' in \code{\link{run_sensitivity}}.
 #' @param compar A character vector with two elements indicating the pairwise
 #'   comparison of interest. The first element refers to the 'experimental'
 #'   and the second element to the 'control' intervention of the comparison.
-#' @param drug_names A vector of labels with the name of the interventions in the order
-#'   they appear in the argument \code{data} of \code{\link{run_model}}.
-#'   If the argument \code{drug_names} is not defined, the order of the interventions
-#'   as they appear in \code{data} is used, instead.
+#' @param drug_names A vector of labels with the name of the interventions
+#'   in the order they appear in the argument \code{data} of
+#'   \code{\link{run_model}}. If the argument \code{drug_names} is not defined,
+#'   the order of the interventions as they appear in
+#'   \code{data} is used, instead.
 #'
 #' @details
-#'   For the summary effect size of the selected pairwise comparison, the different
-#'   colour and size of the bubbles reflect the posterior standard deviation and the
-#'   magnitude of the posterior mean, respectively.
+#'   For the summary effect size of the selected pairwise comparison,
+#'   the different colour and size of the bubbles reflect the posterior
+#'   standard deviation and the magnitude of the posterior mean, respectively.
 #'   A colour key appears below the plot.
 #'   The size of the bubble is proportional to the corresponding posterior mean.
-#'   Crossed bubbles indicate scenarios with conclusive evidence (the 95\% credible
-#'   interval excludes the null value), and filled bubbles indicate scenarios with
-#'   inconclusive evidence (the 95\% credible interval includes the null value).
-#'   The missing-at-random assumption (primary analysis) is labeled in a white frame.
+#'   Crossed bubbles indicate scenarios with conclusive evidence (the 95\%
+#'   credible interval excludes the null value), and filled bubbles indicate
+#'   scenarios with inconclusive evidence (the 95\% credible interval includes
+#'   the null value). The missing-at-random assumption (primary analysis) is
+#'   labeled in a white frame.
 #'   Both axes illustrate the scenarios as specified in the argument
 #'   \code{mean_scenarios} of the \code{run_sensitivity} function:
-#'   the x-axis refers to the 'experimental' intervention, and the y-axis refers to
-#'   the 'control' intervention.
+#'   the x-axis refers to the 'experimental' intervention, and the y-axis refers
+#'   to the 'control' intervention.
 #'
 #'   The same enhanced balloon plot is created for \eqn{\tau}.
-#'   However, filled bubbles indicate low statistical heterogeneity (the posterior
-#'   median of \eqn{\tau} is lower than the median of the prior distribution
-#'   for the heterogeneity parameter),
+#'   However, filled bubbles indicate low statistical heterogeneity
+#'   (the posterior median of \eqn{\tau} is lower than the median of the
+#'   prior distribution for the heterogeneity parameter),
 #'   and crossed bubbles indicate considerable statistical heterogeneity
 #'   (the posterior median of \eqn{\tau} exceeds the median of the prior
 #'   distribution).
 #'
 #'   \code{balloon_plot_mod} can be used only for a network of interventions
 #'   and when missing outcome data have been extracted for at least one trial.
-#'   Otherwise, the execution of the function will be stopped and an error message
-#'   will be printed in the R console.
+#'   Otherwise, the execution of the function will be stopped and an error
+#'   message will be printed in the R console.
 #'
-#' @return \code{balloon_plot} A list of two enhanced balloon plots for one comparison
-#'   (see 'Details' for the description of the enhanced balloon plot):
+#' @return \code{balloon_plot} A list of two enhanced balloon plots for one
+#'   comparison (see 'Details' for the description of the enhanced
+#'   balloon plot):
 #'   \tabular{ll}{
 #'    \code{Plot_effect_size} \tab The enhanced balloon plot for the
 #'    summary effect size of one pairwise comparison.\cr
@@ -105,22 +109,24 @@
 balloon_plot <- function(sens, compar, drug_names) {
 
   if (any(is.na(sens))) {
-    stop("No missing outcome data collected; function cannot be used.", call. = F)
+    stop("No missing outcome data collected; function cannot be used.",
+         call. = F)
   }
 
-  ES_all <- sens$EM
+  es_all <- sens$EM
   D <- sens$D
   scenarios <- sens$scenarios
   measure <- sens$measure
   tau_all <- sens$tau
 
   # Define the position and number of the scenarios
-  nt <- (1 + sqrt(1 + 8 * (length(ES_all[, 1]) / length(scenarios)^2))) / 2
+  nt <- (1 + sqrt(1 + 8 * (length(es_all[, 1]) / length(scenarios)^2))) / 2
 
   drug_names <- if (missing(drug_names)) {
     message(cat(paste0("\033[0;", col = 32, "m",
                        txt = "The argument 'drug_names' has not been defined.
-                       The intervention ID, as specified in 'data' is used as intervention names",
+                       The intervention ID, as specified in 'data' is used as
+                       intervention names",
                        "\033[0m", "\n")))
     as.character(1:nt)
   } else {
@@ -140,38 +146,42 @@ balloon_plot <- function(sens, compar, drug_names) {
                        nrow = length(combn(drug_names, 2)) / 2,
                        ncol = 2,
                        byrow = T)
-  compar_id <- which(comparison[, 1] == compar[2] & comparison[, 2] == compar[1])
+  compar_id <- which(comparison[, 1] == compar[2] &
+                       comparison[, 2] == compar[1])
   experim <- comparison[compar_id, 2]
   control <- comparison[compar_id, 1]
 
   # A matrix: rows for the scenarios and columns for the possible comparisons
-  ES <- matrix(NA, nrow = length(scenarios)^2, ncol = (nt * (nt - 1)) / 2)
-  signif <- upper_ES <- lower_ES <- ES_stand <- sd_ES <- ES
+  es <- matrix(NA, nrow = length(scenarios)^2, ncol = (nt * (nt - 1)) / 2)
+  signif <- upper_es <- lower_es <- es_stand <- sd_es <- es
   for (i in 1:(length(scenarios)^2)) {
     for (j in 1:(nt * (nt - 1)) / 2) {
       # Posterior mean of an effect measure
-      ES[i, j] <- round(ES_all[j + (nt * (nt - 1) / 2) * (i - 1), 1], 3)
+      es[i, j] <- round(es_all[j + (nt * (nt - 1) / 2) * (i - 1), 1], 3)
 
       # Posterior standard deviation of an effect measure
-      sd_ES[i, j] <- round(ES_all[j + (nt * (nt - 1) / 2) * (i - 1), 2], 3)
+      sd_es[i, j] <- round(es_all[j + (nt * (nt - 1) / 2) * (i - 1), 2], 3)
 
       # Standardise the effect estimate based on the outcome direction
-      ES_stand[i, j] <- ifelse(D == 1, ES[i, j] / sd_ES[i, j], -ES[i, j] / sd_ES[i, j])
+      es_stand[i, j] <- ifelse(D == 1, es[i, j] / sd_es[i, j],
+                               -es[i, j] / sd_es[i, j])
 
       # Lower bound of the 95% credible interval of the effect estimate
-      lower_ES[i, j] <- ES_all[j + (nt * (nt - 1) / 2) * (i - 1), 3]
+      lower_es[i, j] <- es_all[j + (nt * (nt - 1) / 2) * (i - 1), 3]
 
       # Upper bound of the 95% credible interval of the effect estimate
-      upper_ES[i, j] <- ES_all[j + (nt * (nt - 1) / 2) * (i - 1), 4]
+      upper_es[i, j] <- es_all[j + (nt * (nt - 1) / 2) * (i - 1), 4]
 
-      # Dummy variable to indicate presence or absence of statistical significance
-      signif[i, j] <- ifelse(lower_ES[i, j] < 0 & upper_ES[i, j] > 0, "yes", "no")
+      # Dummy variable to indicate present or absent statistical significance
+      signif[i, j] <- ifelse(lower_es[i, j] < 0 & upper_es[i, j] > 0,
+                             "yes", "no")
     }
   }
 
-  # Normalise the standardised effect estimate (ES_stand)
+  # Normalise the standardised effect estimate (es_stand)
   # We need this to weight the bubbles in the balloon plot (via geom_point)
-  ES_normalised <- round((ES_stand - min(ES_stand)) / (max(ES_stand) - min(ES_stand)), 2)
+  es_normalised <- round((es_stand - min(es_stand)) /
+                           (max(es_stand) - min(es_stand)), 2)
 
   # All combinations of scenarios for the (active vs control) comparison
   missp <- data.frame(rep(seq_len(length(scenarios)), each = length(scenarios)),
@@ -180,13 +190,13 @@ balloon_plot <- function(sens, compar, drug_names) {
 
   # Prepare dataframe to create the enhanced balloon plot (via ggplot2)
   mat <- data.frame(missp,
-                    ES[, compar_id],
-                    sd_ES[, compar_id],
+                    es[, compar_id],
+                    sd_es[, compar_id],
                     signif[, compar_id])
   colnames(mat) <- c("active", "control", "value", "sd.value", "significance")
 
   # Enhanced balloon plot for summary effect size of the selected comparison
-  bubble_ES <- if (is.element(measure, c("OR", "ROM"))) {
+  bubble_es <- if (is.element(measure, c("OR", "ROM"))) {
    ggplot(mat, aes(x = active,
                    y = control,
                    color = sd.value,
@@ -205,14 +215,16 @@ balloon_plot <- function(sens, compar, drug_names) {
                               ymin = 2,
                               ymax = length(scenarios) - 1),
                 color = "grey100", fill = "grey100", alpha = 0.1) +
-      geom_point(aes(size = ES_normalised[, compar_id]),
+      geom_point(aes(size = es_normalised[, compar_id]),
                  stroke = 2,
-                 shape = ifelse(signif[, compar_id] == "yes", "circle", "circle plus")) +
+                 shape = ifelse(signif[, compar_id] == "yes", "circle",
+                                "circle plus")) +
       scale_size(range = c(0, 30)) +
       geom_text(colour = "black", fontface = "bold", size = 4.5) +
       geom_label(aes(median(order(scenarios)),
                      median(order(scenarios)),
-                     label = round(exp(mat[median(1:(length(scenarios)^2)), 3]), 2)),
+                     label = round(exp(mat[median(1:(length(scenarios)^2)), 3]),
+                                   2)),
                  colour = "black", fontface = "bold",  size = 4.5) +
       scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
       scale_x_continuous(breaks = seq_len(length(scenarios)),
@@ -267,9 +279,10 @@ balloon_plot <- function(sens, compar, drug_names) {
                               ymin = 2,
                               ymax = length(scenarios) - 1),
                 color = "grey100", fill = "grey100", alpha = 0.1) +
-      geom_point(aes(size = ES_normalised[, compar_id]),
+      geom_point(aes(size = es_normalised[, compar_id]),
                  stroke = 2,
-                 shape = ifelse(signif[, compar_id] == "yes", "circle", "circle plus")) +
+                 shape = ifelse(signif[, compar_id] == "yes", "circle",
+                                "circle plus")) +
       scale_size(range = c(0, 30)) +
       geom_text(colour = "black", fontface = "bold", size = 4.5) +
       geom_label(aes(median(order(scenarios)),
@@ -366,7 +379,9 @@ balloon_plot <- function(sens, compar, drug_names) {
       geom_text(colour = "black", fontface = "bold", size = 4.5) +
       geom_label(aes(median(order(scenarios)),
                      median(order(scenarios)),
-                     label = sprintf("%.2f", mat_tau[median(1:(length(scenarios)^2)), 3])),
+                     label = sprintf("%.2f",
+                                     mat_tau[median(1:(length(scenarios)^2)),
+                                             3])),
                  colour = "black", fontface = "bold",  size = 4.5) +
       scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
       scale_x_continuous(breaks = seq_len(length(scenarios)),

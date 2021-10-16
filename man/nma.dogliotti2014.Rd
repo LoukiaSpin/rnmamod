@@ -5,21 +5,27 @@
 \alias{nma.dogliotti2014}
 \title{Oral antithrombotics for stroke episode}
 \format{
-A data frame with 16 rows of arm-based data and 13 columns (maximum number of 3 arms).
+A data frame with 16 rows of arm-based data and 13 columns (maximum
+  number of 3 arms).
 }
 \source{
-Dogliotti A, Paolasso E, Giugliano RP. Current and new oral antithrombotics in non-valvular atrial fibrillation: a network meta-analysis
-of 79808 patients. \emph{Heart} 2014;\bold{100}(5):396--405. [\doi{10.1136/heartjnl-2013-304347}]
+Dogliotti A, Paolasso E, Giugliano RP. Current and new oral antithrombotics
+in non-valvular atrial fibrillation: a network meta-analysis
+of 79808 patients. \emph{Heart} 2014;\bold{100}(5):396--405.
+[\doi{10.1136/heartjnl-2013-304347}]
 }
 \usage{
 data(nma.dogliotti2014)
 }
 \description{
-A dataset of 16 trials comparing seven oral antithrombotics with each other and placebo
-  in patients with atrial fibrillation. The analysed binary outcome is prevention of a stroke episode.
+A dataset of 16 trials comparing seven oral antithrombotics with
+  each other and placebo in patients with atrial fibrillation. The analysed
+  binary outcome is prevention of a stroke episode.
 }
 \details{
-The interventions have been coded as follows: 1, placebo; 2, aspirin; 3, aspirin plus clopidogrel;
-  4, dabigatran 110 mg; 5, dabigatran 150 mg; 6, rivaroxaban; 7, vitamin K antagonist; and 8, apixaban
+The interventions have been coded as follows: 1, placebo;
+  2, aspirin; 3, aspirin plus clopidogrel; 4, dabigatran 110 mg;
+  5,  dabigatran 150 mg; 6, rivaroxaban; 7, vitamin K antagonist; and
+  8, apixaban
 }
 \keyword{datasets}

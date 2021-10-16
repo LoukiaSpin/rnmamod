@@ -15,7 +15,8 @@ run_metareg(
 )
 }
 \arguments{
-\item{full}{An object of S3 class \code{\link{run_model}}. See 'Value' in \code{\link{run_model}}.}
+\item{full}{An object of S3 class \code{\link{run_model}}.
+See 'Value' in \code{\link{run_model}}.}
 
 \item{covariate}{A numeric vector or a matrix for a trial-specific covariate
 that is a potential effect modifier. See 'Details'.}
@@ -36,7 +37,10 @@ MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function
 of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 10000.}
 
-\item{n_burnin}{Positive integer specifying the number of iterations to discard at the beginning of the MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+\item{n_burnin}{Positive integer specifying the number of iterations to
+discard at the beginning of the MCMC sampling; an argument of the
+\code{\link[R2jags]{jags}} function of the R-package
+\href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1000.}
 
 \item{n_thin}{Positive integer specifying the thinning rate for the
@@ -52,10 +56,10 @@ A list of R2jags outputs on the summaries of the posterior distribution,
    \code{EM} \tab The estimated summary effect measure
    (according to the argument \code{measure}).\cr
    \tab \cr
-   \code{dev.o} \tab The deviance contribution of each trial-arm based
+   \code{dev_o} \tab The deviance contribution of each trial-arm based
    on the observed outcome.\cr
    \tab \cr
-   \code{hat.par} \tab The fitted outcome at each trial-arm.\cr
+   \code{hat_par} \tab The fitted outcome at each trial-arm.\cr
    \tab \cr
    \code{phi} \tab The informative missingness parameter.\cr
   }
@@ -63,7 +67,7 @@ A list of R2jags outputs on the summaries of the posterior distribution,
   For a random-effects PMA, the output additionally includes the
   following elements:
   \tabular{ll}{
-   \code{EM.pred} \tab The predicted summary effect measure
+   \code{EM_pred} \tab The predicted summary effect measure
    (according to the argument \code{measure}).\cr
    \tab \cr
    \code{delta} \tab The estimated trial-specific effect measure
@@ -76,11 +80,11 @@ A list of R2jags outputs on the summaries of the posterior distribution,
 
   For a random-effects NMA, the output additionally includes:
   \tabular{ll}{
-   \code{EM.ref} \tab The estimated summary effect measure
+   \code{EM_ref} \tab The estimated summary effect measure
    (according to the argument \code{measure}) of all comparisons
    with the reference intervention.\cr
    \tab \cr
-   \code{pred.ref} \tab The predicted summary effect measure
+   \code{pred_ref} \tab The predicted summary effect measure
    (according to the argument \code{measure}) of all comparisons
    with the reference intervention.\cr
    \tab \cr
@@ -90,29 +94,31 @@ A list of R2jags outputs on the summaries of the posterior distribution,
    \code{effectiveneness} \tab The ranking probability of each intervention
    for every rank.\cr
   }
-  In NMA, \code{EM} and \code{EM.pred} refer to all possible pairwise comparisons of interventions in the network. Furthermore, \code{tau} is typically assumed to be common for all observed comparisons in the network.
+  In NMA, \code{EM} and \code{EM_pred} refer to all possible pairwise
+  comparisons of interventions in the network. Furthermore, \code{tau} is
+  typically assumed to be common for all observed comparisons in the network.
 
   Furthermore, the output includes the following elements (the first three
   resulting from relevant monitored parameters):
   \tabular{ll}{
-   \code{leverage.o} \tab The leverage for the observed outcome
+   \code{leverage_o} \tab The leverage for the observed outcome
    at each trial-arm.\cr
    \tab \cr
-   \code{sign.dev.o} \tab The sign of the difference between
+   \code{sign_dev_o} \tab The sign of the difference between
    observed and fitted outcome at each trial-arm.\cr
    \tab \cr
-   \code{model.assessment} \tab A data-frame on the measures of
+   \code{model_assessment} \tab A data-frame on the measures of
    model assessment: deviance information criterion,
    number of effective parameters, and total residual deviance.\cr
    \tab \cr
    \code{jagsfit} \tab An object of S3 class \code{\link[R2jags]{jags}}
    with the posterior results on all monitored parameters to be used
-   in the \code{mcmc.diagnostics} function.\cr
+   in the \code{mcmc_diagnostics} function.\cr
   }
-  The \code{run_model} function also returns the arguments \code{data},
+  The \code{run_metareg} function also returns the arguments \code{data},
   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
   \code{mean_misspar}, \code{var_misspar}, and \code{D}
-  as specified by the user to be considered in other functions of the package.
+  as already specified by the user in \code{run_model}.
 }
 \description{
 Performs a one-stage pairwise or network meta-regression while addressing
@@ -120,18 +126,17 @@ Performs a one-stage pairwise or network meta-regression while addressing
   pattern-mixture model.
 }
 \details{
-\code{run.metareg} does not contain the arguments \code{data},
+\code{run_metareg} does not contain the arguments \code{data},
   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
   \code{mean_misspar}, and \code{var_misspar} that are found in \code{run_model}.
-  This is to prevent misspecifying the Bayesian model as it would make
-  the comparison of the consistency model with and a covariate meaningless.
-  Instead, these arguments are contained in the argument \code{full}
-  of the function. Therefore, the user needs first to apply \code{run_model},
-  and then use \code{run.UME} (see, 'Examples').
+  This is to prevent misspecifying the Bayesian model that has been considered
+  in \code{run_model}. Instead, these arguments are contained in the argument
+  \code{full} of the function. Therefore, the user needs first to apply
+  \code{run_model}, and then use \code{run_metareg} (see, 'Examples').
 
   The model as specified by the arguments of \code{run_model} runs in \code{JAGS}
   and the progress of the simulation appears in the R console.
-  The output of \code{run_model} is used as an S3 object by other functions
+  The output of \code{run_metareg} is used as an S3 object by other functions
   of the package to be processed further and provide an end-user-ready output.
 
   The model of Spineli, (2019) and Spineli et al. (2021) has been extended

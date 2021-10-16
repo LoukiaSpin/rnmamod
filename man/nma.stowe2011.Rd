@@ -5,22 +5,27 @@
 \alias{nma.stowe2011}
 \title{Antiparkinsonian interventions for later Parkinson’s disease}
 \format{
-A data frame with 29 rows of arm-based data and 11 columns (maximum number of 2 arms).
+A data frame with 29 rows of arm-based data and 11 columns (maximum
+  number of 2 arms).
 }
 \source{
-Stowe R, Ives N, Clarke CE, et al. Meta-analysis of the comparative efficacy and safety of adjuvant treatment to levodopa
-in later Parkinson’s disease. \emph{Mov Disord} 2011;\bold{26}(4):587--598. [\doi{10.1002/mds.23517}]
+Stowe R, Ives N, Clarke CE, et al. Meta-analysis of the comparative efficacy
+and safety of adjuvant treatment to levodopa in later Parkinson’s disease.
+\emph{Mov Disord} 2011;\bold{26}(4):587--598. [\doi{10.1002/mds.23517}]
 }
 \usage{
 data(nma.stowe2011)
 }
 \description{
-A dataset of 29 trials comparing three antiparkinsonian interventions with placebo (a star-shaped network)
-  in patients with later Parkinson’s disease.
-  The analysed continuous outcome is the change from baseline of patient off-time reduction.
+A dataset of 29 trials comparing three antiparkinsonian
+  interventions with placebo (a star-shaped network) in patients with later
+  Parkinson’s disease. The analysed continuous outcome is the change from
+  baseline of patient off-time reduction.
 }
 \details{
-The interventions have been coded as follows: 1, placebo plus levodopa (PBO+LD); 2, dopamine agonist plus levodopa (DA+LD);
-  3, catechol-O-methyl transferase inhibitors plus levodopa (COMBI+LD); and 4, monoamine oxidase type B inhibitors plus levodopa (MAOBI+LD).
+The interventions have been coded as follows: 1, placebo plus
+  levodopa (PBO+LD); 2, dopamine agonist plus levodopa (DA+LD);
+  3, catechol-O-methyl transferase inhibitors plus levodopa (COMBI+LD); and
+  4, monoamine oxidase type B inhibitors plus levodopa (MAOBI+LD).
 }
 \keyword{datasets}

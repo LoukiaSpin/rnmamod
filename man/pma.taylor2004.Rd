@@ -8,16 +8,21 @@
 A data frame with 4 rows of arm-based data and 11 columns.
 }
 \source{
-Taylor MJ, Wilder H, Bhagwagar Z, Geddes J. Inositol for depressive disorders. \emph{Cochrane Database Syst Rev} 2004;\bold{2}:CD004049. [\doi{10.1002/14651858.CD004049.pub2}]
+Taylor MJ, Wilder H, Bhagwagar Z, Geddes J. Inositol for depressive
+disorders. \emph{Cochrane Database Syst Rev} 2004;\bold{2}:CD004049.
+[\doi{10.1002/14651858.CD004049.pub2}]
 }
 \usage{
 data(pma.taylor2004)
 }
 \description{
-A pairwise meta-analysis of 4 trials comparing inositol with glucose (placebo) for depressive episode.
-  The analysed continuous outcome is the resolution of a depressive episode using the Hamilton Depression Rating Scale.
+A pairwise meta-analysis of 4 trials comparing inositol with
+  glucose (placebo) for depressive episode. The analysed continuous outcome
+  is the resolution of a depressive episode using the Hamilton Depression
+  Rating Scale.
 }
 \details{
-The interventions have been coded as follows: 1, placebo; 2, inositol.
+The interventions have been coded as follows:
+  1, placebo; 2, inositol.
 }
 \keyword{datasets}

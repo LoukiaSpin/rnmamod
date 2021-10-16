@@ -12,13 +12,15 @@ See 'Format' for the specification of the columns.}
 
 \item{measure}{Character string indicating the effect measure with values
 \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
-mean difference, standardised mean difference and ratio of means, respectively.}
+mean difference, standardised mean difference and ratio of means,
+respectively.}
 }
 \value{
 A list of data-frames on the following elements to be passed
   to \code{\link{run_model}}:
   \tabular{ll}{
-   \code{m} \tab The number of missing participant outcome data in each trial-arm
+   \code{m} \tab The number of missing participant outcome data in each
+   trial-arm
    (see 'Details' in the \code{run_model} function).\cr
    \tab \cr
    \code{N} \tab The number of randomised participants in each trial-arm.\cr
@@ -28,13 +30,15 @@ A list of data-frames on the following elements to be passed
    \code{I} \tab The pseudo-data-frame \code{I}
    (see 'Details' in \code{run_model}).\cr
    \tab \cr
-   \code{r} \tab The observed number of events of the outcome in each trial-arm,
+   \code{r} \tab The observed number of events of the outcome in each
+   trial-arm,
    when the outcome is binary.\cr
    \tab \cr
    \code{y0} \tab The observed mean value of the outcome in each trial-arm,
    when the outcome is continuous\cr
    \tab \cr
-   \code{se0} \tab The observed standard deviation of the outcome in each trial-arm,
+   \code{se0} \tab The observed standard deviation of the outcome in each
+   trial-arm,
    when the outcome is continuous\cr
   }
 }
@@ -50,19 +54,19 @@ Prepares the dataset in the proper format for R2jags.
   \strong{m} exists in the \code{data}. If this element is missing,
   \code{data_preparation} creates a pseudo-data-frame for \code{m} that has
   zero value for the observed trial-arms, and \code{NA} for the unobserved
-  trial-arms, and the pseudo-data-frame \code{I} that has the same values with
-  the pseudo-data-frame for \code{m}. If the element \strong{m} exists
-  in the \code{data} and has values only for some trials, the pseudo-data-frame
-  for \code{m} is the same with \code{m} for the corresponding trial-arms,
-  and the pseudo-data-frame \code{I} has the value one for these trial-arms.
-  Both pseudo-data-frames aim to retain the trials without information on
-  missing outcome data in \code{data}. Second, \code{data_preparation} sorts
-  the interventions across the arms of each trial in an ascending order and
-  correspondingly the remaining elements in \code{data}
-  (see 'Format' in \code{run_model}). Since all Bayesian models in the package
-  consider the first column in \strong{t} as being control arm for every trial,
-  this sorting ensures that interventions with a lower identifier are consistently
-  treated as the control arm in each trial.
+  trial-arms, and the pseudo-data-frame \code{I} that has the same values
+  with the pseudo-data-frame for \code{m}. If the element \strong{m} exists
+  in the \code{data} and has values only for some trials,
+  the pseudo-data-frame for \code{m} is the same with \code{m} for the
+  corresponding trial-arms, and the pseudo-data-frame \code{I} has the value
+  one for these trial-arms. Both pseudo-data-frames aim to retain the trials
+  without information on missing outcome data in \code{data}. Second,
+  \code{data_preparation} sorts the interventions across the arms of each
+  trial in an ascending order and correspondingly the remaining elements in
+  \code{data} (see 'Format' in \code{run_model}). Since all Bayesian models
+  in the package consider the first column in \strong{t} as being control
+  arm for every trial, this sorting ensures that interventions with a lower
+  identifier are consistently treated as the control arm in each trial.
   This case is relevant in non-star-shaped networks.
 }
 \seealso{
