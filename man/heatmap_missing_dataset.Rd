@@ -48,12 +48,12 @@ head(nma.schwingshackl2014)
 # Balducci, 2009  1  3 NA  6.34  6.65 NA 0.94 1.08  NA  0  0 NA 20 22 NA
 
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("aerobic", "resistance", "combined training")
+interv_names <- c("aerobic", "resistance", "combined training")
 
 # Create the heatmap
 heatmap_missing_dataset(data = nma.schwingshackl2014,
                         trial_names = nma.schwingshackl2014$study,
-                        drug_names = interv.names)
+                        drug_names = interv_names)
 
 }
 \references{

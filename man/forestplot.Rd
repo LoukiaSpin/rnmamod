@@ -64,22 +64,24 @@ res <- run_model(data = nma.liu2013,
                  measure = "OR",
                  model = "RE",
                  assumption = "IDE-ARM",
-                 heter.prior = list("halfnormal", 0, 1),
-                 mean.misspar = c(0, 0),
-                 var.misspar = 1,
+                 heter_prior = list("halfnormal", 0, 1),
+                 mean_misspar = c(0, 0),
+                 var_misspar = 1,
                  D = 1,
-                 n.chains = 3,
-                 n.iter = 10000,
-                 n.burnin = 1000,
-                 n.thin = 1)
+                 n_chains = 3,
+                 n_iter = 10000,
+                 n_burnin = 1000,
+                 n_thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("placebo", "pramipexole", "serotonin–norepinephrine
+interv_names <- c("placebo", "pramipexole", "serotonin–norepinephrine
 reuptake inhibitor", "serotonin reuptake inhibitor", "tricyclic
 antidepressant", "pergolide")
 
 # Create the league heatmap
-forestplot(full = res, compar = "placebo", drug_names = interv.names)
+forestplot(full = res,
+           compar = "placebo",
+           drug_names = interv_names)
 }
 
 }

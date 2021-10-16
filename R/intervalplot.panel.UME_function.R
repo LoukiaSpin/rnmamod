@@ -1,6 +1,6 @@
-#' A panel of interval plots: Consistency model versus unrelated mean effects model
+#' A panel of interval plots: Consistency versus unrelated mean effects
 #'
-#' @description This function creates a panel of interval plots on the summary effect sizes under the consistency model and the unrelated mean effects model.
+#' @description Creates a panel of interval plots on the summary effect sizes under the consistency model and the unrelated mean effects model.
 #'   The number of interval plots equals the number of pairwise comparisons observed in the network.
 #'
 #' @param full An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.

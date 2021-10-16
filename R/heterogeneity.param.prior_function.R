@@ -8,16 +8,17 @@
 #'
 #' @param measure Character string indicating the effect measure with values
 #'   \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
-#'   mean difference, standardised mean difference and ratio of means, respectively.
+#'   mean difference, standardised mean difference and ratio of means,
+#'   respectively.
 #' @param model Character string indicating the analysis model with values
 #'   \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model,
 #'   respectively. The default argument is \code{"RE"}.
 #' @param heter_prior A list of three elements with the following order:
-#'   1) a character string indicating the distribution with (currently available)
-#'   values \code{"halfnormal"}, \code{"uniform"}, \code{"lognormal"}, or
-#'   \code{"logt"}; 2) two numeric values that refer to the parameters of the
-#'   selected distribution.  For \code{"lognormal"}, and \code{"logt"}
-#'   these numbers refer to the mean and precision, respectively.
+#'   1) a character string indicating the distribution with
+#'   (currently available) values \code{"halfnormal"}, \code{"uniform"},
+#'   \code{"lognormal"}, or \code{"logt"}; 2) two numeric values that refer to
+#'   the parameters of the selected distribution.  For \code{"lognormal"}, and
+#'   \code{"logt"} these numbers refer to the mean and precision, respectively.
 #'   For \code{"halfnorm"}, these numbers refer to zero and the scale parameter
 #'   (equal to 0.5 or 1). For \code{"uniform"}, these numbers refer to the
 #'   minimum and maximum value of the distribution.
@@ -28,8 +29,8 @@
 #'   The names of the (current) prior distributions follow the JAGS syntax.
 #'   The mean and precision of \code{"lognormal"} and \code{"logt"} should align
 #'   with the values proposed by Turner et al. (2015) and Rhodes et al. (2015)
-#'   in the corresponding empirically-based prior distributions when \code{measure}
-#'   is \code{"OR"} or \code{"SMD"}, respectively.
+#'   in the corresponding empirically-based prior distributions when
+#'   \code{measure} is \code{"OR"} or \code{"SMD"}, respectively.
 #'   The users may refer to Dias et al. (2013) to determine the minimum and
 #'   maximum value of the uniform distribution, and to Friede et al. (2017)
 #'   to determine the mean and precision of the half-normal distribution.
@@ -41,26 +42,26 @@
 #' @seealso \code{\link{run_model}}
 #'
 #' @references
-#'   Friede T, Röver C, Wandel S, Neuenschwander B. Meta-analysis of two studies
-#'   in the presence of heterogeneity with applications in rare diseases.
-#'   \emph{Biom J} 2017;\bold{59}(4):658--671.
-#'   [\doi{10.1002/bimj.201500236}]
+#' Friede T, Röver C, Wandel S, Neuenschwander B. Meta-analysis of two studies
+#' in the presence of heterogeneity with applications in rare diseases.
+#' \emph{Biom J} 2017;\bold{59}(4):658--671.
+#' [\doi{10.1002/bimj.201500236}]
 #'
-#'   Turner RM, Jackson D, Wei Y, Thompson SG, Higgins JP. Predictive distributions
-#'   for between-study heterogeneity and simple methods for their application
-#'   in Bayesian meta-analysis. \emph{Stat Med} 2015;\bold{34}(6):984--98.
-#'   [\doi{10.1002/sim.6381}]
+#' Turner RM, Jackson D, Wei Y, Thompson SG, Higgins JP. Predictive
+#' distributions for between-study heterogeneity and simple methods for their
+#' application in Bayesian meta-analysis.
+#' \emph{Stat Med} 2015;\bold{34}(6):984--98. [\doi{10.1002/sim.6381}]
 #'
-#'   Rhodes KM, Turner RM, Higgins JP. Predictive distributions were developed
-#'   for the extent of heterogeneity in meta-analyses of continuous outcome data.
-#'   \emph{J Clin Epidemiol} 2015;\bold{68}(1):52--60.
-#'   [\doi{10.1016/j.jclinepi.2014.08.012}]
+#' Rhodes KM, Turner RM, Higgins JP. Predictive distributions were developed
+#' for the extent of heterogeneity in meta-analyses of continuous outcome data.
+#' \emph{J Clin Epidemiol} 2015;\bold{68}(1):52--60.
+#' [\doi{10.1016/j.jclinepi.2014.08.012}]
 #'
-#'   Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
-#'   making 2: a generalized linear modeling framework for pairwise and
-#'   network meta-analysis of randomized controlled trials.
-#'   \emph{Med Decis Making} 2013;\bold{33}(5):607--617.
-#'   [\doi{10.1177/0272989X12458724}]
+#' Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
+#' making 2: a generalized linear modeling framework for pairwise and
+#' network meta-analysis of randomized controlled trials.
+#' \emph{Med Decis Making} 2013;\bold{33}(5):607--617.
+#' [\doi{10.1177/0272989X12458724}]
 #'
 #' @export
 heterogeneity_param_prior <- function(measure, model, heter_prior) {
@@ -120,11 +121,12 @@ heterogeneity_param_prior <- function(measure, model, heter_prior) {
              (measure == "MD" || measure == "ROM") &
              heter_prior[[1]] == "logt") {
     stop("Currently, no empirically-based prior distributions for MD and ROM.
-         Choose a half-normal or a uniform prior distribution, instead", call. = F)
+         Choose a half-normal or a uniform prior distribution, instead",
+         call. = F)
   } else if (model == "RE" &
              measure == "OR" &
              heter_prior[[1]] == "logt") {
-    stop("This is not the proper prior distribution for binary outcome", call. = F)
+    stop("This is not the proper prior distribution for binary outcome",
+         call. = F)
   }
-
 }
