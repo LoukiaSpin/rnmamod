@@ -180,7 +180,7 @@ heatmap_missing_network <- function(data, drug_names) {
                   Var1,
                   label = value,
                   fontface = "bold"),
-              colour = ifelse(value_interv < 1, "black", "white"), # mat_final$value_interv
+              colour = ifelse(value_interv < 1, "black", "white"),
               size = rel(4.5)) +
     scale_fill_manual(breaks = c("low", "moderate", "high"),
                       values = c("#009E73", "orange", "#D55E00")) +
