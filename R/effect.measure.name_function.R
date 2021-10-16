@@ -1,13 +1,14 @@
-effect.measure.name <- function(name) {
+effect_measure_name <- function(name) {
 
-  if (name == "OR") {
-    spell.out <- "Odds ratio"
+  spell_out <- if (name == "OR") {
+    "Odds ratio"
   } else if (name == "MD") {
-    spell.out <- "Mean difference"
+    "Mean difference"
   } else if (name == "SMD") {
-    spell.out <- "Standardised mean difference"
+    "Standardised mean difference"
   } else if (name == "ROM") {
-    spell.out <- "Ratio of means"
+    "Ratio of means"
   }
 
+  return(spell_out)
 }

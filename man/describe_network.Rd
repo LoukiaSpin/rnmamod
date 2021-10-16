@@ -26,28 +26,28 @@ respectively.}
 A list of scalar results and four data-frames to be passed to
   \code{\link[rnmamod]{netplot}}. The scalar results include:
   \tabular{ll}{
-   \code{direct.comp} \tab The number of observed comparisons in the
+   \code{direct_comp} \tab The number of observed comparisons in the
    network. \cr
    \tab \cr
-   \code{two.arm.ns} \tab The number of two-arm trials in the network. \cr
+   \code{two_arm_ns} \tab The number of two-arm trials in the network. \cr
    \tab \cr
-   \code{multi.arm.ns} \tab The number of multi-arm trials in the
+   \code{multi_arm_ns} \tab The number of multi-arm trials in the
    network. \cr
    \tab \cr
-   \code{total.rand.network} \tab The total number of randomised participants
+   \code{total_rand_network} \tab The total number of randomised participants
     in the network. \cr
    \tab \cr
-   \code{prop.obs.network} \tab The proportion of participants who completed
+   \code{prop_obs_network} \tab The proportion of participants who completed
     the trial. \cr
    \tab \cr
-   \code{prop.event.network} \tab The proportion of observed events in the
+   \code{prop_event_network} \tab The proportion of observed events in the
    network. When the outcome is continuous, this element is omitted. \cr
    \tab \cr
-   \code{trial.zero.event} \tab The number of trials with at least one arm
+   \code{trial_zero_event} \tab The number of trials with at least one arm
    with zero events. When the outcome is continuous, this element is
    omitted. \cr
    \tab \cr
-   \code{trial.all.zero.event} \tab The number of trials with zero events in
+   \code{trial_all_zero_event} \tab The number of trials with zero events in
    all arms. When the outcome is continuous, this element is omitted. \cr
   }
 

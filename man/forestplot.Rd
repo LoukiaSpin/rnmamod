@@ -4,27 +4,42 @@
 \alias{forestplot}
 \title{Forest plot of NMA results with a selected intervention}
 \usage{
-forestplot(full, compar, drug.names)
+forestplot(full, compar, drug_names)
 }
 \arguments{
-\item{full}{An object of S3 class \code{\link{run.model}}. See 'Value' in \code{\link{run.model}}.}
+\item{full}{An object of S3 class \code{\link{run_model}}. See 'Value' in
+\code{\link{run_model}}.}
 
-\item{compar}{A character to indicate the comparator intervention. it must be any name found in \code{drug.names}.}
+\item{compar}{A character to indicate the comparator intervention. it must be
+any name found in \code{drug_names}.}
 
-\item{drug.names}{A vector of labels with the name of the interventions in the order they appear in the argument \code{data} of \code{\link{run.model}}. If the argument \code{drug.names} is not defined, the interventions are ordered as they appear in \code{data}.}
+\item{drug_names}{A vector of labels with the name of the interventions in
+the order they appear in the argument \code{data} of
+\code{\link{run_model}}. If the argument \code{drug_names} is not defined,
+the interventions are ordered as they appear in \code{data}.}
 }
 \value{
-A panel of two forest plots: (1) a forest plot on the effect estimates and predictions of comparisons with the selected intervention in the network, and
-(2) a forest plot on the posterior mean and 95\% credible interval of SUCRA values of the interventions (Salanti et al., 2011).
+A panel of two forest plots: (1) a forest plot on the effect
+  estimates and predictions of comparisons with the selected intervention in
+  the network, and (2) a forest plot on the posterior mean and 95\% credible
+  interval of SUCRA values of the interventions (Salanti et al., 2011).
 }
 \description{
-Provides a forest plot with the posterior mean and 95\% credible and prediction intervals for comparisons with the selected intervention in the network.
+Provides a forest plot with the posterior mean and 95\% credible
+  and prediction intervals for comparisons with the selected intervention in
+  the network.
 }
 \details{
-The y-axis of the plot displays the labels of the interventions in the network; the selected intervention that comprises the \code{compar} argument is annotated in the plot with the label 'Comparator intervention'.
-  For each comparison with the selected intervention, the 95\% credible and prediction intervals are displayed as overlapping lines in different colours.
-  The corresponding numerical results are displayed above each line: 95\% credible intervals are found in parentheses, and 95\% predictive intervals are found in brackets.
-  Odds ratios and ratio of means are reported in the original scale after exponentiation of the logarithmic scale.
+The y-axis of the plot displays the labels of the interventions in
+  the network; the selected intervention that comprises the \code{compar}
+  argument is annotated in the plot with the label 'Comparator intervention'.
+  For each comparison with the selected intervention, the 95\% credible and
+  prediction intervals are displayed as overlapping lines in different
+  colours. The corresponding numerical results are displayed above each line:
+  95\% credible intervals are found in parentheses, and 95\% predictive
+  intervals are found in brackets. Odds ratios and ratio of means are
+  reported in the original scale after exponentiation of the logarithmic
+  scale.
 
   The interventions are sorted in descending order of their SUCRA values.
 
@@ -45,7 +60,7 @@ head(nma.liu2013)
 
 \dontrun{
 # Perform a random-effects network meta-analysis
-res <- run.model(data = nma.liu2013,
+res <- run_model(data = nma.liu2013,
                  measure = "OR",
                  model = "RE",
                  assumption = "IDE-ARM",
@@ -59,19 +74,23 @@ res <- run.model(data = nma.liu2013,
                  n.thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("placebo", "pramipexole", "serotonin–norepinephrine reuptake inhibitor",
-                  "serotonin reuptake inhibitor", "tricyclic antidepressant", "pergolide")
+interv.names <- c("placebo", "pramipexole", "serotonin–norepinephrine
+reuptake inhibitor", "serotonin reuptake inhibitor", "tricyclic
+antidepressant", "pergolide")
 
 # Create the league heatmap
-forestplot(full = res, compar = "placebo", drug.names = interv.names)
+forestplot(full = res, compar = "placebo", drug_names = interv.names)
 }
 
 }
 \references{
-Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries for presenting results from multiple-treatment meta-analysis: an overview and tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71. [\doi{10.1016/j.jclinepi.2010.03.016}]
+Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
+for presenting results from multiple-treatment meta-analysis: an overview and
+tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
+[\doi{10.1016/j.jclinepi.2010.03.016}]
 }
 \seealso{
-\code{\link{run.model}}
+\code{\link{run_model}}
 }
 \author{
 {Loukia M. Spineli}
