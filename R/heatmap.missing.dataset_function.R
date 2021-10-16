@@ -46,12 +46,12 @@
 #' # Balducci, 2009  1  3 NA  6.34  6.65 NA 0.94 1.08  NA  0  0 NA 20 22 NA
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("aerobic", "resistance", "combined training")
+#' interv_names <- c("aerobic", "resistance", "combined training")
 #'
 #' # Create the heatmap
 #' heatmap_missing_dataset(data = nma.schwingshackl2014,
 #'                         trial_names = nma.schwingshackl2014$study,
-#'                         drug_names = interv.names)
+#'                         drug_names = interv_names)
 #'
 #' @export
 heatmap_missing_dataset <- function(data, trial_names, drug_names) {
@@ -102,13 +102,13 @@ heatmap_missing_dataset <- function(data, trial_names, drug_names) {
 
   # Turn one row per trial to one row per trial-arm
   transform <- mtc.data.studyrow(cbind(t, m, n, na..),
-                                 armVars = c('treatment' = 't',
-                                             'response' = 'm',
-                                             'sampleSize' = 'n'),
-                                 nArmsVar = 'na')
+                                 armVars = c("treatment" = "t",
+                                             "response" = "m",
+                                             "sampleSize" = "n"),
+                                 nArmsVar = "na")
 
   # Turn all columns into numeric
-  for (i in 1:ncol(transform)) {
+  for (i in 1:dim(transform)[2]) {
     transform[, i] <- as.numeric(transform[, i])
   }
 
