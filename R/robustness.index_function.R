@@ -108,7 +108,7 @@
 #'
 #' # Perform the sensitivity analysis (missing-at-random assumption)
 #' res_sens <- run_sensitivity(full = res,
-#'                             var_.misspar = 1,
+#'                             var_misspar = 1,
 #'                             n_chains = 3,
 #'                             n_iter = 10000,
 #'                             n_burnin = 1000,

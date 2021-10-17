@@ -10,10 +10,10 @@
 #' @param covariate A numeric vector or a matrix for a trial-specific covariate
 #'   that is a potential effect modifier. See 'Details'.
 #' @param covar_assumption Character string indicating the structure of the
-#'   intervention by covariate interaction, as described in Cooper et al., (2009).
-#'   Set \code{covar_assumption} equal to one of the following: \code{"NO"},
-#'   when no meta-regression is performed; otherwise, \code{"exchangeable"},
-#'   \code{"independent"}, and \code{"common"}.
+#'   intervention by covariate interaction, as described in
+#'   Cooper et al., (2009). Set \code{covar_assumption} equal to one of the
+#'   following: \code{"NO"}, when no meta-regression is performed; otherwise,
+#'   \code{"exchangeable"}, \code{"independent"}, and \code{"common"}.
 #' @param n_chains Positive integer specifying the number of chains for the
 #'   MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function
 #'   of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
@@ -32,9 +32,10 @@
 #'   of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 #'   The default argument is 1.
 #'
-#' @return A list of R2jags outputs on the summaries of the posterior distribution,
-#'   and the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the
-#'   following monitored parameters for a fixed-effect PMA:
+#' @return A list of R2jags outputs on the summaries of the posterior
+#'   distribution, and the Gelman-Rubin convergence diagnostic
+#'   (Gelman et al., 1992) of the following monitored parameters for a
+#'   fixed-effect PMA:
 #'   \tabular{ll}{
 #'    \code{EM} \tab The estimated summary effect measure
 #'    (according to the argument \code{measure}).\cr
@@ -105,16 +106,18 @@
 #'
 #' @details \code{run_metareg} does not contain the arguments \code{data},
 #'   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
-#'   \code{mean_misspar}, and \code{var_misspar} that are found in \code{run_model}.
-#'   This is to prevent misspecifying the Bayesian model that has been considered
-#'   in \code{run_model}. Instead, these arguments are contained in the argument
-#'   \code{full} of the function. Therefore, the user needs first to apply
-#'   \code{run_model}, and then use \code{run_metareg} (see, 'Examples').
+#'   \code{mean_misspar}, and \code{var_misspar} that are found in
+#'   \code{run_model}. This is to prevent misspecifying the Bayesian model that
+#'   has been considered in \code{run_model}. Instead, these arguments are
+#'   contained in the argument \code{full} of the function. Therefore, the user
+#'   needs first to apply \code{run_model}, and then use \code{run_metareg}
+#'   (see, 'Examples').
 #'
-#'   The model as specified by the arguments of \code{run_model} runs in \code{JAGS}
-#'   and the progress of the simulation appears in the R console.
+#'   The model as specified by the arguments of \code{run_model} runs in
+#'   \code{JAGS} and the progress of the simulation appears in the R console.
 #'   The output of \code{run_metareg} is used as an S3 object by other functions
-#'   of the package to be processed further and provide an end-user-ready output.
+#'   of the package to be processed further and provide an end-user-ready
+#'   output.
 #'
 #'   The model of Spineli, (2019) and Spineli et al. (2021) has been extended
 #'   to incorporate one \emph{study-level covariate} variable following the
@@ -127,24 +130,24 @@
 #' @seealso  \code{\link{run_model}}, \code{\link[R2jags]{jags}}
 #'
 #' @references
-#'   Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome data
-#'   in network meta-analysis: a one-stage pattern-mixture model approach.
-#'   \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
+#' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
+#' data in network meta-analysis: a one-stage pattern-mixture model approach.
+#' \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
 #'
-#'   Spineli LM. An empirical comparison of Bayesian modelling strategies for
-#'   missing binary outcome data in network meta-analysis.
-#'   \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-#'   [\doi{10.1186/s12874-019-0731-y}]
+#' Spineli LM. An empirical comparison of Bayesian modelling strategies for
+#' missing binary outcome data in network meta-analysis.
+#' \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
+#' [\doi{10.1186/s12874-019-0731-y}]
 #'
-#'   Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
-#'   heterogeneity and inconsistency in mixed treatment comparisons: Application
-#'   to stroke prevention treatments in individuals with non-rheumatic atrial
-#'   fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
-#'   [\doi{10.1002/sim.3594}]
+#' Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
+#' heterogeneity and inconsistency in mixed treatment comparisons: Application
+#' to stroke prevention treatments in individuals with non-rheumatic atrial
+#' fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
+#' [\doi{10.1002/sim.3594}]
 #'
-#'   Gelman A, Rubin DB. Inference from iterative simulation using multiple
-#'   sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
-#'   [\doi{10.1214/ss/1177011136}]
+#' Gelman A, Rubin DB. Inference from iterative simulation using multiple
+#' sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
+#' [\doi{10.1214/ss/1177011136}]
 #'
 #' @examples
 #' data("nma.baker2009")
@@ -165,19 +168,18 @@
 #'                  n_thin = 1)
 #'
 #' # Publicatiom year
-#' pub.year <- c(1996, 1998, 1999, 2000, 2000, 2001, rep(2002, 5), 2003, 2003,
+#' pub_year <- c(1996, 1998, 1999, 2000, 2000, 2001, rep(2002, 5), 2003, 2003,
 #'               rep(2005, 4), 2006, 2006, 2007, 2007)
 #'
 #' # Perform a random-effects network meta-regression (exchangeable structure)
 #' run_metareg(full = res,
-#'             covariate = pub.year,
+#'             covariate = pub_year,
 #'             covar_assumption = "exchangeable",
 #'             n_chains = 3,
 #'             n_iter = 10000,
 #'             n_burnin = 1000,
 #'             n_thin = 1)
 #' }
-#'
 #' @export
 run_metareg <- function(full,
                         covariate,
@@ -185,8 +187,7 @@ run_metareg <- function(full,
                         n_chains,
                         n_iter,
                         n_burnin,
-                        n_thin)
-  {
+                        n_thin) {
 
   # Turn off warning when variables in the 'data_jag' are not used
   options(warn = -1)
@@ -247,10 +248,14 @@ run_metareg <- function(full,
 
   data_jag <- if (length(unique(covariate)) > 2) {
     append(data_jag, list("cov.vector" = covariate - mean(covariate),
-                          "cov.matrix" = matrix(0, nrow = item$ns, ncol = max(item$na))))
+                          "cov.matrix" = matrix(0,
+                                                nrow = item$ns,
+                                                ncol = max(item$na))))
   } else if (length(unique(covariate)) < 3) {
     append(data_jag, list("cov.vector" = covariate,
-                          "cov.matrix" = matrix(0, nrow = item$ns, ncol = max(item$na))))
+                          "cov.matrix" = matrix(0,
+                                                nrow = item$ns,
+                                                ncol = max(item$na))))
   } else if (!is.vector(covariate)) {
     append(data_jag, list("cov.vector" = rep(0, item$ns),
                           "cov.matrix" = covariate))
@@ -270,7 +275,8 @@ run_metareg <- function(full,
                   "totresdev.o",
                   "hat.par")
 
-  param_jags <- if (is.element(assumption, c("HIE-COMMON", "HIE-TRIAL", "HIE-ARM"))) {
+  param_jags <- if (is.element(assumption,
+                               c("HIE-COMMON", "HIE-TRIAL", "HIE-ARM"))) {
     append(param_jags, "mean.phi")
   } else {
     append(param_jags, "phi")
@@ -288,46 +294,46 @@ run_metareg <- function(full,
                   n.burnin = n_burnin,
                   n.thin = n_thin)
 
-
-
   # Turn R2jags object into a data-frame
-  getResults <- as.data.frame(t(jagsfit$BUGSoutput$summary))
+  get_results <- as.data.frame(t(jagsfit$BUGSoutput$summary))
 
   # Effect size of all unique pairwise comparisons
-  EM <- t(getResults %>% dplyr::select(starts_with("EM[")))
+  EM <- t(get_results %>% dplyr::select(starts_with("EM[")))
 
   # Effect size of all comparisons with the reference intervention
-  EM_ref <- t(getResults %>% dplyr::select(starts_with("EM.ref[")))
+  EM_ref <- t(get_results %>% dplyr::select(starts_with("EM.ref[")))
 
   # Predictive effects of all unique pairwise comparisons
-  EM_pred <- t(getResults %>% dplyr::select(starts_with("EM.pred[")))
+  EM_pred <- t(get_results %>% dplyr::select(starts_with("EM.pred[")))
 
   # Predictive effects of all comparisons with the reference intervention
-  pred_ref <- t(getResults %>% dplyr::select(starts_with("pred.ref[")))
+  pred_ref <- t(get_results %>% dplyr::select(starts_with("pred.ref[")))
 
   # Between-trial standard deviation
-  tau <- t(getResults %>% dplyr::select(starts_with("tau")))
+  tau <- t(get_results %>% dplyr::select(starts_with("tau")))
 
   # Regression coefficient for all comparisons with the reference intervention
-  beta <- t(getResults %>% dplyr::select(starts_with("beta[") |
+  beta <- t(get_results %>% dplyr::select(starts_with("beta[") |
                                            starts_with("beta")))
 
   # Regression coefficient for all unique pairwise comparisons
   # (not applicable for 'common' covar_assumption)
-  beta_all <- t(getResults %>% dplyr::select(starts_with("beta.all[")))
+  beta_all <- t(get_results %>% dplyr::select(starts_with("beta.all[")))
 
   # SUrface under the Cumulative RAnking curve values
-  SUCRA <- t(getResults %>% dplyr::select(starts_with("SUCRA")))
+  SUCRA <- t(get_results %>% dplyr::select(starts_with("SUCRA")))
 
   # Within-trial effects size
-  delta <- t(getResults %>% dplyr::select(starts_with("delta") & !ends_with(",1]")))
+  delta <- t(get_results %>% dplyr::select(starts_with("delta") &
+                                             !ends_with(",1]")))
 
   # Ranking probability of each intervention for every rank
-  effectiveness <- t(getResults %>% dplyr::select(starts_with("effectiveness")))
+  effectiveness <- t(get_results %>% dplyr::select(
+    starts_with("effectiveness")))
 
   # Estimated missingness parameter
   phi <- if (length(unique(unlist(item$m))) > 2) {
-    t(getResults %>% dplyr::select(starts_with("phi") |
+    t(get_results %>% dplyr::select(starts_with("phi") |
                                      starts_with("mean.phi") |
                                      starts_with("mean.phi[") |
                                      starts_with("phi[")))
@@ -336,42 +342,55 @@ run_metareg <- function(full,
   }
 
   # Trial-arm deviance contribution for observed outcome
-  dev_o <- t(getResults %>% dplyr::select(starts_with("dev.o")))
+  dev_o <- t(get_results %>% dplyr::select(starts_with("dev.o")))
 
   # Fitted/predicted outcome
-  hat_par <- t(getResults %>% dplyr::select(starts_with("hat.par")))
+  hat_par <- t(get_results %>% dplyr::select(starts_with("hat.par")))
 
   # Total residual deviance
   dev <- jagsfit$BUGSoutput$summary["totresdev.o", "mean"]
 
   # Calculate the deviance at posterior mean of fitted values
   # Turn 'N' and 'm' into a vector (first column, followed by second, etc)
-  m_new <- suppressMessages({as.vector(na.omit(melt(item$m)[, 2]))})
-  N_new <- suppressMessages({as.vector(na.omit(melt(item$N)[, 2]))})
+  m_new <- suppressMessages({
+    as.vector(na.omit(melt(item$m)[, 2]))
+    })
+  N_new <- suppressMessages({
+    as.vector(na.omit(melt(item$N)[, 2]))
+    })
   obs <- N_new - m_new
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
     # Turn 'y0', 'se0' into a vector as above
-    y0_new <- suppressMessages({as.vector(na.omit(melt(item$y0)[, 2]))})
-    se0_new <- suppressMessages({as.vector(na.omit(melt(item$se0)[, 2]))})
+    y0_new <- suppressMessages({
+      as.vector(na.omit(melt(item$y0)[, 2]))
+      })
+    se0_new <- suppressMessages({
+      as.vector(na.omit(melt(item$se0)[, 2]))
+      })
 
     # Deviance at the posterior mean of the fitted mean outcome
-    dev_post_o <- (y0_new - as.vector(hat_par[, 1])) * (y0_new -
-                                                          as.vector(hat_par[, 1])) * (1 / se0_new^2)
+    dev_post_o <- (y0_new -
+                     as.vector(hat_par[, 1])) *
+      (y0_new - as.vector(hat_par[, 1])) * (1 / se0_new^2)
 
     # Sign of the difference between observed and fitted mean outcome
     sign_dev_o <- sign(y0_new - as.vector(hat_par[, 1]))
   } else {
     # Turn 'r' and number of observed into a vector as above
-    r_new <- suppressMessages({as.vector(na.omit(melt(item$r)[, 2]))})
+    r_new <- suppressMessages({
+      as.vector(na.omit(melt(item$r)[, 2]))
+      })
 
     # Correction for zero events in trial-arm
     r0 <- ifelse(r_new == 0, r_new + 0.01,
                  ifelse(r_new == obs, r_new - 0.01, r_new))
 
     # Deviance at the posterior mean of the fitted response
-    dev_post_o <- 2 * (r0 * (log(r0) - log(as.vector(hat_par[, 1]))) +
-                         (obs - r0) * (log(obs - r0) - log(obs - as.vector(hat_par[, 1]))))
+    dev_post_o <- 2 * (r0 * (log(r0) -
+                               log(as.vector(hat_par[, 1]))) +
+                         (obs - r0) * (log(obs - r0) -
+                                         log(obs - as.vector(hat_par[, 1]))))
 
     # Sign of the difference between observed and fitted response
     sign_dev_o <- sign(r0 - as.vector(hat_par[, 1]))
@@ -439,4 +458,3 @@ run_metareg <- function(full,
 
   ifelse(item$nt > 2, return(nma_results), return(ma_results))
 }
-

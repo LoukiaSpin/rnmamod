@@ -266,52 +266,52 @@
 #'   \code{\link{heterogeneity_param_prior}}, \code{\link[R2jags]{jags}}
 #'
 #' @references
-#'   Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
-#'   data in network meta-analysis: a one-stage pattern-mixture model approach.
-#'   \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
+#' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
+#' data in network meta-analysis: a one-stage pattern-mixture model approach.
+#' \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
 #'
-#'   Spineli LM. An empirical comparison of Bayesian modelling strategies for
-#'   missing binary outcome data in network meta-analysis.
-#'   \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-#'   [\doi{10.1186/s12874-019-0731-y}]
+#' Spineli LM. An empirical comparison of Bayesian modelling strategies for
+#' missing binary outcome data in network meta-analysis.
+#' \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
+#' [\doi{10.1186/s12874-019-0731-y}]
 #'
-#'   Spineli LM. Modeling missing binary outcome data while preserving
-#'   transitivity assumption yielded more credible network meta-analysis
-#'   results. \emph{J Clin Epidemiol} 2019;\bold{105}:19--26.
-#'   [\doi{10.1016/j.jclinepi.2018.09.002}]
+#' Spineli LM. Modeling missing binary outcome data while preserving
+#' transitivity assumption yielded more credible network meta-analysis
+#' results. \emph{J Clin Epidemiol} 2019;\bold{105}:19--26.
+#' [\doi{10.1016/j.jclinepi.2018.09.002}]
 #'
-#'   Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
-#'   uncertainty due to missing continuous outcome data in pairwise and
-#'   network meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--741.
-#'   [\doi{10.1002/sim.6365}]
+#' Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
+#' uncertainty due to missing continuous outcome data in pairwise and
+#' network meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--741.
+#' [\doi{10.1002/sim.6365}]
 #'
-#'   Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account
-#'   for uncertainty due to missing binary outcome data in pairwise
-#'   meta-analysis. \emph{Stat Med} 2015;\bold{34}(12):2062--2080.
-#'   [\doi{10.1002/sim.6475}]
+#' Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account
+#' for uncertainty due to missing binary outcome data in pairwise
+#' meta-analysis. \emph{Stat Med} 2015;\bold{34}(12):2062--2080.
+#' [\doi{10.1002/sim.6475}]
 #'
-#'   Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
-#'   making 2: a generalized linear modeling framework for pairwise and network
-#'   meta-analysis of randomized controlled trials. \emph{Med Decis Making}
-#'   2013;\bold{33}(5):607--617. [\doi{10.1177/0272989X12458724}]
+#' Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
+#' making 2: a generalized linear modeling framework for pairwise and network
+#' meta-analysis of randomized controlled trials. \emph{Med Decis Making}
+#' 2013;\bold{33}(5):607--617. [\doi{10.1177/0272989X12458724}]
 #'
-#'   Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing
-#'   between-study heterogeneity and inconsistency in mixed treatment
-#'   comparisons: Application to stroke prevention treatments in individuals
-#'   with non-rheumatic atrial fibrillation.
-#'   \emph{Stat Med} 2009;\bold{28}(14):1861--81. [\doi{10.1002/sim.3594}]
+#' Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing
+#' between-study heterogeneity and inconsistency in mixed treatment
+#' comparisons: Application to stroke prevention treatments in individuals
+#' with non-rheumatic atrial fibrillation.
+#' \emph{Stat Med} 2009;\bold{28}(14):1861--81. [\doi{10.1002/sim.3594}]
 #'
-#'   White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data
-#'   in meta-analysis--part 1: two-stage methods. \emph{Stat Med}
-#'   2008;\bold{27}(5):711--727. [\doi{10.1002/sim.3008}]
+#' White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data
+#' in meta-analysis--part 1: two-stage methods. \emph{Stat Med}
+#' 2008;\bold{27}(5):711--727. [\doi{10.1002/sim.3008}]
 #'
-#'   Lu G, Ades AE. Assessing evidence inconsistency in mixed treatment
-#'   comparisons. \emph{J Am Stat Assoc} 2006;\bold{101}:447--459.
-#'   [\doi{10.1198/016214505000001302}]
+#' Lu G, Ades AE. Assessing evidence inconsistency in mixed treatment
+#' comparisons. \emph{J Am Stat Assoc} 2006;\bold{101}:447--459.
+#' [\doi{10.1198/016214505000001302}]
 #'
-#'   Gelman A, Rubin DB. Inference from iterative simulation using multiple
-#'   sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
-#'   [\doi{10.1214/ss/1177011136}]
+#' Gelman A, Rubin DB. Inference from iterative simulation using multiple
+#' sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
+#' [\doi{10.1214/ss/1177011136}]
 #'
 #' @examples
 #' data("nma.baker2009")
@@ -390,7 +390,8 @@ run_model <- function(data,
   }
   mean_misspar <- missingness_param_prior(assumption, mean_misspar)
   heterog_prior <- heterogeneity_param_prior(measure, model, heter_prior)
-  var_misspar <- if (missing(var_misspar) & is.element(measure, c("OR", "MD", "SMD"))) {
+  var_misspar <- if (missing(var_misspar) &
+                     is.element(measure, c("OR", "MD", "SMD"))) {
     1
   } else if (missing(var_misspar) & measure == "ROM") {
     0.2^2
@@ -437,7 +438,8 @@ run_model <- function(data,
                   "totresdev.o",
                   "hat.par")
 
-  param_jags <- if (is.element(assumption, c("HIE-COMMON", "HIE-TRIAL", "HIE-ARM"))) {
+  param_jags <- if (is.element(assumption,
+                               c("HIE-COMMON", "HIE-TRIAL", "HIE-ARM"))) {
     append(param_jags, "mean.phi")
   } else {
     append(param_jags, "phi")
@@ -446,7 +448,8 @@ run_model <- function(data,
   param_jags <- if (model == "RE") {
     param_jags
   } else {
-    param_jags[!is.element(param_jags, c("EM.pred", "pred.ref", "tau", "delta"))]
+    param_jags[!is.element(param_jags,
+                           c("EM.pred", "pred.ref", "tau", "delta"))]
   }
 
   # Run the Bayesian analysis
@@ -460,7 +463,6 @@ run_model <- function(data,
                   n.iter = n_iter,
                   n.burnin = n_burnin,
                   n.thin = n_thin)
-
 
   # Turn R2jags object into a data-frame
   get_results <- as.data.frame(t(jagsfit$BUGSoutput$summary))
@@ -484,10 +486,12 @@ run_model <- function(data,
   SUCRA <- t(get_results %>% dplyr::select(starts_with("SUCRA")))
 
   # Within-trial effects size
-  delta <- t(get_results %>% dplyr::select(starts_with("delta") & !ends_with(",1]")))
+  delta <- t(get_results %>% dplyr::select(starts_with("delta") &
+                                             !ends_with(",1]")))
 
   # Ranking probability of each intervention for every rank
-  effectiveness <- t(get_results %>% dplyr::select(starts_with("effectiveness")))
+  effectiveness <- t(get_results %>% dplyr::select(
+    starts_with("effectiveness")))
 
   # Estimated missingness parameter
   phi <- if (length(unique(unlist(item$m))) > 2) {
@@ -510,32 +514,45 @@ run_model <- function(data,
 
   # Calculate the deviance at posterior mean of fitted values
   # Turn 'N' and 'm' into a vector (first column, followed by second, etc)
-  m_new <- suppressMessages({as.vector(na.omit(melt(item$m)[, 2]))})
-  N_new <- suppressMessages({as.vector(na.omit(melt(item$N)[, 2]))})
+  m_new <- suppressMessages({
+    as.vector(na.omit(melt(item$m)[, 2]))
+    })
+  N_new <- suppressMessages({
+    as.vector(na.omit(melt(item$N)[, 2]))
+    })
   obs <- N_new - m_new
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
     # Turn 'y0', 'se0' into a vector as above
-    y0_new <- suppressMessages({as.vector(na.omit(melt(item$y0)[, 2]))})
-    se0_new <- suppressMessages({as.vector(na.omit(melt(item$se0)[, 2]))})
+    y0_new <- suppressMessages({
+      as.vector(na.omit(melt(item$y0)[, 2]))
+      })
+    se0_new <- suppressMessages({
+      as.vector(na.omit(melt(item$se0)[, 2]))
+      })
 
     # Deviance at the posterior mean of the fitted mean outcome
-    dev_post_o <- (y0_new - as.vector(hat_par[, 1])) * (y0_new -
-                                                          as.vector(hat_par[, 1])) * (1 / se0_new^2)
+    dev_post_o <- (y0_new -
+                     as.vector(hat_par[, 1])) *
+      (y0_new - as.vector(hat_par[, 1])) * (1 / se0_new^2)
 
     # Sign of the difference between observed and fitted mean outcome
     sign_dev_o <- sign(y0_new - as.vector(hat_par[, 1]))
   } else {
     # Turn 'r' and number of observed into a vector as above
-    r_new <- suppressMessages({as.vector(na.omit(melt(item$r)[, 2]))})
+    r_new <- suppressMessages({
+      as.vector(na.omit(melt(item$r)[, 2]))
+      })
 
     # Correction for zero events in trial-arm
     r0 <- ifelse(r_new == 0, r_new + 0.01,
                  ifelse(r_new == obs, r_new - 0.01, r_new))
 
     # Deviance at the posterior mean of the fitted response
-    dev_post_o <- 2 * (r0 * (log(r0) - log(as.vector(hat_par[, 1]))) +
-                       (obs - r0) * (log(obs - r0) - log(obs - as.vector(hat_par[, 1]))))
+    dev_post_o <- 2 * (r0 * (log(r0) -
+                               log(as.vector(hat_par[, 1]))) +
+                         (obs - r0) * (log(obs - r0) -
+                                         log(obs - as.vector(hat_par[, 1]))))
 
     # Sign of the difference between observed and fitted response
     sign_dev_o <- sign(r0 - as.vector(hat_par[, 1]))

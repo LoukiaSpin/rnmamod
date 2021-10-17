@@ -156,9 +156,10 @@ improved_ume <- function(t, N, ns, na) {
     return(list(obs_comp = tab_comp_arms))
   } else {
     return(list(nbase_multi = length(final[, 1]),
-                t1_bn = final$t1, t2_bn = final$t2,
-                ref_base = min(final$base),
-                base = final$base,
+                t1_bn = final$t1,
+                t2_bn = final$t2,
+                ref_base = min(base),
+                base = base,
                 obs_comp = tab_comp_arms))
   }
 }

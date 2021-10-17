@@ -109,28 +109,28 @@
 #' \code{\link[gemtc]{mtc.nodesplit}}
 #'
 #' @references
-#'   Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
-#'   data in network meta-analysis: a one-stage pattern-mixture model approach.
-#'   \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
+#' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
+#' data in network meta-analysis: a one-stage pattern-mixture model approach.
+#' \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
 #'
-#'   Spineli LM. An empirical comparison of Bayesian modelling strategies for
-#'   missing binary outcome data in network meta-analysis.
-#'   \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-#'   [\doi{10.1186/s12874-019-0731-y}]
+#' Spineli LM. An empirical comparison of Bayesian modelling strategies for
+#' missing binary outcome data in network meta-analysis.
+#' \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
+#' [\doi{10.1186/s12874-019-0731-y}]
 #'
-#'   Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
-#'   treatment comparison meta-analysis.
-#'   \emph{Stat Med} 2010;\bold{29}(7-8):932--44.
-#'   [\doi{10.1002/sim.3767}]
+#' Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
+#' treatment comparison meta-analysis.
+#' \emph{Stat Med} 2010;\bold{29}(7-8):932--44.
+#' [\doi{10.1002/sim.3767}]
 #'
-#'   Gelman A, Rubin DB. Inference from iterative simulation using multiple
-#'   sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
-#'   [\doi{10.1214/ss/1177011136}]
+#' Gelman A, Rubin DB. Inference from iterative simulation using multiple
+#' sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
+#' [\doi{10.1214/ss/1177011136}]
 #'
-#'   van Valkenhoef G, Dias S, Ades AE, Welton NJ. Automated generation of
-#'   node-splitting models for assessment of inconsistency in network
-#'   meta-analysis. \emph{Res Synth Methods} 2016;\bold{7}(1):80--93.
-#'   [\doi{10.1002/jrsm.1167}]
+#' van Valkenhoef G, Dias S, Ades AE, Welton NJ. Automated generation of
+#' node-splitting models for assessment of inconsistency in network
+#' meta-analysis. \emph{Res Synth Methods} 2016;\bold{7}(1):80--93.
+#' [\doi{10.1002/jrsm.1167}]
 #'
 #' @examples
 #' data("nma.baker2009")
@@ -162,8 +162,7 @@ run_nodesplit <- function(full,
                           n_chains,
                           n_iter,
                           n_burnin,
-                          n_thin)
-  {
+                          n_thin) {
 
   # Turn off warning when variables in the 'data_jag' are not used
   options(warn = -1)
@@ -201,11 +200,11 @@ run_nodesplit <- function(full,
                                          item$se0,
                                          item$N,
                                          na..),
-                                   armVars = c('treatment'= 't',
-                                               'mean'='y',
-                                               'std.error'='se',
-                                               'sampleSize'='n'),
-                                   nArmsVar='na')
+                                   armVars = c("treatment" = "t",
+                                               "mean" = "y",
+                                               "std.error" = "se",
+                                               "sampleSize" = "n"),
+                                   nArmsVar = "na")
   } else {
     # Rename columns to agree with gemtc
     names(item$r) <- paste0("r..", seq_len(max(item$na)), ".")
@@ -218,10 +217,10 @@ run_nodesplit <- function(full,
                                          item$r,
                                          item$N,
                                          na..),
-                                   armVars = c('treatment'= 't',
-                                               'response'='r',
-                                               'sampleSize'='n'),
-                                   nArmsVar='na')
+                                   armVars = c("treatment" = "t",
+                                               "response" = "r",
+                                               "sampleSize" = "n"),
+                                   nArmsVar = "na")
   }
 
   # Detect the nodes to split (GeMTC functions)
@@ -261,32 +260,40 @@ run_nodesplit <- function(full,
       N_node[[i]] <- t_node[[i]] <- I_sign[[i]] <- r_node[[i]]
 
       for (j in seq_len(item$ns)) {
-        t_node[[i]][j, 1] <- item$t[j, checkPair[[i]][j,"b"]]
-        t_node[[i]][j, 2:max(na..)] <- unlist(item$t[j, -checkPair[[i]][j,"b"]])
-        N_node[[i]][j, 1] <- item$N[j, checkPair[[i]][j,"b"]]
-        N_node[[i]][j, 2:max(na..)] <- unlist(item$N[j, -checkPair[[i]][j,"b"]])
-        m_node[[i]][j, 1] <- item$m[j, checkPair[[i]][j,"b"]]
-        m_node[[i]][j, 2:max(na..)] <- unlist(item$m[j, -checkPair[[i]][j,"b"]])
+        t_node[[i]][j, 1] <- item$t[j, checkPair[[i]][j, "b"]]
+        t_node[[i]][j, 2:max(na..)] <- unlist(item$t[j,
+                                                     -checkPair[[i]][j, "b"]])
+        N_node[[i]][j, 1] <- item$N[j, checkPair[[i]][j, "b"]]
+        N_node[[i]][j, 2:max(na..)] <- unlist(item$N[j,
+                                                     -checkPair[[i]][j, "b"]])
+        m_node[[i]][j, 1] <- item$m[j, checkPair[[i]][j, "b"]]
+        m_node[[i]][j, 2:max(na..)] <- unlist(item$m[j,
+                                                     -checkPair[[i]][j, "b"]])
 
         if (is.element(measure, c("MD", "SMD", "ROM"))) {
-          y_node[[i]][j, 1] <- item$y0[j, checkPair[[i]][j,"b"]]
-          y_node[[i]][j, 2:max(na..)] <- unlist(item$y0[j, -checkPair[[i]][j,"b"]])
-          se_node[[i]][j, 1] <- item$se0[j, checkPair[[i]][j,"b"]]
-          se_node[[i]][j, 2:max(na..)] <- unlist(item$se0[j, -checkPair[[i]][j,"b"]])
+          y_node[[i]][j, 1] <- item$y0[j, checkPair[[i]][j, "b"]]
+          y_node[[i]][j, 2:max(na..)] <-
+            unlist(item$y0[j, -checkPair[[i]][j, "b"]])
+          se_node[[i]][j, 1] <- item$se0[j, checkPair[[i]][j, "b"]]
+          se_node[[i]][j, 2:max(na..)] <-
+            unlist(item$se0[j, -checkPair[[i]][j, "b"]])
         } else {
-          r_node[[i]][j, 1] <- item$r[j, checkPair[[i]][j,"b"]]
-          r_node[[i]][j, 2:max(na..)] <- unlist(item$r[j, -checkPair[[i]][j,"b"]])
+          r_node[[i]][j, 1] <- item$r[j, checkPair[[i]][j, "b"]]
+          r_node[[i]][j, 2:max(na..)] <-
+            unlist(item$r[j, -checkPair[[i]][j, "b"]])
         }
 
-        for(k in 2:max(na..)){
-          I_sign[[i]][j, k] <- ifelse(t_node[[i]][j, 1] > t_node[[i]][j, k], -1, 1)
+        for (k in 2:max(na..)) {
+          I_sign[[i]][j, k] <-
+            ifelse(t_node[[i]][j, 1] > t_node[[i]][j, k], -1, 1)
         }
       }
 
-      checkPair_node[[i]][,"b"] <- ifelse(checkPair[[i]][,"b"] > 1, 1, checkPair[[i]][,"b"])
+      checkPair_node[[i]][, "b"] <-
+        ifelse(checkPair[[i]][, "b"] > 1, 1, checkPair[[i]][, "b"])
 
       # Build vector bi[i] with baseline treatment: t[i, b[i]]
-      bi[[i]] <- Basetreat(as.matrix(t_node[[i]]), checkPair_node[[i]][,"b"])
+      bi[[i]] <- Basetreat(as.matrix(t_node[[i]]), checkPair_node[[i]][, "b"])
 
       # Indexes to sweep non-baseline arms only
       m[[i]] <- NonbaseSweep(checkPair_node[[i]], na..)
@@ -317,18 +324,19 @@ run_nodesplit <- function(full,
                             "heter.prior" = heter_prior)
 
       data_jag[[i]]  <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
-        append(data_jag[[i]] , list("y.o" = y_node[[i]], "se.o" = se_node[[i]]))
+        append(data_jag[[i]], list("y.o" = y_node[[i]], "se.o" = se_node[[i]]))
       } else if (measure == "OR") {
-        append(data_jag[[i]] , list("r" = r_node[[i]])) #list("r" = item$r)
+        append(data_jag[[i]], list("r" = r_node[[i]]))
       }
 
       # Run the Bayesian analysis
       message(paste(i, "out of", length(pair[, 1]), "split nodes"))
       jagsfit[[i]] <- jags(data = data_jag[[i]],
                            parameters.to.save = param_jags,
-                           model.file = textConnection(prepare_nodesplit(measure,
-                                                                         model,
-                                                                         assumption)),
+                           model.file =
+                             textConnection(prepare_nodesplit(measure,
+                                                              model,
+                                                              assumption)),
                            n.chains = n_chains,
                            n.iter = n_iter,
                            n.burnin = n_burnin,
@@ -341,8 +349,12 @@ run_nodesplit <- function(full,
                    pair[, 1],
                    do.call(rbind,
                            lapply(seq_len(length(pair[, 1])),
-                                  function(i) jagsfit[[i]]$BUGSoutput$summary[paste0("EM[", pair[i, 2], ",", pair[i, 1], "]"),
-                                                                              c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")])))
+                                  function(i)
+                                    jagsfit[[i]]$BUGSoutput$summary[
+                                      paste0("EM[", pair[i, 2], ",",
+                                             pair[i, 1], "]"),
+                                      c("mean", "sd", "2.5%", "97.5%", "Rhat",
+                                        "n.eff")])))
   colnames(EM) <- c("treat1",
                     "treat2",
                     "mean",
@@ -357,8 +369,11 @@ run_nodesplit <- function(full,
                        pair[, 1],
                        do.call(rbind,
                                lapply(seq_len(length(pair[, 1])),
-                                      function(i) jagsfit[[i]]$BUGSoutput$summary["direct",
-                                                                                  c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")])))
+                                      function(i)
+                                        jagsfit[[i]]$BUGSoutput$summary[
+                                          "direct",
+                                          c("mean", "sd", "2.5%", "97.5%",
+                                            "Rhat", "n.eff")])))
   colnames(direct) <- c("treat1",
                         "treat2",
                         "mean",
@@ -373,8 +388,11 @@ run_nodesplit <- function(full,
                      pair[, 1],
                      do.call(rbind,
                              lapply(seq_len(length(pair[, 1])),
-                                    function(i) jagsfit[[i]]$BUGSoutput$summary["diff",
-                                                                                c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")])))
+                                    function(i)
+                                      jagsfit[[i]]$BUGSoutput$summary[
+                                        "diff",
+                                        c("mean", "sd", "2.5%", "97.5%", "Rhat",
+                                          "n.eff")])))
   colnames(diff) <- c("treat1",
                       "treat2",
                       "mean",
@@ -390,7 +408,11 @@ run_nodesplit <- function(full,
                       pair[, 1],
                       do.call(rbind,
                               lapply(seq_len(length(pair[, 1])),
-                                     function(i) jagsfit[[i]]$BUGSoutput$summary["tau", c("50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff")])))
+                                     function(i)
+                                       jagsfit[[i]]$BUGSoutput$summary[
+                                         "tau",
+                                         c("50%", "sd", "2.5%", "97.5%", "Rhat",
+                                           "n.eff")])))
     colnames(tau) <- c("treat1",
                        "treat2",
                        "50%",
@@ -403,40 +425,58 @@ run_nodesplit <- function(full,
     tau <- NA
   }
 
-  obs <- N_new <- m_new <- getResults <- hat_par <- list()
+  obs <- N_new <- m_new <- get_results <- hat_par <- list()
   r0 <- r_new <- se0_new <- y0_new <- dev_post_o <- list()
   dev <- rep(NA, length(pair[, 1]))
   for (i in seq_len(length(pair[, 1]))) {
-    getResults[[i]] <- as.data.frame(t(jagsfit[[i]]$BUGSoutput$summary))
+    get_results[[i]] <- as.data.frame(t(jagsfit[[i]]$BUGSoutput$summary))
 
     # Total residual deviance
-    dev[i] <- t(getResults[[i]] %>% dplyr::select(starts_with("totresdev.o")))[, 1]
+    dev[i] <- t(get_results[[i]] %>% dplyr::select(
+      starts_with("totresdev.o")))[, 1]
 
     # Fitted/predicted number of observed data (hat.par")
-    hat_par[[i]] <- t(getResults[[i]] %>% dplyr::select(starts_with("hat.par[")))
+    hat_par[[i]] <- t(get_results[[i]] %>% dplyr::select(
+      starts_with("hat.par[")))
 
     # Calculate the deviance at posterior mean of fitted values
     # Turn 'N' and 'm' into a vector (first column, followed by second, etc)
-    m_new[[i]] <- suppressMessages({as.vector(na.omit(melt(m_node[[i]])[, 3]))})
-    N_new[[i]] <- suppressMessages({as.vector(na.omit(melt(N_node[[i]])[, 3]))})
+    m_new[[i]] <- suppressMessages({
+      as.vector(na.omit(melt(m_node[[i]])[, 3]))
+      })
+    N_new[[i]] <- suppressMessages({
+      as.vector(na.omit(melt(N_node[[i]])[, 3]))
+      })
     obs[[i]] <- N_new[[i]] - m_new[[i]]
 
     if (is.element(measure, c("MD", "SMD", "ROM"))) {
       # Turn 'y0', 'se0'into a vector as above
-      y0_new[[i]] <- suppressMessages({as.vector(na.omit(melt(y_node[[i]])[, 3]))})
-      se0_new[[i]] <- suppressMessages({as.vector(na.omit(melt(se_node[[i]])[, 3]))})
+      y0_new[[i]] <- suppressMessages({
+        as.vector(na.omit(melt(y_node[[i]])[, 3]))
+        })
+      se0_new[[i]] <- suppressMessages({
+        as.vector(na.omit(melt(se_node[[i]])[, 3]))
+        })
       # Deviance at the posterior mean of the fitted mean outcome
-      dev_post_o[[i]] <- (y0_new[[i]] - as.vector(hat_par[[i]][, 1])) * (y0_new[[i]] -
-                                                                           as.vector(hat_par[[i]][, 1])) * (1 / (se0_new[[i]]^2))
+      dev_post_o[[i]] <- (y0_new[[i]] -
+                            as.vector(hat_par[[i]][, 1])) *
+        (y0_new[[i]] - as.vector(hat_par[[i]][, 1])) * (1 / (se0_new[[i]]^2))
     } else {
       # Turn 'r' and number of observed into a vector as above
-      r_new[[i]] <- suppressMessages({as.vector(na.omit(melt(r_node[[i]])[, 3]))})
+      r_new[[i]] <- suppressMessages({
+        as.vector(na.omit(melt(r_node[[i]])[, 3]))
+        })
       # Correction for zero events in trial-arm
       r0[[i]] <- ifelse(r_new[[i]] == 0, r_new[[i]] + 0.01,
-                        ifelse(r_new[[i]] == obs[[i]], r_new[[i]] - 0.01, r_new[[i]]))
+                        ifelse(r_new[[i]] == obs[[i]], r_new[[i]] - 0.01,
+                               r_new[[i]]))
       # Deviance at the posterior mean of the fitted mean outcome
-      dev_post_o[[i]] <- 2 * (r0[[i]] * (log(r0[[i]]) - log(as.vector(hat_par[[i]][, 1]))) +
-                                (obs[[i]] - r0[[i]]) * (log(obs[[i]] - r0[[i]]) - log(obs[[i]] - as.vector(hat_par[[i]][, 1]))))
+      dev_post_o[[i]] <- 2 *
+        (r0[[i]] * (log(r0[[i]]) -
+                      log(as.vector(hat_par[[i]][, 1]))) +
+           (obs[[i]] - r0[[i]]) * (log(obs[[i]] - r0[[i]]) -
+                                     log(obs[[i]] -
+                                           as.vector(hat_par[[i]][, 1]))))
     }
   }
 
@@ -478,6 +518,3 @@ run_nodesplit <- function(full,
 
   return(results)
 }
-
-
-
