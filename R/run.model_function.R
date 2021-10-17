@@ -463,35 +463,35 @@ run_model <- function(data,
 
 
   # Turn R2jags object into a data-frame
-  getResults <- as.data.frame(t(jagsfit$BUGSoutput$summary))
+  get_results <- as.data.frame(t(jagsfit$BUGSoutput$summary))
 
   # Effect size of all unique pairwise comparisons
-  EM <- t(getResults %>% dplyr::select(starts_with("EM[")))
+  EM <- t(get_results %>% dplyr::select(starts_with("EM[")))
 
   # Effect size of all comparisons with the reference intervention
-  EM_ref <- t(getResults %>% dplyr::select(starts_with("EM.ref[")))
+  EM_ref <- t(get_results %>% dplyr::select(starts_with("EM.ref[")))
 
   # Predictive effects of all unique pairwise comparisons
-  EM_pred <- t(getResults %>% dplyr::select(starts_with("EM.pred[")))
+  EM_pred <- t(get_results %>% dplyr::select(starts_with("EM.pred[")))
 
   # Predictive effects of all comparisons with the reference intervention
-  pred_ref <- t(getResults %>% dplyr::select(starts_with("pred.ref[")))
+  pred_ref <- t(get_results %>% dplyr::select(starts_with("pred.ref[")))
 
   # Between-trial standard deviation
-  tau <- t(getResults %>% dplyr::select(starts_with("tau")))
+  tau <- t(get_results %>% dplyr::select(starts_with("tau")))
 
   # SUrface under the Cumulative RAnking curve values
-  SUCRA <- t(getResults %>% dplyr::select(starts_with("SUCRA")))
+  SUCRA <- t(get_results %>% dplyr::select(starts_with("SUCRA")))
 
   # Within-trial effects size
-  delta <- t(getResults %>% dplyr::select(starts_with("delta") & !ends_with(",1]")))
+  delta <- t(get_results %>% dplyr::select(starts_with("delta") & !ends_with(",1]")))
 
   # Ranking probability of each intervention for every rank
-  effectiveness <- t(getResults %>% dplyr::select(starts_with("effectiveness")))
+  effectiveness <- t(get_results %>% dplyr::select(starts_with("effectiveness")))
 
   # Estimated missingness parameter
   phi <- if (length(unique(unlist(item$m))) > 2) {
-    t(getResults %>% dplyr::select(starts_with("phi") |
+    t(get_results %>% dplyr::select(starts_with("phi") |
                                      starts_with("mean.phi") |
                                      starts_with("mean.phi[") |
                                      starts_with("phi[")))
@@ -500,10 +500,10 @@ run_model <- function(data,
   }
 
   # Trial-arm deviance contribution for observed outcome
-  dev_o <- t(getResults %>% dplyr::select(starts_with("dev.o")))
+  dev_o <- t(get_results %>% dplyr::select(starts_with("dev.o")))
 
   # Fitted/predicted outcome
-  hat_par <- t(getResults %>% dplyr::select(starts_with("hat.par")))
+  hat_par <- t(get_results %>% dplyr::select(starts_with("hat.par")))
 
   # Total residual deviance
   dev <- jagsfit$BUGSoutput$summary["totresdev.o", "mean"]
