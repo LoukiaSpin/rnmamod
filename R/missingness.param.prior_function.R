@@ -2,19 +2,20 @@
 #'
 #' @description
 #'   Generates the mean value of the distribution of the missingness parameter
-#'   in the proper format depending on the assumed structure of the missingness parameter.
-#'   \code{missingness_param_prior} is found in the \code{run_model} function;
-#'   thus, the arguments are as specified in the latter.
+#'   in the proper format depending on the assumed structure of the missingness
+#'   parameter. \code{missingness_param_prior} is found in the \code{run_model}
+#'   function; thus, the arguments are as specified in the latter.
 #'
 #' @param assumption Character string indicating the structure of the
 #'   informative missingness parameter.
 #'   Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"},
-#'   \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"},
-#'   \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.
+#'   \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"},
+#'   \code{"IDE-TRIAL"}, \code{"IDE-ARM"}, \code{"IND-CORR"}, or
+#'   \code{"IND-UNCORR"}.
 #'   The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"},
-#'   \code{"HIE"}, and \code{"IND"} stand for identical, hierarchical and independent,
-#'   respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and
-#'   uncorrelated, respectively.
+#'   \code{"HIE"}, and \code{"IND"} stand for identical, hierarchical and
+#'   independent, respectively. \code{"CORR"} and \code{"UNCORR"} stand for
+#'   correlated and uncorrelated, respectively.
 #' @param mean_misspar A numeric value or a vector of two numeric values for the
 #'   mean of the normal distribution of the informative missingness parameter
 #'   (see 'Details'). The default argument is 0 and corresponds to the
@@ -26,25 +27,27 @@
 #'   in the logarithmic scale for binary outcome data (White et al., 2008;
 #'   Turner et al., 2015; Spineli, 2019), the informative missingness difference
 #'   of means when \code{measure} is \code{"MD"} or \code{"SMD"},
-#'   and the informative missingness ratio of means in the logarithmic scale when
-#'   \code{measure} is \code{"ROM"} (Mavridis et al., 2015; Spineli et al., 2021).
+#'   and the informative missingness ratio of means in the logarithmic scale
+#'   when \code{measure} is \code{"ROM"} (Mavridis et al., 2015;
+#'   Spineli et al., 2021).
 #'
 #'   When \code{assumption} is trial-specific (i.e., \code{"IDE-TRIAL"} or
 #'   \code{"HIE-TRIAL"}), or independent (i.e., \code{"IND-CORR"} or
-#'   \code{"IND-UNCORR"}), only one numeric value can be assigned to \code{mean_misspar}
-#'   because the same missingness scenario is applied to all trials and
-#'   trial-arms of the dataset, respectively. When \code{assumption} is
-#'   \code{"IDE-ARM"} or \code{"HIE-ARM"}, a maximum of two
+#'   \code{"IND-UNCORR"}), only one numeric value can be assigned to
+#'   \code{mean_misspar} because the same missingness scenario is applied to all
+#'   trials and trial-arms of the dataset, respectively. When \code{assumption}
+#'   is \code{"IDE-ARM"} or \code{"HIE-ARM"}, a maximum of two
 #'   \emph{different} numeric values can be assigned as a vector to
 #'   \code{mean_misspars}: the first value refers to the experimental arm,
 #'   and the second value refers to the control arm of a trial.
 #'   In the case of a network, the first value is considered for all
 #'   non-reference interventions and the second value is considered for the
-#'   reference intervention of the network (i.e., the intervention with identifier
-#'   equal to one). This is necessary to ensure transitivity in the assumptions
-#'   for the missingness parameter across the comparisons in the
+#'   reference intervention of the network (i.e., the intervention with
+#'   identifier equal to one). This is necessary to ensure transitivity in the
+#'   assumptions for the missingness parameter across the comparisons in the
 #'   network (Spineli, 2019). When one numeric value is considered,
-#'   the same missingness scenario is applied to all interventions in the dataset.
+#'   the same missingness scenario is applied to all interventions in the
+#'   dataset.
 #'
 #'   Currently, there are no empirically-based prior distributions for the
 #'   informative missingness parameters. The users may refer to
@@ -56,32 +59,32 @@
 #' @seealso \code{\link{run_model}}
 #'
 #' @references
-#'   Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome data
-#'   in network meta-analysis: a one-stage pattern-mixture model approach.
-#'   \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
+#' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
+#' data in network meta-analysis: a one-stage pattern-mixture model approach.
+#' \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
 #'
-#'   Spineli LM. An empirical comparison of Bayesian modelling strategies for
-#'   missing binary outcome data in network meta-analysis.
-#'   \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-#'   [\doi{10.1186/s12874-019-0731-y}]
+#' Spineli LM. An empirical comparison of Bayesian modelling strategies for
+#' missing binary outcome data in network meta-analysis.
+#' \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
+#' [\doi{10.1186/s12874-019-0731-y}]
 #'
-#'   Spineli LM. Modeling missing binary outcome data while preserving
-#'   transitivity assumption yielded more credible network meta-analysis
-#'   results. \emph{J Clin Epidemiol} 2019;\bold{105}:19--26.
-#'   [\doi{10.1016/j.jclinepi.2018.09.002}]
+#' Spineli LM. Modeling missing binary outcome data while preserving
+#' transitivity assumption yielded more credible network meta-analysis
+#' results. \emph{J Clin Epidemiol} 2019;\bold{105}:19--26.
+#' [\doi{10.1016/j.jclinepi.2018.09.002}]
 #'
-#'   Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
-#'   uncertainty due to missing continuous outcome data in pairwise and
-#'   network meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--741.
-#'   [\doi{10.1002/sim.6365}]
+#' Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
+#' uncertainty due to missing continuous outcome data in pairwise and
+#' network meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--741.
+#' [\doi{10.1002/sim.6365}]
 #'
-#'   Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account
-#'   for uncertainty due to missing binary outcome data in pairwise meta-analysis.
-#'   \emph{Stat Med} 2015;\bold{34}(12):2062--2080. [\doi{10.1002/sim.6475}]
+#' Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account
+#' for uncertainty due to missing binary outcome data in pairwise meta-analysis.
+#' \emph{Stat Med} 2015;\bold{34}(12):2062--2080. [\doi{10.1002/sim.6475}]
 #'
-#'   White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data
-#'   in meta-analysis--part 1: two-stage methods. \emph{Stat Med}
-#'   2008;\bold{27}(5):711--727. [\doi{10.1002/sim.3008}]
+#' White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data
+#' in meta-analysis--part 1: two-stage methods. \emph{Stat Med}
+#' 2008;\bold{27}(5):711--727. [\doi{10.1002/sim.3008}]
 #'
 #' @export
 missingness_param_prior <- function(assumption, mean_misspar) {
@@ -97,7 +100,7 @@ missingness_param_prior <- function(assumption, mean_misspar) {
                                 "IND-UNCORR"))) {
     stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL',
          'HIE-COMMON', or 'IND-CORR', 'IND-UNCORR' ", call. = F)
-  } else if (is.element(assumption, c("HIE-ARM", "IDE-ARM" )) &
+  } else if (is.element(assumption, c("HIE-ARM", "IDE-ARM")) &
              missing(mean_misspar)) {
     mean_misspar <- rep(0.0001, 2)
   } else if (is.element(assumption, c("IDE-TRIAL",
@@ -129,6 +132,4 @@ missingness_param_prior <- function(assumption, mean_misspar) {
   }
 
   return(mean_misspar)
-
 }
-

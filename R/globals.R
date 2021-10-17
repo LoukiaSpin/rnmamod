@@ -45,7 +45,7 @@ utils::globalVariables(c("active",
                          "sd_value",         # balloon_plot
                          "signed_dev",
                          "signed_dev_o",
-                         "stat.sign",
+                         "stat_sign",
                          "study",
                          "studlab",
                          "treatment",
