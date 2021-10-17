@@ -1,4 +1,4 @@
-#' Heatmap of league table (network meta-analysis)
+#' League heatmap of all possible comparisons: estimation
 #'
 #' @description
 #'   Provides a heatmap of the estimated effect measures for all possible
@@ -189,7 +189,7 @@ league_heatmap <- function(full, cov_value = NULL, drug_names) {
   # Interventions order based on their SUCRA value (from best to worst)
   drug_order_col <- drug_order_row <- order(-sucra)
 
-  # Order interventions based on their SUCRA value (from the best to the worst)
+  # Order interventions based on their SUCRA value (from best to worst)
   order_drug <- drug_names[order(-sucra)]
   len_drug <- length(order_drug)
 
@@ -225,8 +225,7 @@ league_heatmap <- function(full, cov_value = NULL, drug_names) {
            sprintf("%.2f", upper), ")"),
     nrow = length(drug_names),
     ncol = length(drug_names))
-  colnames(final) <- order_drug
-  rownames(final) <- order_drug
+  colnames(final) <- rownames(final) <- order_drug
 
   # Include SUCRA values in the diagonal of the new matrix
   diag(final) <- paste0(round(sort(sucra * 100, decreasing = T), 1), "%")
@@ -239,7 +238,7 @@ league_heatmap <- function(full, cov_value = NULL, drug_names) {
   mat_new <- cbind(mat_new1, melt(mat, na.rm = F)[, 3])
   colnames(mat_new) <- c("Var1", "Var2", "value", "value2")
 
-  ## The final dataset for ggplot2
+  # The final dataset for ggplot2
   diag(mat) <- NA
   final_col <- melt(mat)
   mat_new$value_sucra <- final_col$value

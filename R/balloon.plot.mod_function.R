@@ -88,7 +88,7 @@
 #'                  n_thin = 1)
 #'
 #' # Perform the sensitivity analysis (missing-at-random assumption)
-#' res.sens <- run_sensitivity(full = res,
+#' res_sens <- run_sensitivity(full = res,
 #'                             var_misspar = 1,
 #'                             n_chains = 3,
 #'                             n_iter = 10000,
@@ -96,14 +96,14 @@
 #'                             n_thin = 1)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv.names <- c("placebo", "budesonide", "budesonide plus formoterol",
+#' interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
 #'                   "fluticasone", "fluticasone plus salmeterol",
 #'                   "formoterol", "salmeterol", "tiotropium")
 #'
 #' # Create the enhanced balloon plot for 'tiotropium versus salmeterol'
-#' balloon_plot(sens = res.sens,
+#' balloon_plot(sens = res_sens,
 #'              compar = c("tiotropium", "salmeterol"),
-#'              drug_names = interv.names)
+#'              drug_names = interv_names)
 #' }
 #' @export
 balloon_plot <- function(sens, compar, drug_names) {
@@ -193,13 +193,13 @@ balloon_plot <- function(sens, compar, drug_names) {
                     es[, compar_id],
                     sd_es[, compar_id],
                     signif[, compar_id])
-  colnames(mat) <- c("active", "control", "value", "sd.value", "significance")
+  colnames(mat) <- c("active", "control", "value", "sd_value", "significance")
 
   # Enhanced balloon plot for summary effect size of the selected comparison
   bubble_es <- if (is.element(measure, c("OR", "ROM"))) {
    ggplot(mat, aes(x = active,
                    y = control,
-                   color = sd.value,
+                   color = sd_value,
                    label = sprintf("%.2f", round(exp(value), 2)))) +
       geom_rect(mapping = aes(x = NULL,
                               y = NULL,
@@ -239,7 +239,7 @@ balloon_plot <- function(sens, compar, drug_names) {
            y = paste("IMOR scenario in", control),
            color = "") +
       guides(shape = F, size = F) +
-      ggtitle(paste("Summary", effect.measure.name(measure))) +
+      ggtitle(paste("Summary", effect_measure_name(measure))) +
       theme_bw() +
       theme(axis.text.x = element_text(size = 12,
                                        angle = 360,
@@ -263,7 +263,7 @@ balloon_plot <- function(sens, compar, drug_names) {
   } else if (is.element(measure, c("MD", "SMD"))) {
     ggplot(mat, aes(x = active,
                     y = control,
-                    color = sd.value,
+                    color = sd_value,
                     label = sprintf("%.2f", round(value, 2)))) +
       geom_rect(mapping = aes(x = NULL,
                               y = NULL,
@@ -302,7 +302,7 @@ balloon_plot <- function(sens, compar, drug_names) {
            y = paste("IMDoM scenario in", control),
            color = "") +
       guides(shape = F, size = F) +
-      ggtitle(paste("Summary", effect.measure.name(measure))) +
+      ggtitle(paste("Summary", effect_measure_name(measure))) +
       theme_bw() +
       theme(axis.text.x = element_text(size = 12,
                                        angle = 360,
@@ -349,14 +349,14 @@ balloon_plot <- function(sens, compar, drug_names) {
 
     # Prepare dataset for the ggplot2
     mat_tau <- data.frame(missp, tau, sd_tau, extent_tau)
-    colnames(mat_tau) <- c("active", "control", "value", "sd.value", "extent")
+    colnames(mat_tau) <- c("active", "control", "value", "sd_value", "extent")
   }
 
   # Enhanced balloon plot for the between-trial standard deviation
   bubble_tau <- if (!is.null(sens$heter)) {
     ggplot(mat_tau, aes(x = active,
                         y = control,
-                        color = sd.value,
+                        color = sd_value,
                         label = sprintf("%.2f", value))) +
       geom_rect(mapping = aes(x = NULL,
                               y = NULL,
@@ -422,21 +422,10 @@ balloon_plot <- function(sens, compar, drug_names) {
   }
 
   results <- if (!is.null(sens$heter)) {
-    list(Plot_effect_size = bubble_ES,
-         Plot_tau = bubble_tau)
-    cat("Plot_effect_size: Enhance balloon plot for
-        the effect measure\n")
-    invisible(bubble_ES)
-    cat("\n")
-
-    cat("Plot_tau: Enhance balloon plot for
-        the between-trial standard deviation\n")
-    invisible(bubble_tau)
+    list(plot_effect_size = bubble_es,
+         plot_tau = bubble_tau)
   } else {
-    bubble_ES
-    cat("Plot_effect_size: Enhance balloon plot for
-        the effect measure \n")
-    invisible(bubble_ES)
+    bubble_es
   }
 
   return(results)
