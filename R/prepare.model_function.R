@@ -1,36 +1,37 @@
 #' The WinBUGS code for Bayesian network meta-analysis
 #'
 #' @description
-#'   The WinBUGS code, as written by Dias et al. (2013) to run a one-stage Bayesian
-#'   network meta-analysis, extended to incorporate the pattern-mixture model
-#'   for binary or continuous missing participant outcome data.
-#'   In the case of two interventions, the code boils down to a one-stage Bayesian
+#'   The WinBUGS code, as written by Dias et al. (2013) to run a one-stage
+#'   Bayesian network meta-analysis, extended to incorporate the pattern-mixture
+#'   model for binary or continuous missing participant outcome data. In the
+#'   case of two interventions, the code boils down to a one-stage Bayesian
 #'   pairwise meta-analysis with pattern-mixture model.
 #'
 #' @param measure Character string indicating the effect measure with values
 #'   \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
-#'   mean difference, standardised mean difference and ratio of means, respectively.
+#'   mean difference, standardised mean difference and ratio of means,
+#'   respectively.
 #' @param model Character string indicating the analysis model with values
 #'   \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model,
 #'   respectively. The default argument is \code{"RE"}.
 #' @param covar_assumption Character string indicating the structure of the
-#'   intervention by covariate interaction, as described in Cooper et al., (2009).
-#'   Set \code{covar_assumption} equal to one of the following: \code{"NO"},
-#'   when no meta-regression is performed; otherwise, \code{"exchangeable"},
-#'   \code{"independent"}, and \code{"common"}.
+#'   intervention by covariate interaction, as described in
+#'   Cooper et al., (2009). Set \code{covar_assumption} equal to one of the
+#'   following: \code{"NO"}, when no meta-regression is performed; otherwise,
+#'   \code{"exchangeable"}, \code{"independent"}, and \code{"common"}.
 #' @param assumption Character string indicating the structure of the
-#'   informative missingness parameter.
-#'   Set \code{assumption} equal to one of the following: \code{"HIE-COMMON"},
-#'   \code{"HIE-TRIAL"}, \code{"HIE-ARM"}, \code{"IDE-COMMON"}, \code{"IDE-TRIAL"},
-#'   \code{"IDE-ARM"}, \code{"IND-CORR"}, or \code{"IND-UNCORR"}.
-#'   The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"},
-#'   \code{"HIE"}, and \code{"IND"} stand for identical, hierarchical and independent,
+#'   informative missingness parameter. Set \code{assumption} equal to one of
+#'   the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"},
+#'   \code{"IDE-COMMON"}, \code{"IDE-TRIAL"}, \code{"IDE-ARM"},
+#'   \code{"IND-CORR"}, or \code{"IND-UNCORR"}. The default argument is
+#'   \code{"IDE-ARM"}. The abbreviations \code{"IDE"}, \code{"HIE"}, and
+#'   \code{"IND"} stand for identical, hierarchical and independent,
 #'   respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and
 #'   uncorrelated, respectively.
 #'
 #' @return An R character vector object to be passed to \code{\link{run_model}}
-#'   and \code{\link{run_metareg}}  through the \code{\link[base]{textconnections}}
-#'   function as the argument \code{object}.
+#'   and \code{\link{run_metareg}}  through the
+#'   \code{\link[base]{textconnections}} function as the argument \code{object}.
 #'
 #' @details \code{prepare_model} creates the model in the JAGS dialect
 #'   of the BUGS language. The output of this function constitutes the argument
@@ -43,36 +44,35 @@
 #'   \code{\link[base]{textconnections}}, \code{\link[R2jags]{jags}}
 #'
 #' @references
-#'   Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome data
-#'   in network meta-analysis: a one-stage pattern-mixture model approach.
-#'   \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
+#' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
+#' data in network meta-analysis: a one-stage pattern-mixture model approach.
+#' \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
 #'
-#'   Spineli LM. An empirical comparison of Bayesian modelling strategies for
-#'   missing binary outcome data in network meta-analysis.
-#'   \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-#'   [\doi{10.1186/s12874-019-0731-y}]
+#' Spineli LM. An empirical comparison of Bayesian modelling strategies for
+#' missing binary outcome data in network meta-analysis.
+#' \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
+#' [\doi{10.1186/s12874-019-0731-y}]
 #'
-#'   Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account
-#'   for uncertainty due to missing binary outcome data in pairwise meta-analysis.
-#'   \emph{Stat Med} 2015;\bold{34}(12):2062--2080. [\doi{10.1002/sim.6475}]
+#' Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account
+#' for uncertainty due to missing binary outcome data in pairwise meta-analysis.
+#' \emph{Stat Med} 2015;\bold{34}(12):2062--2080. [\doi{10.1002/sim.6475}]
 #'
-#'   Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
-#'   making 2: a generalized linear modeling framework for pairwise and network
-#'   meta-analysis of randomized controlled trials. \emph{Med Decis Making}
-#'   2013;\bold{33}(5):607--617. [\doi{10.1177/0272989X12458724}]
+#' Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
+#' making 2: a generalized linear modeling framework for pairwise and network
+#' meta-analysis of randomized controlled trials. \emph{Med Decis Making}
+#' 2013;\bold{33}(5):607--617. [\doi{10.1177/0272989X12458724}]
 #'
-#'   Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
-#'   heterogeneity and inconsistency in mixed treatment comparisons: Application
-#'   to stroke prevention treatments in individuals with non-rheumatic atrial
-#'   fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
-#'   [\doi{10.1002/sim.3594}]
+#' Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
+#' heterogeneity and inconsistency in mixed treatment comparisons: Application
+#' to stroke prevention treatments in individuals with non-rheumatic atrial
+#' fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
+#' [\doi{10.1002/sim.3594}]
 #'
 #' @export
 prepare_model <- function(measure, model, covar_assumption, assumption) {
 
-  code <- paste0("model\n{")
-
-  code <- paste0(code, "\n\tfor (i in 1:ns) {")
+  code <- paste0("model\n{",
+                 "\n\tfor (i in 1:ns) {")
 
   code <- if (model == "RE") {
     paste0(code, "\n\t\tdelta[i, 1] <- 0",
@@ -171,9 +171,8 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
     paste0(code, "\n\t\t\tBeta[i, k] <- beta*(cov.vector[i]*(1 - equals(cov.vector[i], 0)) + cov.matrix[i, k]*equals(cov.vector[i], 0))")
   }
 
-  code <- paste0(code, "\n\t\t\t}}")
-
-  code <- paste0(code, "\n\ttotresdev.o <- sum(resdev.o[])",
+  code <- paste0(code, "\n\t\t\t}}",
+                       "\n\ttotresdev.o <- sum(resdev.o[])",
                        "\n\td[ref] <- 0",
                        "\n\tfor (t in 1:(ref - 1)) {",
                        "\n\t\td[t] ~ dnorm(0, 0.0001)",
@@ -184,19 +183,19 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
 
   if (covar_assumption == "exchangeable") {
     code <- paste0(code, "\n\tbeta[ref] <- 0",
-                 "\n\tfor (t in 1:(ref - 1)) {",
-                 "\n\t\tbeta[t] ~ dnorm(mean.B, prec.B)",
-                 "\n\t\t}",
-                 "\n\tfor (t in (ref + 1):nt) {",
-                 "\n\t\tbeta[t] ~ dnorm(mean.B, prec.B)",
-                 "\n\t\t}",
-                 "\n\tmean.B ~ dnorm(0, .0001)",
-                 "\n\tprec.B <- 1/pow(beta.SD,2)",
-                 "\n\tbeta.SD ~ dnorm(0, 1)I(0, )",
-                 "\n\tfor (c in 1:(nt - 1)) {",
-                 "\n\t\tfor (k in (c + 1):nt) {",
-                 "\n\t\t\tbeta.all[k, c] <- beta[k] - beta[c]",
-                 "\n\t\t\t}}")
+                         "\n\tfor (t in 1:(ref - 1)) {",
+                         "\n\t\tbeta[t] ~ dnorm(mean.B, prec.B)",
+                         "\n\t\t}",
+                         "\n\tfor (t in (ref + 1):nt) {",
+                         "\n\t\tbeta[t] ~ dnorm(mean.B, prec.B)",
+                         "\n\t\t}",
+                         "\n\tmean.B ~ dnorm(0, .0001)",
+                         "\n\tprec.B <- 1/pow(beta.SD,2)",
+                         "\n\tbeta.SD ~ dnorm(0, 1)I(0, )",
+                         "\n\tfor (c in 1:(nt - 1)) {",
+                         "\n\t\tfor (k in (c + 1):nt) {",
+                         "\n\t\t\tbeta.all[k, c] <- beta[k] - beta[c]",
+                         "\n\t\t\t}}")
   } else if (covar_assumption == "independent") {
     code <- paste0(code, "\n\tbeta[ref] <- 0",
                          "\n\tfor (t in 1:(ref - 1)) {",
@@ -215,14 +214,14 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                          "\n\t\tfor (k in (c + 1):nt) {",
                          "\n\t\t\tbeta.all[k, c] <- 0",
                          "\n\t\t\t}}",
-                         "\n\tfor (t in (ref + 1):nt) {",   # t > ref
+                         "\n\tfor (t in (ref + 1):nt) {",
                          "\n\t\tbeta.all[t, ref] <- beta",
                          "\n\t\t}")
   }
 
   code <- if (assumption == "HIE-ARM") {
     paste0(code, "\n\tfor (i in 1:ns) {",
-                 "\n\t\tfor(k in 1:na[i]){",
+                 "\n\t\tfor(k in 1:na[i]) {",
                  "\n\t\t\tphi.m[i, k] <- phi[i, k]",
                  "\n\t\t\tphi[i, k] ~ dnorm(mean.phi[t[i, k]], prec.phi[t[i, k]])",
                  "\n\t\t\t}}",
@@ -242,7 +241,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                  "\n\tpsi.phi <- pow(precd.phi, -2)")
   } else if (assumption == "HIE-TRIAL") {
     paste0(code, "\n\tfor (i in 1:ns) {",
-                 "\n\t\tfor(k in 1:na[i]){",
+                 "\n\t\tfor (k in 1:na[i]) {",
                  "\n\t\t\tphi.m[i, k] <- phi[i, k]",
                  "\n\t\t\tphi[i, k] ~ dnorm(mean.phi[i], prec.phi[i])",
                  "\n\t\t\t}}",
@@ -254,7 +253,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                  "\n\tpsi.phi <- pow(precd.phi, -2)")
   } else if (assumption == "HIE-COMMON") {
     paste0(code, "\n\tfor (i in 1:ns) {",
-                 "\n\t\tfor(k in 1:na[i]){",
+                 "\n\t\tfor (k in 1:na[i]) {",
                  "\n\t\t\tphi.m[i, k] <- phi[i, k]",
                  "\n\t\t\tphi[i, k] ~ dnorm(mean.phi, prec.phi)",
                  "\n\t\t\t}}",
@@ -264,7 +263,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                  "\n\tpsi.phi <- pow(precd.phi, -2)")
   } else if (assumption == "IDE-ARM") {
     paste0(code, "\n\tfor (i in 1:ns) {",
-                 "\n\t\tfor(k in 1:na[i]){",
+                 "\n\t\tfor (k in 1:na[i]) {",
                  "\n\t\t\tphi.m[i, k] <- phi[t[i, k]]",
                  "\n\t\t\t}}",
                  "\n\tphi[ref] ~ dnorm(meand.phi[2], precd.phi)",
@@ -276,7 +275,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                  "\n\t\t}")
   } else if (assumption == "IDE-TRIAL") {
     paste0(code, "\n\tfor (i in 1:ns) {",
-                 "\n\t\tfor(k in 1:na[i]){",
+                 "\n\t\tfor (k in 1:na[i]) {",
                  "\n\t\t\tphi.m[i, k] <- phi[i]",
                  "\n\t\t\t}}",
                  "\n\tfor (i in 1:ns) {",
@@ -284,7 +283,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                  "\n\t\t}")
   } else if (assumption == "IDE-COMMON") {
     paste0(code, "\n\tfor (i in 1:ns) {",
-                 "\n\t\tfor(k in 1:na[i]){",
+                 "\n\t\tfor (k in 1:na[i]) {",
                  "\n\t\t\tphi.m[i, k] <- phi",
                  "\n\t\t\t}}",
                  "\n\t\tphi ~ dnorm(meand.phi, precd.phi)")
@@ -361,14 +360,3 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
 
   return(code)
 }
-
-
-
-
-
-
-
-
-
-
-

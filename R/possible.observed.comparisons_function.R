@@ -39,5 +39,4 @@ possible_observed_comparisons <- function(drug_names, obs_comp) {
   return(list(poss_comp = data.frame(ID = seq_len(length(poss_pair_comp$comp)),
                                      poss_pair_comp),
               obs_comp = observed_comp))
-
 }

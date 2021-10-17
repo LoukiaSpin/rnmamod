@@ -271,7 +271,7 @@ run.UME <- function(full, n.iter, n.burnin, n.chains, n.thin) {
   ## Run the Bayesian analysis
   jagsfit <- jags(data = data.jag,
                   parameters.to.save = param.jags,
-                  model.file = textConnection(prepare.UME(measure, model, assumption, connected)),
+                  model.file = textConnection(prepare_ume(measure, model, assumption, connected)),
                   n.chains = n.chains,
                   n.iter = n.iter,
                   n.burnin = n.burnin,
