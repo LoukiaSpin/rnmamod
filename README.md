@@ -55,9 +55,9 @@ Create the network plot using the *nma.networkplot* function of the [pcnetmeta](
 
 ``` r
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
+interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
 
-netplot(data = nma.baker2009, drug.names = interv.names, text.cex = 1.5)
+netplot(data = nma.baker2009, drug_names = interv_names, text.cex = 1.5)
 ```
 
 <div style="text-align: center"> 
@@ -67,24 +67,24 @@ netplot(data = nma.baker2009, drug.names = interv.names, text.cex = 1.5)
 The following code performs a Bayesian random-effects network meta-analysis under the *missing at random assumption* while using an intervention-specific informative missingness odds ratio (`assumption = "IDE-ARM"`) in the logarithmic scale:
 
 ``` r
-res <- run.model(data = nma.baker2009,
+res <- run_model(data = nma.baker2009,
                  measure = "OR",
                  model = "RE",
                  assumption = "IDE-ARM",
-                 heter.prior = list("halfnormal", 0, 1),
-                 mean.misspar = c(0, 0), 
-                 var.misspar = 1,
+                 heter_prior = list("halfnormal", 0, 1),
+                 mean_misspar = c(0, 0), 
+                 var_misspar = 1,
                  D = 0,
-                 n.chains = 3,
-                 n.iter = 10000,
-                 n.burnin = 1000,
-                 n.thin = 1)
+                 n_chains = 3,
+                 n_iter = 10000,
+                 n_burnin = 1000,
+                 n_thin = 1)
 ```
 
 Illustrate all possible pairwise comparisons of the interventions using a league heatmap. Interventions are sorted in decreasing order by their posterior mean SUCRA (surface under the cumulative ranking) value in the main diagonal:
 
 ``` r
-league.heatmap(full = res, drug.names = interv.names)
+league_heatmap(full = res, drug_names = interv_names)
 ```
 
 <div style="text-align: center"> 
@@ -97,7 +97,7 @@ league.heatmap(full = res, drug.names = interv.names)
 The following code presents the hierarchy of the interventions in the network using integrated rankograms and SUCRA curves:
 
 ``` r
-rankosucra.plot(full = res, drug.names = interv.names)
+rankosucra_plot(full = res, drug_names = interv_names)
 ```
 
 <div style="text-align: center"> 
