@@ -113,12 +113,23 @@ describe_network <- function(data, drug_names, measure) {
                                     max)[, 2], 2) * 100
 
   # Turn into long format using the 'pairwise' function (netmeta): MOD
-  pair_mod <- pairwise(as.list(dat$t),
-                       event = as.list(dat$m),
-                       n = as.list(dat$N),
-                       data = cbind(dat$t, dat$m, dat$N),
-                       studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
-  colnames(pair_mod) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
+  pair_mod0 <- pairwise(as.list(dat$t),
+                        event = as.list(dat$m),
+                        n = as.list(dat$N),
+                        data = cbind(dat$t, dat$m, dat$N),
+                        studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
+  colnames(pair_mod0) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
+
+  # Ensure that t1 < t2 and correspondingly for the other elements
+  treat <- treat0 <- pair_mod0[, 2:3]
+  miss <- miss0 <- pair_mod0[, 4:5]
+  rand <- rand0 <- pair_mod0[, 6:7]
+  for (i in seq_len(length(pair_mod0[, 1]))) {
+    treat[i, ] <- treat0[i, order(treat0[i, ], na.last = T)]
+    miss[i, ] <- miss0[i, order(treat0[i, ], na.last = T)]
+    rand[i, ] <- rand0[i, order(treat0[i, ], na.last = T)]
+  }
+  pair_mod <- data.frame(study = pair_mod0$study, treat, miss, rand)
 
   # Name the interventions in each arm
   pair_mod[, 2] <- drug_names[pair_mod$t1]
@@ -251,12 +262,23 @@ describe_network <- function(data, drug_names, measure) {
                              2) * 100
 
     # Turn into long format using the 'pairwise' function (netmeta)
-    pair_bin <- pairwise(as.list(dat$t),
-                         event = as.list(dat$r),
-                         n = as.list(dat$N),
-                         data = cbind(dat$t, dat$r, dat$N),
-                         studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
-    colnames(pair_bin) <- c("study", "t1", "t2", "r1", "r2", "n1", "n2")
+    pair_bin0 <- pairwise(as.list(dat$t),
+                          event = as.list(dat$r),
+                          n = as.list(dat$N),
+                          data = cbind(dat$t, dat$r, dat$N),
+                          studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
+    colnames(pair_bin0) <- c("study", "t1", "t2", "r1", "r2", "n1", "n2")
+
+    # Ensure that t1 < t2 and correspondingly for the other elements
+    treat <- treat0 <- pair_bin0[, 2:3]
+    resp <- resp0 <- pair_bin0[, 4:5]
+    rand <- rand0 <- pair_bin0[, 6:7]
+    for (i in seq_len(length(pair_bin0[, 1]))) {
+      treat[i, ] <- treat0[i, order(treat0[i, ], na.last = T)]
+      resp[i, ] <- resp0[i, order(treat0[i, ], na.last = T)]
+      rand[i, ] <- rand0[i, order(treat0[i, ], na.last = T)]
+    }
+    pair_bin <- data.frame(study = pair_bin0$study, treat, resp, rand)
 
     # Proportion of observed events per trial-comparison
     trial_risk <- apply(pair_bin[, c("r1", "r2")], 1, sum) /
