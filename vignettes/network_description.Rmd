@@ -53,21 +53,21 @@ If there is at least one trial that reports the number of missing participants p
 The function `netplot` (see ?netplot for help) creates the network plot using only two arguments: the `data` for the dataset (in one-trial-per-row format) and `drug.names` for the names of each intervention in the dataset.
 
 ```{r, results = "hide", fig.show = "hide"}
-netplot(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+netplot(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
 ```
 
 ```{r, echo = FALSE, results = "hide", fig.width = 5, fig.height = 5, fig.align = "center"}
-netplot(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+netplot(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
 ```
 
-The intervention names in `drug.names` must be sorted in the ascending order of their identifier. Hence, `1` in the item `t` refers to `PBO` (placebo), `2` to `BUD` (budesonide), `3` to `BUD+` (budesonide plus formoterol) and so on. See the 'Details' in ?nma.baker2009 for names of the interventions.
+The intervention names in `drug_names` must be sorted in the ascending order of their identifier. Hence, `1` in the item `t` refers to `PBO` (placebo), `2` to `BUD` (budesonide), `3` to `BUD+` (budesonide plus formoterol) and so on. See the 'Details' in ?nma.baker2009 for names of the interventions.
 
 ### Network characteristics
 
 `netplot` also produces a table with the characteristics of the network, such as the number of interventions, number of possible comparisons, number of direct comparisons (i.e., comparisons of interventions informed by at least one trial), and so on:
 
 ```{r, echo = FALSE, fig.show = "hide"}
-net <- netplot(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+net <- netplot(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
 net$Network.description
 ```
 
@@ -76,37 +76,37 @@ net$Network.description
 Furthermore, `netplot` returns a table that summarises the number of trials, number of randomised participants and the proportion of completers (participants who completed the trial) **per intervention**. In the case of a binary outcome, the table additionally illustrates the distribution of the outcome as proportion: 
 
 ```{r, echo = FALSE, fig.show = "hide"}
-net$Table.interventions
+net$interventions
 ```
 
 An identical table is returned for the **observed comparisons** in the network:
 
 ```{r, echo = FALSE, fig.show = "hide"}
-net$Table.comparisons
+net$comparisons
 ```
 
-The users can export all tables in Excel 'xlsx' format at the working directory of their project by adding the argument `save.xls = TRUE` in the `netplot` function.
+The users can export all tables in Excel 'xlsx' format at the working directory of their project by adding the argument `save_xls = TRUE` in the `netplot` function.
 
 ### Distribution of missing participants 
 
 When missing participants have been reported for each intervention arm of at least one trial, we use the `heatmap.missing.network` function to illustrate the proportion of missing participants **per intervention** (main diagonal) and **observed comparison** (lower off-diagonal) in the network:
 
 ```{r, results = "hide", fig.show = "hide"}
-heatmap.missing.network(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+heatmap_missing_network(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
 ```
 
 ```{r, echo = FALSE, results = "hide", fig.width = 7, fig.height = 7, fig.align = "center"}
-heatmap.missing.network(data = nma.baker2009, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+heatmap_missing_network(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
 ```
 
-The `heatmap.missing.dataset` function illustrates the proportion of missing participants for each arm of every trial in the dataset:
+The `heatmap_missing_dataset` function illustrates the proportion of missing participants for each arm of every trial in the dataset:
 
 ```{r, results = "hide", fig.show = "hide"}
-heatmap.missing.dataset(data = nma.baker2009, trial.names = nma.baker2009$study, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+heatmap_missing_dataset(data = nma.baker2009, trial_names = nma.baker2009$study, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
 ```
 
 ```{r, echo = FALSE, results = "hide", fig.width = 7, fig.height = 7, fig.align = "center"}
-heatmap.missing.dataset(data = nma.baker2009, trial.names = nma.baker2009$study, drug.names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+heatmap_missing_dataset(data = nma.baker2009, trial_names = nma.baker2009$study, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
 ```
 
 

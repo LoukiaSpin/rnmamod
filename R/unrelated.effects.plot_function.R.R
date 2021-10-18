@@ -331,7 +331,7 @@ unrelated_effects_plot <- function(data,
                 inherit.aes = T) +
       facet_wrap(vars(comp), scales = "free_x") +
       labs(y = "",
-           x = effect.measure.name(measure),
+           x = effect_measure_name(measure),
            color = colnames(char)[1],
            linetype = colnames(char)[2],
            shape = colnames(char)[3]) +

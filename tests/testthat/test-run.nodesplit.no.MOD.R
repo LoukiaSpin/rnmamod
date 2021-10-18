@@ -26,7 +26,7 @@ test_that("The summary log ORs and between-trial sd agree (no missing outcome da
   colnames(gemtc.re) <- rownames(gemtc.re) <- NULL
 
 
-  ## Adjust the example above to run the 'run.model' function of the 'rnmamod' R-package
+  ## Adjust the example above to run the 'run_model' function of the 'rnmamod' R-package
   data.rnmamod <- read.table(textConnection('
   t1  t2  t3  r1  r2  r3  n1  n2  n3
   1   2   NA  2   5   NA  100 100 NA
@@ -34,14 +34,14 @@ test_that("The summary log ORs and between-trial sd agree (no missing outcome da
   1   2   3   3   7   4   60  80  80'), header=TRUE)
 
   ## Fixed-effect NMA
-  #res.fe <- run.model(data = data.rnmamod, measure = "OR", model = "FE", D = 0)
-  #node.fe2 <- run.nodesplit(res.fe)
+  #res.fe <- run_model(data = data.rnmamod, measure = "OR", model = "FE", D = 0)
+  #node.fe2 <- run_nodesplit(res.fe)
   #resnode.fe <- rbind(node.fe2$direct[c(3, 5:6)], node.fe2$indirect[c(3, 5:6)])
   #colnames(resnode.fe) <- rownames(resnode.fe) <- NULL
 
   ## Random-effects NMA
-  res.re <- run.model(data = data.rnmamod, measure = "OR", model = "RE", heter.prior = list("halfnormal", 0, 1), D = 0)
-  node.re2 <- run.nodesplit(res.re)
+  res.re <- run_model(data = data.rnmamod, measure = "OR", model = "RE", heter_prior = list("halfnormal", 0, 1), D = 0)
+  node.re2 <- run_nodesplit(res.re)
   resnode.re <- rbind(node.re2$direct[c(3, 5:6)], node.re2$indirect[c(3, 5:6)])
   colnames(resnode.re) <- rownames(resnode.re) <- NULL
 

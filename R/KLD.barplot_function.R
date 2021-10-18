@@ -166,7 +166,7 @@ kld_barplot <- function(robust, compar, drug_names) {
                             paste0(scenarios[-13, 1], ",", scenarios[-13, 2]),
                             plausibility[-13],
                             distance[-13])
-  colnames(dataset_new) <- c("KLD",
+  colnames(dataset_new) <- c("kld",
                              "scenarios",
                              "plausibility",
                              "distance")
@@ -174,7 +174,7 @@ kld_barplot <- function(robust, compar, drug_names) {
   # In each facet, x-axis is sorted by KLD in descending order
   barplot <- ggplot(dataset_new,
                     aes(x = reorder(scenarios, -kld),
-                        y = KLD,
+                        y = kld,
                         fill = distance)) +
     geom_bar(stat = "identity", width = 0.5) +
     scale_fill_manual(breaks = c("more distant", "less distant", "no distance"),
@@ -183,7 +183,7 @@ kld_barplot <- function(robust, compar, drug_names) {
     labs(x = "Scenarios (active vs control)",
          y = "Kullback-Leibler divergence measure",
          fill = "Distance between the scenarios") +
-    ylim(0, ifelse(max(dataset_new$KLD) > 0.3, max(dataset_new$KLD), 0.3)) +
+    ylim(0, ifelse(max(dataset_new$kld) > 0.3, max(dataset_new$kld), 0.3)) +
     ggtitle(paste(experim, "versus", control)) +
     theme_classic() +
     theme(axis.title = element_text(size = 12, face = "bold"),

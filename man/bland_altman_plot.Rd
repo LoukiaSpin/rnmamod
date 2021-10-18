@@ -31,10 +31,10 @@ This function facilitates creating the Bland-Altman plot for two
  methods using only three arguments.
 }
 \details{
-\code{bland_altman_plot} is integrated in the \code{UME_plot}
+\code{bland_altman_plot} is integrated in the \code{ume_plot}
   function to create the Bland-Altman plot on the posterior mean of deviance
   under the consistency model (via \code{run_model}) and the unrelated mean
-  effects model (via \code{run_UME}).
+  effects model (via \code{run_ume}).
 
   A uniform scattering of the data points within the 95\% limits of agreement
   and average bias close to 0 indicate that the compared models have a good
@@ -47,8 +47,8 @@ Bland JM, Altman DG. Measuring agreement in method comparison studies.
 \emph{Stat Methods Med Res} 1999;\bold{8}:135--60
 }
 \seealso{
-\code{data_preparation}, \code{\link{UME_plot}},
-  \code{\link{run_model}}, \code{\link{run_UME}}
+\code{data_preparation}, \code{\link{ume_plot}},
+  \code{\link{run_model}}, \code{\link{run_ume}}
 .
 }
 \author{

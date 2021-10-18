@@ -78,7 +78,6 @@ improved_ume <- function(t, N, ns, na) {
   for (i in seq_len(length(wide_format0[, 1]))) {
     treat[i, ] <- treat0[i, order(treat0[i, ], na.last = T)]
     resp[i, ] <- resp0[i, order(treat0[i, ], na.last = T)]
-    miss[i, ] <- miss0[i, order(treat0[i, ], na.last = T)]
     rand[i, ] <- rand0[i, order(treat0[i, ], na.last = T)]
   }
 

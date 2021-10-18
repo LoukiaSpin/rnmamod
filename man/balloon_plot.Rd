@@ -88,7 +88,7 @@ res <- run_model(data = nma.baker2009,
                  n_thin = 1)
 
 # Perform the sensitivity analysis (missing-at-random assumption)
-res.sens <- run_sensitivity(full = res,
+res_sens <- run_sensitivity(full = res,
                             var_misspar = 1,
                             n_chains = 3,
                             n_iter = 10000,
@@ -96,14 +96,14 @@ res.sens <- run_sensitivity(full = res,
                             n_thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv.names <- c("placebo", "budesonide", "budesonide plus formoterol",
+interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
                   "fluticasone", "fluticasone plus salmeterol",
                   "formoterol", "salmeterol", "tiotropium")
 
 # Create the enhanced balloon plot for 'tiotropium versus salmeterol'
-balloon_plot(sens = res.sens,
+balloon_plot(sens = res_sens,
              compar = c("tiotropium", "salmeterol"),
-             drug_names = interv.names)
+             drug_names = interv_names)
 }
 }
 \references{

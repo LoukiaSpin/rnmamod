@@ -19,10 +19,10 @@
 #'  The plot also displays the average bias and the 95\% limits of agreement
 #'  with horizontal solid black lines.
 #'
-#' @details \code{bland_altman_plot} is integrated in the \code{UME_plot}
+#' @details \code{bland_altman_plot} is integrated in the \code{ume_plot}
 #'   function to create the Bland-Altman plot on the posterior mean of deviance
 #'   under the consistency model (via \code{run_model}) and the unrelated mean
-#'   effects model (via \code{run_UME}).
+#'   effects model (via \code{run_ume}).
 #'
 #'   A uniform scattering of the data points within the 95\% limits of agreement
 #'   and average bias close to 0 indicate that the compared models have a good
@@ -32,8 +32,8 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{data_preparation}, \code{\link{UME_plot}},
-#'   \code{\link{run_model}}, \code{\link{run_UME}}
+#' @seealso \code{data_preparation}, \code{\link{ume_plot}},
+#'   \code{\link{run_model}}, \code{\link{run_ume}}
 #'.
 #' @references
 #' Bland JM, Altman DG. Measuring agreement in method comparison studies.

@@ -22,10 +22,10 @@ See 'Value' in \code{\link{run_model}}.}
 that is a potential effect modifier. See 'Details'.}
 
 \item{covar_assumption}{Character string indicating the structure of the
-intervention by covariate interaction, as described in Cooper et al., (2009).
-Set \code{covar_assumption} equal to one of the following: \code{"NO"},
-when no meta-regression is performed; otherwise, \code{"exchangeable"},
-\code{"independent"}, and \code{"common"}.}
+intervention by covariate interaction, as described in
+Cooper et al., (2009). Set \code{covar_assumption} equal to one of the
+following: \code{"NO"}, when no meta-regression is performed; otherwise,
+\code{"exchangeable"}, \code{"independent"}, and \code{"common"}.}
 
 \item{n_chains}{Positive integer specifying the number of chains for the
 MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function
@@ -49,9 +49,10 @@ of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1.}
 }
 \value{
-A list of R2jags outputs on the summaries of the posterior distribution,
-  and the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the
-  following monitored parameters for a fixed-effect PMA:
+A list of R2jags outputs on the summaries of the posterior
+  distribution, and the Gelman-Rubin convergence diagnostic
+  (Gelman et al., 1992) of the following monitored parameters for a
+  fixed-effect PMA:
   \tabular{ll}{
    \code{EM} \tab The estimated summary effect measure
    (according to the argument \code{measure}).\cr
@@ -128,16 +129,18 @@ Performs a one-stage pairwise or network meta-regression while addressing
 \details{
 \code{run_metareg} does not contain the arguments \code{data},
   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
-  \code{mean_misspar}, and \code{var_misspar} that are found in \code{run_model}.
-  This is to prevent misspecifying the Bayesian model that has been considered
-  in \code{run_model}. Instead, these arguments are contained in the argument
-  \code{full} of the function. Therefore, the user needs first to apply
-  \code{run_model}, and then use \code{run_metareg} (see, 'Examples').
+  \code{mean_misspar}, and \code{var_misspar} that are found in
+  \code{run_model}. This is to prevent misspecifying the Bayesian model that
+  has been considered in \code{run_model}. Instead, these arguments are
+  contained in the argument \code{full} of the function. Therefore, the user
+  needs first to apply \code{run_model}, and then use \code{run_metareg}
+  (see, 'Examples').
 
-  The model as specified by the arguments of \code{run_model} runs in \code{JAGS}
-  and the progress of the simulation appears in the R console.
+  The model as specified by the arguments of \code{run_model} runs in
+  \code{JAGS} and the progress of the simulation appears in the R console.
   The output of \code{run_metareg} is used as an S3 object by other functions
-  of the package to be processed further and provide an end-user-ready output.
+  of the package to be processed further and provide an end-user-ready
+  output.
 
   The model of Spineli, (2019) and Spineli et al. (2021) has been extended
   to incorporate one \emph{study-level covariate} variable following the
@@ -164,39 +167,38 @@ res <- run_model(data = nma.baker2009,
                  n_thin = 1)
 
 # Publicatiom year
-pub.year <- c(1996, 1998, 1999, 2000, 2000, 2001, rep(2002, 5), 2003, 2003,
+pub_year <- c(1996, 1998, 1999, 2000, 2000, 2001, rep(2002, 5), 2003, 2003,
               rep(2005, 4), 2006, 2006, 2007, 2007)
 
 # Perform a random-effects network meta-regression (exchangeable structure)
 run_metareg(full = res,
-            covariate = pub.year,
+            covariate = pub_year,
             covar_assumption = "exchangeable",
             n_chains = 3,
             n_iter = 10000,
             n_burnin = 1000,
             n_thin = 1)
 }
-
 }
 \references{
-Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome data
-  in network meta-analysis: a one-stage pattern-mixture model approach.
-  \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
+Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
+data in network meta-analysis: a one-stage pattern-mixture model approach.
+\emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
 
-  Spineli LM. An empirical comparison of Bayesian modelling strategies for
-  missing binary outcome data in network meta-analysis.
-  \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-  [\doi{10.1186/s12874-019-0731-y}]
+Spineli LM. An empirical comparison of Bayesian modelling strategies for
+missing binary outcome data in network meta-analysis.
+\emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
+[\doi{10.1186/s12874-019-0731-y}]
 
-  Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
-  heterogeneity and inconsistency in mixed treatment comparisons: Application
-  to stroke prevention treatments in individuals with non-rheumatic atrial
-  fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
-  [\doi{10.1002/sim.3594}]
+Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
+heterogeneity and inconsistency in mixed treatment comparisons: Application
+to stroke prevention treatments in individuals with non-rheumatic atrial
+fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
+[\doi{10.1002/sim.3594}]
 
-  Gelman A, Rubin DB. Inference from iterative simulation using multiple
-  sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
-  [\doi{10.1214/ss/1177011136}]
+Gelman A, Rubin DB. Inference from iterative simulation using multiple
+sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
+[\doi{10.1214/ss/1177011136}]
 }
 \seealso{
 \code{\link{run_model}}, \code{\link[R2jags]{jags}}

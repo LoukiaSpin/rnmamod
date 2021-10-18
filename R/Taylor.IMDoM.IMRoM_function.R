@@ -78,7 +78,7 @@
 #'   \code{\link[rnmamod]{unrelated_effects_plot}})
 #'   into the long-arm based format.
 #'
-#' @seealso \code{\link[rnmamod]{run.model}},
+#' @seealso \code{\link[rnmamod]{run_model}},
 #'   \code{\link[rnmamod]{unrelated_effects_plot}},
 #'   \code{\link[netmeta]{pairwise}}
 #'
