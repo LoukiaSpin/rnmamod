@@ -272,16 +272,16 @@ unrelated_effects_plot <- function(data,
   }
 
   contrast$lower <- if (!is.element(measure, c("OR", "ROM"))) {
-    round(contrast$EM - 1.95 * contrast$se.EM, 2)
+    round(contrast$EM - (1.95 * contrast$se.EM), 2)
   } else {
-    round(exp(contrast$EM - 1.95 * contrast$se.EM), 2)
+    round(exp(contrast$EM - (1.95 * contrast$se.EM)), 2)
   }
   contrast$upper <- if (!is.element(measure, c("OR", "ROM"))) {
-    round(contrast$EM + 1.95 * contrast$se.EM, 2)
+    round(contrast$EM + (1.95 * contrast$se.EM), 2)
   } else {
-    round(exp(contrast$EM + 1.95 * contrast$se.EM), 2)
+    round(exp(contrast$EM + (1.95 * contrast$se.EM)), 2)
   }
-  contrast$EM <-if (!is.element(measure, c("OR", "ROM"))) {
+  contrast$EM <- if (!is.element(measure, c("OR", "ROM"))) {
     round(contrast$EM, 2)
   } else {
     round(exp(contrast$EM), 2)
@@ -348,10 +348,10 @@ unrelated_effects_plot <- function(data,
             legend.title = element_text(color = "black", size = 12,
                                         face = "bold"))
   } else {
-    write_xlsx(contrast[, c(14, 8:9, 2:7, 19, 12, 13, 16:18)],
+    write_xlsx(contrast[, c(15, 8:9, 2:7, 10, 12, 13, 16:18)],
                paste0("Table Unrelated Trial Effects", ".xlsx"))
   }
 
   return(list(table_unrelated.effects = knitr::kable(table_ute),
-              panel_ntervalplots = results))
+              results = results))
  }
