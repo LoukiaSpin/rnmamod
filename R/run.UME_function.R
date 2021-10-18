@@ -253,14 +253,14 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
 
     # Is the subset of multi-arm trials a connected network?
     multi_network <- pairwise(as.list(t[(ns - ns_multi + 1):ns, ]),
-                              mean = as.list(N[(ns - ns_multi + 1):ns, ]),
-                              sd = as.list(N[(ns - ns_multi + 1):ns, ]),
+                              event = as.list(N[(ns - ns_multi + 1):ns, ]),
                               n = as.list(N[(ns - ns_multi + 1):ns, ]),
                               data = cbind(t[(ns - ns_multi + 1):ns, ],
-                                           N[(ns - ns_multi + 1):ns, ],
-                                           N[(ns - ns_multi + 1):ns, ],
-                                           N[(ns - ns_multi + 1):ns, ]),
+                                          N[(ns - ns_multi + 1):ns, ],
+                                          N[(ns - ns_multi + 1):ns, ],
+                                          N[(ns - ns_multi + 1):ns, ]),
                               studlab = 1:ns_multi)
+
     connected <-
       netconnection(treat1, treat2, studlab, data = multi_network)$n.subnets
 

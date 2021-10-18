@@ -64,12 +64,25 @@
 improved_ume <- function(t, N, ns, na) {
 
   # Turn into contrast-level data ('netmeta')
-  wide_format <- pairwise(as.list(t),
-                          event = as.list(N),
-                          n = as.list(N),
-                          data = cbind(t, N, N),
+  wide_format0 <- pairwise(as.list(t),
+                           event = as.list(N),
+                           n = as.list(N),
+                           data = cbind(t, N, N),
                           studlab = 1:ns)[, c(3:6, 8, 7, 9)]
-  colnames(wide_format) <- c("study", "t1", "t2", "n1", "n2", "n1", "n2")
+  colnames(wide_format0)  <- c("study", "t1", "t2", "n1", "n2", "n1", "n2")
+
+  # Ensure that t1 < t2 and correspondingly for the other elements
+  treat <- treat0 <- wide_format0[, 2:3]
+  resp <- resp0 <- wide_format0[, 4:5]
+  rand <- rand0 <- wide_format0[, 6:7]
+  for (i in seq_len(length(wide_format0[, 1]))) {
+    treat[i, ] <- treat0[i, order(treat0[i, ], na.last = T)]
+    resp[i, ] <- resp0[i, order(treat0[i, ], na.last = T)]
+    miss[i, ] <- miss0[i, order(treat0[i, ], na.last = T)]
+    rand[i, ] <- rand0[i, order(treat0[i, ], na.last = T)]
+  }
+
+  wide_format <- data.frame(study = wide_format0$study, treat, resp, rand)
 
   # Create a vector with the pairwise comparisons of each row
   wide_format$comp <- paste0(wide_format$t1, "vs", wide_format$t2)

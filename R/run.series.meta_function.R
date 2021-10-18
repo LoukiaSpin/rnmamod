@@ -154,14 +154,14 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
                data = cbind(item$t, item$y0, item$sd0, item$N),
                studlab = 1:item$ns)[, c(3:5, 7, 10, 8, 11, 6, 9)]
     colnames(pairwise_observed0) <- c("study",
-                                     "arm1",
-                                     "arm2",
-                                     "y1",
-                                     "y2",
-                                     "sd1",
-                                     "sd2",
-                                     "n1",
-                                     "n2")
+                                      "arm1",
+                                      "arm2",
+                                      "y1",
+                                      "y2",
+                                      "sd1",
+                                      "sd2",
+                                      "n1",
+                                      "n2")
 
     # Maintain MOD and merge with 'pairwise_observed'
     pairwise_mod0 <- pairwise(as.list(item$t),
@@ -174,22 +174,22 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
 
     # Ensure that t1 < t2 and correspondingly for the other elements
     treat <- treat0 <- pairwise_observed0[, 2:3]
-    y.mean <- y.mean0 <- pairwise_observed0[, 4:5]
-    sd.mean <- sd.mean0 <- pairwise_observed0[, 6:7]
+    y_mean <- y_mean0 <- pairwise_observed0[, 4:5]
+    sd_mean <- sd_mean0 <- pairwise_observed0[, 6:7]
     miss <- miss0 <- pairwise_mod0[, 1:2]
     rand <- rand0 <- pairwise_observed0[, 8:9]
     for (i in seq_len(length(pairwise_observed0[, 1]))) {
       treat[i, ] <- treat0[i, order(treat0[i, ], na.last = T)]
-      y.mean[i, ] <- y.mean0[i, order(treat0[i, ], na.last = T)]
-      sd.mean[i, ] <- sd.mean0[i, order(treat0[i, ], na.last = T)]
+      y_mean[i, ] <- y_mean0[i, order(treat0[i, ], na.last = T)]
+      sd_mean[i, ] <- sd_mean0[i, order(treat0[i, ], na.last = T)]
       miss[i, ] <- miss0[i, order(treat0[i, ], na.last = T)]
       rand[i, ] <- rand0[i, order(treat0[i, ], na.last = T)]
     }
 
     pairwise_observed <- data.frame(study = pairwise_observed0$study,
                                     treat,
-                                    y.mean,
-                                    sd.mean,
+                                    y_mean,
+                                    sd_mean,
                                     rand)
     pairwise_mod <- miss
   } else {
@@ -201,12 +201,12 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
                data = cbind(item$t, item$r, item$N),
                studlab = 1:item$ns)[, c(3:6, 8, 7, 9)]
     colnames(pairwise_observed0) <- c("study",
-                                     "arm1",
-                                     "arm2",
-                                     "r1",
-                                     "r2",
-                                     "n1",
-                                     "n2")
+                                      "arm1",
+                                      "arm2",
+                                      "r1",
+                                      "r2",
+                                      "n1",
+                                      "n2")
 
     # Maintain MOD and merge with 'pairwise_observed'
     pairwise_mod0 <- pairwise(as.list(item$t),

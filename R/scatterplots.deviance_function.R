@@ -81,7 +81,7 @@ scatterplots_dev <- function(full, ume, colour) {
               size = 4.0,
               check_overlap = T,
               inherit.aes = T) +
-    labs(x = "Consistency model",
+    labs(x = "Network meta-analysis",
          y = "Unrelated mean effects model") +
     scale_x_continuous(limits = c(min(prepare_dev$full, prepare_dev$ume),
                                   max(prepare_dev$full, prepare_dev$ume)),

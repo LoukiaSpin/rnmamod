@@ -78,8 +78,8 @@ leverage_plot <- function(net, drug_names, title) {
   colnames(prepare_lev) <- c("signed_dev_o", "lev_o")
 
   # Keep only trial-arms that exceed the parabola y + (x)^2 = c at c = 2.
-  poor_o <- ifelse(prepare_lev$lev_o > 2 - (prepare_lev$signed.dev_o^2) |
-                     prepare_lev$lev_o < - (2 - (prepare_lev$signed.dev_o^2)),
+  poor_o <- ifelse(prepare_lev$lev_o > 2 - (prepare_lev$signed_dev_o^2) |
+                     prepare_lev$lev_o < - (2 - (prepare_lev$signed_dev_o^2)),
                    trial_arm, NA)
   poor_fit_o <- data.frame(prepare_lev[!is.na(poor_o), 1:2],
                            poor_o[!is.na(poor_o)])
@@ -88,26 +88,26 @@ leverage_plot <- function(net, drug_names, title) {
   # Leverage plot for observed outcomes
   observed <- ggplot(data = prepare_lev, aes(x = signed_dev_o, y = lev_o)) +
                geom_point(size = 2, colour = "black") +
-               geom_smooth(aes(x = signed.dev_o,
-                               y = 1 - (signed.dev_o^2)),
+               geom_smooth(aes(x = signed_dev_o,
+                               y = 1 - (signed_dev_o^2)),
                            method = "loess",
                            formula = "y ~ x",
                            colour = "#009E73",
                            linetype = 2) +
-               geom_smooth(aes(x = signed.dev_o,
-                               y = 2 - (signed.dev_o^2)),
+               geom_smooth(aes(x = signed_dev_o,
+                               y = 2 - (signed_dev_o^2)),
                            method = "loess",
                            formula = "y ~ x",
                            colour = "orange",
                            linetype = 2) +
-               geom_smooth(aes(x = signed.dev_o,
-                               y = 3 - (signed.dev_o^2)),
+               geom_smooth(aes(x = signed_dev_o,
+                               y = 3 - (signed_dev_o^2)),
                            method = "loess",
                            formula = "y ~ x",
                            colour = "#D55E00",
                            linetype = 2) +
                geom_text_repel(data = poor_fit_o,
-                               aes(x = signed.dev,
+                               aes(x = signed_dev,
                                    y = leverage,
                                    label = poor),
                          color = "blue",
@@ -120,10 +120,10 @@ leverage_plot <- function(net, drug_names, title) {
                labs(x = expression(
                  "" %+-% sqrt("Posterior mean of the residual deviance")),
                     y = "Leverage (each data point)") +
-               coord_cartesian(xlim = c(min(prepare_lev$signed.dev_o),
-                                        max(prepare_lev$signed.dev_o)),
+               coord_cartesian(xlim = c(min(prepare_lev$signed_dev_o),
+                                        max(prepare_lev$signed_dev_o)),
                                ylim = c(0,
-                                        max(3 - (prepare_lev$signed.dev_o^2))),
+                                        max(3 - (prepare_lev$signed_dev_o^2))),
                                expand = T) +
                ggtitle(title) +
                theme_classic() +
