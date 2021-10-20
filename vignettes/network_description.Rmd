@@ -42,16 +42,17 @@ nma.baker2009
 
 The dataset has the one-trial-per-row format containing arm-level data for each trial. This format is widely used for BUGS models. For a binary outcome, the dataset must have a minimum of three items: 
 
-- item `t` that refers to the intervention identifier for the corresponding intervention arm;
-- item `r` that refers to the number of observed events in the corresponding intervention arm. 
-- item `n` that refers to the number of randomised participants in the corresponding intervention arm.
+- item `t` that refers to the intervention identifier for the corresponding (intervention) arm;
+- item `r` that refers to the number of observed events in the corresponding arm. 
+- item `n` that refers to the number of randomised participants in the corresponding arm.
 
-In the example, the maximum number of interventions compared in a trial is four. Therefore, each element comprises four columns (e.g., `t1`, `t2`, `t3`, `t4`) to indicate the maximum number of arms in the dataset.
-If there is at least one trial that reports the number of missing participants per intervention arm, we also include the item `m` in the dataset. If a trial reports the *total* number of missing participants rather than the number of missing participants per intervention arm, we indicate with `NA` in the item `m` the intervention arms of the corresponding trial.
+If there is at least one trial that reports the number of missing participants per arm, we also include the item `m` in the dataset. If a trial reports the *total* number of missing participants rather than the number of missing participants per arm, we indicate with `NA` in the item `m` the arms of the corresponding trial.\cr
+
+In the example, the maximum number of interventions observed in a trial is four. Therefore, each element comprises four columns (e.g., `t1`, `t2`, `t3`, `t4`) to indicate the maximum number of arms in the dataset. Furthermore, all trials of the dataset reported the number of missing participants per arm; therefore, the element `m` appears in the dataset.
 
 ### The network plot
 
-The function `netplot` (see ?netplot for help) creates the network plot using only two arguments: the `data` for the dataset (in one-trial-per-row format) and `drug.names` for the names of each intervention in the dataset.
+The function `netplot` (see ?netplot for help) creates the network plot using only two arguments: the `data` for the dataset (in one-trial-per-row format) and `drug_names` for the names of each intervention in the dataset. To obtain the network plot, `netplot` calls the `nma.networkplot` function from the **pcnetmeta** package.
 
 ```{r, results = "hide", fig.show = "hide"}
 netplot(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
@@ -61,7 +62,9 @@ netplot(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+"
 netplot(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
 ```
 
-The intervention names in `drug_names` must be sorted in the ascending order of their identifier. Hence, `1` in the item `t` refers to `PBO` (placebo), `2` to `BUD` (budesonide), `3` to `BUD+` (budesonide plus formoterol) and so on. See the 'Details' in ?nma.baker2009 for names of the interventions.
+The intervention names in `drug_names` must be sorted in the ascending order of their identifier. Hence, `1` in the element `t` refers to `PBO` (placebo), `2` to `BUD` (budesonide), `3` to `BUD+` (budesonide plus formoterol) and so on. See 'Details' in `?nma.baker2009` for the names of the interventions.\cr
+
+Each node refers to an intervention and each edge refers to a pairwise comparison. The size of a node and the thickness of an edge are weighted by the number of trials that investigated the corresponding intervention and pairwise comparison, respectively.  
 
 ### Network characteristics
 
@@ -69,28 +72,28 @@ The intervention names in `drug_names` must be sorted in the ascending order of 
 
 ```{r, echo = FALSE, fig.show = "hide"}
 net <- netplot(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
-net$Network.description
+net$network_description
 ```
 
 ### Distribution of the outcome
 
-Furthermore, `netplot` returns a table that summarises the number of trials, number of randomised participants and the proportion of completers (participants who completed the trial) **per intervention**. In the case of a binary outcome, the table additionally illustrates the distribution of the outcome as proportion: 
+Furthermore, `netplot` returns a table that summarises the number of trials, number of randomised participants and the proportion of completers (participants who completed the trial) **per intervention**. In the case of a binary outcome, the table additionally illustrates the distribution of the outcome as proportion across the corresponding trials: 
 
 ```{r, echo = FALSE, fig.show = "hide"}
-net$interventions
+net$table_interventions
 ```
 
 An identical table is returned for the **observed comparisons** in the network:
 
 ```{r, echo = FALSE, fig.show = "hide"}
-net$comparisons
+net$table_comparisons
 ```
 
 The users can export all tables in Excel 'xlsx' format at the working directory of their project by adding the argument `save_xls = TRUE` in the `netplot` function.
 
 ### Distribution of missing participants 
 
-When missing participants have been reported for each intervention arm of at least one trial, we use the `heatmap.missing.network` function to illustrate the proportion of missing participants **per intervention** (main diagonal) and **observed comparison** (lower off-diagonal) in the network:
+When missing participants have been reported for *each arm of every* trial, we use the `heatmap_missing_network` function to illustrate the distribution of the proportion of missing participants **per intervention** (main diagonal) and **observed comparison** (lower off-diagonal) in the network (see 'Details' in `?heatmap_missing_network`). 
 
 ```{r, results = "hide", fig.show = "hide"}
 heatmap_missing_network(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
@@ -100,7 +103,11 @@ heatmap_missing_network(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+
 heatmap_missing_network(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
 ```
 
-The `heatmap_missing_dataset` function illustrates the proportion of missing participants for each arm of every trial in the dataset:
+The <span style="color:#009E73">**green**</span> colour implies a median proportion of missing participant up to 5\%, and hence, a <span style="color:#009E73">**low risk**</span> associated with the missing participants. The <span style="color:#D55E00">**red**</span> colour implies a median proportion of missing participant over 20\%, and hence, a <span style="color:#D55E00">**high risk**</span> associated with the missing participants; otherwise, <span style="color:orange">**orange**</span> indicates a <span style="color:orange">**moderate risk**</span>.\cr
+
+In the example, most of the interventions and observed comparisons were associated with *moderate or high* risk due the participant losses, *except for* the unique trial that investigated *formoterol versus tiotropium*.
+
+Use the `heatmap_missing_dataset` function To illustrate the proportion of missing participants for each arm of every trial in the dataset :
 
 ```{r, results = "hide", fig.show = "hide"}
 heatmap_missing_dataset(data = nma.baker2009, trial_names = nma.baker2009$study, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))

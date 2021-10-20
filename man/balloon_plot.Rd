@@ -70,9 +70,9 @@ For the summary effect size of the selected pairwise comparison,
   message will be printed in the R console.
 }
 \examples{
-\dontrun{
 data("nma.baker2009")
 
+\dontrun{
 # Perform a random-effects network meta-analysis
 res <- run_model(data = nma.baker2009,
                  measure = "OR",

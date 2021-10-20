@@ -18,12 +18,24 @@
 #'   The proportion of MOD in each intervention and observed comparison are
 #'   depicted in white and black colour in the main diagonal and lower
 #'   off-diagonal, of the heatmap, respectively, The pairwise comparisons are
-#'   read from left to right.  The 'five-and-twenty' rule of Sackett and
-#'   colleagues is used to characterise the \bold{median} proportion of MOD as
-#'   being associated with low (up to 5\%), moderate (more than 5\% and up to
-#'   20\%), and high risk of attrition bias (more than 20\%). Low, moderate, and
-#'   high risk of bias associated with MOD is indicated using green, orange, and
-#'   red colour, respectively. The function is redundant for a pairwise
+#'   read from left to right.
+#'
+#'   The 'five-and-twenty' rule of Sackett and colleagues is used to
+#'   characterise the \bold{median} proportion of MOD as being associated with
+#'   low (up to 5\%), moderate (more than 5\% and up to 20\%), and high risk of
+#'   attrition bias (more than 20\%). Low, moderate, and high risk of bias
+#'   associated with MOD is indicated using green, orange, and red colour,
+#'   respectively.
+#'
+#'   The summary statistics (median, minimum and maximum) for each intervention
+#'   (main diagonal; white font) result from calculating the proportion of
+#'   missing participants in each arm of every trial and then summarising across
+#'   the corresponding trial-arms. Similarly, the summary statistics for each
+#'   observed comparison (lower off-diagonal; black font) result from
+#'   calculating the proportion of total missing participants in each trial and
+#'   then summarising across the corresponding trials.
+#'
+#'   The \code{heatmap_missing_network} function is redundant for a pairwise
 #'   meta-analysis.
 #'
 #' @author {Loukia M. Spineli}
