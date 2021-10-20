@@ -98,9 +98,6 @@ heatmap_robustness <- function(robust, drug_names) {
     stop(paste(aa, "This function cannot be used."), call. = F)
   }
 
-  robust_index <- robust$robust_index
-  threshold <- robust$threshold
-
   drug_names <- if (missing(drug_names)) {
     aa <- "The  argument 'drug_names' has not been defined."
     bb <- "The intervention ID, as specified in 'data' is used as"
@@ -117,6 +114,9 @@ heatmap_robustness <- function(robust, drug_names) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
          call. = F)
   }
+
+  robust_index <- robust$robust_index
+  threshold <- robust$threshold
 
   if (missing(threshold) & is.element(robust$measure, "OR")) {
     threshold <- 0.28

@@ -183,7 +183,8 @@ run_nodesplit <- function(full,
   # Prepare the dataset for the R2jags
   item <- data_preparation(data, measure)
   if (item$nt < 3) {
-    stop("Fuction *not* relevant for a pairwise meta-analysis", call. = F)
+    stop("This function is *not* relevant for a pairwise meta-analysis",
+         call. = F)
   }
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
