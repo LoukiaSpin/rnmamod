@@ -28,7 +28,7 @@ library(rnmamod)
 
 ## Introduction
 
-This vignette aims to illustrate the toolkits of the **rnmamod** package for the creation of the network plot and summarisation of the corresponding outcome data. If missing participant outcome data (MOD) have been extracted for all trials of the dataset, the **rnmamod** package facilitates visualising the proportion of MOD across the network and dataset.
+This vignette aims to illustrate the toolkits of the **rnmamod** package for the creation of the network plot and summarisation of the corresponding outcome data. If missing participant outcome data (MOD) have been extracted for all trials of the dataset, the **rnmamod** package facilitates visualising the proportion of MOD across the network and within the dataset.
 
 ## Example on a binary outcome 
 
@@ -46,6 +46,7 @@ The dataset has the one-trial-per-row format containing arm-level data for each 
 - item `r` that refers to the number of observed events in the corresponding intervention arm. 
 - item `n` that refers to the number of randomised participants in the corresponding intervention arm.
 
+In the example, the maximum number of interventions compared in a trial is four. Therefore, each element comprises four columns (e.g., `t1`, `t2`, `t3`, `t4`) to indicate the maximum number of arms in the dataset.
 If there is at least one trial that reports the number of missing participants per intervention arm, we also include the item `m` in the dataset. If a trial reports the *total* number of missing participants rather than the number of missing participants per intervention arm, we indicate with `NA` in the item `m` the intervention arms of the corresponding trial.
 
 ### The network plot
