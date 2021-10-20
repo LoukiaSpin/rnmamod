@@ -141,7 +141,7 @@ heatmap_missing_dataset <- function(data, trial_names, drug_names) {
       scale_fill_manual(breaks = c("low", "moderate", "high"),
                         values = c("#009E73", "orange", "#D55E00")) +
       scale_x_discrete(position = "top") +
-      labs(x = "", y = "", fill = "Risk of bias due to missingness") +
+      labs(x = "", y = "", fill = "Risk of bias due to missing participants") +
       theme_classic() +
       theme(axis.text.x = element_text(size = 11),
             axis.text.y = element_text(size = 11),
@@ -158,7 +158,7 @@ heatmap_missing_dataset <- function(data, trial_names, drug_names) {
       scale_fill_manual(breaks = c("low", "moderate", "high"),
                         values = c("green3", "orange", "firebrick1")) +
       scale_x_discrete(position = "top") +
-      labs(x = "", y = "", fill = "Risk of bias due to missingness") +
+      labs(x = "", y = "", fill = "Risk of bias due to missing participants") +
       theme_classic() +
       theme(axis.text.x = element_text(size = 11),
             axis.text.y = element_text(size = 11),
