@@ -109,9 +109,9 @@ rankosucra_plot(full = res, drug_names = interv_names)
 ```
 
 <div style="text-align: center"> 
-<!--- <img src="man/figures/Sucra_Baker.png" width="800" height="600" align="center"> --->
+ <img src="man/figures/Sucra_Baker.png" width="800" height="600" align="center"> 
 <!--- <img src="man/figures/Sucra_Baker.png" width="70%" height="70%" align="center"> --->
-<img src="man/figures/Sucra_Baker.png" width="70%" height="90%" align="center">
+<!--- <img src="man/figures/Sucra_Baker.png" width="70%" height="90%" align="center"> --->
 </div>
 
 ## Funding source
