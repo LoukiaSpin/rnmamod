@@ -123,11 +123,10 @@ balloon_plot <- function(sens, compar, drug_names) {
   nt <- (1 + sqrt(1 + 8 * (length(es_all[, 1]) / length(scenarios)^2))) / 2
 
   drug_names <- if (missing(drug_names)) {
-    message(cat(paste0("\033[0;", col = 32, "m",
-                       txt = "The argument 'drug_names' has not been defined.
-                       The intervention ID, as specified in 'data' is used as
-                       intervention names",
-                       "\033[0m", "\n")))
+    aa <- "The argument 'drug_names' has not been defined."
+    bb <- "The intervention ID, as specified in 'data' is used as "
+    cc <- "intervention names"
+    message(cat(paste0("\033[0;", col = 32, "m", aa, bb, cc, "\033[0m", "\n")))
     as.character(1:nt)
   } else {
     drug_names

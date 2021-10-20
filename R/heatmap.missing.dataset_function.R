@@ -57,8 +57,8 @@
 heatmap_missing_dataset <- function(data, trial_names, drug_names) {
 
   m <- if (dim(data %>% select(starts_with("m")))[2] == 0) {
-    stop("Missing participant outcome data have *not* been collected.
-         This function cannot be used.", call. = F)
+    aa <- "Missing participant outcome data have *not* been collected."
+    stop(paste(aa, "This function cannot be used."), call. = F)
   } else {
     data %>% select(starts_with("m"))
   }
@@ -72,24 +72,22 @@ heatmap_missing_dataset <- function(data, trial_names, drug_names) {
   }
 
   trial_names <- if (missing(trial_names)) {
-    message(cat(paste0("\033[0;",
-                       col = 32,
-                       "m",
-                       txt = "The argument 'trial_names' has not been defined.
-                       The trial ID, as specified in the argument 'data' is used
-                       as trial names", "\033[0m", "\n")))
+    aa <- "The argument 'trial_names' has not been defined."
+    bb <- "The trial ID, as specified in the argument 'data' is used"
+    cc <- "as trial names"
+    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
+                       "\033[0m", "\n")))
     as.character(1:ns)
   } else {
     trial_names
   }
 
   drug_names <- if (missing(drug_names)) {
-    message(cat(paste0("\033[0;",
-                       col = 32,
-                       "m",
-                       txt = "The argument 'drug_names' has not been defined.
-                       The intervention ID, as specified in argument 'data' is
-                       used as intervention names", "\033[0m", "\n")))
+    aa <- "The argument 'drug_names' has not been defined."
+    bb <- "The intervention ID, as specified in argument 'data' is"
+    cc <- "used as intervention names"
+    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
+                       "\033[0m", "\n")))
     as.character(1:nt)
   } else {
     drug_names

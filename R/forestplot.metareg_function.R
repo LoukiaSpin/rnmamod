@@ -60,22 +60,22 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
 
   if (length(unique(reg$covariate)) < 3 &
       !is.element(cov_value[1], reg$covariate)) {
-    stop("The first element of the argument 'cov_value' is out of the value
-         range of the analysed covariate", call. = F)
+    aa <- "The first element of the argument 'cov_value' is out of the value"
+    bb <- "range of the analysed covariate"
+    stop(paste(aa, bb), call. = F)
   } else if (length(unique(reg$covariate)) > 2 &
              (cov_value[1] < min(reg$covariate) |
               cov_value[1] > max(reg$covariate))) {
-    stop("The first element of the argument 'cov_value' is out of the value
-         range of the analysed covariate", call. = F)
+    aa <- "The first element of the argument 'cov_value' is out of the value"
+    bb <- "range of the analysed covariate"
+    stop(paste(aa, bb), call. = F)
   }
 
   drug_names <- if (missing(drug_names)) {
-    message(cat(paste0("\033[0;",
-                       col = 32,
-                       "m",
-                       txt = "The argument 'drug_names' has not been defined.
-                       The intervention ID, as specified in 'data' is used as
-                       intervention names", "\033[0m", "\n")))
+    aa <- "The argument 'drug_names' has not been defined."
+    bb <- "The intervention ID, as specified in 'data' is used as"
+    cc <- "intervention names"
+    message(cat(paste0("\033[0;", col = 32, "m", aa, bb, cc, "\033[0m", "\n")))
     nt <- length(full$SUCRA[, 1])
     as.character(1:nt)
   } else {
@@ -104,8 +104,8 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   cov_value <- if (!is.null(reg$beta_all) & missing(cov_value)) {
     stop("The argument 'cov_value' has not been defined", call. = F)
   } else if (!is.null(reg$beta_all) & length(cov_value) < 2) {
-    stop("The argument 'cov_value' must be a vector with elements a number and
-         a character", call. = F)
+    aa <- "The argument 'cov_value' must be a vector with elements a number and"
+    stop(paste(aa, "a character"), call. = F)
   } else if (!is.null(reg$beta_all) & length(cov_value) == 2) {
     cov_value
   }

@@ -102,12 +102,11 @@
 league_heatmap <- function(full, cov_value = NULL, drug_names) {
 
   drug_names <- if (missing(drug_names)) {
-    message(cat(paste0("\033[0;",
-                       col = 32,
-                       "m",
-                       txt = "The argument 'drug_names' has not been defined.
-                       The intervention ID, as specified in 'data' is used as
-                       intervention names", "\033[0m", "\n")))
+    aa <- "The argument 'drug_names' has not been defined."
+    bb <- "The intervention ID, as specified in 'data' is used as"
+    cc <- "intervention names"
+    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
+                       "\033[0m", "\n")))
     as.character(seq_len(length(full$SUCRA[, 1])))
   } else {
     drug_names
@@ -121,8 +120,8 @@ league_heatmap <- function(full, cov_value = NULL, drug_names) {
   cov_value <- if (!is.null(full$beta_all) & missing(cov_value)) {
     stop("The argument 'cov_value' has not been defined", call. = F)
   } else if (!is.null(full$beta_all) & length(cov_value) < 2) {
-    stop("The argument 'cov_value' must be a vector with elements a number and a
-         character", call. = F)
+    aa <- "The argument 'cov_value' must be a vector with elements a number and"
+    stop(paste(aa, "a character"), call. = F)
   } else if (!is.null(full$beta_all) & length(cov_value) == 2) {
     cov_value
   }

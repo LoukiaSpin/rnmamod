@@ -130,12 +130,10 @@ unrelated_effects_plot <- function(data,
     drug_names
   }
   trial_names <- if (missing(trial_names)) {
-    message(cat(paste0("\033[0;",
-                       col = 32,
-                       "m",
-                       txt = "The argument 'trial_names' has not been defined.
-                       The trial ID, as specified in the argument 'data' is used
-                       as trial names", "\033[0m", "\n")))
+    aa <- "The argument 'trial_names' has not been defined."
+    bb <- "The trial ID, as specified in the argument 'data' is used"
+    cc <- " as trial names"
+    message(cat(paste0("\033[0;", col = 32, "m", aa, bb, cc, "\033[0m", "\n")))
     as.character(1:item$ns)
   } else {
     trial_names
@@ -295,12 +293,12 @@ unrelated_effects_plot <- function(data,
 
   # Write the table with the EMs from both models as .xlsx
   if (save_xls == TRUE) {
-    write_xlsx(contrast[, c(14, 8:9, 2:7, 19, 12, 13, 16:18)],
+    write_xlsx(table_ute,
                paste0("Table Unrelated Trial Effects", ".xlsx"))
   }
 
   # Present plot or excel under a condition
-  results <- if (item$ns < 15) {
+  results <- if (item$ns <= 15) {
     ggplot(contrast,
            aes(x = EM,
                y = studlab,
@@ -348,10 +346,9 @@ unrelated_effects_plot <- function(data,
             legend.title = element_text(color = "black", size = 12,
                                         face = "bold"))
   } else {
-    write_xlsx(contrast[, c(15, 8:9, 2:7, 10, 12, 13, 16:18)],
-               paste0("Table Unrelated Trial Effects", ".xlsx"))
+   "Plot will *not* be printed for network with more than 15 trials."
   }
 
-  return(list(table_unrelated.effects = knitr::kable(table_ute),
+  return(list(table_unrelated_effects = knitr::kable(table_ute),
               results = results))
  }

@@ -146,13 +146,13 @@ metareg_plot <- function(full,
 
  if (length(unique(reg$covariate)) < 3 &
      !is.element(cov_value[1], reg$covariate)) {
-   stop("The first element of the argument 'cov_value' is out of the value range
-        of the analysed covariate", call. = F)
+   aa <- "The first element of the argument 'cov_value' is out of the value"
+   stop(paste(aa, "range of the analysed covariate"), call. = F)
  } else if (length(unique(reg$covariate)) > 2 &
             (cov_value[1] < min(reg$covariate) |
              cov_value[1] > max(reg$covariate))) {
-   stop("The first element of the argument 'cov_value' is out of the value range
-        of the analysed covariate", call. = F)
+   aa <- "The first element of the argument 'cov_value' is out of the value"
+   stop(paste(aa, "range of the analysed covariate"), call. = F)
  }
 
   save_xls <- if (missing(save_xls)) {
@@ -173,8 +173,8 @@ metareg_plot <- function(full,
   cov_value <- if (missing(cov_value)) {
     stop("The argument 'cov_value' has not been defined", call. = F)
   } else if (length(cov_value) < 2) {
-    stop("The argument 'cov_value' must be a vector with elements a number and a
-         character", call. = F)
+    aa <- "The argument 'cov_value' must be a vector with elements a number and"
+    stop(paste(aa, "a character"), call. = F)
   } else if (length(cov_value) == 2) {
     cov_value
   }
@@ -189,12 +189,10 @@ metareg_plot <- function(full,
                     as.numeric(cov_value[1]) - mean(covariate))
 
   drug_names <- if (missing(drug_names)) {
-    message(cat(paste0("\033[0;",
-                       col = 32,
-                       "m",
-                       txt = "The argument 'drug_names' has not been defined.
-                       The intervention ID, as specified in 'data' is used as
-                       intervention names", "\033[0m", "\n")))
+    aa <- "The argument 'drug_names' has not been defined."
+    bb <- "The intervention ID, as specified in 'data' is used as"
+    cc <- "intervention names"
+    message(cat(paste0("\033[0;", col = 32, "m", aa, bb, cc, "\033[0m", "\n")))
   } else {
     drug_names
   }

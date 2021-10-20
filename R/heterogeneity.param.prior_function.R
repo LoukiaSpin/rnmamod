@@ -120,9 +120,9 @@ heterogeneity_param_prior <- function(measure, model, heter_prior) {
   } else if (model == "RE" &
              (measure == "MD" || measure == "ROM") &
              heter_prior[[1]] == "logt") {
-    stop("Currently, no empirically-based prior distributions for MD and ROM.
-         Choose a half-normal or a uniform prior distribution, instead",
-         call. = F)
+    aa <- "Currently, no empirically-based prior distributions for MD and ROM."
+    bb <- "Choose a half-normal or a uniform prior distribution, instead"
+    stop(paste(aa, bb), call. = F)
   } else if (model == "RE" &
              measure == "OR" &
              heter_prior[[1]] == "logt") {

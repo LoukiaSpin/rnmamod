@@ -94,20 +94,18 @@
 heatmap_robustness <- function(robust, drug_names) {
 
   if (any(is.na(robust))) {
-    stop("Missing participant outcome data have *not* been collected.
-         This function cannot be used.", call. = F)
+    aa <- "Missing participant outcome data have *not* been collected."
+    stop(paste(aa, "This function cannot be used."), call. = F)
   }
 
   robust_index <- robust$robust_index
   threshold <- robust$threshold
 
   drug_names <- if (missing(drug_names)) {
-    message(cat(paste0("\033[0;",
-                       col = 32,
-                       "m",
-                       txt = "The  argument 'drug_names' has not been defined.
-                       The intervention ID, as specified in 'data' is used as
-                       intervention names", "\033[0m", "\n")))
+    aa <- "The  argument 'drug_names' has not been defined."
+    bb <- "The intervention ID, as specified in 'data' is used as"
+    cc <- "intervention names"
+    message(cat(paste0("\033[0;", col = 32, "m", aa, bb, cc, "\033[0m", "\n")))
     nt <- (1 + sqrt(1 + 8 * length(robust$robust))) / 2
     as.character(1:nt)
   } else {
@@ -125,23 +123,22 @@ heatmap_robustness <- function(robust, drug_names) {
     message(cat(paste0("\033[0;",
                        col = 32,
                        "m",
-                       txt = "The value 0.28 was assigned on 'threshold' by
-                       default", "\033[0m", "\n")))
+                       txt = "Default value 0.28 was assigned on 'threshold'",
+                       "\033[0m", "\n")))
   } else if (missing(threshold) & is.element(robust$measure,
                                              c("MD", "SMD", "ROM"))) {
     threshold <- 0.17
     message(cat(paste0("\033[0;",
                        col = 32,
                        "m",
-                       txt = "The value 0.17 was assigned on 'threshold' by
-                       default", "\033[0m", "\n")))
+                       txt = "Default value 0.17 was assigned on 'threshold'",
+                       "\033[0m", "\n")))
   } else {
     threshold <- threshold
     message(cat(paste0("\033[0;",
                        col = 32,
                        "m",
-                       txt = paste("The value",
-                                   threshold,
+                       txt = paste("The value", threshold,
                                    "was assigned on 'threshold' for",
                                    effect_measure_name(robust$measure)),
                        "\033[0m", "\n")))

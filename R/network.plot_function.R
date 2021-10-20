@@ -138,12 +138,11 @@ netplot <- function(data, drug_names, save_xls, ...) {
   }
 
   drug_names <- if (missing(drug_names)) {
-    message(cat(paste0("\033[0;",
-                       col = 32,
-                       "m",
-                       txt = "The argument 'drug_names' has not been defined.
-                       The intervention ID, as specified in argument 'data' is
-                       used as intervention names", "\033[0m", "\n")))
+    aa <- "The argument 'drug_names' has not been defined."
+    bb <- "The intervention ID, as specified in argument 'data' is"
+    cc <- "used as intervention names"
+    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
+                       "\033[0m", "\n")))
     as.character(1:nt)
   } else {
     drug_names

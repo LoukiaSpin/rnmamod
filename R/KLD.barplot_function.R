@@ -91,8 +91,8 @@
 kld_barplot <- function(robust, compar, drug_names) {
 
   if (any(is.na(robust))) {
-    stop("Missing participant outcome data have *not* been collected.
-         This function cannot be used.", call. = F)
+    aa <- "Missing participant outcome data have *not* been collected."
+    stop(paste(aa, "This function cannot be used."), call. = F)
   }
 
   if (dim(robust$kld)[2] < 25) {
@@ -101,12 +101,10 @@ kld_barplot <- function(robust, compar, drug_names) {
   }
 
   drug_names <- if (missing(drug_names)) {
-    message(cat(paste0("\033[0;",
-                       col = 32,
-                       "m",
-                       txt = "The argument 'drug_names' has not been defined.
-                       The intervention ID, as specified in 'data' is used as
-                       intervention names", "\033[0m", "\n")))
+    aa <- "The argument 'drug_names' has not been defined."
+    bb <- "The intervention ID, as specified in 'data' is used as"
+    cc <- "intervention names"
+    message(cat(paste0("\033[0;", col = 32, "m", aa, bb, cc, "\033[0m", "\n")))
     nt <- (1 + sqrt(1 + 8 * length(robust$robust))) / 2
     as.character(1:nt)
   } else {
