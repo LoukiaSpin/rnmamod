@@ -192,7 +192,8 @@ metareg_plot <- function(full,
     aa <- "The argument 'drug_names' has not been defined."
     bb <- "The intervention ID, as specified in 'data' is used as"
     cc <- "intervention names"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, bb, cc, "\033[0m", "\n")))
+    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
+                       "\033[0m", "\n")))
   } else {
     drug_names
   }

@@ -123,7 +123,8 @@ heatmap_robustness <- function(robust, drug_names) {
     message(cat(paste0("\033[0;",
                        col = 32,
                        "m",
-                       txt = "Default value 0.28 was assigned on 'threshold'",
+                       txt =
+                       "The value 0.28 was assigned on 'threshold' by default",
                        "\033[0m", "\n")))
   } else if (missing(threshold) & is.element(robust$measure,
                                              c("MD", "SMD", "ROM"))) {
@@ -131,7 +132,8 @@ heatmap_robustness <- function(robust, drug_names) {
     message(cat(paste0("\033[0;",
                        col = 32,
                        "m",
-                       txt = "Default value 0.17 was assigned on 'threshold'",
+                       txt =
+                       "The value 0.17 was assigned on 'threshold' by default",
                        "\033[0m", "\n")))
   } else {
     threshold <- threshold

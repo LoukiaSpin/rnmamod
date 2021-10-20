@@ -119,12 +119,11 @@ unrelated_effects_plot <- function(data,
     char
   }
   drug_names <- if (missing(drug_names)) {
-    message(cat(paste0("\033[0;",
-                       col = 32,
-                       "m",
-                       txt = "The argument 'drug_names' has not been defined.
-                       The intervention ID, as specified in 'data' is used as
-                       intervention names", "\033[0m", "\n")))
+    aa <- "The argument 'drug_names' has not been defined."
+    bb <- "The intervention ID, as specified in 'data' is used as"
+    cc <- "intervention names"
+    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
+                       "\033[0m", "\n")))
     as.character(1:item$nt)
   } else {
     drug_names
@@ -133,7 +132,8 @@ unrelated_effects_plot <- function(data,
     aa <- "The argument 'trial_names' has not been defined."
     bb <- "The trial ID, as specified in the argument 'data' is used"
     cc <- " as trial names"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, bb, cc, "\033[0m", "\n")))
+    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
+                       "\033[0m", "\n")))
     as.character(1:item$ns)
   } else {
     trial_names

@@ -266,6 +266,13 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
 
   # Forest plots on credible/predictive intervals of comparisons with the
   # selected comparator
+
+  caption <- if (length(unique(full$covariate)) > 2) {
+    paste("Results for", cov_value[2], cov_value[1])
+  } else {
+    paste("Results for", cov_value[2])
+  }
+
   forest_plots <- if (model == "RE") {
     ggplot(data = prepare_em,
            aes(x = order,
@@ -327,9 +334,10 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
       labs(x = "",
            y = measure,
            colour = "Analysis",
-           subtitle = paste("Results for", cov_value[2],
-                            ifelse(length(unique(reg$covariate)) < 3, " ",
-                                   cov_value[1]))) +
+           subtitle = caption) +
+           #subtitle = paste("Results for", cov_value[2],
+           #                  ifelse(length(unique(reg$covariate)) < 3, " ",
+           #                         cov_value[1]))) +
       facet_wrap(~ interval, ncol = 2, scales = "fixed") +
       scale_x_discrete(breaks = as.factor(seq_len(len_drug)),
                        labels = drug_names_sorted[rev(seq_len(len_drug))]) +
@@ -422,9 +430,10 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
       labs(x = "",
            y = measure,
            colour = "Analysis",
-           subtitle = paste("Results for", cov_value[2],
-                            ifelse(length(unique(reg$covariate)) < 3, " ",
-                                   cov_value[1]))) +
+           subtitle = caption) +
+           #subtitle = paste("Results for", cov_value[2],
+           #                  ifelse(length(unique(reg$covariate)) < 3, " ",
+           #                         cov_value[1]))) +
       scale_x_discrete(breaks = as.factor(seq_len(len_drug)),
                        labels = drug_names_sorted[rev(seq_len(len_drug))]) +
       scale_color_manual(breaks = c("Network meta-analysis",

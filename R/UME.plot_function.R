@@ -136,6 +136,18 @@
 #' @export
 ume_plot <- function(full, ume, drug_names, save_xls) {
 
+  drug_names <- if (missing(drug_names)) {
+    aa <- "The argument 'drug_names' has not been defined."
+    bb <- "The intervention ID, as specified in 'data' is used as"
+    cc <- "intervention names"
+    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
+                       "\033[0m", "\n")))
+    nt <- length(full$SUCRA[, 1])
+    as.character(1:nt)
+  } else {
+    drug_names
+  }
+
   if (length(drug_names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
          call. = F)
@@ -149,19 +161,6 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
 
   model <- full$model
   measure <- full$measure
-
-  drug_names <- if (missing(drug_names)) {
-    message(cat(paste0("\033[0;",
-                       col = 32,
-                       "m",
-                       txt = "The argument 'drug_names' has not been defined.
-                       The intervention ID, as specified in 'data' is used as
-                       intervention names", "\033[0m", "\n")))
-    nt <- length(full$SUCRA[, 1])
-    as.character(1:nt)
-  } else {
-    drug_names
-  }
 
   # Posterior results on the effect estimates under NMA
   em_full <- full$EM[, c(1:3, 7)]

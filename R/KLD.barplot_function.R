@@ -104,11 +104,23 @@ kld_barplot <- function(robust, compar, drug_names) {
     aa <- "The argument 'drug_names' has not been defined."
     bb <- "The intervention ID, as specified in 'data' is used as"
     cc <- "intervention names"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, bb, cc, "\033[0m", "\n")))
+    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
+                       "\033[0m", "\n")))
     nt <- (1 + sqrt(1 + 8 * length(robust$robust))) / 2
     as.character(1:nt)
   } else {
     drug_names
+  }
+
+  compar <- if (missing(compar)) {
+    stop("The argument 'compar' needs to be defined", call. = F)
+  } else if (length(drug_names) < 3 & missing(compar)) {
+    c(drug_names[2], drug_names[1])
+  } else if (!is.element(compar, drug_names)) {
+    stop("The value of 'compar' is not found in the argument 'drug_names'",
+         call. = F)
+  } else if (is.element(compar, drug_names)) {
+    compar
   }
 
   # Indicate all possible comparisons (necessary for NMA)
@@ -121,13 +133,6 @@ kld_barplot <- function(robust, compar, drug_names) {
   experim <- comparison[compar_id, 2]
   control <- comparison[compar_id, 1]
 
-  compar <- if (length(drug_names) > 2 & missing(compar)) {
-    stop("The argument 'compar' needs to be defined", call. = F)
-  } else if (length(drug_names) < 3 & missing(compar)) {
-    c(comparison[2], comparison[2])
-  } else {
-    compar
-  }
 
   # Define the scenarios
   scenarios <- if (is.element(robust$measure, c("OR", "ROM"))) {
