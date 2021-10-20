@@ -94,9 +94,9 @@ league_heatmap(full = res, drug_names = interv_names)
 ```
 
 <div style="text-align: center"> 
-<!--- <img src="man/figures/League_Baker.png" width="950" height="700" align="center"> --->
+ <img src="man/figures/League_Baker.png" width="950" height="700" align="center"> 
 <!--- <img src="man/figures/League_Baker.png" width="70%" height="70%" align="center"> --->  
-<img src="man/figures/League_Baker.png" width="70%" height="90%" align="center"> 
+<!--- <img src="man/figures/League_Baker.png" width="70%" height="90%" align="center"> --->
 </div>
 <br/>
 
