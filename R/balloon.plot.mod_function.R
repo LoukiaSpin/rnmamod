@@ -199,6 +199,20 @@ balloon_plot <- function(sens, compar, drug_names) {
   colnames(mat) <- c("active", "control", "value", "sd_value", "significance")
 
   # Enhanced balloon plot for summary effect size of the selected comparison
+  labels <- if (is.element(measure, c("OR", "ROM"))) {
+    as.character(fractions(exp(scenarios)))
+  } else {
+    as.character(scenarios)
+  }
+
+  imp <- if (is.element(measure, "OR")) {
+    "IMOR"
+  } else if (is.element(measure, c("MD", "SMD"))) {
+    "IMDoM"
+  } else if (is.element(measure, "ROM")) {
+    "IMRoM"
+  }
+
   bubble_es <- if (is.element(measure, c("OR", "ROM"))) {
    ggplot(mat, aes(x = active,
                    y = control,
@@ -231,15 +245,15 @@ balloon_plot <- function(sens, compar, drug_names) {
                  colour = "black", fontface = "bold",  size = 4.5) +
       scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
       scale_x_continuous(breaks = seq_len(length(scenarios)),
-                         labels = as.character(fractions(exp(scenarios))),
+                         labels = labels,
                          position = "bottom",
                          expand = c(0.2, 0)) +
       scale_y_continuous(breaks = seq_len(length(scenarios)),
-                         labels = as.character(fractions(exp(scenarios))),
+                         labels = labels,
                          expand = c(0.2, 0)) +
       coord_cartesian(ylim = c(1, length(scenarios)), clip = "off") +
-      labs(x = paste("IMOR scenario in", experim),
-           y = paste("IMOR scenario in", control),
+      labs(x = paste(imp, "scenario in", experim),
+           y = paste(imp, "scenario in", control),
            color = "") +
       guides(shape = F, size = F) +
       ggtitle(paste("Summary", effect_measure_name(measure))) +
@@ -294,15 +308,15 @@ balloon_plot <- function(sens, compar, drug_names) {
                  colour = "black", fontface = "bold",  size = 4.5) +
       scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
       scale_x_continuous(breaks = seq_len(length(scenarios)),
-                         labels = as.character(scenarios),
+                         labels = labels,
                          position = "bottom",
                          expand = c(0.2, 0)) +
       scale_y_continuous(breaks = seq_len(length(scenarios)),
-                         labels = as.character(scenarios),
+                         labels = labels,
                          expand = c(0.2, 0)) +
       coord_cartesian(ylim = c(1, length(scenarios)), clip = "off") +
-      labs(x = paste("IMDoM scenario in", experim),
-           y = paste("IMDoM scenario in", control),
+      labs(x = paste(imp, "scenario in", experim),
+           y = paste(imp, "scenario in", control),
            color = "") +
       guides(shape = F, size = F) +
       ggtitle(paste("Summary", effect_measure_name(measure))) +
@@ -356,6 +370,21 @@ balloon_plot <- function(sens, compar, drug_names) {
   }
 
   # Enhanced balloon plot for the between-trial standard deviation
+  axis.name.x <- if (is.element(measure, "OR")) {
+    "IMOR scenario in experimental"
+  } else if (is.element(measure, c("MD", "SMD"))) {
+    "IMDoM scenario in experimental"
+  } else if (is.element(measure, "ROM")) {
+    "IMRoM scenario in experimental"
+  }
+  axis.name.y <- if (is.element(measure, "OR")) {
+    "IMOR scenario in control"
+  } else if (is.element(measure, c("MD", "SMD"))) {
+    "IMDoM scenario in control"
+  } else if (is.element(measure, "ROM")) {
+    "IMRoM scenario in control"
+  }
+
   bubble_tau <- if (!is.null(sens$heter)) {
     ggplot(mat_tau, aes(x = active,
                         y = control,
@@ -388,15 +417,15 @@ balloon_plot <- function(sens, compar, drug_names) {
                  colour = "black", fontface = "bold",  size = 4.5) +
       scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
       scale_x_continuous(breaks = seq_len(length(scenarios)),
-                         labels = as.character(fractions(exp(scenarios))),
+                         labels = labels,
                          position = "bottom",
                          expand = c(0.2, 0)) +
       scale_y_continuous(breaks = seq_len(length(scenarios)),
-                         labels = as.character(fractions(exp(scenarios))),
+                         labels = labels,
                          expand = c(0.2, 0)) +
       coord_cartesian(ylim = c(1, length(scenarios)), clip = "off") +
-      labs(x = paste("IMOR scenario in experimental"),
-           y = paste("IMOR scenario in control"),
+      labs(x = axis.name.x,
+           y = axis.name.y,
            color = "") +
       ggtitle("Between-trial standard deviation") +
       guides(shape = F, size = F) +

@@ -332,9 +332,9 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                    "N.obs" = n_obs)
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
-    data_jag <- append(data_jag, list("y" =
+    data_jag <- append(data_jag, list("y.o" =
                                         item$y0[order(item$na, na.last = T), ],
-                                      "se" =
+                                      "se.o" =
                                         item$se0[order(item$na, na.last = T), ],
                                       "y.m" =
                                       item$y0[order(item$na, na.last = T), ]))

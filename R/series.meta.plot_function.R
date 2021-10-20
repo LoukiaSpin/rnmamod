@@ -232,6 +232,8 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
   }
 
   # Forest plots of comparisons on effect estimate
+  add <- ifelse(is.element(full$measure, c("OR", "ROM")), 1, 4)
+
   p1 <- ggplot(data = prepare,
                aes(x = as.factor(order),
                    y = mean,
@@ -262,7 +264,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
                     position = position_dodge(width = 0.5)) +
           geom_text(aes(x = 0.45,
                         y = ifelse(is.element(full$measure, c("OR", "ROM")),
-                                   0.4, -0.2),
+                                   0.4, -0.2*add),
                         label = ifelse(full$D == 0, "Favours first arm",
                                        "Favours second arm")),
                     size = 3.5,

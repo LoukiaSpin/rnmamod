@@ -123,6 +123,11 @@ robustness_index <- function(sens, threshold) {
 
   options(warn = -1)
 
+  if (is.null(sens)) {
+    aa <- "Missing participant outcome data have *not* been collected."
+    stop(paste(aa, "This function cannot be used."), call. = F)
+  }
+
   if (is.null(sens$EM)) {
     es_mat <- as.matrix(sens[[1]])
     measure <- sens[[2]]
@@ -139,7 +144,6 @@ robustness_index <- function(sens, threshold) {
     if (any(is.na(sens))) {
       stop("Missing participant outcome data have *not* been collected.
            This function cannot be used.", call. = F)
-      return(NA)
     }
   }
 
@@ -169,7 +173,7 @@ robustness_index <- function(sens, threshold) {
                        col = 32,
                        "m",
                        txt = paste("The value", threshold,
-                       "was assigned on'threshold' for",
+                       "was assigned on 'threshold' for",
                                    effect_measure_name(measure)),
                        "\033[0m", "\n")))
   }

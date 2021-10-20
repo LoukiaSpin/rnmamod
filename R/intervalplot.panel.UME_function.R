@@ -97,6 +97,8 @@ intervalplot_panel_ume <- function(full, ume, drug_names) {
                           "frail")
 
   # Obtain forestplot
+  add <- ifelse(is.element(full$measure, c("OR", "ROM")), 1, 4)
+
   ggplot(data = data_set,
          aes(x = as.factor(analysis),
              y = mean,
@@ -139,7 +141,7 @@ intervalplot_panel_ume <- function(full, ume, drug_names) {
               inherit.aes = T) +
     geom_text(aes(x = 0.45,
                   y = ifelse(is.element(full$measure, c("OR", "ROM")),
-                             0.1, -0.2),
+                             0.1, -0.2*add),
                   label = ifelse(full$D == 0, "Favours first arm",
                                  "Favours second arm")),
               size = 3.5,

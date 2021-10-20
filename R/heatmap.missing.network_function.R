@@ -60,6 +60,11 @@ heatmap_missing_network <- function(data, drug_names) {
 
   options(warn = -1)
 
+  if (dim(data %>% select(starts_with("m")))[2] == 0) {
+    aa <- "Missing participant outcome data have *not* been collected."
+    stop(paste(aa, "This function cannot be used."), call. = F)
+  }
+
   if (dim(data %>% dplyr::select(starts_with("r")))[2] > 0) {
     measure <- "OR"
   } else {
