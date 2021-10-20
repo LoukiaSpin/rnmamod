@@ -51,6 +51,8 @@ head(nma.baker2009)
 #>         Rennard, 2001  1  7 NA NA 41 38 NA NA 29 22 NA NA 135 132 NA NA
 ```
 
+### Network plot
+
 Create the network plot using the *nma.networkplot* function of the [pcnetmeta](https://CRAN.R-project.org/package=netmeta) R package:
 
 ``` r
@@ -63,6 +65,8 @@ netplot(data = nma.baker2009, drug_names = interv_names, text.cex = 1.5)
 <div style="text-align: center"> 
 <img src="man/figures/Network_Baker.png" width="800" height="551" align="center">
 </div>
+
+### Perform Bayesian random-effects network meta-analysis
 
 The following code performs a Bayesian random-effects network meta-analysis under the *missing at random assumption* while using an intervention-specific informative missingness odds ratio (`assumption = "IDE-ARM"`) in the logarithmic scale:
 
@@ -81,6 +85,8 @@ res <- run_model(data = nma.baker2009,
                  n_thin = 1)
 ```
 
+### League table
+
 Illustrate all possible pairwise comparisons of the interventions using a league heatmap. Interventions are sorted in decreasing order by their posterior mean SUCRA (surface under the cumulative ranking) value in the main diagonal:
 
 ``` r
@@ -94,6 +100,8 @@ league_heatmap(full = res, drug_names = interv_names)
 </div>
 <br/>
 
+### Rankogram with SUCRA curves
+
 The following code presents the hierarchy of the interventions in the network using integrated rankograms and SUCRA curves:
 
 ``` r
@@ -106,5 +114,6 @@ rankosucra_plot(full = res, drug_names = interv_names)
 <img src="man/figures/Sucra_Baker.png" width="70%" height="90%" align="center">
 </div>
 
-##
+### Funding source
+
 The development of `rnmamod` package is funded by the **German Research Foundation** (Deutsche Forschungsgemeinschaft) (grant no. [SP 1664/1-3](https://gepris.dfg.de/gepris/projekt/339420617)) <div style="text-align: right"> <img src="man/figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="340" height="150" align="right"></div>
