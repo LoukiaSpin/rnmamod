@@ -146,23 +146,27 @@ kld_barplot <- function(robust, compar, drug_names) {
   }
   colnames(scenarios) <- c("active", "ctrl")
   kld <- robust$kld[compar_id, ]
+  len.scen <- length(unique(scenarios[, 1]))
 
   # Rank the scenarios to calculate their distance in the compared arms
-  ranked_scenarios <- cbind(rep(rank(1:5), each = 5), rep(rank(1:5), times = 5))
+  ranked_scenarios <- cbind(rep(rank(1:len.scen), each = len.scen),
+                            rep(rank(1:len.scen), times = len.scen))
   distance <-
     ifelse(abs(ranked_scenarios[, 1] - ranked_scenarios[, 2]) > 1,
            "more distant",
            ifelse(abs(ranked_scenarios[, 1] - ranked_scenarios[, 2]) == 1,
                   "less distant", "no distance"))
 
+
+
+
   # Characterise the scenarios to extreme, sceptical, and optimistic with
   # respect to their position from MAR
-  plausibility <- factor(c("Extreme", rep("Sceptical", 3), "Extreme",
-                           "Sceptical", rep("Optimistic", 3), "Sceptical",
-                           "Sceptical", rep("Optimistic", 3), "Sceptical",
-                           "Sceptical", rep("Optimistic", 3), "Sceptical",
-                           "Extreme", rep("Sceptical", 3), "Extreme"),
-                         levels = c("Extreme", "Sceptical", "Optimistic"))
+  plausibility <- factor(
+    c("Extreme", rep("Sceptical", len.scen - 2), "Extreme",
+      rep(c("Sceptical", rep("Optimistic", len.scen - 2), "Sceptical"), len.scen - 2),
+      "Extreme", rep("Sceptical", len.scen - 2), "Extreme"),
+    levels = c("Extreme", "Sceptical", "Optimistic"))
 
   # Dataset for the barplot
   dataset_new <- data.frame(kld[-13],
