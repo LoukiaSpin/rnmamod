@@ -28,31 +28,56 @@ library(rnmamod)
 
 ## Introduction
 
-This vignette aims to illustrate the toolkits of the **rnmamod** package for the creation of the network plot and summarisation of the corresponding outcome data. If missing participant outcome data (MOD) have been extracted for all trials of the dataset, the **rnmamod** package facilitates visualising the proportion of MOD across the network and within the dataset.
+This vignette aims to illustrate the toolkits of the **rnmamod** package for the
+creation of the network plot and summarisation of the corresponding outcome 
+data. If missing participant outcome data (MOD) have been extracted for all 
+trials of the dataset, the **rnmamod** package facilitates visualising the 
+proportion of MOD across the network and within the dataset.
 
 ## Example on a binary outcome 
 
 ### Dataset preparation
 
-We will use the systematic review of [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that comprises 21 trials comparing seven pharmacological interventions with each other and placebo in patients with chronic obstructive pulmonary disease (COPD). The exacerbation of COPD (harmful outcome) is the analysed *binary* outcome. 
+We will use the systematic review of 
+[Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that comprises 
+21 trials comparing seven pharmacological interventions with each other and 
+placebo in patients with chronic obstructive pulmonary disease (COPD). The 
+exacerbation of COPD (harmful outcome) is the analysed *binary* outcome. 
 
 ```{r comment = NA}
 nma.baker2009
 ```
 
-The dataset has the one-trial-per-row format containing arm-level data for each trial. This format is widely used for BUGS models. For a binary outcome, the dataset must have a minimum of three items: 
+The dataset has the one-trial-per-row format containing arm-level data for each 
+trial. This format is widely used for BUGS models. For a binary outcome, the 
+dataset must have a minimum of three items: 
 
-- item `t` that refers to the intervention identifier for the corresponding (intervention) arm;
-- item `r` that refers to the number of observed events in the corresponding arm. 
-- item `n` that refers to the number of randomised participants in the corresponding arm.
+- item `t` that refers to the intervention identifier for the corresponding 
+(intervention) arm;
+- item `r` that refers to the number of observed events in the corresponding 
+arm. 
+- item `n` that refers to the number of randomised participants in the 
+corresponding arm.
 
-If there is at least one trial that reports the number of missing participants per arm, we also include the item `m` in the dataset. If a trial reports the *total* number of missing participants rather than the number of missing participants per arm, we indicate with `NA` in the item `m` the arms of the corresponding trial.\cr
+If there is at least one trial that reports the number of missing participants 
+per arm, we also include the item `m` in the dataset. If a trial reports the 
+*total* number of missing participants rather than the number of missing 
+participants per arm, we indicate with `NA` in the item `m` the arms of the 
+corresponding trial.\cr
 
-In the example, the maximum number of interventions observed in a trial is four. Therefore, each element comprises four columns (e.g., `t1`, `t2`, `t3`, `t4`) to indicate the maximum number of arms in the dataset. Furthermore, all trials of the dataset reported the number of missing participants per arm; therefore, the element `m` appears in the dataset.
+In the example, the maximum number of interventions observed in a trial is four.
+Therefore, each element comprises four columns (e.g., `t1`, `t2`, `t3`, `t4`) to
+indicate the maximum number of arms in the dataset. Furthermore, all trials of 
+the dataset reported the number of missing participants per arm; therefore, the 
+element `m` appears in the dataset.
 
 ### The network plot
 
-The function `netplot` (see ?netplot for help) creates the network plot using only two arguments: the `data` for the dataset (in one-trial-per-row format) and `drug_names` for the names of each intervention in the dataset. To obtain the network plot, `netplot` calls the `nma.networkplot` function from the **pcnetmeta** package.
+The function `netplot` (see ?netplot for help) creates the network plot using 
+only two arguments: the `data` for the dataset (in one-trial-per-row format) and
+`drug_names` for the names of each intervention in the dataset. To obtain the 
+network plot, `netplot` calls the `nma.networkplot` function from the 
+**pcnetmeta** package.
 
 ```{r, results = "hide", fig.show = "hide"}
 netplot(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
@@ -91,7 +116,7 @@ net$table_comparisons
 
 The users can export all tables in Excel 'xlsx' format at the working directory of their project by adding the argument `save_xls = TRUE` in the `netplot` function.
 
-### Distribution of missing participants 
+### Distribution of missing participants across the network
 
 When missing participants have been reported for *each arm of every* trial, we use the `heatmap_missing_network` function to illustrate the distribution of the proportion of missing participants **per intervention** (main diagonal) and **observed comparison** (lower off-diagonal) in the network (see 'Details' in `?heatmap_missing_network`). 
 
@@ -107,7 +132,9 @@ The <span style="color:#009E73">**green**</span> colour implies a median proport
 
 In the example, most of the interventions and observed comparisons were associated with *moderate or high* risk due the participant losses, *except for* the unique trial that investigated *formoterol versus tiotropium*.
 
-Use the `heatmap_missing_dataset` function To illustrate the proportion of missing participants for each arm of every trial in the dataset :
+### Distribution of missing participants across the trials
+
+Use the `heatmap_missing_dataset` function To illustrate the proportion of missing participants in each arm of every trial in the dataset :
 
 ```{r, results = "hide", fig.show = "hide"}
 heatmap_missing_dataset(data = nma.baker2009, trial_names = nma.baker2009$study, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
@@ -116,7 +143,6 @@ heatmap_missing_dataset(data = nma.baker2009, trial_names = nma.baker2009$study,
 ```{r, echo = FALSE, results = "hide", fig.width = 7, fig.height = 7, fig.align = "center"}
 heatmap_missing_dataset(data = nma.baker2009, trial_names = nma.baker2009$study, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
 ```
-
 
 ## References
 
