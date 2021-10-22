@@ -1,4 +1,4 @@
-#' Comparator-specific forest-plot on estimated and predicted effect sizes
+#' Comparator-specific forest-plot for network meta-regression
 #'
 #' @description This function illustrates a forest plot of the posterior mean
 #'   and 95\% credible and predictive interval of comparisons with the selected

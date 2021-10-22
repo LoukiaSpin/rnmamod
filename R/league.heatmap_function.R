@@ -1,4 +1,4 @@
-#' League heatmap of all possible comparisons: estimation
+#' League heatmap for estimation
 #'
 #' @description
 #'   Provides a heatmap of the estimated effect measures for all possible

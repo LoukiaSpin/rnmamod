@@ -1,4 +1,4 @@
-#' Create the Bland-Altman plot
+#' The Bland-Altman plot
 #'
 #' @description This function facilitates creating the Bland-Altman plot for two
 #'  methods using only three arguments.

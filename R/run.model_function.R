@@ -1,4 +1,4 @@
-#' Pairwise or network meta-analysis with missing participant outcome data
+#' Perform Bayesian pairwise or network meta-analysis
 #'
 #' @description
 #'   Performs a one-stage pairwise or network meta-analysis while addressing

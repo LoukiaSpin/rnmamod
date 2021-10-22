@@ -1,4 +1,4 @@
-#' Enhanced balloon plot (missing participant outcome data)
+#' Enhanced balloon plot
 #'
 #' @description
 #'   Creates the enhanced balloon plot for the summary effect size and

@@ -1,4 +1,4 @@
-#' Create the network plot
+#' Network plot and network description
 #'
 #' @description Draws the network plot using the
 #'   \code{\link[pcnetmeta]{nma.networkplot}} function

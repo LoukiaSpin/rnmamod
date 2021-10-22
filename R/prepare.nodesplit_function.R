@@ -1,4 +1,4 @@
-#' The WinBUGS code for Bayesian node-splitting model
+#' WinBUGS code for the node-splitting approach
 #'
 #' @description The WinBUGS code, as written by Dias et al. (2010) to run a
 #'   one-stage Bayesian node-splitting model, extended to incorporate the

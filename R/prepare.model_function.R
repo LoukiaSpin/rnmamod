@@ -1,4 +1,4 @@
-#' The WinBUGS code for Bayesian network meta-analysis
+#' WinBUGS code for Bayesian pairwise or network meta-analysis
 #'
 #' @description
 #'   The WinBUGS code, as written by Dias et al. (2013) to run a one-stage

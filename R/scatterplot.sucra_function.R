@@ -1,4 +1,4 @@
-#' Scatterplot of SUCRA values from two models
+#' Scatterplot of SUCRA values
 #'
 #' @description Creates a scatterplot of the SUCRA values under the network
 #'   meta-analysis and the network meta-regression for a specific level or value
@@ -39,7 +39,7 @@
 #'   \code{cov_value} the name of the level for which the scatterplot will be
 #'   created.
 #'
-#'   \code{scatteplot_sucra} can be used only for a network of interventions. In
+#'   \code{scatterplot_sucra} can be used only for a network of interventions. In
 #'   the case of two interventions, the execution of the function will be
 #'   stopped and an error message will be printed in the R console.
 #'
@@ -54,7 +54,7 @@
 #' [\doi{10.1016/j.jclinepi.2010.03.016}]
 #'
 #' @export
-scatteplot_sucra <- function(full, reg, cov_value, drug_names) {
+scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
 
   options(warn = -1)
 

@@ -1,4 +1,4 @@
-#' A panel of interval plots: Consistency versus unrelated mean effects
+#' A panel of interval plots for the unrelated mean effects model
 #'
 #' @description Creates a panel of interval plots on the summary effect sizes
 #'   under the consistency model and the unrelated mean effects model.

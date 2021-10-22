@@ -1,4 +1,4 @@
-#' End-user-ready results for network meta-regression analysis
+#' End-user-ready results for network meta-regression
 #'
 #' @description Illustrates the effect estimates, predictions and regression
 #'   coefficients of comparisons with a specified comparator and also exports
@@ -462,7 +462,7 @@ metareg_plot <- function(full,
 
   # Forest plots of reference-comparisons on effect estimate
   forest_plots <- forestplot_metareg(full, reg, compar, cov_value, drug_names)
-  sucra_scatterplot <- scatteplot_sucra(full, reg, cov_value, drug_names)
+  sucra_scatterplot <- scatterplot_sucra(full, reg, cov_value, drug_names)
 
   # Write all tables as .xlsx
   if (save_xls == TRUE) {

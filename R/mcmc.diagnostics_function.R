@@ -1,4 +1,4 @@
-#' Markov Chain Monte Carlo Diagnostics
+#' Markov Chain Monte Carlo diagnostics
 #'
 #' @description Evaluates whether convergence has been achieved for the
 #'   monitored parameters of the Bayesian models. The Gelman-Rubin convergence

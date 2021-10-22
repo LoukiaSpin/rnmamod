@@ -1,4 +1,4 @@
-#' Bayesian node-splitting approach to explore (in)consistency
+#' Perform the node-splitting approach
 #'
 #' @description
 #'   Performs a Bayesian network meta-analysis based on the node-splitting

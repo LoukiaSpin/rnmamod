@@ -1,4 +1,4 @@
-#' A function to perform Bayesian unrelated mean effects model
+#' Perform the unrelated mean effects model
 #'
 #' @description Performs a Bayesian network meta-analysis based on the unrelated
 #'   mean effects model of Dias et al. (2013a) extended to address aggregate

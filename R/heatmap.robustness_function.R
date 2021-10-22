@@ -1,4 +1,4 @@
-#' Heatmap of robsutness index (network meta-analysis)
+#' Heatmap of robustness index
 #'
 #' @description This functions facilitates the detection of comparisons that are
 #'   sensible to different assumptions about the informative missingness

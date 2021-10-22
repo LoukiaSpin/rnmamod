@@ -1,4 +1,4 @@
-#' Create the deviance scatterplot
+#' Deviance scatterplot
 #'
 #' @description Illustrates the posterior mean of deviance of the individual
 #'   data points under the unrelated mean effects model (via \code{run_ume})

@@ -1,4 +1,4 @@
-#' Forest plot of NMA results with a selected intervention
+#' Comparator-specific forest plot for network meta-analysis
 #'
 #' @description Provides a forest plot with the posterior mean and 95\% credible
 #'   and prediction intervals for comparisons with the selected intervention in

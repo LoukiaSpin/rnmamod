@@ -1,4 +1,4 @@
-#' League heatmap of all possible comparisons: prediction
+#' League heatmap for prediction
 #'
 #' @description
 #'   Creates a heatmap with the predicted effec size of all possible

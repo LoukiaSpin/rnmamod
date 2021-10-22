@@ -1,4 +1,4 @@
-#' Heatmap of the propoertion of missing participant outcome data in the network
+#' Heatmap of proportion of missing participant outcome data in the network
 #'
 #' @description Illustrates the distribution of and the risk of bias associated
 #'   with missing participant outcome data (MOD) for each intervention and

@@ -1,4 +1,4 @@
-#' The WinBUGS code for Bayesian unrelated mean effects model
+#' WinBUGS code for the unrelated mean effects model
 #'
 #' @description The WinBUGS code, as written by Dias et al. (2013) to run a
 #'   one-stage Bayesian unrelated mean effects model, extended to incorporate

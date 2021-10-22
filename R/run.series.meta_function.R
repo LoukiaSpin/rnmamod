@@ -1,4 +1,4 @@
-#' A series of Bayesian pairwise meta-analyses from a network of interventions
+#' Perform a series of Bayesian pairwise meta-analyses
 #'
 #' @description Performs separate Bayesian pairwise meta-analysis for each
 #'   pairwise comparison with at least two trials in the network.

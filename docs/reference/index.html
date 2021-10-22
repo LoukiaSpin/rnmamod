@@ -94,6 +94,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/model_diagnostics.html">Evaluate the model diagnostics</a>
+    </li>
+    <li>
       <a href="../articles/network_description.html">Description of the network</a>
     </li>
     <li>
@@ -131,7 +134,87 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
+          <h2 id="section-models" class="hasAnchor"><a href="#section-models" class="anchor"></a>Models</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="run_metareg.html">run_metareg()</a></code> </p>
+        </td>
+        <td><p>Pairwise or network meta-regression with missing participant outcome data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="run_model.html">run_model()</a></code> </p>
+        </td>
+        <td><p>Pairwise or network meta-analysis with missing participant outcome data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="run_nodesplit.html">run_nodesplit()</a></code> </p>
+        </td>
+        <td><p>Bayesian node-splitting approach to explore (in)consistency</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="run_sensitivity.html">run_sensitivity()</a></code> </p>
+        </td>
+        <td><p>Sensitivity analysis for aggregate missing outcome participant data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="run_series_meta.html">run_series_meta()</a></code> </p>
+        </td>
+        <td><p>A series of Bayesian pairwise meta-analyses from a network of interventions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="run_ume.html">run_ume()</a></code> </p>
+        </td>
+        <td><p>A function to perform Bayesian unrelated mean effects model</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-bugs-code" class="hasAnchor"><a href="#section-bugs-code" class="anchor"></a>BUGS code</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="prepare_model.html">prepare_model()</a></code> </p>
+        </td>
+        <td><p>The WinBUGS code for Bayesian network meta-analysis</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="prepare_nodesplit.html">prepare_nodesplit()</a></code> </p>
+        </td>
+        <td><p>The WinBUGS code for Bayesian node-splitting model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="prepare_ume.html">prepare_ume()</a></code> </p>
+        </td>
+        <td><p>The WinBUGS code for Bayesian unrelated mean effects model</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-end-user-ready-visualisation" class="hasAnchor"><a href="#section-end-user-ready-visualisation" class="anchor"></a>End-user-ready visualisation</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -155,27 +238,63 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="data_preparation.html">data_preparation()</a></code> </p>
-        </td>
-        <td><p>Prepare the dataset in the proper format for R2jags</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="describe_network.html">describe_network()</a></code> </p>
-        </td>
-        <td><p>A function to describe a network of interventions</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="forestplot.html">forestplot()</a></code> </p>
         </td>
         <td><p>Forest plot of NMA results with a selected intervention</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="forestplot_metareg.html">forestplot_metareg()</a></code> </p>
+          <p><code><a href="kld_barplot.html">kld_barplot()</a></code> </p>
         </td>
-        <td><p>Comparator-specific forest-plot on estimated and predicted effect sizes</p></td>
+        <td><p>Barplot for the Kullback-Leibler divergence measure</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="leverage_plot.html">leverage_plot()</a></code> </p>
+        </td>
+        <td><p>Create the leverage plot</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="metareg_plot.html">metareg_plot()</a></code> </p>
+        </td>
+        <td><p>End-user-ready results for network meta-regression analysis</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="netplot.html">netplot()</a></code> </p>
+        </td>
+        <td><p>Create the network plot</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="nodesplit_plot.html">nodesplit_plot()</a></code> </p>
+        </td>
+        <td><p>End-user-ready results for node-splitting approach</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rankosucra_plot.html">rankosucra_plot()</a></code> </p>
+        </td>
+        <td><p>Rankograms and SUCRA curves</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="series_meta_plot.html">series_meta_plot()</a></code> </p>
+        </td>
+        <td><p>End-user-ready results for series of pairwise meta-analyses</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ume_plot.html">ume_plot()</a></code> </p>
+        </td>
+        <td><p>End-user-ready results for unrelated mean effects model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="unrelated_effects_plot.html">unrelated_effects_plot()</a></code> </p>
+        </td>
+        <td><p>End-user-ready results for unrelated trials effects model</p></td>
       </tr><tr>
         
         <td>
@@ -197,27 +316,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="heterogeneity_param_prior.html">heterogeneity_param_prior()</a></code> </p>
+          <p><code><a href="forestplot_metareg.html">forestplot_metareg()</a></code> </p>
         </td>
-        <td><p>Determine the prior distribution for the heterogeneity parameter</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="improved_ume.html">improved_ume()</a></code> </p>
-        </td>
-        <td><p>A function to detect the frail comparisons in multi-arm trials</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="intervalplot_panel_ume.html">intervalplot_panel_ume()</a></code> </p>
-        </td>
-        <td><p>A panel of interval plots: Consistency versus unrelated mean effects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="kld_barplot.html">kld_barplot()</a></code> </p>
-        </td>
-        <td><p>Barplot for the Kullback-Leibler divergence measure</p></td>
+        <td><p>Comparator-specific forest-plot on estimated and predicted effect sizes</p></td>
       </tr><tr>
         
         <td>
@@ -233,34 +334,29 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="leverage_plot.html">leverage_plot()</a></code> </p>
+          <p><code><a href="scatterplots_dev.html">scatterplots_dev()</a></code> </p>
         </td>
-        <td><p>Create the leverage plot</p></td>
+        <td><p>Create the deviance scatterplot</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="mcmc_diagnostics.html">mcmc_diagnostics()</a></code> </p>
+          <p><code><a href="intervalplot_panel_ume.html">intervalplot_panel_ume()</a></code> </p>
         </td>
-        <td><p>Markov Chain Monte Carlo Diagnostics</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="metareg_plot.html">metareg_plot()</a></code> </p>
-        </td>
-        <td><p>End-user-ready results for network meta-regression analysis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="missingness_param_prior.html">missingness_param_prior()</a></code> </p>
-        </td>
-        <td><p>Indicate the mean value of the distribution of the missingness parameter</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="netplot.html">netplot()</a></code> </p>
-        </td>
-        <td><p>Create the network plot</p></td>
-      </tr><tr>
+        <td><p>A panel of interval plots: Consistency versus unrelated mean effects</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-datasets" class="hasAnchor"><a href="#section-datasets" class="anchor"></a>Datasets</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
           <p><code><a href="nma.baker2009.html">nma.baker2009</a></code> </p>
@@ -299,12 +395,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="nodesplit_plot.html">nodesplit_plot()</a></code> </p>
-        </td>
-        <td><p>End-user-ready results for node-splitting approach</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="pma.hetrick2012.html">pma.hetrick2012</a></code> </p>
         </td>
         <td><p>Paroxetine versus placeboe for depressive disorders</p></td>
@@ -314,90 +404,61 @@
           <p><code><a href="pma.taylor2004.html">pma.taylor2004</a></code> </p>
         </td>
         <td><p>Inositol versus glucose for depressive episode</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-miscellaneous" class="hasAnchor"><a href="#section-miscellaneous" class="anchor"></a>Miscellaneous</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="data_preparation.html">data_preparation()</a></code> </p>
+        </td>
+        <td><p>Prepare the dataset in the proper format for R2jags</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="prepare_model.html">prepare_model()</a></code> </p>
+          <p><code><a href="describe_network.html">describe_network()</a></code> </p>
         </td>
-        <td><p>The WinBUGS code for Bayesian network meta-analysis</p></td>
+        <td><p>A function to describe a network of interventions</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="prepare_nodesplit.html">prepare_nodesplit()</a></code> </p>
+          <p><code><a href="heterogeneity_param_prior.html">heterogeneity_param_prior()</a></code> </p>
         </td>
-        <td><p>The WinBUGS code for Bayesian node-splitting model</p></td>
+        <td><p>Determine the prior distribution for the heterogeneity parameter</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="prepare_ume.html">prepare_ume()</a></code> </p>
+          <p><code><a href="improved_ume.html">improved_ume()</a></code> </p>
         </td>
-        <td><p>The WinBUGS code for Bayesian unrelated mean effects model</p></td>
+        <td><p>A function to detect the frail comparisons in multi-arm trials</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="rankosucra_plot.html">rankosucra_plot()</a></code> </p>
+          <p><code><a href="mcmc_diagnostics.html">mcmc_diagnostics()</a></code> </p>
         </td>
-        <td><p>Rankograms and SUCRA curves</p></td>
+        <td><p>Markov Chain Monte Carlo Diagnostics</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="missingness_param_prior.html">missingness_param_prior()</a></code> </p>
+        </td>
+        <td><p>Indicate the mean value of the distribution of the missingness parameter</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="robustness_index.html">robustness_index()</a></code> </p>
         </td>
         <td><p>Robustness index</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_metareg.html">run_metareg()</a></code> </p>
-        </td>
-        <td><p>Pairwise or network meta-regression with missing participant outcome data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_model.html">run_model()</a></code> </p>
-        </td>
-        <td><p>Pairwise or network meta-analysis with missing participant outcome data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_nodesplit.html">run_nodesplit()</a></code> </p>
-        </td>
-        <td><p>Bayesian node-splitting approach to explore (in)consistency</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_sensitivity.html">run_sensitivity()</a></code> </p>
-        </td>
-        <td><p>Sensitivity analysis for aggregate missing outcome participant data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_series_meta.html">run_series_meta()</a></code> </p>
-        </td>
-        <td><p>A series of Bayesian pairwise meta-analyses from a network of interventions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_ume.html">run_ume()</a></code> </p>
-        </td>
-        <td><p>A function to perform Bayesian unrelated mean effects model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="scatteplot_sucra.html">scatteplot_sucra()</a></code> </p>
-        </td>
-        <td><p>Scatterplot of SUCRA values from two models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="scatterplots_dev.html">scatterplots_dev()</a></code> </p>
-        </td>
-        <td><p>Create the deviance scatterplot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="series_meta_plot.html">series_meta_plot()</a></code> </p>
-        </td>
-        <td><p>End-user-ready results for series of pairwise meta-analyses</p></td>
       </tr><tr>
         
         <td>
@@ -410,18 +471,6 @@
           <p><code><a href="taylor_imor.html">taylor_imor()</a></code> </p>
         </td>
         <td><p>Pattern-mixture model with Taylor series for binary outcomes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ume_plot.html">ume_plot()</a></code> </p>
-        </td>
-        <td><p>End-user-ready results for unrelated mean effects model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="unrelated_effects_plot.html">unrelated_effects_plot()</a></code> </p>
-        </td>
-        <td><p>End-user-ready results for unrelated trials effects model</p></td>
       </tr>
     </tbody>
     </table>

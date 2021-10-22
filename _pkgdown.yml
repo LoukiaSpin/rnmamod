@@ -1,0 +1,34 @@
+reference:
+- title: Models
+  #desc: Build a complete site or its individual section components.
+- contents:
+  - starts_with("run_")
+- title: BUGS code
+- contents:
+  - starts_with("prepare_")
+- title: End-user-ready visualisation
+- contents:
+  - ends_with("plot")
+  - starts_with("heatmap")
+  - starts_with("forestplot")
+  - starts_with("league_")
+  - starts_with("scatter")
+  - intervalplot_panel_ume
+- title: Datasets
+- contents:
+  - starts_with("nma.")
+  - starts_with("pma.")
+- title: Miscellaneous
+- contents:
+  - data_preparation
+  - describe_network
+  - heterogeneity_param_prior
+  - improved_ume
+  - mcmc_diagnostics
+  - missingness_param_prior
+  - robustness_index
+  - taylor_continuous
+  - taylor_imor
+
+
+

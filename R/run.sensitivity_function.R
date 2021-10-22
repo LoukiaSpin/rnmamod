@@ -1,4 +1,4 @@
-#' Sensitivity analysis for aggregate missing outcome participant data
+#' Perform sensitivity analysis for aggregate missing outcome participant data
 #'
 #' @description This function performs sensitivity analysis by applying pairwise
 #'   meta-analysis (PMA) or network meta-analysis (NMA) for a series of
