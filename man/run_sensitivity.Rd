@@ -2,7 +2,7 @@
 % Please edit documentation in R/run.sensitivity_function.R
 \name{run_sensitivity}
 \alias{run_sensitivity}
-\title{Sensitivity analysis for aggregate missing outcome participant data}
+\title{Perform sensitivity analysis for aggregate missing outcome participant data}
 \usage{
 run_sensitivity(
   full,

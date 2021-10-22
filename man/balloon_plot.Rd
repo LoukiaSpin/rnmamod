@@ -2,7 +2,7 @@
 % Please edit documentation in R/balloon.plot.mod_function.R
 \name{balloon_plot}
 \alias{balloon_plot}
-\title{Enhanced balloon plot (missing participant outcome data)}
+\title{Enhanced balloon plot}
 \usage{
 balloon_plot(sens, compar, drug_names)
 }

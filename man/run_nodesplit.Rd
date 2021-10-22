@@ -2,7 +2,7 @@
 % Please edit documentation in R/run.nodesplit_function.R
 \name{run_nodesplit}
 \alias{run_nodesplit}
-\title{Bayesian node-splitting approach to explore (in)consistency}
+\title{Perform the node-splitting approach}
 \usage{
 run_nodesplit(full, n_chains, n_iter, n_burnin, n_thin)
 }

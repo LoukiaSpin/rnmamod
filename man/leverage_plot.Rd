@@ -2,7 +2,7 @@
 % Please edit documentation in R/leverage.plot_function.R
 \name{leverage_plot}
 \alias{leverage_plot}
-\title{Create the leverage plot}
+\title{Leverage plot}
 \usage{
 leverage_plot(net, drug_names, title)
 }

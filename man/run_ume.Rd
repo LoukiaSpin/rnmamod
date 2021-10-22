@@ -2,7 +2,7 @@
 % Please edit documentation in R/run.UME_function.R
 \name{run_ume}
 \alias{run_ume}
-\title{A function to perform Bayesian unrelated mean effects model}
+\title{Perform the unrelated mean effects model}
 \usage{
 run_ume(full, n_iter, n_burnin, n_chains, n_thin)
 }

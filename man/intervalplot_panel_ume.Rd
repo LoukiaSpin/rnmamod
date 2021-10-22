@@ -2,7 +2,7 @@
 % Please edit documentation in R/intervalplot.panel.UME_function.R
 \name{intervalplot_panel_ume}
 \alias{intervalplot_panel_ume}
-\title{A panel of interval plots: Consistency versus unrelated mean effects}
+\title{A panel of interval plots for the unrelated mean effects model}
 \usage{
 intervalplot_panel_ume(full, ume, drug_names)
 }

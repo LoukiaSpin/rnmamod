@@ -2,7 +2,7 @@
 % Please edit documentation in R/metareg.plot_function.R
 \name{metareg_plot}
 \alias{metareg_plot}
-\title{End-user-ready results for network meta-regression analysis}
+\title{End-user-ready results for network meta-regression}
 \usage{
 metareg_plot(full, reg, compar, cov_value, drug_names, save_xls)
 }

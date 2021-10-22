@@ -2,7 +2,7 @@
 % Please edit documentation in R/run.model_function.R
 \name{run_model}
 \alias{run_model}
-\title{Pairwise or network meta-analysis with missing participant outcome data}
+\title{Perform Bayesian pairwise or network meta-analysis}
 \format{
 The columns of the data frame in the argument \code{data} refer
   to the following ordered elements for a continuous outcome:

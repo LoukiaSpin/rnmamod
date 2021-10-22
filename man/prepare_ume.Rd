@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepare.UME_function.R
 \name{prepare_ume}
 \alias{prepare_ume}
-\title{The WinBUGS code for Bayesian unrelated mean effects model}
+\title{WinBUGS code for the unrelated mean effects model}
 \usage{
 prepare_ume(measure, model, assumption, connected)
 }

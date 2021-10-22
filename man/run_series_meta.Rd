@@ -2,7 +2,7 @@
 % Please edit documentation in R/run.series.meta_function.R
 \name{run_series_meta}
 \alias{run_series_meta}
-\title{A series of Bayesian pairwise meta-analyses from a network of interventions}
+\title{Perform a series of Bayesian pairwise meta-analyses}
 \usage{
 run_series_meta(full, n_chains, n_iter, n_burnin, n_thin)
 }

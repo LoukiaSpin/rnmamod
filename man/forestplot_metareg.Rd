@@ -2,7 +2,7 @@
 % Please edit documentation in R/forestplot.metareg_function.R
 \name{forestplot_metareg}
 \alias{forestplot_metareg}
-\title{Comparator-specific forest-plot on estimated and predicted effect sizes}
+\title{Comparator-specific forest-plot for network meta-regression}
 \usage{
 forestplot_metareg(full, reg, compar, cov_value, drug_names)
 }

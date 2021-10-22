@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>WinBUGS code for Bayesian pairwise or network meta-analysis — prepare_model • rnmamod</title>
+<title>Scatterplot of SUCRA values — scatterplot_sucra • rnmamod</title>
 
 
 <!-- jquery -->
@@ -39,12 +39,10 @@
 
 
 
-<meta property="og:title" content="WinBUGS code for Bayesian pairwise or network meta-analysis — prepare_model" />
-<meta property="og:description" content="The WinBUGS code, as written by Dias et al. (2013) to run a one-stage
-  Bayesian network meta-analysis, extended to incorporate the pattern-mixture
-  model for binary or continuous missing participant outcome data. In the
-  case of two interventions, the code boils down to a one-stage Bayesian
-  pairwise meta-analysis with pattern-mixture model." />
+<meta property="og:title" content="Scatterplot of SUCRA values — scatterplot_sucra" />
+<meta property="og:description" content="Creates a scatterplot of the SUCRA values under the network
+  meta-analysis and the network meta-regression for a specific level or value
+  of the investigated covariate." />
 
 
 
@@ -125,100 +123,84 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>WinBUGS code for Bayesian pairwise or network meta-analysis</h1>
+    <h1>Scatterplot of SUCRA values</h1>
     
-    <div class="hidden name"><code>prepare_model.Rd</code></div>
+    <div class="hidden name"><code>scatterplot_sucra.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>The WinBUGS code, as written by Dias et al. (2013) to run a one-stage
-  Bayesian network meta-analysis, extended to incorporate the pattern-mixture
-  model for binary or continuous missing participant outcome data. In the
-  case of two interventions, the code boils down to a one-stage Bayesian
-  pairwise meta-analysis with pattern-mixture model.</p>
+    <p>Creates a scatterplot of the SUCRA values under the network
+  meta-analysis and the network meta-regression for a specific level or value
+  of the investigated covariate.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>prepare_model</span><span class='op'>(</span><span class='va'>measure</span>, <span class='va'>model</span>, <span class='va'>covar_assumption</span>, <span class='va'>assumption</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>scatterplot_sucra</span><span class='op'>(</span><span class='va'>full</span>, <span class='va'>reg</span>, <span class='va'>cov_value</span>, <span class='va'>drug_names</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>measure</th>
-      <td><p>Character string indicating the effect measure with values
-<code>"OR"</code>, <code>"MD"</code>, <code>"SMD"</code>, or <code>"ROM"</code> for the odds ratio,
-mean difference, standardised mean difference and ratio of means,
-respectively.</p></td>
+      <th>full</th>
+      <td><p>An object of S3 class <code><a href='run_model.html'>run_model</a></code>.
+See 'Value' in <code><a href='run_model.html'>run_model</a></code>.</p></td>
     </tr>
     <tr>
-      <th>model</th>
-      <td><p>Character string indicating the analysis model with values
-<code>"RE"</code>, or <code>"FE"</code> for the random-effects and fixed-effect model,
-respectively. The default argument is <code>"RE"</code>.</p></td>
+      <th>reg</th>
+      <td><p>An object of S3 class <code><a href='run_metareg.html'>run_metareg</a></code>. See 'Value' in
+<code><a href='run_metareg.html'>run_metareg</a></code>.</p></td>
     </tr>
     <tr>
-      <th>covar_assumption</th>
-      <td><p>Character string indicating the structure of the
-intervention by covariate interaction, as described in
-Cooper et al., (2009). Set <code>covar_assumption</code> equal to one of the
-following: <code>"NO"</code>, when no meta-regression is performed; otherwise,
-<code>"exchangeable"</code>, <code>"independent"</code>, and <code>"common"</code>.</p></td>
+      <th>cov_value</th>
+      <td><p>A vector of two elements in the following order: a number
+that corresponds to a value of the covariate considered in
+<code><a href='run_metareg.html'>run_metareg</a></code>, and a character object to indicate the name of
+the covariate. See also 'Details'.</p></td>
     </tr>
     <tr>
-      <th>assumption</th>
-      <td><p>Character string indicating the structure of the
-informative missingness parameter. Set <code>assumption</code> equal to one of
-the following: <code>"HIE-COMMON"</code>, <code>"HIE-TRIAL"</code>, <code>"HIE-ARM"</code>,
-<code>"IDE-COMMON"</code>, <code>"IDE-TRIAL"</code>, <code>"IDE-ARM"</code>,
-<code>"IND-CORR"</code>, or <code>"IND-UNCORR"</code>. The default argument is
-<code>"IDE-ARM"</code>. The abbreviations <code>"IDE"</code>, <code>"HIE"</code>, and
-<code>"IND"</code> stand for identical, hierarchical and independent,
-respectively. <code>"CORR"</code> and <code>"UNCORR"</code> stand for correlated and
-uncorrelated, respectively.</p></td>
+      <th>drug_names</th>
+      <td><p>A vector of labels with the name of the interventions in
+the order they appear in the argument <code>data</code> of
+<code><a href='run_model.html'>run_model</a></code>. If the argument <code>drug_names</code> is not defined,
+the order of the interventions as they appear in <code>data</code> is used,
+instead.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An R character vector object to be passed to <code><a href='run_model.html'>run_model</a></code>
-  and <code><a href='run_metareg.html'>run_metareg</a></code>  through the
-  <code>textconnections</code> function as the argument <code>object</code>.</p>
+    <p>A scatterplot of the SUCRA values under the network meta-analysis
+  (y-axis) against the SUCRA values under the network meta-regression
+  (x-axis) for a specific level or value of the investigated covariate.
+  The names of the interventions appear at the corresponding points. Three
+  coloured rectangulars appear in the scatterplot: a red rectangular refer to
+  SUCRA values up to 50<!-- %, a yellow rectangular refer to SUCRA values between -->
+  50<!-- % and 80%, and a green rectangular refers to SUCRA values over 80%. -->
+  Interventions falling at the green area are considered as the highest
+  ranked interventions, whilst interventions falling at the red area are
+  considered as the lowest ranked interventions.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>prepare_model</code> creates the model in the JAGS dialect
-  of the BUGS language. The output of this function constitutes the argument
-  <code>model.file</code> of <code><a href='https://rdrr.io/pkg/R2jags/man/jags.html'>jags</a></code> via the
-  <code>textconnections</code> function.</p>
+    <p>The y-axis displays all interventions in the network; the selected
+  intervention that comprises the <code>compar</code> is indicated in the plot with
+  a homonymous label. The numerical results are displayed above each line.
+  Odds ratio and ratio of means are reported in the original scale after
+  exponentiation of the logarithmic scale.</p>
+<p>When the covariate is binary, specify in the second element of
+  <code>cov_value</code> the name of the level for which the scatterplot will be
+  created.</p>
+<p><code>scatterplot_sucra</code> can be used only for a network of interventions. In
+  the case of two interventions, the execution of the function will be
+  stopped and an error message will be printed in the R console.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
-data in network meta-analysis: a one-stage pattern-mixture model approach.
-<em>Stat Methods Med Res</em> 2021. [doi: <a href='https://doi.org/10.1177/0962280220983544'>10.1177/0962280220983544</a>
-]</p>
-<p>Spineli LM. An empirical comparison of Bayesian modelling strategies for
-missing binary outcome data in network meta-analysis.
-<em>BMC Med Res Methodol</em> 2019;<b>19</b>(1):86.
-[doi: <a href='https://doi.org/10.1186/s12874-019-0731-y'>10.1186/s12874-019-0731-y</a>
-]</p>
-<p>Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account
-for uncertainty due to missing binary outcome data in pairwise meta-analysis.
-<em>Stat Med</em> 2015;<b>34</b>(12):2062--2080. [doi: <a href='https://doi.org/10.1002/sim.6475'>10.1002/sim.6475</a>
-]</p>
-<p>Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
-making 2: a generalized linear modeling framework for pairwise and network
-meta-analysis of randomized controlled trials. <em>Med Decis Making</em>
-2013;<b>33</b>(5):607--617. [doi: <a href='https://doi.org/10.1177/0272989X12458724'>10.1177/0272989X12458724</a>
-]</p>
-<p>Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
-heterogeneity and inconsistency in mixed treatment comparisons: Application
-to stroke prevention treatments in individuals with non-rheumatic atrial
-fibrillation. <em>Stat Med</em> 2009;<b>28</b>(14):1861--81.
-[doi: <a href='https://doi.org/10.1002/sim.3594'>10.1002/sim.3594</a>
+    <p>Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
+for presenting results from multiple-treatment meta-analysis: an overview and
+tutorial. <em>J Clin Epidemiol</em> 2011;<b>64</b>(2):163--71.
+[doi: <a href='https://doi.org/10.1016/j.jclinepi.2010.03.016'>10.1016/j.jclinepi.2010.03.016</a>
 ]</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>, <code><a href='run_metareg.html'>run_metareg</a></code>,
-  <code>textconnections</code>, <code><a href='https://rdrr.io/pkg/R2jags/man/jags.html'>jags</a></code></p></div>
+    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>, <code><a href='run_metareg.html'>run_metareg</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>

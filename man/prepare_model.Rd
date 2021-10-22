@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepare.model_function.R
 \name{prepare_model}
 \alias{prepare_model}
-\title{The WinBUGS code for Bayesian network meta-analysis}
+\title{WinBUGS code for Bayesian pairwise or network meta-analysis}
 \usage{
 prepare_model(measure, model, covar_assumption, assumption)
 }

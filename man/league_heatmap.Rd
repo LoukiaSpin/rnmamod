@@ -2,7 +2,7 @@
 % Please edit documentation in R/league.heatmap_function.R
 \name{league_heatmap}
 \alias{league_heatmap}
-\title{League heatmap of all possible comparisons: estimation}
+\title{League heatmap for estimation}
 \usage{
 league_heatmap(full, cov_value = NULL, drug_names)
 }
