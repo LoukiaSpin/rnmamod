@@ -1,7 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
-^\.travis\.yml$
 
 ^_pkgdown\.yml$
 ^docs$

@@ -32,3 +32,18 @@ This vignette illustrates how to perform a random-effects network meta-analysis
 using the minimum required argumentation of the `run_model` function. 
  
 ## Example on a binary outcome 
+
+We will use the network on pharmacologic interventions for chronic obstructive 
+pulmonary disease (COPD) from the systematic review of [Baker et al. (2009)]
+(https://pubmed.ncbi.nlm.nih.gov/19637942/). 
+
+This network comprises 21 trials comparing seven pharmacologic interventions 
+with each other and placebo. Theexacerbation of COPD (harmful outcome) is the 
+analysed binary outcome.
+
+```{r, echo = FALSE, results = "hide", fig.width = 5, fig.height = 5, fig.align = "center"}
+netplot(data = nma.baker2009, drug_names = c("placebo", "budesonide \n", "budesonide plus \n formoterol \n", "fluticasone \n", "fluticasone plus \n salmeterol \n", "formoterol", "salmeterol \n", "tiotropium \n"),
+        adjust.figsizex = 1.35, adjust.figsizey = 1.15)
+```
+
+
