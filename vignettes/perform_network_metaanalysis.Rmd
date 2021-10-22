@@ -58,7 +58,7 @@ the minimum required arguments, the function adjusts MOD under the
 missing-at-random assumption (MAR; by default) via the informative missingness 
 odds ratio (IMOR) in the logarithmic scale (White et al. (2008)):
 
-```{r fit-models-hidden, results = "hide", message = FALSE}
+```{r eval = FALSE}
 run_model(data = nma.baker2009,
           measure = "OR",
           heter_prior = list("halfnormal", 0, 1),
@@ -95,7 +95,7 @@ still assume MAR on average with variance of log IMOR equal to 1
 (`var_misspar = 1`) which is also the default argument. In this case, 
 `run_model` must be specified as follows:
 
-```{r, results = "hide", message = FALSE}
+```{r eval = FALSE}
 run_model(data = nma.baker2009,
           measure = "OR",
           model = "RE",
@@ -138,24 +138,10 @@ For instance, the output below presents the posterior distribution of the log
 odds ratio of comparisons with placebo, the reference intervention of the 
 network.
 
-```{r, echo = FALSE, results = "hide"}
-res <- run_model(data = nma.baker2009,
-                 measure = "OR",
-                 model = "RE",
-                 assumption = "HIE-ARM",
-                 heter_prior = list("lognormal", -2.06, 0.438),
-                 mean_misspar = c(0, 0),
-                 var_misspar = 1,
-                 D = 0,
-                 n_chains = 3,
-                 n_iter = 10000,
-                 n_burnin = 1000,
-                 n_thin = 1)
-```
-
-```{r set-options, echo = FALSE, results = "show", comment = NA}
+```{r set-options, echo = FALSE, comment = NA}
 options(width = 1000)
-res$EM_ref
+load("./output_data/em_ref_baker_ln.Rdata")
+em_ref_baker_ln
 ```
 
 ### No or partially extracted missing participant outcome data
@@ -165,30 +151,18 @@ have been extracted for some trials or trial-arms. For illustrative purposes, we
 removed the item `m` from `nma.baker2009` to indicate that MOD were not 
 extracted for this outcome:
 
-```{r, echo = FALSE, comment = NA}
+```{r echo = FALSE, comment = NA}
 (data_new <- nma.baker2009[, c(-10, -11, -12, -13)])
 ```
 
-Using the minimum required arguments, `run_model` will run and provide results. 
-For instance, for the log odds ratio of comparisons with placebo: 
+Using the minimum required arguments with 
+`heter_prior = list("lognormal", -2.06, 0.438)`, `run_model` will run and 
+provide results. For instance, for the log odds ratio of comparisons with
+placebo: 
 
-```{r, echo = FALSE, results = "hide"}
-res1 <- run_model(data = data_new,
-                  measure = "OR",
-                  model = "RE",
-                  assumption = "HIE-ARM",
-                  heter_prior = list("lognormal", -2.06, 0.438),
-                  mean_misspar = c(0, 0),
-                  var_misspar = 1,
-                  D = 0,
-                  n_chains = 3,
-                  n_iter = 10000,
-                  n_burnin = 1000,
-                  n_thin = 1)
-```
-
-```{r, echo = FALSE, results = "show", comment = NA}
-res1$EM_ref
+```{r echo = FALSE, comment = NA}
+load("./output_data/em_ref_baker_ln_nomod.Rdata")
+em_ref_baker_ln_nomod
 ```
 
 `run_model` calls the `data_preparation` function. The latter creates a 
