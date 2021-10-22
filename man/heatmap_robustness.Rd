@@ -2,7 +2,7 @@
 % Please edit documentation in R/heatmap.robustness_function.R
 \name{heatmap_robustness}
 \alias{heatmap_robustness}
-\title{Heatmap of robsutness index (network meta-analysis)}
+\title{Heatmap of robustness index}
 \usage{
 heatmap_robustness(robust, drug_names)
 }

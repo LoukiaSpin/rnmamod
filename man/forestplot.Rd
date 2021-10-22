@@ -2,7 +2,7 @@
 % Please edit documentation in R/forestplot_function.R
 \name{forestplot}
 \alias{forestplot}
-\title{Forest plot of NMA results with a selected intervention}
+\title{Comparator-specific forest plot for network meta-analysis}
 \usage{
 forestplot(full, compar, drug_names)
 }

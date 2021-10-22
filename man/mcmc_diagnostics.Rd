@@ -2,7 +2,7 @@
 % Please edit documentation in R/mcmc.diagnostics_function.R
 \name{mcmc_diagnostics}
 \alias{mcmc_diagnostics}
-\title{Markov Chain Monte Carlo Diagnostics}
+\title{Markov Chain Monte Carlo diagnostics}
 \usage{
 mcmc_diagnostics(net, par)
 }

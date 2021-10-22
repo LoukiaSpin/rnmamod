@@ -2,7 +2,7 @@
 % Please edit documentation in R/run.metareg_function.R
 \name{run_metareg}
 \alias{run_metareg}
-\title{Pairwise or network meta-regression with missing participant outcome data}
+\title{Perform Bayesian pairwise or network meta-regression}
 \usage{
 run_metareg(
   full,

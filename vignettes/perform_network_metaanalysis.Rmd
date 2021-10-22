@@ -58,7 +58,7 @@ the minimum required arguments, the function adjusts MOD under the
 missing-at-random assumption (MAR; by default) via the informative missingness 
 odds ratio (IMOR) in the logarithmic scale (White et al. (2008)):
 
-```{r, results = "hide", message = FALSE}
+```{r fit-models-hidden, results = "hide", message = FALSE}
 run_model(data = nma.baker2009,
           measure = "OR",
           heter_prior = list("halfnormal", 0, 1),

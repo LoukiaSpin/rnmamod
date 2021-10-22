@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepare.nodesplit_function.R
 \name{prepare_nodesplit}
 \alias{prepare_nodesplit}
-\title{The WinBUGS code for Bayesian node-splitting model}
+\title{WinBUGS code for the node-splitting approach}
 \usage{
 prepare_nodesplit(measure, model, assumption)
 }

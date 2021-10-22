@@ -2,7 +2,7 @@
 % Please edit documentation in R/network.plot_function.R
 \name{netplot}
 \alias{netplot}
-\title{Create the network plot}
+\title{Network plot and network description}
 \usage{
 netplot(data, drug_names, save_xls, ...)
 }

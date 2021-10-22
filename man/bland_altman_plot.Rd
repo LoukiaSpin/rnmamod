@@ -2,7 +2,7 @@
 % Please edit documentation in R/BlandAltman.plot_function.R
 \name{bland_altman_plot}
 \alias{bland_altman_plot}
-\title{Create the Bland-Altman plot}
+\title{The Bland-Altman plot}
 \usage{
 bland_altman_plot(group1, group2, colour)
 }

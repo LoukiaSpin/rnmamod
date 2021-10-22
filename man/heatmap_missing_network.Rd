@@ -2,7 +2,7 @@
 % Please edit documentation in R/heatmap.missing.network_function.R
 \name{heatmap_missing_network}
 \alias{heatmap_missing_network}
-\title{Heatmap of the propoertion of missing participant outcome data in the network}
+\title{Heatmap of proportion of missing participant outcome data in the network}
 \usage{
 heatmap_missing_network(data, drug_names)
 }
