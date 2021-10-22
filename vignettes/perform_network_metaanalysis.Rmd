@@ -28,38 +28,35 @@ library(rnmamod)
 
 ## Introduction
 
-This vignette illustrates how to perform a random-effects network meta-analysis 
-using the minimum required argumentation of the `run_model` function. 
+This vignette illustrates how to perform a one-stage Bayesian random-effects 
+network meta-analysis using the `run_model` function. The function includes 
+arguments to handle aggregate missing participant outcome data (MOD) in each arm
+of every trial via the pattern-mixture model.
  
 ## Example on a binary outcome 
 
 We will use the network on pharmacologic interventions for chronic obstructive 
-pulmonary disease (COPD) from the systematic review of [Baker et al. (2009)]
-(https://pubmed.ncbi.nlm.nih.gov/19637942/). 
-
-This network comprises 21 trials comparing seven pharmacologic interventions 
-with each other and placebo. The exacerbation of COPD (harmful outcome) is the 
-analysed binary outcome.
+pulmonary disease (COPD) from the systematic review of 
+[Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/). This network 
+comprises 21 trials comparing seven pharmacological interventions with each 
+other and placebo. The exacerbation of COPD (harmful outcome) is the analysed 
+binary outcome.
 
 ```{r, echo = FALSE, results = "hide", fig.width = 5, fig.height = 5, fig.align = "center"}
 netplot(data = nma.baker2009, drug_names = c("placebo", "budesonide", "budesonide plus \n formoterol", "fluticasone", "fluticasone plus \n salmeterol", "formoterol", "salmeterol", "tiotropium"),
         adjust.figsizex = 1.35, adjust.figsizey = 1.15)
 ```
 
+## Perform Bayesian random-effects network meta-analysis
 
-The minimum required arguments of `run_model` include specifying:
+### Using the minimum required arguments
 
-- the dataset (a data-frame one-trial-per-row format) in `data` (see
-`?data.preparation`);
-- the effect measure in `measure` (see 'Arguments' in `?run_model`):
-- the prior distribution for the heterogeneity parameter in `heter_prior` (see
-`?heterogeneity_param_prior`);
-- the direction of the outcome in `D` (here, `D=0` because the outcome is 
-harmful; see, 'Arguments' in `?run_model`)
-- the number of chains in `n_chains` (see 'Arguments' in `?run_model`);
-- the number of iterations in `n_iter`;
-- the number of burn-in in `n_burnin`, and 
-- the thinning in `n_thin`.
+`run_model` calls the `jags` function from the 
+[**R2jags**](https://CRAN.R-project.org/package=R2jags) package to perform the
+Bayesian analysis. Using only the minimum required arguments, the function 
+adjusts MOD under the missing-at-random assumption (by default) via the 
+informative missingness odds ratio (IMOR) in the logarithmic scale
+(White et al. (2008)):
 
 ```{r, results = "hide", message = FALSE}
 run_model(data = nma.baker2009,
@@ -71,3 +68,83 @@ run_model(data = nma.baker2009,
           n_burnin = 1000,
           n_thin = 1)
 ```
+
+The minimum required arguments of `run_model` include specifying:
+
+- the dataset (a data-frame one-trial-per-row format) in `data` (see
+`?data_preparation`);
+- the effect measure in `measure` (see 'Arguments' in `?run_model`):
+- the prior distribution for the heterogeneity parameter in `heter_prior` (see
+`?heterogeneity_param_prior`);
+- the direction of the outcome in `D` (here, `D = 0` because the outcome is 
+harmful; see, 'Arguments' in `?run_model`)
+- the number of chains in `n_chains` (see 'Arguments' in `?run_model` -- also 
+for the subsequent arguments);
+- the number of iterations in `n_iter`;
+- the number of burn-in in `n_burnin`, and 
+- the thinning in `n_thin`.
+
+### Using all arguments
+
+Suppose we decide to use an *empirically-based prior distribution for the 
+between-trial variance* that aligns with the outcome and interventions under 
+investigation. We also consider a *hierarchical structure for the prior 
+normal distribution of the log IMOR that is specific to the interventions* in 
+the network (`assumption = "HIE-ARM"`) (Turner et al., 2015a; Spineli, 2019). We 
+still assume MAR on average with variance of log IMOR equal to 1 
+(`var_misspar = 1`) which is also the default argument. In this case, 
+`run_model` must be specified as follows:
+
+```{r, results = "hide", message = FALSE}
+run_model(data = nma.baker2009,
+          measure = "OR",
+          model = "RE",
+          assumption = "HIE-ARM",
+          heter_prior = list("lognormal", -2.06, 0.438),
+          mean_misspar = c(0, 0),
+          var_misspar = 1,
+          D = 0,
+          n_chains = 3,
+          n_iter = 10000,
+          n_burnin = 1000,
+          n_thin = 1)
+```
+
+`heter_prior = list("lognormal", -2.06, 0.438)` refers to ‘symptoms reflecting 
+the continuation of condition’ for the ‘pharmacological versus placebo’ 
+comparison-type as elicited by Turner and colleagues (2015b). 
+
+In the argument `mean_misspar = c(0, 0)`, the first and second element of the
+vector refers to the mean log IMOR in the non-reference interventions and the
+reference intervention of the network, respectively -- the latter is always the 
+intervention with identifier equal to 1. Hence, for all non-reference 
+interventions we can consider **the same** mean log IMOR.
+
+`run_model` returns **a list of R2jags output** on the summaries of the 
+posterior distribution, and the Gelman-Rubin convergence diagnostic of the 
+monitored parameters (see 'Value' in `?run_model`). The output is used as an S3 
+object by other functions of the package to be processed further and provide an 
+end-user-ready output. See, for example, the function `?league_heatmap` that 
+creates the league table with the effect sizes of all possible comparisons in 
+the network.
+
+## References
+
+White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data in 
+meta-analysis--part 1: two-stage methods. *Stat Med* 2008;**27**(5):711--27.
+[doi: 10.1002/sim.3008](https://pubmed.ncbi.nlm.nih.gov/17703496/)
+
+Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account for 
+uncertainty due to missing binary outcome data in pairwise meta-analysis. 
+*Stat Med* 2015a;**34**(12):2062--80.
+[doi: 10.1002/sim.6475](https://pubmed.ncbi.nlm.nih.gov/25809313/)
+
+Spineli LM. An empirical comparison of Bayesian modelling strategies for missing
+binary outcome data in network meta- analysis. *BMC Med Res Methodol* 
+2019;**19**(1):86. 
+[doi: 10.1186/s12874-019-0731-y](https://pubmed.ncbi.nlm.nih.gov/31018836/)
+
+Turner RM, Jackson D, Wei Y, Thompson SG, Higgins JPT. Predictive distributions 
+for between-study heterogeneity and simple methods for their application in 
+Bayesian meta-analysis. *Stat Med* 2015b;**34**(6):984--98.
+[doi: 10.1002/sim.6381](https://pubmed.ncbi.nlm.nih.gov/25475839/)

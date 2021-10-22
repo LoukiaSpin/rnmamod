@@ -178,10 +178,10 @@ heatmap_missing_dataset(data = nma.bottomley2011, trial_names = nma.bottomley201
 Bottomley JM, Taylor RS, Ryttov J. The effectiveness of two-compound formulation
 calcipotriol and betamethasone dipropionate gel in the treatment of moderately 
 severe scalp psoriasis: a systematic review of direct and indirect evidence. 
-\emph{Curr Med Res Opin} 2011;\bold{27}(1):251--268. 
+*Curr Med Res Opin* 2011;**27**(1):251--268. 
 [doi: 10.1185/03007995.2010.541022](https://pubmed.ncbi.nlm.nih.gov/21142838/)
 
 Lifeng Lin, Jing Zhang, James S. Hodges, Haitao Chu. Performing Arm-Based 
-Network Meta-Analysis in R with the pcnetmeta Package. \emph{J Stat Softw} 2017;
-\bold{80}(5): 1--25. 
+Network Meta-Analysis in R with the pcnetmeta Package. *J Stat Softw* 2017;
+**80**(5): 1--25. 
 [doi: 10.18637/jss.v080.i05](https://www.jstatsoft.org/article/view/v080i05)

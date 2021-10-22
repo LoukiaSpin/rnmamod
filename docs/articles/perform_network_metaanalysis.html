@@ -90,25 +90,21 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>This vignette illustrates how to perform a random-effects network meta-analysis using the minimum required argumentation of the <code>run_model</code> function.</p>
+<p>This vignette illustrates how to perform a one-stage Bayesian random-effects network meta-analysis using the <code>run_model</code> function. The function includes arguments to handle aggregate missing participant outcome data (MOD) in each arm of every trial via the pattern-mixture model.</p>
 </div>
 <div id="example-on-a-binary-outcome" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-on-a-binary-outcome" class="anchor"></a>Example on a binary outcome</h2>
-<p>We will use the network on pharmacologic interventions for chronic obstructive pulmonary disease (COPD) from the systematic review of [Baker et al. (2009)] (<a href="https://pubmed.ncbi.nlm.nih.gov/19637942/" class="uri">https://pubmed.ncbi.nlm.nih.gov/19637942/</a>).</p>
-<p>This network comprises 21 trials comparing seven pharmacologic interventions with each other and placebo. The exacerbation of COPD (harmful outcome) is the analysed binary outcome.</p>
+<p>We will use the network on pharmacologic interventions for chronic obstructive pulmonary disease (COPD) from the systematic review of <a href="https://pubmed.ncbi.nlm.nih.gov/19637942/">Baker et al. (2009)</a>. This network comprises 21 trials comparing seven pharmacological interventions with each other and placebo. The exacerbation of COPD (harmful outcome) is the analysed binary outcome.</p>
 <p><img src="perform_network_metaanalysis_files/figure-html/unnamed-chunk-2-1.png" width="480" style="display: block; margin: auto;"></p>
-<p>The minimum required arguments of <code>run_model</code> include specifying:</p>
-<ul>
-<li>the dataset (a data-frame one-trial-per-row format) in <code>data</code> (see <code>?data.preparation</code>);</li>
-<li>the effect measure in <code>measure</code> (see ‘Arguments’ in <code><a href="../reference/run_model.html">?run_model</a></code>):</li>
-<li>the prior distribution for the heterogeneity parameter in <code>heter_prior</code> (see <code><a href="../reference/heterogeneity_param_prior.html">?heterogeneity_param_prior</a></code>);</li>
-<li>the direction of the outcome in <code>D</code> (here, <code>D=0</code> because the outcome is harmful; see, ‘Arguments’ in <code><a href="../reference/run_model.html">?run_model</a></code>)</li>
-<li>the number of chains in <code>n_chains</code> (see ‘Arguments’ in <code><a href="../reference/run_model.html">?run_model</a></code>);</li>
-<li>the number of iterations in <code>n_iter</code>;</li>
-<li>the number of burn-in in <code>n_burnin</code>, and</li>
-<li>the thinning in <code>n_thin</code>.</li>
-</ul>
+</div>
+<div id="perform-bayesian-random-effects-network-meta-analysis" class="section level2">
+<h2 class="hasAnchor">
+<a href="#perform-bayesian-random-effects-network-meta-analysis" class="anchor"></a>Perform Bayesian random-effects network meta-analysis</h2>
+<div id="using-the-minimum-required-arguments" class="section level3">
+<h3 class="hasAnchor">
+<a href="#using-the-minimum-required-arguments" class="anchor"></a>Using the minimum required arguments</h3>
+<p><code>run_model</code> calls the <code>jags</code> function from the <a href="https://CRAN.R-project.org/package=R2jags"><strong>R2jags</strong></a> package to perform the Bayesian analysis. Below, the minimum required specification of the function adjusts MOD under the missing-at-random assumption (by default) via the informative missingness odds ratio (IMOR) in the logarithmic scale (White et al. (2008)):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/run_model.html">run_model</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.baker2009</span>,
           measure <span class="op">=</span> <span class="st">"OR"</span>,
@@ -117,8 +113,48 @@
           n_chains <span class="op">=</span> <span class="fl">3</span>,
           n_iter <span class="op">=</span> <span class="fl">10000</span>,
           n_burnin <span class="op">=</span> <span class="fl">1000</span>,
-          n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="co">#&gt; module glm loaded</span></code></pre></div>
+          n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
+<p>The minimum required arguments of <code>run_model</code> include specifying:</p>
+<ul>
+<li>the dataset (a data-frame one-trial-per-row format) in <code>data</code> (see <code><a href="../reference/data_preparation.html">?data_preparation</a></code>);</li>
+<li>the effect measure in <code>measure</code> (see ‘Arguments’ in <code><a href="../reference/run_model.html">?run_model</a></code>):</li>
+<li>the prior distribution for the heterogeneity parameter in <code>heter_prior</code> (see <code><a href="../reference/heterogeneity_param_prior.html">?heterogeneity_param_prior</a></code>);</li>
+<li>the direction of the outcome in <code>D</code> (here, <code>D = 0</code> because the outcome is harmful; see, ‘Arguments’ in <code><a href="../reference/run_model.html">?run_model</a></code>)</li>
+<li>the number of chains in <code>n_chains</code> (see ‘Arguments’ in <code><a href="../reference/run_model.html">?run_model</a></code>);</li>
+<li>the number of iterations in <code>n_iter</code>;</li>
+<li>the number of burn-in in <code>n_burnin</code>, and</li>
+<li>the thinning in <code>n_thin</code>.</li>
+</ul>
+</div>
+<div id="using-all-arguments" class="section level3">
+<h3 class="hasAnchor">
+<a href="#using-all-arguments" class="anchor"></a>Using all arguments</h3>
+<p>Suppose we decide to use an empirically-based prior distribution for the between-trial variance that aligns with the outcome and interventions under investigation. We also consider a hierarchical structure for the prior normal distribution of the log IMOR that is specific to the interventions in the network (<code>assumption = "HIE-ARM"</code>) (Turner et al., 2015a; Spineli, 2019). We still assume MAR on average with variance of log IMOR equal to 1 (<code>var_misspar = 1</code>) which is also the default argument. In this case, <code>run_model</code> must be specified as follows:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/run_model.html">run_model</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.baker2009</span>,
+          measure <span class="op">=</span> <span class="st">"OR"</span>,
+          model <span class="op">=</span> <span class="st">"RE"</span>,
+          assumption <span class="op">=</span> <span class="st">"HIE-ARM"</span>,
+          heter_prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"lognormal"</span>, <span class="op">-</span><span class="fl">2.06</span>, <span class="fl">0.438</span><span class="op">)</span>,
+          mean_misspar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,
+          var_misspar <span class="op">=</span> <span class="fl">1</span>,
+          D <span class="op">=</span> <span class="fl">0</span>,
+          n_chains <span class="op">=</span> <span class="fl">3</span>,
+          n_iter <span class="op">=</span> <span class="fl">10000</span>,
+          n_burnin <span class="op">=</span> <span class="fl">1000</span>,
+          n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
+<p><code>heter_prior = list("lognormal", -2.06, 0.438)</code> refers to ‘symptoms reflecting the continuation of condition’ for the ‘pharmacological versus placebo’ comparison-type as elicited by Turner and colleagues (2015b).</p>
+<p>In the argument <code>mean_misspar = c(0, 0)</code>, the first and second element of the vector refers to the mean log IMOR in the non-reference interventions and the reference intervention of the network - the latter is always the intervention with identifier equal to 1. Hence, for all non-reference interventions we can consider <strong>the same</strong> mean log IMOR.</p>
+<p><code>run_model</code> returns a list of R2jags output on the summaries of the posterior distribution, and the Gelman-Rubin convergence diagnostic of the monitored parameters (see ‘Value’ in <code><a href="../reference/run_model.html">?run_model</a></code>). The output is used as an S3 object by other functions of the package and can be processed further and provide an end-user-ready output. See, for example, the function <code><a href="../reference/league_heatmap.html">?league_heatmap</a></code> that creates the league table with the effect sizes of all possible comparisons in the network.</p>
+</div>
+</div>
+<div id="references" class="section level2">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h2>
+<p>White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data in meta-analysis–part 1: two-stage methods. <em>Stat Med</em> 2008;<strong>27</strong>(5):711–27. <a href="https://pubmed.ncbi.nlm.nih.gov/17703496/">doi: 10.1002/sim.3008</a></p>
+<p>Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account for uncertainty due to missing binary outcome data in pairwise meta-analysis. <em>Stat Med</em> 2015a;<strong>34</strong>(12):2062–80. <a href="https://pubmed.ncbi.nlm.nih.gov/25809313/">doi: 10.1002/sim.6475</a></p>
+<p>Spineli LM. An empirical comparison of Bayesian modelling strategies for missing binary outcome data in network meta- analysis. <em>BMC Med Res Methodol</em> 2019;<strong>19</strong>(1):86. <a href="https://pubmed.ncbi.nlm.nih.gov/31018836/">doi: 10.1186/s12874-019-0731-y</a></p>
+<p>Turner RM, Jackson D, Wei Y, Thompson SG, Higgins JPT. Predictive distributions for between-study heterogeneity and simple methods for their application in Bayesian meta-analysis. <em>Stat Med</em> 2015b;<strong>34</strong>(6):984–98. <a href="https://pubmed.ncbi.nlm.nih.gov/25475839/">doi: 10.1002/sim.6381</a></p>
 </div>
   </div>
 
