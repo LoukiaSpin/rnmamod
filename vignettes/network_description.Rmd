@@ -42,9 +42,10 @@ We will use the systematic review of
 [Bottomley et al. (2011)](https://pubmed.ncbi.nlm.nih.gov/21142838/) that 
 comprises 9 trials comparing six pharmacologic interventions with each other and
 placebo for moderately severe scalp psoriasis. The analysed binary outcome is 
-the investigator's global assessment response at 4 weeks 
+the investigator's global assessment response at 4 weeks (`?nma.bottomley2011`).
 
-```{r comment = NA}
+```{r set-options, echo = FALSE, comment = NA}
+options(width = 1000)
 nma.bottomley2011
 ```
 

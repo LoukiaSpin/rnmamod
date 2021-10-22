@@ -90,12 +90,12 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>This vignette illustrates how to perform a one-stage Bayesian random-effects network meta-analysis using the <code>run_model</code> function. The function includes arguments to handle aggregate missing participant outcome data (MOD) in each arm of every trial via the pattern-mixture model.</p>
+<p>This vignette illustrates how to perform a one-stage Bayesian random-effects network meta-analysis with consistency equation using the <code>run_model</code> function. The function includes arguments to handle aggregate missing participant outcome data (MOD) in each arm of every trial via the pattern-mixture model.</p>
 </div>
 <div id="example-on-a-binary-outcome" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-on-a-binary-outcome" class="anchor"></a>Example on a binary outcome</h2>
-<p>We will use the network on pharmacologic interventions for chronic obstructive pulmonary disease (COPD) from the systematic review of <a href="https://pubmed.ncbi.nlm.nih.gov/19637942/">Baker et al. (2009)</a>. This network comprises 21 trials comparing seven pharmacological interventions with each other and placebo. The exacerbation of COPD (harmful outcome) is the analysed binary outcome.</p>
+<p>We will use the network on pharmacologic interventions for chronic obstructive pulmonary disease (COPD) from the systematic review of <a href="https://pubmed.ncbi.nlm.nih.gov/19637942/">Baker et al. (2009)</a>. This network comprises 21 trials comparing seven pharmacological interventions with each other and placebo. The exacerbation of COPD (harmful outcome) is the analysed binary outcome (see <code><a href="../reference/nma.baker2009.html">?nma.baker2009</a></code>).</p>
 <p><img src="perform_network_metaanalysis_files/figure-html/unnamed-chunk-2-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div id="perform-bayesian-random-effects-network-meta-analysis" class="section level2">
@@ -104,7 +104,7 @@
 <div id="using-the-minimum-required-arguments" class="section level3">
 <h3 class="hasAnchor">
 <a href="#using-the-minimum-required-arguments" class="anchor"></a>Using the minimum required arguments</h3>
-<p><code>run_model</code> calls the <code>jags</code> function from the <a href="https://CRAN.R-project.org/package=R2jags"><strong>R2jags</strong></a> package to perform the Bayesian analysis. Below, the minimum required specification of the function adjusts MOD under the missing-at-random assumption (by default) via the informative missingness odds ratio (IMOR) in the logarithmic scale (White et al. (2008)):</p>
+<p><code>run_model</code> calls the <code>jags</code> function from the <a href="https://CRAN.R-project.org/package=R2jags"><strong>R2jags</strong></a> package to perform the Bayesian analysis using the BUGS code of Dias and colleagues. With only the minimum required arguments, the function adjusts MOD under the missing-at-random assumption (MAR; by default) via the informative missingness odds ratio (IMOR) in the logarithmic scale (White et al. (2008)):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/run_model.html">run_model</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.baker2009</span>,
           measure <span class="op">=</span> <span class="st">"OR"</span>,
@@ -116,11 +116,11 @@
           n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p>The minimum required arguments of <code>run_model</code> include specifying:</p>
 <ul>
-<li>the dataset (a data-frame one-trial-per-row format) in <code>data</code> (see <code><a href="../reference/data_preparation.html">?data_preparation</a></code>);</li>
+<li>the dataset (a data-frame with one-trial-per-row format) in <code>data</code> (see <code><a href="../reference/data_preparation.html">?data_preparation</a></code>);</li>
 <li>the effect measure in <code>measure</code> (see ‘Arguments’ in <code><a href="../reference/run_model.html">?run_model</a></code>):</li>
 <li>the prior distribution for the heterogeneity parameter in <code>heter_prior</code> (see <code><a href="../reference/heterogeneity_param_prior.html">?heterogeneity_param_prior</a></code>);</li>
 <li>the direction of the outcome in <code>D</code> (here, <code>D = 0</code> because the outcome is harmful; see, ‘Arguments’ in <code><a href="../reference/run_model.html">?run_model</a></code>)</li>
-<li>the number of chains in <code>n_chains</code> (see ‘Arguments’ in <code><a href="../reference/run_model.html">?run_model</a></code>);</li>
+<li>the number of chains in <code>n_chains</code> (see ‘Arguments’ in <code><a href="../reference/run_model.html">?run_model</a></code> – also for the subsequent arguments);</li>
 <li>the number of iterations in <code>n_iter</code>;</li>
 <li>the number of burn-in in <code>n_burnin</code>, and</li>
 <li>the thinning in <code>n_thin</code>.</li>
@@ -129,7 +129,7 @@
 <div id="using-all-arguments" class="section level3">
 <h3 class="hasAnchor">
 <a href="#using-all-arguments" class="anchor"></a>Using all arguments</h3>
-<p>Suppose we decide to use an empirically-based prior distribution for the between-trial variance that aligns with the outcome and interventions under investigation. We also consider a hierarchical structure for the prior normal distribution of the log IMOR that is specific to the interventions in the network (<code>assumption = "HIE-ARM"</code>) (Turner et al., 2015a; Spineli, 2019). We still assume MAR on average with variance of log IMOR equal to 1 (<code>var_misspar = 1</code>) which is also the default argument. In this case, <code>run_model</code> must be specified as follows:</p>
+<p>Suppose we decide to use an <em>empirically-based prior distribution for the between-trial variance</em> that aligns with the outcome and interventions under investigation. We also consider a <em>hierarchical structure for the prior normal distribution of the log IMOR that is specific to the interventions</em> in the network (<code>assumption = "HIE-ARM"</code>) (Turner et al., 2015a; Spineli, 2019). We still assume MAR on average with variance of log IMOR equal to 1 (<code>var_misspar = 1</code>) which is also the default argument. In this case, <code>run_model</code> must be specified as follows:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/run_model.html">run_model</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.baker2009</span>,
           measure <span class="op">=</span> <span class="st">"OR"</span>,
@@ -143,14 +143,83 @@
           n_iter <span class="op">=</span> <span class="fl">10000</span>,
           n_burnin <span class="op">=</span> <span class="fl">1000</span>,
           n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
+<p>The argument <code>model = "RE"</code> refers to the random-effects model. For the fixed-effect model, use <code>model = "FE"</code>.</p>
 <p><code>heter_prior = list("lognormal", -2.06, 0.438)</code> refers to ‘symptoms reflecting the continuation of condition’ for the ‘pharmacological versus placebo’ comparison-type as elicited by Turner and colleagues (2015b).</p>
-<p>In the argument <code>mean_misspar = c(0, 0)</code>, the first and second element of the vector refers to the mean log IMOR in the non-reference interventions and the reference intervention of the network - the latter is always the intervention with identifier equal to 1. Hence, for all non-reference interventions we can consider <strong>the same</strong> mean log IMOR.</p>
-<p><code>run_model</code> returns a list of R2jags output on the summaries of the posterior distribution, and the Gelman-Rubin convergence diagnostic of the monitored parameters (see ‘Value’ in <code><a href="../reference/run_model.html">?run_model</a></code>). The output is used as an S3 object by other functions of the package and can be processed further and provide an end-user-ready output. See, for example, the function <code><a href="../reference/league_heatmap.html">?league_heatmap</a></code> that creates the league table with the effect sizes of all possible comparisons in the network.</p>
+<p>In the argument <code>mean_misspar = c(0, 0)</code>, the first and second element of the vector refers to the mean log IMOR in the non-reference interventions and the reference intervention of the network, respectively – the latter is always the intervention with identifier equal to 1. Hence, for all non-reference interventions we can consider <strong>the same</strong> mean log IMOR. See ‘Details’ in <code><a href="../reference/missingness_param_prior.html">?missingness_param_prior</a></code></p>
+</div>
+<div id="the-output" class="section level3">
+<h3 class="hasAnchor">
+<a href="#the-output" class="anchor"></a>The output</h3>
+<p><code>run_model</code> returns <strong>a list of R2jags output</strong> on the summaries of the posterior distribution, and the Gelman-Rubin convergence diagnostic of the monitored parameters (see ‘Value’ in <code><a href="../reference/run_model.html">?run_model</a></code>). The output is used as an S3 object by other functions of the package to be processed further and provide an end-user-ready output. See, for example, the function <code><a href="../reference/league_heatmap.html">?league_heatmap</a></code> that creates the league table with the effect sizes of all possible comparisons in the network.</p>
+<p>For instance, the output below presents the posterior distribution of the log odds ratio of comparisons with placebo, the reference intervention of the network.</p>
+<pre><code>                 mean        sd       2.5%        25%         50%         75%
+EM.ref[2] -0.97105577 0.4919084 -1.8663934 -1.3144442 -0.99043582 -0.64466813
+EM.ref[3] -0.72713646 0.4608000 -1.6003024 -1.0369959 -0.73801646 -0.42146300
+EM.ref[4] -0.26600375 0.2987762 -0.8336294 -0.4765560 -0.26597957 -0.06595052
+EM.ref[5] -0.45136808 0.2907178 -1.0048823 -0.6531007 -0.45370240 -0.25593954
+EM.ref[6] -0.09859253 0.2705047 -0.6458478 -0.2776769 -0.09199479  0.08276160
+EM.ref[7] -0.47676225 0.1770459 -0.8280365 -0.5937053 -0.47562701 -0.35921253
+EM.ref[8] -0.53260639 0.1569225 -0.8549934 -0.6341342 -0.52751130 -0.42746300
+                97.5%     Rhat n.eff
+EM.ref[2]  0.04274451 1.006226   380
+EM.ref[3]  0.19765163 1.008097   300
+EM.ref[4]  0.31897277 1.006871   340
+EM.ref[5]  0.12807422 1.001913  3100
+EM.ref[6]  0.42466019 1.012325   220
+EM.ref[7] -0.12760147 1.004491   570
+EM.ref[8] -0.23298889 1.011101   200</code></pre>
+</div>
+<div id="no-or-partially-extracted-missing-participant-outcome-data" class="section level3">
+<h3 class="hasAnchor">
+<a href="#no-or-partially-extracted-missing-participant-outcome-data" class="anchor"></a>No or partially extracted missing participant outcome data</h3>
+<p><code>run_model</code> can also handle a dataset where MOD have not be extracted or MOD have been extracted for some trials or trial-arms. For illustrative purposes, we removed the item <code>m</code> from <code>nma.baker2009</code> to indicate that MOD were not extracted for this outcome:</p>
+<pre><code>                   study t1 t2 t3 t4  r1  r2 r3 r4  n1  n2  n3  n4
+1  Llewellyn-Jones, 1996  1  4 NA NA   3   0 NA NA   8   8  NA  NA
+2         Paggiaro, 1998  1  4 NA NA  51  45 NA NA 139 142  NA  NA
+3           Mahler, 1999  1  7 NA NA  47  28 NA NA 143 135  NA  NA
+4         Casaburi, 2000  1  8 NA NA  41  45 NA NA 191 279  NA  NA
+5        van Noord, 2000  1  7 NA NA  18  11 NA NA  50  47  NA  NA
+6          Rennard, 2001  1  7 NA NA  41  38 NA NA 135 132  NA  NA
+7         Casaburi, 2002  1  8 NA NA 156 198 NA NA 371 550  NA  NA
+8          Chapman, 2002  1  7 NA NA  68  52 NA NA 207 201  NA  NA
+9          Donohue, 2002  1  7  8 NA  92  82 77 NA 201 213 209  NA
+10          Mahler, 2002  1  4  7  5  79  77 63 68 181 168 160 165
+11           Rossi, 2002  1  6 NA NA  75 117 NA NA 220 425  NA  NA
+12         Hanania, 2003  1  4  7  5  73  79 65 71 185 183 177 178
+13      Szafranski, 2003  1  2  6  3  53  26 38 35 205 198 201 208
+14          Briggs, 2005  8  7 NA NA  30  36 NA NA 328 325  NA  NA
+15        Campbell, 2005  1  6 NA NA  34  35 NA NA 217 215  NA  NA
+16      Niewoehner, 2005  1  8 NA NA 296 255 NA NA 915 914  NA  NA
+17       van Noord, 2005  8  6 NA NA   4  14 NA NA  70  69  NA  NA
+18          Barnes, 2006  1  5 NA NA  24  11 NA NA  73  67  NA  NA
+19       O’Donnell, 2006  1  7  5 NA   6   1  2 NA  64  59  62  NA
+20     Baumgartner, 2007  1  7 NA NA  24  20 NA NA 143 144  NA  NA
+21         Freeman, 2007  1  8 NA NA  35  19 NA NA 195 200  NA  NA</code></pre>
+<p>Using the minimum required arguments, <code>run_model</code> will run and provide results. For instance, for the log odds ratio of comparisons with placebo:</p>
+<pre><code>#&gt; Missing participant outcome data have *not* been collected</code></pre>
+<pre><code>                 mean         sd       2.5%        25%         50%         75%
+EM.ref[2] -0.71776976 0.29648222 -1.3131628 -0.9129785 -0.71265507 -0.51507442
+EM.ref[3] -0.42531203 0.26498565 -0.9541688 -0.5983463 -0.42239623 -0.24974435
+EM.ref[4] -0.07233064 0.14682922 -0.3714553 -0.1660160 -0.07072584  0.02640845
+EM.ref[5] -0.26196150 0.15262397 -0.5757662 -0.3606422 -0.25875946 -0.15872144
+EM.ref[6] -0.15323841 0.15286621 -0.4456488 -0.2569885 -0.15564728 -0.05213035
+EM.ref[7] -0.31423167 0.09646051 -0.5068981 -0.3778013 -0.31280247 -0.24967099
+EM.ref[8] -0.37487097 0.10221873 -0.5956541 -0.4373341 -0.36947803 -0.30617043
+                97.5%     Rhat n.eff
+EM.ref[2] -0.15092620 1.000963 27000
+EM.ref[3]  0.08483121 1.002146  1700
+EM.ref[4]  0.20704800 1.001711  2600
+EM.ref[5]  0.02744352 1.002696  1100
+EM.ref[6]  0.15177423 1.003113   920
+EM.ref[7] -0.12776578 1.001990  1900
+EM.ref[8] -0.18895468 1.001440  5900</code></pre>
+<p><code>run_model</code> calls the <code>data_preparation</code> function. The latter creates a pseudo-data-frame for the item <code>m</code> (see ‘Value’ in <code><a href="../reference/data_preparation.html">?data_preparation</a></code>) that assigns <code>NA</code> to all trial-arms. <code>data_preparation</code> also creates the pseudo-data-frame <code>I</code> that has the same dimension with the other items in the dataset, and assigns the zero value to all trial-arms to indicate that no MOD have been extracted. Both pseudo-data-frames aim to retain in the dataset the trials without information on MOD; otherwise, these trials would have been excluded from the analysis. See ‘Details’ in <code><a href="../reference/data_preparation.html">?data_preparation</a></code> and <code><a href="../reference/run_model.html">?run_model</a></code>.</p>
 </div>
 </div>
 <div id="references" class="section level2">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
+<p>Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision making 2: a generalized linear modeling framework for pairwise and network meta-analysis of randomized controlled trials. <em>Med Decis Making</em> 2013;<strong>33</strong>(5):607–617. <a href="https://pubmed.ncbi.nlm.nih.gov/23104435/">doi: 10.1177/0272989X12458724</a></p>
 <p>White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data in meta-analysis–part 1: two-stage methods. <em>Stat Med</em> 2008;<strong>27</strong>(5):711–27. <a href="https://pubmed.ncbi.nlm.nih.gov/17703496/">doi: 10.1002/sim.3008</a></p>
 <p>Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account for uncertainty due to missing binary outcome data in pairwise meta-analysis. <em>Stat Med</em> 2015a;<strong>34</strong>(12):2062–80. <a href="https://pubmed.ncbi.nlm.nih.gov/25809313/">doi: 10.1002/sim.6475</a></p>
 <p>Spineli LM. An empirical comparison of Bayesian modelling strategies for missing binary outcome data in network meta- analysis. <em>BMC Med Res Methodol</em> 2019;<strong>19</strong>(1):86. <a href="https://pubmed.ncbi.nlm.nih.gov/31018836/">doi: 10.1186/s12874-019-0731-y</a></p>

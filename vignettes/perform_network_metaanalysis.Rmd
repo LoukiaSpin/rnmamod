@@ -29,9 +29,9 @@ library(rnmamod)
 ## Introduction
 
 This vignette illustrates how to perform a one-stage Bayesian random-effects 
-network meta-analysis using the `run_model` function. The function includes 
-arguments to handle aggregate missing participant outcome data (MOD) in each arm
-of every trial via the pattern-mixture model.
+network meta-analysis with consistency equation using the `run_model` function. 
+This function includes arguments to handle aggregate missing participant outcome 
+data (MOD) in each arm of every trial via the pattern-mixture model.
  
 ## Example on a binary outcome 
 
@@ -40,7 +40,7 @@ pulmonary disease (COPD) from the systematic review of
 [Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/). This network 
 comprises 21 trials comparing seven pharmacological interventions with each 
 other and placebo. The exacerbation of COPD (harmful outcome) is the analysed 
-binary outcome.
+binary outcome (see `?nma.baker2009`).
 
 ```{r, echo = FALSE, results = "hide", fig.width = 5, fig.height = 5, fig.align = "center"}
 netplot(data = nma.baker2009, drug_names = c("placebo", "budesonide", "budesonide plus \n formoterol", "fluticasone", "fluticasone plus \n salmeterol", "formoterol", "salmeterol", "tiotropium"),
@@ -53,10 +53,10 @@ netplot(data = nma.baker2009, drug_names = c("placebo", "budesonide", "budesonid
 
 `run_model` calls the `jags` function from the 
 [**R2jags**](https://CRAN.R-project.org/package=R2jags) package to perform the
-Bayesian analysis. Using only the minimum required arguments, the function 
-adjusts MOD under the missing-at-random assumption (by default) via the 
-informative missingness odds ratio (IMOR) in the logarithmic scale
-(White et al. (2008)):
+Bayesian analysis using the BUGS code of Dias and colleagues (2013). With only 
+the minimum required arguments, the function adjusts MOD under the
+missing-at-random assumption (MAR; by default) via the informative missingness 
+odds ratio (IMOR) in the logarithmic scale (White et al. (2008)):
 
 ```{r, results = "hide", message = FALSE}
 run_model(data = nma.baker2009,
@@ -71,7 +71,7 @@ run_model(data = nma.baker2009,
 
 The minimum required arguments of `run_model` include specifying:
 
-- the dataset (a data-frame one-trial-per-row format) in `data` (see
+- the dataset (a data-frame with one-trial-per-row format) in `data` (see
 `?data_preparation`);
 - the effect measure in `measure` (see 'Arguments' in `?run_model`):
 - the prior distribution for the heterogeneity parameter in `heter_prior` (see
@@ -110,6 +110,9 @@ run_model(data = nma.baker2009,
           n_thin = 1)
 ```
 
+The argument `model = "RE"` refers to the random-effects model. For the 
+fixed-effect model, use `model = "FE"`.
+
 `heter_prior = list("lognormal", -2.06, 0.438)` refers to ‘symptoms reflecting 
 the continuation of condition’ for the ‘pharmacological versus placebo’ 
 comparison-type as elicited by Turner and colleagues (2015b). 
@@ -118,7 +121,10 @@ In the argument `mean_misspar = c(0, 0)`, the first and second element of the
 vector refers to the mean log IMOR in the non-reference interventions and the
 reference intervention of the network, respectively -- the latter is always the 
 intervention with identifier equal to 1. Hence, for all non-reference 
-interventions we can consider **the same** mean log IMOR.
+interventions we can consider **the same** mean log IMOR. See 'Details' in 
+`?missingness_param_prior`
+
+### The output 
 
 `run_model` returns **a list of R2jags output** on the summaries of the 
 posterior distribution, and the Gelman-Rubin convergence diagnostic of the 
@@ -128,7 +134,79 @@ end-user-ready output. See, for example, the function `?league_heatmap` that
 creates the league table with the effect sizes of all possible comparisons in 
 the network.
 
+For instance, the output below presents the posterior distribution of the log 
+odds ratio of comparisons with placebo, the reference intervention of the 
+network.
+
+```{r, echo = FALSE, results = "hide"}
+res <- run_model(data = nma.baker2009,
+                 measure = "OR",
+                 model = "RE",
+                 assumption = "HIE-ARM",
+                 heter_prior = list("lognormal", -2.06, 0.438),
+                 mean_misspar = c(0, 0),
+                 var_misspar = 1,
+                 D = 0,
+                 n_chains = 3,
+                 n_iter = 10000,
+                 n_burnin = 1000,
+                 n_thin = 1)
+```
+
+```{r set-options, echo = FALSE, results = "show", comment = NA}
+options(width = 1000)
+res$EM_ref
+```
+
+### No or partially extracted missing participant outcome data
+
+`run_model` can also handle a dataset where MOD have not be extracted or MOD 
+have been extracted for some trials or trial-arms. For illustrative purposes, we
+removed the item `m` from `nma.baker2009` to indicate that MOD were not 
+extracted for this outcome:
+
+```{r, echo = FALSE, comment = NA}
+(data_new <- nma.baker2009[, c(-10, -11, -12, -13)])
+```
+
+Using the minimum required arguments, `run_model` will run and provide results. 
+For instance, for the log odds ratio of comparisons with placebo: 
+
+```{r, echo = FALSE, results = "hide"}
+res1 <- run_model(data = data_new,
+                  measure = "OR",
+                  model = "RE",
+                  assumption = "HIE-ARM",
+                  heter_prior = list("lognormal", -2.06, 0.438),
+                  mean_misspar = c(0, 0),
+                  var_misspar = 1,
+                  D = 0,
+                  n_chains = 3,
+                  n_iter = 10000,
+                  n_burnin = 1000,
+                  n_thin = 1)
+```
+
+```{r, echo = FALSE, results = "show", comment = NA}
+res1$EM_ref
+```
+
+`run_model` calls the `data_preparation` function. The latter creates a 
+pseudo-data-frame for the item `m` (see 'Value' in `?data_preparation`) that 
+assigns `NA` to all trial-arms. `data_preparation` also creates the 
+pseudo-data-frame `I` that has the same dimension with the other items in the 
+dataset, and assigns the zero value to all trial-arms to indicate that no MOD 
+have been extracted. Both pseudo-data-frames aim to retain in the dataset the 
+trials without information on MOD; otherwise, these trials would have been 
+excluded from the analysis. See 'Details' in `?data_preparation` and 
+`?run_model`.
+
 ## References
+
+Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision making 2:
+a generalized linear modeling framework for pairwise and network meta-analysis 
+of randomized controlled trials. *Med Decis Making* 2013;**33**(5):607--617. 
+[doi: 10.1177/0272989X12458724](https://pubmed.ncbi.nlm.nih.gov/23104435/)
 
 White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data in 
 meta-analysis--part 1: two-stage methods. *Stat Med* 2008;**27**(5):711--27.
