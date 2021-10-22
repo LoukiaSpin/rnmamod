@@ -140,8 +140,9 @@ network.
 
 ```{r set-options, echo = FALSE, comment = NA}
 options(width = 1000)
-load("./output_data/baker_ln_results.RData")
-res$EM_ref
+load("./output_data/em_ref_baker_ln.Rdata")
+em_ref_baker_ln
+
 ```
 
 ### No or partially extracted missing participant outcome data
