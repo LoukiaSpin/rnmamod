@@ -38,12 +38,36 @@ pulmonary disease (COPD) from the systematic review of [Baker et al. (2009)]
 (https://pubmed.ncbi.nlm.nih.gov/19637942/). 
 
 This network comprises 21 trials comparing seven pharmacologic interventions 
-with each other and placebo. Theexacerbation of COPD (harmful outcome) is the 
+with each other and placebo. The exacerbation of COPD (harmful outcome) is the 
 analysed binary outcome.
 
 ```{r, echo = FALSE, results = "hide", fig.width = 5, fig.height = 5, fig.align = "center"}
-netplot(data = nma.baker2009, drug_names = c("placebo", "budesonide \n", "budesonide plus \n formoterol \n", "fluticasone \n", "fluticasone plus \n salmeterol \n", "formoterol", "salmeterol \n", "tiotropium \n"),
+netplot(data = nma.baker2009, drug_names = c("placebo", "budesonide", "budesonide plus \n formoterol", "fluticasone", "fluticasone plus \n salmeterol", "formoterol", "salmeterol", "tiotropium"),
         adjust.figsizex = 1.35, adjust.figsizey = 1.15)
 ```
 
 
+The minimum required arguments of `run_model` include specifying:
+
+- the dataset (a data-frame one-trial-per-row format) in `data` (see
+`?data.preparation`);
+- the effect measure in `measure` (see 'Arguments' in `?run_model`):
+- the prior distribution for the heterogeneity parameter in `heter_prior` (see
+`?heterogeneity_param_prior`);
+- the direction of the outcome in `D` (here, `D=0` because the outcome is 
+harmful; see, 'Arguments' in `?run_model`)
+- the number of chains in `n_chains` (see 'Arguments' in `?run_model`);
+- the number of iterations in `n_iter`;
+- the number of burn-in in `n_burnin`, and 
+- the thinning in `n_thin`.
+
+```{r, results = "hide", message = FALSE}
+run_model(data = nma.baker2009,
+          measure = "OR",
+          heter_prior = list("halfnormal", 0, 1),
+          D = 0,
+          n_chains = 3,
+          n_iter = 10000,
+          n_burnin = 1000,
+          n_thin = 1)
+```

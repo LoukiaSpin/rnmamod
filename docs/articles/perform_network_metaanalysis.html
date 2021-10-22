@@ -96,8 +96,29 @@
 <h2 class="hasAnchor">
 <a href="#example-on-a-binary-outcome" class="anchor"></a>Example on a binary outcome</h2>
 <p>We will use the network on pharmacologic interventions for chronic obstructive pulmonary disease (COPD) from the systematic review of [Baker et al. (2009)] (<a href="https://pubmed.ncbi.nlm.nih.gov/19637942/" class="uri">https://pubmed.ncbi.nlm.nih.gov/19637942/</a>).</p>
-<p>This network comprises 21 trials comparing seven pharmacologic interventions with each other and placebo. Theexacerbation of COPD (harmful outcome) is the analysed binary outcome.</p>
+<p>This network comprises 21 trials comparing seven pharmacologic interventions with each other and placebo. The exacerbation of COPD (harmful outcome) is the analysed binary outcome.</p>
 <p><img src="perform_network_metaanalysis_files/figure-html/unnamed-chunk-2-1.png" width="480" style="display: block; margin: auto;"></p>
+<p>The minimum required arguments of <code>run_model</code> include specifying:</p>
+<ul>
+<li>the dataset (a data-frame one-trial-per-row format) in <code>data</code> (see <code>?data.preparation</code>);</li>
+<li>the effect measure in <code>measure</code> (see ‘Arguments’ in <code><a href="../reference/run_model.html">?run_model</a></code>):</li>
+<li>the prior distribution for the heterogeneity parameter in <code>heter_prior</code> (see <code><a href="../reference/heterogeneity_param_prior.html">?heterogeneity_param_prior</a></code>);</li>
+<li>the direction of the outcome in <code>D</code> (here, <code>D=0</code> because the outcome is harmful; see, ‘Arguments’ in <code><a href="../reference/run_model.html">?run_model</a></code>)</li>
+<li>the number of chains in <code>n_chains</code> (see ‘Arguments’ in <code><a href="../reference/run_model.html">?run_model</a></code>);</li>
+<li>the number of iterations in <code>n_iter</code>;</li>
+<li>the number of burn-in in <code>n_burnin</code>, and</li>
+<li>the thinning in <code>n_thin</code>.</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/run_model.html">run_model</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.baker2009</span>,
+          measure <span class="op">=</span> <span class="st">"OR"</span>,
+          heter_prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"halfnormal"</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,
+          D <span class="op">=</span> <span class="fl">0</span>,
+          n_chains <span class="op">=</span> <span class="fl">3</span>,
+          n_iter <span class="op">=</span> <span class="fl">10000</span>,
+          n_burnin <span class="op">=</span> <span class="fl">1000</span>,
+          n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<span class="co">#&gt; module glm loaded</span></code></pre></div>
 </div>
   </div>
 
