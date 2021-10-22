@@ -39,13 +39,13 @@ proportion of MOD across the network and within the dataset.
 ### Dataset preparation
 
 We will use the systematic review of 
-[Baker et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19637942/) that comprises 
-21 trials comparing seven pharmacological interventions with each other and 
-placebo in patients with chronic obstructive pulmonary disease (COPD). The 
-exacerbation of COPD (harmful outcome) is the analysed *binary* outcome. 
+[Bottomley et al. (2011)](https://pubmed.ncbi.nlm.nih.gov/21142838/) that 
+comprises 9 trials comparing six pharmacologic interventions with each other and
+placebo for moderately severe scalp psoriasis. The analysed binary outcome is 
+the investigator's global assessment response at 4 weeks 
 
 ```{r comment = NA}
-nma.baker2009
+nma.bottomley2011
 ```
 
 The dataset has the one-trial-per-row format containing arm-level data for each 
@@ -80,29 +80,43 @@ network plot, `netplot` calls the `nma.networkplot` function from the
 **pcnetmeta** package.
 
 ```{r, results = "hide", fig.show = "hide"}
-netplot(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+netplot(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"))
 ```
 
 ```{r, echo = FALSE, results = "hide", fig.width = 5, fig.height = 5, fig.align = "center"}
-netplot(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+netplot(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"))
 ```
 
-The intervention names in `drug_names` must be sorted in the ascending order of their identifier. Hence, `1` in the element `t` refers to `PBO` (placebo), `2` to `BUD` (budesonide), `3` to `BUD+` (budesonide plus formoterol) and so on. See 'Details' in `?nma.baker2009` for the names of the interventions.\cr
+The intervention names in `drug_names` must be sorted in the ascending order of 
+their identifier. Hence, `1` in the element `t` refers to `BDP`, 
+(betamethasone dipropionate) `2` to `BMV` (betamethasone valerate), `3` to `CPL`
+(calcipotriol) and so on. See 'Details' in `?nma.bottomley20119` for the names 
+of the interventions.\cr
 
-Each node refers to an intervention and each edge refers to a pairwise comparison. The size of a node and the thickness of an edge are weighted by the number of trials that investigated the corresponding intervention and pairwise comparison, respectively.  
+Each node refers to an intervention and each edge refers to a pairwise 
+comparison. The size of a node and the thickness of an edge are weighted by the 
+number of trials that investigated the corresponding intervention and pairwise 
+comparison, respectively.  
 
 ### Network characteristics
 
-`netplot` also produces a table with the characteristics of the network, such as the number of interventions, number of possible comparisons, number of direct comparisons (i.e., comparisons of interventions informed by at least one trial), and so on:
+`netplot` also produces a table with the characteristics of the network, such as
+the number of interventions, number of possible comparisons, number of direct 
+comparisons (i.e., comparisons of interventions informed by at least one trial),
+and so on:
 
 ```{r, echo = FALSE, fig.show = "hide"}
-net <- netplot(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+net <- netplot(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"))
 net$network_description
 ```
 
 ### Distribution of the outcome
 
-Furthermore, `netplot` returns a table that summarises the number of trials, number of randomised participants and the proportion of completers (participants who completed the trial) **per intervention**. In the case of a binary outcome, the table additionally illustrates the distribution of the outcome as proportion across the corresponding trials: 
+Furthermore, `netplot` returns a table that summarises the number of trials, 
+number of randomised participants and the proportion of completers (participants
+who completed the trial) **per intervention**. In the case of a binary outcome, 
+the table additionally illustrates the distribution of the outcome as proportion
+across the corresponding trials: 
 
 ```{r, echo = FALSE, fig.show = "hide"}
 net$table_interventions
@@ -114,37 +128,60 @@ An identical table is returned for the **observed comparisons** in the network:
 net$table_comparisons
 ```
 
-The users can export all tables in Excel 'xlsx' format at the working directory of their project by adding the argument `save_xls = TRUE` in the `netplot` function.
+The users can export all tables in Excel 'xlsx' format at the working directory 
+of their project by adding the argument `save_xls = TRUE` in the `netplot` 
+function.
 
 ### Distribution of missing participants across the network
 
-When missing participants have been reported for *each arm of every* trial, we use the `heatmap_missing_network` function to illustrate the distribution of the proportion of missing participants **per intervention** (main diagonal) and **observed comparison** (lower off-diagonal) in the network (see 'Details' in `?heatmap_missing_network`). 
+When missing participants have been reported for *each arm of every* trial, we 
+use the `heatmap_missing_network` function to illustrate the distribution of the
+proportion of missing participants **per intervention** (main diagonal) and 
+**observed comparison** (lower off-diagonal) in the network (see 'Details' in 
+`?heatmap_missing_network`). 
 
 ```{r, results = "hide", fig.show = "hide"}
-heatmap_missing_network(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+heatmap_missing_network(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"))
 ```
 
 ```{r, echo = FALSE, results = "hide", fig.width = 7, fig.height = 7, fig.align = "center"}
-heatmap_missing_network(data = nma.baker2009, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+heatmap_missing_network(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"))
 ```
 
-The <span style="color:#009E73">**green**</span> colour implies a median proportion of missing participant up to 5\%, and hence, a <span style="color:#009E73">**low risk**</span> associated with the missing participants. The <span style="color:#D55E00">**red**</span> colour implies a median proportion of missing participant over 20\%, and hence, a <span style="color:#D55E00">**high risk**</span> associated with the missing participants; otherwise, <span style="color:orange">**orange**</span> indicates a <span style="color:orange">**moderate risk**</span>.\cr
+The <span style="color:#009E73">**green**</span> colour implies a median 
+proportion of missing participant up to 5\%, and hence, a 
+<span style="color:#009E73">**low risk**</span> associated with the missing 
+participants. The <span style="color:#D55E00">**red**</span> colour implies a 
+median proportion of missing participant over 20\%, and hence, a 
+<span style="color:#D55E00">**high risk**</span> associated with the missing 
+participants; otherwise, <span style="color:orange">**orange**</span> indicates 
+a <span style="color:orange">**moderate risk**</span>.\cr
 
-In the example, most of the interventions and observed comparisons were associated with *moderate or high* risk due the participant losses, *except for* the unique trial that investigated *formoterol versus tiotropium*.
+In the example, most of the interventions and observed comparisons were 
+associated with a *low* risk due the participant losses.
 
 ### Distribution of missing participants across the trials
 
-Use the `heatmap_missing_dataset` function To illustrate the proportion of missing participants in each arm of every trial in the dataset :
+Use the `heatmap_missing_dataset` function To illustrate the proportion of 
+missing participants in each arm of every trial in the dataset :
 
 ```{r, results = "hide", fig.show = "hide"}
-heatmap_missing_dataset(data = nma.baker2009, trial_names = nma.baker2009$study, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+heatmap_missing_dataset(data = nma.bottomley2011, trial_names = nma.bottomley2011$study, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"))
 ```
 
-```{r, echo = FALSE, results = "hide", fig.width = 7, fig.height = 7, fig.align = "center"}
-heatmap_missing_dataset(data = nma.baker2009, trial_names = nma.baker2009$study, drug_names = c("PBO", "BUD", "BUD+", "FLU", "FLU+", "FOR", "SAL", "TIO"))
+```{r, echo = FALSE, results = "hide", fig.width = 7.5, fig.height = 7, fig.align = "center"}
+heatmap_missing_dataset(data = nma.bottomley2011, trial_names = nma.bottomley2011$study, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"))
 ```
 
 ## References
 
-Lifeng Lin, Jing Zhang, James S. Hodges, Haitao Chu. Performing Arm-Based Network Meta-Analysis in R
-with the pcnetmeta Package. \emph{J Stat Softw} 2017;\bold{80}(5): 1--25. [doi: 10.18637/jss.v080.i05](https://www.jstatsoft.org/article/view/v080i05)
+Bottomley JM, Taylor RS, Ryttov J. The effectiveness of two-compound formulation
+calcipotriol and betamethasone dipropionate gel in the treatment of moderately 
+severe scalp psoriasis: a systematic review of direct and indirect evidence. 
+\emph{Curr Med Res Opin} 2011;\bold{27}(1):251--268. 
+[doi: 10.1185/03007995.2010.541022](https://pubmed.ncbi.nlm.nih.gov/21142838/)
+
+Lifeng Lin, Jing Zhang, James S. Hodges, Haitao Chu. Performing Arm-Based 
+Network Meta-Analysis in R with the pcnetmeta Package. \emph{J Stat Softw} 2017;
+\bold{80}(5): 1--25. 
+[doi: 10.18637/jss.v080.i05](https://www.jstatsoft.org/article/view/v080i05)
