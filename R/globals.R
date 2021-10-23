@@ -66,3 +66,4 @@ utils::globalVariables(c("active",
 Sys.setenv(`_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_` = "false")
 Sys.setenv(JAGS_HOME = "C:/Program Files/JAGS/JAGS-4.2.0")
 Sys.setenv(JAGS_ROOT = "C:/Program Files/JAGS/JAGS-4.2.0")
+
