@@ -81,7 +81,7 @@
       <h1 data-toc-skip>Perform network meta-analysis</h1>
                         <h4 class="author">Loukia M. Spineli</h4>
             
-            <h4 class="date">Latest version: 2021-10-22</h4>
+            <h4 class="date">Latest version: 2021-11-01</h4>
       
       
       <div class="hidden name"><code>perform_network_metaanalysis.Rmd</code></div>
@@ -104,10 +104,10 @@
 <div id="perform-bayesian-random-effects-network-meta-analysis" class="section level2">
 <h2 class="hasAnchor">
 <a href="#perform-bayesian-random-effects-network-meta-analysis" class="anchor"></a>Perform Bayesian random-effects network meta-analysis</h2>
-<div id="using-the-minimum-required-arguments" class="section level3">
+<div id="run-the-model" class="section level3">
 <h3 class="hasAnchor">
-<a href="#using-the-minimum-required-arguments" class="anchor"></a>Using the minimum required arguments</h3>
-<p><code>run_model</code> calls the <code>jags</code> function from the <a href="https://CRAN.R-project.org/package=R2jags"><strong>R2jags</strong></a> package to perform the Bayesian analysis using the BUGS code of Dias and colleagues (2013). With only the minimum required arguments, the function adjusts MOD under the missing-at-random assumption (MAR; by default) via the informative missingness odds ratio (IMOR) in the logarithmic scale (White et al. (2008)):</p>
+<a href="#run-the-model" class="anchor"></a>Run the model</h3>
+<p><code>run_model</code> calls the <code>jags</code> function from the <a href="https://CRAN.R-project.org/package=R2jags"><strong>R2jags</strong></a> package to perform the Bayesian analysis using the BUGS code of Dias and colleagues (2013).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/run_model.html">run_model</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.baker2009</span>,
           measure <span class="op">=</span> <span class="st">"OR"</span>,
@@ -117,7 +117,7 @@
           n_iter <span class="op">=</span> <span class="fl">10000</span>,
           n_burnin <span class="op">=</span> <span class="fl">1000</span>,
           n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
-<p>The minimum required arguments of <code>run_model</code> include specifying:</p>
+<p>With only the minimum required arguments, the function adjusts MOD under the missing-at-random assumption (MAR; by default) via the informative missingness odds ratio (IMOR) in the logarithmic scale (White et al. (2008)): The minimum required arguments of <code>run_model</code> include specifying:</p>
 <ul>
 <li>the dataset (a data-frame with one-trial-per-row format) in <code>data</code> (see <code><a href="../reference/data_preparation.html">?data_preparation</a></code>);</li>
 <li>the effect measure in <code>measure</code> (see ‘Arguments’ in <code><a href="../reference/run_model.html">?run_model</a></code>):</li>
@@ -154,51 +154,19 @@
 <h3 class="hasAnchor">
 <a href="#the-output" class="anchor"></a>The output</h3>
 <p><code>run_model</code> returns <strong>a list of R2jags output</strong> on the summaries of the posterior distribution, and the Gelman-Rubin convergence diagnostic of the monitored parameters (see ‘Value’ in <code><a href="../reference/run_model.html">?run_model</a></code>). The output is used as an S3 object by other functions of the package to be processed further and provide an end-user-ready output. See, for example, the function <code><a href="../reference/league_heatmap.html">?league_heatmap</a></code> that creates the league table with the effect sizes of all possible comparisons in the network.</p>
-<p>For instance, the output below presents the posterior distribution of the log odds ratio of comparisons with placebo, the reference intervention of the network.</p>
-<pre><code>                mean        sd       2.5%        25%        50%        75%         97.5%     Rhat n.eff
-EM.ref[2] -1.0135605 0.5158865 -2.0181983 -1.3613121 -1.0153426 -0.6652565 -0.0004322233 1.026631    82
-EM.ref[3] -0.7399978 0.4940694 -1.6678087 -1.0859824 -0.7456329 -0.4064875  0.2441385109 1.008615   350
-EM.ref[4] -0.3054729 0.2991304 -0.8586807 -0.5200100 -0.3156166 -0.1013371  0.2981857565 1.024879    86
-EM.ref[5] -0.4583383 0.3054830 -1.0569655 -0.6667384 -0.4548602 -0.2502635  0.1392162992 1.005794   410
-EM.ref[6] -0.1151235 0.2879957 -0.6992939 -0.3027628 -0.1138745  0.0800187  0.4402731446 1.015480   160
-EM.ref[7] -0.4876014 0.1876068 -0.8625496 -0.6130174 -0.4868090 -0.3592050 -0.1246390602 1.003764  1400
-EM.ref[8] -0.5509855 0.1698570 -0.8955905 -0.6619008 -0.5495011 -0.4356700 -0.2311146571 1.020389   110</code></pre>
 </div>
 <div id="no-or-partially-extracted-missing-participant-outcome-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#no-or-partially-extracted-missing-participant-outcome-data" class="anchor"></a>No or partially extracted missing participant outcome data</h3>
 <p><code>run_model</code> can also handle a dataset where MOD have not be extracted or MOD have been extracted for some trials or trial-arms. For illustrative purposes, we removed the item <code>m</code> from <code>nma.baker2009</code> to indicate that MOD were not extracted for this outcome:</p>
-<pre><code>                   study t1 t2 t3 t4  r1  r2 r3 r4  n1  n2  n3  n4
-1  Llewellyn-Jones, 1996  1  4 NA NA   3   0 NA NA   8   8  NA  NA
-2         Paggiaro, 1998  1  4 NA NA  51  45 NA NA 139 142  NA  NA
-3           Mahler, 1999  1  7 NA NA  47  28 NA NA 143 135  NA  NA
-4         Casaburi, 2000  1  8 NA NA  41  45 NA NA 191 279  NA  NA
-5        van Noord, 2000  1  7 NA NA  18  11 NA NA  50  47  NA  NA
-6          Rennard, 2001  1  7 NA NA  41  38 NA NA 135 132  NA  NA
-7         Casaburi, 2002  1  8 NA NA 156 198 NA NA 371 550  NA  NA
-8          Chapman, 2002  1  7 NA NA  68  52 NA NA 207 201  NA  NA
-9          Donohue, 2002  1  7  8 NA  92  82 77 NA 201 213 209  NA
-10          Mahler, 2002  1  4  7  5  79  77 63 68 181 168 160 165
-11           Rossi, 2002  1  6 NA NA  75 117 NA NA 220 425  NA  NA
-12         Hanania, 2003  1  4  7  5  73  79 65 71 185 183 177 178
-13      Szafranski, 2003  1  2  6  3  53  26 38 35 205 198 201 208
-14          Briggs, 2005  8  7 NA NA  30  36 NA NA 328 325  NA  NA
-15        Campbell, 2005  1  6 NA NA  34  35 NA NA 217 215  NA  NA
-16      Niewoehner, 2005  1  8 NA NA 296 255 NA NA 915 914  NA  NA
-17       van Noord, 2005  8  6 NA NA   4  14 NA NA  70  69  NA  NA
-18          Barnes, 2006  1  5 NA NA  24  11 NA NA  73  67  NA  NA
-19       O’Donnell, 2006  1  7  5 NA   6   1  2 NA  64  59  62  NA
-20     Baumgartner, 2007  1  7 NA NA  24  20 NA NA 143 144  NA  NA
-21         Freeman, 2007  1  8 NA NA  35  19 NA NA 195 200  NA  NA</code></pre>
-<p>Using the minimum required arguments with <code>heter_prior = list("lognormal", -2.06, 0.438)</code>, <code>run_model</code> will run and provide results. For instance, for the log odds ratio of comparisons with placebo:</p>
-<pre><code>                 mean         sd       2.5%        25%        50%         75%       97.5%     Rhat n.eff
-EM.ref[2] -0.72920596 0.28686071 -1.3033803 -0.9141650 -0.7270219 -0.53734009 -0.17075628 1.004825   520
-EM.ref[3] -0.42768916 0.26458685 -0.9543692 -0.6015970 -0.4264438 -0.25276934  0.08716902 1.001865  2200
-EM.ref[4] -0.07704499 0.14578345 -0.3669056 -0.1710370 -0.0760908  0.01999531  0.20331443 1.006332   370
-EM.ref[5] -0.25077968 0.15316094 -0.5597808 -0.3483063 -0.2480374 -0.14916845  0.04000530 1.004139   630
-EM.ref[6] -0.14967387 0.15043785 -0.4388848 -0.2486304 -0.1519309 -0.05508650  0.15565688 1.002590  1200
-EM.ref[7] -0.31240149 0.09839246 -0.5083675 -0.3778892 -0.3109943 -0.24596647 -0.12406551 1.003544   770
-EM.ref[8] -0.37210063 0.09938740 -0.5790483 -0.4329195 -0.3672147 -0.30563542 -0.19028276 1.003890   680</code></pre>
+<pre><code>                  study t1 t2 t3 t4 r1 r2 r3 r4  n1  n2 n3 n4
+1 Llewellyn-Jones, 1996  1  4 NA NA  3  0 NA NA   8   8 NA NA
+2        Paggiaro, 1998  1  4 NA NA 51 45 NA NA 139 142 NA NA
+3          Mahler, 1999  1  7 NA NA 47 28 NA NA 143 135 NA NA
+4        Casaburi, 2000  1  8 NA NA 41 45 NA NA 191 279 NA NA
+5       van Noord, 2000  1  7 NA NA 18 11 NA NA  50  47 NA NA
+6         Rennard, 2001  1  7 NA NA 41 38 NA NA 135 132 NA NA</code></pre>
+<p>Using the minimum required arguments, <code>run_model</code> will run and provide results.</p>
 <p><code>run_model</code> calls the <code>data_preparation</code> function. The latter creates a pseudo-data-frame for the item <code>m</code> (see ‘Value’ in <code><a href="../reference/data_preparation.html">?data_preparation</a></code>) that assigns <code>NA</code> to all trial-arms. <code>data_preparation</code> also creates the pseudo-data-frame <code>I</code> that has the same dimension with the other items in the dataset, and assigns the zero value to all trial-arms to indicate that no MOD have been extracted. Both pseudo-data-frames aim to retain in the dataset the trials without information on MOD; otherwise, these trials would have been excluded from the analysis. See ‘Details’ in <code><a href="../reference/data_preparation.html">?data_preparation</a></code> and <code><a href="../reference/run_model.html">?run_model</a></code>.</p>
 </div>
 </div>
