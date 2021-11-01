@@ -35,7 +35,7 @@ uncorrelated, respectively.}
 \value{
 An R character vector object to be passed to \code{\link{run_model}}
   and \code{\link{run_metareg}}  through the
-  \code{\link[base]{textconnections}} function as the argument \code{object}.
+  \code{\link[base]{textConnection}} function as the argument \code{object}.
 }
 \description{
 The WinBUGS code, as written by Dias et al., (2013) to run a one-stage
@@ -48,7 +48,7 @@ The WinBUGS code, as written by Dias et al., (2013) to run a one-stage
 \code{prepare_model} creates the model in the JAGS dialect
   of the BUGS language. The output of this function constitutes the argument
   \code{model.file} of \code{\link[R2jags]{jags}} via the
-  \code{\link[base]{textconnections}} function.
+  \code{\link[base]{textConnection}} function.
 }
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
@@ -77,7 +77,7 @@ fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
 }
 \seealso{
 \code{\link[R2jags]{jags}}, \code{\link{run_metareg}},
-  \code{\link{run_model}}, \code{\link[base]{textconnections}}
+  \code{\link{run_model}}, \code{\link[base]{textConnection}}
 }
 \author{
 {Loukia M. Spineli}

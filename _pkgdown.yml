@@ -8,12 +8,27 @@ reference:
   - starts_with("prepare_")
 - title: End-user-ready visualisation
 - contents:
-  - ends_with("plot")
-  - starts_with("heatmap")
-  - starts_with("forestplot")
-  - starts_with("league_")
-  - starts_with("scatter")
+  - balloon_plot
+  - bland_altman_plot
+  - forestplot
+  - forestplot_metareg
+  - heatmap_missing_dataset
+  - heatmap_missing_network
+  - heatmap_robustness
   - intervalplot_panel_ume
+  - kld_barplot
+  - league_heatmap
+  - league_heatmap_pred
+  - leverage_plot
+  - metareg_plot
+  - netplot
+  - nodesplit_plot
+  - rankosucra_plot
+  - scatterplots_dev
+  - scatterplots_sucra
+  - series_meta_plot
+  - ume_plot
+  - unrelated_effects_plot
 - title: Datasets
 - contents:
   - starts_with("nma.")

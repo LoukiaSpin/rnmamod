@@ -31,11 +31,11 @@ of subnetworks.}
 }
 \value{
 An R character vector object to be passed to \code{\link{run_ume}}
-  through the \code{\link[base]{textconnections}} function as the argument
+  through the \code{\link[base]{textConnection}} function as the argument
   \code{object}.
 }
 \description{
-The WinBUGS code, as written by Dias et al. (2013) to run a
+The WinBUGS code, as written by Dias et al., (2013) to run a
   one-stage Bayesian unrelated mean effects model, extended to incorporate
   the pattern-mixture model for binary or continuous missing participant
   outcome data.
@@ -44,27 +44,27 @@ The WinBUGS code, as written by Dias et al. (2013) to run a
 This functions creates the model in the JAGS dialect of the BUGS
   language. The output of this function constitutes the argument
   \code{model.file} of \code{\link[R2jags]{jags}} via the
-  \code{\link[base]{textconnections}} function.
+  \code{\link[base]{textConnection}} function.
 }
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 data in network meta-analysis: a one-stage pattern-mixture model approach.
-\emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
+\emph{Stat Methods Med Res} 2021. \doi{10.1177/0962280220983544}
 
 Spineli LM. An empirical comparison of Bayesian modelling strategies for
 missing binary outcome data in network meta-analysis.
 \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-[\doi{10.1186/s12874-019-0731-y}]
+\doi{10.1186/s12874-019-0731-y}
 
 Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis
 for decision making 4: inconsistency in networks of evidence based on
 randomized controlled trials.
 \emph{Med Decis Making} 2013;\bold{33}(5):641--56.
-[\doi{10.1177/0272989X12455847}]
+\doi{10.1177/0272989X12455847}
 }
 \seealso{
-\code{\link{run_ume}}, \code{\link[base]{textconnections}},
-  \code{\link[R2jags]{jags}}
+\code{\link[R2jags]{jags}}, \code{\link{run_ume}},
+  \code{\link[base]{textConnection}}
 }
 \author{
 {Loukia M. Spineli}

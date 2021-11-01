@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="WinBUGS code for Bayesian pairwise or network meta-analysis — prepare_model" />
-<meta property="og:description" content="The WinBUGS code, as written by Dias et al. (2013) to run a one-stage
+<meta property="og:description" content="The WinBUGS code, as written by Dias et al., (2013) to run a one-stage
   Bayesian network meta-analysis, extended to incorporate the pattern-mixture
   model for binary or continuous missing participant outcome data. In the
   case of two interventions, the code boils down to a one-stage Bayesian
@@ -131,7 +131,7 @@
     </div>
 
     <div class="ref-description">
-    <p>The WinBUGS code, as written by Dias et al. (2013) to run a one-stage
+    <p>The WinBUGS code, as written by Dias et al., (2013) to run a one-stage
   Bayesian network meta-analysis, extended to incorporate the pattern-mixture
   model for binary or continuous missing participant outcome data. In the
   case of two interventions, the code boils down to a one-stage Bayesian
@@ -159,7 +159,7 @@ respectively. The default argument is <code>"RE"</code>.</p></td>
     <tr>
       <th>covar_assumption</th>
       <td><p>Character string indicating the structure of the
-intervention by covariate interaction, as described in
+intervention-by-covariate interaction, as described in
 Cooper et al., (2009). Set <code>covar_assumption</code> equal to one of the
 following: <code>"NO"</code>, when no meta-regression is performed; otherwise,
 <code>"exchangeable"</code>, <code>"independent"</code>, and <code>"common"</code>.</p></td>
@@ -182,43 +182,38 @@ uncorrelated, respectively.</p></td>
 
     <p>An R character vector object to be passed to <code><a href='run_model.html'>run_model</a></code>
   and <code><a href='run_metareg.html'>run_metareg</a></code>  through the
-  <code>textconnections</code> function as the argument <code>object</code>.</p>
+  <code><a href='https://rdrr.io/r/base/textconnections.html'>textConnection</a></code> function as the argument <code>object</code>.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>prepare_model</code> creates the model in the JAGS dialect
   of the BUGS language. The output of this function constitutes the argument
   <code>model.file</code> of <code><a href='https://rdrr.io/pkg/R2jags/man/jags.html'>jags</a></code> via the
-  <code>textconnections</code> function.</p>
+  <code><a href='https://rdrr.io/r/base/textconnections.html'>textConnection</a></code> function.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 data in network meta-analysis: a one-stage pattern-mixture model approach.
-<em>Stat Methods Med Res</em> 2021. [doi: <a href='https://doi.org/10.1177/0962280220983544'>10.1177/0962280220983544</a>
-]</p>
+<em>Stat Methods Med Res</em> 2021. doi: <a href='https://doi.org/10.1177/0962280220983544'>10.1177/0962280220983544</a></p>
 <p>Spineli LM. An empirical comparison of Bayesian modelling strategies for
 missing binary outcome data in network meta-analysis.
 <em>BMC Med Res Methodol</em> 2019;<b>19</b>(1):86.
-[doi: <a href='https://doi.org/10.1186/s12874-019-0731-y'>10.1186/s12874-019-0731-y</a>
-]</p>
+doi: <a href='https://doi.org/10.1186/s12874-019-0731-y'>10.1186/s12874-019-0731-y</a></p>
 <p>Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account
 for uncertainty due to missing binary outcome data in pairwise meta-analysis.
-<em>Stat Med</em> 2015;<b>34</b>(12):2062--2080. [doi: <a href='https://doi.org/10.1002/sim.6475'>10.1002/sim.6475</a>
-]</p>
+<em>Stat Med</em> 2015;<b>34</b>(12):2062--2080. doi: <a href='https://doi.org/10.1002/sim.6475'>10.1002/sim.6475</a></p>
 <p>Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
 making 2: a generalized linear modeling framework for pairwise and network
 meta-analysis of randomized controlled trials. <em>Med Decis Making</em>
-2013;<b>33</b>(5):607--617. [doi: <a href='https://doi.org/10.1177/0272989X12458724'>10.1177/0272989X12458724</a>
-]</p>
+2013;<b>33</b>(5):607--617. doi: <a href='https://doi.org/10.1177/0272989X12458724'>10.1177/0272989X12458724</a></p>
 <p>Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
 heterogeneity and inconsistency in mixed treatment comparisons: Application
 to stroke prevention treatments in individuals with non-rheumatic atrial
 fibrillation. <em>Stat Med</em> 2009;<b>28</b>(14):1861--81.
-[doi: <a href='https://doi.org/10.1002/sim.3594'>10.1002/sim.3594</a>
-]</p>
+doi: <a href='https://doi.org/10.1002/sim.3594'>10.1002/sim.3594</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>, <code><a href='run_metareg.html'>run_metareg</a></code>,
-  <code>textconnections</code>, <code><a href='https://rdrr.io/pkg/R2jags/man/jags.html'>jags</a></code></p></div>
+    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/R2jags/man/jags.html'>jags</a></code>, <code><a href='run_metareg.html'>run_metareg</a></code>,
+  <code><a href='run_model.html'>run_model</a></code>, <code><a href='https://rdrr.io/r/base/textconnections.html'>textConnection</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>

@@ -222,7 +222,7 @@ The default argument is 1.</p></td>
 </table>
 <p>Furthermore, <code>run_ume</code> returns a character vector with the pairwise
   comparisons observed in the network, <code>obs_comp</code>, and a character
-  vector with comparisons between non-baseline interventions observed in
+  vector with comparisons between the non-baseline interventions observed in
   multi-arm trials only, <code>frail_comp</code>. Both vectors are used in
   <code><a href='ume_plot.html'>ume_plot</a></code> function.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -232,7 +232,7 @@ The default argument is 1.</p></td>
   <code>mean_misspar</code>, and <code>var_misspar</code> from <code><a href='run_model.html'>run_model</a></code>.
   This prevents specifying a different Bayesian model from that considered in
   <code><a href='run_model.html'>run_model</a></code>.Therefore, the user needs first to apply
-  <code><a href='run_model.html'>run_model</a></code>, and then usen<code>run_ume</code> (see, 'Examples').</p>
+  <code><a href='run_model.html'>run_model</a></code>, and then usen<code>run_ume</code> (see 'Examples').</p>
 <p>Initially, <code>run_ume</code> calls the <code><a href='improved_ume.html'>improved_ume</a></code> function to
   identify the <em>frail comparisons</em>, that is, comparisons between
   non-baseline interventions in multi-arm trials not investigated in any
@@ -258,7 +258,7 @@ The default argument is 1.</p></td>
   object and processes it further to provide an end-user-ready output.</p>
 <p><code>run_ume</code> can be used only for a network of interventions. In the case
   of two interventions, the execution of the function will be stopped and an
-  error message will be printed in the R console.</p>
+  error message will be printed on the R console.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Spineli LM. A novel framework to evaluate the consistency assumption globally

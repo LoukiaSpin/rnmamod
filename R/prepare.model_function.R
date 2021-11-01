@@ -31,17 +31,17 @@
 #'
 #' @return An R character vector object to be passed to \code{\link{run_model}}
 #'   and \code{\link{run_metareg}}  through the
-#'   \code{\link[base]{textconnections}} function as the argument \code{object}.
+#'   \code{\link[base]{textConnection}} function as the argument \code{object}.
 #'
 #' @details \code{prepare_model} creates the model in the JAGS dialect
 #'   of the BUGS language. The output of this function constitutes the argument
 #'   \code{model.file} of \code{\link[R2jags]{jags}} via the
-#'   \code{\link[base]{textconnections}} function.
+#'   \code{\link[base]{textConnection}} function.
 #'
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link[R2jags]{jags}}, \code{\link{run_metareg}},
-#'   \code{\link{run_model}}, \code{\link[base]{textconnections}}
+#'   \code{\link{run_model}}, \code{\link[base]{textConnection}}
 #'
 #' @references
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
