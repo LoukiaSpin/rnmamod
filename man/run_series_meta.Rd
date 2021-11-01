@@ -36,8 +36,9 @@ An R2jags output on the summaries of the posterior distribution, and
   the Gelman-Rubin convergence diagnostic of the following monitored
   parameters:
   \tabular{ll}{
-   \code{EM} \tab The summary effect estimate of each pairwise comparison
-   with at least two trials observed in the network.\cr
+   \code{EM} \tab The summary effect estimate (according to the argument
+   \code{measure} defined in \code{\link{run_model}}) of each observed
+   pairwise comparison with at least two trials in the network.\cr
    \tab \cr
    \code{tau} \tab The between-trial standard deviation for pairwise
    comparisons with at least two trials, when the random-effects model has
@@ -45,31 +46,32 @@ An R2jags output on the summaries of the posterior distribution, and
   }
 }
 \description{
-Performs separate Bayesian pairwise meta-analysis for each
-  pairwise comparison with at least two trials in the network.
+Performs a Bayesian pairwise meta-analysis for each
+ pairwise comparison with at least two trials in the network.
 }
 \details{
 \code{run_series_meta} inherits the arguments \code{data},
   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
-  \code{mean_misspar}, and \code{var_misspar} from \code{run_model}, now
-  contained in the argument \code{full}. This prevents misspecifying the
-  Bayesian model that has been considered in \code{run_model}. Instead,
-  these arguments are contained in the argument \code{full} of the function.
-  Therefore, the user needs first to apply \code{run_model}, and then use
-  \code{run_series_meta} (see, 'Examples').
+  \code{mean_misspar}, and \code{var_misspar} from \code{\link{run_model}}
+  (now contained in the argument \code{full}). This prevents specifying
+  a different Bayesian model from that considered in \code{\link{run_model}}.
+  Therefore, the user needs first to apply \code{\link{run_model}}, and then
+  use \code{run_series_meta} (see 'Examples').
 
-  \code{run_series_meta} performs Bayesian pairwise meta-analysis in
-  \code{JAGS}. The progress of the simulation appears in the R console. The
-  number of times a pairwise meta-analysis is preformed is also printed in
-  the console (in red) and is equal to the number of pairwise comparisons
-  available in the network (see 'Examples').
+  \code{run_series_meta} runs a series of Bayesian pairwise meta-analyses
+  in \code{JAGS}. The progress of the simulation appears on the R console.
+  The number of times a pairwise meta-analysis is preformed is also printed
+  on the console (in red) and is equal to the number of  pairwise comparisons
+  observed in the network (see 'Examples').
 
   The output of \code{run_series_meta} is not end-user-ready. The
-  \code{series_meta_plot} function uses the output of \code{run_series_meta}
-  as an S3 object and processes it further to provide an end-user-ready
-  output.
+  \code{\link{series_meta_plot}} function uses the output of
+  \code{run_series_meta} as an S3 object and processes it further to provide
+  an end-user-ready output.
 
   \code{run_series_meta} can be used only for a network of interventions.
+  In the case of two interventions, the execution of the function will
+  be stopped and an error message will be printed on the R console.
 }
 \examples{
 data("nma.dogliotti2014")
@@ -110,11 +112,11 @@ run_series_meta(full = res,
 \references{
 Gelman A, Rubin DB. Inference from iterative simulation using multiple
 sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
-[\doi{10.1214/ss/1177011136}]
+\doi{10.1214/ss/1177011136}
 }
 \seealso{
-\code{\link{run_model}}, \code{\link{series_meta_plot}},
-  \code{\link[R2jags]{jags}}
+\code{\link[R2jags]{jags}}, \code{\link{run_model}},
+  \code{\link{series_meta_plot}},
 }
 \author{
 {Loukia M. Spineli}

@@ -138,7 +138,6 @@
   <span class='va'>data</span>,
   <span class='va'>measure</span>,
   <span class='va'>model</span>,
-  <span class='va'>covar_assumption</span>,
   <span class='va'>assumption</span>,
   <span class='va'>heter_prior</span>,
   <span class='va'>mean_misspar</span>,
@@ -172,16 +171,6 @@ respectively.</p></td>
 respectively. The default argument is <code>"RE"</code>.</p></td>
     </tr>
     <tr>
-      <th>covar_assumption</th>
-      <td><p>Character string indicating the structure of the
-intervention by covariate interaction, as described in
-Cooper et al., (2009).
-Set <code>covar_assumption</code> equal to one of the following: <code>"NO"</code>,
-when no meta-regression is performed; otherwise, <code>"exchangeable"</code>,
-<code>"independent"</code>, and <code>"common"</code>.
-See the <code>run_metareg</code> function.</p></td>
-    </tr>
-    <tr>
       <th>assumption</th>
       <td><p>Character string indicating the structure of the
 informative missingness parameter.
@@ -203,9 +192,10 @@ correlated and uncorrelated, respectively.</p></td>
 the parameters of the selected distribution.  For <code>"lognormal"</code>, and
 <code>"logt"</code> these numbers refer to the mean and precision, respectively.
 For <code>"halfnorm"</code>, these numbers refer to zero and the scale parameter
-(equal to 0.5 or 1). For <code>"uniform"</code>, these numbers refer to the
+(equal to 4 or 1 being the corresponding precision of the scale parameter
+0.5 or 1). For <code>"uniform"</code>, these numbers refer to the
 minimum and maximum value of the distribution.
-See the function <code><a href='heterogeneity_param_prior.html'>heterogeneity_param_prior</a></code>.</p></td>
+See 'Details' in <code><a href='heterogeneity_param_prior.html'>heterogeneity_param_prior</a></code>.</p></td>
     </tr>
     <tr>
       <th>mean_misspar</th>
@@ -213,14 +203,14 @@ See the function <code><a href='heterogeneity_param_prior.html'>heterogeneity_pa
 mean of the normal distribution of the informative missingness parameter
 (see 'Details'). The default argument is 0 and corresponds to the
 missing-at-random assumption.
-See the function <code><a href='missingness_param_prior.html'>missingness_param_prior</a></code>.</p></td>
+See also 'Details' in <code><a href='missingness_param_prior.html'>missingness_param_prior</a></code>.</p></td>
     </tr>
     <tr>
       <th>var_misspar</th>
       <td><p>A positive non-zero number for the variance of the
 normal distribution of the informative missingness parameter.
 When the <code>measure</code> is <code>"OR"</code>, <code>"MD"</code>, or <code>"SMD"</code>
-the default argument is 1; When the <code>measure</code> is <code>"ROM"</code>
+the default argument is 1. When the <code>measure</code> is <code>"ROM"</code>
 the default argument is 0.04</p></td>
     </tr>
     <tr>
@@ -262,8 +252,8 @@ The default argument is 1.</p></td>
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>The columns of the data frame in the argument <code>data</code> refer
-  to the following ordered elements for a continuous outcome:</p><table class='table'>
+    <p>The columns of the data-frame in the argument <code>data</code> refer
+  to the following elements for a continuous outcome:</p><table class='table'>
 <tr><td><strong>t</strong></td><td>An intervention identifier in each arm.</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><strong>y</strong></td><td>The observed mean value of the outcome in each arm.</td></tr>
@@ -279,7 +269,7 @@ The default argument is 1.</p></td>
 
 
 <p>For a binary outcome, the columns of the data-frame in the argument
-  <code>data</code> refer to the following ordered elements:</p><table class='table'>
+  <code>data</code> refer to the following elements:</p><table class='table'>
 <tr><td><strong>t</strong></td><td>An intervention identifier in each arm.</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><strong>r</strong></td><td>The observed number of events of the outcome in
@@ -294,7 +284,8 @@ The default argument is 1.</p></td>
   Each element appears in <code>data</code> as many times as the maximum number of
   interventions compared in a trial of the dataset.
   In pairwise meta-analysis (PMA), the maximum number of arms is inherently
-  two. The same holds for NMA without multi-arm trials.
+  two. The same holds for a network meta-analysis (NMA) without multi-arm
+  trials.
   In the case of NMA with multi-arm trials, the maximum number of arms
   exceeds two. See 'Examples' that illustrates the structure of <code>data</code>
   for a network with a maximum number of four arms.
@@ -318,26 +309,8 @@ The default argument is 1.</p></td>
 </table>
 
 
-<p>For a random-effects PMA, the output additionally includes the
-  following elements:</p><table class='table'>
-<tr><td><code>EM_pred</code></td><td>The predicted summary effect measure
-   (according to the argument <code>measure</code>).</td></tr>
-<tr><td></td><td></td></tr>
-<tr><td><code>delta</code></td><td>The estimated trial-specific effect measure
-   (according to the argument <code>measure</code>).
-   For a multi-arm trial, we estimate <em>T-1</em> effects, where <em>T</em>
-   is the number of interventions in the trial.</td></tr>
-<tr><td></td><td></td></tr>
-<tr><td><code>tau</code></td><td>The between-trial standard deviation.</td></tr>
-</table>
-
-
-<p>For a random-effects model, the output additionally includes:</p><table class='table'>
+<p>For a fixed-effect NMA, the output additionally includes:</p><table class='table'>
 <tr><td><code>EM_ref</code></td><td>The estimated summary effect measure
-   (according to the argument <code>measure</code>) of all comparisons
-   with the reference intervention.</td></tr>
-<tr><td></td><td></td></tr>
-<tr><td><code>pred_ref</code></td><td>The predicted summary effect measure
    (according to the argument <code>measure</code>) of all comparisons
    with the reference intervention.</td></tr>
 <tr><td></td><td></td></tr>
@@ -347,11 +320,33 @@ The default argument is 1.</p></td>
 <tr><td><code>effectiveneness</code></td><td>The ranking probability of each intervention
     for every rank.</td></tr>
 </table>
+
+
+<p>For a random-effects PMA, the output additionally includes the
+  following elements:</p><table class='table'>
+<tr><td><code>EM_pred</code></td><td>The predicted summary effect measure
+   (according to the argument <code>measure</code>).</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td><code>delta</code></td><td>The estimated trial-specific effect measure
+   (according to the argument <code>measure</code>).</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td><code>tau</code></td><td>The between-trial standard deviation.</td></tr>
+</table>
+
+
+<p>For a random-effects NMA, the output additionally includes:</p><table class='table'>
+<tr><td><code>pred_ref</code></td><td>The predicted summary effect measure
+   (according to the argument <code>measure</code>) of all comparisons
+   with the reference intervention.</td></tr>
+</table>
 <p>In NMA, <code>EM</code> and <code>EM_pred</code> refer to all possible pairwise
   comparisons of interventions in the network. Furthermore, <code>tau</code> is
-  typically assumed to be common for all observed comparisons in the network.</p>
-<p>Furthermore, the output includes the following elements (the first three
-  resulting from relevant monitored parameters):</p><table class='table'>
+  typically assumed to be common for all observed comparisons in the network.
+  For a multi-arm trial, we estimate a total of <em>T-1</em> <code>delta</code> for
+  comparisons with the baseline intervention of the trial (found in the first
+  column of the element <b>t</b>), with <em>T</em> being the number of
+  interventions in the trial.</p>
+<p>Furthermore, the output includes the following elements:</p><table class='table'>
 <tr><td><code>leverage_o</code></td><td>The leverage for the observed outcome
    at each trial-arm.</td></tr>
 <tr><td></td><td></td></tr>
@@ -364,7 +359,7 @@ The default argument is 1.</p></td>
 <tr><td></td><td></td></tr>
 <tr><td><code>jagsfit</code></td><td>An object of S3 class <code><a href='https://rdrr.io/pkg/R2jags/man/jags.html'>jags</a></code>
    with the posterior results on all monitored parameters to be used
-   in the <code>mcmc_diagnostics</code> function.</td></tr>
+   in the <code><a href='mcmc_diagnostics.html'>mcmc_diagnostics</a></code> function.</td></tr>
 </table>
 <p>The <code>run_model</code> function also returns the arguments <code>data</code>,
   <code>measure</code>, <code>model</code>, <code>assumption</code>, <code>heter_prior</code>,
@@ -372,129 +367,118 @@ The default argument is 1.</p></td>
   user to be considered in other functions of the package.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The model as specified by the arguments of <code>run_model</code> runs
-  in <code>JAGS</code> and the progress of the simulation appears in the R console.
-  The output of <code>run_model</code> is used as an S3 object by other functions
-  of the package and can be processed further and provide an end-user-ready
-  output.</p>
-<p>The <code>data_preparation</code> function is called to prepare the data for
-  the Bayesian analysis. The <code>data_preparation</code> checks whether the
-  element <strong>m</strong> exists in the <code>data</code>. If this element is missing,
-  <code>data_preparation</code> creates a pseudo-data-frame for <code>m</code> that has
-  zero value for the observed trial-arms, and <code>NA</code> for the unobserved
-  trial-arms, and the pseudo-data-frame <code>I</code> that has the same values
-  with the pseudo-data-frame for <code>m</code>. If the element <strong>m</strong> exists
-  in the <code>data</code> and has values only for some trials, the
-  pseudo-data-frame for <code>m</code> is the same with <code>m</code> for the
-  corresponding trial-arms, and the pseudo-data-frame <code>I</code> has the value
-  one for these trial-arms. Both pseudo-data-frames aim to retain the trials
-  without information on missing outcome data in <code>data</code>. Second,
-  <code>data_preparation</code> sorts the interventions across the arms of each
-  trial in an ascending order and correspondingly the remaining elements in
-  <code>data</code> (see 'Format'). The <code>prepare_model</code> function considers the
+    <p>The model runs in <code>JAGS</code> and the progress of the simulation
+  appears on the R console. The output of <code>run_model</code> is used as an S3
+  object by other functions of the package to be processed further and
+  provide an end-user-ready output.</p>
+<p>The <code><a href='data_preparation.html'>data_preparation</a></code> function is called to prepare the data
+  for the Bayesian analysis. <code><a href='data_preparation.html'>data_preparation</a></code> checks whether
+  the element <strong>m</strong> exists in the <code>data</code>. If this element is
+  missing, <code><a href='data_preparation.html'>data_preparation</a></code> creates a pseudo-data-frame for
+  <strong>m</strong> that has the zero value for the observed trial-arms, and
+  <code>NA</code> for the unobserved trial-arms, and the pseudo-data-frame <code>I</code>
+  that is identical with the pseudo-data-frame for <code>m</code>. If the element
+  <strong>m</strong> exists in the <code>data</code> and has values only for some
+  trial-arms, the pseudo-data-frame for <strong>m</strong> is identical to <strong>m</strong>
+  for the corresponding trial-arms, and the pseudo-data-frame <code>I</code> has
+  the value one for these trial-arms. Both pseudo-data-frames aim to retain
+  the trials without information on missing participant outcome data.</p>
+<p>Furthermore, <code><a href='data_preparation.html'>data_preparation</a></code> sorts the interventions across
+  the arms of each trial in an ascending order and correspondingly the
+  remaining elements in <code>data</code> (see 'Format').
+  <code><a href='data_preparation.html'>data_preparation</a></code> considers the
   first column in <strong>t</strong> as being the control arm for every trial. Thus,
   this sorting ensures that interventions with a lower identifier are
   consistently treated as the control arm in each trial. This case is
   relevant in non-star-shaped networks. By default, <code>run_model</code> treats
   the intervention with identifier equal to one as the reference intervention
-   of the network.</p>
-<p>To perform a Bayesian PMA or NMA, the <code>prepare_model</code> function is
-  called which contains the WinBUGS code as written by Dias et al. (2013) for
-  binomial and normal likelihood to analyse binary and continuous data,
-  respectively. <code>prepare_model</code> uses the consistency model (as described
-  in Lu and Ades (2006)) to estimate all possible comparisons in the network.
+  of the network.</p>
+<p>To perform a Bayesian PMA or NMA, the <code><a href='prepare_model.html'>prepare_model</a></code> function
+  is called which contains the WinBUGS code as written by Dias et al., (2013)
+  for binomial and normal likelihood to analyse binary and continuous data,
+  respectively. <code><a href='prepare_model.html'>prepare_model</a></code> uses the consistency model (as
+  described in Lu and Ades (2006)) to estimate all possible comparisons in
+  the network.
   It also accounts for the multi-arm trials by assigning conditional
   univariate normal distributions on the basic parameters of these trials,
-  namely, effect parameters between non-baseline and baseline arms
-  (Dias et al., 2013).</p>
-<p>The code of Dias et al. (2013) has been extended to incorporate the
+  namely, effect parameters between the non-baseline arms and the baseline
+  arm of the multi-arm trial (Dias et al., 2013).</p>
+<p>The code of Dias et al., (2013) has been extended to incorporate the
   pattern-mixture model to adjust the underlying outcome in each arm of
-  every trial for MOD (Turner et al., 2015; Spineli et al., 2021).
-  Assumptions about the missingness parameter is specified using the
-  arguments <code>mean_misspar</code> and <code>var_misspar</code>.
-  Specifically, <code>run_model</code> considers the informative missingness odds
-  ratio in the logarithmic scale for binary outcome data (White et al., 2008;
-  Turner et al., 2015; Spineli, 2019), the informative missingness difference
-  of means when <code>measure</code> is <code>"MD"</code> or <code>"SMD"</code>,
-  and the informative missingness ratio of means in the logarithmic scale
-  when <code>measure</code> is <code>"ROM"</code> (Mavridis et al., 2015;
-  Spineli et al., 2021).</p>
+  every trial for missing participant outcome data (Turner et al., 2015;
+  Spineli, 2019a; Spineli et al., 2021). The assumptions about the
+  missingness parameter are specified using the arguments <code>mean_misspar</code>
+  and <code>var_misspar</code>. Specifically, <code>run_model</code> considers the
+  informative missingness odds ratio in the logarithmic scale for binary
+  outcome data (White et al., 2008; Turner et al., 2015; Spineli, 2019a), the
+  informative missingness difference of means when <code>measure</code> is
+  <code>"MD"</code> or <code>"SMD"</code>, and the informative missingness ratio of means
+  in the logarithmic scale when <code>measure</code> is <code>"ROM"</code>
+  (Mavridis et al., 2015; Spineli et al., 2021).</p>
 <p>When <code>assumption</code> is trial-specific (i.e., <code>"IDE-TRIAL"</code> or
   <code>"HIE-TRIAL"</code>), or independent (i.e., <code>"IND-CORR"</code> or
   <code>"IND-UNCORR"</code>), only one numeric value can be assigned to
   <code>mean_misspar</code> because the same missingness scenario is applied to all
   trials and trial-arms of the dataset, respectively. When <code>assumption</code>
   is <code>"IDE-ARM"</code> or <code>"HIE-ARM"</code>, a maximum of two
-  <em>different</em> numeric values can be assigned as a vector to
-  <code>mean_misspars</code>: the first value refers to the experimental arm,
-  and the second value refers to the control arm of a trial.
+  <em>different</em> or <em>identical</em> numeric values can be assigned as a
+  vector to <code>mean_misspars</code>: the first value refers to the experimental
+  arm, and the second value refers to the control arm of a trial.
   In the case of a network, the first value is considered for all
   non-reference interventions and the second value is considered for the
   reference intervention of the network (i.e., the intervention with
   identifier equal to one). This is necessary to ensure transitivity in the
-  assumptions for the missingness parameter across the comparisons in the
-  network (Spineli, 2019). When one numeric value is considered,
-  the same missingness scenario is applied to all interventions in the
-  dataset.</p>
+  assumptions for the missingness parameter across the network (Spineli,
+  2019b).</p>
 <p>Currently, there are no empirically-based prior distributions for the
-  informative missingness parameters. The users may refer to
-  White et al. (2008), Mavridis et al. (2015), Turner et al. (2015) and
-  Spineli (2019) to determine <code>mean_misspar</code> for an informative
-  missingness mechanism and select a proper value for <code>var_misspar</code>.</p>
+  informative missingness parameters. The user may refer to
+  White et al., (2008); Mavridis et al., (2015); Turner et al., (2015) and
+  Spineli (2019) to determine <code>mean_misspar</code> and select a proper value
+  for <code>var_misspar</code>.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 data in network meta-analysis: a one-stage pattern-mixture model approach.
-<em>Stat Methods Med Res</em> 2021. [doi: <a href='https://doi.org/10.1177/0962280220983544'>10.1177/0962280220983544</a>
-]</p>
+<em>Stat Methods Med Res</em> 2021. doi: <a href='https://doi.org/10.1177/0962280220983544'>10.1177/0962280220983544</a></p>
 <p>Spineli LM. An empirical comparison of Bayesian modelling strategies for
 missing binary outcome data in network meta-analysis.
-<em>BMC Med Res Methodol</em> 2019;<b>19</b>(1):86.
-[doi: <a href='https://doi.org/10.1186/s12874-019-0731-y'>10.1186/s12874-019-0731-y</a>
-]</p>
+<em>BMC Med Res Methodol</em> 2019a;<b>19</b>(1):86.
+doi: <a href='https://doi.org/10.1186/s12874-019-0731-y'>10.1186/s12874-019-0731-y</a></p>
 <p>Spineli LM. Modeling missing binary outcome data while preserving
 transitivity assumption yielded more credible network meta-analysis
-results. <em>J Clin Epidemiol</em> 2019;<b>105</b>:19--26.
-[doi: <a href='https://doi.org/10.1016/j.jclinepi.2018.09.002'>10.1016/j.jclinepi.2018.09.002</a>
-]</p>
+results. <em>J Clin Epidemiol</em> 2019b;<b>105</b>:19--26.
+doi: <a href='https://doi.org/10.1016/j.jclinepi.2018.09.002'>10.1016/j.jclinepi.2018.09.002</a></p>
 <p>Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
 uncertainty due to missing continuous outcome data in pairwise and
 network meta-analysis. <em>Stat Med</em> 2015;<b>34</b>(5):721--741.
-[doi: <a href='https://doi.org/10.1002/sim.6365'>10.1002/sim.6365</a>
-]</p>
+doi: <a href='https://doi.org/10.1002/sim.6365'>10.1002/sim.6365</a></p>
 <p>Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account
 for uncertainty due to missing binary outcome data in pairwise
 meta-analysis. <em>Stat Med</em> 2015;<b>34</b>(12):2062--2080.
-[doi: <a href='https://doi.org/10.1002/sim.6475'>10.1002/sim.6475</a>
-]</p>
+doi: <a href='https://doi.org/10.1002/sim.6475'>10.1002/sim.6475</a></p>
 <p>Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
 making 2: a generalized linear modeling framework for pairwise and network
 meta-analysis of randomized controlled trials. <em>Med Decis Making</em>
-2013;<b>33</b>(5):607--617. [doi: <a href='https://doi.org/10.1177/0272989X12458724'>10.1177/0272989X12458724</a>
-]</p>
+2013;<b>33</b>(5):607--617. doi: <a href='https://doi.org/10.1177/0272989X12458724'>10.1177/0272989X12458724</a></p>
 <p>Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing
 between-study heterogeneity and inconsistency in mixed treatment
 comparisons: Application to stroke prevention treatments in individuals
 with non-rheumatic atrial fibrillation.
-<em>Stat Med</em> 2009;<b>28</b>(14):1861--81. [doi: <a href='https://doi.org/10.1002/sim.3594'>10.1002/sim.3594</a>
-]</p>
+<em>Stat Med</em> 2009;<b>28</b>(14):1861--81. doi: <a href='https://doi.org/10.1002/sim.3594'>10.1002/sim.3594</a></p>
 <p>White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data
 in meta-analysis--part 1: two-stage methods. <em>Stat Med</em>
-2008;<b>27</b>(5):711--727. [doi: <a href='https://doi.org/10.1002/sim.3008'>10.1002/sim.3008</a>
-]</p>
+2008;<b>27</b>(5):711--727. doi: <a href='https://doi.org/10.1002/sim.3008'>10.1002/sim.3008</a></p>
 <p>Lu G, Ades AE. Assessing evidence inconsistency in mixed treatment
 comparisons. <em>J Am Stat Assoc</em> 2006;<b>101</b>:447--459.
-[doi: <a href='https://doi.org/10.1198/016214505000001302'>10.1198/016214505000001302</a>
-]</p>
+doi: <a href='https://doi.org/10.1198/016214505000001302'>10.1198/016214505000001302</a></p>
 <p>Gelman A, Rubin DB. Inference from iterative simulation using multiple
 sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.
-[doi: <a href='https://doi.org/10.1214/ss/1177011136'>10.1214/ss/1177011136</a>
-]</p>
+doi: <a href='https://doi.org/10.1214/ss/1177011136'>10.1214/ss/1177011136</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='data_preparation.html'>data_preparation</a></code>, <code><a href='prepare_model.html'>prepare_model</a></code>,
-  <code><a href='missingness_param_prior.html'>missingness_param_prior</a></code>,
-  <code><a href='heterogeneity_param_prior.html'>heterogeneity_param_prior</a></code>, <code><a href='https://rdrr.io/pkg/R2jags/man/jags.html'>jags</a></code></p></div>
+    <div class='dont-index'><p><code><a href='data_preparation.html'>data_preparation</a></code>,
+  <code><a href='heterogeneity_param_prior.html'>heterogeneity_param_prior</a></code>, <code><a href='https://rdrr.io/pkg/R2jags/man/jags.html'>jags</a></code>
+  <code><a href='missingness_param_prior.html'>missingness_param_prior</a></code>, <code><a href='prepare_model.html'>prepare_model</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>

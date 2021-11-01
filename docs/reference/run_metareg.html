@@ -154,16 +154,15 @@ See 'Value' in <code><a href='run_model.html'>run_model</a></code>.</p></td>
     </tr>
     <tr>
       <th>covariate</th>
-      <td><p>A numeric vector or a matrix for a trial-specific covariate
+      <td><p>A numeric vector or matrix for a trial-specific covariate
 that is a potential effect modifier. See 'Details'.</p></td>
     </tr>
     <tr>
       <th>covar_assumption</th>
       <td><p>Character string indicating the structure of the
-intervention by covariate interaction, as described in
-Cooper et al., (2009). Set <code>covar_assumption</code> equal to one of the
-following: <code>"NO"</code>, when no meta-regression is performed; otherwise,
-<code>"exchangeable"</code>, <code>"independent"</code>, and <code>"common"</code>.</p></td>
+intervention-by-covariate interaction, as described in
+Cooper et al., (2009). Set <code>covar_assumption</code> equal to
+<code>"exchangeable"</code>, <code>"independent"</code>, or <code>"common"</code>.</p></td>
     </tr>
     <tr>
       <th>n_chains</th>
@@ -200,10 +199,10 @@ The default argument is 1.</p></td>
 
     <p>A list of R2jags outputs on the summaries of the posterior
   distribution, and the Gelman-Rubin convergence diagnostic
-  (Gelman et al., 1992) of the following monitored parameters for a
-  fixed-effect PMA:</p><table class='table'>
-<tr><td><code>EM</code></td><td>The estimated summary effect measure
-   (according to the argument <code>measure</code>).</td></tr>
+  (Gelman et al., 1992) for the following monitored parameters for a
+  fixed-effect pairwise meta-analysis (PMA):</p><table class='table'>
+<tr><td><code>EM</code></td><td>The estimated summary effect measure (according to the
+   argument <code>measure</code> defined in <code><a href='run_model.html'>run_model</a></code>).</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>dev_o</code></td><td>The deviance contribution of each trial-arm based
    on the observed outcome.</td></tr>
@@ -214,13 +213,30 @@ The default argument is 1.</p></td>
 </table>
 
 
+<p>For a fixed-effect network meta-analysis (NMA), the output additionally
+  includes:</p><table class='table'>
+<tr><td><code>EM_ref</code></td><td>The estimated summary effect measure
+   (according to the argument <code>measure</code> defined in
+   <code><a href='run_model.html'>run_model</a></code>) of all comparisons with the reference
+   intervention.</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td><code>SUCRA</code></td><td>The surface under the cumulative ranking (SUCRA) curve
+   for each intervention.</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td><code>effectiveneness</code></td><td>The ranking probability of each intervention
+   for every rank.</td></tr>
+</table>
+
+
 <p>For a random-effects PMA, the output additionally includes the
   following elements:</p><table class='table'>
 <tr><td><code>EM_pred</code></td><td>The predicted summary effect measure
-   (according to the argument <code>measure</code>).</td></tr>
+   (according to the argument <code>measure</code> defined in
+   <code><a href='run_model.html'>run_model</a></code>).</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>delta</code></td><td>The estimated trial-specific effect measure
-   (according to the argument <code>measure</code>).
+   (according to the argument <code>measure</code> defined in
+   <code><a href='run_model.html'>run_model</a></code>).
    For a multi-arm trial, we estimate <em>T-1</em> effects, where <em>T</em>
    is the number of interventions in the trial.</td></tr>
 <tr><td></td><td></td></tr>
@@ -228,26 +244,21 @@ The default argument is 1.</p></td>
 </table>
 
 
-<p>For a random-effects NMA, the output additionally includes:</p><table class='table'>
-<tr><td><code>EM_ref</code></td><td>The estimated summary effect measure
-   (according to the argument <code>measure</code>) of all comparisons
-   with the reference intervention.</td></tr>
-<tr><td></td><td></td></tr>
+<p>For a random-effects NMA, the output additionally
+  includes:</p><table class='table'>
 <tr><td><code>pred_ref</code></td><td>The predicted summary effect measure
-   (according to the argument <code>measure</code>) of all comparisons
-   with the reference intervention.</td></tr>
-<tr><td></td><td></td></tr>
-<tr><td><code>SUCRA</code></td><td>The surface under the cumulative ranking curve
-   for each intervention.</td></tr>
-<tr><td></td><td></td></tr>
-<tr><td><code>effectiveneness</code></td><td>The ranking probability of each intervention
-   for every rank.</td></tr>
+   (according to the argument <code>measure</code> defined in
+   <code><a href='run_model.html'>run_model</a></code>) of all comparisons with the reference
+   intervention.</td></tr>
 </table>
 <p>In NMA, <code>EM</code> and <code>EM_pred</code> refer to all possible pairwise
   comparisons of interventions in the network. Furthermore, <code>tau</code> is
-  typically assumed to be common for all observed comparisons in the network.</p>
-<p>Furthermore, the output includes the following elements (the first three
-  resulting from relevant monitored parameters):</p><table class='table'>
+  typically assumed to be common for all observed comparisons in the network.
+  For a multi-arm trial, we estimate a total <em>T-1</em> of <code>delta</code> for
+  comparisons with the baseline intervention of the trial (found in the first
+  column of the element <b>t</b>), with <em>T</em> being the number of
+  interventions in the trial.</p>
+<p>Furthermore, the output includes the following elements:</p><table class='table'>
 <tr><td><code>leverage_o</code></td><td>The leverage for the observed outcome
    at each trial-arm.</td></tr>
 <tr><td></td><td></td></tr>
@@ -260,56 +271,52 @@ The default argument is 1.</p></td>
 <tr><td></td><td></td></tr>
 <tr><td><code>jagsfit</code></td><td>An object of S3 class <code><a href='https://rdrr.io/pkg/R2jags/man/jags.html'>jags</a></code>
    with the posterior results on all monitored parameters to be used
-   in the <code>mcmc_diagnostics</code> function.</td></tr>
+   in the <code><a href='mcmc_diagnostics.html'>mcmc_diagnostics</a></code> function.</td></tr>
 </table>
 <p>The <code>run_metareg</code> function also returns the arguments <code>data</code>,
   <code>measure</code>, <code>model</code>, <code>assumption</code>, <code>heter_prior</code>,
   <code>mean_misspar</code>, <code>var_misspar</code>, and <code>D</code>
-  as already specified by the user in <code>run_model</code>.</p>
+  that have been specified by the user in <code><a href='run_model.html'>run_model</a></code> (see
+  'Arguments' in <code><a href='run_model.html'>run_model</a></code>).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>run_metareg</code> does not contain the arguments <code>data</code>,
+    <p><code>run_metareg</code> inherits the arguments <code>data</code>,
   <code>measure</code>, <code>model</code>, <code>assumption</code>, <code>heter_prior</code>,
-  <code>mean_misspar</code>, and <code>var_misspar</code> that are found in
-  <code>run_model</code>. This is to prevent misspecifying the Bayesian model that
-  has been considered in <code>run_model</code>. Instead, these arguments are
-  contained in the argument <code>full</code> of the function. Therefore, the user
-  needs first to apply <code>run_model</code>, and then use <code>run_metareg</code>
-  (see, 'Examples').</p>
-<p>The model as specified by the arguments of <code>run_model</code> runs in
-  <code>JAGS</code> and the progress of the simulation appears in the R console.
-  The output of <code>run_metareg</code> is used as an S3 object by other functions
-  of the package to be processed further and provide an end-user-ready
-  output.</p>
-<p>The model of Spineli, (2019) and Spineli et al. (2021) has been extended
-  to incorporate one <em>study-level covariate</em> variable following the
-  assumptions of Cooper et al. (2009) for the structure of the intervention
-  by covariate interaction. The covariate can be either a numeric vector or a
-  matrix (the columns equal the maximum number of arms in the dataset).</p>
+  <code>mean_misspar</code>, and <code>var_misspar</code> from <code><a href='run_model.html'>run_model</a></code>
+  (now contained in the argument <code>full</code>). This prevents specifying a
+  different Bayesian model from that considered in <code><a href='run_model.html'>run_model</a></code>.
+  Therefore, the user needs first to apply <code><a href='run_model.html'>run_model</a></code>, and then
+  use <code>run_metareg</code> (see 'Examples').</p>
+<p>The model runs in <code>JAGS</code> and the progress of the simulation appears on
+  the R console. The output of <code>run_metareg</code> is used as an S3 object by
+  other functions of the package to be processed further and provide an
+  end-user-ready output.</p>
+<p>The models described in Spineli (2019), and Spineli et al., (2021) have
+  been extended to incorporate one <em>study-level covariate</em> variable
+  following the assumptions of Cooper et al. (2009) for the structure of the
+  intervention-by-covariate interaction. The covariate can be either a
+  numeric vector or matrix with columns equal to the maximum number of arms
+  in the dataset.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 data in network meta-analysis: a one-stage pattern-mixture model approach.
-<em>Stat Methods Med Res</em> 2021. [doi: <a href='https://doi.org/10.1177/0962280220983544'>10.1177/0962280220983544</a>
-]</p>
+<em>Stat Methods Med Res</em> 2021. doi: <a href='https://doi.org/10.1177/0962280220983544'>10.1177/0962280220983544</a></p>
 <p>Spineli LM. An empirical comparison of Bayesian modelling strategies for
 missing binary outcome data in network meta-analysis.
 <em>BMC Med Res Methodol</em> 2019;<b>19</b>(1):86.
-[doi: <a href='https://doi.org/10.1186/s12874-019-0731-y'>10.1186/s12874-019-0731-y</a>
-]</p>
+doi: <a href='https://doi.org/10.1186/s12874-019-0731-y'>10.1186/s12874-019-0731-y</a></p>
 <p>Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
 heterogeneity and inconsistency in mixed treatment comparisons: Application
 to stroke prevention treatments in individuals with non-rheumatic atrial
 fibrillation. <em>Stat Med</em> 2009;<b>28</b>(14):1861--81.
-[doi: <a href='https://doi.org/10.1002/sim.3594'>10.1002/sim.3594</a>
-]</p>
+doi: <a href='https://doi.org/10.1002/sim.3594'>10.1002/sim.3594</a></p>
 <p>Gelman A, Rubin DB. Inference from iterative simulation using multiple
 sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.
-[doi: <a href='https://doi.org/10.1214/ss/1177011136'>10.1214/ss/1177011136</a>
-]</p>
+doi: <a href='https://doi.org/10.1214/ss/1177011136'>10.1214/ss/1177011136</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>, <code><a href='https://rdrr.io/pkg/R2jags/man/jags.html'>jags</a></code></p></div>
+    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/R2jags/man/jags.html'>jags</a></code>, <code><a href='run_model.html'>run_model</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>
@@ -332,7 +339,7 @@ sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.
                  n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,
                  n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 
-<span class='co'># Publicatiom year</span>
+<span class='co'># Publication year</span>
 <span class='va'>pub_year</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1996</span>, <span class='fl'>1998</span>, <span class='fl'>1999</span>, <span class='fl'>2000</span>, <span class='fl'>2000</span>, <span class='fl'>2001</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2002</span>, <span class='fl'>5</span><span class='op'>)</span>, <span class='fl'>2003</span>, <span class='fl'>2003</span>,
               <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2005</span>, <span class='fl'>4</span><span class='op'>)</span>, <span class='fl'>2006</span>, <span class='fl'>2006</span>, <span class='fl'>2007</span>, <span class='fl'>2007</span><span class='op'>)</span>
 

@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Perform sensitivity analysis for aggregate missing outcome participant data — run_sensitivity" />
-<meta property="og:description" content="This function performs sensitivity analysis by applying pairwise
+<meta property="og:description" content="Performs a sensitivity analysis by applying pairwise
   meta-analysis (PMA) or network meta-analysis (NMA) for a series of
   different scenarios about the informative missingness parameter," />
 
@@ -129,7 +129,7 @@
     </div>
 
     <div class="ref-description">
-    <p>This function performs sensitivity analysis by applying pairwise
+    <p>Performs a sensitivity analysis by applying pairwise
   meta-analysis (PMA) or network meta-analysis (NMA) for a series of
   different scenarios about the informative missingness parameter,</p>
     </div>
@@ -167,9 +167,9 @@ respectively.</p></td>
       <th>var_misspar</th>
       <td><p>A positive non-zero number for the variance of the normal
 distribution of the informative missingness parameter. When the
-<code>measure</code> is <code>"OR"</code>, <code>"MD"</code>, or <code>"SMD"</code> the default
-argument is 1; When the <code>measure</code> is <code>"ROM"</code> in
-<code><a href='run_model.html'>run_model</a></code> the default argument is 0.04</p></td>
+<code>measure</code> (defined in <code><a href='run_model.html'>run_model</a></code>) is <code>"OR"</code>,
+<code>"MD"</code>, or <code>"SMD"</code> the default argument is 1. When the
+<code>measure</code> is <code>"ROM"</code>, the default argument is 0.04</p></td>
     </tr>
     <tr>
       <th>n_chains</th>
@@ -209,7 +209,7 @@ The default argument is 1.</p></td>
   (Gelman et al., 1992) of the following monitored parameters for a
   random-effects PMA:</p><table class='table'>
 <tr><td><code>EM</code></td><td>The estimated summary effect measure (according to the
-   argument <code>measure</code> in <code>run_model</code>).</td></tr>
+   argument <code>measure</code> in <code><a href='run_model.html'>run_model</a></code>).</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>tau</code></td><td>The between-trial standard deviation. This element does
    not appear in the case of a fixed-effect PMA.</td></tr>
@@ -221,85 +221,77 @@ The default argument is 1.</p></td>
   typically assumed to be common for all observed comparisons in the network.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The model as specified by the arguments of <code>run_sensitivity</code>
-  and <code>run_model</code> (the latter via the argument <code>full</code>) runs in
-  <code>JAGS</code> and the progress of the simulation appears in the R console.
-  The number of times <code>run_sensitivity</code> is used appears in the R console
-  as a text in red and it equals the number of scenarios specified in
-  argument <code>mean_scenarios</code> (see 'Examples'). The output of
-  <code>run_sensitivity</code> is used as an S3 object by other functions of the
-  package function to be processed further and provide an end-user-ready
-  output.</p>
+    <p>The model runs in <code>JAGS</code> and the progress of the simulation
+  appears on the R console. The number of times <code>run_sensitivity</code> is
+  used appears on the R console as a text in red and it equals the
+  <em>number of scenarios</em> defined as the square of the length of the
+  vector specified in argument <code>mean_scenarios</code> (see 'Examples').
+  The output of <code>run_sensitivity</code> is used as an S3 object by other
+  functions of the package function to be processed further and provide an
+  end-user-ready output.</p>
 <p>In the case of PMA, <code>EM</code> and <code>tau</code> have as many rows as the
-  <em>square of the number of scenarios</em> indicated in argument
-  <code>mean_scenarios</code>. In the case of NMA, each possible pairwise
-  comparison is estimated as many times as the square of the number of
-  scenarios indicated in argument <code>mean_scenarios</code>.</p>
+  number of scenarios considered. In the case of NMA, each possible pairwise
+  comparison is estimated as many times as the number of scenarios
+  considered.</p>
 <p>The informative missingness parameter is assumed to differ only across the
-  interventions of the dataset. Therefore, the user can specify this
-  parameter to be arm-specific and identical
-  (<code>assumption</code> = <code>"IDE-ARM}), or arm-specific and hierarchical
-  (\code{assumption} = \code{"HIE-ARM</code>) (Spineli et al., 2021).</p>
-<p>The number of scenarios in <code>mean_scenarios</code> should be equal to or more
-  than 5 (a positive odd integer) to allow for an adequate sensitivity
-  analysis. It is important that the scenario corresponding to the MAR
-  assumption is the middle of the numbers in <code>mean_scenarios</code>.
-  Under the informative missingness of mean difference parameter, the MAR
+  interventions of the dataset. Therefore, the user can specify the
+  informative missingness parameter to be arm-specific <em>and</em> identical
+  (<code>assumption = "IDE-ARM"</code>), or arm-specific <em>and</em>
+  hierarchical (<code>assumption = "HIE-ARM"</code>) (Spineli et al., 2021).</p>
+<p>The length of the vector specified in argument <code>mean_scenarios</code> should
+  be equal to or more than 5 (a positive odd integer) to allow for an
+  adequate number of scenarios. It is important that the number
+  corresponding to the MAR assumption is the middle of the numbers in the
+  vector specified in argument <code>mean_scenarios</code>.
+  Under the informative missingness difference of means parameter, the MAR
   assumption is equal to 0. Under the informative missingness odds ratio
   parameter and the informative missingness ratio of means parameter, the MAR
-  assumption is equal to 1. Both parameters are analysed in the logarithmic
-  scale. We advise using the value <code>0.999</code> rather than log(1)
+  assumption is equal to 1; however, both parameters are analysed in the logarithmic
+  scale. We advise using the value <code>0.999</code> rather than <code>1</code>
   in <code>mean_scenarios</code>; otherwise, the execution of the function will be
-  stopped and the error 'Invalid parent values' will be printed in the R
+  stopped and the error 'Invalid parent values' will be printed on the R
   console. Currently, there are no empirically-based prior distributions for
   the informative missingness parameters. The users may refer to
-  White et al. (2008), Mavridis et al. (2015), Turner et al. (2015) and
+  White et al., (2008), Mavridis et al., (2015), Turner et al., (2015) and
   Spineli (2019) to determine <code>mean_scenarios</code> for an informative
   missingness mechanism and select a proper value for <code>var_misspar</code>.</p>
-<p><code>run_sensitivity</code> does not contain the arguments <code>data</code>,
-  <code>measure</code>, <code>model</code>, and <code>heter_prior</code> that are found in
-  <code>run_model</code>. This is to prevent misspecifying the Bayesian model as it
-  would make the comparison of the primary analysis (via <code>run_model</code>)
-  with the re-analyses meaningless. Instead, these arguments are contained in
-  the argument <code>full</code> of the function. Therefore, the user needs first
-  to apply <code>run_model</code>, and then use <code>run_sensitivity</code>
-  (see, 'Examples').</p>
-<p><code>run_sensitivity</code> can be used only for when missing participant
+<p><code>run_sensitivity</code> inherits the arguments <code>data</code>,
+  <code>measure</code>, <code>model</code>, and <code>heter_prior</code> from
+  <code><a href='run_model.html'>run_model</a></code> (now contained in the argument <code>full</code>). This
+  prevents specifying a different Bayesian model from that considered in the
+  primary analysis (via <code>run_model</code>). Therefore, the user needs first to
+  apply <code><a href='run_model.html'>run_model</a></code>, and then use <code>run_sensitivity</code>
+  (see 'Examples').</p>
+<p><code>run_sensitivity</code> can be used only when missing participant
   outcome data have been extracted for at least one trial. Otherwise, the
   execution of the function will be stopped and an error message will be
-  printed in the R console.</p>
+  printed on the R console.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
 primary analysis results: A case study on missing outcome data in pairwise
 and network meta-analysis.
 <em>Res Synth Methods</em> 2021;<b>12</b>(4):475--490.
-[doi: <a href='https://doi.org/10.1002/jrsm.1478'>10.1002/jrsm.1478</a>
-]</p>
+doi: <a href='https://doi.org/10.1002/jrsm.1478'>10.1002/jrsm.1478</a></p>
 <p>Spineli LM. An empirical comparison of Bayesian modelling strategies for
 missing binary outcome data in network meta-analysis.
 <em>BMC Med Res Methodol</em> 2019;<b>19</b>(1):86.
-[doi: <a href='https://doi.org/10.1186/s12874-019-0731-y'>10.1186/s12874-019-0731-y</a>
-]</p>
+doi: <a href='https://doi.org/10.1186/s12874-019-0731-y'>10.1186/s12874-019-0731-y</a></p>
 <p>Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
 uncertainty due to missing continuous outcome data in pairwise and network
 meta-analysis. <em>Stat Med</em> 2015;<b>34</b>(5):721--741.
-[doi: <a href='https://doi.org/10.1002/sim.6365'>10.1002/sim.6365</a>
-]</p>
+doi: <a href='https://doi.org/10.1002/sim.6365'>10.1002/sim.6365</a></p>
 <p>Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account for
 uncertainty due to missing binary outcome data in pairwise meta-analysis.
-<em>Stat Med</em> 2015;<b>34</b>(12):2062--2080. [doi: <a href='https://doi.org/10.1002/sim.6475'>10.1002/sim.6475</a>
-]</p>
+<em>Stat Med</em> 2015;<b>34</b>(12):2062--2080. doi: <a href='https://doi.org/10.1002/sim.6475'>10.1002/sim.6475</a></p>
 <p>White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data
 in meta-analysis--part 1: two-stage methods.
-<em>Stat Med</em> 2008;<b>27</b>(5):711--727. [doi: <a href='https://doi.org/10.1002/sim.3008'>10.1002/sim.3008</a>
-]</p>
+<em>Stat Med</em> 2008;<b>27</b>(5):711--727. doi: <a href='https://doi.org/10.1002/sim.3008'>10.1002/sim.3008</a></p>
 <p>Gelman, A, Rubin, DB. Inference from iterative simulation using multiple
-sequences. Stat Sci. 1992;7:457–472.</p>
+sequences. Stat Sci. 1992;7:457–472. doi: <a href='https://doi.org/10.1214/ss/1177011136'>10.1214/ss/1177011136</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>,
-  <a href='https://CRAN.R-project.org/package=R2jags'>R2jags</a></p></div>
+    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>

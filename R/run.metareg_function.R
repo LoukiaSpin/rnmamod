@@ -7,13 +7,12 @@
 #'
 #' @param full An object of S3 class \code{\link{run_model}}.
 #' See 'Value' in \code{\link{run_model}}.
-#' @param covariate A numeric vector or a matrix for a trial-specific covariate
+#' @param covariate A numeric vector or matrix for a trial-specific covariate
 #'   that is a potential effect modifier. See 'Details'.
 #' @param covar_assumption Character string indicating the structure of the
-#'   intervention by covariate interaction, as described in
-#'   Cooper et al., (2009). Set \code{covar_assumption} equal to one of the
-#'   following: \code{"NO"}, when no meta-regression is performed; otherwise,
-#'   \code{"exchangeable"}, \code{"independent"}, and \code{"common"}.
+#'   intervention-by-covariate interaction, as described in
+#'   Cooper et al., (2009). Set \code{covar_assumption} equal to
+#'   \code{"exchangeable"}, \code{"independent"}, or \code{"common"}.
 #' @param n_chains Positive integer specifying the number of chains for the
 #'   MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function
 #'   of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
@@ -34,11 +33,11 @@
 #'
 #' @return A list of R2jags outputs on the summaries of the posterior
 #'   distribution, and the Gelman-Rubin convergence diagnostic
-#'   (Gelman et al., 1992) of the following monitored parameters for a
-#'   fixed-effect PMA:
+#'   (Gelman et al., 1992) for the following monitored parameters for a
+#'   fixed-effect pairwise meta-analysis (PMA):
 #'   \tabular{ll}{
-#'    \code{EM} \tab The estimated summary effect measure
-#'    (according to the argument \code{measure}).\cr
+#'    \code{EM} \tab The estimated summary effect measure (according to the
+#'    argument \code{measure} defined in \code{\link{run_model}}).\cr
 #'    \tab \cr
 #'    \code{dev_o} \tab The deviance contribution of each trial-arm based
 #'    on the observed outcome.\cr
@@ -48,42 +47,54 @@
 #'    \code{phi} \tab The informative missingness parameter.\cr
 #'   }
 #'
+#'   For a fixed-effect network meta-analysis (NMA), the output additionally
+#'   includes:
+#'   \tabular{ll}{
+#'    \code{EM_ref} \tab The estimated summary effect measure
+#'    (according to the argument \code{measure} defined in
+#'    \code{\link{run_model}}) of all comparisons with the reference
+#'    intervention.\cr
+#'    \tab \cr
+#'    \code{SUCRA} \tab The surface under the cumulative ranking (SUCRA) curve
+#'    for each intervention.\cr
+#'    \tab \cr
+#'    \code{effectiveneness} \tab The ranking probability of each intervention
+#'    for every rank.\cr
+#'   }
+#'
 #'   For a random-effects PMA, the output additionally includes the
 #'   following elements:
 #'   \tabular{ll}{
 #'    \code{EM_pred} \tab The predicted summary effect measure
-#'    (according to the argument \code{measure}).\cr
+#'    (according to the argument \code{measure} defined in
+#'    \code{\link{run_model}}).\cr
 #'    \tab \cr
 #'    \code{delta} \tab The estimated trial-specific effect measure
-#'    (according to the argument \code{measure}).
+#'    (according to the argument \code{measure} defined in
+#'    \code{\link{run_model}}).
 #'    For a multi-arm trial, we estimate \emph{T-1} effects, where \emph{T}
 #'    is the number of interventions in the trial.\cr
 #'    \tab \cr
 #'    \code{tau} \tab The between-trial standard deviation.\cr
 #'   }
 #'
-#'   For a random-effects NMA, the output additionally includes:
+#'   For a random-effects NMA, the output additionally
+#'   includes:
 #'   \tabular{ll}{
-#'    \code{EM_ref} \tab The estimated summary effect measure
-#'    (according to the argument \code{measure}) of all comparisons
-#'    with the reference intervention.\cr
-#'    \tab \cr
 #'    \code{pred_ref} \tab The predicted summary effect measure
-#'    (according to the argument \code{measure}) of all comparisons
-#'    with the reference intervention.\cr
-#'    \tab \cr
-#'    \code{SUCRA} \tab The surface under the cumulative ranking curve
-#'    for each intervention.\cr
-#'    \tab \cr
-#'    \code{effectiveneness} \tab The ranking probability of each intervention
-#'    for every rank.\cr
+#'    (according to the argument \code{measure} defined in
+#'    \code{\link{run_model}}) of all comparisons with the reference
+#'    intervention.\cr
 #'   }
 #'   In NMA, \code{EM} and \code{EM_pred} refer to all possible pairwise
 #'   comparisons of interventions in the network. Furthermore, \code{tau} is
 #'   typically assumed to be common for all observed comparisons in the network.
+#'   For a multi-arm trial, we estimate a total \emph{T-1} of \code{delta} for
+#'   comparisons with the baseline intervention of the trial (found in the first
+#'   column of the element \bold{t}), with \emph{T} being the number of
+#'   interventions in the trial.
 #'
-#'   Furthermore, the output includes the following elements (the first three
-#'   resulting from relevant monitored parameters):
+#'   Furthermore, the output includes the following elements:
 #'   \tabular{ll}{
 #'    \code{leverage_o} \tab The leverage for the observed outcome
 #'    at each trial-arm.\cr
@@ -97,57 +108,57 @@
 #'    \tab \cr
 #'    \code{jagsfit} \tab An object of S3 class \code{\link[R2jags]{jags}}
 #'    with the posterior results on all monitored parameters to be used
-#'    in the \code{mcmc_diagnostics} function.\cr
+#'    in the \code{\link{mcmc_diagnostics}} function.\cr
 #'   }
 #'   The \code{run_metareg} function also returns the arguments \code{data},
 #'   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
 #'   \code{mean_misspar}, \code{var_misspar}, and \code{D}
-#'   as already specified by the user in \code{run_model}.
+#'   that have been specified by the user in \code{\link{run_model}} (see
+#'   'Arguments' in \code{\link{run_model}}).
 #'
-#' @details \code{run_metareg} does not contain the arguments \code{data},
+#' @details \code{run_metareg} inherits the arguments \code{data},
 #'   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
-#'   \code{mean_misspar}, and \code{var_misspar} that are found in
-#'   \code{run_model}. This is to prevent misspecifying the Bayesian model that
-#'   has been considered in \code{run_model}. Instead, these arguments are
-#'   contained in the argument \code{full} of the function. Therefore, the user
-#'   needs first to apply \code{run_model}, and then use \code{run_metareg}
-#'   (see, 'Examples').
+#'   \code{mean_misspar}, and \code{var_misspar} from \code{\link{run_model}}
+#'   (now contained in the argument \code{full}). This prevents specifying a
+#'   different Bayesian model from that considered in \code{\link{run_model}}.
+#'   Therefore, the user needs first to apply \code{\link{run_model}}, and then
+#'   use \code{run_metareg} (see 'Examples').
 #'
-#'   The model as specified by the arguments of \code{run_model} runs in
-#'   \code{JAGS} and the progress of the simulation appears in the R console.
-#'   The output of \code{run_metareg} is used as an S3 object by other functions
-#'   of the package to be processed further and provide an end-user-ready
-#'   output.
+#'   The model runs in \code{JAGS} and the progress of the simulation appears on
+#'   the R console. The output of \code{run_metareg} is used as an S3 object by
+#'   other functions of the package to be processed further and provide an
+#'   end-user-ready output.
 #'
-#'   The model of Spineli, (2019) and Spineli et al. (2021) has been extended
-#'   to incorporate one \emph{study-level covariate} variable following the
-#'   assumptions of Cooper et al. (2009) for the structure of the intervention
-#'   by covariate interaction. The covariate can be either a numeric vector or a
-#'   matrix (the columns equal the maximum number of arms in the dataset).
+#'   The models described in Spineli (2019), and Spineli et al., (2021) have
+#'   been extended to incorporate one \emph{study-level covariate} variable
+#'   following the assumptions of Cooper et al. (2009) for the structure of the
+#'   intervention-by-covariate interaction. The covariate can be either a
+#'   numeric vector or matrix with columns equal to the maximum number of arms
+#'   in the dataset.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso  \code{\link{run_model}}, \code{\link[R2jags]{jags}}
+#' @seealso \code{\link[R2jags]{jags}}, \code{\link{run_model}}
 #'
 #' @references
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 #' data in network meta-analysis: a one-stage pattern-mixture model approach.
-#' \emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
+#' \emph{Stat Methods Med Res} 2021. \doi{10.1177/0962280220983544}
 #'
 #' Spineli LM. An empirical comparison of Bayesian modelling strategies for
 #' missing binary outcome data in network meta-analysis.
 #' \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-#' [\doi{10.1186/s12874-019-0731-y}]
+#' \doi{10.1186/s12874-019-0731-y}
 #'
 #' Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
 #' heterogeneity and inconsistency in mixed treatment comparisons: Application
 #' to stroke prevention treatments in individuals with non-rheumatic atrial
 #' fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
-#' [\doi{10.1002/sim.3594}]
+#' \doi{10.1002/sim.3594}
 #'
 #' Gelman A, Rubin DB. Inference from iterative simulation using multiple
 #' sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
-#' [\doi{10.1214/ss/1177011136}]
+#' \doi{10.1214/ss/1177011136}
 #'
 #' @examples
 #' data("nma.baker2009")
@@ -167,7 +178,7 @@
 #'                  n_burnin = 1000,
 #'                  n_thin = 1)
 #'
-#' # Publicatiom year
+#' # Publication year
 #' pub_year <- c(1996, 1998, 1999, 2000, 2000, 2001, rep(2002, 5), 2003, 2003,
 #'               rep(2005, 4), 2006, 2006, 2007, 2007)
 #'

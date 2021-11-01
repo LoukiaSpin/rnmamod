@@ -36,12 +36,14 @@ An R2jags output on the summaries of the posterior distribution,
   and the Gelman-Rubin convergence diagnostic of the
   following monitored parameters:
   \tabular{ll}{
-   \code{direct} \tab The (summary) direct effect estimate of each
+   \code{direct} \tab The summary effect measure (according to the
+   argument \code{measure} defined in \code{\link{run_model}}) of each
    split node based on the corresponding trials.\cr
    \tab \cr
-   \code{indirect} \tab The indirect effect estimate of each
-   split node based on the remaining network after removing (splitting)
-   the corresponding node.\cr
+   \code{indirect} \tab The indirect summary effect measure (according to the
+   argument \code{measure} defined in \code{\link{run_model}}) of each split
+   node based on the remaining network after removing (splitting) the
+   corresponding node.\cr
    \tab \cr
    \code{diff} \tab The inconsistency parameter for each split node
    defined as the difference between the direct and indirect effect
@@ -53,66 +55,66 @@ An R2jags output on the summaries of the posterior distribution,
 
   Furthermore, the output includes the following element:
   \tabular{ll}{
-   \code{model.assessment} \tab A data-frame on the measures of model
+   \code{model_assessment} \tab A data-frame on the measures of model
    assessment after each split node: deviance information criterion,
    total residual deviance, and number of effective parameters.\cr
   }
 }
 \description{
-Performs a Bayesian network meta-analysis based on the node-splitting
-  approach of Dias et al. (2010) extended to address aggregate binary
-  and continuous participant outcome data via the pattern-mixture model
-  (Spineli, 2019; Spineli et al., 2021). This model offers a local evaluation
-  of the plausibility of the consistency assumption in the network
-  (Dias et al. (2010)).
+Performs the Bayesian node-splitting approach of Dias et al., (2010)
+  extended to address aggregate binary and continuous missing participant
+  outcome data via the pattern-mixture model (Spineli, 2019;
+  Spineli et al., 2021). This model offers a local evaluation of the
+  plausibility of the consistency assumption in the network
+  (Dias et al., 2010).
 }
 \details{
-\code{run_nodesplit} does not contain the arguments \code{data},
+\code{run_nodesplit} inherits the arguments \code{data},
   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
-  \code{mean_misspar}, and \code{var.misspar} that are found in
-  \code{run_model}. This is to prevent misspecifying the Bayesian model that
-  has been considered in \code{run_model}. Instead, these arguments are
-  contained in the argument \code{full} of the function. Therefore, the user
-  needs first to apply \code{run_model}, and then use \code{run_nodesplit}
-  (see, 'Examples').
+  \code{mean_misspar}, and \code{var_misspar} from \code{\link{run_model}}
+  (now contained in the argument \code{full}). This prevents specifying
+  a different Bayesian model from that considered in \code{\link{run_model}}.
+  Therefore, the user needs first to apply \code{\link{run_model}}, and then
+  use \code{run_nodesplit} (see 'Examples').
 
   To perform the Bayesian node-splitting approach, the
-  \code{prepare_nodesplit} function is called which contains the WinBUGS
-  code as written by Dias et al. (2010) for binomial and normal likelihood
-  to analyse binary and continuous outcome data, respectively.
-  \code{prepare_nodesplit} has been extended to incorporate the
+  \code{\link{prepare_nodesplit}} function is called which contains the
+  WinBUGS code as written by Dias et al., (2010) for binomial and normal
+  likelihood to analyse binary and continuous outcome data, respectively.
+  \code{\link{prepare_nodesplit}} has been extended to incorporate the
   pattern-mixture model with informative missingness parameters for binary
-  and continuous outcome data (see, 'Details' in \code{run_model}).
+  and continuous outcome data (see 'Details' in \code{\link{run_model}}).
 
-  \code{run_nodesplit} runs Bayesian network meta-analysis based on the
-  node-splitting approach in \code{JAGS}. The progress of the simulation
-  appears in the R console. The number of times \code{run_nodesplit} is used
-  appears in the R console as a text in red and it equals the number of
-  split nodes (see 'Examples'). If there are no split nodes in the network,
-  the execution of the function will be stopped and an error message
-  will be printed in the R console.
+  \code{run_nodesplit} runs the Bayesian node-splitting approach in
+  \code{JAGS}. The progress of the simulation appears on the R console. The
+  number of times \code{run_nodesplit} is used appears on the R console as a
+  text in red and it equals the number of split nodes (see 'Examples').
+  If there are no split nodes in the network, the execution of the function
+  will be stopped and an error message will be printed on the R console.
 
-  \code{run_nodesplit} uses the \code{mtc.nodesplit.comparisons} function
-  of the \code{\link{gemtc}} package to  obtain automatically the nodes to
-  split based on the decision rule of van Valkenhoef et al. (2016).
-  \code{run_nodesplit} uses the option (1) in van Valkenhoef et al. (2016)
+  \code{run_nodesplit} uses the
+  \code{\link[gemtc]{mtc.nodesplit.comparisons}} function of the
+  R-package \href{https://CRAN.R-project.org/package=gemtc}{gemtc}
+  to obtain automatically the nodes to split based on the decision rule of
+  van Valkenhoef et al., (2016).
+  \code{run_nodesplit} uses the option (1) in van Valkenhoef et al., (2016)
   to parameterise multi-arm trials that contain the node-to-split.
-  In contrast, the \code{mtc.nodesplit} function of the \code{\link{gemtc}}
-  package uses the option (3) in van Valkenhoef et al. (2016).
+  In contrast, \code{\link[gemtc]{mtc.nodesplit.comparisons}} uses the option
+  (3) in van Valkenhoef et al., (2016).
   Option (1) keeps the baseline arm of the node-to-split in the corresponding
   multi-arms. Option (3) excludes both arms of the node-to-split from the
   corresponding multi-arm trials. Hence, the corresponding subnetworks
-  obtained after splitting the node differ, and by extend, the results that
-  correspond to split nodes found in multi-arm trials.
+  obtained after splitting the node differ, and by extend, the results of the
+  corresponding split nodes found in multi-arm trials.
 
   The output of \code{run_nodesplit} is not end-user-ready.
-  The \code{nodesplit_plot} function uses the output of \code{run_nodesplit}
-  as an S3 object and processes it further to provide an end-user-ready
-  output.
+  The \code{\link{nodesplit_plot}} function uses the output of
+  \code{run_nodesplit} as an S3 object and processes it further to provide an
+  end-user-ready output.
 
   \code{run_nodesplit} can be used only for a network of interventions.
   In the case of two interventions, the execution of the function will
-  be stopped and an error message will be printed in the R console.
+  be stopped and an error message will be printed on the R console.
 }
 \examples{
 data("nma.baker2009")
@@ -132,7 +134,7 @@ res <- run_model(data = nma.baker2009,
                  n_burnin = 1000,
                  n_thin = 1)
 
-# Run random-effects network meta-analysis with node-splitting approach
+# Run random-effects node-splitting approach
 run_nodesplit(full = res,
               n_chains = 3,
               n_iter = 10000,
@@ -143,32 +145,32 @@ run_nodesplit(full = res,
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 data in network meta-analysis: a one-stage pattern-mixture model approach.
-\emph{Stat Methods Med Res} 2021. [\doi{10.1177/0962280220983544}]
+\emph{Stat Methods Med Res} 2021. \doi{10.1177/0962280220983544}
 
 Spineli LM. An empirical comparison of Bayesian modelling strategies for
 missing binary outcome data in network meta-analysis.
 \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-[\doi{10.1186/s12874-019-0731-y}]
-
-Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
-treatment comparison meta-analysis.
-\emph{Stat Med} 2010;\bold{29}(7-8):932--44.
-[\doi{10.1002/sim.3767}]
-
-Gelman A, Rubin DB. Inference from iterative simulation using multiple
-sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
-[\doi{10.1214/ss/1177011136}]
+\doi{10.1186/s12874-019-0731-y}
 
 van Valkenhoef G, Dias S, Ades AE, Welton NJ. Automated generation of
 node-splitting models for assessment of inconsistency in network
 meta-analysis. \emph{Res Synth Methods} 2016;\bold{7}(1):80--93.
-[\doi{10.1002/jrsm.1167}]
+\doi{10.1002/jrsm.1167}
+
+Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
+treatment comparison meta-analysis.
+\emph{Stat Med} 2010;\bold{29}(7-8):932--44.
+\doi{10.1002/sim.3767}
+
+Gelman A, Rubin DB. Inference from iterative simulation using multiple
+sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
+\doi{10.1214/ss/1177011136}
 }
 \seealso{
-\code{\link{run_model}}, \code{\link{nodesplit_plot}}, \
-code{\link{prepare_nodesplit}}, \code{\link[R2jags]{jags}},
-\code{\link[gemtc]{mtc.nodesplit.comparisons}},
-\code{\link[gemtc]{mtc.nodesplit}}
+\code{\link[R2jags]{jags}}, \code{\link[gemtc]{mtc.nodesplit}},
+  \code{\link[gemtc]{mtc.nodesplit.comparisons}},
+  \code{\link{nodesplit_plot}}, \code{\link{prepare_nodesplit}},
+  \code{\link{run_model}},
 }
 \author{
 {Loukia M. Spineli}

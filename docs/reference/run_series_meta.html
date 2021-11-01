@@ -40,8 +40,8 @@
 
 
 <meta property="og:title" content="Perform a series of Bayesian pairwise meta-analyses — run_series_meta" />
-<meta property="og:description" content="Performs separate Bayesian pairwise meta-analysis for each
-  pairwise comparison with at least two trials in the network." />
+<meta property="og:description" content="Performs a Bayesian pairwise meta-analysis for each
+ pairwise comparison with at least two trials in the network." />
 
 
 
@@ -128,8 +128,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Performs separate Bayesian pairwise meta-analysis for each
-  pairwise comparison with at least two trials in the network.</p>
+    <p>Performs a Bayesian pairwise meta-analysis for each
+ pairwise comparison with at least two trials in the network.</p>
     </div>
 
     <pre class="usage"><span class='fu'>run_series_meta</span><span class='op'>(</span><span class='va'>full</span>, <span class='va'>n_chains</span>, <span class='va'>n_iter</span>, <span class='va'>n_burnin</span>, <span class='va'>n_thin</span><span class='op'>)</span></pre>
@@ -178,8 +178,9 @@ The default argument is 1.</p></td>
     <p>An R2jags output on the summaries of the posterior distribution, and
   the Gelman-Rubin convergence diagnostic of the following monitored
   parameters:</p><table class='table'>
-<tr><td><code>EM</code></td><td>The summary effect estimate of each pairwise comparison
-   with at least two trials observed in the network.</td></tr>
+<tr><td><code>EM</code></td><td>The summary effect estimate (according to the argument
+   <code>measure</code> defined in <code><a href='run_model.html'>run_model</a></code>) of each observed
+   pairwise comparison with at least two trials in the network.</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>tau</code></td><td>The between-trial standard deviation for pairwise
    comparisons with at least two trials, when the random-effects model has
@@ -191,32 +192,32 @@ The default argument is 1.</p></td>
 
     <p><code>run_series_meta</code> inherits the arguments <code>data</code>,
   <code>measure</code>, <code>model</code>, <code>assumption</code>, <code>heter_prior</code>,
-  <code>mean_misspar</code>, and <code>var_misspar</code> from <code>run_model</code>, now
-  contained in the argument <code>full</code>. This prevents misspecifying the
-  Bayesian model that has been considered in <code>run_model</code>. Instead,
-  these arguments are contained in the argument <code>full</code> of the function.
-  Therefore, the user needs first to apply <code>run_model</code>, and then use
-  <code>run_series_meta</code> (see, 'Examples').</p>
-<p><code>run_series_meta</code> performs Bayesian pairwise meta-analysis in
-  <code>JAGS</code>. The progress of the simulation appears in the R console. The
-  number of times a pairwise meta-analysis is preformed is also printed in
-  the console (in red) and is equal to the number of pairwise comparisons
-  available in the network (see 'Examples').</p>
+  <code>mean_misspar</code>, and <code>var_misspar</code> from <code><a href='run_model.html'>run_model</a></code>
+  (now contained in the argument <code>full</code>). This prevents specifying
+  a different Bayesian model from that considered in <code><a href='run_model.html'>run_model</a></code>.
+  Therefore, the user needs first to apply <code><a href='run_model.html'>run_model</a></code>, and then
+  use <code>run_series_meta</code> (see 'Examples').</p>
+<p><code>run_series_meta</code> runs a series of Bayesian pairwise meta-analyses
+  in <code>JAGS</code>. The progress of the simulation appears on the R console.
+  The number of times a pairwise meta-analysis is preformed is also printed
+  on the console (in red) and is equal to the number of  pairwise comparisons
+  observed in the network (see 'Examples').</p>
 <p>The output of <code>run_series_meta</code> is not end-user-ready. The
-  <code>series_meta_plot</code> function uses the output of <code>run_series_meta</code>
-  as an S3 object and processes it further to provide an end-user-ready
-  output.</p>
-<p><code>run_series_meta</code> can be used only for a network of interventions.</p>
+  <code><a href='series_meta_plot.html'>series_meta_plot</a></code> function uses the output of
+  <code>run_series_meta</code> as an S3 object and processes it further to provide
+  an end-user-ready output.</p>
+<p><code>run_series_meta</code> can be used only for a network of interventions.
+  In the case of two interventions, the execution of the function will
+  be stopped and an error message will be printed on the R console.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Gelman A, Rubin DB. Inference from iterative simulation using multiple
 sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.
-[doi: <a href='https://doi.org/10.1214/ss/1177011136'>10.1214/ss/1177011136</a>
-]</p>
+doi: <a href='https://doi.org/10.1214/ss/1177011136'>10.1214/ss/1177011136</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>, <code><a href='series_meta_plot.html'>series_meta_plot</a></code>,
-  <code><a href='https://rdrr.io/pkg/R2jags/man/jags.html'>jags</a></code></p></div>
+    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/R2jags/man/jags.html'>jags</a></code>, <code><a href='run_model.html'>run_model</a></code>,
+  <code><a href='series_meta_plot.html'>series_meta_plot</a></code>,</p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>
