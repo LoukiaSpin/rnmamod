@@ -6,6 +6,11 @@
 #'
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
 #'   \code{\link{run_model}}.
+#' @param assumption Character string indicating the structure of the
+#'   informative missingness parameter. Set \code{assumption} equal to one of
+#'   the following: \code{"HIE-ARM"}, or \code{"IDE-TRIAL"} (see 'Details').
+#'   The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"},
+#'   and \code{"HIE"} stand for identical, and hierarchical, respectively.
 #' @param mean_scenarios A vector with numeric values for the mean of the normal
 #'    distribution of the informative missingness parameter (see 'Details').
 #'   The vector should have a length of 5 or larger \emph{positive odd integer}.
@@ -43,7 +48,7 @@
 #'   random-effects PMA:
 #'   \tabular{ll}{
 #'    \code{EM} \tab The estimated summary effect measure (according to the
-#'    argument \code{measure} in \code{\link{run_model}}).\cr
+#'    argument \code{measure} defined in \code{\link{run_model}}).\cr
 #'    \tab \cr
 #'    \code{tau} \tab The between-trial standard deviation. This element does
 #'    not appear in the case of a fixed-effect PMA.\cr
@@ -56,8 +61,8 @@
 #' @details The model runs in \code{JAGS} and the progress of the simulation
 #'   appears on the R console. The number of times \code{run_sensitivity} is
 #'   used appears on the R console as a text in red and it equals the
-#'   \emph{number of scenarios} defined as the square of the length of the
-#'   vector specified in argument \code{mean_scenarios} (see 'Examples').
+#'   \bold{number of scenarios} defined as \emph{the square of the length of the
+#'   \code{mean_scenarios} vector}  (see 'Examples').
 #'   The output of \code{run_sensitivity} is used as an S3 object by other
 #'   functions of the package function to be processed further and provide an
 #'   end-user-ready output.
@@ -156,6 +161,7 @@
 #'
 #' # Perform the sensitivity analysis (missing-at-random assumption)
 #' run_sensitivity(full = res,
+#'                 assumption = "HIE-ARM",
 #'                 var_misspar = 1,
 #'                 n_chains = 3,
 #'                 n_iter = 10000,
@@ -164,6 +170,7 @@
 #' }
 #' @export
 run_sensitivity <- function(full,
+                            assumption,
                             mean_scenarios,
                             var_misspar,
                             n_chains,
@@ -176,10 +183,16 @@ run_sensitivity <- function(full,
 
   data <- full$data
   measure <- full$measure
-  assumption <- full$assumption
   model <- full$model
   heter_prior <- full$heter_prior
   D <- full$D
+  assumption <- if (missing(assumption)) {
+    "IDE-ARM"
+  } else if(!is.element(assumption, c("IDE-ARM", "HIE-ARM"))) {
+    stop("Insert 'IDE-ARM', or, 'HIE-ARM'", call. = F)
+  } else {
+    assumption
+  }
 
   # Prepare the dataset for the R2jags
   item <- data_preparation(data, measure)
