@@ -25,7 +25,7 @@ reference:
   - nodesplit_plot
   - rankosucra_plot
   - scatterplots_dev
-  - scatterplots_sucra
+  - scatterplot_sucra
   - series_meta_plot
   - ume_plot
   - unrelated_effects_plot
