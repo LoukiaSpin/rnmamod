@@ -45,7 +45,7 @@ test_that("The summary log ORs and between-trial sd agree (no missing outcome da
   resnode.re <- rbind(node.re2$direct[c(3, 5:6)], node.re2$indirect[c(3, 5:6)])
   colnames(resnode.re) <- rownames(resnode.re) <- NULL
 
-  #expect_equal( resnode.fe, gemtc.fe, tolerance = 4e-2)
-  #expect_equal( resnode.re, gemtc.re, tolerance = 4e-2)
+  #expect_equal(resnode.fe, gemtc.fe, tolerance = 4e-2)
+  #expect_equal(resnode.re, gemtc.re, tolerance = 4e-2)
 })
 
