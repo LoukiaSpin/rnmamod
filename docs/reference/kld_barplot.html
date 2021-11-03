@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Barplot for the Kullback-Leibler divergence measure — kld_barplot" />
 <meta property="og:description" content="Produces a barplot with the Kullback-Leibler divergence (KLD)
-  measure from each re-analysis to primary analysis for a pairwise
+  measure from each re-analysis to the primary analysis for a pairwise
   comparison. Currently, kld_barplot is used concerning the impact of
   missing participant outcome data." />
 
@@ -131,7 +131,7 @@
 
     <div class="ref-description">
     <p>Produces a barplot with the Kullback-Leibler divergence (KLD)
-  measure from each re-analysis to primary analysis for a pairwise
+  measure from each re-analysis to the primary analysis for a pairwise
   comparison. Currently, <code>kld_barplot</code> is used concerning the impact of
   missing participant outcome data.</p>
     </div>
@@ -148,7 +148,7 @@ See 'Value' in <code><a href='robustness_index.html'>robustness_index</a></code>
     </tr>
     <tr>
       <th>compar</th>
-      <td><p>A character vector with two characters that indicates the
+      <td><p>A character vector with two elements that indicates the
 pairwise comparison of interest. The first character refers to the
 'experimental' intervention and the second character refers to the
 'control' intervention of the comparison.</p></td>
@@ -157,7 +157,7 @@ pairwise comparison of interest. The first character refers to the
       <th>drug_names</th>
       <td><p>A vector of labels with the name of the interventions in
 the order they appear in the argument <code>data</code> of
-<code><a href='run_model.html'>run_model</a></code>. If the argument <code>drug_names</code> is not defined,
+<code><a href='run_model.html'>run_model</a></code>. If <code>drug_names</code> is not defined,
 the order of the interventions as they appear in <code>data</code> is used,
 instead.</p></td>
     </tr>
@@ -169,15 +169,18 @@ instead.</p></td>
   each analysis.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The scenarios for the missingness parameter in compared
-  interventions are split to <em>Extreme</em>, <em>Sceptical</em>, and
-  <em>Optimistic</em> following the classification of Spineli et al. (2021).
-  In each class, bars will green, orange, and red colour refer to scenarios
-  without distance, less distant, and more distant scenarios from the primary
-   analysis (the missing-at-random assumption).</p>
-<p><code>kld_barplot</code> can be used only for when missing participant outcome
+    <p><code>kld_barplot</code> uses the scenarios inherited by
+  <code><a href='robustness_index.html'>robustness_index</a></code> via the <code><a href='run_sensitivity.html'>run_sensitivity</a></code>
+  function. The scenarios for the missingness parameter (see 'Details' in
+  <code><a href='run_sensitivity.html'>run_sensitivity</a></code>) in the compared interventions are split to
+  <em>Extreme</em>, <em>Sceptical</em>, and <em>Optimistic</em> following the
+  classification of Spineli et al., (2021). In each class, bars will green,
+  orange, and red colour refer to scenarios without distance, less distant,
+  and more distant from the primary analysis
+  (the missing-at-random assumption).</p>
+<p><code>kld_barplot</code> can be used only when missing participant outcome
   data have been extracted for at least one trial. Otherwise, the execution
-  of the function will be stopped and an error message will be printed in
+  of the function will be stopped and an error message will be printed on
   the R console.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -185,15 +188,14 @@ instead.</p></td>
 primary analysis results: A case study on missing outcome data in pairwise
 and network meta-analysis.
 <em>Res Synth Methods</em> 2021;<b>12</b>(4):475--490.
-[doi: <a href='https://doi.org/10.1002/jrsm.1478'>10.1002/jrsm.1478</a>
-]</p>
+doi: <a href='https://doi.org/10.1002/jrsm.1478'>10.1002/jrsm.1478</a></p>
 <p>Kullback S, Leibler RA. On information and sufficiency.
 <em>Ann Math Stat</em> 1951;<b>22</b>(1):79--86.
-[doi: <a href='https://doi.org/10.1214/aoms/1177729694'>10.1214/aoms/1177729694</a>
-]</p>
+doi: <a href='https://doi.org/10.1214/aoms/1177729694'>10.1214/aoms/1177729694</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='robustness_index.html'>robustness_index</a></code>, <code><a href='run_model.html'>run_model</a></code></p></div>
+    <div class='dont-index'><p><code><a href='robustness_index.html'>robustness_index</a></code>, <code><a href='run_model.html'>run_model</a></code>,
+  <code><a href='run_sensitivity.html'>run_sensitivity</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>

@@ -20,18 +20,19 @@
 #'   improved unrelated mean effects model (Spineli, 2021) of all pairwise
 #'   comparisons observed in the network.
 #'
-#' @details \code{intervalplot_panel_ume} is integrated in the \code{ume_plot}
-#'   function. The consistency model and the unrelated mean effects model are
-#'   abbreviated in the y-axis as 'NMA model' and 'UME model'. The intervals are
-#'   highlighted with green, when the corresponding summary effect sizes do not
-#'   cross the vertical line of no difference, and red otherwise. Grey panels
-#'   refer to the frail comparisons as detected by the \code{run_ume} function
-#'   (see 'Details' in \code{run_ume}).
+#' @details \code{intervalplot_panel_ume} is integrated in the
+#'   \code{\link{ume_plot}} function. The consistency model and the unrelated
+#'   mean effects model are abbreviated in the y-axis as 'NMA model' and
+#'   'UME model'. The intervals are highlighted with green, when the
+#'   corresponding summary effect sizes do not cross the vertical line of no
+#'   difference, and red otherwise. Grey panels refer to the frail comparisons
+#'   as detected by the \code{\link{run_ume}} function (see 'Details' in
+#'   \code{\link{run_ume}}).
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run_model}}, \code{\link{run_ume}},
-#'   \code{\link{ume_plot}}
+#' @seealso \code{\link{run_model}}, \code{\link{ume_plot}},
+#'   \code{\link{run_ume}}
 #'
 #' @references
 #' Spineli LM. A novel framework to evaluate the consistency assumption globally

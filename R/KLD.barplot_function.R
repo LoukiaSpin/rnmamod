@@ -1,51 +1,55 @@
 #' Barplot for the Kullback-Leibler divergence measure
 #'
 #' @description Produces a barplot with the Kullback-Leibler divergence (KLD)
-#'   measure from each re-analysis to primary analysis for a pairwise
+#'   measure from each re-analysis to the primary analysis for a pairwise
 #'   comparison. Currently, \code{kld_barplot} is used concerning the impact of
 #'   missing participant outcome data.
 #'
 #' @param robust An object of S3 class \code{\link{robustness_index}}.
 #'   See 'Value' in \code{\link{robustness_index}}.
-#' @param compar A character vector with two characters that indicates the
-#'   pairwise comparison of interest. The first character refers to the
-#'   'experimental' intervention and the second character refers to the
+#' @param compar A character vector with two elements that indicates the
+#'   pairwise comparison of interest. The first element refers to the
+#'   'experimental' intervention and the second element refers to the
 #'   'control' intervention of the comparison.
 #' @param drug_names A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data} of
-#'   \code{\link{run_model}}. If the argument \code{drug_names} is not defined,
+#'   \code{\link{run_model}}. If \code{drug_names} is not defined,
 #'   the order of the interventions as they appear in \code{data} is used,
 #'   instead.
 #'
 #' @return \code{kld_barplot} returns a panel of barplots on the KLD measure for
-#'   each analysis.
+#'   each re-analysis.
 #'
-#' @details The scenarios for the missingness parameter in compared
-#'   interventions are split to \emph{Extreme}, \emph{Sceptical}, and
-#'   \emph{Optimistic} following the classification of Spineli et al. (2021).
-#'   In each class, bars will green, orange, and red colour refer to scenarios
-#'   without distance, less distant, and more distant scenarios from the primary
-#'    analysis (the missing-at-random assumption).
+#' @details \code{kld_barplot} uses the scenarios inherited by
+#'   \code{\link{robustness_index}} via the \code{\link{run_sensitivity}}
+#'   function. The scenarios for the missingness parameter (see 'Details' in
+#'   \code{\link{run_sensitivity}}) in the compared interventions are split to
+#'   \emph{Extreme}, \emph{Sceptical}, and \emph{Optimistic} following the
+#'   classification of Spineli et al., (2021). In each class, bars will green,
+#'   orange, and red colour refer to scenarios without distance, less distant,
+#'   and more distant from the primary analysis
+#'   (the missing-at-random assumption).
 #'
-#'   \code{kld_barplot} can be used only for when missing participant outcome
+#'   \code{kld_barplot} can be used only when missing participant outcome
 #'   data have been extracted for at least one trial. Otherwise, the execution
-#'   of the function will be stopped and an error message will be printed in
+#'   of the function will be stopped and an error message will be printed on
 #'   the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{robustness_index}}, \code{\link{run_model}}
+#' @seealso \code{\link{robustness_index}}, \code{\link{run_model}},
+#'   \code{\link{run_sensitivity}}
 #'
 #' @references
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
 #' primary analysis results: A case study on missing outcome data in pairwise
 #' and network meta-analysis.
 #' \emph{Res Synth Methods} 2021;\bold{12}(4):475--490.
-#' [\doi{10.1002/jrsm.1478}]
+#' \doi{10.1002/jrsm.1478}
 #'
 #' Kullback S, Leibler RA. On information and sufficiency.
 #' \emph{Ann Math Stat} 1951;\bold{22}(1):79--86.
-#' [\doi{10.1214/aoms/1177729694}]
+#' \doi{10.1214/aoms/1177729694}
 #'
 #' @examples
 #' data("nma.baker2009")
