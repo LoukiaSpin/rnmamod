@@ -42,7 +42,8 @@
 <meta property="og:title" content="Comparator-specific forest-plot for network meta-regression — forestplot_metareg" />
 <meta property="og:description" content="This function illustrates a forest plot of the posterior mean
   and 95% credible and predictive interval of comparisons with the selected
-  intervention of the network." />
+  intervention of the network under the netwrok meta-analysis and network
+  meta-regression." />
 
 
 
@@ -131,7 +132,8 @@
     <div class="ref-description">
     <p>This function illustrates a forest plot of the posterior mean
   and 95% credible and predictive interval of comparisons with the selected
-  intervention of the network.</p>
+  intervention of the network under the netwrok meta-analysis and network
+  meta-regression.</p>
     </div>
 
     <pre class="usage"><span class='fu'>forestplot_metareg</span><span class='op'>(</span><span class='va'>full</span>, <span class='va'>reg</span>, <span class='va'>compar</span>, <span class='va'>cov_value</span>, <span class='va'>drug_names</span><span class='op'>)</span></pre>
@@ -175,34 +177,35 @@ instead.</p></td>
 
     <p>A panel of two forest plots: (1) a forest plot on the estimated
   effect size of comparisons with the selected intervention of the network,
-  and (2) a forest plot predicted effect size of comparisons with the
+  and (2) a forest plot on the predicted effect size of comparisons with the
   selected intervention of the network. Both panels illustrate the results
-  from network meta-analysis and meta-regression using different colours.</p>
+  from network meta-analysis and network meta-regression using different
+  colours for the corresponding lines.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The y-axis displays all interventions in the network; the selected
-  intervention that comprises the <code>compar</code> is indicated in the plot with
-  a homonymous label. The numerical results are displayed above each line.
+    <p>In both plots, tThe y-axis displays all interventions in the
+  network; the selected intervention that comprises the <code>compar</code> is
+  indicated in the plot with a homonymous label. The numerical results are
+  displayed above each line.
   Odds ratio and ratio of means are reported in the original scale after
   exponentiation of the logarithmic scale.</p>
 <p>When the covariate is binary, specify in the second element of
   <code>cov_value</code> the name of the level for which the forest plot will be
   created.</p>
-<p>The interventions are sorted in the descending order of their SUCRA values
-  obtain via network meta-analysis.</p>
+<p>In both plots, the interventions are sorted in the descending order of
+  their SUCRA values obtain via the network meta-analysis.</p>
 <p><code>forestplot</code> can be used only for a network of interventions. In the
   case of two interventions, the execution of the function will be stopped
-  and an error message will be printed in the R console.</p>
+  and an error message will be printed on the R console.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 for presenting results from multiple-treatment meta-analysis: an overview and
 tutorial. <em>J Clin Epidemiol</em> 2011;<b>64</b>(2):163--71.
-[doi: <a href='https://doi.org/10.1016/j.jclinepi.2010.03.016'>10.1016/j.jclinepi.2010.03.016</a>
-]</p>
+doi: <a href='https://doi.org/10.1016/j.jclinepi.2010.03.016'>10.1016/j.jclinepi.2010.03.016</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>, <code><a href='run_metareg.html'>run_metareg</a></code></p></div>
+    <div class='dont-index'><p><code><a href='run_metareg.html'>run_metareg</a></code>, <code><a href='run_model.html'>run_model</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>

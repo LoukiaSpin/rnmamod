@@ -26,13 +26,14 @@ A panel of two forest plots: (1) a forest plot on the effect
 }
 \description{
 Provides a forest plot with the posterior mean and 95\% credible
-  and prediction intervals for comparisons with the selected intervention in
-  the network.
+  and prediction intervals for comparisons with the selected intervention
+  (comparator) in the network.
 }
 \details{
-The y-axis of the plot displays the labels of the interventions in
-  the network; the selected intervention that comprises the \code{compar}
-  argument is annotated in the plot with the label 'Comparator intervention'.
+The y-axis of the forest plot on the effect sizes displays the
+  labels of the interventions in the network; the selected intervention that
+  comprises the \code{compar} argument is annotated in the plot with the
+  label 'Comparator intervention'.
   For each comparison with the selected intervention, the 95\% credible and
   prediction intervals are displayed as overlapping lines in different
   colours. The corresponding numerical results are displayed above each line:
@@ -41,9 +42,16 @@ The y-axis of the plot displays the labels of the interventions in
   reported in the original scale after exponentiation of the logarithmic
   scale.
 
-  The interventions are sorted in descending order of their SUCRA values.
+  The y-axis for the forest plot on the SUCRA values displays the
+  labels of the interventions in the network.
+  The corresponding numerical results are displayed above each line.
+
+  In both plots, the interventions are sorted in descending order of their
+  SUCRA values.
 
   \code{forestplot} can be used only for a network of interventions.
+  Otherwise, the execution of the function will be stopped and an error
+  message will be printed on the R console.
 }
 \examples{
 data("nma.liu2013")
@@ -89,7 +97,7 @@ forestplot(full = res,
 Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 for presenting results from multiple-treatment meta-analysis: an overview and
 tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
-[\doi{10.1016/j.jclinepi.2010.03.016}]
+\doi{10.1016/j.jclinepi.2010.03.016}
 }
 \seealso{
 \code{\link{run_model}}

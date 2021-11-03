@@ -30,19 +30,22 @@ instead.}
 \value{
 A panel of two forest plots: (1) a forest plot on the estimated
   effect size of comparisons with the selected intervention of the network,
-  and (2) a forest plot predicted effect size of comparisons with the
+  and (2) a forest plot on the predicted effect size of comparisons with the
   selected intervention of the network. Both panels illustrate the results
-  from network meta-analysis and meta-regression using different colours.
+  from network meta-analysis and network meta-regression using different
+  colours for the corresponding lines.
 }
 \description{
 This function illustrates a forest plot of the posterior mean
   and 95\% credible and predictive interval of comparisons with the selected
-  intervention of the network.
+  intervention of the network under the netwrok meta-analysis and network
+  meta-regression.
 }
 \details{
-The y-axis displays all interventions in the network; the selected
-  intervention that comprises the \code{compar} is indicated in the plot with
-  a homonymous label. The numerical results are displayed above each line.
+In both plots, tThe y-axis displays all interventions in the
+  network; the selected intervention that comprises the \code{compar} is
+  indicated in the plot with a homonymous label. The numerical results are
+  displayed above each line.
   Odds ratio and ratio of means are reported in the original scale after
   exponentiation of the logarithmic scale.
 
@@ -50,21 +53,21 @@ The y-axis displays all interventions in the network; the selected
   \code{cov_value} the name of the level for which the forest plot will be
   created.
 
-  The interventions are sorted in the descending order of their SUCRA values
-  obtain via network meta-analysis.
+  In both plots, the interventions are sorted in the descending order of
+  their SUCRA values obtain via the network meta-analysis.
 
   \code{forestplot} can be used only for a network of interventions. In the
   case of two interventions, the execution of the function will be stopped
-  and an error message will be printed in the R console.
+  and an error message will be printed on the R console.
 }
 \references{
 Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 for presenting results from multiple-treatment meta-analysis: an overview and
 tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
-[\doi{10.1016/j.jclinepi.2010.03.016}]
+\doi{10.1016/j.jclinepi.2010.03.016}
 }
 \seealso{
-\code{\link{run_model}}, \code{\link{run_metareg}}
+\code{\link{run_metareg}}, \code{\link{run_model}}
 }
 \author{
 {Loukia M. Spineli}

@@ -41,8 +41,8 @@
 
 <meta property="og:title" content="Comparator-specific forest plot for network meta-analysis — forestplot" />
 <meta property="og:description" content="Provides a forest plot with the posterior mean and 95% credible
-  and prediction intervals for comparisons with the selected intervention in
-  the network." />
+  and prediction intervals for comparisons with the selected intervention
+  (comparator) in the network." />
 
 
 
@@ -130,8 +130,8 @@
 
     <div class="ref-description">
     <p>Provides a forest plot with the posterior mean and 95% credible
-  and prediction intervals for comparisons with the selected intervention in
-  the network.</p>
+  and prediction intervals for comparisons with the selected intervention
+  (comparator) in the network.</p>
     </div>
 
     <pre class="usage"><span class='fu'>forestplot</span><span class='op'>(</span><span class='va'>full</span>, <span class='va'>compar</span>, <span class='va'>drug_names</span><span class='op'>)</span></pre>
@@ -166,9 +166,10 @@ the interventions are ordered as they appear in <code>data</code>.</p></td>
   interval of SUCRA values of the interventions (Salanti et al., 2011).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The y-axis of the plot displays the labels of the interventions in
-  the network; the selected intervention that comprises the <code>compar</code>
-  argument is annotated in the plot with the label 'Comparator intervention'.
+    <p>The y-axis of the forest plot on the effect sizes displays the
+  labels of the interventions in the network; the selected intervention that
+  comprises the <code>compar</code> argument is annotated in the plot with the
+  label 'Comparator intervention'.
   For each comparison with the selected intervention, the 95% credible and
   prediction intervals are displayed as overlapping lines in different
   colours. The corresponding numerical results are displayed above each line:
@@ -176,15 +177,20 @@ the interventions are ordered as they appear in <code>data</code>.</p></td>
   intervals are found in brackets. Odds ratios and ratio of means are
   reported in the original scale after exponentiation of the logarithmic
   scale.</p>
-<p>The interventions are sorted in descending order of their SUCRA values.</p>
-<p><code>forestplot</code> can be used only for a network of interventions.</p>
+<p>The y-axis for the forest plot on the SUCRA values displays the
+  labels of the interventions in the network.
+  The corresponding numerical results are displayed above each line.</p>
+<p>In both plots, the interventions are sorted in descending order of their
+  SUCRA values.</p>
+<p><code>forestplot</code> can be used only for a network of interventions.
+  Otherwise, the execution of the function will be stopped and an error
+  message will be printed on the R console.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 for presenting results from multiple-treatment meta-analysis: an overview and
 tutorial. <em>J Clin Epidemiol</em> 2011;<b>64</b>(2):163--71.
-[doi: <a href='https://doi.org/10.1016/j.jclinepi.2010.03.016'>10.1016/j.jclinepi.2010.03.016</a>
-]</p>
+doi: <a href='https://doi.org/10.1016/j.jclinepi.2010.03.016'>10.1016/j.jclinepi.2010.03.016</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code></p></div>
@@ -193,51 +199,52 @@ tutorial. <em>J Clin Epidemiol</em> 2011;<b>64</b>(2):163--71.
     <p>Loukia M. Spineli</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"nma.liu2013"</span><span class='op'>)</span>
-
-<span class='co'># Show the first six trials of the dataset (one-trial-per-row format)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>nma.liu2013</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                study t1 t2 t3 r1 r2 r3 m1 m2 m3  n1  n2 n3
-#&gt; 356    Richard, 2012  1  3  4 15 16 23  6  8  4  39  42 34
-#&gt; 357     Barone, 2010  1  2 NA 27 38 NA 19 20 NA 152 144 NA
-#&gt; 358 Weinbtraub, 2010  1  3 NA  2  5 NA  6  6 NA  27  28 NA
-#&gt; 359      Menza, 2009  1  4  5  4  2  9  6  7  5  17  18 17
-#&gt; 360      Devos, 2008  1  4  5  4  8 11  0  2  1  16  15 17
-#&gt; 361   Antonini, 2006  4  5 NA 10  8 NA  4  4 NA  16  15 NA</div><div class='input'><span class='co'>#            study t1 t2 t3 r1 r2 r3 m1 m2 m3  n1  n2 n3</span>
-<span class='co'>#    Richard, 2012  1  3  4 15 16 23  6  8  4  39  42 34</span>
-<span class='co'>#     Barone, 2010  1  2 NA 27 38 NA 19 20 NA 152 144 NA</span>
-<span class='co'># Weinbtraub, 2010  1  3 NA  2  5 NA  6  6 NA  27  28 NA</span>
-<span class='co'>#      Menza, 2009  1  4  5  4  2  9  6  7  5  17  18 17</span>
-<span class='co'>#      Devos, 2008  1  4  5  4  8 11  0  2  1  16  15 17</span>
-<span class='co'>#   Antonini, 2006  4  5 NA 10  8 NA  4  4 NA  16  15 NA</span>
-
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># Perform a random-effects network meta-analysis</span>
-<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_model.html'>run_model</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>nma.liu2013</span>,
-                 measure <span class='op'>=</span> <span class='st'>"OR"</span>,
-                 model <span class='op'>=</span> <span class='st'>"RE"</span>,
-                 assumption <span class='op'>=</span> <span class='st'>"IDE-ARM"</span>,
-                 heter_prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"halfnormal"</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>,
-                 mean_misspar <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>,
-                 var_misspar <span class='op'>=</span> <span class='fl'>1</span>,
-                 D <span class='op'>=</span> <span class='fl'>1</span>,
-                 n_chains <span class='op'>=</span> <span class='fl'>3</span>,
-                 n_iter <span class='op'>=</span> <span class='fl'>10000</span>,
-                 n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,
-                 n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-
-<span class='co'># The names of the interventions in the order they appear in the dataset</span>
-<span class='va'>interv_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"placebo"</span>, <span class='st'>"pramipexole"</span>, <span class='st'>"serotonin–norepinephrine
-reuptake inhibitor"</span>, <span class='st'>"serotonin reuptake inhibitor"</span>, <span class='st'>"tricyclic
-antidepressant"</span>, <span class='st'>"pergolide"</span><span class='op'>)</span>
-
-<span class='co'># Create the league heatmap</span>
-<span class='fu'>forestplot</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,
-           compar <span class='op'>=</span> <span class='st'>"placebo"</span>,
-           drug_names <span class='op'>=</span> <span class='va'>interv_names</span><span class='op'>)</span>
-<span class='op'>}</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"nma.liu2013"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Show the first six trials of the dataset (one-trial-per-row format)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>nma.liu2013</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                study t1 t2 t3 r1 r2 r3 m1 m2 m3  n1  n2 n3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 356    Richard, 2012  1  3  4 15 16 23  6  8  4  39  42 34</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 357     Barone, 2010  1  2 NA 27 38 NA 19 20 NA 152 144 NA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 358 Weinbtraub, 2010  1  3 NA  2  5 NA  6  6 NA  27  28 NA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 359      Menza, 2009  1  4  5  4  2  9  6  7  5  17  18 17</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 360      Devos, 2008  1  4  5  4  8 11  0  2  1  16  15 17</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 361   Antonini, 2006  4  5 NA 10  8 NA  4  4 NA  16  15 NA</span>
+<span class='r-in'><span class='co'>#            study t1 t2 t3 r1 r2 r3 m1 m2 m3  n1  n2 n3</span></span>
+<span class='r-in'><span class='co'>#    Richard, 2012  1  3  4 15 16 23  6  8  4  39  42 34</span></span>
+<span class='r-in'><span class='co'>#     Barone, 2010  1  2 NA 27 38 NA 19 20 NA 152 144 NA</span></span>
+<span class='r-in'><span class='co'># Weinbtraub, 2010  1  3 NA  2  5 NA  6  6 NA  27  28 NA</span></span>
+<span class='r-in'><span class='co'>#      Menza, 2009  1  4  5  4  2  9  6  7  5  17  18 17</span></span>
+<span class='r-in'><span class='co'>#      Devos, 2008  1  4  5  4  8 11  0  2  1  16  15 17</span></span>
+<span class='r-in'><span class='co'>#   Antonini, 2006  4  5 NA 10  8 NA  4  4 NA  16  15 NA</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='co'># Perform a random-effects network meta-analysis</span></span>
+<span class='r-in'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_model.html'>run_model</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>nma.liu2013</span>,</span>
+<span class='r-in'>                 measure <span class='op'>=</span> <span class='st'>"OR"</span>,</span>
+<span class='r-in'>                 model <span class='op'>=</span> <span class='st'>"RE"</span>,</span>
+<span class='r-in'>                 assumption <span class='op'>=</span> <span class='st'>"IDE-ARM"</span>,</span>
+<span class='r-in'>                 heter_prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"halfnormal"</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>,</span>
+<span class='r-in'>                 mean_misspar <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>,</span>
+<span class='r-in'>                 var_misspar <span class='op'>=</span> <span class='fl'>1</span>,</span>
+<span class='r-in'>                 D <span class='op'>=</span> <span class='fl'>1</span>,</span>
+<span class='r-in'>                 n_chains <span class='op'>=</span> <span class='fl'>3</span>,</span>
+<span class='r-in'>                 n_iter <span class='op'>=</span> <span class='fl'>10000</span>,</span>
+<span class='r-in'>                 n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,</span>
+<span class='r-in'>                 n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># The names of the interventions in the order they appear in the dataset</span></span>
+<span class='r-in'><span class='va'>interv_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"placebo"</span>, <span class='st'>"pramipexole"</span>, <span class='st'>"serotonin–norepinephrine</span>
+<span class='r-in'>reuptake inhibitor"</span>, <span class='st'>"serotonin reuptake inhibitor"</span>, <span class='st'>"tricyclic</span>
+<span class='r-in'>antidepressant"</span>, <span class='st'>"pergolide"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Create the league heatmap</span></span>
+<span class='r-in'><span class='fu'>forestplot</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,</span>
+<span class='r-in'>           compar <span class='op'>=</span> <span class='st'>"placebo"</span>,</span>
+<span class='r-in'>           drug_names <span class='op'>=</span> <span class='va'>interv_names</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

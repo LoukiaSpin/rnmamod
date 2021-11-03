@@ -11,8 +11,7 @@
 #' @param drug_names A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data} of
 #'   \code{\link{run_model}}. If the argument \code{drug_names} is not defined,
-#'   the interventions are ordered as they appear in \code{data} (See
-#'   'Arguments' in \code{\link{run_model}}).
+#'   the interventions are ordered as they appear in \code{data}.
 #'
 #' @return A panel of two forest plots: (1) a forest plot on the effect
 #'   estimates and predictions of comparisons with the selected intervention in
@@ -31,9 +30,16 @@
 #'   reported in the original scale after exponentiation of the logarithmic
 #'   scale.
 #'
-#'   The interventions are sorted in descending order of their SUCRA values.
+#'   The y-axis for the forest plot on the SUCRA values displays the
+#'   labels of the interventions in the network.
+#'   The corresponding numerical results are displayed above each line.
+#'
+#'   In both plots, the interventions are sorted in descending order of their
+#'   SUCRA values.
 #'
 #'   \code{forestplot} can be used only for a network of interventions.
+#'   Otherwise, the execution of the function will be stopped and an error
+#'   message will be printed on the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -43,7 +49,7 @@
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 #' for presenting results from multiple-treatment meta-analysis: an overview and
 #' tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
-#' [\doi{10.1016/j.jclinepi.2010.03.016}]
+#' \doi{10.1016/j.jclinepi.2010.03.016}
 #'
 #' @examples
 #' data("nma.liu2013")
