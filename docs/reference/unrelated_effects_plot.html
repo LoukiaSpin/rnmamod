@@ -40,9 +40,8 @@
 
 
 <meta property="og:title" content="End-user-ready results for unrelated trials effects model — unrelated_effects_plot" />
-<meta property="og:description" content="Performs the unrelated trial effects model and create a panel of
-  interval plots on the results of each trial and corresponding pairwise
-  comparison." />
+<meta property="og:description" content="Performs the unrelated trial effects model and illustrates the
+  results of each trial and corresponding pairwise comparison." />
 
 
 
@@ -129,9 +128,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Performs the unrelated trial effects model and create a panel of
-  interval plots on the results of each trial and corresponding pairwise
-  comparison.</p>
+    <p>Performs the unrelated trial effects model and illustrates the
+  results of each trial and corresponding pairwise comparison.</p>
     </div>
 
     <pre class="usage"><span class='fu'>unrelated_effects_plot</span><span class='op'>(</span>
@@ -140,8 +138,8 @@
   <span class='va'>char</span>,
   <span class='va'>drug_names</span>,
   <span class='va'>trial_names</span>,
-  <span class='va'>mean_value</span>,
-  <span class='va'>var_value</span>,
+  <span class='va'>mean_misspar</span>,
+  <span class='va'>var_misspar</span>,
   <span class='va'>rho</span>,
   <span class='va'>save_xls</span>
 <span class='op'>)</span></pre>
@@ -153,8 +151,7 @@
       <th>data</th>
       <td><p>A data-frame of a one-trial-per-row format containing arm-level
 data of each trial. This format is widely used for BUGS models. See
-'Format' in <code><a href='run_model.html'>run_model</a></code> function for the specification
-of the columns.</p></td>
+'Format' in <code><a href='run_model.html'>run_model</a></code>.</p></td>
     </tr>
     <tr>
       <th>measure</th>
@@ -179,26 +176,25 @@ is used, instead.</p></td>
     <tr>
       <th>trial_names</th>
       <td><p>A vector of labels with the name of the trials in the
-order they appear in the argument <code>data</code>. If the argument
-<code>drug_names</code> is not defined, the order of the interventions as they
-appear in <code>data</code> is used, instead.</p></td>
+order they appear in the argument <code>data</code>. If <code>trial_names</code> is not
+defined, the order of the trials as they appear in <code>data</code> is used,
+instead.</p></td>
     </tr>
     <tr>
-      <th>mean_value</th>
-      <td><p>A numeric value for the mean of the normal distribution of
-the informative missingness parameter. The same value is considered for all
-trial-arms of the dataset. The default argument is 0 and corresponds to the
-missing-at-random assumption. For the informative missingness odds ratio
-and the informative missingness ratio of means, the mean value is defined
-in the logarithmic scale.</p></td>
+      <th>mean_misspar</th>
+      <td><p>A numeric value or a vector of two numeric values for the
+mean of the normal distribution of the informative missingness parameter
+(see 'Details'). The default argument is 0 and corresponds to the
+missing-at-random assumption.
+See also 'Details' in <code><a href='missingness_param_prior.html'>missingness_param_prior</a></code>.</p></td>
     </tr>
     <tr>
-      <th>var_value</th>
-      <td><p>A positive non-zero number for the variance of the normal
-distribution of the informative missingness parameter. When the
-<code>measure</code> is <code>"OR"</code>, <code>"MD"</code>, or <code>"SMD"</code> the default
-argument is 1; When the <code>measure</code> is <code>"ROM"</code> the default argument
-is 0.04.</p></td>
+      <th>var_misspar</th>
+      <td><p>A positive non-zero number for the variance of the
+normal distribution of the informative missingness parameter.
+When the <code>measure</code> is <code>"OR"</code>, <code>"MD"</code>, or <code>"SMD"</code>
+the default argument is 1. When the <code>measure</code> is <code>"ROM"</code>
+the default argument is 0.04</p></td>
     </tr>
     <tr>
       <th>rho</th>
@@ -210,21 +206,22 @@ argument is 0 and corresponds to uncorrelated missingness parameters.</p></td>
     <tr>
       <th>save_xls</th>
       <td><p>Logical to indicate whether to export the tabulated results
-to an Excel 'xlsx' format (via the <code><a href='https://docs.ropensci.org/writexl/reference/write_xlsx.html'>write_xlsx</a></code>
+to an 'xlsx' file (via the <code><a href='https://docs.ropensci.org/writexl/reference/write_xlsx.html'>write_xlsx</a></code>
 function) to the working directory of the user. The default is <code>FALSE</code>
-(do not export to an Excel format).</p></td>
+(do not export).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A panel of interval plots for each observed comparison in the
-  network, when there are up to 21 trials in the <code>data</code>. Otherwise, an
-  Excel file with the arm-level data of each trial, the corresponding effect
-  measure and 95% confidence interval (lower, upper), the intervention
-  compared, and the three characteristics (as defined in <code>char</code>). For
-  larger datasets, the plot becomes cluttered and it is difficult to identify
-  the trial names. Hence, exporting the results in an Excel file is an viable
+  network, when there are up to 15 trials in the <code>data</code>. Otherwise, an
+  Excel file with the arm-level data of each trial (as defined in
+  <code>data</code>), the corresponding effect measure and 95% confidence
+  interval, the interventions compared, and the three characteristics
+  (as defined in <code>char</code>). For datasets with more than 15 trials,
+  the plot becomes cluttered and it is difficult to identify  the trial
+  names. Hence, exporting the results in an Excel file is an viable
   alternative.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -235,13 +232,13 @@ function) to the working directory of the user. The default is <code>FALSE</code
   standard error are adjusted by applying the pattern-mixture model with
   Taylor series in trial-arms with MOD (White et al., 2008;
   Mavridis et al., 2015). The <code>unrelated_effects_plot</code> function calls
-  the <code>taylor_imor</code> and <code>taylor_continuous</code> functions (for binary
-  and continuous outcome, respectively) to employ pattern-mixture model with
-  Taylor series. The <code>unrelated_effects_plot</code> function considers the
-  informative missingness odds ratio in the logarithmic scale for binary
-  outcome data (White et al., 2008), the informative missingness difference
-  of means when <code>measure</code> is <code>"MD"</code> or <code>"SMD"</code>, and the
-  informative missingness ratio of means in the logarithmic scale when
+  the <code><a href='taylor_imor.html'>taylor_imor</a></code> and <code><a href='taylor_continuous.html'>taylor_continuous</a></code> functions
+  (for binary and continuous outcome, respectively) to employ pattern-mixture
+  model with Taylor series. The <code>unrelated_effects_plot</code> function
+  considers the informative missingness odds ratio in the logarithmic scale
+  for binary outcome data (White et al., 2008), the informative missingness
+  difference of means when <code>measure</code> is <code>"MD"</code> or <code>"SMD"</code>, and
+  the informative missingness ratio of means in the logarithmic scale when
   <code>"ROM"</code> is the effect measure (Mavridis et al., 2015).</p>
 <p>The number of interval plots equals the number of observed comparisons in
   the network. In each interval plot, the y-axis refers to all trials of the
@@ -259,17 +256,14 @@ function) to the working directory of the user. The default is <code>FALSE</code
     <p>Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
 uncertainty due to missing continuous outcome data in pairwise and network
 meta-analysis. <em>Stat Med</em> 2015;<b>34</b>(5):721--41.
-[doi: <a href='https://doi.org/10.1002/sim.6365'>10.1002/sim.6365</a>
-]</p>
+doi: <a href='https://doi.org/10.1002/sim.6365'>10.1002/sim.6365</a></p>
 <p>White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data
 in meta-analysis--part 1: two-stage methods.
-<em>Stat Med</em> 2008;<b>27</b>(5):711--27. [doi: <a href='https://doi.org/10.1002/sim.3008'>10.1002/sim.3008</a>
-]</p>
+<em>Stat Med</em> 2008;<b>27</b>(5):711--27. doi: <a href='https://doi.org/10.1002/sim.3008'>10.1002/sim.3008</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>,
-  <code><a href='taylor_continuous.html'>taylor_continuous</a></code>,
-  <code><a href='taylor_imor.html'>taylor_imor</a></code></p></div>
+    <div class='dont-index'><p><code><a href='missingness_param_prior.html'>missingness_param_prior</a></code>, <code><a href='run_model.html'>run_model</a></code>,
+  <code><a href='taylor_continuous.html'>taylor_continuous</a></code>,  <code><a href='taylor_imor.html'>taylor_imor</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>

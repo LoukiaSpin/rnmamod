@@ -1,13 +1,11 @@
 #' End-user-ready results for unrelated trials effects model
 #'
-#' @description Performs the unrelated trial effects model and create a panel of
-#'   interval plots on the results of each trial and corresponding pairwise
-#'   comparison.
+#' @description Performs the unrelated trial effects model and illustrates the
+#'   results of each trial and corresponding pairwise comparison.
 #'
 #' @param data A data-frame of a one-trial-per-row format containing arm-level
 #'   data of each trial. This format is widely used for BUGS models. See
-#'   'Format' in \code{\link[rnmamod]{run_model}} function for the specification
-#'   of the columns.
+#'   'Format' in \code{\link[rnmamod]{run_model}}.
 #' @param measure Character string indicating the effect measure with values
 #'   \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
 #'   mean difference, standardised mean difference and ratio of means,
@@ -20,36 +18,36 @@
 #'   not defined, the order of the interventions as they appear in \code{data}
 #'   is used, instead.
 #' @param trial_names A vector of labels with the name of the trials in the
-#'   order they appear in the argument \code{data}. If the argument
-#'   \code{drug_names} is not defined, the order of the interventions as they
-#'   appear in \code{data} is used, instead.
-#' @param mean_value A numeric value for the mean of the normal distribution of
-#'   the informative missingness parameter. The same value is considered for all
-#'   trial-arms of the dataset. The default argument is 0 and corresponds to the
-#'   missing-at-random assumption. For the informative missingness odds ratio
-#'   and the informative missingness ratio of means, the mean value is defined
-#'   in the logarithmic scale.
-#' @param var_value A positive non-zero number for the variance of the normal
-#'   distribution of the informative missingness parameter. When the
-#'   \code{measure} is \code{"OR"}, \code{"MD"}, or \code{"SMD"} the default
-#'   argument is 1; When the \code{measure} is \code{"ROM"} the default argument
-#'   is 0.04.
+#'   order they appear in the argument \code{data}. If \code{trial_names} is not
+#'   defined, the order of the trials as they appear in \code{data} is used,
+#'   instead.
+#' @param mean_misspar A numeric value or a vector of two numeric values for the
+#'   mean of the normal distribution of the informative missingness parameter
+#'   (see 'Details'). The default argument is 0 and corresponds to the
+#'   missing-at-random assumption.
+#'   See also 'Details' in \code{\link{missingness_param_prior}}.
+#' @param var_misspar A positive non-zero number for the variance of the
+#'   normal distribution of the informative missingness parameter.
+#'   When the \code{measure} is \code{"OR"}, \code{"MD"}, or \code{"SMD"}
+#'   the default argument is 1. When the \code{measure} is \code{"ROM"}
+#'   the default argument is 0.04
 #' @param rho A numeric value in the interval [-1, 1] that indicates the
 #'   correlation coefficient between two missingness parameters in a trial.
 #'   The same value is considered across all trials of the dataset. The default
 #'   argument is 0 and corresponds to uncorrelated missingness parameters.
 #' @param save_xls Logical to indicate whether to export the tabulated results
-#'   to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}}
+#'   to an 'xlsx' file (via the \code{\link[writexl]{write_xlsx}}
 #'   function) to the working directory of the user. The default is \code{FALSE}
-#'   (do not export to an Excel format).
+#'   (do not export).
 #'
 #' @return A panel of interval plots for each observed comparison in the
-#'   network, when there are up to 21 trials in the \code{data}. Otherwise, an
-#'   Excel file with the arm-level data of each trial, the corresponding effect
-#'   measure and 95\% confidence interval (lower, upper), the intervention
-#'   compared, and the three characteristics (as defined in \code{char}). For
-#'   larger datasets, the plot becomes cluttered and it is difficult to identify
-#'   the trial names. Hence, exporting the results in an Excel file is an viable
+#'   network, when there are up to 15 trials in the \code{data}. Otherwise, an
+#'   Excel file with the arm-level data of each trial (as defined in
+#'   \code{data}), the corresponding effect measure and 95\% confidence
+#'   interval, the interventions compared, and the three characteristics
+#'   (as defined in \code{char}). For datasets with more than 15 trials,
+#'   the plot becomes cluttered and it is difficult to identify  the trial
+#'   names. Hence, exporting the results in an Excel file is an viable
 #'   alternative.
 #'
 #' @details The unrelated trial effects model may be an alternative to network
@@ -59,13 +57,13 @@
 #'   standard error are adjusted by applying the pattern-mixture model with
 #'   Taylor series in trial-arms with MOD (White et al., 2008;
 #'   Mavridis et al., 2015). The \code{unrelated_effects_plot} function calls
-#'   the \code{taylor_imor} and \code{taylor_continuous} functions (for binary
-#'   and continuous outcome, respectively) to employ pattern-mixture model with
-#'   Taylor series. The \code{unrelated_effects_plot} function considers the
-#'   informative missingness odds ratio in the logarithmic scale for binary
-#'   outcome data (White et al., 2008), the informative missingness difference
-#'   of means when \code{measure} is \code{"MD"} or \code{"SMD"}, and the
-#'   informative missingness ratio of means in the logarithmic scale when
+#'   the \code{\link{taylor_imor}} and \code{\link{taylor_continuous}} functions
+#'   (for binary and continuous outcome, respectively) to employ pattern-mixture
+#'   model with Taylor series. The \code{unrelated_effects_plot} function
+#'   considers the informative missingness odds ratio in the logarithmic scale
+#'   for binary outcome data (White et al., 2008), the informative missingness
+#'   difference of means when \code{measure} is \code{"MD"} or \code{"SMD"}, and
+#'   the informative missingness ratio of means in the logarithmic scale when
 #'   \code{"ROM"} is the effect measure (Mavridis et al., 2015).
 #'
 #'   The number of interval plots equals the number of observed comparisons in
@@ -81,19 +79,18 @@
 #'   cluttered. For now, the \code{unrelated_effects_plot} function uses the
 #'   default color palette, line-types and point-shapes.
 #'
-#' @seealso \code{\link[rnmamod]{run_model}},
-#'   \code{\link[rnmamod]{taylor_continuous}},
-#'   \code{\link[rnmamod]{taylor_imor}}
+#' @seealso \code{\link{missingness_param_prior}}, \code{\link{run_model}},
+#'   \code{\link{taylor_continuous}},  \code{\link{taylor_imor}}
 #'
 #' @references
 #' Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
 #' uncertainty due to missing continuous outcome data in pairwise and network
 #' meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--41.
-#' [\doi{10.1002/sim.6365}]
+#' \doi{10.1002/sim.6365}
 #'
 #' White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data
 #' in meta-analysis--part 1: two-stage methods.
-#' \emph{Stat Med} 2008;\bold{27}(5):711--27. [\doi{10.1002/sim.3008}]
+#' \emph{Stat Med} 2008;\bold{27}(5):711--27. \doi{10.1002/sim.3008}
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -103,8 +100,8 @@ unrelated_effects_plot <- function(data,
                                    char,
                                    drug_names,
                                    trial_names,
-                                   mean_value,
-                                   var_value,
+                                   mean_misspar,
+                                   var_misspar,
                                    rho,
                                    save_xls) {
 
@@ -138,11 +135,11 @@ unrelated_effects_plot <- function(data,
   } else {
     trial_names
   }
-  mean_value <- ifelse(missing(mean_value), 0, mean_value)
-  var_value <- ifelse(missing(var_value) &
+  mean_misspar <- ifelse(missing(mean_misspar), 0, mean_misspar)
+  var_misspar <- ifelse(missing(var_misspar) &
                         (is.element(measure, c("OR", "MD", "SMD"))), 1,
-                      ifelse(missing(var_value) & measure == "ROM", 0.2^2,
-                             var_value))
+                      ifelse(missing(var_misspar) & measure == "ROM", 0.2^2,
+                             var_misspar))
   rho <- ifelse(missing(rho), 0, rho)
   save_xls <- if (missing(save_xls)) {
     FALSE
@@ -249,13 +246,13 @@ unrelated_effects_plot <- function(data,
  if (is.element(measure, c("MD", "SMD", "ROM"))) {
    contrast <- taylor_continuous(pairwise_data,
                                  measure,
-                                 mean_value,
-                                 var_value,
+                                 mean_misspar,
+                                 var_misspar,
                                  rho)
   } else {
     contrast <- taylor_imor(pairwise_data,
-                            mean_value,
-                            var_value,
+                            mean_misspar,
+                            var_misspar,
                             rho)
   }
 
