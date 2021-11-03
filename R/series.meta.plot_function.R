@@ -1,8 +1,8 @@
 #' End-user-ready results for series of pairwise meta-analyses
 #'
-#' @description Facilitates the comparison of the estimated effects and
-#'   between-trial standard deviation (where applicable) from the network
-#'   meta-analysis versus the results from the pairwise meta-analyses.
+#' @description Facilitates comparing the estimated effects and
+#'   between-trial standard deviation obtained from corresponding pairwise
+#'   meta-analyses with those from a network meta-analysis.
 #'
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
 #'   \code{\link{run_model}}.
@@ -10,34 +10,39 @@
 #'   in \code{\link{run_series_meta}}.
 #' @param drug_names A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data} of
-#'   \code{\link{run_model}}. If the argument \code{drug_names} is not defined,
-#'   the interventions are ordered as they appear in \code{data}.
+#'   \code{\link{run_model}}. If \code{drug_names} is not defined,
+#'   the order of the interventions as they appear in \code{data} is used,
+#'   instead.
 #' @param save_xls Logical to indicate whether to export the tabulated results
-#' in Excel 'xlsx' format at the working directory of the user.
-#'   The default is \code{FALSE} (do not export in Excel format).
+#'   to an 'xlsx' file at the working directory of the user.
+#'   The default is \code{FALSE} (do not export).
 #'
 #' @return \code{series_meta_plot} returns a panel of two forest plots: (1) a
 #'   forest plot on the posterior mean and 95\% credible interval of the effect
-#'   of the observed comparisons under the consistency model and the
+#'   size of the observed comparisons from network meta-analysis and the
 #'   corresponding pairwise meta-analyses, and (2) a forest plot on the
 #'   posterior median and 95\% credible interval of the between-trial standard
 #'   deviation (\eqn{\tau}) for the observed comparisons. The estimated
-#'   \eqn{\tau} from the consistency model appears as a rectangle in the forest
+#'   \eqn{\tau} from network meta-analysis appears as a rectangle in the forest
 #'   plot. When a fixed-effect model has been fitted, only the forest plot on
 #'   the estimated effects is shown.
 #'
-#'   The R console prints the data-frame with the estimated effects of the
-#'   observed comparisons under both models and the data-frame on the estimated
-#'   (\eqn{\tau})s from the pairwise meta-analyses. Furthermore,
-#'   \code{series_meta_plot} exports both data-frames in Excel 'xlsx' format at
-#'   the working directory of the user.
+#'   The user can detect any inconsistencies in the estimated
+#'   effects from the compared models and explore the gains in precision
+#'   stemming from network meta-analysis. Furthermore, the user can investigate
+#'   the plausibility of the common between-trial heterogeneity assumption which
+#'   is typically considered in network meta-analysis.
+#'
+#'   The R console prints the data-frame with the estimated effects and
+#'   \eqn{\tau}s of the observed comparisons under both models. In the case of a
+#'   fixed-effect model, the data-frame is printed without results on
+#'   \eqn{\tau}.
+#'   Furthermore, \code{series_meta_plot} the data-frame to an 'xlsx' file at
+#'   the working  directory of the user.
 #'
 #' @details \code{series_meta_plot} can be used only for a network of
-#'   interventions. The user can detect any inconsistencies in the estimated
-#'   effects from the compared models and explore the gains in their precision
-#'   by applying the consistency model. Furthermore, the user can investigate
-#'   the plausibility of the common between-trial heterogeneity assumption which
-#'   is typically considered in the consistency model.
+#'   interventions. Otherwise, the execution of the function will be stopped and
+#'   an error message will be printed on the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'

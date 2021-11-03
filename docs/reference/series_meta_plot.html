@@ -40,9 +40,9 @@
 
 
 <meta property="og:title" content="End-user-ready results for series of pairwise meta-analyses — series_meta_plot" />
-<meta property="og:description" content="Facilitates the comparison of the estimated effects and
-  between-trial standard deviation (where applicable) from the network
-  meta-analysis versus the results from the pairwise meta-analyses." />
+<meta property="og:description" content="Facilitates comparing the estimated effects and
+  between-trial standard deviation obtained from corresponding pairwise
+  meta-analyses with those from a network meta-analysis." />
 
 
 
@@ -129,9 +129,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Facilitates the comparison of the estimated effects and
-  between-trial standard deviation (where applicable) from the network
-  meta-analysis versus the results from the pairwise meta-analyses.</p>
+    <p>Facilitates comparing the estimated effects and
+  between-trial standard deviation obtained from corresponding pairwise
+  meta-analyses with those from a network meta-analysis.</p>
     </div>
 
     <pre class="usage"><span class='fu'>series_meta_plot</span><span class='op'>(</span><span class='va'>full</span>, <span class='va'>meta</span>, <span class='va'>drug_names</span>, <span class='va'>save_xls</span><span class='op'>)</span></pre>
@@ -153,14 +153,15 @@ in <code><a href='run_series_meta.html'>run_series_meta</a></code>.</p></td>
       <th>drug_names</th>
       <td><p>A vector of labels with the name of the interventions in
 the order they appear in the argument <code>data</code> of
-<code><a href='run_model.html'>run_model</a></code>. If the argument <code>drug_names</code> is not defined,
-the interventions are ordered as they appear in <code>data</code>.</p></td>
+<code><a href='run_model.html'>run_model</a></code>. If <code>drug_names</code> is not defined,
+the order of the interventions as they appear in <code>data</code> is used,
+instead.</p></td>
     </tr>
     <tr>
       <th>save_xls</th>
       <td><p>Logical to indicate whether to export the tabulated results
-in Excel 'xlsx' format at the working directory of the user.
-  The default is <code>FALSE</code> (do not export in Excel format).</p></td>
+to an 'xlsx' file at the working directory of the user.
+The default is <code>FALSE</code> (do not export).</p></td>
     </tr>
     </table>
 
@@ -168,26 +169,29 @@ in Excel 'xlsx' format at the working directory of the user.
 
     <p><code>series_meta_plot</code> returns a panel of two forest plots: (1) a
   forest plot on the posterior mean and 95% credible interval of the effect
-  of the observed comparisons under the consistency model and the
+  size of the observed comparisons from network meta-analysis and the
   corresponding pairwise meta-analyses, and (2) a forest plot on the
   posterior median and 95% credible interval of the between-trial standard
   deviation (\(\tau\)) for the observed comparisons. The estimated
-  \(\tau\) from the consistency model appears as a rectangle in the forest
+  \(\tau\) from network meta-analysis appears as a rectangle in the forest
   plot. When a fixed-effect model has been fitted, only the forest plot on
   the estimated effects is shown.</p>
-<p>The R console prints the data-frame with the estimated effects of the
-  observed comparisons under both models and the data-frame on the estimated
-  (\(\tau\))s from the pairwise meta-analyses. Furthermore,
-  <code>series_meta_plot</code> exports both data-frames in Excel 'xlsx' format at
-  the working directory of the user.</p>
+<p>The user can detect any inconsistencies in the estimated
+  effects from the compared models and explore the gains in precision
+  stemming from network meta-analysis. Furthermore, the user can investigate
+  the plausibility of the common between-trial heterogeneity assumption which
+  is typically considered in network meta-analysis.</p>
+<p>The R console prints the data-frame with the estimated effects and
+  \(\tau\)s of the observed comparisons under both models. In the case of a
+  fixed-effect model, the data-frame is printed without results on
+  \(\tau\).
+  Furthermore, <code>series_meta_plot</code> the data-frame to an 'xlsx' file at
+  the working  directory of the user.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>series_meta_plot</code> can be used only for a network of
-  interventions. The user can detect any inconsistencies in the estimated
-  effects from the compared models and explore the gains in their precision
-  by applying the consistency model. Furthermore, the user can investigate
-  the plausibility of the common between-trial heterogeneity assumption which
-  is typically considered in the consistency model.</p>
+  interventions. Otherwise, the execution of the function will be stopped and
+  an error message will be printed on the R console.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>, <code><a href='run_series_meta.html'>run_series_meta</a></code></p></div>

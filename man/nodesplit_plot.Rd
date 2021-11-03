@@ -47,14 +47,14 @@ function) to the working directory of the user. The default is \code{FALSE}
   }
 }
 \description{
-Illustrates the direct and indirect effects and inconsistency
-  factor of the split nodes in a panel of interval plots and also exports
-  these results to an Excel file. Furthermore, \code{nodesplit_plot}
+\code{nodesplit_plot} hosts a toolkit of functions that
   facilitates the comparison of the consistency model
   (via \code{\link{run_model}}) with the node-splitting approach
-  (via \code{\link{run_nodesplit}}) regarding between-trial standard
-  deviation (\eqn{\tau}) and model assessment parameters
-  (Spiegelhalter et al., (2002)) after each split node of the network.
+  (via \code{\link{run_nodesplit}}) regarding the posterior summaries of the
+  the direct and indirect effects and inconsistency factor of the split
+  nodes, the between-trial standard deviation (τ) and model assessment
+  parameters (Spiegelhalter et al., (2002)) after each split node in the
+  network.
 }
 \details{
 \code{intervalplot_inconsistency_factor} includes as many interval
