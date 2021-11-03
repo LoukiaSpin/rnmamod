@@ -8,7 +8,7 @@
 #'   \code{\link{run_model}}.
 #' @param assumption Character string indicating the structure of the
 #'   informative missingness parameter. Set \code{assumption} equal to one of
-#'   the following: \code{"HIE-ARM"}, or \code{"IDE-TRIAL"} (see 'Details').
+#'   the following: \code{"HIE-ARM"}, or \code{"IDE-ARM"} (see 'Details').
 #'   The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"},
 #'   and \code{"HIE"} stand for identical, and hierarchical, respectively.
 #' @param mean_scenarios A vector with numeric values for the mean of the normal
@@ -82,19 +82,23 @@
 #'   be equal to or more than 5 (a positive odd integer) to allow for an
 #'   adequate number of scenarios. It is important that the number
 #'   corresponding to the MAR assumption is the middle of the numbers in the
-#'   vector specified in argument \code{mean_scenarios}.
-#'   Under the informative missingness difference of means parameter, the MAR
-#'   assumption is equal to 0. Under the informative missingness odds ratio
-#'   parameter and the informative missingness ratio of means parameter, the MAR
-#'   assumption is equal to 1; however, both parameters are analysed in the logarithmic
-#'   scale. We advise using the value \code{0.999} rather than \code{1}
-#'   in \code{mean_scenarios}; otherwise, the execution of the function will be
-#'   stopped and the error 'Invalid parent values' will be printed on the R
-#'   console. Currently, there are no empirically-based prior distributions for
-#'   the informative missingness parameters. The users may refer to
-#'   White et al., (2008), Mavridis et al., (2015), Turner et al., (2015) and
-#'   Spineli (2019) to determine \code{mean_scenarios} for an informative
-#'   missingness mechanism and select a proper value for \code{var_misspar}.
+#'   vector specified in argument \code{mean_scenarios}. The \bold{MAR
+#'   assumption} constitutes the \bold{primary analysis}.
+#'   Under the informative missingness difference of means parameter (relevant
+#'   for the raw and standardised mean diffenre), the MAR assumption equals 0.
+#'   Under the informative missingness odds ratio parameter (IMOR; relevant for
+#'   the odds ratio) and the informative missingness ratio of means (IMRoM;
+#'   relevant for the ratio of means) parameter, the MAR assumption equals 1;
+#'   however, both parameters are analysed in the logarithmic scale. We advise
+#'   using the value \code{0.999} rather than \code{1} in \code{mean_scenarios}
+#'   for the IMOR and IMRoM parameters; otherwise, the execution of the function
+#'   will be stopped and the error 'Invalid parent values' will be printed on
+#'   the R console. Currently, there are no empirically-based prior
+#'   distributions for the informative missingness parameters. The users may
+#'   refer to White et al., (2008), Mavridis et al., (2015), Turner et al.,
+#'   (2015) and Spineli (2019) to determine \code{mean_scenarios} for an
+#'   informative missingness mechanism and select a proper value for
+#'   \code{var_misspar}.
 #'
 #'   \code{run_sensitivity} inherits the arguments \code{data},
 #'   \code{measure}, \code{model}, and \code{heter_prior} from

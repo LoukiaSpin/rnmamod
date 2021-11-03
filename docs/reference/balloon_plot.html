@@ -166,55 +166,54 @@ the order of the interventions as they appear in
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>balloon_plot</code> A list of two enhanced balloon plots for one
-  comparison (see 'Details' for the description of the enhanced
-  balloon plot):</p><table class='table'>
+    <p><code>balloon_plot</code> returns two enhanced balloon plots for one
+  comparison (see 'Details'):</p><table class='table'>
 <tr><td><code>Plot_effect_size</code></td><td>The enhanced balloon plot for the
-   summary effect size of one pairwise comparison.</td></tr>
+   summary effect size (according to the argument <code>measure</code> inherited
+   by <code><a href='run_sensitivity.html'>run_sensitivity</a></code>) of one pairwise comparison.</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>Plot_tau</code></td><td>The enhanced balloon plot for \(\tau\). When the
-   fixed-effect model has been performed in <code>run_sensitivity</code>,
+   fixed-effect model has been performed in <code><a href='run_sensitivity.html'>run_sensitivity</a></code>,
    the function will not return the <code>Plot_tau</code>.</td></tr>
 </table>
 
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>For the summary effect size of the selected pairwise comparison,
-  the different colour and size of the bubbles reflect the posterior
-  standard deviation and the magnitude of the posterior mean, respectively.
+    <p>For the <code>Plot_effect_size</code> of the selected pairwise
+  comparison, the different colours and sizes of the bubbles reflect the
+  posterior standard deviation and the posterior mean, respectively.
   A colour key appears below the plot.
   The size of the bubble is proportional to the corresponding posterior mean.
-  Crossed bubbles indicate scenarios with conclusive evidence (the 95%
-  credible interval excludes the null value), and filled bubbles indicate
-  scenarios with inconclusive evidence (the 95% credible interval includes
-  the null value). The missing-at-random assumption (primary analysis) is
-  labeled in a white frame.
+  Crossed bubbles indicate scenarios with conclusive evidence (the
+  95% credible interval excludes the null value), and filled bubbles
+  indicate scenarios with inconclusive evidence (the 95% credible interval
+  includes the null value). The missing-at-random assumption (primary
+  analysis) is labeled in a white frame.
   Both axes illustrate the scenarios as specified in the argument
-  <code>mean_scenarios</code> of the <code>run_sensitivity</code> function:
+  <code>mean_scenarios</code> of the <code><a href='run_sensitivity.html'>run_sensitivity</a></code>:
   the x-axis refers to the 'experimental' intervention, and the y-axis refers
   to the 'control' intervention.</p>
-<p>The same enhanced balloon plot is created for \(\tau\).
+<p>The same enhanced balloon plot is created for \(\tau\) (<code>Plot_tau</code>).
   However, filled bubbles indicate low statistical heterogeneity
   (the posterior median of \(\tau\) is lower than the median of the
   prior distribution for the heterogeneity parameter),
   and crossed bubbles indicate considerable statistical heterogeneity
   (the posterior median of \(\tau\) exceeds the median of the prior
-  distribution).</p>
-<p><code>balloon_plot_mod</code> can be used only for a network of interventions
-  and when missing outcome data have been extracted for at least one trial.
+  distribution for the heterogeneity parameter).</p>
+<p><code>balloon_plot_mod</code> can be used only for when missing participant
+  outcome data have been extracted for at least one trial.
   Otherwise, the execution of the function will be stopped and an error
-  message will be printed in the R console.</p>
+  message will be printed on the R console.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
-  primary analysis results: A case study on missing outcome data in pairwise
-  and network meta-analysis. <em>Res Synth Methods</em>
-  2021;<b>12</b>(4):475--490. [doi: <a href='https://doi.org/10.1002/jrsm.1478'>10.1002/jrsm.1478</a>
-]</p>
+primary analysis results: A case study on missing outcome data in pairwise
+and network meta-analysis. <em>Res Synth Methods</em>
+2021;<b>12</b>(4):475--490. doi: <a href='https://doi.org/10.1002/jrsm.1478'>10.1002/jrsm.1478</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='run_sensitivity.html'>run_sensitivity</a></code>, <code><a href='run_model.html'>run_model</a></code></p></div>
+    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>, <code><a href='run_sensitivity.html'>run_sensitivity</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>
@@ -237,8 +236,9 @@ the order of the interventions as they appear in
                  n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,
                  n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 
-<span class='co'># Perform the sensitivity analysis (missing-at-random assumption)</span>
+<span class='co'># Perform the sensitivity analysis (default values for 'mean_misspar')</span>
 <span class='va'>res_sens</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_sensitivity.html'>run_sensitivity</a></span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,
+                            assumption <span class='op'>=</span> <span class='st'>"IDE-ARM"</span>,
                             var_misspar <span class='op'>=</span> <span class='fl'>1</span>,
                             n_chains <span class='op'>=</span> <span class='fl'>3</span>,
                             n_iter <span class='op'>=</span> <span class='fl'>10000</span>,

@@ -6,6 +6,7 @@
 \usage{
 run_sensitivity(
   full,
+  assumption,
   mean_scenarios,
   var_misspar,
   n_chains,
@@ -17,6 +18,12 @@ run_sensitivity(
 \arguments{
 \item{full}{An object of S3 class \code{\link{run_model}}. See 'Value' in
 \code{\link{run_model}}.}
+
+\item{assumption}{Character string indicating the structure of the
+informative missingness parameter. Set \code{assumption} equal to one of
+the following: \code{"HIE-ARM"}, or \code{"IDE-ARM"} (see 'Details').
+The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"},
+and \code{"HIE"} stand for identical, and hierarchical, respectively.}
 
 \item{mean_scenarios}{A vector with numeric values for the mean of the normal
  distribution of the informative missingness parameter (see 'Details').
@@ -61,7 +68,7 @@ A list of R2jags outputs on the summaries of the posterior
   random-effects PMA:
   \tabular{ll}{
    \code{EM} \tab The estimated summary effect measure (according to the
-   argument \code{measure} in \code{\link{run_model}}).\cr
+   argument \code{measure} defined in \code{\link{run_model}}).\cr
    \tab \cr
    \code{tau} \tab The between-trial standard deviation. This element does
    not appear in the case of a fixed-effect PMA.\cr
@@ -80,8 +87,8 @@ Performs a sensitivity analysis by applying pairwise
 The model runs in \code{JAGS} and the progress of the simulation
   appears on the R console. The number of times \code{run_sensitivity} is
   used appears on the R console as a text in red and it equals the
-  \emph{number of scenarios} defined as the square of the length of the
-  vector specified in argument \code{mean_scenarios} (see 'Examples').
+  \bold{number of scenarios} defined as \emph{the square of the length of the
+  \code{mean_scenarios} vector}  (see 'Examples').
   The output of \code{run_sensitivity} is used as an S3 object by other
   functions of the package function to be processed further and provide an
   end-user-ready output.
@@ -101,19 +108,23 @@ The model runs in \code{JAGS} and the progress of the simulation
   be equal to or more than 5 (a positive odd integer) to allow for an
   adequate number of scenarios. It is important that the number
   corresponding to the MAR assumption is the middle of the numbers in the
-  vector specified in argument \code{mean_scenarios}.
-  Under the informative missingness difference of means parameter, the MAR
-  assumption is equal to 0. Under the informative missingness odds ratio
-  parameter and the informative missingness ratio of means parameter, the MAR
-  assumption is equal to 1; however, both parameters are analysed in the logarithmic
-  scale. We advise using the value \code{0.999} rather than \code{1}
-  in \code{mean_scenarios}; otherwise, the execution of the function will be
-  stopped and the error 'Invalid parent values' will be printed on the R
-  console. Currently, there are no empirically-based prior distributions for
-  the informative missingness parameters. The users may refer to
-  White et al., (2008), Mavridis et al., (2015), Turner et al., (2015) and
-  Spineli (2019) to determine \code{mean_scenarios} for an informative
-  missingness mechanism and select a proper value for \code{var_misspar}.
+  vector specified in argument \code{mean_scenarios}. The \bold{MAR
+  assumption} constitutes the \bold{primary analysis}.
+  Under the informative missingness difference of means parameter (relevant
+  for the raw and standardised mean diffenre), the MAR assumption equals 0.
+  Under the informative missingness odds ratio parameter (IMOR; relevant for
+  the odds ratio) and the informative missingness ratio of means (IMRoM;
+  relevant for the ratio of means) parameter, the MAR assumption equals 1;
+  however, both parameters are analysed in the logarithmic scale. We advise
+  using the value \code{0.999} rather than \code{1} in \code{mean_scenarios}
+  for the IMOR and IMRoM parameters; otherwise, the execution of the function
+  will be stopped and the error 'Invalid parent values' will be printed on
+  the R console. Currently, there are no empirically-based prior
+  distributions for the informative missingness parameters. The users may
+  refer to White et al., (2008), Mavridis et al., (2015), Turner et al.,
+  (2015) and Spineli (2019) to determine \code{mean_scenarios} for an
+  informative missingness mechanism and select a proper value for
+  \code{var_misspar}.
 
   \code{run_sensitivity} inherits the arguments \code{data},
   \code{measure}, \code{model}, and \code{heter_prior} from
@@ -148,6 +159,7 @@ res <- run_model(data = nma.baker2009,
 
 # Perform the sensitivity analysis (missing-at-random assumption)
 run_sensitivity(full = res,
+                assumption = "HIE-ARM",
                 var_misspar = 1,
                 n_chains = 3,
                 n_iter = 10000,

@@ -136,6 +136,7 @@
 
     <pre class="usage"><span class='fu'>run_sensitivity</span><span class='op'>(</span>
   <span class='va'>full</span>,
+  <span class='va'>assumption</span>,
   <span class='va'>mean_scenarios</span>,
   <span class='va'>var_misspar</span>,
   <span class='va'>n_chains</span>,
@@ -151,6 +152,14 @@
       <th>full</th>
       <td><p>An object of S3 class <code><a href='run_model.html'>run_model</a></code>. See 'Value' in
 <code><a href='run_model.html'>run_model</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>assumption</th>
+      <td><p>Character string indicating the structure of the
+informative missingness parameter. Set <code>assumption</code> equal to one of
+the following: <code>"HIE-ARM"</code>, or <code>"IDE-ARM"</code> (see 'Details').
+The default argument is <code>"IDE-ARM"</code>. The abbreviations <code>"IDE"</code>,
+and <code>"HIE"</code> stand for identical, and hierarchical, respectively.</p></td>
     </tr>
     <tr>
       <th>mean_scenarios</th>
@@ -209,7 +218,7 @@ The default argument is 1.</p></td>
   (Gelman et al., 1992) of the following monitored parameters for a
   random-effects PMA:</p><table class='table'>
 <tr><td><code>EM</code></td><td>The estimated summary effect measure (according to the
-   argument <code>measure</code> in <code><a href='run_model.html'>run_model</a></code>).</td></tr>
+   argument <code>measure</code> defined in <code><a href='run_model.html'>run_model</a></code>).</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>tau</code></td><td>The between-trial standard deviation. This element does
    not appear in the case of a fixed-effect PMA.</td></tr>
@@ -224,8 +233,8 @@ The default argument is 1.</p></td>
     <p>The model runs in <code>JAGS</code> and the progress of the simulation
   appears on the R console. The number of times <code>run_sensitivity</code> is
   used appears on the R console as a text in red and it equals the
-  <em>number of scenarios</em> defined as the square of the length of the
-  vector specified in argument <code>mean_scenarios</code> (see 'Examples').
+  <b>number of scenarios</b> defined as <em>the square of the length of the
+  <code>mean_scenarios</code> vector</em>  (see 'Examples').
   The output of <code>run_sensitivity</code> is used as an S3 object by other
   functions of the package function to be processed further and provide an
   end-user-ready output.</p>
@@ -242,19 +251,23 @@ The default argument is 1.</p></td>
   be equal to or more than 5 (a positive odd integer) to allow for an
   adequate number of scenarios. It is important that the number
   corresponding to the MAR assumption is the middle of the numbers in the
-  vector specified in argument <code>mean_scenarios</code>.
-  Under the informative missingness difference of means parameter, the MAR
-  assumption is equal to 0. Under the informative missingness odds ratio
-  parameter and the informative missingness ratio of means parameter, the MAR
-  assumption is equal to 1; however, both parameters are analysed in the logarithmic
-  scale. We advise using the value <code>0.999</code> rather than <code>1</code>
-  in <code>mean_scenarios</code>; otherwise, the execution of the function will be
-  stopped and the error 'Invalid parent values' will be printed on the R
-  console. Currently, there are no empirically-based prior distributions for
-  the informative missingness parameters. The users may refer to
-  White et al., (2008), Mavridis et al., (2015), Turner et al., (2015) and
-  Spineli (2019) to determine <code>mean_scenarios</code> for an informative
-  missingness mechanism and select a proper value for <code>var_misspar</code>.</p>
+  vector specified in argument <code>mean_scenarios</code>. The <b>MAR
+  assumption</b> constitutes the <b>primary analysis</b>.
+  Under the informative missingness difference of means parameter (relevant
+  for the raw and standardised mean diffenre), the MAR assumption equals 0.
+  Under the informative missingness odds ratio parameter (IMOR; relevant for
+  the odds ratio) and the informative missingness ratio of means (IMRoM;
+  relevant for the ratio of means) parameter, the MAR assumption equals 1;
+  however, both parameters are analysed in the logarithmic scale. We advise
+  using the value <code>0.999</code> rather than <code>1</code> in <code>mean_scenarios</code>
+  for the IMOR and IMRoM parameters; otherwise, the execution of the function
+  will be stopped and the error 'Invalid parent values' will be printed on
+  the R console. Currently, there are no empirically-based prior
+  distributions for the informative missingness parameters. The users may
+  refer to White et al., (2008), Mavridis et al., (2015), Turner et al.,
+  (2015) and Spineli (2019) to determine <code>mean_scenarios</code> for an
+  informative missingness mechanism and select a proper value for
+  <code>var_misspar</code>.</p>
 <p><code>run_sensitivity</code> inherits the arguments <code>data</code>,
   <code>measure</code>, <code>model</code>, and <code>heter_prior</code> from
   <code><a href='run_model.html'>run_model</a></code> (now contained in the argument <code>full</code>). This
@@ -316,6 +329,7 @@ sequences. Stat Sci. 1992;7:457–472. doi: <a href='https://doi.org/10.1214/ss/
 
 <span class='co'># Perform the sensitivity analysis (missing-at-random assumption)</span>
 <span class='fu'>run_sensitivity</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,
+                assumption <span class='op'>=</span> <span class='st'>"HIE-ARM"</span>,
                 var_misspar <span class='op'>=</span> <span class='fl'>1</span>,
                 n_chains <span class='op'>=</span> <span class='fl'>3</span>,
                 n_iter <span class='op'>=</span> <span class='fl'>10000</span>,

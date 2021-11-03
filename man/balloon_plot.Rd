@@ -21,15 +21,15 @@ the order of the interventions as they appear in
 \code{data} is used, instead.}
 }
 \value{
-\code{balloon_plot} A list of two enhanced balloon plots for one
-  comparison (see 'Details' for the description of the enhanced
-  balloon plot):
+\code{balloon_plot} returns two enhanced balloon plots for one
+  comparison (see 'Details'):
   \tabular{ll}{
    \code{Plot_effect_size} \tab The enhanced balloon plot for the
-   summary effect size of one pairwise comparison.\cr
+   summary effect size (according to the argument \code{measure} inherited
+   by \code{\link{run_sensitivity}}) of one pairwise comparison.\cr
    \tab \cr
    \code{Plot_tau} \tab The enhanced balloon plot for \eqn{\tau}. When the
-   fixed-effect model has been performed in \code{run_sensitivity},
+   fixed-effect model has been performed in \code{\link{run_sensitivity}},
    the function will not return the \code{Plot_tau}.\cr
 }
 }
@@ -41,33 +41,33 @@ Creates the enhanced balloon plot for the summary effect size and
   \code{\link{run_sensitivity}}.
 }
 \details{
-For the summary effect size of the selected pairwise comparison,
-  the different colour and size of the bubbles reflect the posterior
-  standard deviation and the magnitude of the posterior mean, respectively.
+For the \code{Plot_effect_size} of the selected pairwise
+  comparison, the different colours and sizes of the bubbles reflect the
+  posterior standard deviation and the posterior mean, respectively.
   A colour key appears below the plot.
   The size of the bubble is proportional to the corresponding posterior mean.
-  Crossed bubbles indicate scenarios with conclusive evidence (the 95\%
-  credible interval excludes the null value), and filled bubbles indicate
-  scenarios with inconclusive evidence (the 95\% credible interval includes
-  the null value). The missing-at-random assumption (primary analysis) is
-  labeled in a white frame.
+  Crossed bubbles indicate scenarios with conclusive evidence (the
+  95\% credible interval excludes the null value), and filled bubbles
+  indicate scenarios with inconclusive evidence (the 95\% credible interval
+  includes the null value). The missing-at-random assumption (primary
+  analysis) is labeled in a white frame.
   Both axes illustrate the scenarios as specified in the argument
-  \code{mean_scenarios} of the \code{run_sensitivity} function:
+  \code{mean_scenarios} of the \code{\link{run_sensitivity}}:
   the x-axis refers to the 'experimental' intervention, and the y-axis refers
   to the 'control' intervention.
 
-  The same enhanced balloon plot is created for \eqn{\tau}.
+  The same enhanced balloon plot is created for \eqn{\tau} (\code{Plot_tau}).
   However, filled bubbles indicate low statistical heterogeneity
   (the posterior median of \eqn{\tau} is lower than the median of the
   prior distribution for the heterogeneity parameter),
   and crossed bubbles indicate considerable statistical heterogeneity
   (the posterior median of \eqn{\tau} exceeds the median of the prior
-  distribution).
+  distribution for the heterogeneity parameter).
 
-  \code{balloon_plot_mod} can be used only for a network of interventions
-  and when missing outcome data have been extracted for at least one trial.
+  \code{balloon_plot_mod} can be used only when missing participant
+  outcome data have been extracted for at least one trial.
   Otherwise, the execution of the function will be stopped and an error
-  message will be printed in the R console.
+  message will be printed on the R console.
 }
 \examples{
 data("nma.baker2009")
@@ -87,8 +87,9 @@ res <- run_model(data = nma.baker2009,
                  n_burnin = 1000,
                  n_thin = 1)
 
-# Perform the sensitivity analysis (missing-at-random assumption)
+# Perform the sensitivity analysis (default values for 'mean_misspar')
 res_sens <- run_sensitivity(full = res,
+                            assumption = "IDE-ARM",
                             var_misspar = 1,
                             n_chains = 3,
                             n_iter = 10000,
@@ -108,12 +109,12 @@ balloon_plot(sens = res_sens,
 }
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
-  primary analysis results: A case study on missing outcome data in pairwise
-  and network meta-analysis. \emph{Res Synth Methods}
-  2021;\bold{12}(4):475--490. [\doi{10.1002/jrsm.1478}]
+primary analysis results: A case study on missing outcome data in pairwise
+and network meta-analysis. \emph{Res Synth Methods}
+2021;\bold{12}(4):475--490. \doi{10.1002/jrsm.1478}
 }
 \seealso{
-\code{\link{run_sensitivity}}, \code{\link{run_model}}
+\code{\link{run_model}}, \code{\link{run_sensitivity}}
 }
 \author{
 {Loukia M. Spineli}
