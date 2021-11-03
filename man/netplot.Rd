@@ -2,23 +2,22 @@
 % Please edit documentation in R/network.plot_function.R
 \name{netplot}
 \alias{netplot}
-\title{Network plot and network description}
+\title{Network plot and description}
 \usage{
 netplot(data, drug_names, save_xls, ...)
 }
 \arguments{
 \item{data}{A data-frame of a one-trial-per-row format containing arm-level
-data of each trial. See 'Format' in \code{\link[rnmamod]{run_model}}
-function for the specification of the columns.}
+data of each trial. See 'Format' in \code{\link{run_model}}.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
-the order they appear in the argument \code{data}. If the argument
-\code{drug_names} is not defined, the interventions are ordered as they
-appear in \code{data}.}
+the order they appear in the argument \code{data}. If \code{drug_names} is
+not defined, the order of the interventions as they appear in \code{data}
+is used, instead.}
 
 \item{save_xls}{Logical to indicate whether to export the tabulated results
-in Excel 'xlsx' format at the working directory of the user.
-The default is \code{FALSE} (do not export in Excel format).}
+to an 'xlsx' file at the working directory of the user.
+The default is \code{FALSE} (do not export).}
 
 \item{...}{Additional arguments of the
 \code{\link[pcnetmeta]{nma.networkplot}} function of the R-package
@@ -28,47 +27,40 @@ The default is \code{FALSE} (do not export in Excel format).}
 A network plot with coloured closed-loops informed by multi-arm
   trials. Each node indicates an intervention and each link an observed
   pairwise comparison. The edge thickness is proportional to the number of
-  direct treatment comparisons, unless specified otherwise
-  (see \code{\link[pcnetmeta]{nma.networkplot}} function). The size of the
-  node is weighted by the total number of direct treatment comparisons of the
-  corresponding treatment, unless specified otherwise
-  (see \code{\link[pcnetmeta]{nma.networkplot}} function).
+  trials investigating the corresponding comparison, unless
+  specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}}
+  function). The size of the node is weighted by the total number of
+  trials investigating the corresponding intervention, unless specified
+  otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function).
 
-  \code{netplot} also returns five data-frames that describe characteristics
-  of the network:
+  \code{netplot} also returns the followind data-frames that describe the
+  evidence base:
   \tabular{ll}{
    \code{network_description} \tab The number of: interventions, possible
    comparisons, direct and indirect comparisons, number of trials in total,
    number of two-arm and multi-arm trials, number of randomised participants,
-   proportion of participants completing the trial (completers), and
-   proportion of missing participants. When the outcome is binary, the number
-   of trials with at least one zero event, and the number of trials with all
-   zero events are also presented. \cr
+   and proportion of participants completing the trial (completers).
+   When the outcome is binary, the number of trials with at least one zero
+   event, and the number of trials with all zero events are also
+   presented. \cr
    \tab \cr
    \code{table_interventions} \tab For each intervention, the
-   number of trials, number of randomised participants, proportion of
-   completers and of missing participants. When the outcome is binary, the
-   data-frame presents also the proportion of total observed events, the
-   minimum, median and maximum proportion of observed events across the
-   corresponding trials. \cr
+   number of trials, number of randomised participants, and proportion of
+   completers. When the outcome is binary, the data-frame presents also the
+   corresponding proportion of total observed events, the minimum, median and
+   maximum proportion of observed events across the corresponding trials. \cr
    \tab \cr
    \code{table_comparisons} \tab Identical structure to
    \code{table_interventions} but for each observed comparison in the
    network. \cr
-   \tab \cr
-   \code{table_interventions_missing} \tab The summary results on the
-   proportion of missing participants for each intervention. See also
-   'Details'.Identical structure to \code{table_interventions} for the binary
-   outcome. \cr
-   \tab \cr
-   \code{table_comparisons_missing} \tab The summary results on the
-   proportion of missing participants for each observed comparison in the
-   network. See also 'Details'. Identical structure to
-   \code{table_comparisons} for the binary outcome. \cr
   }
 }
 \description{
-Draws the network plot using the
+Illustrates the network plot for one outcome and summarises the
+  characteristics of the evidence base.
+}
+\details{
+\code{netplot} draws the network plot using the
   \code{\link[pcnetmeta]{nma.networkplot}} function
   of the R-package
   \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}.
@@ -76,20 +68,6 @@ Draws the network plot using the
   \href{https://CRAN.R-project.org/package=gemtc}{gemtc} is additionally used
   to convert \code{data} from the required one-trial-per-row format into the
   one-arm-per-row format.
-}
-\details{
-The proportion of total missing participants per intervention has
-  been calculated as the total number of missing participants in an
-  intervention to the total number of randomised participants in that
-  intervention. Similarly, for the proportion of total missing participants
-  per observed comparison,
-
-  The median proportion of missing participants in an intervention is the
-  median of the proportion of missing participants across the trials that
-  investigated that intervention. Similarly, for the minimum, and the maximum
-  proportion of missing participants in an intervention. The concept is
-  similar for the minimum, median, and maximum proportion of missing
-  participants per observed comparison.
 }
 \examples{
 data("nma.bottomley2011")
@@ -116,19 +94,19 @@ netplot(data = nma.bottomley2011,
 
 }
 \references{
-Lifeng Lin, Jing Zhang, James S. Hodges, Haitao Chu. Performing Arm-Based
-Network Meta-Analysis in R with the pcnetmeta Package.
-\emph{J Stat Softw} 2017;\bold{80}(5): 1--25. [\doi{10.18637/jss.v080.i05}]
-
-Gert van Valkenhoef and Joel Kuiper. gemtc: Network Meta-Analysis Using
+van Valkenhoef G, Kuiper J. gemtc: Network Meta-Analysis Using
 Bayesian Methods. \emph{R package version 1.0-1}. 2021.
 \url{https://CRAN.R-project.org/package=gemtc}
+
+Lin L, Zhang J, Hodges JS, Chu H. Performing Arm-Based Network Meta-Analysis
+in R with the pcnetmeta Package.
+\emph{J Stat Softw} 2017;\bold{80}(5): 1--25. \doi{10.18637/jss.v080.i05}
 }
 \seealso{
-\code{\link[rnmamod]{run_model}},
-  \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta} and
+\code{\link{data_preparation}},
   \href{https://CRAN.R-project.org/package=gemtc}{gemtc},
-  \code{\link[rnmamod]{data_preparation}}.
+  \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta},
+  \code{\link{run_model}}.
 }
 \author{
 {Loukia M. Spineli}

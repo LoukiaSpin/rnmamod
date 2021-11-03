@@ -42,12 +42,12 @@
 <meta property="og:title" content="End-user-ready results for node-splitting approach — nodesplit_plot" />
 <meta property="og:description" content="Illustrates the direct and indirect effects and inconsistency
   factor of the split nodes in a panel of interval plots and also exports
-  these results in an Excel format. Furthermore, nodesplit_plot
-  facilitates the comparison of the consistency model (via run_model)
-  with the node-splitting approach (via run_nodesplit) regarding
-  between-trial standard deviation (\(\tau\)) and model assessment
-  parameters (Spiegelhalter et al. (2002)) after each split node of the
-  network." />
+  these results to an Excel file. Furthermore, nodesplit_plot
+  facilitates the comparison of the consistency model
+  (via run_model) with the node-splitting approach
+  (via run_nodesplit) regarding between-trial standard
+  deviation (\(\tau\)) and model assessment parameters
+  (Spiegelhalter et al. (2002)) after each split node of the network." />
 
 
 
@@ -136,12 +136,12 @@
     <div class="ref-description">
     <p>Illustrates the direct and indirect effects and inconsistency
   factor of the split nodes in a panel of interval plots and also exports
-  these results in an Excel format. Furthermore, <code>nodesplit_plot</code>
-  facilitates the comparison of the consistency model (via <code>run_model</code>)
-  with the node-splitting approach (via <code>run_nodesplit</code>) regarding
-  between-trial standard deviation (\(\tau\)) and model assessment
-  parameters (Spiegelhalter et al. (2002)) after each split node of the
-  network.</p>
+  these results to an Excel file. Furthermore, <code>nodesplit_plot</code>
+  facilitates the comparison of the consistency model
+  (via <code><a href='run_model.html'>run_model</a></code>) with the node-splitting approach
+  (via <code><a href='run_nodesplit.html'>run_nodesplit</a></code>) regarding between-trial standard
+  deviation (\(\tau\)) and model assessment parameters
+  (Spiegelhalter et al. (2002)) after each split node of the network.</p>
     </div>
 
     <pre class="usage"><span class='fu'>nodesplit_plot</span><span class='op'>(</span><span class='va'>full</span>, <span class='va'>node</span>, <span class='va'>drug_names</span>, <span class='va'>save_xls</span><span class='op'>)</span></pre>
@@ -163,16 +163,16 @@ in <code><a href='run_nodesplit.html'>run_nodesplit</a></code>.</p></td>
       <th>drug_names</th>
       <td><p>A vector of labels with the name of the interventions in
 the order they appear in the argument <code>data</code> of
-<code><a href='run_model.html'>run_model</a></code>. If the argument <code>drug_names</code> is not defined,
+<code><a href='run_model.html'>run_model</a></code>. If <code>drug_names</code> is not defined,
 the order of the interventions as they appear in <code>data</code> is used,
 instead.</p></td>
     </tr>
     <tr>
       <th>save_xls</th>
       <td><p>Logical to indicate whether to export the tabulated results
-to an Excel 'xlsx' format (via the <code><a href='https://docs.ropensci.org/writexl/reference/write_xlsx.html'>write_xlsx</a></code>
+to an 'xlsx' file (via the <code><a href='https://docs.ropensci.org/writexl/reference/write_xlsx.html'>write_xlsx</a></code>
 function) to the working directory of the user. The default is <code>FALSE</code>
-(do not export to an Excel format).</p></td>
+(do not export).</p></td>
     </tr>
     </table>
 
@@ -184,10 +184,11 @@ function) to the working directory of the user. The default is <code>FALSE</code
    indirect effect and the inconsistency factor of each split node.</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>table_model_assessment</code></td><td>A data-frame with the model assessment
-   parameters (DIC, posterior mean of total residual deviance, and number of
-   effective parameters), the posterior median, posterior standard deviation
-   and 95% credible interval of \(\tau\) under the consistency model and
-   after each split node. See 'Details'.</td></tr>
+   parameters (deviance information criterion (DIC), posterior mean of total
+   residual deviance, and number of effective parameters), the posterior
+   median, posterior standard deviation and 95% credible interval of
+   \(\tau\) under the consistency model and after each split node. See
+   'Details'.</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>intervalplot_inconsistency_factor</code></td><td>A panel of interval plots on
    the direct and indirect effect of the split nodes and the corresponding
@@ -200,54 +201,55 @@ function) to the working directory of the user. The default is <code>FALSE</code
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>node_split_intervalplot</code> includes as many interval plots as
-  the number of split nodes in the network. Each interval plot illustrates
-  the posterior mean and 95% credible interval of the direct and indirect
-  effect of the split nodes and the corresponding inconsistency factor.
+    <p><code>intervalplot_inconsistency_factor</code> includes as many interval
+  plots as the number of split nodes in the network. Each interval plot
+  illustrates the posterior mean and 95% credible interval of the direct and
+  indirect effect of the split nodes and the corresponding inconsistency
+  factor.
   The line that corresponds to the inconsistency factor is highlighted with
   green, when it does not cross the vertical line of no difference (between
   the direct and indirect effect), and red otherwise. If there are more than
   30 split nodes, the function presents the interval plots on split nodes
-  with statistically significant inconsistency factor or those with
+  with conclusive inconsistency factor (green intervals) or those with
   inconsistent sign in the direct and indirect effect.</p>
 <p><code>intervalplot_tau</code> is a interval plot on the median and 95% credible
   interval of \(\tau\) after each split node. The lines that correspond to
-  the split nodes are sorted in ascending order of the
-  deviance information criterion (DIC) which appears at the top of each line.
+  the split nodes are sorted in ascending order of the DIC which appears at
+  the top of each line.
   The 95% credible interval of \(\tau\) under the consistency model
   appears as a rectangle in the interval plot. When a fixed-effect model has
-  been performed, <code>nodesplit_plot</code> does not return
+  been performed, <code>nodesplit_plot</code> does not return the
   <code>intervalplot_tau</code>.</p>
-<p>The data-frame <code>table_model_assessment</code> also include the column
+<p>The <code>table_model_assessment</code> also includes the column
   <em>DIC-based better fit</em> that indicates the preferred model in terms of
   parsimony for each split node. Therefore, the DIC of the model after each
   split node is compared with the DIC of the consistency model
-  (Dias et al. (2010)). If the difference in DIC exceeds 5, the consistency
+  (Dias et al., (2010)). If the difference in DIC exceeds 5, the consistency
   model is preferred; if the difference in DIC is less than -5, the model
-  after split node is preferred; otherwise, there is little to choose between
-  the compared models.</p>
+  after the split node is preferred; otherwise, there is little to choose
+  between the compared models.</p>
 <p>The split nodes have been automatically selected via the
-  <code>mtc.nodesplit.comparisons</code> function of the
-  <code>gemtc</code> package. See 'Details' in <code>run_nodesplit</code>.</p>
-<p>Furthermore, <code>nodesplit_plot</code> exports both data-frames to an Excel
-  'xlsx' format (via the <code><a href='https://docs.ropensci.org/writexl/reference/write_xlsx.html'>write_xlsx</a></code> function) to the
+  <code><a href='https://rdrr.io/pkg/gemtc/man/mtc.nodesplit.html'>mtc.nodesplit.comparisons</a></code> function of the
+  R-package <a href='https://CRAN.R-project.org/package=gemtc'>gemtc</a>.
+  See 'Details' in <code><a href='run_nodesplit.html'>run_nodesplit</a></code>.</p>
+<p>Furthermore, <code>nodesplit_plot</code> exports both data-frames to separate
+  'xlsx' files (via the <code><a href='https://docs.ropensci.org/writexl/reference/write_xlsx.html'>write_xlsx</a></code> function) to the
   working directory of the user.</p>
-<p><code>nodesplit_plot</code> can be used only for a network of interventions.
-  In the case of two interventions, the execution of the function will be
-  stopped and an error message will be printed in the R console.</p>
+<p><code>nodesplit_plot</code> can be used only for a network of interventions and
+  when there is at least one split node. Otherwise, the execution of the
+  function will be stopped and an error message will be printed on the R
+  console.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
 treatment comparison meta-analysis.
-<em>Stat Med</em> 2010;<b>29</b>(7-8):932--44. [doi: <a href='https://doi.org/10.1002/sim.3767'>10.1002/sim.3767</a>
-]</p>
+<em>Stat Med</em> 2010;<b>29</b>(7-8):932--44. doi: <a href='https://doi.org/10.1002/sim.3767'>10.1002/sim.3767</a></p>
 <p>Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of
 model complexity and fit. <em>J R Stat Soc B</em> 2002;<b>64</b>:583--616.
-[doi: <a href='https://doi.org/10.1111/1467-9868.00353'>10.1111/1467-9868.00353</a>
-]</p>
+doi: <a href='https://doi.org/10.1111/1467-9868.00353'>10.1111/1467-9868.00353</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>, <code><a href='run_nodesplit.html'>run_nodesplit</a></code>,
+    <div class='dont-index'><p>\code<a href='run_model.html'>run_model</a>, code<a href='run_nodesplit.html'>run_nodesplit</a>,
   <code><a href='https://rdrr.io/pkg/gemtc/man/mtc.nodesplit.html'>mtc.nodesplit.comparisons</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
@@ -271,7 +273,7 @@ model complexity and fit. <em>J R Stat Soc B</em> 2002;<b>64</b>:583--616.
 <span class='r-in'>                 n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,</span>
 <span class='r-in'>                 n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
 <span class='r-in'></span>
-<span class='r-in'><span class='co'># Run random-effects network meta-analysis with node-splitting approachs</span></span>
+<span class='r-in'><span class='co'># Run random-effects node-splitting approach</span></span>
 <span class='r-in'><span class='va'>node</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_nodesplit.html'>run_nodesplit</a></span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,</span>
 <span class='r-in'>                      n_chains <span class='op'>=</span> <span class='fl'>3</span>,</span>
 <span class='r-in'>                      n_iter <span class='op'>=</span> <span class='fl'>10000</span>,</span>

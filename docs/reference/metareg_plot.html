@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="End-user-ready results for network meta-regression — metareg_plot" />
 <meta property="og:description" content="Illustrates the effect estimates, predictions and regression
-  coefficients of comparisons with a specified comparator and also exports
+  coefficients of comparisons with a specific comparator and also exports
   these results to an Excel format." />
 
 
@@ -130,7 +130,7 @@
 
     <div class="ref-description">
     <p>Illustrates the effect estimates, predictions and regression
-  coefficients of comparisons with a specified comparator and also exports
+  coefficients of comparisons with a specific comparator and also exports
   these results to an Excel format.</p>
     </div>
 
@@ -187,18 +187,19 @@ function) to the working directory of the user. The default is <code>FALSE</code
 <tr><td><code>table_estimates</code></td><td>The posterior mean, and 95% credible interval
    of the summary effect measure (according to the argument <code>measure</code>
    defined in <code><a href='run_model.html'>run_model</a></code>) for each comparison with the selected
-   intervention under network meta-analysis and network meta-regression.</td></tr>
+   intervention under network meta-analysis and network meta-regression
+   based on the specified <code>cov_value</code>.</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>table_predictions</code></td><td>The posterior mean, and 95% predictive
    interval of the summary effect measure (according to the argument
    <code>measure</code> defined in <code><a href='run_model.html'>run_model</a></code>) for each comparison
    with the selected intervention under network meta-analysis and network
-   meta-regression.</td></tr>
+   meta-regression based on the specified <code>cov_value</code>.</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>table_model_assessment</code></td><td>The DIC, total residual deviance,
-   number of effective parameters, and the posterior median and 95<!-- % credible -->
+   number of effective parameters, and the posterior median and 95% credible
    interval of between-trial standard deviation (\(\tau\)) under each model
-   (Spiegelhalter et al. (2002)). When a fixed-effect model has been
+   (Spiegelhalter et al., (2002)). When a fixed-effect model has been
    performed, <code>metareg_plot</code> does not return results on \(\tau\).</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>table_regression_coeffients</code></td><td>The posterior mean and 95%
@@ -238,12 +239,10 @@ function) to the working directory of the user. The default is <code>FALSE</code
     <p>Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 for presenting results from multiple-treatment meta-analysis: an overview and
 tutorial. <em>J Clin Epidemiol</em> 2011;<b>64</b>(2):163--71.
-[doi: <a href='https://doi.org/10.1016/j.jclinepi.2010.03.016'>10.1016/j.jclinepi.2010.03.016</a>
-]</p>
+doi: <a href='https://doi.org/10.1016/j.jclinepi.2010.03.016'>10.1016/j.jclinepi.2010.03.016</a></p>
 <p>Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of
 model complexity and fit. <em>J R Stat Soc B</em> 2002;<b>64</b>:583--616.
-[doi: <a href='https://doi.org/10.1111/1467-9868.00353'>10.1111/1467-9868.00353</a>
-]</p>
+doi: <a href='https://doi.org/10.1111/1467-9868.00353'>10.1111/1467-9868.00353</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='forestplot_metareg.html'>forestplot_metareg</a></code>, <code><a href='run_metareg.html'>run_metareg</a></code>,

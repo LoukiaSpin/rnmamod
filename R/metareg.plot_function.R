@@ -1,7 +1,7 @@
 #' End-user-ready results for network meta-regression
 #'
 #' @description Illustrates the effect estimates, predictions and regression
-#'   coefficients of comparisons with a specified comparator and also exports
+#'   coefficients of comparisons with a specific comparator and also exports
 #'   these results to an Excel format.
 #'
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
@@ -32,18 +32,19 @@
 #'    \code{table_estimates} \tab The posterior mean, and 95\% credible interval
 #'    of the summary effect measure (according to the argument \code{measure}
 #'    defined in \code{\link{run_model}}) for each comparison with the selected
-#'    intervention under network meta-analysis and network meta-regression.\cr
+#'    intervention under network meta-analysis and network meta-regression
+#'    based on the specified \code{cov_value}.\cr
 #'    \tab \cr
 #'    \code{table_predictions} \tab The posterior mean, and 95\% predictive
 #'    interval of the summary effect measure (according to the argument
 #'    \code{measure} defined in \code{\link{run_model}}) for each comparison
 #'    with the selected intervention under network meta-analysis and network
-#'    meta-regression.\cr
+#'    meta-regression based on the specified \code{cov_value}.\cr
 #'    \tab \cr
 #'    \code{table_model_assessment} \tab The DIC, total residual deviance,
-#'    number of effective parameters, and the posterior median and 95% credible
+#'    number of effective parameters, and the posterior median and 95\% credible
 #'    interval of between-trial standard deviation (\eqn{\tau}) under each model
-#'    (Spiegelhalter et al. (2002)). When a fixed-effect model has been
+#'    (Spiegelhalter et al., (2002)). When a fixed-effect model has been
 #'    performed, \code{metareg_plot} does not return results on \eqn{\tau}.\cr
 #'    \tab \cr
 #'    \code{table_regression_coeffients} \tab The posterior mean and 95\%
@@ -89,11 +90,11 @@
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 #' for presenting results from multiple-treatment meta-analysis: an overview and
 #' tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
-#' [\doi{10.1016/j.jclinepi.2010.03.016}]
+#' \doi{10.1016/j.jclinepi.2010.03.016}
 #'
 #' Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of
 #' model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616.
-#' [\doi{10.1111/1467-9868.00353}]
+#' \doi{10.1111/1467-9868.00353}
 #'
 #' @examples
 #' data("nma.baker2009")

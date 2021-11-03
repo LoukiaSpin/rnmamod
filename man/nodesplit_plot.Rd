@@ -15,14 +15,14 @@ in \code{\link{run_nodesplit}}.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
-\code{\link{run_model}}. If the argument \code{drug_names} is not defined,
+\code{\link{run_model}}. If \code{drug_names} is not defined,
 the order of the interventions as they appear in \code{data} is used,
 instead.}
 
 \item{save_xls}{Logical to indicate whether to export the tabulated results
-to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}}
+to an 'xlsx' file (via the \code{\link[writexl]{write_xlsx}}
 function) to the working directory of the user. The default is \code{FALSE}
-(do not export to an Excel format).}
+(do not export).}
 }
 \value{
 \code{nodesplit_plot} returns the following list of elements:
@@ -32,10 +32,11 @@ function) to the working directory of the user. The default is \code{FALSE}
    indirect effect and the inconsistency factor of each split node.\cr
    \tab \cr
    \code{table_model_assessment} \tab A data-frame with the model assessment
-   parameters (DIC, posterior mean of total residual deviance, and number of
-   effective parameters), the posterior median, posterior standard deviation
-   and 95\% credible interval of \eqn{\tau} under the consistency model and
-   after each split node. See 'Details'.\cr
+   parameters (deviance information criterion (DIC), posterior mean of total
+   residual deviance, and number of effective parameters), the posterior
+   median, posterior standard deviation and 95\% credible interval of
+   \eqn{\tau} under the consistency model and after each split node. See
+   'Details'.\cr
    \tab \cr
    \code{intervalplot_inconsistency_factor} \tab A panel of interval plots on
    the direct and indirect effect of the split nodes and the corresponding
@@ -48,54 +49,57 @@ function) to the working directory of the user. The default is \code{FALSE}
 \description{
 Illustrates the direct and indirect effects and inconsistency
   factor of the split nodes in a panel of interval plots and also exports
-  these results in an Excel format. Furthermore, \code{nodesplit_plot}
-  facilitates the comparison of the consistency model (via \code{run_model})
-  with the node-splitting approach (via \code{run_nodesplit}) regarding
-  between-trial standard deviation (\eqn{\tau}) and model assessment
-  parameters (Spiegelhalter et al. (2002)) after each split node of the
-  network.
+  these results to an Excel file. Furthermore, \code{nodesplit_plot}
+  facilitates the comparison of the consistency model
+  (via \code{\link{run_model}}) with the node-splitting approach
+  (via \code{\link{run_nodesplit}}) regarding between-trial standard
+  deviation (\eqn{\tau}) and model assessment parameters
+  (Spiegelhalter et al. (2002)) after each split node of the network.
 }
 \details{
-\code{node_split_intervalplot} includes as many interval plots as
-  the number of split nodes in the network. Each interval plot illustrates
-  the posterior mean and 95\% credible interval of the direct and indirect
-  effect of the split nodes and the corresponding inconsistency factor.
+\code{intervalplot_inconsistency_factor} includes as many interval
+  plots as the number of split nodes in the network. Each interval plot
+  illustrates the posterior mean and 95\% credible interval of the direct and
+  indirect effect of the split nodes and the corresponding inconsistency
+  factor.
   The line that corresponds to the inconsistency factor is highlighted with
   green, when it does not cross the vertical line of no difference (between
   the direct and indirect effect), and red otherwise. If there are more than
   30 split nodes, the function presents the interval plots on split nodes
-  with statistically significant inconsistency factor or those with
+  with conclusive inconsistency factor (green intervals) or those with
   inconsistent sign in the direct and indirect effect.
 
   \code{intervalplot_tau} is a interval plot on the median and 95\% credible
   interval of \eqn{\tau} after each split node. The lines that correspond to
-  the split nodes are sorted in ascending order of the
-  deviance information criterion (DIC) which appears at the top of each line.
+  the split nodes are sorted in ascending order of the DIC which appears at
+  the top of each line.
   The 95\% credible interval of \eqn{\tau} under the consistency model
   appears as a rectangle in the interval plot. When a fixed-effect model has
-  been performed, \code{nodesplit_plot} does not return
+  been performed, \code{nodesplit_plot} does not return the
   \code{intervalplot_tau}.
 
-  The data-frame \code{table_model_assessment} also include the column
+  The \code{table_model_assessment} also includes the column
   \emph{DIC-based better fit} that indicates the preferred model in terms of
   parsimony for each split node. Therefore, the DIC of the model after each
   split node is compared with the DIC of the consistency model
-  (Dias et al. (2010)). If the difference in DIC exceeds 5, the consistency
+  (Dias et al., (2010)). If the difference in DIC exceeds 5, the consistency
   model is preferred; if the difference in DIC is less than -5, the model
-  after split node is preferred; otherwise, there is little to choose between
-  the compared models.
+  after the split node is preferred; otherwise, there is little to choose
+  between the compared models.
 
   The split nodes have been automatically selected via the
-  \code{mtc.nodesplit.comparisons} function of the
-  \code{\link{gemtc}} package. See 'Details' in \code{run_nodesplit}.
+  \code{\link[gemtc]{mtc.nodesplit.comparisons}} function of the
+  R-package \href{https://CRAN.R-project.org/package=gemtc}{gemtc}.
+  See 'Details' in \code{\link{run_nodesplit}}.
 
-  Furthermore, \code{nodesplit_plot} exports both data-frames to an Excel
-  'xlsx' format (via the \code{\link[writexl]{write_xlsx}} function) to the
+  Furthermore, \code{nodesplit_plot} exports both data-frames to separate
+  'xlsx' files (via the \code{\link[writexl]{write_xlsx}} function) to the
   working directory of the user.
 
-  \code{nodesplit_plot} can be used only for a network of interventions.
-  In the case of two interventions, the execution of the function will be
-  stopped and an error message will be printed in the R console.
+  \code{nodesplit_plot} can be used only for a network of interventions and
+  when there is at least one split node. Otherwise, the execution of the
+  function will be stopped and an error message will be printed on the R
+  console.
 }
 \examples{
 data("nma.baker2009")
@@ -115,7 +119,7 @@ res <- run_model(data = nma.baker2009,
                  n_burnin = 1000,
                  n_thin = 1)
 
-# Run random-effects network meta-analysis with node-splitting approachs
+# Run random-effects node-splitting approach
 node <- run_nodesplit(full = res,
                       n_chains = 3,
                       n_iter = 10000,
@@ -136,14 +140,14 @@ nodesplit_plot(full = res,
 \references{
 Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
 treatment comparison meta-analysis.
-\emph{Stat Med} 2010;\bold{29}(7-8):932--44. [\doi{10.1002/sim.3767}]
+\emph{Stat Med} 2010;\bold{29}(7-8):932--44. \doi{10.1002/sim.3767}
 
 Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of
 model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616.
-[\doi{10.1111/1467-9868.00353}]
+\doi{10.1111/1467-9868.00353}
 }
 \seealso{
-\code{\link{run_model}}, \code{\link{run_nodesplit}},
+\\code{\link{run_model}}, code{\link{run_nodesplit}},
   \code{\link[gemtc]{mtc.nodesplit.comparisons}}
 }
 \author{
