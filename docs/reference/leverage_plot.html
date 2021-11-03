@@ -40,10 +40,9 @@
 
 
 <meta property="og:title" content="Leverage plot — leverage_plot" />
-<meta property="og:description" content="Illustrates the posterior mean of deviance of the individual
-  data points under the unrelated mean effects model (via run_ume)
-  against the posterior mean of deviance under the consistency model
-  (via run_model)." />
+<meta property="og:description" content="Plots the leverage against the square root of the
+  posterior mean of residual deviance of the trial-arms under the model of
+  interest." />
 
 
 
@@ -130,10 +129,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Illustrates the posterior mean of deviance of the individual
-  data points under the unrelated mean effects model (via <code>run_ume</code>)
-  against the posterior mean of deviance under the consistency model
-  (via <code>run_model</code>).</p>
+    <p>Plots the leverage against the square root of the
+  posterior mean of residual deviance of the trial-arms under the model of
+  interest.</p>
     </div>
 
     <pre class="usage"><span class='fu'>leverage_plot</span><span class='op'>(</span><span class='va'>net</span>, <span class='va'>drug_names</span>, <span class='va'>title</span><span class='op'>)</span></pre>
@@ -143,8 +141,9 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>net</th>
-      <td><p>An object of S3 class <code><a href='run_model.html'>run_model</a></code> or
-<code><a href='run_ume.html'>run_ume</a></code>. See 'Value' in <code><a href='run_model.html'>run_model</a></code> and
+      <td><p>An object of S3 class <code><a href='run_model.html'>run_model</a></code>,
+<code><a href='run_metareg.html'>run_metareg</a></code>, or <code><a href='run_ume.html'>run_ume</a></code>.
+See 'Value' in <code><a href='run_model.html'>run_model</a></code>, <code><a href='run_metareg.html'>run_metareg</a></code>, or
 <code><a href='run_ume.html'>run_ume</a></code>.</p></td>
     </tr>
     <tr>
@@ -152,46 +151,45 @@
       <td><p>A vector of labels with the name of the interventions in
 the order they appear in the argument <code>data</code> of
 <code><a href='run_model.html'>run_model</a></code>.
-If the argument <code>drug_names</code> is not defined, the order of the
+If <code>drug_names</code> is not defined, the order of the
 interventions as they appear in <code>data</code> is used, instead.</p></td>
     </tr>
     <tr>
       <th>title</th>
-      <td><p>A title to indicate the model (consistency model or unrelated
-mean effects model).</p></td>
+      <td><p>A title to indicate the model (consistency model, network
+meta-regression or unrelated mean effects model).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A scatterplot of the leverage against the square root of the
-  posterior mean of residual deviance of the trial-arms under the consistency
-  models or the unrelated mean effects model. The green, yellow, and red
-  curves correspond to the parabola \(x^2 + y = k\) with \(k\) = 1, 2,
-  and 3, respectively. Data points correspond to trial-arms. Data points
-  found outside the yellow parabola are linked with a pair of numbers.
-  The first number refers to the trial position in the dataset, and the
-  second arm refers to the corresponding trial-arm (see 'Arguments' and
-  'Value' in <code>data.preparation</code>). These trial-arms contribute more than
-  1 to the posterior mean deviance and, hence, the model's poor fit.</p>
+  posterior mean of residual deviance of the trial-arms under the model of
+  interest. The green, yellow, and red curves correspond to the parabola
+  \(x^2 + y = k\) with \(k\) = 1, 2, and 3, respectively. The data points
+  correspond to trial-arms. Data points found outside the yellow parabola are
+  linked with a pair of numbers. The first number refers to the position
+  of the trial in the dataset, and the second number refers to the
+  corresponding trial-arm (see 'Arguments' and 'Value' in
+  <code><a href='data_preparation.html'>data_preparation</a></code>). These trial-arms contribute more than
+  1 to the deviance information criterion and, hence, the model's poor fit.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>leverage_plot</code> is integrated in the <code>ume_plot</code> function
-  to create the leverage on the posterior mean of deviance under the
-  consistency model and the unrelated mean effects model. These plots appear
-  side-by-side in the output of <code>ume_plot</code>. Dias et al. (2010) used
-  leverage plots to investigate the fit of the consistency and inconsistency
-  models - the latter through the node-splitting approach.</p>
+    <p><code>leverage_plot</code> is integrated in the <code><a href='ume_plot.html'>ume_plot</a></code>
+  function to create the leverage plot for the consistency model and the
+  unrelated mean effects model. These plots appear side-by-side in the output
+  of <code><a href='ume_plot.html'>ume_plot</a></code>. Dias et al. (2010) used leverage plots to
+  investigate the fit of the consistency and inconsistency models--the
+  latter through the node-splitting approach.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
 treatment comparison meta-analysis.
-<em>Stat Med</em> 2010;<b>29</b>(7-8):932--44. [doi: <a href='https://doi.org/10.1002/sim.3767'>10.1002/sim.3767</a>
-]</p>
+<em>Stat Med</em> 2010;<b>29</b>(7-8):932--44. doi: <a href='https://doi.org/10.1002/sim.3767'>10.1002/sim.3767</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='ume_plot.html'>ume_plot</a></code>, <code><a href='run_model.html'>run_model</a></code>,
-  <code><a href='run_ume.html'>run_ume</a></code></p></div>
+    <div class='dont-index'><p><code><a href='data_preparation.html'>data_preparation</a></code>, <code><a href='run_metareg.html'>run_metareg</a></code>,
+  <code><a href='run_model.html'>run_model</a></code>, <code><a href='ume_plot.html'>ume_plot</a></code>, <code><a href='run_ume.html'>run_ume</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>

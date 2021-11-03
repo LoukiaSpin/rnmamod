@@ -17,20 +17,20 @@ metareg_plot(full, reg, compar, cov_value, drug_names, save_xls)
 any name found in \code{drug_names}.}
 
 \item{cov_value}{A vector of two elements in the following order: a number
-that corresponds to a value of the covariate considered in
-\code{\link{run_metareg}}, and a character object to indicate the name of
+for the covariate value of interest (see 'Arguments' in
+\code{\link{run_metareg}}), and a character to indicate the name of
 the covariate. See also 'Details'.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
-\code{\link{run_model}}. If the argument \code{drug_names} is not defined,
+\code{\link{run_model}}. If \code{drug_names} is not defined,
 the order of the interventions as they appear in \code{data} is used,
 instead.}
 
 \item{save_xls}{Logical to indicate whether to export the tabulated results
-to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}}
+to an 'xlsx' file (via the \code{\link[writexl]{write_xlsx}}
 function) to the working directory of the user. The default is \code{FALSE}
-(do not export to an Excel format).}
+(do not export).}
 }
 \value{
 \code{metareg_plot} prints on the R console a message on the most
@@ -39,15 +39,18 @@ function) to the working directory of the user. The default is \code{FALSE}
    elements:
   \tabular{ll}{
    \code{table_estimates} \tab The posterior mean, and 95\% credible interval
-   of the summary effect size for each comparison with the selected
-   intervention under network meta-analysis and meta-regression.\cr
+   of the summary effect measure (according to the argument \code{measure}
+   defined in \code{\link{run_model}}) for each comparison with the selected
+   intervention under network meta-analysis and network meta-regression.\cr
    \tab \cr
    \code{table_predictions} \tab The posterior mean, and 95\% predictive
-   interval of the summary effect size for each comparison with the selected
-   intervention under network meta-analysis and meta-regression.\cr
+   interval of the summary effect measure (according to the argument
+   \code{measure} defined in \code{\link{run_model}}) for each comparison
+   with the selected intervention under network meta-analysis and network
+   meta-regression.\cr
    \tab \cr
    \code{table_model_assessment} \tab The DIC, total residual deviance,
-   number of effective parameters, and the posterior mean and 95% credible
+   number of effective parameters, and the posterior median and 95% credible
    interval of between-trial standard deviation (\eqn{\tau}) under each model
    (Spiegelhalter et al. (2002)). When a fixed-effect model has been
    performed, \code{metareg_plot} does not return results on \eqn{\tau}.\cr
@@ -55,16 +58,22 @@ function) to the working directory of the user. The default is \code{FALSE}
    \code{table_regression_coeffients} \tab The posterior mean and 95\%
    credible interval of the regression coefficient(s).\cr
    \tab \cr
-   \code{Interval.plots} \tab The panel of forest-plots on estimated and
+   \code{interval_plots} \tab The panel of forest-plots on the estimated and
    predicted effect sizes of comparisons with the selected intervention under
-   network meta-analysis and meta-regression. See 'Details' and 'Value' in
+   network meta-analysis and network meta-regression based on the specified
+   \code{cov_value}. See 'Details' and 'Value' in
    \code{\link{forestplot_metareg}}.\cr
+   \tab \cr
+   \code{sucra_scatterplot} \tab A scatterplot of the SUCRA values from the
+   network meta-analysis against the SUCRA values from the network
+   meta-regression based on the specified \code{cov_value}. See 'Details'
+   and 'Value' in \code{\link{scatterplot_sucra}}.
 }
 }
 \description{
 Illustrates the effect estimates, predictions and regression
   coefficients of comparisons with a specified comparator and also exports
-  these results in an Excel format.
+  these results to an Excel format.
 }
 \details{
 The DIC of the network meta-analysis model is compared with the DIC
@@ -74,16 +83,16 @@ The DIC of the network meta-analysis model is compared with the DIC
   there is little to choose between the compared models.
 
   When the covariate is binary, specify in the second element of
-  \code{cov_value} the name of the level for which the scatterplot will be
+  \code{cov_value} the name of the level for which the output will be
   created.
 
   Furthermore, \code{metareg_plot} exports all tabulated results to separate
-  Excel 'xlsx' formats (via the \code{\link[writexl]{write_xlsx}} function)
+  'xlsx' files (via the \code{\link[writexl]{write_xlsx}} function)
   to the working directory of the user.
 
   \code{metareg_plot} can be used only for a network of interventions. In the
   case of two interventions, the execution of the function will be stopped
-  and an error message will be printed in the R console.
+  and an error message will be printed on the R console.
 }
 \examples{
 data("nma.baker2009")
@@ -103,7 +112,7 @@ res <- run_model(data = nma.baker2009,
                  n_burnin = 1000,
                  n_thin = 1)
 
-# Publicatiom year
+# Publication year
 pub_year <- c(1996, 1998, 1999, 2000, 2000, 2001, rep(2002, 5), 2003, 2003,
               rep(2005, 4), 2006, 2006, 2007, 2007)
 
@@ -121,8 +130,8 @@ interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
                   "fluticasone", "fluticasone plus salmeterol",
                   "formoterol", "salmeterol", "tiotropium")
 
-# Plot the results from the network meta-analysis and meta-regression
-# for comparisons with salmeterol and publication year 2000
+# Plot the results from the network meta-analysis and network meta-regression
+# for all comparisons with salmeterol and publication year 2000
 metareg_plot(full = res,
              reg = reg,
              compar = "salmeterol",
@@ -141,8 +150,9 @@ model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616.
 [\doi{10.1111/1467-9868.00353}]
 }
 \seealso{
-\code{\link{run_model}}, \code{\link{run_metareg}},
-  \code{\link{forestplot_metareg}}
+\code{\link{forestplot_metareg}}, \code{\link{run_metareg}},
+  \code{\link{run_model}}, \code{\link{scatterplot_sucra}},
+  \code{\link[writexl]{write_xlsx}}
 }
 \author{
 {Loukia M. Spineli}

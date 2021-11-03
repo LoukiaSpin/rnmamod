@@ -7,53 +7,53 @@
 leverage_plot(net, drug_names, title)
 }
 \arguments{
-\item{net}{An object of S3 class \code{\link{run_model}} or
-\code{\link{run_ume}}. See 'Value' in \code{\link{run_model}} and
+\item{net}{An object of S3 class \code{\link{run_model}},
+\code{\link{run_metareg}}, or \code{\link{run_ume}}.
+See 'Value' in \code{\link{run_model}}, \code{\link{run_metareg}}, or
 \code{\link{run_ume}}.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
 \code{\link{run_model}}.
-If the argument \code{drug_names} is not defined, the order of the
+If \code{drug_names} is not defined, the order of the
 interventions as they appear in \code{data} is used, instead.}
 
-\item{title}{A title to indicate the model (consistency model or unrelated
-mean effects model).}
+\item{title}{A title to indicate the model (consistency model, network
+meta-regression or unrelated mean effects model).}
 }
 \value{
 A scatterplot of the leverage against the square root of the
-  posterior mean of residual deviance of the trial-arms under the consistency
-  models or the unrelated mean effects model. The green, yellow, and red
-  curves correspond to the parabola \eqn{x^2 + y = k} with \eqn{k} = 1, 2,
-  and 3, respectively. Data points correspond to trial-arms. Data points
-  found outside the yellow parabola are linked with a pair of numbers.
-  The first number refers to the trial position in the dataset, and the
-  second arm refers to the corresponding trial-arm (see 'Arguments' and
-  'Value' in \code{data.preparation}). These trial-arms contribute more than
-  1 to the posterior mean deviance and, hence, the model's poor fit.
+  posterior mean of residual deviance of the trial-arms under the model of
+  interest. The green, yellow, and red curves correspond to the parabola
+  \eqn{x^2 + y = k} with \eqn{k} = 1, 2, and 3, respectively. The data points
+  correspond to trial-arms. Data points found outside the yellow parabola are
+  linked with a pair of numbers. The first number refers to the position
+  of the trial in the dataset, and the second number refers to the
+  corresponding trial-arm (see 'Arguments' and 'Value' in
+  \code{\link{data_preparation}}). These trial-arms contribute more than
+  1 to the deviance information criterion and, hence, the model's poor fit.
 }
 \description{
-Illustrates the posterior mean of deviance of the individual
-  data points under the unrelated mean effects model (via \code{run_ume})
-  against the posterior mean of deviance under the consistency model
-  (via \code{run_model}).
+Plots the leverage against the square root of the
+  posterior mean of residual deviance of the trial-arms under the model of
+  interest.
 }
 \details{
-\code{leverage_plot} is integrated in the \code{ume_plot} function
-  to create the leverage on the posterior mean of deviance under the
-  consistency model and the unrelated mean effects model. These plots appear
-  side-by-side in the output of \code{ume_plot}. Dias et al. (2010) used
-  leverage plots to investigate the fit of the consistency and inconsistency
-  models - the latter through the node-splitting approach.
+\code{leverage_plot} is integrated in the \code{\link{ume_plot}}
+  function to create the leverage plot for the consistency model and the
+  unrelated mean effects model. These plots appear side-by-side in the output
+  of \code{\link{ume_plot}}. Dias et al. (2010) used leverage plots to
+  investigate the fit of the consistency and inconsistency models--the
+  latter through the node-splitting approach.
 }
 \references{
 Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
 treatment comparison meta-analysis.
-\emph{Stat Med} 2010;\bold{29}(7-8):932--44. [\doi{10.1002/sim.3767}]
+\emph{Stat Med} 2010;\bold{29}(7-8):932--44. \doi{10.1002/sim.3767}
 }
 \seealso{
-\code{\link{ume_plot}}, \code{\link{run_model}},
-  \code{\link{run_ume}}
+\code{\link{data_preparation}}, \code{\link{run_metareg}},
+  \code{\link{run_model}}, \code{\link{ume_plot}}, \code{\link{run_ume}}
 }
 \author{
 {Loukia M. Spineli}
