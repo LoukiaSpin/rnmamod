@@ -119,7 +119,7 @@ in meta-analysis--part 1: two-stage methods.
 }
 \seealso{
 \code{\link{missingness_param_prior}}, \code{\link{run_model}},
-  \code{\link{taylor_continuous}},  \code{\link{taylor_imor}}
+  \code{\link{taylor_continuous}}, \code{\link{taylor_imor}}
 }
 \author{
 {Loukia M. Spineli}
