@@ -17,8 +17,8 @@ forestplot_metareg(full, reg, compar, cov_value, drug_names)
 be any name found in \code{drug_names}.}
 
 \item{cov_value}{A vector of two elements in the following order: a number
-that corresponds to a value of the covariate considered in
-\code{\link{run_metareg}}, and a character object to indicate the name of
+for the covariate value of interest (see 'Arguments' in
+\code{\link{run_metareg}}), and a character to indicate the name of
 the covariate. See also 'Details'.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in

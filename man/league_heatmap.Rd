@@ -17,8 +17,9 @@ covariate. See also 'Details'.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
-\code{\link{run_model}}. If the argument \code{drug_names} is not defined,
-the interventions are ordered as they appear in \code{data}.}
+\code{\link{run_model}}. If \code{drug_names} is not defined,
+the order of the interventions as they appear in \code{data} is used,
+instead.}
 }
 \value{
 A heatmap of the league table showing the posterior mean and 95\%
@@ -26,7 +27,7 @@ A heatmap of the league table showing the posterior mean and 95\%
   the posterior mean of the SUCRA values in the diagonal.
 }
 \description{
-Provides a heatmap of the estimated effect measures for all possible
+Provides a heatmap of the estimated effect measure for all possible
   comparisons of interventions in the network. \code{league_heatmap} can be
   used for a random-effects or fixed-effect network meta-analysis and network
    meta-regression. It is applied for one outcome only.
@@ -36,10 +37,13 @@ The rows and columns of the heatmap display the names of
   interventions  sorted by decreasing order from the best to the worst
   based on their SUCRA value (Salanti et al., 2011). The off-diagonals
   contain the posterior mean and 95\% credible interval of the effect measure
-  of the corresponding comparisons. The main diagonal contains the SUCRA
-  values of the corresponding interventions when the argument \code{full}
-  refers to the \code{\link{run_model}} function. When the argument
-  \code{full} refers to the \code{\link{run_metareg}} function, the p-score
+  (according to the argument \code{measure} defined in
+  \code{\link{run_model}}) of the corresponding comparisons.
+
+  The main diagonal contains the posterior mean of SUCRA of the corresponding
+  interventions when the argument \code{full} refers to the
+  \code{\link{run_model}} function. When the argument \code{full} refers to
+  the \code{\link{run_metareg}} function, the p-score
   (Rücker and Schwarzer, 2015) is calculated for each intervention while
   taking into account the covariate value in the argument \code{cov_value}.
   P-score is the 'frequentist analogue to SUCRA'
@@ -54,17 +58,19 @@ The rows and columns of the heatmap display the names of
   original scale after exponentiation of the logarithmic scale.
 
   Comparisons between interventions should be read from left to right.
-  Results that indicate strong evidence in favor of the row-defining
+  Therefore, each cell refers to the corresponding row-defining intervention
+  against the column-defining intervention.
+  Results that indicate strong evidence in favour of the row-defining
   intervention (i.e. the respective 95\% credible interval does not include
   the null value) are indicated in bold.
 
   In the case of network meta-regression, when the covariate is binary,
   specify in the second element of \code{cov_value} the name of the level
-  for which the scatterplot will be created.
+  for which the heatmap will be created.
 
   \code{league_heatmap} can be used only for a network of interventions.
   In the case of two interventions, the execution of the function will be
-  stopped and an error message will be printed in the R console.
+  stopped and an error message will be printed on the R console.
 }
 \examples{
 data("nma.liu2013")
@@ -98,15 +104,15 @@ league_heatmap(full = res,
 Rücker G, Schwarzer G. Ranking treatments in frequentist network
 meta-analysis works without resampling methods.
 \emph{BMC Med Res Methodol} 2015;\bold{15}:58.
-[\doi{10.1186/s12874-015-0060-8}]
+\doi{10.1186/s12874-015-0060-8}
 
 Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 for presenting results from multiple-treatment meta-analysis: an overview and
- tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
- [\doi{10.1016/j.jclinepi.2010.03.016}]
+tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
+\doi{10.1016/j.jclinepi.2010.03.016}
 }
 \seealso{
-\code{\link{run_model}}, \code{\link{run_metareg}}
+\code{\link{run_metareg}}, \code{\link{run_model}}
 }
 \author{
 {Loukia M. Spineli}, {Chrysostomos Kalyvas},

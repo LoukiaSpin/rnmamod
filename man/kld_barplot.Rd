@@ -11,8 +11,8 @@ kld_barplot(robust, compar, drug_names)
 See 'Value' in \code{\link{robustness_index}}.}
 
 \item{compar}{A character vector with two elements that indicates the
-pairwise comparison of interest. The first character refers to the
-'experimental' intervention and the second character refers to the
+pairwise comparison of interest. The first element refers to the
+'experimental' intervention and the second element refers to the
 'control' intervention of the comparison.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
@@ -23,7 +23,7 @@ instead.}
 }
 \value{
 \code{kld_barplot} returns a panel of barplots on the KLD measure for
-  each analysis.
+  each re-analysis.
 }
 \description{
 Produces a barplot with the Kullback-Leibler divergence (KLD)

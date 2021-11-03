@@ -15,13 +15,14 @@
 #'   covariate. See also 'Details'.
 #' @param drug_names A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data} of
-#'   \code{\link{run_model}}. If the argument \code{drug_names} is not defined,
+#'   \code{\link{run_model}}. If \code{drug_names} is not defined,
 #'   the order of the interventions as they appear in \code{data} is used,
 #'   instead.
 #'
-#' @return A league heatmap of the posterior mean, 95\% predictive interval of
-#'   the effects for all possible comparisons in the off-diagonals, and the
-#'   posterior mean of the SUCRA values in the diagonal.
+#' @return A league heatmap of the posterior mean and 95\% predictive interval
+#'   of the effect measure (according to the argument \code{measure} defined in
+#'   \code{\link{run_model}}) for all possible comparisons in the off-diagonals,
+#'   and the posterior mean of the SUCRA values in the diagonal.
 #'
 #' @details The rows and columns of the heatmap display the names of
 #'   interventions which are sorted by decreasing order from the best to the
@@ -39,41 +40,42 @@
 #'   (in absolute or logarithmic scale), and vice versa.
 #'   Darker shades of red and green correspond to larger treatment effects in
 #'   the upper and lower triangle, respectively, for a beneficial outcome, and
-#'   the other way around for a harmful outcome.
+#'   vice versa for a harmful outcome.
 #'   Odds ratio and ratio of means are reported in the original scale after
 #'   exponentiation of the logarithmic scale.
 #'
 #'   Comparisons between interventions should be read from left to right.
 #'   Therefore, each cell refers to the corresponding row-defining intervention
 #'   against the column-defining intervention. Results that indicate strong
-#'   evidence in favor of the row-defining intervention (i.e. the respective
+#'   evidence in favour of the row-defining intervention (i.e. the respective
 #'   95\% predictive interval does not include the null value) are indicated in
 #'   bold.
 #'
 #'   In the case of network meta-regression, when the covariate is binary,
 #'   specify in the second element of \code{cov_value} the name of the level for
-#'    which the scatterplot will be created.
+#'   which the heatmap will be created.
 #'
 #'   \code{league_heatmap_pred} can be used only for a network of interventions.
 #'   In the case of two interventions, the execution of the function will be
-#'   stopped and an error message will be printed in the R console. Similarly,
-#'   when the function is executed for a fixed-effect network meta-analysis.
+#'   stopped and an error message will be printed on the R console. Similarly,
+#'   when the function is executed for a fixed-effect network meta-analysis or
+#'   network meta-regression.
 #'
 #' @author {Loukia M. Spineli}, {Chrysostomos Kalyvas},
 #'   {Katerina Papadimitropoulou}
 #'
-#' @seealso \code{\link{run_model}}, \code{\link{run_metareg}}
+#' @seealso \code{\link{run_metareg}}, \code{\link{run_model}}
 #'
 #' @references
 #' Rücker G, Schwarzer G. Ranking treatments in frequentist network
 #' meta-analysis works without resampling methods.
 #' \emph{BMC Med Res Methodol} 2015;\bold{15}:58.
-#' [\doi{10.1186/s12874-015-0060-8}]
+#' \doi{10.1186/s12874-015-0060-8}
 #'
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 #' for presenting results from multiple-treatment meta-analysis: an overview and
 #' tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
-#' [\doi{10.1016/j.jclinepi.2010.03.016}]
+#' \doi{10.1016/j.jclinepi.2010.03.016}
 #'
 #' @examples
 #' data("nma.liu2013")
