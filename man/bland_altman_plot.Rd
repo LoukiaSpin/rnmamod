@@ -4,37 +4,36 @@
 \alias{bland_altman_plot}
 \title{The Bland-Altman plot}
 \usage{
-bland_altman_plot(group1, group2, colour)
+bland_altman_plot(model1, model2, colour)
 }
 \arguments{
-\item{group1}{A vector with the numeric values of the target method (here,
-the consistency model).}
+\item{model1}{A vector with the numeric values of the target model (for
+instance, the consistency model).}
 
-\item{group2}{A vector with the numeric values of the reference method (here,
-the unrelated mean effects model).}
+\item{model2}{A vector with the numeric values of the reference model (for
+instance, the unrelated mean effects model).}
 
 \item{colour}{A string to define the colour of the data points in the plot.}
 }
 \value{
 Bland-Altman plot on the posterior mean deviance contribution of the
- individual data points under the consistency model and the unrelated mean
- effects model.
+ individual data points under model 1 and model 2.
  Each data point corresponds to a trial-arm indicated by a pair of numbers.
- The first number refers to the trial position in the dataset,
+ The first number refers to the position of the trial in the dataset,
  and the second arm refers to the corresponding trial-arm (see 'Arguments'
- and 'Value' in \code{data_preparation}).
+ and 'Value' in \code{\link{data_preparation}}).
  The plot also displays the average bias and the 95\% limits of agreement
  with horizontal solid black lines.
 }
 \description{
 This function facilitates creating the Bland-Altman plot for two
- methods using only three arguments.
+ models using only three arguments.
 }
 \details{
-\code{bland_altman_plot} is integrated in the \code{ume_plot}
-  function to create the Bland-Altman plot on the posterior mean of deviance
-  under the consistency model (via \code{run_model}) and the unrelated mean
-  effects model (via \code{run_ume}).
+\code{bland_altman_plot} is integrated in \code{\link{ume_plot}}
+  to create the Bland-Altman plot on the posterior mean of deviance
+  under the consistency model (via \code{\link{run_model}}) and the
+  unrelated mean effects model (via \code{\link{run_ume}}).
 
   A uniform scattering of the data points within the 95\% limits of agreement
   and average bias close to 0 indicate that the compared models have a good
@@ -47,9 +46,8 @@ Bland JM, Altman DG. Measuring agreement in method comparison studies.
 \emph{Stat Methods Med Res} 1999;\bold{8}:135--60
 }
 \seealso{
-\code{data_preparation}, \code{\link{ume_plot}},
-  \code{\link{run_model}}, \code{\link{run_ume}}
-.
+\code{\link{data_preparation}}, \code{\link{run_model}},
+  \code{\link{ume_plot}}, \code{\link{run_ume}}
 }
 \author{
 {Loukia M. Spineli}

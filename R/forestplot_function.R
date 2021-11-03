@@ -1,8 +1,8 @@
 #' Comparator-specific forest plot for network meta-analysis
 #'
 #' @description Provides a forest plot with the posterior mean and 95\% credible
-#'   and prediction intervals for comparisons with the selected intervention in
-#'   the network.
+#'   and prediction intervals for comparisons with the selected intervention
+#'   (comparator) in the network.
 #'
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
 #'   \code{\link{run_model}}.
@@ -11,16 +11,18 @@
 #' @param drug_names A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data} of
 #'   \code{\link{run_model}}. If the argument \code{drug_names} is not defined,
-#'   the interventions are ordered as they appear in \code{data}.
+#'   the interventions are ordered as they appear in \code{data} (See
+#'   'Arguments' in \code{\link{run_model}}).
 #'
 #' @return A panel of two forest plots: (1) a forest plot on the effect
 #'   estimates and predictions of comparisons with the selected intervention in
 #'   the network, and (2) a forest plot on the posterior mean and 95\% credible
 #'   interval of SUCRA values of the interventions (Salanti et al., 2011).
 #'
-#' @details The y-axis of the plot displays the labels of the interventions in
-#'   the network; the selected intervention that comprises the \code{compar}
-#'   argument is annotated in the plot with the label 'Comparator intervention'.
+#' @details The y-axis of the forest plot on the effect sizes displays the
+#'   labels of the interventions in the network; the selected intervention that
+#'   comprises the \code{compar} argument is annotated in the plot with the
+#'   label 'Comparator intervention'.
 #'   For each comparison with the selected intervention, the 95\% credible and
 #'   prediction intervals are displayed as overlapping lines in different
 #'   colours. The corresponding numerical results are displayed above each line:

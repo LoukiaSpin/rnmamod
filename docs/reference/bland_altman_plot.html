@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="The Bland-Altman plot — bland_altman_plot" />
 <meta property="og:description" content="This function facilitates creating the Bland-Altman plot for two
- methods using only three arguments." />
+ models using only three arguments." />
 
 
 
@@ -129,23 +129,23 @@
 
     <div class="ref-description">
     <p>This function facilitates creating the Bland-Altman plot for two
- methods using only three arguments.</p>
+ models using only three arguments.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bland_altman_plot</span><span class='op'>(</span><span class='va'>group1</span>, <span class='va'>group2</span>, <span class='va'>colour</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>bland_altman_plot</span><span class='op'>(</span><span class='va'>model1</span>, <span class='va'>model2</span>, <span class='va'>colour</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>group1</th>
-      <td><p>A vector with the numeric values of the target method (here,
-the consistency model).</p></td>
+      <th>model1</th>
+      <td><p>A vector with the numeric values of the target model (for
+instance, the consistency model).</p></td>
     </tr>
     <tr>
-      <th>group2</th>
-      <td><p>A vector with the numeric values of the reference method (here,
-the unrelated mean effects model).</p></td>
+      <th>model2</th>
+      <td><p>A vector with the numeric values of the reference model (for
+instance, the unrelated mean effects model).</p></td>
     </tr>
     <tr>
       <th>colour</th>
@@ -156,20 +156,19 @@ the unrelated mean effects model).</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Bland-Altman plot on the posterior mean deviance contribution of the
- individual data points under the consistency model and the unrelated mean
- effects model.
+ individual data points under model 1 and model 2.
  Each data point corresponds to a trial-arm indicated by a pair of numbers.
- The first number refers to the trial position in the dataset,
+ The first number refers to the position of the trial in the dataset,
  and the second arm refers to the corresponding trial-arm (see 'Arguments'
- and 'Value' in <code>data_preparation</code>).
+ and 'Value' in <code><a href='data_preparation.html'>data_preparation</a></code>).
  The plot also displays the average bias and the 95% limits of agreement
  with horizontal solid black lines.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>bland_altman_plot</code> is integrated in the <code>ume_plot</code>
-  function to create the Bland-Altman plot on the posterior mean of deviance
-  under the consistency model (via <code>run_model</code>) and the unrelated mean
-  effects model (via <code>run_ume</code>).</p>
+    <p><code>bland_altman_plot</code> is integrated in <code><a href='ume_plot.html'>ume_plot</a></code>
+  to create the Bland-Altman plot on the posterior mean of deviance
+  under the consistency model (via <code><a href='run_model.html'>run_model</a></code>) and the
+  unrelated mean effects model (via <code><a href='run_ume.html'>run_ume</a></code>).</p>
 <p>A uniform scattering of the data points within the 95% limits of agreement
   and average bias close to 0 indicate that the compared models have a good
   agreement. Data points positioned above or below the 95% limits of
@@ -181,9 +180,8 @@ the unrelated mean effects model).</p></td>
 <em>Stat Methods Med Res</em> 1999;<b>8</b>:135--60</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code>data_preparation</code>, <code><a href='ume_plot.html'>ume_plot</a></code>,
-  <code><a href='run_model.html'>run_model</a></code>, <code><a href='run_ume.html'>run_ume</a></code>
-.</p></div>
+    <div class='dont-index'><p><code><a href='data_preparation.html'>data_preparation</a></code>, <code><a href='run_model.html'>run_model</a></code>,
+  <code><a href='ume_plot.html'>ume_plot</a></code>, <code><a href='run_ume.html'>run_ume</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>

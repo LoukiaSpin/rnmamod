@@ -1,28 +1,27 @@
 #' The Bland-Altman plot
 #'
 #' @description This function facilitates creating the Bland-Altman plot for two
-#'  methods using only three arguments.
+#'  models using only three arguments.
 #'
-#' @param group1 A vector with the numeric values of the target method (here,
-#'   the consistency model).
-#' @param group2 A vector with the numeric values of the reference method (here,
-#'   the unrelated mean effects model).
+#' @param model1 A vector with the numeric values of the target model (for
+#'   instance, the consistency model).
+#' @param model2 A vector with the numeric values of the reference model (for
+#'   instance, the unrelated mean effects model).
 #' @param colour A string to define the colour of the data points in the plot.
 #'
 #' @return Bland-Altman plot on the posterior mean deviance contribution of the
-#'  individual data points under the consistency model and the unrelated mean
-#'  effects model.
+#'  individual data points under model 1 and model 2.
 #'  Each data point corresponds to a trial-arm indicated by a pair of numbers.
-#'  The first number refers to the trial position in the dataset,
+#'  The first number refers to the position of the trial in the dataset,
 #'  and the second arm refers to the corresponding trial-arm (see 'Arguments'
-#'  and 'Value' in \code{data_preparation}).
+#'  and 'Value' in \code{\link{data_preparation}}).
 #'  The plot also displays the average bias and the 95\% limits of agreement
 #'  with horizontal solid black lines.
 #'
-#' @details \code{bland_altman_plot} is integrated in the \code{ume_plot}
-#'   function to create the Bland-Altman plot on the posterior mean of deviance
-#'   under the consistency model (via \code{run_model}) and the unrelated mean
-#'   effects model (via \code{run_ume}).
+#' @details \code{bland_altman_plot} is integrated in \code{\link{ume_plot}}
+#'   to create the Bland-Altman plot on the posterior mean of deviance
+#'   under the consistency model (via \code{\link{run_model}}) and the
+#'   unrelated mean effects model (via \code{\link{run_ume}}).
 #'
 #'   A uniform scattering of the data points within the 95\% limits of agreement
 #'   and average bias close to 0 indicate that the compared models have a good
@@ -32,15 +31,15 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{data_preparation}, \code{\link{ume_plot}},
-#'   \code{\link{run_model}}, \code{\link{run_ume}}
-#'.
+#' @seealso \code{\link{data_preparation}}, \code{\link{run_model}},
+#'   \code{\link{ume_plot}}, \code{\link{run_ume}}
+#'
 #' @references
 #' Bland JM, Altman DG. Measuring agreement in method comparison studies.
 #' \emph{Stat Methods Med Res} 1999;\bold{8}:135--60
 #'
 #' @export
-bland_altman_plot <- function(group1, group2, colour) {
+bland_altman_plot <- function(model1, model2, colour) {
 
   # A function to extract numbers from a character.
   #Source: http://stla.github.io/stlapblog/posts/numextract.html
@@ -50,8 +49,8 @@ bland_altman_plot <- function(group1, group2, colour) {
 
   # A matriX with the trial-arms of the analysed network:
   # first column is trial id, second column is arm id (i.e. 2, 3, and so on)
-  trial_arm0 <- matrix(as.numeric(numextract(names(group1))),
-                        nrow = length(group1),
+  trial_arm0 <- matrix(as.numeric(numextract(names(model1))),
+                        nrow = length(model1),
                         ncol = 2,
                         byrow = T)
 
@@ -62,8 +61,8 @@ bland_altman_plot <- function(group1, group2, colour) {
   # Round to the second decimal
   scale_fun <- function(x) sprintf("%.2f", x)
 
-  difference <- group1 - group2
-  average <- apply(cbind(group1, group2), 1, mean)
+  difference <- model1 - model2
+  average <- apply(cbind(model1, model2), 1, mean)
 
   # Dataset to be plotted in ggplot2
   data <- data.frame(round(average, 4), round(difference, 4), trial_arm)
