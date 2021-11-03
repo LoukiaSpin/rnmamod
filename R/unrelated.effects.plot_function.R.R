@@ -80,7 +80,7 @@
 #'   default color palette, line-types and point-shapes.
 #'
 #' @seealso \code{\link{missingness_param_prior}}, \code{\link{run_model}},
-#'   \code{\link{taylor_continuous}},  \code{\link{taylor_imor}}
+#'   \code{\link{taylor_continuous}}, \code{\link{taylor_imor}}
 #'
 #' @references
 #' Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
