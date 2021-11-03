@@ -140,15 +140,13 @@
     <tr>
       <th>data</th>
       <td><p>A data-frame of a one-trial-per-row format containing arm-level
-data of each trial. See 'Format' in <code><a href='run_model.html'>run_model</a></code>
-function for the specification of the columns.</p></td>
+data of each trial. See 'Format' in <code><a href='run_model.html'>run_model</a></code>.</p></td>
     </tr>
     <tr>
       <th>trial_names</th>
       <td><p>A vector of labels with the name of the trials in the
-order they appear in the argument <code>data</code>. If the argument
-<code>drug_names</code> is not defined, the order of the interventions
-as they appear in <code>data</code> is used, instead.</p></td>
+order they appear in the argument <code>data</code>. If <code>trial_names</code> is not
+defined, the trials are ordered as they appear in <code>data</code>.</p></td>
     </tr>
     <tr>
       <th>drug_names</th>
@@ -160,13 +158,13 @@ not defined, the interventions are ordered as they appear in <code>data</code>.<
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A heatmap presenting the percentage of MOD in each trial-arm of the
+    <p>A heatmap presenting the proportion of MOD in each trial-arm of the
   dataset. The columns and the rows of the heatmap correspond to the
   interventions and trials, respectively. The 'five-and-twenty' rule of
-  Sackett and colleagues is used to characterise the percentage of MOD as
-  being associated with low (up to 5%), moderate (more than 5% and up to
-  20%), and high risk of bias (more than 20%). Low, moderate, high risk of
-  bias due to MOD are indicated using green, orange, and red colour,
+  Sackett and colleagues (1997) is used to characterise the proportion of MOD
+  as being associated with low (up to 5%), moderate (more than 5% and up to
+  20%), and high risk of bias (more than 20%). Low, moderate, and high risk
+  of bias due to MOD are indicated using green, orange, and red colour,
   respectively. The function is also applicable for a pairwise meta-analysis.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 

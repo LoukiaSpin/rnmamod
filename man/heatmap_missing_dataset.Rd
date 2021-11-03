@@ -8,26 +8,24 @@ heatmap_missing_dataset(data, trial_names, drug_names)
 }
 \arguments{
 \item{data}{A data-frame of a one-trial-per-row format containing arm-level
-data of each trial. See 'Format' in \code{\link[rnmamod]{run_model}}
-function for the specification of the columns.}
+data of each trial. See 'Format' in \code{\link[rnmamod]{run_model}}.}
 
 \item{trial_names}{A vector of labels with the name of the trials in the
-order they appear in the argument \code{data}. If the argument
-\code{drug_names} is not defined, the order of the interventions
-as they appear in \code{data} is used, instead.}
+order they appear in the argument \code{data}. If \code{trial_names} is not
+defined, the trials are ordered as they appear in \code{data}.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data}. If \code{drug_names} is
 not defined, the interventions are ordered as they appear in \code{data}.}
 }
 \value{
-A heatmap presenting the percentage of MOD in each trial-arm of the
+A heatmap presenting the proportion of MOD in each trial-arm of the
   dataset. The columns and the rows of the heatmap correspond to the
   interventions and trials, respectively. The 'five-and-twenty' rule of
-  Sackett and colleagues is used to characterise the percentage of MOD as
-  being associated with low (up to 5\%), moderate (more than 5\% and up to
-  20\%), and high risk of bias (more than 20\%). Low, moderate, high risk of
-  bias due to MOD are indicated using green, orange, and red colour,
+  Sackett and colleagues (1997) is used to characterise the proportion of MOD
+  as being associated with low (up to 5\%), moderate (more than 5\% and up to
+  20\%), and high risk of bias (more than 20\%). Low, moderate, and high risk
+  of bias due to MOD are indicated using green, orange, and red colour,
   respectively. The function is also applicable for a pairwise meta-analysis.
 }
 \description{

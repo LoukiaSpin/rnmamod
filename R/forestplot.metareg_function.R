@@ -2,7 +2,7 @@
 #'
 #' @description This function illustrates a forest plot of the posterior mean
 #'   and 95\% credible and predictive interval of comparisons with the selected
-#'   intervention of the network under the netwrok meta-analysis and network
+#'   intervention of the network under the network meta-analysis and network
 #'   meta-regression.
 #'
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
@@ -24,11 +24,11 @@
 #' @return A panel of two forest plots: (1) a forest plot on the estimated
 #'   effect size of comparisons with the selected intervention of the network,
 #'   and (2) a forest plot on the predicted effect size of comparisons with the
-#'   selected intervention of the network. Both panels illustrate the results
-#'   from network meta-analysis and network meta-regression using different
-#'   colours for the corresponding lines.
+#'   selected intervention of the network. Both forest plots illustrate the
+#'   results from network meta-analysis and network meta-regression using
+#'   different colours for the corresponding lines.
 #'
-#' @details In both plots, tThe y-axis displays all interventions in the
+#' @details In both plots, the y-axis displays all interventions in the
 #'   network; the selected intervention that comprises the \code{compar} is
 #'   indicated in the plot with a homonymous label. The numerical results are
 #'   displayed above each line.
@@ -40,7 +40,7 @@
 #'   created.
 #'
 #'   In both plots, the interventions are sorted in the descending order of
-#'   their SUCRA values obtain via the network meta-analysis.
+#'   their SUCRA values based on the network meta-analysis.
 #'
 #'   \code{forestplot} can be used only for a network of interventions. In the
 #'   case of two interventions, the execution of the function will be stopped

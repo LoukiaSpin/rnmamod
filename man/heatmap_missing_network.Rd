@@ -8,29 +8,27 @@ heatmap_missing_network(data, drug_names)
 }
 \arguments{
 \item{data}{A data-frame of a one-trial-per-row format containing arm-level
-data of each trial. See 'Format' in \code{\link[rnmamod]{run_model}}
-function for the specification of the columns.}
+data of each trial. See 'Format' in \code{\link[rnmamod]{run_model}}.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data}. If the argument
 \code{drug_names} is not defined, the interventions are ordered
-as they appear in the argument \code{data}.}
+as they appear in \code{data}.}
 }
 \value{
-A heatmap on the proportion of MOD in each intervention and observed
+A heatmap of the proportion of MOD in each intervention and observed
   comparison in the network. Each cell annotates the median, minimum and
-  maximum (in parenthesis) proportion of MOD across the corresponding trials.
+  maximum (the latter two in parenthesis) proportion of MOD across the
+  corresponding trials.
   The proportion of MOD in each intervention and observed comparison are
-  depicted in white and black colour in the main diagonal and lower
-  off-diagonal, of the heatmap, respectively, The pairwise comparisons are
-  read from left to right.
+  depicted in the main diagonal and lower off-diagonal with white and black
+  colour, respectively, The pairwise comparisons are read from left to right.
 
-  The 'five-and-twenty' rule of Sackett and colleagues is used to
+  The 'five-and-twenty' rule of Sackett and colleagues (1997) is used to
   characterise the \bold{median} proportion of MOD as being associated with
   low (up to 5\%), moderate (more than 5\% and up to 20\%), and high risk of
-  attrition bias (more than 20\%). Low, moderate, and high risk of bias
-  associated with MOD is indicated using green, orange, and red colour,
-  respectively.
+  bias (more than 20\%). Low, moderate, and high risk of bias associated with
+  MOD is indicated using green, orange, and red colour, respectively.
 
   The summary statistics (median, minimum and maximum) for each intervention
   (main diagonal; white font) result from calculating the proportion of
@@ -44,9 +42,9 @@ A heatmap on the proportion of MOD in each intervention and observed
   meta-analysis.
 }
 \description{
-Illustrates the distribution of and the risk of bias associated
-  with missing participant outcome data (MOD) for each intervention and
-  observed comparison in the network.
+Illustrates the distribution of missing participant outcome data
+ (MOD) and the associated risk of bias for each intervention and observed
+ comparison in the network.
 }
 \examples{
 data("nma.stowe2011")
