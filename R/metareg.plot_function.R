@@ -132,8 +132,8 @@
 #'                   "fluticasone", "fluticasone plus salmeterol",
 #'                   "formoterol", "salmeterol", "tiotropium")
 #'
-#' # Plot the results from the network meta-analysis and network meta-regression
-#' # for all comparisons with salmeterol and publication year 2000
+#' # Plot the results from both models for all comparisons with salmeterol and
+#' # publication year 2000
 #' metareg_plot(full = res,
 #'              reg = reg,
 #'              compar = "salmeterol",

@@ -131,7 +131,7 @@ interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
                   "fluticasone", "fluticasone plus salmeterol",
                   "formoterol", "salmeterol", "tiotropium")
 
-# Plot the results from the consistency model and the node-splitting approach
+# Plot the results from both models
 nodesplit_plot(full = res,
                node = node,
                drug_names = interv_names)

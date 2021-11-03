@@ -40,9 +40,11 @@
 
 
 <meta property="og:title" content="End-user-ready results for series of pairwise meta-analyses — series_meta_plot" />
-<meta property="og:description" content="Facilitates comparing the estimated effects and
-  between-trial standard deviation obtained from corresponding pairwise
-  meta-analyses with those from a network meta-analysis." />
+<meta property="og:description" content="Facilitates the comparison of the consistency model
+  (via run_model) with a series of pairwise meta-analyses
+  (via run_series_meta) regarding the estimated summary effect
+  sizes and between-trial standard deviation for comparisons with at least
+  two trials." />
 
 
 
@@ -129,9 +131,11 @@
     </div>
 
     <div class="ref-description">
-    <p>Facilitates comparing the estimated effects and
-  between-trial standard deviation obtained from corresponding pairwise
-  meta-analyses with those from a network meta-analysis.</p>
+    <p>Facilitates the comparison of the consistency model
+  (via <code><a href='run_model.html'>run_model</a></code>) with a series of pairwise meta-analyses
+  (via <code><a href='run_series_meta.html'>run_series_meta</a></code>) regarding the estimated summary effect
+  sizes and between-trial standard deviation for comparisons with at least
+  two trials.</p>
     </div>
 
     <pre class="usage"><span class='fu'>series_meta_plot</span><span class='op'>(</span><span class='va'>full</span>, <span class='va'>meta</span>, <span class='va'>drug_names</span>, <span class='va'>save_xls</span><span class='op'>)</span></pre>
@@ -167,26 +171,26 @@ The default is <code>FALSE</code> (do not export).</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>series_meta_plot</code> returns a panel of two forest plots: (1) a
-  forest plot on the posterior mean and 95% credible interval of the effect
-  size of the observed comparisons from network meta-analysis and the
+    <p>The R console prints the data-frame with the estimated summary effect sizes
+  and \(\tau\)s of comparisons under both models. The comparisons have at
+  least two trialsIn the case of a fixed-effect model, the data-frame is
+  printed without results on \(\tau\).</p>
+<p>Furthermore, <code>series_meta_plot</code> exports the data-frame to an 'xlsx'
+  file at the working  directory of the user.</p>
+<p><code>series_meta_plot</code> returns a panel of two forest plots: (1) a
+  forest plot on the posterior mean and 95% credible interval of the summary
+  effect size of the observed comparisons from network meta-analysis and the
   corresponding pairwise meta-analyses, and (2) a forest plot on the
   posterior median and 95% credible interval of the between-trial standard
-  deviation (\(\tau\)) for the observed comparisons. The estimated
+  deviation (\(\tau\)) for these observed comparisons. The estimated
   \(\tau\) from network meta-analysis appears as a rectangle in the forest
   plot. When a fixed-effect model has been fitted, only the forest plot on
-  the estimated effects is shown.</p>
+  the estimated summary effect sizes is shown.</p>
 <p>The user can detect any inconsistencies in the estimated
   effects from the compared models and explore the gains in precision
-  stemming from network meta-analysis. Furthermore, the user can investigate
-  the plausibility of the common between-trial heterogeneity assumption which
-  is typically considered in network meta-analysis.</p>
-<p>The R console prints the data-frame with the estimated effects and
-  \(\tau\)s of the observed comparisons under both models. In the case of a
-  fixed-effect model, the data-frame is printed without results on
-  \(\tau\).
-  Furthermore, <code>series_meta_plot</code> the data-frame to an 'xlsx' file at
-  the working  directory of the user.</p>
+  stemming from applying network meta-analysis. Furthermore, the user can
+  investigate the plausibility of the common between-trial heterogeneity
+  assumption which is typically considered in network meta-analysis.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>series_meta_plot</code> can be used only for a network of

@@ -15,14 +15,14 @@ ume_plot(full, ume, drug_names, save_xls)
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
-\code{\link{run_model}}. If the argument \code{drug_names} is not defined,
+\code{\link{run_model}}. If \code{drug_names} is not defined,
 the order of the interventions as they appear in \code{data} is used,
 instead.}
 
 \item{save_xls}{Logical to indicate whether to export the tabulated results
-to an Excel 'xlsx' format (via the \code{\link[writexl]{write_xlsx}}
+to an 'xlsx' file (via the \code{\link[writexl]{write_xlsx}}
 function) to the working directory of the user. The default is \code{FALSE}
-(do not export to an Excel format).}
+(do not export).}
 }
 \value{
 \code{ume_plot} prints on the R console a message on the most
@@ -37,7 +37,7 @@ function) to the working directory of the user. The default is \code{FALSE}
    \tab \cr
    \code{table_model_assessment} \tab The DIC, number of effective
    parameters, and total residual deviance under the consistency model and
-   the unrelated mean effects model (Spiegelhalter et al. (2002)).\cr
+   the unrelated mean effects model (Spiegelhalter et al., (2002)).\cr
    \tab \cr
    \code{table_tau} \tab The posterior median and 95\% credible interval of
    \eqn{\tau} under the consistency model and the unrelated mean effects
@@ -50,10 +50,9 @@ function) to the working directory of the user. The default is \code{FALSE}
    and 'Value' in \code{\link{scatterplots_dev}} and
    \code{\link{bland_altman_plot}}.\cr
    \tab \cr
-   \code{levarage_plots} \tab The leverage plot on the posterior mean of
-   deviance of the individual data points under the consistency model and the
-   unrelated mean effects model, separately. See 'Details' and 'Value' in
-   \code{\link{leverage_plot}}.\cr
+   \code{levarage_plots} \tab The leverage plot under the consistency model
+   and the unrelated mean effects model, separately. See 'Details' and
+   'Value' in \code{\link{leverage_plot}}.\cr
    \tab \cr
    \code{intervalplots} \tab A panel of interval plots on the summary effect
    size under the consistency model and the unrelated mean effects model for
@@ -71,19 +70,19 @@ function) to the working directory of the user. The default is \code{FALSE}
 }
 \details{
 The DIC of the consistency model is compared with the DIC of the
-  unrelated mean effects model (Dias et al. (2013)). If the difference in DIC
-  exceeds 5, the unrelated mean effects model is preferred; if the difference
-  in DIC is less than -5, the consistency is preferred; otherwise, there is
-  little to choose between the compared models.
+  unrelated mean effects model (Dias et al., (2013)). If the difference in
+  DIC exceeds 5, the unrelated mean effects model is preferred; if the
+  difference in DIC is less than -5, the consistency is preferred; otherwise,
+  there is little to choose between the compared models.
 
   Furthermore, \code{ume_plot} exports \code{table_effect_size} and
-  \code{table_model_assessment} to separate Excel 'xlsx' formats (via the
+  \code{table_model_assessment} to separate 'xlsx' files (via the
   \code{\link[writexl]{write_xlsx}} function) to the working directory of the
    user.
 
   \code{ume_plot} can be used only for a network of interventions. In the
   case of two interventions, the execution of the function will be stopped
-  and an error message will be printed in the R console.
+  and an error message will be printed on the R console.
 }
 \examples{
 data("nma.liu2013")
@@ -103,7 +102,7 @@ res <- run_model(data = nma.liu2013,
                  n_burnin = 1000,
                  n_thin = 1)
 
-# Run random-effects network meta-analysis with node-splitting approach
+# Run random-effects unrelated mean effects model
 ume <- run_ume(full = res,
                n_chains = 3,
                n_iter = 10000,
@@ -115,36 +114,27 @@ interv_names <- c("placebo", "pramipexole", "serotonin–norepinephrine
                   reuptake inhibitor", "serotonin reuptake inhibitor",
                   "tricyclic antidepressant", "pergolide")
 
-# Plot the results from the consistency model and the node-splitting approach
+# Plot the results from both models
 ume_plot(full = res,
          ume = ume,
          drug_names = interv_names)
 }
 }
 \references{
-Spineli LM. A novel framework to evaluate the consistency assumption globally
-in a network of interventions. \emph{submitted} 2021.
-
-Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
-primary analysis results: A case study on missing outcome data in pairwise
-and network meta-analysis.
-\emph{Res Synth Methods} 2021;\bold{12}(4):475--490.
-[\doi{10.1002/jrsm.1478}]
-
 Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis
 for decision making 4: inconsistency in networks of evidence based on
 randomized controlled trials.
 \emph{Med Decis Making} 2013a;\bold{33}(5):641--56.
-[\doi{10.1177/0272989X12455847}]
+\doi{10.1177/0272989X12455847}
 
 Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of
 model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616.
-[\doi{10.1111/1467-9868.00353}]
+\doi{10.1111/1467-9868.00353}
 }
 \seealso{
-\code{\link{run_model}}, \code{\link{run_ume}},
-  \code{\link{bland_altman_plot}}, \code{\link{leverage_plot}},
-  \code{\link{intervalplot_panel_ume}}
+\code{\link{bland_altman_plot}},
+  \code{\link{intervalplot_panel_ume}}, \code{\link{leverage_plot}},
+  \code{\link{run_model}}, \code{\link{run_ume}}.
 }
 \author{
 {Loukia M. Spineli}
