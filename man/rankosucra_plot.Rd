@@ -12,12 +12,13 @@ rankosucra_plot(full, drug_names)
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
-\code{\link{run_model}}. If the argument \code{drug_names} is not defined,
-the interventions are ordered as they appear in \code{data}.}
+\code{\link{run_model}}. If \code{drug_names} is not defined,
+the order of the interventions as they appear in \code{data} is used,
+instead.}
 }
 \value{
 A panel of rankograms with integrated SUCRA curves for each
-  intervention of the network (Salanti et al., 2011). The x-axis of each
+  intervention in the network (Salanti et al., 2011). The x-axis of each
   panel refers to the ranking, and the y-axis refers to the ranking
   probability expressed in percentage.
 }
@@ -31,6 +32,8 @@ Interventions are sorted in the descending order of their SUCRA
   corner of each panel.
 
   \code{rankosucra_plot} can be used only for a network of interventions.
+  Otherwise, the execution of the function will be stopped and an error
+  message will be printed on the R console.
 }
 \examples{
 data("nma.liu2013")
@@ -64,7 +67,7 @@ rankosucra_plot(full = res,
 Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 for presenting results from multiple-treatment meta-analysis: an overview and
 tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
-[\doi{10.1016/j.jclinepi.2010.03.016}]
+\doi{10.1016/j.jclinepi.2010.03.016}
 }
 \seealso{
 \code{\link{run_model}}

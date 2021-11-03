@@ -40,9 +40,9 @@
 
 
 <meta property="og:title" content="Scatterplot of SUCRA values — scatterplot_sucra" />
-<meta property="og:description" content="Creates a scatterplot of the SUCRA values under the network
-  meta-analysis and the network meta-regression for a specific level or value
-  of the investigated covariate." />
+<meta property="og:description" content="Creates a scatterplot to compare the SUCRA values from the
+  network meta-analysis and the network meta-regression
+  for a specific level or value of the investigated covariate." />
 
 
 
@@ -129,9 +129,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Creates a scatterplot of the SUCRA values under the network
-  meta-analysis and the network meta-regression for a specific level or value
-  of the investigated covariate.</p>
+    <p>Creates a scatterplot to compare the SUCRA values from the
+  network meta-analysis and the network meta-regression
+  for a specific level or value of the investigated covariate.</p>
     </div>
 
     <pre class="usage"><span class='fu'>scatterplot_sucra</span><span class='op'>(</span><span class='va'>full</span>, <span class='va'>reg</span>, <span class='va'>cov_value</span>, <span class='va'>drug_names</span><span class='op'>)</span></pre>
@@ -152,15 +152,15 @@ See 'Value' in <code><a href='run_model.html'>run_model</a></code>.</p></td>
     <tr>
       <th>cov_value</th>
       <td><p>A vector of two elements in the following order: a number
-that corresponds to a value of the covariate considered in
-<code><a href='run_metareg.html'>run_metareg</a></code>, and a character object to indicate the name of
+for the covariate value of interest (see 'Arguments' in
+<code><a href='run_metareg.html'>run_metareg</a></code>), and a character to indicate the name of
 the covariate. See also 'Details'.</p></td>
     </tr>
     <tr>
       <th>drug_names</th>
       <td><p>A vector of labels with the name of the interventions in
 the order they appear in the argument <code>data</code> of
-<code><a href='run_model.html'>run_model</a></code>. If the argument <code>drug_names</code> is not defined,
+<code><a href='run_model.html'>run_model</a></code>. If <code>drug_names</code> is not defined,
 the order of the interventions as they appear in <code>data</code> is used,
 instead.</p></td>
     </tr>
@@ -170,37 +170,32 @@ instead.</p></td>
 
     <p>A scatterplot of the SUCRA values under the network meta-analysis
   (y-axis) against the SUCRA values under the network meta-regression
-  (x-axis) for a specific level or value of the investigated covariate.
-  The names of the interventions appear at the corresponding points. Three
-  coloured rectangulars appear in the scatterplot: a red rectangular refer to
-  SUCRA values up to 50<!-- %, a yellow rectangular refer to SUCRA values between -->
-  50<!-- % and 80%, and a green rectangular refers to SUCRA values over 80%. -->
+  (x-axis) for a specific level or value of the investigated covariate.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The names of the interventions appear above each point in the plot.
+  Three coloured rectangles appear in the scatterplot: a red rectangle for
+  SUCRA values up to 50%, a yellow rectangular refer to SUCRA values between
+  50<!-- % and 80%, and a green rectangle for SUCRA values over 80\%. -->
   Interventions falling at the green area are considered as the highest
   ranked interventions, whilst interventions falling at the red area are
   considered as the lowest ranked interventions.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The y-axis displays all interventions in the network; the selected
-  intervention that comprises the <code>compar</code> is indicated in the plot with
-  a homonymous label. The numerical results are displayed above each line.
-  Odds ratio and ratio of means are reported in the original scale after
-  exponentiation of the logarithmic scale.</p>
 <p>When the covariate is binary, specify in the second element of
   <code>cov_value</code> the name of the level for which the scatterplot will be
   created.</p>
-<p><code>scatterplot_sucra</code> can be used only for a network of interventions. In
-  the case of two interventions, the execution of the function will be
-  stopped and an error message will be printed in the R console.</p>
+<p><code>scatterplot_sucra</code> can be used only for a network of interventions.
+  Otherwise, the execution of the function will be stopped and an error
+  message will be printed on the R console.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 for presenting results from multiple-treatment meta-analysis: an overview and
 tutorial. <em>J Clin Epidemiol</em> 2011;<b>64</b>(2):163--71.
-[doi: <a href='https://doi.org/10.1016/j.jclinepi.2010.03.016'>10.1016/j.jclinepi.2010.03.016</a>
+[´´doi: <a href='https://doi.org/10.1016/j.jclinepi.2010.03.016'>10.1016/j.jclinepi.2010.03.016</a>
 ]</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>, <code><a href='run_metareg.html'>run_metareg</a></code></p></div>
+    <div class='dont-index'><p><code><a href='run_metareg.html'>run_metareg</a></code>, <code><a href='run_model.html'>run_model</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>

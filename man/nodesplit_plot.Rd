@@ -54,7 +54,7 @@ Illustrates the direct and indirect effects and inconsistency
   (via \code{\link{run_model}}) with the node-splitting approach
   (via \code{\link{run_nodesplit}}) regarding between-trial standard
   deviation (\eqn{\tau}) and model assessment parameters
-  (Spiegelhalter et al. (2002)) after each split node of the network.
+  (Spiegelhalter et al., (2002)) after each split node of the network.
 }
 \details{
 \code{intervalplot_inconsistency_factor} includes as many interval
@@ -147,7 +147,7 @@ model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616.
 \doi{10.1111/1467-9868.00353}
 }
 \seealso{
-\\code{\link{run_model}}, code{\link{run_nodesplit}},
+\code{\link{run_model}}, \code{\link{run_nodesplit}},
   \code{\link[gemtc]{mtc.nodesplit.comparisons}}
 }
 \author{

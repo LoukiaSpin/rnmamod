@@ -40,10 +40,10 @@
 
 
 <meta property="og:title" content="Deviance scatterplot — scatterplots_dev" />
-<meta property="og:description" content="Illustrates the posterior mean of deviance of the individual
-  data points under the unrelated mean effects model (via run_ume)
-  against the posterior mean of deviance under the consistency model
-  (via run_model)." />
+<meta property="og:description" content="Illustrates the posterior mean of deviance contribution of the
+  individual data points under the unrelated mean effects model (via
+  run_ume) against the posterior mean of deviance contribution
+  under the consistency model (via run_model)." />
 
 
 
@@ -130,10 +130,10 @@
     </div>
 
     <div class="ref-description">
-    <p>Illustrates the posterior mean of deviance of the individual
-  data points under the unrelated mean effects model (via <code>run_ume</code>)
-  against the posterior mean of deviance under the consistency model
-  (via <code>run_model</code>).</p>
+    <p>Illustrates the posterior mean of deviance contribution of the
+  individual data points under the unrelated mean effects model (via
+  <code><a href='run_ume.html'>run_ume</a></code>) against the posterior mean of deviance contribution
+  under the consistency model (via <code><a href='run_model.html'>run_model</a></code>).</p>
     </div>
 
     <pre class="usage"><span class='fu'>scatterplots_dev</span><span class='op'>(</span><span class='va'>full</span>, <span class='va'>ume</span>, <span class='va'>colour</span><span class='op'>)</span></pre>
@@ -144,12 +144,13 @@
     <tr>
       <th>full</th>
       <td><p>A numeric vector with the posterior mean of deviance obtained
-using the consistency model.</p></td>
+using the consistency model (see 'Value' in <code><a href='run_model.html'>run_model</a></code>).</p></td>
     </tr>
     <tr>
       <th>ume</th>
       <td><p>A numeric vector with the posterior mean of deviance obtained
-using the unrelated mean effects model.</p></td>
+using the unrelated mean effects model (see 'Value' in
+<code><a href='run_ume.html'>run_ume</a></code>).</p></td>
     </tr>
     <tr>
       <th>colour</th>
@@ -159,37 +160,34 @@ using the unrelated mean effects model.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A scatterplot on the posterior mean deviance contribution of the
-  individual data points under the consistency model and the unrelated mean
-  effects model. Each data point corresponds to a trial-arm indicated by a
-  pair of numbers. The first number refers to the trial position in the
-  dataset, and the second arm refers to the corresponding trial-arm
-  (see 'Arguments' and 'Value' in <code>data_preparation</code>).</p>
+    <p>A scatterplot of the posterior mean deviance contribution of the
+  individual data points from the unrelated mean effects model against those
+  from the consistency model. Each data point corresponds to a trial-arm
+  indicated by a pair of numbers. The first number refers to the position
+  of the trial in the dataset, and the second number refers to the
+  corresponding trial-arm (see 'Arguments' and 'Value' in
+  <code><a href='data_preparation.html'>data_preparation</a></code>).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>scatterplots_dev</code> is integrated in the <code>ume_plot</code>
-  function to create the scatterplot on the posterior mean of deviance under
-  the compared models, also considered by Dias et al. (2013). When the
-  majority of data points are scattered across the diagonal dotted line, we
-  may conclude that the compared models have a good agreement. Data points
-  scattered above and below the diagonal dotted line may contribute more to
-  the poor fit of the unrelated mean effects model or the consistency model,
-  respectively. However, using the <code>scatterplots_dev</code>, it is difficult
-  to declare these data points as possible 'outliers'. Therefore,
-  <code>scatterplots_dev</code> is accompanied by <code>bland_altman_plot</code> in the
-  <code>ume_plot</code> function.</p>
+    <p><code>scatterplots_dev</code> is integrated in the <code><a href='ume_plot.html'>ume_plot</a></code>
+  function to compare the models regarding the posterior mean of deviance.
+  This scatterplot has also been considered by Dias et al., (2013).
+  When the majority of data points are scattered across the diagonal line,
+  we may conclude that the compared models have a good agreement. Data points
+  systematically scattered above and below the diagonal line may
+  contribute more to the poor fit of the unrelated mean effects model and the
+  consistency model, respectively.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis
 for decision making 4: inconsistency in networks of evidence based on
 randomized controlled trials.
 <em>Med Decis Making</em> 2013a;<b>33</b>(5):641--56.
-[doi: <a href='https://doi.org/10.1177/0272989X12455847'>10.1177/0272989X12455847</a>
-]</p>
+doi: <a href='https://doi.org/10.1177/0272989X12455847'>10.1177/0272989X12455847</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='ume_plot.html'>ume_plot</a></code>, <code><a href='run_model.html'>run_model</a></code>,
-  <code><a href='run_ume.html'>run_ume</a></code></p></div>
+    <div class='dont-index'><p><code><a href='data_preparation.html'>data_preparation</a></code>, <code><a href='run_model.html'>run_model</a></code>,
+  <code><a href='run_ume.html'>run_ume</a></code>, <code><a href='ume_plot.html'>ume_plot</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>
