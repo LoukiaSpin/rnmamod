@@ -12,11 +12,13 @@ data of each trial. See 'Format' in \code{\link[rnmamod]{run_model}}.}
 
 \item{trial_names}{A vector of labels with the name of the trials in the
 order they appear in the argument \code{data}. If \code{trial_names} is not
-defined, the trials are ordered as they appear in \code{data}.}
+defined, the order of the trials as they appear in \code{data} is used,
+instead.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data}. If \code{drug_names} is
-not defined, the interventions are ordered as they appear in \code{data}.}
+not defined, the order of the interventions as they appear in \code{data}
+is used, instead.}
 }
 \value{
 A heatmap presenting the proportion of MOD in each trial-arm of the

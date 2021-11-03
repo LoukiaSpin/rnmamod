@@ -8,8 +8,8 @@
 #'   data of each trial. See 'Format' in \code{\link[rnmamod]{run_model}}.
 #' @param drug_names A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data}. If the argument
-#'   \code{drug_names} is not defined, the interventions are ordered
-#'   as they appear in \code{data}.
+#'   \code{drug_names} is not defined, the order of the interventions as they
+#'   appear in \code{data} is used, instead.
 #'
 #' @return A heatmap of the proportion of MOD in each intervention and observed
 #'   comparison in the network. Each cell annotates the median, minimum and
