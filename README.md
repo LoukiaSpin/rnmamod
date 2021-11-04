@@ -22,7 +22,7 @@ The package handles data inputs in *arm-based format*:
 <!--- The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. --->
 
 The `rnmamod` package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Also includes a rich suite of visualisation tools to aid in interpretation of the results and preparation of NMA manuscript submission. 
-Missing participant outcome data are addressed in all models of the rnmamod package.
+Missing participant outcome data are addressed in all models of the package.
 
 <!---that aid the interpretation and accommodation of the results in the submitted research work for publication. --->
 
@@ -94,7 +94,7 @@ league_heatmap(full = res, drug_names = interv_names)
 ```
 
 <div style="text-align: center"> 
- <img src="man/figures/League_Baker.png" width="950" height="700" align="center"> 
+ <img src="man/figures/League_Baker.png" width="850" height="600" align="center"> 
 <!--- <img src="man/figures/League_Baker.png" width="70%" height="70%" align="center"> --->  
 <!--- <img src="man/figures/League_Baker.png" width="70%" height="90%" align="center"> --->
 </div>
@@ -109,11 +109,11 @@ rankosucra_plot(full = res, drug_names = interv_names)
 ```
 
 <div style="text-align: center"> 
- <img src="man/figures/Sucra_Baker.png" width="800" height="600" align="center"> 
+ <img src="man/figures/Sucra_Baker.png" width="700" height="500" align="center"> 
 <!--- <img src="man/figures/Sucra_Baker.png" width="70%" height="70%" align="center"> --->
 <!--- <img src="man/figures/Sucra_Baker.png" width="70%" height="90%" align="center"> --->
 </div>
 
 ## Funding source
 
-The development of `rnmamod` package is funded by the **German Research Foundation** (Deutsche Forschungsgemeinschaft) (grant no. [SP 1664/1-3](https://gepris.dfg.de/gepris/projekt/339420617)) <div style="text-align: right"> <img src="man/figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="380" height="150" align="right"></div>
+The development of `rnmamod` package is funded by the **German Research Foundation** (Deutsche Forschungsgemeinschaft) (grant no. [SP 1664/1-3](https://gepris.dfg.de/gepris/projekt/339420617)) <div style="text-align: right"> <img src="man/figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="280" height="120" align="right"></div>
