@@ -1,27 +1,22 @@
-#' A function to describe a network of interventions
+#' A function to describe the evidence base
 #'
-#' @description This function calculates the necessary elements to describe a
-#'   network, such as the number of interventions, trials, randomised
-#'   participants, and so on. Furthermore, this function provides summary
-#'   statistics of the missing participants and the analysed outcome per
-#'   intervention and observed comparison in a tabulated format. See 'Value' in
-#'   the \code{\link[rnmamod]{netplot}} function for more details.
+#' @description Calculates the necessary elements to describe the evidence base
+#'   for an outcome across the network, the interventions, and observed
+#'   comparisons. See also 'Value' in \code{\link{netplot}}.
 #'
 #' @param data A data-frame of a one-trial-per-row format containing arm-level
-#'   data of each trial. This format is widely used for BUGS models.
-#'   See 'Format' in \code{\link[rnmamod]{run_model}} function for the
-#'   specification of the columns.
+#'   data of each trial. See 'Format' in \code{\link{run_model}}.
 #' @param drug_names A vector of labels with the name of the interventions in
-#'   the order they appear in the argument \code{data}. If the argument
-#'   \code{drug_names} is not defined, the order of the interventions
-#'   as they appear in \code{data} is used, instead.
+#'   the order they appear in the argument \code{data}. If \code{drug_names} is
+#'   not defined, the order of the interventions as they appear in \code{data}
+#'   is used, instead.
 #' @param measure Character string indicating the effect measure with values
 #'   \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
 #'   mean difference, standardised mean difference and ratio of means,
 #'   respectively.
 #'
-#' @return A list of scalar results and four data-frames to be passed to
-#'   \code{\link[rnmamod]{netplot}}. The scalar results include:
+#' @return A list of scalar results and two data-frames to be passed to
+#'   \code{\link{netplot}}. The scalar results include:
 #'   \tabular{ll}{
 #'    \code{direct_comp} \tab The number of observed comparisons in the
 #'    network. \cr
@@ -48,17 +43,15 @@
 #'    all arms. When the outcome is continuous, this element is omitted. \cr
 #'   }
 #'
-#'   The four data-frames include \code{interventions_missingness},
-#'   \code{comparisons_missingness}, \code{interventions} and
-#'   \code{comparisons}.
-#'   See 'Value' in \code{\link[rnmamod]{netplot}} that describes these
-#'   data-frames in detail.
+#'   The two data-frames include\code{table_interventions} and
+#'   \code{table_comparisons}. See 'Value' in \code{\link{netplot}} for these
+#'   data-frames.
 #'
-#' @details \code{describe_network} calls the \code{data_preparation} function
-#'   to facilitate the calculations.
+#' @details \code{describe_network} calls \code{\link{data_preparation}} to
+#' facilitate the calculations.
 #'
-#' @seealso \code{\link[rnmamod]{netplot}}, \code{\link[rnmamod]{run_model}},
-#'   \code{\link[rnmamod]{data_preparation}}
+#' @seealso \code{\link{data_preparation}}, \code{\link{netplot}},
+#'   \code{\link{run_model}},
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -371,18 +364,9 @@ describe_network <- function(data, drug_names, measure) {
                   multi_arm_ns = multi_arm_ns,
                   total_rand_network = total_rand_network,
                   prop_obs_network = prop_obs_network,
-                  interventions = knitr::kable(table_interv),
-                  comparisons = knitr::kable(table_comp))
+                  table_interventions = knitr::kable(table_interv),
+                  table_comparisons = knitr::kable(table_comp))
 
-  if (length(unique(na.omit(unlist(data_preparation(data, measure)$m)))) > 1) {
-    results <- append(results,
-                      list(interventions_missingness =
-                             knitr::kable(table_interv_mod),
-                           comparisons_missingness =
-                             knitr::kable(table_comp_mod)))
-  } else {
-    results
-  }
 
   if (measure == "OR") {
     results <- append(results,

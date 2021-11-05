@@ -97,7 +97,6 @@ and network meta-analysis.
 
 Kullback S, Leibler RA. On information and sufficiency.
 \emph{Ann Math Stat} 1951;\bold{22}(1):79--86.
-\doi{10.1214/aoms/1177729694}
 }
 \seealso{
 \code{\link{robustness_index}}, \code{\link{run_model}},

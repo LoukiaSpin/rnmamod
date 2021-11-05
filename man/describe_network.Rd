@@ -2,20 +2,18 @@
 % Please edit documentation in R/describe.network_function.R
 \name{describe_network}
 \alias{describe_network}
-\title{A function to describe a network of interventions}
+\title{A function to describe the evidence base}
 \usage{
 describe_network(data, drug_names, measure)
 }
 \arguments{
 \item{data}{A data-frame of a one-trial-per-row format containing arm-level
-data of each trial. This format is widely used for BUGS models.
-See 'Format' in \code{\link[rnmamod]{run_model}} function for the
-specification of the columns.}
+data of each trial. See 'Format' in \code{\link{run_model}}.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
-the order they appear in the argument \code{data}. If the argument
-\code{drug_names} is not defined, the order of the interventions
-as they appear in \code{data} is used, instead.}
+the order they appear in the argument \code{data}. If \code{drug_names} is
+not defined, the order of the interventions as they appear in \code{data}
+is used, instead.}
 
 \item{measure}{Character string indicating the effect measure with values
 \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
@@ -23,8 +21,8 @@ mean difference, standardised mean difference and ratio of means,
 respectively.}
 }
 \value{
-A list of scalar results and four data-frames to be passed to
-  \code{\link[rnmamod]{netplot}}. The scalar results include:
+A list of scalar results and two data-frames to be passed to
+  \code{\link{netplot}}. The scalar results include:
   \tabular{ll}{
    \code{direct_comp} \tab The number of observed comparisons in the
    network. \cr
@@ -51,27 +49,22 @@ A list of scalar results and four data-frames to be passed to
    all arms. When the outcome is continuous, this element is omitted. \cr
   }
 
-  The four data-frames include \code{interventions_missingness},
-  \code{comparisons_missingness}, \code{interventions} and
-  \code{comparisons}.
-  See 'Value' in \code{\link[rnmamod]{netplot}} that describes these
-  data-frames in detail.
+  The two data-frames include\code{table_interventions} and
+  \code{table_comparisons}. See 'Value' in \code{\link{netplot}} for these
+  data-frames.
 }
 \description{
-This function calculates the necessary elements to describe a
-  network, such as the number of interventions, trials, randomised
-  participants, and so on. Furthermore, this function provides summary
-  statistics of the missing participants and the analysed outcome per
-  intervention and observed comparison in a tabulated format. See 'Value' in
-  the \code{\link[rnmamod]{netplot}} function for more details.
+Calculates the necessary elements to describe the evidence base
+  for an outcome across the network, the interventions, and observed
+  comparisons. See also 'Value' in \code{\link{netplot}}.
 }
 \details{
-\code{describe_network} calls the \code{data_preparation} function
-  to facilitate the calculations.
+\code{describe_network} calls \code{\link{data_preparation}} to
+facilitate the calculations.
 }
 \seealso{
-\code{\link[rnmamod]{netplot}}, \code{\link[rnmamod]{run_model}},
-  \code{\link[rnmamod]{data_preparation}}
+\code{\link{data_preparation}}, \code{\link{netplot}},
+  \code{\link{run_model}},
 }
 \author{
 {Loukia M. Spineli}

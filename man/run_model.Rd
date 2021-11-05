@@ -367,7 +367,6 @@ comparisons. \emph{J Am Stat Assoc} 2006;\bold{101}:447--459.
 
 Gelman A, Rubin DB. Inference from iterative simulation using multiple
 sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
-\doi{10.1214/ss/1177011136}
 }
 \seealso{
 \code{\link{data_preparation}},

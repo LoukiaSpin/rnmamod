@@ -196,8 +196,8 @@ netplot <- function(data, drug_names, save_xls, ...) {
 
   results <- list(network_plot = network_plot,
                   network_description = knitr::kable(results),
-                  table_interventions = dat$interventions,
-                  table_comparisons = dat$comparisons)
+                  table_interventions = dat$table_interventions,
+                  table_comparisons = dat$table_comparisons)
 
   return(results)
 }
