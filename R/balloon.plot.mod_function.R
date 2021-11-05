@@ -2,7 +2,7 @@
 #'
 #' @description
 #'   Creates the enhanced balloon plot for the summary effect size and
-#'   between-trial standard deviation, \eqn{\tau}, under different scenarios
+#'   between-trial standard deviation, \emph{tau}, under different scenarios
 #'   about the missingness parameter for a pair of interventions.
 #'   \code{balloon_plot} uses the scenarios considered in
 #'   \code{\link{run_sensitivity}}.
@@ -25,7 +25,7 @@
 #'    summary effect size (according to the argument \code{measure} inherited
 #'    by \code{\link{run_sensitivity}}) of one pairwise comparison.\cr
 #'    \tab \cr
-#'    \code{Plot_tau} \tab The enhanced balloon plot for \eqn{\tau}. When the
+#'    \code{Plot_tau} \tab The enhanced balloon plot for tau. When the
 #'    fixed-effect model has been performed in \code{\link{run_sensitivity}},
 #'    the function will not return the \code{Plot_tau}.\cr
 #' }
@@ -46,12 +46,12 @@
 #'   the x-axis refers to the 'experimental' intervention, and the y-axis refers
 #'   to the 'control' intervention.
 #'
-#'   The same enhanced balloon plot is created for \eqn{\tau} (\code{Plot_tau}).
+#'   The same enhanced balloon plot is created for tau (\code{Plot_tau}).
 #'   However, filled bubbles indicate low statistical heterogeneity
-#'   (the posterior median of \eqn{\tau} is lower than the median of the
+#'   (the posterior median of tau is lower than the median of the
 #'   prior distribution for the heterogeneity parameter),
 #'   and crossed bubbles indicate considerable statistical heterogeneity
-#'   (the posterior median of \eqn{\tau} exceeds the median of the prior
+#'   (the posterior median of tau exceeds the median of the prior
 #'   distribution for the heterogeneity parameter).
 #'
 #'   \code{balloon_plot_mod} can be used only when missing participant

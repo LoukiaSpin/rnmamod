@@ -35,14 +35,14 @@ function) to the working directory of the user. The default is \code{FALSE}
    parameters (deviance information criterion (DIC), posterior mean of total
    residual deviance, and number of effective parameters), the posterior
    median, posterior standard deviation and 95\% credible interval of
-   \eqn{\tau} under the consistency model and after each split node. See
+   tau under the consistency model and after each split node. See
    'Details'.\cr
    \tab \cr
    \code{intervalplot_inconsistency_factor} \tab A panel of interval plots on
    the direct and indirect effect of the split nodes and the corresponding
    inconsistency factor. See 'Details'.\cr
    \tab \cr
-   \code{intervalplot_tau} \tab An interval plot on \eqn{\tau} after each
+   \code{intervalplot_tau} \tab An interval plot on tau after each
    split node. See 'Details'.\cr
   }
 }
@@ -52,7 +52,7 @@ function) to the working directory of the user. The default is \code{FALSE}
   (via \code{\link{run_model}}) with the node-splitting approach
   (via \code{\link{run_nodesplit}}) regarding the posterior summaries of the
   the direct and indirect effects and inconsistency factor of the split
-  nodes, the between-trial standard deviation (τ) and model assessment
+  nodes, the between-trial standard deviation and model assessment
   parameters (Spiegelhalter et al., (2002)) after each split node in the
   network.
 }
@@ -70,10 +70,10 @@ function) to the working directory of the user. The default is \code{FALSE}
   inconsistent sign in the direct and indirect effect.
 
   \code{intervalplot_tau} is a interval plot on the median and 95\% credible
-  interval of \eqn{\tau} after each split node. The lines that correspond to
+  interval of \emph{tau} after each split node. The lines that correspond to
   the split nodes are sorted in ascending order of the DIC which appears at
   the top of each line.
-  The 95\% credible interval of \eqn{\tau} under the consistency model
+  The 95\% credible interval of tau under the consistency model
   appears as a rectangle in the interval plot. When a fixed-effect model has
   been performed, \code{nodesplit_plot} does not return the
   \code{intervalplot_tau}.

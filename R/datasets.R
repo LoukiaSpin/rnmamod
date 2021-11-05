@@ -20,7 +20,7 @@
 #' Baker WL, Baker EL, Coleman CI. Pharmacologic treatments for chronic
 #' obstructive pulmonary disease: a mixed-treatment
 #' comparison meta-analysis. \emph{Pharmacotherapy} 2009;\bold{29}(8):891--905.
-#' [\doi{10.1592/phco.29.8.891}]
+#' \doi{10.1592/phco.29.8.891}
 NULL
 
 #' Pharmacological interventions for moderately severe scalp psoriasis
@@ -46,7 +46,7 @@ NULL
 #' formulation calcipotriol and betamethasone dipropionate gel in the
 #' treatment of moderately severe scalp psoriasis: a systematic review of direct
 #' and indirect evidence. \emph{Curr Med Res Opin} 2011;\bold{27}(1):251--268.
-#' [\doi{10.1185/03007995.2010.541022}]
+#' [doi{10.1185/03007995.2010.541022}
 NULL
 
 #' Oral antithrombotics for stroke episode
@@ -60,7 +60,7 @@ NULL
 #'
 #' @details The interventions have been coded as follows: 1, placebo;
 #'   2, aspirin; 3, aspirin plus clopidogrel; 4, dabigatran 110 mg;
-#'   5,  dabigatran 150 mg; 6, rivaroxaban; 7, vitamin K antagonist; and
+#'   5, dabigatran 150 mg; 6, rivaroxaban; 7, vitamin K antagonist; and
 #'   8, apixaban
 #'
 #' @docType data
@@ -71,7 +71,7 @@ NULL
 #' Dogliotti A, Paolasso E, Giugliano RP. Current and new oral antithrombotics
 #' in non-valvular atrial fibrillation: a network meta-analysis
 #' of 79808 patients. \emph{Heart} 2014;\bold{100}(5):396--405.
-#' [\doi{10.1136/heartjnl-2013-304347}]
+#' \doi{10.1136/heartjnl-2013-304347}
 NULL
 
 #' Antidepressants in Parkinson's disease
@@ -85,7 +85,7 @@ NULL
 #'   number of 3 arms).
 #'
 #' @details The interventions have been coded as follows: 1, placebo;
-#'   2, pramipexole; 3, serotonin–norepinephrine reuptake inhibitor;
+#'   2, pramipexole; 3, serotonin-norepinephrine reuptake inhibitor;
 #'   4, selective serotonin reuptake inhibitor; 5, tricyclic antidepressant; and
 #'   6, pergolide.
 #'
@@ -97,7 +97,7 @@ NULL
 #' Liu J, Dong J, Wang L, Yan P, Sun S. Comparative efficacy and acceptability
 #' of antidepressants in Parkinson's disease: a network meta-analysis.
 #' \emph{PLOS ONE} 2013;\bold{8}(10):e76651.
-#' [\doi{10.1371/journal.pone.0076651}]
+#' \doi{10.1371/journal.pone.0076651}
 NULL
 
 #' Inositol versus glucose for depressive episode
@@ -119,7 +119,7 @@ NULL
 #' @source
 #' Taylor MJ, Wilder H, Bhagwagar Z, Geddes J. Inositol for depressive
 #' disorders. \emph{Cochrane Database Syst Rev} 2004;\bold{2}:CD004049.
-#' [\doi{10.1002/14651858.CD004049.pub2}]
+#' \doi{10.1002/14651858.CD004049.pub2}
 NULL
 
 #' Paroxetine versus placeboe for depressive disorders
@@ -141,14 +141,14 @@ NULL
 #' Hetrick SE, McKenzie JE, Cox GR, Simmons MB, Merry SN. Newer generation
 #' antidepressants for depressive disorders in children and adolescents.
 #' \emph{Cochrane Database Syst Rev} 2012;\bold{11}:CD004851.
-#' [\doi{10.1002/14651858.CD004851.pub3}]
+#' \doi{10.1002/14651858.CD004851.pub3}
 NULL
 
-#' Antiparkinsonian interventions for later Parkinson’s disease
+#' Antiparkinsonian interventions for later Parkinson's disease
 #'
 #' @description A dataset of 29 trials comparing three antiparkinsonian
 #'   interventions with placebo (a star-shaped network) in patients with later
-#'   Parkinson’s disease. The analysed continuous outcome is the change from
+#'   Parkinson's disease. The analysed continuous outcome is the change from
 #'   baseline of patient off-time reduction.
 #'
 #' @format A data frame with 29 rows of arm-based data and 11 columns (maximum
@@ -165,8 +165,8 @@ NULL
 #' @usage data(nma.stowe2011)
 #' @source
 #' Stowe R, Ives N, Clarke CE, et al. Meta-analysis of the comparative efficacy
-#' and safety of adjuvant treatment to levodopa in later Parkinson’s disease.
-#' \emph{Mov Disord} 2011;\bold{26}(4):587--598. [\doi{10.1002/mds.23517}]
+#' and safety of adjuvant treatment to levodopa in later Parkinson's disease.
+#' \emph{Mov Disord} 2011;\bold{26}(4):587--598. \doi{10.1002/mds.23517}
 NULL
 
 #' Training modalities for patients with type 2 diabetes
@@ -190,5 +190,5 @@ NULL
 #' modalities on glycaemic control and blood lipids in patients with type 2
 #' diabetes: a systematic review and network meta-analysis.
 #' \emph{Diabetologia} 2014;\bold{57}(9):1789--1797.
-#' [\doi{10.1007/s00125-014-3303-z}]
+#' \doi{10.1007/s00125-014-3303-z}
 NULL

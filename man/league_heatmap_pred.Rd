@@ -41,10 +41,10 @@ The rows and columns of the heatmap display the names of
   contains the SUCRA values of the corresponding interventions when the
   argument \code{full} refers to the \code{\link{run_model}} function.
   When the argument \code{full} refers to the \code{\link{run_metareg}}
-  function, the p-score (Rücker and Schwarzer, 2015) is calculated for each
+  function, the p-score (Ruecker and Schwarzer, 2015) is calculated for each
   intervention while taking into account the covariate value in
   the argument \code{cov_value}. P-score is the 'frequentist analogue to
-  SUCRA' (Rücker and Schwarzer, 2015).
+  SUCRA' (Ruecker and Schwarzer, 2015).
 
   Results in the lower triangle refer to comparisons in the opposite
   direction after converting negative values into positive values
@@ -91,7 +91,7 @@ res <- run_model(data = nma.liu2013,
                  n_thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv_names <- c("placebo", "pramipexole", "serotonin–norepinephrine
+interv_names <- c("placebo", "pramipexole", "serotonin-norepinephrine
                   reuptake inhibitor", "serotonin reuptake inhibitor",
                   "tricyclic antidepressant", "pergolide")
 
@@ -101,7 +101,7 @@ league_heatmap_pred(full = res,
 }
 }
 \references{
-Rücker G, Schwarzer G. Ranking treatments in frequentist network
+Ruecker G, Schwarzer G. Ranking treatments in frequentist network
 meta-analysis works without resampling methods.
 \emph{BMC Med Res Methodol} 2015;\bold{15}:58.
 \doi{10.1186/s12874-015-0060-8}

@@ -83,7 +83,7 @@ res <- run_model(data = nma.liu2013,
                  n_thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv_names <- c("placebo", "pramipexole", "serotonin–norepinephrine
+interv_names <- c("placebo", "pramipexole", "serotonin-norepinephrine
 reuptake inhibitor", "serotonin reuptake inhibitor", "tricyclic
 antidepressant", "pergolide")
 

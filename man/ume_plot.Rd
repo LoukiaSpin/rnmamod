@@ -40,7 +40,7 @@ function) to the working directory of the user. The default is \code{FALSE}
    the unrelated mean effects model (Spiegelhalter et al., (2002)).\cr
    \tab \cr
    \code{table_tau} \tab The posterior median and 95\% credible interval of
-   \eqn{\tau} under the consistency model and the unrelated mean effects
+   tau under the consistency model and the unrelated mean effects
    model. When a fixed-effect model has been performed, \code{ume_plot} does
    not return this element.\cr
    \tab \cr
@@ -65,7 +65,7 @@ function) to the working directory of the user. The default is \code{FALSE}
   the comparison of the consistency model (via \code{run_model}) with the
   unrelated mean effects model (via \code{run_ume}) regarding the posterior
   summaries of the summary effect size for the pairwise comparisons observed
-  in the network, the between-trial standard deviation (\eqn{\tau}) and model
+  in the network, the between-trial standard deviation (tau) and model
   assessment parameters.
 }
 \details{
@@ -110,7 +110,7 @@ ume <- run_ume(full = res,
                n_thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
-interv_names <- c("placebo", "pramipexole", "serotonin–norepinephrine
+interv_names <- c("placebo", "pramipexole", "serotonin-norepinephrine
                   reuptake inhibitor", "serotonin reuptake inhibitor",
                   "tricyclic antidepressant", "pergolide")
 

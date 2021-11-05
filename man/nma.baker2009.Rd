@@ -12,7 +12,7 @@ A data-frame with 21 rows of arm-based data and 17 columns (maximum
 Baker WL, Baker EL, Coleman CI. Pharmacologic treatments for chronic
 obstructive pulmonary disease: a mixed-treatment
 comparison meta-analysis. \emph{Pharmacotherapy} 2009;\bold{29}(8):891--905.
-[\doi{10.1592/phco.29.8.891}]
+\doi{10.1592/phco.29.8.891}
 }
 \usage{
 data(nma.baker2009)

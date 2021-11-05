@@ -20,9 +20,9 @@
 #'   The default is \code{FALSE} (do not export).
 #'
 #' @return The R console prints the data-frame with the estimated summary effect sizes
-#'   and \eqn{\tau}s of comparisons under both models. The comparisons have at
+#'   and taus of comparisons under both models. The comparisons have at
 #'   least two trialsIn the case of a fixed-effect model, the data-frame is
-#'   printed without results on \eqn{\tau}.
+#'   printed without results on tau.
 #'
 #'   Furthermore, \code{series_meta_plot} exports the data-frame to an 'xlsx'
 #'   file at the working  directory of the user.
@@ -32,8 +32,8 @@
 #'   effect size of the observed comparisons from network meta-analysis and the
 #'   corresponding pairwise meta-analyses, and (2) a forest plot on the
 #'   posterior median and 95\% credible interval of the between-trial standard
-#'   deviation (\eqn{\tau}) for these observed comparisons. The estimated
-#'   \eqn{\tau} from network meta-analysis appears as a rectangle in the forest
+#'   deviation (tau) for these observed comparisons. The estimated
+#'   tau from network meta-analysis appears as a rectangle in the forest
 #'   plot. When a fixed-effect model has been fitted, only the forest plot on
 #'   the estimated summary effect sizes is shown.
 #'

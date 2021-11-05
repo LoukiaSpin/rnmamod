@@ -52,9 +52,9 @@ function) to the working directory of the user. The default is \code{FALSE}
    \tab \cr
    \code{table_model_assessment} \tab The DIC, total residual deviance,
    number of effective parameters, and the posterior median and 95\% credible
-   interval of between-trial standard deviation (\eqn{\tau}) under each model
+   interval of between-trial standard deviation (\emph{tau}) under each model
    (Spiegelhalter et al., (2002)). When a fixed-effect model has been
-   performed, \code{metareg_plot} does not return results on \eqn{\tau}.\cr
+   performed, \code{metareg_plot} does not return results on tau.\cr
    \tab \cr
    \code{table_regression_coeffients} \tab The posterior mean and 95\%
    credible interval of the regression coefficient(s).\cr

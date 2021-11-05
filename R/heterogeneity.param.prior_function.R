@@ -42,7 +42,7 @@
 #' @seealso \code{\link{run_model}}
 #'
 #' @references
-#' Friede T, Röver C, Wandel S, Neuenschwander B. Meta-analysis of two studies
+#' Friede T, Roever C, Wandel S, Neuenschwander B. Meta-analysis of two studies
 #' in the presence of heterogeneity with applications in rare diseases.
 #' \emph{Biom J} 2017;\bold{59}(4):658--671.
 #' [\doi{10.1002/bimj.201500236}]
