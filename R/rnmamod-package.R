@@ -74,9 +74,9 @@
 #'   as visualisation of the summary effects from both models
 #'   (\code{\link{intervalplot_panel_ume}}) and the goodness of fit of each
 #'   model using a series of complementary plots (\code{\link{scatterplots_dev}}
-#'   (Dias et al., (2013c)), \code{\link{bland_altman_plot}}, and
-#'   \code{\link{leverage_plot}} (Dias et al., (2010))--all found in
-#'   \code{\link{ume_plot}});
+#'   (Dias et al., (2013a)), \code{\link{bland_altman_plot}}
+#'   (Bland and Altman, 1999), and \code{\link{leverage_plot}}
+#'   (Dias et al., (2010))--all found in \code{\link{ume_plot}});
 #'   - tabulation of the estimated summary effects and corresponding
 #'   between-trial standard deviation for comparisons with at least two trials
 #'   under pairwise and network meta-analysis, as well as visualisation of these
@@ -96,7 +96,15 @@
 #'   after extending the code to incorporating the pattern-mixture model
 #'   (Spineli, 2019; Spineli et al., (2021)).
 #'
-#'   The source for \bold{rnmamod} is available on
+#'   Type \code{help("rnmamod")} to access the documentation of all listed
+#'   function of \bold{rnmamod}.
+#'
+#'   Type \code{citation("rnmamod")} on how to cite \bold{rnmamod}.
+#'
+#'   To report possible bogs and errors, send an email to Loukia Spineli
+#'   (<Spineli.Loukia@mh-hannove.de>).
+#'
+#'   The development version of \bold{rnmamod} is available on
 #'   [GitHub](https://github.com/LoukiaSpin/rnmamod) under the GPL-3.0 License.
 #'
 #' @author {Loukia M. Spineli}
