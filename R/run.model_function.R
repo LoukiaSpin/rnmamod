@@ -310,7 +310,6 @@
 #'
 #' Gelman A, Rubin DB. Inference from iterative simulation using multiple
 #' sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
-#' \doi{10.1214/ss/1177011136}
 #'
 #' @examples
 #' data("nma.baker2009")
@@ -445,10 +444,12 @@ run_model <- function(data,
   # Run the Bayesian analysis
   jagsfit <- jags(data = data_jag,
                   parameters.to.save = param_jags,
-                  model.file = textConnection(prepare_model(measure,
-                                                            model,
-                                                            covar_assumption = "NO",
-                                                            assumption)),
+                  model.file = textConnection(
+                    prepare_model(measure,
+                                  model,
+                                  covar_assumption = "NO",
+                                  assumption)
+                    ),
                   n.chains = n_chains,
                   n.iter = n_iter,
                   n.burnin = n_burnin,

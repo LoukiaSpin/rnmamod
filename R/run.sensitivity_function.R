@@ -143,7 +143,7 @@
 #' \emph{Stat Med} 2008;\bold{27}(5):711--727. \doi{10.1002/sim.3008}
 #'
 #' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple
-#' sequences. Stat Sci. 1992;7:457--472. \doi{10.1214/ss/1177011136}
+#' sequences. Stat Sci. 1992;7:457--472.
 #'
 #' @examples
 #' data("nma.baker2009")

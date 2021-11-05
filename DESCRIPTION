@@ -3,20 +3,16 @@ Package: rnmamod
 Title: Addressing Missing Participants with Aggregate Binary or Continuous
     Outcome Data in Network Meta-Analysis
 Version: 0.1.0
-Date: 2021-11-05
 Authors@R: c(
-    person("Loukia", "Spineli", role = c("aut", "cre"),
-            email = "Spineli.Loukia@mh-hannover.de",
-           comment = c(ORCID = "0000-0001-9515-582X")),
-    person("Chrysostomos", "Kalyvas", role = "ctb",
-           comment = c(ORCID = "0000-0003-0606-4518")),
-    person("Katerina", "Papadimitropoulou", role = "ctb",
-           comment = c(ORCID = "0000-0002-5732-4044"))
+    person("Loukia", "Spineli", email = "Spineli.Loukia@mh-hannover.de", role = c("aut", "cre")),
+    person("Chrysostomos", "Kalyvas", role = "ctb"),
+    person("Katerina", "Papadimitropoulou", role = "ctb")
   )
 Maintainer: Loukia Spineli <Spineli.Loukia@mh-hannover.de>
 Description: Perform pairwise and network meta-analysis with aggregate
     binary or continuous missing participant outcome data.
-License: GPL-3
+License: GPL-3 + file LICENSE
+URL: https://github.com/LoukiaSpin/rnmamod
 Depends: 
     R (>= 4.0.0)
 Imports: 

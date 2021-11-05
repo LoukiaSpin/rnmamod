@@ -82,11 +82,10 @@
 #' primary analysis results: A case study on missing outcome data in pairwise
 #' and network meta-analysis.
 #' \emph{Res Synth Methods} 2021;\bold{12}(4):475--490.
-#' [\doi{10.1002/jrsm.1478}]
+#' \doi{10.1002/jrsm.1478}
 #'
 #' Kullback S, Leibler RA. On information and sufficiency.
 #' \emph{Ann Math Stat} 1951;\bold{22}(1):79--86.
-#' [\doi{10.1214/aoms/1177729694}]
 #'
 #' @examples
 #' data("nma.baker2009")

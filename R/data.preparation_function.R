@@ -1,9 +1,9 @@
 #' Prepare the dataset in the proper format for R2jags
 #'
 #' @description
-#'   Prepares the dataset in the proper format for R2jags.
-#'   \code{data_preparation} is found in the \code{run_model} function;
-#'   thus, the arguments are as specified in the latter.
+#'   \code{data_preparation} prepares the dataset in the proper format for
+#'   R2jags ans returns alist of elements that \code{\link{run_model}} inherites
+#'   via the argument \code{data}.
 #'
 #' @param data A data-frame of the one-trial-per-row format with arm-level data.
 #'   See 'Format' for the specification of the columns.

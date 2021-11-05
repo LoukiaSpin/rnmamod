@@ -49,7 +49,6 @@
 #'
 #' Kullback S, Leibler RA. On information and sufficiency.
 #' \emph{Ann Math Stat} 1951;\bold{22}(1):79--86.
-#' \doi{10.1214/aoms/1177729694}
 #'
 #' @examples
 #' data("nma.baker2009")
@@ -168,7 +167,8 @@ kld_barplot <- function(robust, compar, drug_names) {
   # respect to their position from MAR
   plausibility <- factor(
     c("Extreme", rep("Sceptical", len.scen - 2), "Extreme",
-      rep(c("Sceptical", rep("Optimistic", len.scen - 2), "Sceptical"), len.scen - 2),
+      rep(c("Sceptical", rep("Optimistic", len.scen - 2), "Sceptical"),
+          len.scen - 2),
       "Extreme", rep("Sceptical", len.scen - 2), "Extreme"),
     levels = c("Extreme", "Sceptical", "Optimistic"))
 

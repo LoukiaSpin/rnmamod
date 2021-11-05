@@ -71,7 +71,6 @@ NULL
 #' Dogliotti A, Paolasso E, Giugliano RP. Current and new oral antithrombotics
 #' in non-valvular atrial fibrillation: a network meta-analysis
 #' of 79808 patients. \emph{Heart} 2014;\bold{100}(5):396--405.
-#' \doi{10.1136/heartjnl-2013-304347}
 NULL
 
 #' Antidepressants in Parkinson's disease

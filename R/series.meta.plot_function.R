@@ -3,8 +3,8 @@
 #' @description Facilitates the comparison of the consistency model
 #'   (via \code{\link{run_model}}) with a series of pairwise meta-analyses
 #'   (via \code{\link{run_series_meta}}) regarding the estimated summary effect
-#'   sizes and between-trial standard deviation for comparisons with at least
-#'   two trials.
+#'   sizes and between-trial standard deviation for comparisons with at
+#'   least two trials.
 #'
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
 #'   \code{\link{run_model}}.
@@ -19,10 +19,11 @@
 #'   to an 'xlsx' file at the working directory of the user.
 #'   The default is \code{FALSE} (do not export).
 #'
-#' @return The R console prints the data-frame with the estimated summary effect sizes
-#'   and taus of comparisons under both models. The comparisons have at
-#'   least two trialsIn the case of a fixed-effect model, the data-frame is
-#'   printed without results on tau.
+#' @return The R console prints the data-frame with the estimated summary effect
+#'   sizes and between-trial standard deviation of comparisons under both
+#'   models. The comparisons have at least two trials. In the case of a
+#'   fixed-effect model, the data-frame is printed without results on
+#'   between-trial standard deviation.
 #'
 #'   Furthermore, \code{series_meta_plot} exports the data-frame to an 'xlsx'
 #'   file at the working  directory of the user.
@@ -32,10 +33,10 @@
 #'   effect size of the observed comparisons from network meta-analysis and the
 #'   corresponding pairwise meta-analyses, and (2) a forest plot on the
 #'   posterior median and 95\% credible interval of the between-trial standard
-#'   deviation (tau) for these observed comparisons. The estimated
-#'   tau from network meta-analysis appears as a rectangle in the forest
-#'   plot. When a fixed-effect model has been fitted, only the forest plot on
-#'   the estimated summary effect sizes is shown.
+#'   deviation for these observed comparisons. The estimated
+#'   between-trial standard deviation from network meta-analysis appears as a
+#'   rectangle in the forest plot. When a fixed-effect model has been fitted,
+#'   only the forest plot on the estimated summary effect sizes is shown.
 #'
 #'   The user can detect any inconsistencies in the estimated
 #'   effects from the compared models and explore the gains in precision
