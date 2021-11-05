@@ -114,8 +114,8 @@ run_model(data = nma.baker2009,
 The argument `model = "RE"` refers to the random-effects model. For the 
 fixed-effect model, use `model = "FE"`.
 
-`heter_prior = list("lognormal", -2.06, 0.438)` refers to ‘symptoms reflecting 
-the continuation of condition’ for the ‘pharmacological versus placebo’ 
+`heter_prior = list("lognormal", -2.06, 0.438)` refers to 'symptoms reflecting 
+the continuation of condition' for the 'pharmacological versus placebo' 
 comparison-type as elicited by Turner and colleagues (2015b). 
 
 In the argument `mean_misspar = c(0, 0)`, the first and second element of the
