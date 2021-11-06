@@ -185,7 +185,7 @@ run_nodesplit <- function(full,
   item <- data_preparation(data, measure)
   if (item$nt < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+         call. = FALSE)
   }
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
@@ -232,7 +232,7 @@ run_nodesplit <- function(full,
   rownames(splitting) <- NULL
 
   if (dim(splitting)[1] < 1) {
-    stop("There is *no* loop to evaluate", call. = F)
+    stop("There is *no* loop to evaluate", call. = FALSE)
   } else {
     # Define node to split: AB=(1,2)
     pair <- if (dim(splitting)[1] == 1) {

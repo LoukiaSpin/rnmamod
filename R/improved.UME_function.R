@@ -2,44 +2,45 @@
 #'
 #' @description Detects the frail comparisons in multi-arm trials, that is,
 #'   comparisons between non-baseline interventions not investigated in any
-#'   two-arm trial of the network (Spineli, 2021). The 'original' model of
-#'   Dias et al. (2013) omits the frail comparisons from the estimation process
+#'   two-arm trial in the network (Spineli, 2021). The 'original' model of
+#'   Dias et al., (2013) omits the frail comparisons from the estimation process
 #'   of the unrelated mean effects model. Consequently, their posterior
 #'   distribution coincides with the prior distribution yielding implausible
 #'   posterior standard deviations.
 #'
 #' @param t A data-frame of the one-trial-per-row format containing the
 #'   intervention identifier in each arm of every trial (see 'Details' below,
-#'   and 'Arguments' in \code{run_model}).
+#'   and 'Format' in \code{\link{run_model}}).
 #' @param N A data-frame of the one-trial-per-row format containing the number
 #'   of participants randomised on the assigned intervention in each arm of
-#'   every trial (see 'Details' below, and 'Arguments' in \code{run_model}).
+#'   every trial (see 'Details' below, and 'Format' in \code{\link{run_model}}).
 #' @param ns A scale parameter on the number trials.
 #' @param na A vector of length equal to \code{ns} with the number of arms in
 #'   each trial.
 #'
 #' @return The output of \code{improved_ume} is a list of elements that are used
-#'   by the \code{run_ume}:
+#'   by \code{\link{run_ume}}:
 #'   \tabular{ll}{
 #'    \code{nbase_multi} \tab A scalar parameter on the number of frail
 #'    comparisons.\cr
 #'    \tab \cr
-#'    \code{t1_bn} \tab A vector with numeric values on the first arm of each
-#'    frail comparison.\cr
+#'    \code{t1_bn} \tab A vector with numeric values referring to the first arm
+#'    of each frail comparison.\cr
 #'    \tab \cr
-#'    \code{t2_bn} \tab A vector with numeric values on the second arm of each
-#'    frail comparison.\cr
+#'    \code{t2_bn} \tab A vector with numeric values referring to the second arm
+#'    of each frail comparison.\cr
 #'    \tab \cr
-#'    \code{base} \tab A vector with numeric values on the baseline intervention
-#'     of the multi-arm trials that contain the frail comparisons.\cr
+#'    \code{base} \tab A vector with numeric values referring to the baseline
+#'    intervention of the multi-arm trials that contain the frail
+#'    comparisons.\cr
 #'    \tab \cr
 #'    \code{obs_comp} \tab A data-frame that indicates how many two-arms and
 #'    multi-arm trials have included each pairwise comparison observed in the
 #'    network.\cr
 #'   }
 #'
-#' @details \code{improved_ume} is integrated in the \code{run_ume} function and
-#'   calls the output of the \code{data_preparation} function after sorting the
+#' @details \code{improved_ume} is integrated in \code{\link{run_ume}} and
+#'   calls the output of \code{\link{data_preparation}} after sorting the
 #'   rows so that multi-arm trials appear at the bottom of the dataset.
 #'   When there are no multi-arm trials or no frail comparisons in the network,
 #'   \code{improved_ume} returns only the element \code{obs_comp}
@@ -47,8 +48,8 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run_ume}}, \code{\link{data_preparation}},
-#'   \code{\link{run_model}}
+#' @seealso \code{\link{data_preparation}}, \code{\link{run_model}},
+#'   \code{\link{run_ume}}
 #'
 #' @references
 #' Spineli LM. A novel framework to evaluate the consistency assumption globally
@@ -58,7 +59,7 @@
 #' for decision making 4: inconsistency in networks of evidence based on
 #' randomized controlled trials.
 #' \emph{Med Decis Making} 2013;\bold{33}(5):641--56.
-#' [\doi{10.1177/0272989X12455847}]
+#' \doi{10.1177/0272989X12455847}
 #'
 #' @export
 improved_ume <- function(t, N, ns, na) {
@@ -76,9 +77,9 @@ improved_ume <- function(t, N, ns, na) {
   resp <- resp0 <- wide_format0[, 4:5]
   rand <- rand0 <- wide_format0[, 6:7]
   for (i in seq_len(length(wide_format0[, 1]))) {
-    treat[i, ] <- treat0[i, order(treat0[i, ], na.last = T)]
-    resp[i, ] <- resp0[i, order(treat0[i, ], na.last = T)]
-    rand[i, ] <- rand0[i, order(treat0[i, ], na.last = T)]
+    treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
+    resp[i, ] <- resp0[i, order(treat0[i, ], na.last = TRUE)]
+    rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
   }
 
   wide_format <- data.frame(study = wide_format0$study, treat, resp, rand)
@@ -129,8 +130,8 @@ improved_ume <- function(t, N, ns, na) {
     levels(unlist(as.data.frame(tab_comp_arms0)["arms"]))[1] == "multi-arm" ||
     dim(unique(as.data.frame(tab_comp_arms0)["arms"]))[1] == 2) {
     tab_comp_arms$select <- ifelse(tab_comp_arms$two == 0 &
-                                     tab_comp_arms$multi != 0, T, F)
-    subs <- subset(tab_comp_arms, select == T, select = comp)
+                                     tab_comp_arms$multi != 0, TRUE, FALSE)
+    subs <- subset(tab_comp_arms, select == TRUE, select = comp)
 
     # Match the selected comparisons with the study id
     pairwise_n0 <- list()

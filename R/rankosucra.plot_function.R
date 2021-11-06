@@ -79,7 +79,7 @@ rankosucra_plot <- function(full, drug_names) {
 
   if (length(drug_names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+         call. = FALSE)
   }
 
   sucra <- full$SUCRA
@@ -90,7 +90,7 @@ rankosucra_plot <- function(full, drug_names) {
   drug_names_order <- drug_names[order(-sucra[, 1])]
 
   # Note: row is the drug, column is the order
-  prob_rank0 <- matrix(effectiveness[, 1], nrow = nt, ncol = nt, byrow = T)
+  prob_rank0 <- matrix(effectiveness[, 1], nrow = nt, ncol = nt, byrow = TRUE)
   prob_rank <- prob_rank0[, order(-sucra[, 1])]
   colnames(prob_rank) <- drug_names_order
 
@@ -106,7 +106,7 @@ rankosucra_plot <- function(full, drug_names) {
   rank_data <- cbind(melt(prob_rank * 100), melt(cum_prob_rank * 100)[, 3])
   colnames(rank_data) <- c("order", "intervention", "value_rank", "value_cum")
   dat_text <- data.frame(label = paste0(round(sort(sucra[, 1] * 100,
-                                                   decreasing = T), 1), "%"),
+                                                   decreasing = TRUE), 1), "%"),
                          intervention = unique(rank_data$intervention),
                          x = rep(1.2, nt),
                          y = rep(98, nt))

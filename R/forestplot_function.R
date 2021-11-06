@@ -110,14 +110,14 @@ forestplot <- function(full, compar,  drug_names) {
 
   if (length(drug_names) == 2) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+         call. = FALSE)
   }
 
   compar <- if (missing(compar)) {
     stop("The argument 'compar' has not been defined", call. = F)
   } else if (!is.element(compar, drug_names)) {
     stop("The value of 'compar' is not found in the argument 'drug_names'",
-         call. = F)
+         call. = FALSE)
   } else if (is.element(compar, drug_names)) {
     compar
   }
@@ -145,7 +145,7 @@ forestplot <- function(full, compar,  drug_names) {
                           drug_names)[order(match(data.frame(sucra[, 1],
                                                              drug_names)[, 2],
                                                   em_subset[, 4])), 1]
-  em_ref <- em_ref0[order(sucra_new, decreasing = T), ]
+  em_ref <- em_ref0[order(sucra_new, decreasing = TRUE), ]
   rownames(em_ref) <- NULL
 
   # Posterior results on the predicted estimates of comparisons with the
@@ -162,7 +162,7 @@ forestplot <- function(full, compar,  drug_names) {
 
   # Sort by SUCRA in decreasing order and remove the reference intervention
   pred_ref <- if (model == "RE") {
-    pred_ref0[order(sucra_new, decreasing = T), ]
+    pred_ref0[order(sucra_new, decreasing = TRUE), ]
   } else {
     NA
   }
@@ -171,7 +171,7 @@ forestplot <- function(full, compar,  drug_names) {
 
   # Sort the drugs by their SUCRA in decreasing order and remove the reference
   # intervention (number 1)
-  drug_names_sorted <- drug_names[order(sucra[, 1], decreasing = T)]
+  drug_names_sorted <- drug_names[order(sucra[, 1], decreasing = TRUE)]
   len_drug_names <- length(drug_names_sorted)
 
   # Create a data-frame with credible and prediction intervals of comparisons
@@ -217,8 +217,8 @@ forestplot <- function(full, compar,  drug_names) {
 
   # Create a data-frame with the SUCRA values
   prepare_sucra <- data.frame(rev(seq_len(len_drug_names)),
-                              drug_names[order(sucra[, 1], decreasing = T)],
-                              sucra[order(sucra[, 1], decreasing = T),
+                              drug_names[order(sucra[, 1], decreasing = TRUE)],
+                              sucra[order(sucra[, 1], decreasing = TRUE),
                                     c(1, 3, 7)])
   colnames(prepare_sucra) <- c("order",
                                "intervention",
@@ -280,10 +280,10 @@ forestplot <- function(full, compar,  drug_names) {
                     vjust = -0.5),
                 color = "black",
                 size = 4.0,
-                check_overlap = F,
-                parse = F,
+                check_overlap = FALSE,
+                parse = FALSE,
                 position = position_dodge(width = 0.5),
-                inherit.aes = T, na.rm = T) +
+                inherit.aes = TRUE, na.rm = TRUE) +
       geom_text(aes(x = 0.45,
                     y = ifelse(is.element(measure,
                                           c("Odds ratio", "Ratio of means")),
@@ -352,9 +352,10 @@ forestplot <- function(full, compar,  drug_names) {
                                    prepare_em[seq_len(len_drug_names), 5],
                                    ")"),
                     hjust = 0, vjust = -0.5),
-                color = "black", size = 4.0, check_overlap = F, parse = F,
-                position = position_dodge(width = 0.5), inherit.aes = T,
-                na.rm = T) +
+                color = "black", size = 4.0, check_overlap = FALSE,
+                parse = FALSE,
+                position = position_dodge(width = 0.5), inherit.aes = TRUE,
+                na.rm = TRUE) +
       geom_text(aes(x = 0.45,
                     y = ifelse(is.element(
                       measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2),
@@ -409,8 +410,8 @@ forestplot <- function(full, compar,  drug_names) {
                                  " ",
                                  round(upper * 100, 0), ")"),
                         hjust = 0, vjust = -0.5),
-              color = "black", size = 4.0, check_overlap = F, parse = F,
-              position = position_dodge(width = 0.5), inherit.aes = T) +
+              color = "black", size = 4.0, check_overlap = FALSE, parse = FALSE,
+              position = position_dodge(width = 0.5), inherit.aes = TRUE) +
     labs(x = "", y = "Surface under the cumulative ranking curve value") +
     scale_x_discrete(breaks = as.factor(seq_len(len_drug_names)),
                      labels = prepare_sucra$intervention[rev(
@@ -425,7 +426,7 @@ forestplot <- function(full, compar,  drug_names) {
 
   # Bring together both forest-plots
   forest_plots <- ggarrange(p1, p2, nrow = 1, ncol = 2, labels = c("A)", "B)"),
-                            common.legend = T, legend = "bottom")
+                            common.legend = TRUE, legend = "bottom")
 
   return(forest_plots)
 }

@@ -152,18 +152,18 @@ metareg_plot <- function(full,
 
   if (length(drug_names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+         call. = FALSE)
   }
 
  if (length(unique(reg$covariate)) < 3 &
      !is.element(cov_value[1], reg$covariate)) {
    aa <- "The first element of the argument 'cov_value' is out of the value"
-   stop(paste(aa, "range of the analysed covariate"), call. = F)
+   stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
  } else if (length(unique(reg$covariate)) > 2 &
             (cov_value[1] < min(reg$covariate) |
              cov_value[1] > max(reg$covariate))) {
    aa <- "The first element of the argument 'cov_value' is out of the value"
-   stop(paste(aa, "range of the analysed covariate"), call. = F)
+   stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
  }
 
   save_xls <- if (missing(save_xls)) {
@@ -173,19 +173,19 @@ metareg_plot <- function(full,
   }
 
   compar <- if (missing(compar)) {
-    stop("The argument 'compar' has not been defined", call. = F)
+    stop("The argument 'compar' has not been defined", call. = FALSE)
   } else if (!is.element(compar, drug_names)) {
     stop("The value of the argument 'compar' is not found in the 'drug_names'",
-         call. = F)
+         call. = FALSE)
   } else if (is.element(compar, drug_names)) {
     compar
   }
 
   cov_value <- if (missing(cov_value)) {
-    stop("The argument 'cov_value' has not been defined", call. = F)
+    stop("The argument 'cov_value' has not been defined", call. = FALSE)
   } else if (length(cov_value) < 2) {
     aa <- "The argument 'cov_value' must be a vector with elements a number and"
-    stop(paste(aa, "a character"), call. = F)
+    stop(paste(aa, "a character"), call. = FALSE)
   } else if (length(cov_value) == 2) {
     cov_value
   }
@@ -215,10 +215,10 @@ metareg_plot <- function(full,
   # Posterior results on the SUCRA value under NMA
   sucra_full <- round(full$SUCRA, 2)
   sucra_full_order <- round(full$SUCRA, 2)[order(sucra_full[, 1],
-                                                 decreasing = T), ]
+                                                 decreasing = TRUE), ]
 
   # Sort the drugs by their NMA-SUCRA in decreasing order
-  drug_names_sorted <- drug_names[order(sucra_full[, 1], decreasing = T)]
+  drug_names_sorted <- drug_names[order(sucra_full[, 1], decreasing = TRUE)]
 
   # A matrix with all possible comparisons in the network
   poss_pair_comp1 <- data.frame(exp = t(combn(drug_names, 2))[, 2],
@@ -240,7 +240,7 @@ metareg_plot <- function(full,
   sucra_full_new <- data.frame(sucra_full[, 1], drug_names)[
     order(match(data.frame(sucra_full[, 1], drug_names)[, 2],
                 em_subset_nma[, 4])), 1]
-  em_ref_nma <- em_ref0_nma[order(sucra_full_new, decreasing = T), ]
+  em_ref_nma <- em_ref0_nma[order(sucra_full_new, decreasing = TRUE), ]
 
   # Posterior mean of regression coefficients for all pairwise comparisons
   if (is.element(reg$covar_assumption, c("exchangeable", "independent"))) {
@@ -253,7 +253,7 @@ metareg_plot <- function(full,
                     poss_pair_comp)
     beta_all_subset <- subset(beta00, beta00[5] == compar)
     beta0 <- rbind(beta_all_subset[, 1:3], c(rep(NA, 3)))
-    beta <- beta0[order(sucra_full_new, decreasing = T), ]
+    beta <- beta0[order(sucra_full_new, decreasing = TRUE), ]
     rownames(beta) <- NULL
   } else {
     beta <- reg$beta[1, c(1, 3, 7)]
@@ -273,7 +273,7 @@ metareg_plot <- function(full,
                         poss_pair_comp)
   em_subset_nmr <- subset(em_ref00_nmr, em_ref00_nmr[5] == compar)
   em_ref0_nmr <- rbind(em_subset_nmr[, 1:3], c(rep(NA, 3)))
-  em_ref_nmr <- em_ref0_nmr[order(sucra_full_new, decreasing = T), ]
+  em_ref_nmr <- em_ref0_nmr[order(sucra_full_new, decreasing = TRUE), ]
   rownames(em_ref_nma) <- rownames(em_ref_nmr) <- NULL
 
   # Posterior results on the predicted estimates of comparisons with the
@@ -308,8 +308,8 @@ metareg_plot <- function(full,
 
   # Sort by SUCRA in decreasing order and remove the reference intervention
   if (model == "RE") {
-    pred_ref_nma <- pred_ref0_nma[order(sucra_full_new, decreasing = T), ]
-    pred_ref_nmr <- pred_ref0_nmr[order(sucra_full_new, decreasing = T), ]
+    pred_ref_nma <- pred_ref0_nma[order(sucra_full_new, decreasing = TRUE), ]
+    pred_ref_nmr <- pred_ref0_nmr[order(sucra_full_new, decreasing = TRUE), ]
   } else {
     NA
   }

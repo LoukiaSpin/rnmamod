@@ -118,9 +118,9 @@ describe_network <- function(data, drug_names, measure) {
   miss <- miss0 <- pair_mod0[, 4:5]
   rand <- rand0 <- pair_mod0[, 6:7]
   for (i in seq_len(length(pair_mod0[, 1]))) {
-    treat[i, ] <- treat0[i, order(treat0[i, ], na.last = T)]
-    miss[i, ] <- miss0[i, order(treat0[i, ], na.last = T)]
-    rand[i, ] <- rand0[i, order(treat0[i, ], na.last = T)]
+    treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
+    miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
+    rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
   }
   pair_mod <- data.frame(study = pair_mod0$study, treat, miss, rand)
 
@@ -135,12 +135,12 @@ describe_network <- function(data, drug_names, measure) {
   direct_comp <- length(unique(comp))
 
   # Total number of randomised in the network
-  total_rand_network <- sum(apply(dat$N, 1, sum, na.rm = T))
+  total_rand_network <- sum(apply(dat$N, 1, sum, na.rm = TRUE))
 
   # Proportion of completers in the network (in %)
   prop_obs_network <-
     round(((total_rand_network - sum(
-      apply(dat$m, 1, sum, na.rm = T)
+      apply(dat$m, 1, sum, na.rm = TRUE)
     )) / total_rand_network) * 100, 0)
 
   # Number of randomised per observed comparison
@@ -214,7 +214,7 @@ describe_network <- function(data, drug_names, measure) {
     rule <- apply(t(apply(arm_risk, 1, function(x) {
       ifelse(x == 0, 1, 0)
       })), 1,
-                  sum, na.rm = T)
+                  sum, na.rm = TRUE)
 
     # Number of trials with at least one arm with zero events
     trial_zero_event <- ifelse(length(which(rule > 0)) == 0, 0, which(rule > 0))
@@ -224,8 +224,9 @@ describe_network <- function(data, drug_names, measure) {
                                    which(rule == dat$na))
 
     # Proportion of total events in the network
-    prop_event_network <- round(sum(unlist(dat$r), na.rm = T) /
-                                  sum(unlist(dat$N) - unlist(dat$m), na.rm = T),
+    prop_event_network <- round(sum(unlist(dat$r), na.rm = TRUE) /
+                                  sum(unlist(dat$N) - unlist(dat$m),
+                                      na.rm = TRUE),
                                 2) * 100
 
     # Number of events per intervention
@@ -267,9 +268,9 @@ describe_network <- function(data, drug_names, measure) {
     resp <- resp0 <- pair_bin0[, 4:5]
     rand <- rand0 <- pair_bin0[, 6:7]
     for (i in seq_len(length(pair_bin0[, 1]))) {
-      treat[i, ] <- treat0[i, order(treat0[i, ], na.last = T)]
-      resp[i, ] <- resp0[i, order(treat0[i, ], na.last = T)]
-      rand[i, ] <- rand0[i, order(treat0[i, ], na.last = T)]
+      treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
+      resp[i, ] <- resp0[i, order(treat0[i, ], na.last = TRUE)]
+      rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
     }
     pair_bin <- data.frame(study = pair_bin0$study, treat, resp, rand)
 

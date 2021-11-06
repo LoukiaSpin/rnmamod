@@ -144,7 +144,7 @@ netplot <- function(data, drug_names, save_xls, ...) {
                                   treatment1,
                                   data = transform,
                                   trtname = drug_names,
-                                  multi.show = T, ...)
+                                  multi.show = TRUE, ...)
 
   if (dim(data %>% dplyr::select(starts_with("r")))[2] > 0) {
     measure <- "OR"

@@ -110,7 +110,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
 
   if (length(drug_names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+         call. = FALSE)
   }
 
   # Posterior results on the effect estimates under NMA
@@ -344,10 +344,10 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
                 hjust = 0,
                 vjust = -0.5,
                 size = 4.0,
-                check_overlap = F,
-                parse = F,
+                check_overlap = FALSE,
+                parse = FALSE,
                 position = position_dodge(width = 0.8),
-                inherit.aes = T) +
+                inherit.aes = TRUE) +
       scale_x_discrete(breaks = as.factor(seq_len(length(obs_comp))),
                        labels = prepare_tau$comparison[
                          seq_len(length(obs_comp))]) +
@@ -365,7 +365,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
   # Bring together both forest-plots
   forest_plots <- if (model == "RE") {
     ggarrange(p1, p2, nrow = 1, ncol = 2, labels = c("A)", "B)"),
-              common.legend = T, legend = "bottom")
+              common.legend = TRUE, legend = "bottom")
   } else {
     p1
   }

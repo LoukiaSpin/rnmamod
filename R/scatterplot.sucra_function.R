@@ -57,12 +57,12 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
   if (length(unique(reg$covariate)) < 3 &
       !is.element(cov_value[1], reg$covariate)) {
     stop("The first element of the argument 'cov_value' is out of the value
-         range of the analysed covariate", call. = F)
+         range of the analysed covariate", call. = FALSE)
   } else if (length(unique(reg$covariate)) > 2 &
              (cov_value[1] < min(reg$covariate) |
               cov_value[1] > max(reg$covariate))) {
     stop("The first element of the argument 'cov_value' is out of the value
-         range of the analysed covariate", call. = F)
+         range of the analysed covariate", call. = FALSE)
   }
 
   drug_names <- if (missing(drug_names)) {
@@ -80,14 +80,14 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
 
   if (length(drug_names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+         call. = FALSE)
   }
 
   cov_value <- if (!is.null(reg$beta_all) & missing(cov_value)) {
-    stop("The argument 'cov_value' has not been defined", call. = F)
+    stop("The argument 'cov_value' has not been defined", call. = FALSE)
   } else if (!is.null(reg$beta_all) & length(cov_value) < 2) {
     stop("The argument 'cov_value' must be a vector with elements a number and a
-         character", call. = F)
+         character", call. = FALSE)
   } else if (!is.null(reg$beta_all) & length(cov_value) == 2) {
     cov_value
   }
@@ -112,7 +112,7 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
   par_sd <- sqrt(((reg$EM[, 2])^2) + ((reg$beta_all[, 2] * covar)^2))
   z_test <- par_mean / par_sd
   z_test_mat <- matrix(NA, nrow = length(drug_names), ncol = length(drug_names))
-  z_test_mat[lower.tri(z_test_mat, diag = F)] <- z_test * (-1)
+  z_test_mat[lower.tri(z_test_mat, diag = FALSE)] <- z_test * (-1)
   z_test_mat <- reflect_triangle(z_test_mat, from = "lower")
   prob_diff <- if (full$D == 0) {
     pnorm(z_test_mat)
@@ -120,7 +120,7 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
     1 - pnorm(z_test_mat)
   }
   # The p-scores per intervention
-  sucra_nmr <- round(apply(prob_diff, 1, sum, na.rm = T) /
+  sucra_nmr <- round(apply(prob_diff, 1, sum, na.rm = TRUE) /
                        (length(drug_names) - 1) * 100, 0)
   dataset <- data.frame(sucra_nma, sucra_nmr, drug_names)
 

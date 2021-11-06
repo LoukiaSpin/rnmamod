@@ -71,7 +71,7 @@ data_preparation <- function(data, measure) {
 
   # Intervention studied in each arm of every trial
   treat <- if (dim(data %>% select(starts_with("t")))[2] == 0) {
-    stop("The information on the individual arms is missing", call. = F)
+    stop("The information on the individual arms is missing", call. = FALSE)
   } else {
     data %>% select(starts_with("t"))
   }
@@ -85,19 +85,19 @@ data_preparation <- function(data, measure) {
   ref <- 1
 
   measure <- if (missing(measure)) {
-    stop("The argument 'measure' needs to be defined", call. = F)
+    stop("The argument 'measure' needs to be defined", call. = FALSE)
   } else if ((dim(data %>% select(starts_with("r")))[2] > 0) &
              !is.element(measure, c("MD", "SMD", "ROM", "OR"))) {
-    stop("Insert 'OR'", call. = F)
+    stop("Insert 'OR'", call. = FALSE)
   } else if ((dim(data %>% select(starts_with("r")))[2] == 0) &
              !is.element(measure, c("MD", "SMD", "ROM", "OR"))) {
-    stop("Insert 'MD', 'SMD' or 'ROM'", call. = F)
+    stop("Insert 'MD', 'SMD' or 'ROM'", call. = FALSE)
   } else if ((dim(data %>% select(starts_with("r")))[2] > 0) &
              is.element(measure, c("MD", "SMD", "ROM"))) {
-    stop("Insert 'OR' for a  binary outcome", call. = F)
+    stop("Insert 'OR' for a  binary outcome", call. = FALSE)
   } else if ((dim(data %>% select(starts_with("r")))[2] == 0) &
              is.element(measure, "OR")) {
-    stop("Insert 'MD', 'SMD' or 'ROM' for a continuous outcome", call. = F)
+    stop("Insert 'MD', 'SMD' or 'ROM' for a continuous outcome", call. = FALSE)
   } else {
     measure
   }
@@ -126,25 +126,25 @@ data_preparation <- function(data, measure) {
         (dim(sd_obs)[2] != max(na)) |
         (dim(mod)[2] != max(na)) |
         (dim(rand)[2] != max(na))) {
-      stop("All elements must have the same dimension", call. = F)
+      stop("All elements must have the same dimension", call. = FALSE)
     }
 
     if ((dim(y_obs)[1] != ns) |
         (dim(sd_obs)[1] != ns) |
         (dim(mod)[1] != ns) |
         (dim(rand)[1] != ns)) {
-      stop("All elements must have the same dimension", call. = F)
+      stop("All elements must have the same dimension", call. = FALSE)
     }
 
     # Order by 'id of t1' < 'id of t1'
     y0 <- sd0 <- se0 <- m <- N <- t <- treat
     for (i in 1:ns) {
-      y0[i, ] <- y_obs[i, order(treat[i, ], na.last = T)]
-      sd0[i, ] <- sd_obs[i, order(treat[i, ], na.last = T)]
-      se0[i, ] <- se_obs[i, order(treat[i, ], na.last = T)]
-      m[i, ] <- mod[i, order(treat[i, ], na.last = T)]
-      N[i, ] <- rand[i, order(treat[i, ], na.last = T)]
-      t[i, ] <- sort(treat[i, ], na.last = T)
+      y0[i, ] <- y_obs[i, order(treat[i, ], na.last = TRUE)]
+      sd0[i, ] <- sd_obs[i, order(treat[i, ], na.last = TRUE)]
+      se0[i, ] <- se_obs[i, order(treat[i, ], na.last = TRUE)]
+      m[i, ] <- mod[i, order(treat[i, ], na.last = TRUE)]
+      N[i, ] <- rand[i, order(treat[i, ], na.last = TRUE)]
+      t[i, ] <- sort(treat[i, ], na.last = TRUE)
     }
 
     names(y0) <- paste0("y", seq_len(max(na)))
@@ -163,22 +163,22 @@ data_preparation <- function(data, measure) {
     if ((dim(event)[2] != max(na)) |
         (dim(mod)[2] != max(na)) |
         (dim(rand)[2] != max(na))) {
-      stop("All elements must have the same dimension", call. = F)
+      stop("All elements must have the same dimension", call. = FALSE)
     }
 
     if ((dim(event)[1] != ns) |
         (dim(mod)[1] != ns) |
         (dim(rand)[1] != ns)) {
-      stop("All elements must have the same dimension", call. = F)
+      stop("All elements must have the same dimension", call. = FALSE)
     }
 
     # Order by 'id of t1' < 'id of t2' < 'id of t3', and so on
     r <- m <- N <- t <- treat
     for (i in 1:ns) {
-      r[i, ] <- event[i, order(treat[i, ], na.last = T)]
-      m[i, ] <- mod[i, order(treat[i, ], na.last = T)]
-      N[i, ] <- rand[i, order(treat[i, ], na.last = T)]
-      t[i, ] <- sort(treat[i, ], na.last = T)
+      r[i, ] <- event[i, order(treat[i, ], na.last = TRUE)]
+      m[i, ] <- mod[i, order(treat[i, ], na.last = TRUE)]
+      N[i, ] <- rand[i, order(treat[i, ], na.last = TRUE)]
+      t[i, ] <- sort(treat[i, ], na.last = TRUE)
     }
 
     names(r) <- paste0("r", seq_len(max(na)))

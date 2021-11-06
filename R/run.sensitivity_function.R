@@ -193,7 +193,7 @@ run_sensitivity <- function(full,
   assumption <- if (missing(assumption)) {
     "IDE-ARM"
   } else if(!is.element(assumption, c("IDE-ARM", "HIE-ARM"))) {
-    stop("Insert 'IDE-ARM', or, 'HIE-ARM'", call. = F)
+    stop("Insert 'IDE-ARM', or, 'HIE-ARM'", call. = FALSE)
   } else {
     assumption
   }
@@ -203,7 +203,7 @@ run_sensitivity <- function(full,
 
   if (unique(na.omit(unlist(item$I))) == 0) {
     stop("Missing participant outcome data have *not* been collected.
-         This function cannot be used.", call. = F)
+         This function cannot be used.", call. = FALSE)
     return(NA)
   }
 
@@ -221,7 +221,7 @@ run_sensitivity <- function(full,
     c(-log(3), -log(2), log(0.9999), log(2), log(3))
   } else if (length(mean_scenarios) < 5) {
     stop("The argument 'mean_scenarios' must have a length of at least 5",
-         call. = F)
+         call. = FALSE)
   } else {
     mean_scenarios
   }

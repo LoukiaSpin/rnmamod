@@ -95,12 +95,12 @@ kld_barplot <- function(robust, compar, drug_names) {
 
   if (any(is.na(robust))) {
     aa <- "Missing participant outcome data have *not* been collected."
-    stop(paste(aa, "This function cannot be used."), call. = F)
+    stop(paste(aa, "This function cannot be used."), call. = FALSE)
   }
 
   if (dim(robust$kld)[2] < 25) {
     stop("Use *only* for different scenarios about the missingness parameter.",
-         call. = F)
+         call. = FALSE)
   }
 
   drug_names <- if (missing(drug_names)) {
@@ -116,12 +116,12 @@ kld_barplot <- function(robust, compar, drug_names) {
   }
 
   compar <- if (missing(compar)) {
-    stop("The argument 'compar' needs to be defined", call. = F)
+    stop("The argument 'compar' needs to be defined", call. = FALSE)
   } else if (length(drug_names) < 3 & missing(compar)) {
     c(drug_names[2], drug_names[1])
   } else if (!is.element(compar, drug_names)) {
     stop("The value of 'compar' is not found in the argument 'drug_names'",
-         call. = F)
+         call. = FALSE)
   } else if (is.element(compar, drug_names)) {
     compar
   }
@@ -130,7 +130,7 @@ kld_barplot <- function(robust, compar, drug_names) {
   comparison <- matrix(combn(drug_names, 2),
                        nrow = length(combn(drug_names, 2)) / 2,
                        ncol = 2,
-                       byrow = T)
+                       byrow = TRUE)
   compar_id <- which(comparison[, 1] == compar[2] &
                        comparison[, 2] == compar[1])
   experim <- comparison[compar_id, 2]

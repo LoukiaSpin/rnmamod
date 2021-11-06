@@ -65,13 +65,13 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
       !is.element(cov_value[1], reg$covariate)) {
     aa <- "The first element of the argument 'cov_value' is out of the value"
     bb <- "range of the analysed covariate"
-    stop(paste(aa, bb), call. = F)
+    stop(paste(aa, bb), call. = FALSE)
   } else if (length(unique(reg$covariate)) > 2 &
              (cov_value[1] < min(reg$covariate) |
               cov_value[1] > max(reg$covariate))) {
     aa <- "The first element of the argument 'cov_value' is out of the value"
     bb <- "range of the analysed covariate"
-    stop(paste(aa, bb), call. = F)
+    stop(paste(aa, bb), call. = FALSE)
   }
 
   drug_names <- if (missing(drug_names)) {
@@ -88,27 +88,27 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
 
   if (length(drug_names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+         call. = FALSE)
   }
 
   # Sort the drugs by their SUCRA in decreasing order and remove the reference
   # intervention (number 1)
-  drug_names_sorted <- drug_names[order(full$SUCRA[, 1], decreasing = T)]
+  drug_names_sorted <- drug_names[order(full$SUCRA[, 1], decreasing = TRUE)]
 
   compar <- if (missing(compar)) {
-    stop("The argument 'compar' has not been defined", call. = F)
+    stop("The argument 'compar' has not been defined", call. = FALSE)
   } else if (!is.element(compar, drug_names)) {
     stop("The value of the argument 'compar' is not found in the 'drug_names'",
-         call. = F)
+         call. = FALSE)
   } else if (is.element(compar, drug_names)) {
     compar
   }
 
   cov_value <- if (!is.null(reg$beta_all) & missing(cov_value)) {
-    stop("The argument 'cov_value' has not been defined", call. = F)
+    stop("The argument 'cov_value' has not been defined", call. = FALSE)
   } else if (!is.null(reg$beta_all) & length(cov_value) < 2) {
     aa <- "The argument 'cov_value' must be a vector with elements a number and"
-    stop(paste(aa, "a character"), call. = F)
+    stop(paste(aa, "a character"), call. = FALSE)
   } else if (!is.null(reg$beta_all) & length(cov_value) == 2) {
     cov_value
   }
@@ -140,7 +140,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                           drug_names)[order(match(data.frame(full$SUCRA[, 1],
                                                              drug_names)[, 2],
                                                   em_subset_nma[, 4])), 1]
-  em_ref_nma <- em_ref0_nma[order(sucra_new, decreasing = T), ]
+  em_ref_nma <- em_ref0_nma[order(sucra_new, decreasing = TRUE), ]
 
   # Effect size of all possible pairwise comparisons (NMR)
   par_mean <- as.vector(c(reg$EM[, 1] + reg$beta_all[, 1] * cov_val,
@@ -157,7 +157,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                         poss_pair_comp)
   em_subset_nmr <- subset(em_ref00_nmr, em_ref00_nmr[5] == compar)
   em_ref0_nmr <- rbind(em_subset_nmr[, 1:3], c(rep(NA, 3)))
-  em_ref_nmr <- em_ref0_nmr[order(sucra_new, decreasing = T), ]
+  em_ref_nmr <- em_ref0_nmr[order(sucra_new, decreasing = TRUE), ]
   rownames(em_ref_nma) <- rownames(em_ref_nmr) <- NULL
 
   # Posterior results on the predicted estimates of comparisons with the
@@ -193,8 +193,8 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
 
   # Sort by SUCRA in decreasing order and remove the reference intervention
   if (model == "RE") {
-    pred_ref_nma <- pred_ref0_nma[order(sucra_new, decreasing = T), ]
-    pred_ref_nmr <- pred_ref0_nmr[order(sucra_new, decreasing = T), ]
+    pred_ref_nma <- pred_ref0_nma[order(sucra_new, decreasing = TRUE), ]
+    pred_ref_nmr <- pred_ref0_nmr[order(sucra_new, decreasing = TRUE), ]
   } else {
     NA
   }
@@ -306,11 +306,11 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                     vjust = -0.5),
                 color = "black",
                 size = 4.0,
-                check_overlap = F,
-                parse = F,
+                check_overlap = FALSE,
+                parse = FALSE,
                 position = position_dodge(width = 0.5),
-                inherit.aes = T,
-                na.rm = T) +
+                inherit.aes = TRUE,
+                na.rm = TRUE) +
       geom_text(aes(x = 0.45,
                     y = ifelse(is.element(
                       measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2),
@@ -402,11 +402,11 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                     vjust = -0.5),
                 color = "black",
                 size = 4.0,
-                check_overlap = F,
-                parse = F,
+                check_overlap = FALSE,
+                parse = FALSE,
                 position = position_dodge(width = 0.5),
-                inherit.aes = T,
-                na.rm = T) +
+                inherit.aes = TRUE,
+                na.rm = TRUE) +
       geom_text(aes(x = 0.45,
                     y = ifelse(is.element(
                       measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2),

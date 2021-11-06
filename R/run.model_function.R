@@ -363,7 +363,7 @@ run_model <- function(data,
   model <- if (missing(model)) {
     "RE"
   } else if (!is.element(model, c("RE", "FE"))) {
-    stop("Insert 'RE', or 'FE'", call. = F)
+    stop("Insert 'RE', or 'FE'", call. = FALSE)
   } else {
     model
   }
@@ -373,7 +373,7 @@ run_model <- function(data,
     assumption
   }
   D <- if (missing(D)) {
-    stop("The argument 'D' needs to be defined", call. = F)
+    stop("The argument 'D' needs to be defined", call. = FALSE)
   } else {
     D
   }

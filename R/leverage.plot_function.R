@@ -67,7 +67,7 @@ leverage_plot <- function(net, drug_names, title) {
   trial_arm0 <- matrix(as.numeric(numextract(names(dev_o[, 1]))),
                        nrow = length(dev_o[, 1]),
                        ncol = 2,
-                       byrow = T)
+                       byrow = TRUE)
 
   # Create a vector of trial-arms using the 'paste0' function
   trial_arm <- paste0(trial_arm0[, 1], ",", trial_arm0[, 2])
@@ -124,7 +124,7 @@ leverage_plot <- function(net, drug_names, title) {
                                         max(prepare_lev$signed_dev_o)),
                                ylim = c(0,
                                         max(3 - (prepare_lev$signed_dev_o^2))),
-                               expand = T) +
+                               expand = TRUE) +
                ggtitle(title) +
                theme_classic() +
                theme(axis.title.x = element_text(color = "black", size = 12),

@@ -120,14 +120,14 @@ league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
 
   if (length(drug_names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+         call. = FALSE)
   }
 
   cov_value <- if (!is.null(full$beta_all) & missing(cov_value)) {
-    stop("The argument 'cov_value' has not been defined", call. = F)
+    stop("The argument 'cov_value' has not been defined", call. = FALSE)
   } else if (!is.null(full$beta_all) & length(cov_value) < 2) {
     aa <- "The argument 'cov_value' must be a vector with elements a number and"
-    stop(paste(aa, "a character"), call. = F)
+    stop(paste(aa, "a character"), call. = FALSE)
   } else if (!is.null(full$beta_all) & length(cov_value) == 2) {
     cov_value
   }
@@ -169,7 +169,7 @@ league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
     z_test_mat <- matrix(NA,
                          nrow = length(drug_names),
                          ncol = length(drug_names))
-    z_test_mat[lower.tri(z_test_mat, diag = F)] <- z_test * (-1)
+    z_test_mat[lower.tri(z_test_mat, diag = FALSE)] <- z_test * (-1)
     z_test_mat <- reflect_triangle(z_test_mat, from = "lower")
     prob_diff <- if (full$D == 0) {
       pnorm(z_test_mat)
@@ -177,26 +177,26 @@ league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
       1 - pnorm(z_test_mat)
     }
     # The p-scores per intervention
-    sucra <- apply(prob_diff, 1, sum, na.rm = T) / (length(drug_names) - 1)
+    sucra <- apply(prob_diff, 1, sum, na.rm = TRUE) / (length(drug_names) - 1)
   }
 
   # Matrix of effect measure for all possible comparisons
   # Lower triangle
   point0 <- matrix(NA, nrow = length(drug_names), ncol = length(drug_names))
   lower0 <- upper0 <- point0
-  point0[lower.tri(point0, diag = F)] <- round(par[, 1], 2)
+  point0[lower.tri(point0, diag = FALSE)] <- round(par[, 1], 2)
   # Incorporate upper triangle
   point1 <- reflect_triangle(point0, from = "lower")
 
   # Matrix of lower and upper bound of effect measure (all possible comparisons)
   # Lower triangle
-  lower0[lower.tri(lower0, diag = F)] <- round(par[, 3], 2)
-  upper0[lower.tri(upper0, diag = F)] <- round(par[, 7], 2)
+  lower0[lower.tri(lower0, diag = FALSE)] <- round(par[, 3], 2)
+  upper0[lower.tri(upper0, diag = FALSE)] <- round(par[, 7], 2)
   # Incorporate upper triangle
   lower1 <- reflect_triangle(upper0, from = "lower")
-  lower1[lower.tri(lower1, diag = F)] <- round(par[, 3], 2)
+  lower1[lower.tri(lower1, diag = FALSE)] <- round(par[, 3], 2)
   upper1 <- reflect_triangle(lower0, from = "lower")
-  upper1[lower.tri(upper1, diag = F)] <- round(par[, 7], 2)
+  upper1[lower.tri(upper1, diag = FALSE)] <- round(par[, 7], 2)
 
   # Interventions order based on their SUCRA value (from best to worst)
   drug_order_col <- drug_order_row <- order(-sucra)
@@ -216,7 +216,7 @@ league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
     # include the value of no difference)
     (signif_status <- melt(ifelse(upper < 0 | lower > 0,
                                   "significant", "non-significant"),
-                           na.rm = F)[3])
+                           na.rm = FALSE)[3])
     signif_status[is.na(signif_status)] <- 0
   } else {
     point <- round(exp(point1[drug_order_col, drug_order_row]), 2)
@@ -227,7 +227,7 @@ league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
     # include the value of no difference)
     signif_status <- melt(ifelse(upper < 1 | lower > 1,
                                  "significant", "non-significant"),
-                          na.rm = F)[3]
+                          na.rm = FALSE)[3]
     signif_status[is.na(signif_status)] <- 1
   }
 
@@ -240,14 +240,14 @@ league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
   colnames(final) <- rownames(final) <- order_drug
 
   # Include SUCRA values in the diagonal of the new matrix
-  diag(final) <- paste0(round(sort(sucra * 100, decreasing = T), 1), "%")
+  diag(final) <- paste0(round(sort(sucra * 100, decreasing = TRUE), 1), "%")
 
   # Preparing the dataset for the ggplot2
-  mat_new1 <- melt(final, na.rm = F)
+  mat_new1 <- melt(final, na.rm = FALSE)
 
   # Merge both datasets to be used for ggplot2
   mat <- point
-  mat_new <- cbind(mat_new1, melt(mat, na.rm = F)[, 3])
+  mat_new <- cbind(mat_new1, melt(mat, na.rm = FALSE)[, 3])
   colnames(mat_new) <- c("Var1", "Var2", "value", "value2")
 
   # The final dataset for ggplot2
@@ -272,20 +272,20 @@ league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
     geom_tile(aes(fill = value_sucra)) +
     geom_fit_text(aes(factor(Var2, levels = order_drug[seq_len(len_drug)]),
                       factor(Var1, levels = order_drug[rev(seq_len(len_drug))]),
-                      label = value), reflow = T) +
+                      label = value), reflow = TRUE) +
     geom_fit_text(aes(factor(Var2, levels = order_drug[seq_len(len_drug)]),
                       factor(Var1, levels = order_drug[rev(seq_len(len_drug))]),
                       label = value,
                       fontface = ifelse(signif_status == "significant",
                                         "bold", "plain")),
-                  reflow = T) +
+                  reflow = TRUE) +
     scale_fill_gradientn(colours = c("#009E73", "white", "#D55E00"),
                          values = rescale(
-                           c(min(mat_new$value2, na.rm = T),
+                           c(min(mat_new$value2, na.rm = TRUE),
                              ifelse(measure != "OR" & measure != "ROM", 0, 1),
-                             max(mat_new$value2, na.rm = T))),
-                         limits = c(min(mat_new$value2, na.rm = T),
-                                    max(mat_new$value2, na.rm = T))) +
+                             max(mat_new$value2, na.rm = TRUE))),
+                         limits = c(min(mat_new$value2, na.rm = TRUE),
+                                    max(mat_new$value2, na.rm = TRUE))) +
     scale_x_discrete(position = "top") +
     labs(x = "", y = "", caption = caption) +
     theme_bw() +

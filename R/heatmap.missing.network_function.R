@@ -72,7 +72,7 @@ heatmap_missing_network <- function(data, drug_names) {
 
   if (dim(data %>% select(starts_with("m")))[2] == 0) {
     aa <- "Missing participant outcome data have *not* been collected."
-    stop(paste(aa, "This function cannot be used."), call. = F)
+    stop(paste(aa, "This function cannot be used."), call. = FALSE)
   }
 
   if (dim(data %>% dplyr::select(starts_with("r")))[2] > 0) {
@@ -135,9 +135,9 @@ heatmap_missing_network <- function(data, drug_names) {
   miss <- miss0 <- pair_mod0[, 4:5]
   rand <- rand0 <- pair_mod0[, 6:7]
   for (i in seq_len(length(pair_mod0[, 1]))) {
-    treat[i, ] <- treat0[i, order(treat0[i, ], na.last = T)]
-    miss[i, ] <- miss0[i, order(treat0[i, ], na.last = T)]
-    rand[i, ] <- rand0[i, order(treat0[i, ], na.last = T)]
+    treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
+    miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
+    rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
   }
   pair_mod <- data.frame(study = pair_mod0$study, treat, miss, rand)
 
@@ -165,7 +165,7 @@ heatmap_missing_network <- function(data, drug_names) {
   unique_comp <- matrix(as.numeric(numextract(unique_comp0)),
                         nrow = length(unique_comp0),
                         ncol = 2,
-                        byrow = T)
+                        byrow = TRUE)
   median_mat <- matrix(NA, nrow = len_drugs, ncol = len_drugs)
   min_mat <- max_mat <- median_mat
   median_mat[unique_comp] <- median_mod_comp
@@ -184,7 +184,7 @@ heatmap_missing_network <- function(data, drug_names) {
   # Preparing the dataset for the ggplot2
   mat <- median_mat
   diag(mat) <- median_mod_interv
-  mat_new <- cbind(melt(final, na.rm = T), melt(mat, na.rm = F)[, 3])
+  mat_new <- cbind(melt(final, na.rm = TRUE), melt(mat, na.rm = FALSE)[, 3])
   colnames(mat_new) <- c("Var1", "Var2", "value", "value2")
 
   # Keep only the rows without 'NA' and use for ggplot2

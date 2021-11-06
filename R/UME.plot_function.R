@@ -140,7 +140,7 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
 
   if (length(drug_names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+         call. = FALSE)
   }
 
   save_xls <- if (missing(save_xls)) {

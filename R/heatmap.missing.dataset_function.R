@@ -58,7 +58,7 @@ heatmap_missing_dataset <- function(data, trial_names, drug_names) {
 
   m <- if (dim(data %>% select(starts_with("m")))[2] == 0) {
     aa <- "Missing participant outcome data have *not* been collected."
-    stop(paste(aa, "This function cannot be used."), call. = F)
+    stop(paste(aa, "This function cannot be used."), call. = FALSE)
   } else {
     data %>% select(starts_with("m"))
   }

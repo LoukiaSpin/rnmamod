@@ -94,7 +94,7 @@ heatmap_robustness <- function(robust, drug_names) {
 
   if (any(is.na(robust))) {
     aa <- "Missing participant outcome data have *not* been collected."
-    stop(paste(aa, "This function cannot be used."), call. = F)
+    stop(paste(aa, "This function cannot be used."), call. = FALSE)
   }
 
   drug_names <- if (missing(drug_names)) {
@@ -111,7 +111,7 @@ heatmap_robustness <- function(robust, drug_names) {
 
   if (len_drugs < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+         call. = FALSE)
   }
 
   robust_index <- robust$robust_index
@@ -149,10 +149,10 @@ heatmap_robustness <- function(robust, drug_names) {
   mat <- matrix(NA,
                 nrow = len_drugs - 1,
                 ncol = len_drugs - 1)
-  mat[lower.tri(mat, diag = T)] <- sprintf("%.2f", robust_index)
+  mat[lower.tri(mat, diag = TRUE)] <- sprintf("%.2f", robust_index)
   colnames(mat) <- drug_names[1:(len_drugs - 1)]
   rownames(mat) <- drug_names[2:len_drugs]
-  mat_new <- melt(mat, na.rm = T)
+  mat_new <- melt(mat, na.rm = TRUE)
 
 
   ## Create the heatmap for one network of interventions

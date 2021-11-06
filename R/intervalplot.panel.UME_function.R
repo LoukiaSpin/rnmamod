@@ -136,10 +136,10 @@ intervalplot_panel_ume <- function(full, ume, drug_names) {
               hjust = 0,
               vjust = -0.5,
               size = 3.3,
-              check_overlap = F,
-              parse = F,
+              check_overlap = FALSE,
+              parse = FALSE,
               position = position_dodge(width = 0.8),
-              inherit.aes = T) +
+              inherit.aes = TRUE) +
     geom_text(aes(x = 0.45,
                   y = ifelse(is.element(full$measure, c("OR", "ROM")),
                              0.1, -0.2*add),

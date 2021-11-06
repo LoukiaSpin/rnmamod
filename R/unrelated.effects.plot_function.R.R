@@ -1,11 +1,10 @@
-#' End-user-ready results for unrelated trials effects model
+#' End-user-ready results for unrelated trial effects model
 #'
 #' @description Performs the unrelated trial effects model and illustrates the
 #'   results of each trial and corresponding pairwise comparison.
 #'
 #' @param data A data-frame of a one-trial-per-row format containing arm-level
-#'   data of each trial. This format is widely used for BUGS models. See
-#'   'Format' in \code{\link[rnmamod]{run_model}}.
+#'   data of each trial. See 'Format' in \code{\link{run_model}}.
 #' @param measure Character string indicating the effect measure with values
 #'   \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
 #'   mean difference, standardised mean difference and ratio of means,
@@ -21,20 +20,19 @@
 #'   order they appear in the argument \code{data}. If \code{trial_names} is not
 #'   defined, the order of the trials as they appear in \code{data} is used,
 #'   instead.
-#' @param mean_misspar A numeric value or a vector of two numeric values for the
-#'   mean of the normal distribution of the informative missingness parameter
-#'   (see 'Details'). The default argument is 0 and corresponds to the
-#'   missing-at-random assumption.
-#'   See also 'Details' in \code{\link{missingness_param_prior}}.
+#' @param mean_misspar A numeric value for the mean of the normal distribution
+#'   of the informative missingness parameter (see 'Details'). The default
+#'   argument is 0 and corresponds to the missing-at-random assumption.
 #' @param var_misspar A positive non-zero number for the variance of the
 #'   normal distribution of the informative missingness parameter.
 #'   When the \code{measure} is \code{"OR"}, \code{"MD"}, or \code{"SMD"}
 #'   the default argument is 1. When the \code{measure} is \code{"ROM"}
 #'   the default argument is 0.04
 #' @param rho A numeric value in the interval [-1, 1] that indicates the
-#'   correlation coefficient between two missingness parameters in a trial.
-#'   The same value is considered across all trials of the dataset. The default
-#'   argument is 0 and corresponds to uncorrelated missingness parameters.
+#'   correlation coefficient between two informative missingness parameters in
+#'   a trial. The same value is considered across all trials of the dataset.
+#'   The default argument is 0 and corresponds to uncorrelated missingness
+#'   parameters.
 #' @param save_xls Logical to indicate whether to export the tabulated results
 #'   to an 'xlsx' file (via the \code{\link[writexl]{write_xlsx}}
 #'   function) to the working directory of the user. The default is \code{FALSE}
@@ -47,7 +45,7 @@
 #'   interval, the interventions compared, and the three characteristics
 #'   (as defined in \code{char}). For datasets with more than 15 trials,
 #'   the plot becomes cluttered and it is difficult to identify  the trial
-#'   names. Hence, exporting the results in an Excel file is an viable
+#'   names. Hence, exporting the results in an Excel file is a viable
 #'   alternative.
 #'
 #' @details The unrelated trial effects model may be an alternative to network
@@ -79,8 +77,8 @@
 #'   cluttered. For now, the \code{unrelated_effects_plot} function uses the
 #'   default color palette, line-types and point-shapes.
 #'
-#' @seealso \code{\link{missingness_param_prior}}, \code{\link{run_model}},
-#'   \code{\link{taylor_continuous}}, \code{\link{taylor_imor}}
+#' @seealso \code{\link{run_model}}, \code{\link{taylor_continuous}},
+#'   \code{\link{taylor_imor}}
 #'
 #' @references
 #' Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
@@ -111,7 +109,7 @@ unrelated_effects_plot <- function(data,
 
   # Default arguments
   char <- if (missing(char)) {
-    stop("The argument 'char' needs to be defined", call. = F)
+    stop("The argument 'char' needs to be defined", call. = FALSE)
   } else {
     char
   }
@@ -181,11 +179,11 @@ unrelated_effects_plot <- function(data,
     miss <- miss0 <- pairwise_mod0[, 1:2]
     rand <- rand0 <- pairwise_observed0[, 8:9]
     for (i in seq_len(length(pairwise_observed0[, 1]))) {
-      treat[i, ] <- treat0[i, order(treat0[i, ], na.last = T)]
-      y_mean[i, ] <- y_mean0[i, order(treat0[i, ], na.last = T)]
-      sd_mean[i, ] <- sd_mean0[i, order(treat0[i, ], na.last = T)]
-      miss[i, ] <- miss0[i, order(treat0[i, ], na.last = T)]
-      rand[i, ] <- rand0[i, order(treat0[i, ], na.last = T)]
+      treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
+      y_mean[i, ] <- y_mean0[i, order(treat0[i, ], na.last = TRUE)]
+      sd_mean[i, ] <- sd_mean0[i, order(treat0[i, ], na.last = TRUE)]
+      miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
+      rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
     }
 
     pairwise_observed <- data.frame(study = pairwise_observed0$study,
@@ -225,10 +223,10 @@ unrelated_effects_plot <- function(data,
     miss <- miss0 <- pairwise_mod0[, 1:2]
     rand <- rand0 <- pairwise_observed0[, 4:5]
     for (i in seq_len(length(pairwise_observed0[, 1]))) {
-      treat[i, ] <- treat0[i, order(treat0[i, ], na.last = T)]
-      resp[i, ] <- resp0[i, order(treat0[i, ], na.last = T)]
-      miss[i, ] <- miss0[i, order(treat0[i, ], na.last = T)]
-      rand[i, ] <- rand0[i, order(treat0[i, ], na.last = T)]
+      treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
+      resp[i, ] <- resp0[i, order(treat0[i, ], na.last = TRUE)]
+      miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
+      rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
     }
 
     pairwise_observed <- data.frame(study = pairwise_observed0$study,
@@ -320,10 +318,10 @@ unrelated_effects_plot <- function(data,
                 hjust = -0.3,
                 vjust = -0.1,
                 size = 3.5,
-                check_overlap = F,
-                parse = F,
+                check_overlap = FALSE,
+                parse = FALSE,
                 position = position_dodge(width = 0.8),
-                inherit.aes = T) +
+                inherit.aes = TRUE) +
       facet_wrap(vars(comp), scales = "free_x") +
       labs(y = "",
            x = effect_measure_name(measure),

@@ -187,7 +187,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
   item <- data_preparation(data, measure)
   if (item$nt < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+         call. = FALSE)
   }
 
   # Default arguments
@@ -197,9 +197,9 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
   n_thin <- ifelse(missing(n_thin), 1, n_thin)
 
   # Move multi-arm trials at the bottom
-  t <- item$t[order(item$na, na.last = T), ]
-  m <- item$m[order(item$na, na.last = T), ]
-  N <- item$N[order(item$na, na.last = T), ]
+  t <- item$t[order(item$na, na.last = TRUE), ]
+  m <- item$m[order(item$na, na.last = TRUE), ]
+  N <- item$N[order(item$na, na.last = TRUE), ]
   na <- sort(item$na)
   ns <- item$ns
 
@@ -215,7 +215,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
   observed_comp <- matrix(Numextract(observed_comp0[, 1]),
                           nrow = length(observed_comp0[, 1]),
                           ncol = 2,
-                          byrow = T)
+                          byrow = TRUE)
   t1_obs_com <- as.numeric(as.character(observed_comp[, 1]))
   t2_obs_com <- as.numeric(as.character(observed_comp[, 2]))
   obs_comp <- paste0(t2_obs_com, "vs", t1_obs_com)
@@ -316,7 +316,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                    "ref" = ifelse(is.element(assumption,
                                              c("HIE-ARM", "IDE-ARM")),
                                   item$ref, NA),
-                   "I" = item$I[order(item$na, na.last = T), ],
+                   "I" = item$I[order(item$na, na.last = TRUE), ],
                    "M" = ifelse(!is.na(m), mean_misspar, NA),
                    "cov.phi" = 0.5 * var_misspar,
                    "var.phi" = var_misspar,
@@ -329,16 +329,21 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
     data_jag <- append(data_jag, list("y.o" =
-                                        item$y0[order(item$na, na.last = T), ],
+                                        item$y0[
+                                          order(item$na, na.last = TRUE), ],
                                       "se.o" =
-                                        item$se0[order(item$na, na.last = T), ],
+                                        item$se0[
+                                          order(item$na, na.last = TRUE), ],
                                       "y.m" =
-                                      item$y0[order(item$na, na.last = T), ]))
+                                      item$y0[
+                                        order(item$na, na.last = TRUE), ]))
   } else if (measure == "OR") {
     data_jag <- append(data_jag, list("r" =
-                                        item$r[order(item$na, na.last = T), ],
+                                        item$r[
+                                          order(item$na, na.last = TRUE), ],
                                       "r.m" =
-                                        item$r[order(item$na, na.last = T), ]))
+                                        item$r[
+                                          order(item$na, na.last = TRUE), ]))
   }
 
   data_jag <- if (max(na) > 2 & !is.null(impr_ume$nbase_multi)) {
@@ -398,7 +403,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                   n.iter = n_iter,
                   n.burnin = n_burnin,
                   n.thin = n_thin,
-                  DIC = F)
+                  DIC = FALSE)
 
   # Turn summary of posterior results (R2jags object) into a data-frame
   # to select model parameters (using 'dplyr')
@@ -435,10 +440,10 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
     # Turn 'y0', 'se0'into a vector as above
     y0_new <- suppressMessages({
-      as.vector(na.omit(melt(item$y0[order(item$na, na.last = T), ])[, 2]))
+      as.vector(na.omit(melt(item$y0[order(item$na, na.last = TRUE), ])[, 2]))
       })
     se0_new <- suppressMessages({
-      as.vector(na.omit(melt(item$se0[order(item$na, na.last = T), ])[, 2]))
+      as.vector(na.omit(melt(item$se0[order(item$na, na.last = TRUE), ])[, 2]))
       })
 
     # Deviance at the posterior mean of the fitted mean outcome
@@ -451,7 +456,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
   } else {
     # Turn 'r' and number of observed into a vector as above
     r_new <- suppressMessages({
-      as.vector(na.omit(melt(item$r[order(item$na, na.last = T), ])[, 2]))
+      as.vector(na.omit(melt(item$r[order(item$na, na.last = TRUE), ])[, 2]))
       })
 
     # Correction for zero events in trial-arm

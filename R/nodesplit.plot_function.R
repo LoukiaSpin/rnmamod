@@ -141,7 +141,7 @@
 nodesplit_plot <- function(full, node, drug_names, save_xls) {
 
   if (is.null(node)) {
-    stop("There is no split node.", call. = F)
+    stop("There is no split node.", call. = FALSE)
   }
 
   save_xls <- if (missing(save_xls)) {
@@ -155,7 +155,7 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
   item <- data_preparation(data, measure)
   if (item$nt < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+         call. = FALSE)
   }
 
   drug_names <- if (missing(drug_names)) {
@@ -253,10 +253,10 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                           vjust = -0.5),
                       color = "black",
                       size = 4.0,
-                      check_overlap = F,
-                      parse = F,
+                      check_overlap = FALSE,
+                      parse = FALSE,
                       position = position_dodge(width = 0.5),
-                      inherit.aes = T) +
+                      inherit.aes = TRUE) +
             geom_label(aes(x = 3.5,
                            y = -Inf,
                            hjust = 0,
@@ -319,10 +319,10 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                           vjust = -0.5),
                       color = "black",
                       size = 4.0,
-                      check_overlap = F,
-                      parse = F,
+                      check_overlap = FALSE,
+                      parse = FALSE,
                       position = position_dodge(width = 0.5),
-                      inherit.aes = T) +
+                      inherit.aes = TRUE) +
             geom_label(aes(x = 3.5,
                            y = -Inf,
                            hjust = 0,
@@ -465,10 +465,10 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                     vjust = 0.3),
                 color = "black",
                 size = 4.0,
-                check_overlap = F,
-                parse = F,
+                check_overlap = FALSE,
+                parse = FALSE,
                 position = position_dodge(width = 0.5),
-                inherit.aes = T) +
+                inherit.aes = TRUE) +
       geom_label(aes(x = as.factor(seq_len(length(prepare_tau$node))),
                      y = upper,
                      label = sprintf("%.2f", DIC)),

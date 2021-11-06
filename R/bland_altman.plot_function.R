@@ -52,7 +52,7 @@ bland_altman_plot <- function(model1, model2, colour) {
   trial_arm0 <- matrix(as.numeric(numextract(names(model1))),
                         nrow = length(model1),
                         ncol = 2,
-                        byrow = T)
+                        byrow = TRUE)
 
   # Use the matrix above to create a vector of trial-arms using the
   # 'paste0' function: 'trial id', 'arm id'
@@ -86,8 +86,8 @@ bland_altman_plot <- function(model1, model2, colour) {
               hjust = -0.2,
               vjust = -0.3,
               size = 4.0,
-              check_overlap = T,
-              inherit.aes = T) +
+              check_overlap = TRUE,
+              inherit.aes = TRUE) +
     scale_y_continuous(labels = scale_fun) +
     scale_x_continuous(labels = scale_fun) +
     theme_classic() +

@@ -2,7 +2,7 @@ possible_observed_comparisons <- function(drug_names, obs_comp) {
 
   if (length(drug_names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+         call. = FALSE)
   }
 
   # Obtain all unique pairwise comparisons using the 'combn' functions

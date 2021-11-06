@@ -29,13 +29,13 @@
 #'    \code{tau} \tab The between-trial standard deviation.\cr
 #'    \tab \cr
 #'    \code{direct} \tab The direct estimate of the split node
-#'    (see 'Value' \code{\link{run_nodesplit}}).\cr
+#'    (see 'Value' in \code{\link{run_nodesplit}}).\cr
 #'    \tab \cr
 #'    \code{indirect} \tab The indirect estimate of the split node
-#'    (see 'Value' \code{\link{run_nodesplit}}).\cr
+#'    (see 'Value' in \code{\link{run_nodesplit}}).\cr
 #'    \tab \cr
 #'    \code{IF} \tab The inconsistency factor of the split node
-#'    (see 'Value' \code{\link{run_nodesplit}}).\cr
+#'    (see 'Value' in \code{\link{run_nodesplit}}).\cr
 #'    \tab \cr
 #'    \code{phi} \tab The informative missingness parameter.\cr
 #'    \tab \cr
@@ -56,9 +56,10 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link[mcmcplots]{mcmcplot}}, \code{\link{run_model}},
-#'   \code{\link{run_series_meta}}, \code{\link{run_nodesplit}},
-#'   \code{\link{run_ume}}, \code{\link{run_ume}}, \code{\link{run_metareg}}
+#' @seealso \code{\link[mcmcplots]{mcmcplot}}, \code{\link{run_metareg}},
+#'   \code{\link{run_model}}, \code{\link{run_nodesplit}},
+#'   \code{\link{run_sensitivity}}, \code{\link{run_series_meta}},
+#'   \code{\link{run_ume}}
 #'
 #' @references
 #' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple
@@ -92,7 +93,7 @@ mcmc_diagnostics <- function(net, par) {
   options(warn = -1)
 
   par <- if (!is.null(net$jagsfit) & missing(par)) {
-    stop("The argument 'par' needs to be defined", call. = F)
+    stop("The argument 'par' needs to be defined", call. = FALSE)
   } else if (is.null(net$jagsfit)) {
     aa <- "The argument 'par' is ignored as it is used only"
     bb <- "for the functions 'run_model', 'run_ume' and 'run_metareg'"

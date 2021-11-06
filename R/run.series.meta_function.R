@@ -141,7 +141,7 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
   item <- data_preparation(data, measure)
   if (item$nt < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+         call. = FALSE)
   }
 
   # For a continuous outcome
@@ -180,11 +180,11 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
     miss <- miss0 <- pairwise_mod0[, 1:2]
     rand <- rand0 <- pairwise_observed0[, 8:9]
     for (i in seq_len(length(pairwise_observed0[, 1]))) {
-      treat[i, ] <- treat0[i, order(treat0[i, ], na.last = T)]
-      y_mean[i, ] <- y_mean0[i, order(treat0[i, ], na.last = T)]
-      sd_mean[i, ] <- sd_mean0[i, order(treat0[i, ], na.last = T)]
-      miss[i, ] <- miss0[i, order(treat0[i, ], na.last = T)]
-      rand[i, ] <- rand0[i, order(treat0[i, ], na.last = T)]
+      treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
+      y_mean[i, ] <- y_mean0[i, order(treat0[i, ], na.last = TRUE)]
+      sd_mean[i, ] <- sd_mean0[i, order(treat0[i, ], na.last = TRUE)]
+      miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
+      rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
     }
 
     pairwise_observed <- data.frame(study = pairwise_observed0$study,
@@ -223,10 +223,10 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
     miss <- miss0 <- pairwise_mod0[, 1:2]
     rand <- rand0 <- pairwise_observed0[, 6:7]
     for (i in seq_len(length(pairwise_observed0[, 1]))) {
-      treat[i, ] <- treat0[i, order(treat0[i, ], na.last = T)]
-      resp[i, ] <- resp0[i, order(treat0[i, ], na.last = T)]
-      miss[i, ] <- miss0[i, order(treat0[i, ], na.last = T)]
-      rand[i, ] <- rand0[i, order(treat0[i, ], na.last = T)]
+      treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
+      resp[i, ] <- resp0[i, order(treat0[i, ], na.last = TRUE)]
+      miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
+      rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
     }
 
     pairwise_observed <- data.frame(study = pairwise_observed0$study,
@@ -259,7 +259,7 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
   keep_comp <- matrix(as.numeric(numextract(keep_comp0[, 1])),
                       nrow = dim(keep_comp0)[1],
                       ncol = 2,
-                      byrow = T)
+                      byrow = TRUE)
   n_comp <- dim(keep_comp)[1]
 
   # Run each random-effects pairwise meta-analysis
