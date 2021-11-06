@@ -112,7 +112,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/LoukiaSpin/rnmamod/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -127,7 +132,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Perform the node-splitting approach</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/LoukiaSpin/rnmamod/blob/master/R/run.nodesplit_function.R'><code>R/run.nodesplit_function.R</code></a></small>
     <div class="hidden name"><code>run_nodesplit.Rd</code></div>
     </div>
 
@@ -272,8 +277,7 @@ treatment comparison meta-analysis.
 <em>Stat Med</em> 2010;<b>29</b>(7-8):932--44.
 doi: <a href='https://doi.org/10.1002/sim.3767'>10.1002/sim.3767</a></p>
 <p>Gelman A, Rubin DB. Inference from iterative simulation using multiple
-sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.
-doi: <a href='https://doi.org/10.1214/ss/1177011136'>10.1214/ss/1177011136</a></p>
+sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/R2jags/man/jags.html'>jags</a></code>, <code><a href='https://rdrr.io/pkg/gemtc/man/mtc.nodesplit.html'>mtc.nodesplit</a></code>,
@@ -285,31 +289,31 @@ doi: <a href='https://doi.org/10.1214/ss/1177011136'>10.1214/ss/1177011136</a></
     <p>Loukia M. Spineli</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"nma.baker2009"</span><span class='op'>)</span>
-
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># Perform a random-effects network meta-analysis</span>
-<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_model.html'>run_model</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>nma.baker2009</span>,
-                 measure <span class='op'>=</span> <span class='st'>"OR"</span>,
-                 model <span class='op'>=</span> <span class='st'>"RE"</span>,
-                 assumption <span class='op'>=</span> <span class='st'>"IDE-ARM"</span>,
-                 heter_prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"halfnormal"</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>,
-                 mean_misspar <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>,
-                 var_misspar <span class='op'>=</span> <span class='fl'>1</span>,
-                 D <span class='op'>=</span> <span class='fl'>1</span>,
-                 n_chains <span class='op'>=</span> <span class='fl'>3</span>,
-                 n_iter <span class='op'>=</span> <span class='fl'>10000</span>,
-                 n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,
-                 n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-
-<span class='co'># Run random-effects node-splitting approach</span>
-<span class='fu'>run_nodesplit</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,
-              n_chains <span class='op'>=</span> <span class='fl'>3</span>,
-              n_iter <span class='op'>=</span> <span class='fl'>10000</span>,
-              n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,
-              n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"nma.baker2009"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='co'># Perform a random-effects network meta-analysis</span></span>
+<span class='r-in'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_model.html'>run_model</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>nma.baker2009</span>,</span>
+<span class='r-in'>                 measure <span class='op'>=</span> <span class='st'>"OR"</span>,</span>
+<span class='r-in'>                 model <span class='op'>=</span> <span class='st'>"RE"</span>,</span>
+<span class='r-in'>                 assumption <span class='op'>=</span> <span class='st'>"IDE-ARM"</span>,</span>
+<span class='r-in'>                 heter_prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"halfnormal"</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>,</span>
+<span class='r-in'>                 mean_misspar <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>,</span>
+<span class='r-in'>                 var_misspar <span class='op'>=</span> <span class='fl'>1</span>,</span>
+<span class='r-in'>                 D <span class='op'>=</span> <span class='fl'>1</span>,</span>
+<span class='r-in'>                 n_chains <span class='op'>=</span> <span class='fl'>3</span>,</span>
+<span class='r-in'>                 n_iter <span class='op'>=</span> <span class='fl'>10000</span>,</span>
+<span class='r-in'>                 n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,</span>
+<span class='r-in'>                 n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Run random-effects node-splitting approach</span></span>
+<span class='r-in'><span class='fu'>run_nodesplit</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,</span>
+<span class='r-in'>              n_chains <span class='op'>=</span> <span class='fl'>3</span>,</span>
+<span class='r-in'>              n_iter <span class='op'>=</span> <span class='fl'>10000</span>,</span>
+<span class='r-in'>              n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,</span>
+<span class='r-in'>              n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

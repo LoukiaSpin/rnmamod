@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pattern-mixture model with Taylor series for continuous outcomes — taylor_continuous • rnmamod</title>
+<title>Pattern-mixture model with Taylor series for continuous outcome — taylor_continuous • rnmamod</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,12 @@
 
 
 
-<meta property="og:title" content="Pattern-mixture model with Taylor series for continuous outcomes — taylor_continuous" />
-<meta property="og:description" content="Applies pattern-mixture model under a specific assumption about
-  the missingness parameter in trial-arms with continuous missing
-  participant outcome data (MOD) and uses the Taylor series to obtain the
-  effect size and standard error for each trial (Mavridis et al., 2015)." />
+<meta property="og:title" content="Pattern-mixture model with Taylor series for continuous outcome — taylor_continuous" />
+<meta property="og:description" content="Applies the pattern-mixture model under a specific assumption
+  about the informative missingness parameter in trial-arms with
+  continuous missing participant outcome data (MOD) and uses the
+  Taylor series to obtain the effect size and standard error for each trial
+  (Mavridis et al., 2015)." />
 
 
 
@@ -110,7 +111,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/LoukiaSpin/rnmamod/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -124,16 +130,17 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Pattern-mixture model with Taylor series for continuous outcomes</h1>
-    
+    <h1>Pattern-mixture model with Taylor series for continuous outcome</h1>
+    <small class="dont-index">Source: <a href='https://github.com/LoukiaSpin/rnmamod/blob/master/R/Taylor.IMDoM.IMRoM_function.R'><code>R/Taylor.IMDoM.IMRoM_function.R</code></a></small>
     <div class="hidden name"><code>taylor_continuous.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Applies pattern-mixture model under a specific assumption about
-  the missingness parameter in trial-arms with <b>continuous</b> missing
-  participant outcome data (MOD) and uses the Taylor series to obtain the
-  effect size and standard error for each trial (Mavridis et al., 2015).</p>
+    <p>Applies the pattern-mixture model under a specific assumption
+  about the informative missingness parameter in trial-arms with
+  <b>continuous</b> missing participant outcome data (MOD) and uses the
+  Taylor series to obtain the effect size and standard error for each trial
+  (Mavridis et al., 2015).</p>
     </div>
 
     <pre class="usage"><span class='fu'>taylor_continuous</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>measure</span>, <span class='va'>mean_value</span>, <span class='va'>var_value</span>, <span class='va'>rho</span><span class='op'>)</span></pre>
@@ -143,7 +150,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>A data-frame in the long arm-based format. Two arm-trials occupy
+      <td><p>A data-frame in the long arm-based format. Two-arm trials occupy
 one row in the data-frame. Multi-arm trials occupy as many rows as the
 number of possible comparisons among the interventions. See 'Format' for
 the specification of the columns.</p></td>
@@ -172,9 +179,10 @@ When the <code>measure</code> is <code>"ROM"</code> the default argument is 0.04
     <tr>
       <th>rho</th>
       <td><p>A numeric value in the interval [-1, 1] that indicates the
-correlation coefficient between two missingness parameters in a trial. The
-same value is considered across all trials of the dataset. The default
-argument is 0 and corresponds to uncorrelated missingness parameters.</p></td>
+correlation coefficient between two informative missingness parameters in
+a trial. The same value is considered across all trials of the dataset.
+The default argument is 0 and corresponds to uncorrelated missingness
+parameters.</p></td>
     </tr>
     </table>
 
@@ -220,8 +228,8 @@ argument is 0 and corresponds to uncorrelated missingness parameters.</p></td>
 <tr><td><strong>EM</strong></td><td>The effect size adjusted for MOD and obtained using the
    Taylor series.</td></tr>
 <tr><td></td><td></td></tr>
-<tr><td><strong>se.EM</strong></td><td>The standard error of the effect size for MOD and
-   obtained using the Taylor series.</td></tr>
+<tr><td><strong>se.EM</strong></td><td>The standard error of the effect size adjusted for MOD
+   and obtained using the Taylor series.</td></tr>
 </table>
 
 
@@ -240,13 +248,11 @@ argument is 0 and corresponds to uncorrelated missingness parameters.</p></td>
     <p>Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
 uncertainty due to missing continuous outcome data in pairwise and network
 meta-analysis. <em>Stat Med</em> 2015;<b>34</b>(5):721--41.
-[doi: <a href='https://doi.org/10.1002/sim.6365'>10.1002/sim.6365</a>
-]</p>
+doi: <a href='https://doi.org/10.1002/sim.6365'>10.1002/sim.6365</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>,
-  <code><a href='unrelated_effects_plot.html'>unrelated_effects_plot</a></code>,
-  <code><a href='https://rdrr.io/pkg/netmeta/man/pairwise.html'>pairwise</a></code></p></div>
+    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/netmeta/man/pairwise.html'>pairwise</a></code>, <code><a href='run_model.html'>run_model</a></code>,
+  <code><a href='unrelated_effects_plot.html'>unrelated_effects_plot</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>

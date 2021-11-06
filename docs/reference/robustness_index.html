@@ -42,11 +42,9 @@
 <meta property="og:title" content="Robustness index — robustness_index" />
 <meta property="og:description" content="Calculates the robustness index, a novel index that quantifies the overall
   divergence of the sensitivity analysis results from the primary analysis
-  results (missing-at-random assumption), and considers objective decision
-  rules to infer the presence of lack of robustness of the primary analysis
-  results when conducting a sensitivity analysis (Spineli et al., 2021).
-  Currently, robustness_index is used concerning the impact of missing
-  participant outcome data." />
+  results, and considers objective decision rules to infer the presence or
+  lack of robustness of the primary analysis results when conducting a
+  sensitivity analysis (Spineli et al., 2021)." />
 
 
 
@@ -113,7 +111,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/LoukiaSpin/rnmamod/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -128,18 +131,16 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Robustness index</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/LoukiaSpin/rnmamod/blob/master/R/robustness.index_function.R'><code>R/robustness.index_function.R</code></a></small>
     <div class="hidden name"><code>robustness_index.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Calculates the robustness index, a novel index that quantifies the overall
   divergence of the sensitivity analysis results from the primary analysis
-  results (missing-at-random assumption), and considers objective decision
-  rules to infer the presence of lack of robustness of the primary analysis
-  results when conducting a sensitivity analysis (Spineli et al., 2021).
-  Currently, <code>robustness_index</code> is used concerning the impact of missing
-  participant outcome data.</p>
+  results, and considers objective decision rules to infer the presence or
+  lack of robustness of the primary analysis results when conducting a
+  sensitivity analysis (Spineli et al., 2021).</p>
     </div>
 
     <pre class="usage"><span class='fu'>robustness_index</span><span class='op'>(</span><span class='va'>sens</span>, <span class='va'>threshold</span><span class='op'>)</span></pre>
@@ -159,8 +160,8 @@ each re-analysis (the first <code>EM</code> should refer to the estimated summar
 effect measure under the primary analysis); 2) the effect measure with
 values <code>"OR"</code>, <code>"MD"</code>, <code>"SMD"</code>, or <code>"ROM"</code> for the odds
 ratio, mean difference, standardised mean difference and ratio of means,
-respectively; and 3) a character vector that indicates which re-analyses
-went employed.</p></td>
+respectively; and 3) a character vector that indicates the name of the
+re-analyses employed.</p></td>
     </tr>
     <tr>
       <th>threshold</th>
@@ -172,8 +173,8 @@ re-analysis results. See 'Details' below.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>robustness_index</code> prints on the R console a message on the
-  threshold of robustness determined by the user in green text.
+    <p><code>robustness_index</code> prints on the R console a message in green
+  text on the threshold of robustness determined by the user.
   Then, the function returns the following list of elements:</p><table class='table'>
 <tr><td><code>robust_index</code></td><td>A a numeric scalar or vector on the robustness
    index values. In the case of a pairwise meta-analysis (PMA),
@@ -182,20 +183,22 @@ re-analysis results. See 'Details' below.</p></td>
    vector with length equal to the number of possible pairwise comparisons;
    one robustness index per possible comparison.</td></tr>
 <tr><td></td><td></td></tr>
-<tr><td><code>robust</code></td><td>A character vector on whether the primary analysis
-   results are <em>robust</em> or <em>frail</em> to the different re-analyses.</td></tr>
+<tr><td><code>robust</code></td><td>A character or character vector (of same length with
+   <code>robust_index</code>) on whether the primary analysis results are
+   <em>robust</em> or <em>frail</em> to the different re-analyses.</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>kld</code></td><td>A vector or matrix on the Kullback-Leibler divergence
    (KLD) measure in the summary effect size from a subsequent re-analysis to
    the primary analysis. In the case of a PMA, <code>kld</code> is a vector with
    length equal to the number of total analyses. The latter equals the square
-   of the number of scenarios indicated in argument <code>mean_scenarios</code> of
-   <code>run_sensitivity</code>, in the case of missing participant outcome data,
-   or the length of the character vector in argument <code>sens</code>. Therefore,
-   one KLD value per analysis. In the case of NMA, <code>robust_index</code> is a
-   matrix with number of rows equal to the number of total analyses and
-   number of columns equal to the number of possible pairwise comparisons;
-   one KLD value per analysis and possible comparison.</td></tr>
+   of the number of scenarios indicated in the argument <code>mean_scenarios</code>
+   of <code><a href='run_sensitivity.html'>run_sensitivity</a></code>, in the case of missing participant
+   outcome data, or the length of the character vector in argument
+   <code>sens</code>. Therefore, one KLD value per analysis. In the case of NMA,
+   <code>robust_index</code> is a matrix with number of rows equal to the number of
+   total analyses and number of columns equal to the number of possible
+   pairwise comparisons; one KLD value per analysis and possible
+   comparison.</td></tr>
 </table>
 
 
@@ -204,18 +207,17 @@ re-analysis results. See 'Details' below.</p></td>
     <p>The user may consider the values 0.28 and 0.17 in the argument
   <code>threshold</code> for binary and continuous outcome data (the default
   values), respectively, or consider other plausible values.
-  Spineli et al. (2021) offers a discussion on specifying the
+  Spineli et al., (2021) offers a discussion on specifying the
   <code>threshold</code> of robustness.</p>
 <p>In the case of missing participant outcome data, the primary analysis is
   considered to be the middle of the numbers in the argument
-  <code>mean_scenarios</code>
-  of the <code>run_sensitivity</code> function (see 'Arguments' and 'Details' in
-  <code>run_sensitivity</code>).</p>
+  <code>mean_scenarios</code> of <code><a href='run_sensitivity.html'>run_sensitivity</a></code> (see 'Arguments'
+  and 'Details' in <code>link{run_sensitivity}</code>).</p>
 <p>In <code>robust</code>, the value <code>"robust"</code> appears when
-  <code>robust_index</code> \(&lt;\) <code>threshold</code>); otherwise, the value
+  <code>robust_index</code> is less than <code>threshold</code>); otherwise, the value
   <code>"frail"</code> appears.</p>
 <p>In the case of missing participant outcome data, <code>robustness_index</code>
-  can be used only for when missing participant outcome data have been
+  can be used only when missing participant outcome data have been
   extracted for at least one trial. Otherwise, the execution of the function
   will be stopped and an error message will be printed in the R console.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
@@ -224,15 +226,12 @@ re-analysis results. See 'Details' below.</p></td>
 primary analysis results: A case study on missing outcome data in pairwise
 and network meta-analysis.
 <em>Res Synth Methods</em> 2021;<b>12</b>(4):475--490.
-[doi: <a href='https://doi.org/10.1002/jrsm.1478'>10.1002/jrsm.1478</a>
-]</p>
+doi: <a href='https://doi.org/10.1002/jrsm.1478'>10.1002/jrsm.1478</a></p>
 <p>Kullback S, Leibler RA. On information and sufficiency.
-<em>Ann Math Stat</em> 1951;<b>22</b>(1):79--86.
-[doi: <a href='https://doi.org/10.1214/aoms/1177729694'>10.1214/aoms/1177729694</a>
-]</p>
+<em>Ann Math Stat</em> 1951;<b>22</b>(1):79--86.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='run_sensitivity.html'>run_sensitivity</a></code>, <code><a href='run_model.html'>run_model</a></code></p></div>
+    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>, <code><a href='run_sensitivity.html'>run_sensitivity</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>
@@ -267,6 +266,7 @@ and network meta-analysis.
 <span class='r-in'><span class='fu'>robustness_index</span><span class='op'>(</span>sens <span class='op'>=</span> <span class='va'>res_sens</span>,</span>
 <span class='r-in'>                 threshold <span class='op'>=</span> <span class='fl'>0.28</span><span class='op'>)</span></span>
 <span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'></span>
 </pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

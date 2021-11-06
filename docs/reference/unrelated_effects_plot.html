@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>End-user-ready results for unrelated trials effects model — unrelated_effects_plot • rnmamod</title>
+<title>End-user-ready results for unrelated trial effects model — unrelated_effects_plot • rnmamod</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="End-user-ready results for unrelated trials effects model — unrelated_effects_plot" />
+<meta property="og:title" content="End-user-ready results for unrelated trial effects model — unrelated_effects_plot" />
 <meta property="og:description" content="Performs the unrelated trial effects model and illustrates the
   results of each trial and corresponding pairwise comparison." />
 
@@ -108,7 +108,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/LoukiaSpin/rnmamod/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -122,8 +127,8 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>End-user-ready results for unrelated trials effects model</h1>
-    
+    <h1>End-user-ready results for unrelated trial effects model</h1>
+    <small class="dont-index">Source: <a href='https://github.com/LoukiaSpin/rnmamod/blob/master/R/unrelated.effects.plot_function.R.R'><code>R/unrelated.effects.plot_function.R.R</code></a></small>
     <div class="hidden name"><code>unrelated_effects_plot.Rd</code></div>
     </div>
 
@@ -150,8 +155,7 @@
     <tr>
       <th>data</th>
       <td><p>A data-frame of a one-trial-per-row format containing arm-level
-data of each trial. This format is widely used for BUGS models. See
-'Format' in <code><a href='run_model.html'>run_model</a></code>.</p></td>
+data of each trial. See 'Format' in <code><a href='run_model.html'>run_model</a></code>.</p></td>
     </tr>
     <tr>
       <th>measure</th>
@@ -182,11 +186,9 @@ instead.</p></td>
     </tr>
     <tr>
       <th>mean_misspar</th>
-      <td><p>A numeric value or a vector of two numeric values for the
-mean of the normal distribution of the informative missingness parameter
-(see 'Details'). The default argument is 0 and corresponds to the
-missing-at-random assumption.
-See also 'Details' in <code><a href='missingness_param_prior.html'>missingness_param_prior</a></code>.</p></td>
+      <td><p>A numeric value for the mean of the normal distribution
+of the informative missingness parameter (see 'Details'). The default
+argument is 0 and corresponds to the missing-at-random assumption.</p></td>
     </tr>
     <tr>
       <th>var_misspar</th>
@@ -199,9 +201,10 @@ the default argument is 0.04</p></td>
     <tr>
       <th>rho</th>
       <td><p>A numeric value in the interval [-1, 1] that indicates the
-correlation coefficient between two missingness parameters in a trial.
-The same value is considered across all trials of the dataset. The default
-argument is 0 and corresponds to uncorrelated missingness parameters.</p></td>
+correlation coefficient between two informative missingness parameters in
+a trial. The same value is considered across all trials of the dataset.
+The default argument is 0 and corresponds to uncorrelated missingness
+parameters.</p></td>
     </tr>
     <tr>
       <th>save_xls</th>
@@ -221,7 +224,7 @@ function) to the working directory of the user. The default is <code>FALSE</code
   interval, the interventions compared, and the three characteristics
   (as defined in <code>char</code>). For datasets with more than 15 trials,
   the plot becomes cluttered and it is difficult to identify  the trial
-  names. Hence, exporting the results in an Excel file is an viable
+  names. Hence, exporting the results in an Excel file is a viable
   alternative.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -262,8 +265,8 @@ in meta-analysis--part 1: two-stage methods.
 <em>Stat Med</em> 2008;<b>27</b>(5):711--27. doi: <a href='https://doi.org/10.1002/sim.3008'>10.1002/sim.3008</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='missingness_param_prior.html'>missingness_param_prior</a></code>, <code><a href='run_model.html'>run_model</a></code>,
-  <code><a href='taylor_continuous.html'>taylor_continuous</a></code>,  <code><a href='taylor_imor.html'>taylor_imor</a></code></p></div>
+    <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code>, <code><a href='taylor_continuous.html'>taylor_continuous</a></code>,
+  <code><a href='taylor_imor.html'>taylor_imor</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>

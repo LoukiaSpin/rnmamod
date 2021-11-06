@@ -45,7 +45,7 @@
   (via run_model) with the node-splitting approach
   (via run_nodesplit) regarding the posterior summaries of the
   the direct and indirect effects and inconsistency factor of the split
-  nodes, the between-trial standard deviation (τ) and model assessment
+  nodes, the between-trial standard deviation and model assessment
   parameters (Spiegelhalter et al., (2002)) after each split node in the
   network." />
 
@@ -114,7 +114,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/LoukiaSpin/rnmamod/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -129,7 +134,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>End-user-ready results for node-splitting approach</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/LoukiaSpin/rnmamod/blob/master/R/nodesplit.plot_function.R'><code>R/nodesplit.plot_function.R</code></a></small>
     <div class="hidden name"><code>nodesplit_plot.Rd</code></div>
     </div>
 
@@ -139,7 +144,7 @@
   (via <code><a href='run_model.html'>run_model</a></code>) with the node-splitting approach
   (via <code><a href='run_nodesplit.html'>run_nodesplit</a></code>) regarding the posterior summaries of the
   the direct and indirect effects and inconsistency factor of the split
-  nodes, the between-trial standard deviation (τ) and model assessment
+  nodes, the between-trial standard deviation and model assessment
   parameters (Spiegelhalter et al., (2002)) after each split node in the
   network.</p>
     </div>
@@ -187,14 +192,14 @@ function) to the working directory of the user. The default is <code>FALSE</code
    parameters (deviance information criterion (DIC), posterior mean of total
    residual deviance, and number of effective parameters), the posterior
    median, posterior standard deviation and 95% credible interval of
-   \(\tau\) under the consistency model and after each split node. See
+   tau under the consistency model and after each split node. See
    'Details'.</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>intervalplot_inconsistency_factor</code></td><td>A panel of interval plots on
    the direct and indirect effect of the split nodes and the corresponding
    inconsistency factor. See 'Details'.</td></tr>
 <tr><td></td><td></td></tr>
-<tr><td><code>intervalplot_tau</code></td><td>An interval plot on \(\tau\) after each
+<tr><td><code>intervalplot_tau</code></td><td>An interval plot on tau after each
    split node. See 'Details'.</td></tr>
 </table>
 
@@ -213,10 +218,10 @@ function) to the working directory of the user. The default is <code>FALSE</code
   with conclusive inconsistency factor (green intervals) or those with
   inconsistent sign in the direct and indirect effect.</p>
 <p><code>intervalplot_tau</code> is a interval plot on the median and 95% credible
-  interval of \(\tau\) after each split node. The lines that correspond to
+  interval of <em>tau</em> after each split node. The lines that correspond to
   the split nodes are sorted in ascending order of the DIC which appears at
   the top of each line.
-  The 95% credible interval of \(\tau\) under the consistency model
+  The 95% credible interval of tau under the consistency model
   appears as a rectangle in the interval plot. When a fixed-effect model has
   been performed, <code>nodesplit_plot</code> does not return the
   <code>intervalplot_tau</code>.</p>
