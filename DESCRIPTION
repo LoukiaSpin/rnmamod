@@ -11,7 +11,7 @@ Authors@R: c(
 Maintainer: Loukia Spineli <Spineli.Loukia@mh-hannover.de>
 Description: Perform pairwise and network meta-analysis with aggregate
     binary or continuous missing participant outcome data.
-License: GPL (>= 3) 
+License: GPL (>= 3) + file LICENSE
 URL: https://github.com/LoukiaSpin/rnmamod
 Depends: 
     R (>= 4.0.0)
