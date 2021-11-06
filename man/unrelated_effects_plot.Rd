@@ -2,7 +2,7 @@
 % Please edit documentation in R/unrelated.effects.plot_function.R.R
 \name{unrelated_effects_plot}
 \alias{unrelated_effects_plot}
-\title{End-user-ready results for unrelated trials effects model}
+\title{End-user-ready results for unrelated trial effects model}
 \usage{
 unrelated_effects_plot(
   data,
@@ -18,8 +18,7 @@ unrelated_effects_plot(
 }
 \arguments{
 \item{data}{A data-frame of a one-trial-per-row format containing arm-level
-data of each trial. This format is widely used for BUGS models. See
-'Format' in \code{\link[rnmamod]{run_model}}.}
+data of each trial. See 'Format' in \code{\link{run_model}}.}
 
 \item{measure}{Character string indicating the effect measure with values
 \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
@@ -40,11 +39,9 @@ order they appear in the argument \code{data}. If \code{trial_names} is not
 defined, the order of the trials as they appear in \code{data} is used,
 instead.}
 
-\item{mean_misspar}{A numeric value or a vector of two numeric values for the
-mean of the normal distribution of the informative missingness parameter
-(see 'Details'). The default argument is 0 and corresponds to the
-missing-at-random assumption.
-See also 'Details' in \code{\link{missingness_param_prior}}.}
+\item{mean_misspar}{A numeric value for the mean of the normal distribution
+of the informative missingness parameter (see 'Details'). The default
+argument is 0 and corresponds to the missing-at-random assumption.}
 
 \item{var_misspar}{A positive non-zero number for the variance of the
 normal distribution of the informative missingness parameter.
@@ -53,9 +50,10 @@ the default argument is 1. When the \code{measure} is \code{"ROM"}
 the default argument is 0.04}
 
 \item{rho}{A numeric value in the interval [-1, 1] that indicates the
-correlation coefficient between two missingness parameters in a trial.
-The same value is considered across all trials of the dataset. The default
-argument is 0 and corresponds to uncorrelated missingness parameters.}
+correlation coefficient between two informative missingness parameters in
+a trial. The same value is considered across all trials of the dataset.
+The default argument is 0 and corresponds to uncorrelated missingness
+parameters.}
 
 \item{save_xls}{Logical to indicate whether to export the tabulated results
 to an 'xlsx' file (via the \code{\link[writexl]{write_xlsx}}
@@ -70,7 +68,7 @@ A panel of interval plots for each observed comparison in the
   interval, the interventions compared, and the three characteristics
   (as defined in \code{char}). For datasets with more than 15 trials,
   the plot becomes cluttered and it is difficult to identify  the trial
-  names. Hence, exporting the results in an Excel file is an viable
+  names. Hence, exporting the results in an Excel file is a viable
   alternative.
 }
 \description{
@@ -118,8 +116,8 @@ in meta-analysis--part 1: two-stage methods.
 \emph{Stat Med} 2008;\bold{27}(5):711--27. \doi{10.1002/sim.3008}
 }
 \seealso{
-\code{\link{missingness_param_prior}}, \code{\link{run_model}},
-  \code{\link{taylor_continuous}}, \code{\link{taylor_imor}}
+\code{\link{run_model}}, \code{\link{taylor_continuous}},
+  \code{\link{taylor_imor}}
 }
 \author{
 {Loukia M. Spineli}

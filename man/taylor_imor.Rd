@@ -2,7 +2,7 @@
 % Please edit documentation in R/Taylor.IMOR_function.R
 \name{taylor_imor}
 \alias{taylor_imor}
-\title{Pattern-mixture model with Taylor series for binary outcomes}
+\title{Pattern-mixture model with Taylor series for binary outcome}
 \format{
 The columns of the data-frame in the argument \code{data} refer to
   the following ordered elements for a binary outcome:
@@ -36,7 +36,7 @@ The columns of the data-frame in the argument \code{data} refer to
 taylor_imor(data, mean_value, var_value, rho)
 }
 \arguments{
-\item{data}{A data-frame in the long arm-based format. Two arm-trials occupy
+\item{data}{A data-frame in the long arm-based format. Two-arm trials occupy
 one row in the data-frame. Multi-arm trials occupy as many rows as the
 number of possible comparisons among the interventions. See 'Format' for
 the specification of the columns.}
@@ -66,30 +66,30 @@ A data-frame that additionally includes the following elements:
   }
 }
 \description{
-Applies pattern-mixture model under a specific assumption about
-  the missingness parameter in trial-arms with \bold{binary} missing
-  participant outcome data (MOD) and uses the Taylor series to obtain the
-  effect size and standard error for each trial (White et al., 2008).
+Applies the pattern-mixture model under a specific assumption
+  about the informative missingness parameter in trial-arms with
+  \bold{binary} missing participant outcome data (MOD) and uses the Taylor
+  series to obtain the effect size and standard error for each trial
+  (White et al., 2008).
 }
 \details{
 The \code{taylor_imor} function is found in the
-  \code{\link[rnmamod]{unrelated_effects_plot}} function. The latter uses the
+  \code{\link{unrelated_effects_plot}} function. The latter uses the
   the \code{\link[netmeta]{pairwise}} function from the package
   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}
   to transform the dataset from the wide arm-based format
   (see, 'Arguments' for \code{data} in
-  \code{\link[rnmamod]{unrelated_effects_plot}}) into the long-arm based
+  \code{\link{unrelated_effects_plot}}) into the long-arm based
   format.
 }
 \references{
 White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data
 in meta-analysis--part 1: two-stage methods.
-\emph{Stat Med} 2008;\bold{27}(5):711--27. [\doi{10.1002/sim.3008}]
+\emph{Stat Med} 2008;\bold{27}(5):711--27. \doi{10.1002/sim.3008}
 }
 \seealso{
-\code{\link[rnmamod]{run_model}},
-  \code{\link[rnmamod]{unrelated_effects_plot}},
-  \code{\link[netmeta]{pairwise}}
+\code{\link[netmeta]{pairwise}}, \code{\link{run_model}},
+  \code{\link{unrelated_effects_plot}}
 }
 \author{
 {Loukia M. Spineli}

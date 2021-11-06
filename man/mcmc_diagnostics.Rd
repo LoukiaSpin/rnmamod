@@ -34,13 +34,13 @@ ignored for objects of S3 class \code{\link{run_series_meta}},
    \code{tau} \tab The between-trial standard deviation.\cr
    \tab \cr
    \code{direct} \tab The direct estimate of the split node
-   (see 'Value' \code{\link{run_nodesplit}}).\cr
+   (see 'Value' in \code{\link{run_nodesplit}}).\cr
    \tab \cr
    \code{indirect} \tab The indirect estimate of the split node
-   (see 'Value' \code{\link{run_nodesplit}}).\cr
+   (see 'Value' in \code{\link{run_nodesplit}}).\cr
    \tab \cr
    \code{IF} \tab The inconsistency factor of the split node
-   (see 'Value' \code{\link{run_nodesplit}}).\cr
+   (see 'Value' in \code{\link{run_nodesplit}}).\cr
    \tab \cr
    \code{phi} \tab The informative missingness parameter.\cr
    \tab \cr
@@ -93,9 +93,10 @@ Gelman, A, Rubin, DB. Inference from iterative simulation using multiple
 sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
 }
 \seealso{
-\code{\link[mcmcplots]{mcmcplot}}, \code{\link{run_model}},
-  \code{\link{run_series_meta}}, \code{\link{run_nodesplit}},
-  \code{\link{run_ume}}, \code{\link{run_ume}}, \code{\link{run_metareg}}
+\code{\link[mcmcplots]{mcmcplot}}, \code{\link{run_metareg}},
+  \code{\link{run_model}}, \code{\link{run_nodesplit}},
+  \code{\link{run_sensitivity}}, \code{\link{run_series_meta}},
+  \code{\link{run_ume}}
 }
 \author{
 {Loukia M. Spineli}

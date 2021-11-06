@@ -17,16 +17,16 @@ each re-analysis (the first \code{EM} should refer to the estimated summary
 effect measure under the primary analysis); 2) the effect measure with
 values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds
 ratio, mean difference, standardised mean difference and ratio of means,
-respectively; and 3) a character vector that indicates which re-analyses
-went employed.}
+respectively; and 3) a character vector that indicates the name of the
+re-analyses employed.}
 
 \item{threshold}{A number indicating the threshold of robustness, that is,
 the minimally allowed deviation between the primary analysis and
 re-analysis results. See 'Details' below.}
 }
 \value{
-\code{robustness_index} prints on the R console a message on the
-  threshold of robustness determined by the user in green text.
+\code{robustness_index} prints on the R console a message in green
+  text on the threshold of robustness determined by the user.
   Then, the function returns the following list of elements:
   \tabular{ll}{
    \code{robust_index} \tab A a numeric scalar or vector on the robustness
@@ -36,50 +36,49 @@ re-analysis results. See 'Details' below.}
    vector with length equal to the number of possible pairwise comparisons;
    one robustness index per possible comparison.\cr
    \tab \cr
-   \code{robust} \tab A character vector on whether the primary analysis
-   results are \emph{robust} or \emph{frail} to the different re-analyses.\cr
+   \code{robust} \tab A character or character vector (of same length with
+   \code{robust_index}) on whether the primary analysis results are
+   \emph{robust} or \emph{frail} to the different re-analyses.\cr
    \tab \cr
    \code{kld} \tab A vector or matrix on the Kullback-Leibler divergence
    (KLD) measure in the summary effect size from a subsequent re-analysis to
    the primary analysis. In the case of a PMA, \code{kld} is a vector with
    length equal to the number of total analyses. The latter equals the square
-   of the number of scenarios indicated in argument \code{mean_scenarios} of
-   \code{run_sensitivity}, in the case of missing participant outcome data,
-   or the length of the character vector in argument \code{sens}. Therefore,
-   one KLD value per analysis. In the case of NMA, \code{robust_index} is a
-   matrix with number of rows equal to the number of total analyses and
-   number of columns equal to the number of possible pairwise comparisons;
-   one KLD value per analysis and possible comparison.\cr
+   of the number of scenarios indicated in the argument \code{mean_scenarios}
+   of \code{\link{run_sensitivity}}, in the case of missing participant
+   outcome data, or the length of the character vector in argument
+   \code{sens}. Therefore, one KLD value per analysis. In the case of NMA,
+   \code{robust_index} is a matrix with number of rows equal to the number of
+   total analyses and number of columns equal to the number of possible
+   pairwise comparisons; one KLD value per analysis and possible
+   comparison.\cr
   }
 }
 \description{
 Calculates the robustness index, a novel index that quantifies the overall
   divergence of the sensitivity analysis results from the primary analysis
-  results (missing-at-random assumption), and considers objective decision
-  rules to infer the presence of lack of robustness of the primary analysis
-  results when conducting a sensitivity analysis (Spineli et al., 2021).
-  Currently, \code{robustness_index} is used concerning the impact of missing
-  participant outcome data.
+  results, and considers objective decision rules to infer the presence or
+  lack of robustness of the primary analysis results when conducting a
+  sensitivity analysis (Spineli et al., 2021).
 }
 \details{
 The user may consider the values 0.28 and 0.17 in the argument
   \code{threshold} for binary and continuous outcome data (the default
   values), respectively, or consider other plausible values.
-  Spineli et al. (2021) offers a discussion on specifying the
+  Spineli et al., (2021) offers a discussion on specifying the
   \code{threshold} of robustness.
 
   In the case of missing participant outcome data, the primary analysis is
   considered to be the middle of the numbers in the argument
-  \code{mean_scenarios}
-  of the \code{run_sensitivity} function (see 'Arguments' and 'Details' in
-  \code{run_sensitivity}).
+  \code{mean_scenarios} of \code{\link{run_sensitivity}} (see 'Arguments'
+  and 'Details' in \code{link{run_sensitivity}}).
 
   In \code{robust}, the value \code{"robust"} appears when
-  \code{robust_index} \eqn{<} \code{threshold}); otherwise, the value
+  \code{robust_index} is less than \code{threshold}); otherwise, the value
   \code{"frail"} appears.
 
   In the case of missing participant outcome data, \code{robustness_index}
-  can be used only for when missing participant outcome data have been
+  can be used only when missing participant outcome data have been
   extracted for at least one trial. Otherwise, the execution of the function
   will be stopped and an error message will be printed in the R console.
 }
@@ -113,6 +112,7 @@ res_sens <- run_sensitivity(full = res,
 robustness_index(sens = res_sens,
                  threshold = 0.28)
 }
+
 }
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
@@ -125,7 +125,7 @@ Kullback S, Leibler RA. On information and sufficiency.
 \emph{Ann Math Stat} 1951;\bold{22}(1):79--86.
 }
 \seealso{
-\code{\link{run_sensitivity}}, \code{\link{run_model}}
+\code{\link{run_model}}, \code{\link{run_sensitivity}}
 }
 \author{
 {Loukia M. Spineli}

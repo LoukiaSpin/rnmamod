@@ -2,7 +2,7 @@
 % Please edit documentation in R/Taylor.IMDoM.IMRoM_function.R
 \name{taylor_continuous}
 \alias{taylor_continuous}
-\title{Pattern-mixture model with Taylor series for continuous outcomes}
+\title{Pattern-mixture model with Taylor series for continuous outcome}
 \format{
 The columns of the data-frame in the argument \code{data} refer to
   the following ordered elements for a continuous outcome:
@@ -42,7 +42,7 @@ The columns of the data-frame in the argument \code{data} refer to
 taylor_continuous(data, measure, mean_value, var_value, rho)
 }
 \arguments{
-\item{data}{A data-frame in the long arm-based format. Two arm-trials occupy
+\item{data}{A data-frame in the long arm-based format. Two-arm trials occupy
 one row in the data-frame. Multi-arm trials occupy as many rows as the
 number of possible comparisons among the interventions. See 'Format' for
 the specification of the columns.}
@@ -63,9 +63,10 @@ distribution of the informative missingness parameter. When the
 When the \code{measure} is \code{"ROM"} the default argument is 0.04}
 
 \item{rho}{A numeric value in the interval [-1, 1] that indicates the
-correlation coefficient between two missingness parameters in a trial. The
-same value is considered across all trials of the dataset. The default
-argument is 0 and corresponds to uncorrelated missingness parameters.}
+correlation coefficient between two informative missingness parameters in
+a trial. The same value is considered across all trials of the dataset.
+The default argument is 0 and corresponds to uncorrelated missingness
+parameters.}
 }
 \value{
 A data-frame that additionally includes the following elements:
@@ -73,36 +74,36 @@ A data-frame that additionally includes the following elements:
    \strong{EM} \tab The effect size adjusted for MOD and obtained using the
    Taylor series.\cr
    \tab \cr
-   \strong{se.EM} \tab The standard error of the effect size for MOD and
-   obtained using the Taylor series.\cr
+   \strong{se.EM} \tab The standard error of the effect size adjusted for MOD
+   and obtained using the Taylor series.\cr
   }
 }
 \description{
-Applies pattern-mixture model under a specific assumption about
-  the missingness parameter in trial-arms with \bold{continuous} missing
-  participant outcome data (MOD) and uses the Taylor series to obtain the
-  effect size and standard error for each trial (Mavridis et al., 2015).
+Applies the pattern-mixture model under a specific assumption
+  about the informative missingness parameter in trial-arms with
+  \bold{continuous} missing participant outcome data (MOD) and uses the
+  Taylor series to obtain the effect size and standard error for each trial
+  (Mavridis et al., 2015).
 }
 \details{
 The \code{taylor_continuous} function is found in the
-  \code{\link[rnmamod]{unrelated_effects_plot}} function. The latter uses the
+  \code{\link{unrelated_effects_plot}} function. The latter uses the
   the \code{\link[netmeta]{pairwise}} function from the package
   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}
   to transform the dataset from the wide arm-based format
   (see, 'Arguments' for \code{data} in
-  \code{\link[rnmamod]{unrelated_effects_plot}})
+  \code{\link{unrelated_effects_plot}})
   into the long-arm based format.
 }
 \references{
 Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
 uncertainty due to missing continuous outcome data in pairwise and network
 meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--41.
-[\doi{10.1002/sim.6365}]
+\doi{10.1002/sim.6365}
 }
 \seealso{
-\code{\link[rnmamod]{run_model}},
-  \code{\link[rnmamod]{unrelated_effects_plot}},
-  \code{\link[netmeta]{pairwise}}
+\code{\link[netmeta]{pairwise}}, \code{\link{run_model}},
+  \code{\link{unrelated_effects_plot}}
 }
 \author{
 {Loukia M. Spineli}
