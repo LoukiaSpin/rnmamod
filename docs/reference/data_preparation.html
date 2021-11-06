@@ -40,9 +40,9 @@
 
 
 <meta property="og:title" content="Prepare the dataset in the proper format for R2jags — data_preparation" />
-<meta property="og:description" content="Prepares the dataset in the proper format for R2jags.
-  data_preparation is found in the run_model function;
-  thus, the arguments are as specified in the latter." />
+<meta property="og:description" content="data_preparation prepares the dataset in the proper format for
+  R2jags ans returns a list of elements that run_model inherits
+  via the argument data." />
 
 
 
@@ -109,7 +109,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/LoukiaSpin/rnmamod/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -124,14 +129,14 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Prepare the dataset in the proper format for R2jags</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/LoukiaSpin/rnmamod/blob/master/R/data.preparation_function.R'><code>R/data.preparation_function.R</code></a></small>
     <div class="hidden name"><code>data_preparation.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Prepares the dataset in the proper format for R2jags.
-  <code>data_preparation</code> is found in the <code>run_model</code> function;
-  thus, the arguments are as specified in the latter.</p>
+    <p><code>data_preparation</code> prepares the dataset in the proper format for
+  R2jags ans returns a list of elements that <code><a href='run_model.html'>run_model</a></code> inherits
+  via the argument <code>data</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>data_preparation</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>measure</span><span class='op'>)</span></pre>
@@ -142,7 +147,7 @@
     <tr>
       <th>data</th>
       <td><p>A data-frame of the one-trial-per-row format with arm-level data.
-See 'Format' for the specification of the columns.</p></td>
+See 'Format' in <code><a href='run_model.html'>run_model</a></code>.</p></td>
     </tr>
     <tr>
       <th>measure</th>
@@ -158,15 +163,14 @@ respectively.</p></td>
     <p>A list of data-frames on the following elements to be passed
   to <code><a href='run_model.html'>run_model</a></code>:</p><table class='table'>
 <tr><td><code>m</code></td><td>The number of missing participant outcome data in each
-   trial-arm
-   (see 'Details' in the <code>run_model</code> function).</td></tr>
+   trial-arm (see 'Details' in the <code><a href='run_model.html'>run_model</a></code> function).</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>N</code></td><td>The number of randomised participants in each trial-arm.</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>t</code></td><td>The intervention identifier in each trial-arm.</td></tr>
 <tr><td></td><td></td></tr>
-<tr><td><code>I</code></td><td>The pseudo-data-frame <code>I</code>
-   (see 'Details' in <code>run_model</code>).</td></tr>
+<tr><td><code>I</code></td><td>The pseudo-data-frame <code>I</code> (see 'Details'
+   in <code><a href='run_model.html'>run_model</a></code>).</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>r</code></td><td>The observed number of events of the outcome in each
    trial-arm,
@@ -184,25 +188,25 @@ respectively.</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>data_preparation</code> prepares the data for the Bayesian analysis.
-  The data preparation includes the following actions.
-  First, <code>data_preparation</code> checks whether the element
-  <strong>m</strong> exists in the <code>data</code>. If this element is missing,
-  <code>data_preparation</code> creates a pseudo-data-frame for <code>m</code> that has
-  zero value for the observed trial-arms, and <code>NA</code> for the unobserved
-  trial-arms, and the pseudo-data-frame <code>I</code> that has the same values
-  with the pseudo-data-frame for <code>m</code>. If the element <strong>m</strong> exists
-  in the <code>data</code> and has values only for some trials,
-  the pseudo-data-frame for <code>m</code> is the same with <code>m</code> for the
-  corresponding trial-arms, and the pseudo-data-frame <code>I</code> has the value
-  one for these trial-arms. Both pseudo-data-frames aim to retain the trials
-  without information on missing outcome data in <code>data</code>. Second,
-  <code>data_preparation</code> sorts the interventions across the arms of each
-  trial in an ascending order and correspondingly the remaining elements in
-  <code>data</code> (see 'Format' in <code>run_model</code>). Since all Bayesian models
-  in the package consider the first column in <strong>t</strong> as being control
-  arm for every trial, this sorting ensures that interventions with a lower
-  identifier are consistently treated as the control arm in each trial.
-  This case is relevant in non-star-shaped networks.</p>
+  <code>data_preparation</code> checks whether the element <strong>m</strong> exists in the
+  <code>data</code> argument (See 'Format' in <code><a href='run_model.html'>run_model</a></code>). If this
+  element is missing, <code>data_preparation</code> creates a pseudo-data-frame for
+  <strong>m</strong> that has the zero value for the observed trial-arms, and
+  <code>NA</code> for the unobserved trial-arms, and the pseudo-data-frame <code>I</code>
+  that is identical with the pseudo-data-frame for <code>m</code>. If the element
+  <strong>m</strong> exists in the <code>data</code> and has values only for some
+  trial-arms, the pseudo-data-frame for <strong>m</strong> is identical to <strong>m</strong>
+  for the corresponding trial-arms, and the pseudo-data-frame <code>I</code> has
+  the value one for these trial-arms. Both pseudo-data-frames aim to retain
+  the trials without information on missing participant outcome data.</p>
+<p>Furthermore, <code>data_preparation</code> sorts the interventions across
+  the arms of each trial in an ascending order and correspondingly the
+  remaining elements in <code>data</code> (See 'Format' in
+  <code><a href='run_model.html'>run_model</a></code>). <code>data_preparation</code> considers the first
+  column in <strong>t</strong> as being the control arm for every trial. Thus,
+  this sorting ensures that interventions with a lower identifier are
+  consistently treated as the control arm in each trial. This case is
+  relevant in non-star-shaped networks.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='https://CRAN.R-project.org/package=R2jags'>R2jags</a>,

@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Enhanced balloon plot — balloon_plot" />
 <meta property="og:description" content="Creates the enhanced balloon plot for the summary effect size and
-  between-trial standard deviation, \(\tau\), under different scenarios
+  between-trial standard deviation, tau, under different scenarios
   about the missingness parameter for a pair of interventions.
   balloon_plot uses the scenarios considered in
   run_sensitivity." />
@@ -111,7 +111,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/LoukiaSpin/rnmamod/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -126,13 +131,13 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Enhanced balloon plot</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/LoukiaSpin/rnmamod/blob/master/R/balloon.plot.mod_function.R'><code>R/balloon.plot.mod_function.R</code></a></small>
     <div class="hidden name"><code>balloon_plot.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Creates the enhanced balloon plot for the summary effect size and
-  between-trial standard deviation, \(\tau\), under different scenarios
+  between-trial standard deviation, <em>tau</em>, under different scenarios
   about the missingness parameter for a pair of interventions.
   <code>balloon_plot</code> uses the scenarios considered in
   <code><a href='run_sensitivity.html'>run_sensitivity</a></code>.</p>
@@ -172,7 +177,7 @@ the order of the interventions as they appear in
    summary effect size (according to the argument <code>measure</code> inherited
    by <code><a href='run_sensitivity.html'>run_sensitivity</a></code>) of one pairwise comparison.</td></tr>
 <tr><td></td><td></td></tr>
-<tr><td><code>Plot_tau</code></td><td>The enhanced balloon plot for \(\tau\). When the
+<tr><td><code>Plot_tau</code></td><td>The enhanced balloon plot for tau. When the
    fixed-effect model has been performed in <code><a href='run_sensitivity.html'>run_sensitivity</a></code>,
    the function will not return the <code>Plot_tau</code>.</td></tr>
 </table>
@@ -194,12 +199,12 @@ the order of the interventions as they appear in
   <code>mean_scenarios</code> of the <code><a href='run_sensitivity.html'>run_sensitivity</a></code>:
   the x-axis refers to the 'experimental' intervention, and the y-axis refers
   to the 'control' intervention.</p>
-<p>The same enhanced balloon plot is created for \(\tau\) (<code>Plot_tau</code>).
+<p>The same enhanced balloon plot is created for tau (<code>Plot_tau</code>).
   However, filled bubbles indicate low statistical heterogeneity
-  (the posterior median of \(\tau\) is lower than the median of the
+  (the posterior median of tau is lower than the median of the
   prior distribution for the heterogeneity parameter),
   and crossed bubbles indicate considerable statistical heterogeneity
-  (the posterior median of \(\tau\) exceeds the median of the prior
+  (the posterior median of tau exceeds the median of the prior
   distribution for the heterogeneity parameter).</p>
 <p><code>balloon_plot_mod</code> can be used only when missing participant
   outcome data have been extracted for at least one trial.
@@ -219,43 +224,43 @@ and network meta-analysis. <em>Res Synth Methods</em>
     <p>Loukia M. Spineli</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"nma.baker2009"</span><span class='op'>)</span>
-
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># Perform a random-effects network meta-analysis</span>
-<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_model.html'>run_model</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>nma.baker2009</span>,
-                 measure <span class='op'>=</span> <span class='st'>"OR"</span>,
-                 model <span class='op'>=</span> <span class='st'>"RE"</span>,
-                 assumption <span class='op'>=</span> <span class='st'>"IDE-ARM"</span>,
-                 heter_prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"halfnormal"</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>,
-                 mean_misspar <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>,
-                 var_misspar <span class='op'>=</span> <span class='fl'>1</span>,
-                 D <span class='op'>=</span> <span class='fl'>1</span>,
-                 n_chains <span class='op'>=</span> <span class='fl'>3</span>,
-                 n_iter <span class='op'>=</span> <span class='fl'>10000</span>,
-                 n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,
-                 n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-
-<span class='co'># Perform the sensitivity analysis (default values for 'mean_misspar')</span>
-<span class='va'>res_sens</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_sensitivity.html'>run_sensitivity</a></span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,
-                            assumption <span class='op'>=</span> <span class='st'>"IDE-ARM"</span>,
-                            var_misspar <span class='op'>=</span> <span class='fl'>1</span>,
-                            n_chains <span class='op'>=</span> <span class='fl'>3</span>,
-                            n_iter <span class='op'>=</span> <span class='fl'>10000</span>,
-                            n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,
-                            n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-
-<span class='co'># The names of the interventions in the order they appear in the dataset</span>
-<span class='va'>interv_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"placebo"</span>, <span class='st'>"budesonide"</span>, <span class='st'>"budesonide plus formoterol"</span>,
-                  <span class='st'>"fluticasone"</span>, <span class='st'>"fluticasone plus salmeterol"</span>,
-                  <span class='st'>"formoterol"</span>, <span class='st'>"salmeterol"</span>, <span class='st'>"tiotropium"</span><span class='op'>)</span>
-
-<span class='co'># Create the enhanced balloon plot for 'tiotropium versus salmeterol'</span>
-<span class='fu'>balloon_plot</span><span class='op'>(</span>sens <span class='op'>=</span> <span class='va'>res_sens</span>,
-             compar <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"tiotropium"</span>, <span class='st'>"salmeterol"</span><span class='op'>)</span>,
-             drug_names <span class='op'>=</span> <span class='va'>interv_names</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"nma.baker2009"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='co'># Perform a random-effects network meta-analysis</span></span>
+<span class='r-in'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_model.html'>run_model</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>nma.baker2009</span>,</span>
+<span class='r-in'>                 measure <span class='op'>=</span> <span class='st'>"OR"</span>,</span>
+<span class='r-in'>                 model <span class='op'>=</span> <span class='st'>"RE"</span>,</span>
+<span class='r-in'>                 assumption <span class='op'>=</span> <span class='st'>"IDE-ARM"</span>,</span>
+<span class='r-in'>                 heter_prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"halfnormal"</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>,</span>
+<span class='r-in'>                 mean_misspar <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>,</span>
+<span class='r-in'>                 var_misspar <span class='op'>=</span> <span class='fl'>1</span>,</span>
+<span class='r-in'>                 D <span class='op'>=</span> <span class='fl'>1</span>,</span>
+<span class='r-in'>                 n_chains <span class='op'>=</span> <span class='fl'>3</span>,</span>
+<span class='r-in'>                 n_iter <span class='op'>=</span> <span class='fl'>10000</span>,</span>
+<span class='r-in'>                 n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,</span>
+<span class='r-in'>                 n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Perform the sensitivity analysis (default values for 'mean_misspar')</span></span>
+<span class='r-in'><span class='va'>res_sens</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_sensitivity.html'>run_sensitivity</a></span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,</span>
+<span class='r-in'>                            assumption <span class='op'>=</span> <span class='st'>"IDE-ARM"</span>,</span>
+<span class='r-in'>                            var_misspar <span class='op'>=</span> <span class='fl'>1</span>,</span>
+<span class='r-in'>                            n_chains <span class='op'>=</span> <span class='fl'>3</span>,</span>
+<span class='r-in'>                            n_iter <span class='op'>=</span> <span class='fl'>10000</span>,</span>
+<span class='r-in'>                            n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,</span>
+<span class='r-in'>                            n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># The names of the interventions in the order they appear in the dataset</span></span>
+<span class='r-in'><span class='va'>interv_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"placebo"</span>, <span class='st'>"budesonide"</span>, <span class='st'>"budesonide plus formoterol"</span>,</span>
+<span class='r-in'>                  <span class='st'>"fluticasone"</span>, <span class='st'>"fluticasone plus salmeterol"</span>,</span>
+<span class='r-in'>                  <span class='st'>"formoterol"</span>, <span class='st'>"salmeterol"</span>, <span class='st'>"tiotropium"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Create the enhanced balloon plot for 'tiotropium versus salmeterol'</span></span>
+<span class='r-in'><span class='fu'>balloon_plot</span><span class='op'>(</span>sens <span class='op'>=</span> <span class='va'>res_sens</span>,</span>
+<span class='r-in'>             compar <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"tiotropium"</span>, <span class='st'>"salmeterol"</span><span class='op'>)</span>,</span>
+<span class='r-in'>             drug_names <span class='op'>=</span> <span class='va'>interv_names</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

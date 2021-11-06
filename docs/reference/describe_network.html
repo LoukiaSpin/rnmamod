@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A function to describe a network of interventions — describe_network • rnmamod</title>
+<title>A function to describe the evidence base — describe_network • rnmamod</title>
 
 
 <!-- jquery -->
@@ -39,13 +39,10 @@
 
 
 
-<meta property="og:title" content="A function to describe a network of interventions — describe_network" />
-<meta property="og:description" content="This function calculates the necessary elements to describe a
-  network, such as the number of interventions, trials, randomised
-  participants, and so on. Furthermore, this function provides summary
-  statistics of the missing participants and the analysed outcome per
-  intervention and observed comparison in a tabulated format. See 'Value' in
-  the netplot function for more details." />
+<meta property="og:title" content="A function to describe the evidence base — describe_network" />
+<meta property="og:description" content="Calculates the necessary elements to describe the evidence base
+  for an outcome across the network, the interventions, and observed
+  comparisons. See also 'Value' in netplot." />
 
 
 
@@ -112,7 +109,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/LoukiaSpin/rnmamod/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -126,18 +128,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A function to describe a network of interventions</h1>
-    
+    <h1>A function to describe the evidence base</h1>
+    <small class="dont-index">Source: <a href='https://github.com/LoukiaSpin/rnmamod/blob/master/R/describe.network_function.R'><code>R/describe.network_function.R</code></a></small>
     <div class="hidden name"><code>describe_network.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function calculates the necessary elements to describe a
-  network, such as the number of interventions, trials, randomised
-  participants, and so on. Furthermore, this function provides summary
-  statistics of the missing participants and the analysed outcome per
-  intervention and observed comparison in a tabulated format. See 'Value' in
-  the <code><a href='netplot.html'>netplot</a></code> function for more details.</p>
+    <p>Calculates the necessary elements to describe the evidence base
+  for an outcome across the network, the interventions, and observed
+  comparisons. See also 'Value' in <code><a href='netplot.html'>netplot</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>describe_network</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>drug_names</span>, <span class='va'>measure</span><span class='op'>)</span></pre>
@@ -148,16 +147,14 @@
     <tr>
       <th>data</th>
       <td><p>A data-frame of a one-trial-per-row format containing arm-level
-data of each trial. This format is widely used for BUGS models.
-See 'Format' in <code><a href='run_model.html'>run_model</a></code> function for the
-specification of the columns.</p></td>
+data of each trial. See 'Format' in <code><a href='run_model.html'>run_model</a></code>.</p></td>
     </tr>
     <tr>
       <th>drug_names</th>
       <td><p>A vector of labels with the name of the interventions in
-the order they appear in the argument <code>data</code>. If the argument
-<code>drug_names</code> is not defined, the order of the interventions
-as they appear in <code>data</code> is used, instead.</p></td>
+the order they appear in the argument <code>data</code>. If <code>drug_names</code> is
+not defined, the order of the interventions as they appear in <code>data</code>
+is used, instead.</p></td>
     </tr>
     <tr>
       <th>measure</th>
@@ -170,7 +167,7 @@ respectively.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of scalar results and four data-frames to be passed to
+    <p>A list of scalar results and two data-frames to be passed to
   <code><a href='netplot.html'>netplot</a></code>. The scalar results include:</p><table class='table'>
 <tr><td><code>direct_comp</code></td><td>The number of observed comparisons in the
    network.</td></tr>
@@ -198,19 +195,17 @@ respectively.</p></td>
 </table>
 
 
-<p>The four data-frames include <code>interventions_missingness</code>,
-  <code>comparisons_missingness</code>, <code>interventions</code> and
-  <code>comparisons</code>.
-  See 'Value' in <code><a href='netplot.html'>netplot</a></code> that describes these
-  data-frames in detail.</p>
+<p>The two data-frames include<code>table_interventions</code> and
+  <code>table_comparisons</code>. See 'Value' in <code><a href='netplot.html'>netplot</a></code> for these
+  data-frames.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>describe_network</code> calls the <code>data_preparation</code> function
-  to facilitate the calculations.</p>
+    <p><code>describe_network</code> calls <code><a href='data_preparation.html'>data_preparation</a></code> to
+facilitate the calculations.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='netplot.html'>netplot</a></code>, <code><a href='run_model.html'>run_model</a></code>,
-  <code><a href='data_preparation.html'>data_preparation</a></code></p></div>
+    <div class='dont-index'><p><code><a href='data_preparation.html'>data_preparation</a></code>, <code><a href='netplot.html'>netplot</a></code>,
+  <code><a href='run_model.html'>run_model</a></code>,</p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>

@@ -40,10 +40,10 @@
 
 
 <meta property="og:title" content="Determine the prior distribution for the heterogeneity parameter — heterogeneity_param_prior" />
-<meta property="og:description" content="Generates the prior distribution for the between-trial standard deviation
-  depending on the selected effect measure.
-  heterogeneity_param_prior is found in the run_model function;
-  thus, the arguments are as specified in the latter." />
+<meta property="og:description" content="Generates the prior distribution (weakly informative or empirically-based)
+  for the heterogeneity parameter.
+  run_model inherits heterogeneity_param_prior via the
+  argument heter_prior." />
 
 
 
@@ -110,7 +110,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/LoukiaSpin/rnmamod/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -125,15 +130,15 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Determine the prior distribution for the heterogeneity parameter</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/LoukiaSpin/rnmamod/blob/master/R/heterogeneity.param.prior_function.R'><code>R/heterogeneity.param.prior_function.R</code></a></small>
     <div class="hidden name"><code>heterogeneity_param_prior.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Generates the prior distribution for the between-trial standard deviation
-  depending on the selected effect measure.
-  <code>heterogeneity_param_prior</code> is found in the <code>run_model</code> function;
-  thus, the arguments are as specified in the latter.</p>
+    <p>Generates the prior distribution (weakly informative or empirically-based)
+  for the heterogeneity parameter.
+  <code><a href='run_model.html'>run_model</a></code> inherits <code>heterogeneity_param_prior</code> via the
+  argument <code>heter_prior</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>heterogeneity_param_prior</span><span class='op'>(</span><span class='va'>measure</span>, <span class='va'>model</span>, <span class='va'>heter_prior</span><span class='op'>)</span></pre>
@@ -163,7 +168,8 @@ respectively. The default argument is <code>"RE"</code>.</p></td>
 the parameters of the selected distribution.  For <code>"lognormal"</code>, and
 <code>"logt"</code> these numbers refer to the mean and precision, respectively.
 For <code>"halfnorm"</code>, these numbers refer to zero and the scale parameter
-(equal to 0.5 or 1). For <code>"uniform"</code>, these numbers refer to the
+(equal to 4 or 1 being the corresponding precision of the scale parameter
+0.5 or 1). For <code>"uniform"</code>, these numbers refer to the
 minimum and maximum value of the distribution.</p></td>
     </tr>
     </table>
@@ -175,37 +181,33 @@ minimum and maximum value of the distribution.</p></td>
 
     <p>The names of the (current) prior distributions follow the JAGS syntax.
   The mean and precision of <code>"lognormal"</code> and <code>"logt"</code> should align
-  with the values proposed by Turner et al. (2015) and Rhodes et al. (2015)
-  in the corresponding empirically-based prior distributions when
+  with the values proposed by Turner et al., (2015) and Rhodes et al., (2015)
+  for the corresponding empirically-based prior distributions when
   <code>measure</code> is <code>"OR"</code> or <code>"SMD"</code>, respectively.
-  The users may refer to Dias et al. (2013) to determine the minimum and
-  maximum value of the uniform distribution, and to Friede et al. (2017)
+  The users may refer to Dias et al., (2013) to determine the minimum and
+  maximum value of the uniform distribution, and to Friede et al., (2017)
   to determine the mean and precision of the half-normal distribution.
   When <code>model</code> is <code>"FE"</code>, <code>heterogeneity_param_prior</code>
-  is ignored in the <code>run_model</code> function.</p>
+  is ignored in <code><a href='run_model.html'>run_model</a></code>.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Friede T, Röver C, Wandel S, Neuenschwander B. Meta-analysis of two studies
+    <p>Friede T, Roever C, Wandel S, Neuenschwander B. Meta-analysis of two studies
 in the presence of heterogeneity with applications in rare diseases.
 <em>Biom J</em> 2017;<b>59</b>(4):658--671.
-[doi: <a href='https://doi.org/10.1002/bimj.201500236'>10.1002/bimj.201500236</a>
-]</p>
+doi: <a href='https://doi.org/10.1002/bimj.201500236'>10.1002/bimj.201500236</a></p>
 <p>Turner RM, Jackson D, Wei Y, Thompson SG, Higgins JP. Predictive
 distributions for between-study heterogeneity and simple methods for their
 application in Bayesian meta-analysis.
-<em>Stat Med</em> 2015;<b>34</b>(6):984--98. [doi: <a href='https://doi.org/10.1002/sim.6381'>10.1002/sim.6381</a>
-]</p>
+<em>Stat Med</em> 2015;<b>34</b>(6):984--98. doi: <a href='https://doi.org/10.1002/sim.6381'>10.1002/sim.6381</a></p>
 <p>Rhodes KM, Turner RM, Higgins JP. Predictive distributions were developed
 for the extent of heterogeneity in meta-analyses of continuous outcome data.
 <em>J Clin Epidemiol</em> 2015;<b>68</b>(1):52--60.
-[doi: <a href='https://doi.org/10.1016/j.jclinepi.2014.08.012'>10.1016/j.jclinepi.2014.08.012</a>
-]</p>
+doi: <a href='https://doi.org/10.1016/j.jclinepi.2014.08.012'>10.1016/j.jclinepi.2014.08.012</a></p>
 <p>Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
 making 2: a generalized linear modeling framework for pairwise and
 network meta-analysis of randomized controlled trials.
 <em>Med Decis Making</em> 2013;<b>33</b>(5):607--617.
-[doi: <a href='https://doi.org/10.1177/0272989X12458724'>10.1177/0272989X12458724</a>
-]</p>
+doi: <a href='https://doi.org/10.1177/0272989X12458724'>10.1177/0272989X12458724</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='run_model.html'>run_model</a></code></p></div>

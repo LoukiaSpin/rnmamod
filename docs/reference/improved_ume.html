@@ -42,8 +42,8 @@
 <meta property="og:title" content="A function to detect the frail comparisons in multi-arm trials — improved_ume" />
 <meta property="og:description" content="Detects the frail comparisons in multi-arm trials, that is,
   comparisons between non-baseline interventions not investigated in any
-  two-arm trial of the network (Spineli, 2021). The 'original' model of
-  Dias et al. (2013) omits the frail comparisons from the estimation process
+  two-arm trial in the network (Spineli, 2021). The 'original' model of
+  Dias et al., (2013) omits the frail comparisons from the estimation process
   of the unrelated mean effects model. Consequently, their posterior
   distribution coincides with the prior distribution yielding implausible
   posterior standard deviations." />
@@ -113,7 +113,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/LoukiaSpin/rnmamod/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -128,15 +133,15 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>A function to detect the frail comparisons in multi-arm trials</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/LoukiaSpin/rnmamod/blob/master/R/improved.UME_function.R'><code>R/improved.UME_function.R</code></a></small>
     <div class="hidden name"><code>improved_ume.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Detects the frail comparisons in multi-arm trials, that is,
   comparisons between non-baseline interventions not investigated in any
-  two-arm trial of the network (Spineli, 2021). The 'original' model of
-  Dias et al. (2013) omits the frail comparisons from the estimation process
+  two-arm trial in the network (Spineli, 2021). The 'original' model of
+  Dias et al., (2013) omits the frail comparisons from the estimation process
   of the unrelated mean effects model. Consequently, their posterior
   distribution coincides with the prior distribution yielding implausible
   posterior standard deviations.</p>
@@ -151,13 +156,13 @@
       <th>t</th>
       <td><p>A data-frame of the one-trial-per-row format containing the
 intervention identifier in each arm of every trial (see 'Details' below,
-and 'Arguments' in <code>run_model</code>).</p></td>
+and 'Format' in <code><a href='run_model.html'>run_model</a></code>).</p></td>
     </tr>
     <tr>
       <th>N</th>
       <td><p>A data-frame of the one-trial-per-row format containing the number
 of participants randomised on the assigned intervention in each arm of
-every trial (see 'Details' below, and 'Arguments' in <code>run_model</code>).</p></td>
+every trial (see 'Details' below, and 'Format' in <code><a href='run_model.html'>run_model</a></code>).</p></td>
     </tr>
     <tr>
       <th>ns</th>
@@ -173,18 +178,19 @@ each trial.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>The output of <code>improved_ume</code> is a list of elements that are used
-  by the <code>run_ume</code>:</p><table class='table'>
+  by <code><a href='run_ume.html'>run_ume</a></code>:</p><table class='table'>
 <tr><td><code>nbase_multi</code></td><td>A scalar parameter on the number of frail
    comparisons.</td></tr>
 <tr><td></td><td></td></tr>
-<tr><td><code>t1_bn</code></td><td>A vector with numeric values on the first arm of each
-   frail comparison.</td></tr>
+<tr><td><code>t1_bn</code></td><td>A vector with numeric values referring to the first arm
+   of each frail comparison.</td></tr>
 <tr><td></td><td></td></tr>
-<tr><td><code>t2_bn</code></td><td>A vector with numeric values on the second arm of each
-   frail comparison.</td></tr>
+<tr><td><code>t2_bn</code></td><td>A vector with numeric values referring to the second arm
+   of each frail comparison.</td></tr>
 <tr><td></td><td></td></tr>
-<tr><td><code>base</code></td><td>A vector with numeric values on the baseline intervention
-    of the multi-arm trials that contain the frail comparisons.</td></tr>
+<tr><td><code>base</code></td><td>A vector with numeric values referring to the baseline
+   intervention of the multi-arm trials that contain the frail
+   comparisons.</td></tr>
 <tr><td></td><td></td></tr>
 <tr><td><code>obs_comp</code></td><td>A data-frame that indicates how many two-arms and
    multi-arm trials have included each pairwise comparison observed in the
@@ -194,8 +200,8 @@ each trial.</p></td>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>improved_ume</code> is integrated in the <code>run_ume</code> function and
-  calls the output of the <code>data_preparation</code> function after sorting the
+    <p><code>improved_ume</code> is integrated in <code><a href='run_ume.html'>run_ume</a></code> and
+  calls the output of <code><a href='data_preparation.html'>data_preparation</a></code> after sorting the
   rows so that multi-arm trials appear at the bottom of the dataset.
   When there are no multi-arm trials or no frail comparisons in the network,
   <code>improved_ume</code> returns only the element <code>obs_comp</code>
@@ -208,12 +214,11 @@ in a network of interventions. <em>submitted</em> 2021.</p>
 for decision making 4: inconsistency in networks of evidence based on
 randomized controlled trials.
 <em>Med Decis Making</em> 2013;<b>33</b>(5):641--56.
-[doi: <a href='https://doi.org/10.1177/0272989X12455847'>10.1177/0272989X12455847</a>
-]</p>
+doi: <a href='https://doi.org/10.1177/0272989X12455847'>10.1177/0272989X12455847</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='run_ume.html'>run_ume</a></code>, <code><a href='data_preparation.html'>data_preparation</a></code>,
-  <code><a href='run_model.html'>run_model</a></code></p></div>
+    <div class='dont-index'><p><code><a href='data_preparation.html'>data_preparation</a></code>, <code><a href='run_model.html'>run_model</a></code>,
+  <code><a href='run_ume.html'>run_ume</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Loukia M. Spineli</p>

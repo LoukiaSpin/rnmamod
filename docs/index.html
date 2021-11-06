@@ -5,15 +5,17 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Addressing Missing Participants with Aggregate Binary or Continuous Outcome Data in Network Meta-Analysis • rnmamod</title>
+<title>Addressing Missing Participants with Aggregate Binary or Continuous
+    Outcome Data in Network Meta-Analysis • rnmamod</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Addressing Missing Participants with Aggregate Binary or Continuous Outcome Data in Network Meta-Analysis">
-<meta property="og:description" content="Perform pairwise and network meta-analysis with aggregate binary or continuous missing 
-    participant outcome data.">
+<script src="pkgdown.js"></script><meta property="og:title" content="Addressing Missing Participants with Aggregate Binary or Continuous
+    Outcome Data in Network Meta-Analysis">
+<meta property="og:description" content="Perform pairwise and network meta-analysis with aggregate
+    binary or continuous missing participant outcome data.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -66,7 +68,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/LoukiaSpin/rnmamod/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -84,6 +93,11 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#rnmamod-a-bayesian-network-meta-analysis-package-for-r" class="anchor"></a>rnmamod: A Bayesian network meta-analysis package for R</h1></div>
 <p><!-- badges: start --> <a href="https://github.com/LoukiaSpin/rnmamod/actions"><img src="https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a> <a href="https://github.com/LoukiaSpin/rnmamod/actions"><img src="https://img.shields.io/github/license/LoukiaSpin/rnmamod.svg" alt="license"></a> <!-- badges: end --></p>
+<div id="contributors" class="section level2">
+<h2 class="hasAnchor">
+<a href="#contributors" class="anchor"></a>Contributors</h2>
+<p><a href="https://orcid.org/0000-0001-9515-582X">Loukia Spineli</a>, <a href="https://orcid.org/0000-0003-0606-4518">Chrysostomos Kalyvas</a>, <a href="https://orcid.org/0000-0002-5732-4044">Katerina Papadimitropoulou</a></p>
+</div>
 <div id="description" class="section level2">
 <h2 class="hasAnchor">
 <a href="#description" class="anchor"></a>Description</h2>
@@ -94,7 +108,7 @@
 </li>
 <li>continuous data (effect size: raw and standardised mean differences, ratio of means).</li>
 </ul>
-<!--- The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. ---><p>The <code>rnmamod</code> package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Also includes a rich suite of visualisation tools to aid in interpretation of the results and preparation of NMA manuscript submission. Missing participant outcome data are addressed in all models of the rnmamod package.</p>
+<!--- The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. ---><p>The <code>rnmamod</code> package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Also includes a rich suite of visualisation tools to aid in interpretation of the results and preparation of NMA manuscript submission. Missing participant outcome data are addressed in all models of the package.</p>
 <!---that aid the interpretation and accommodation of the results in the submitted research work for publication. --->
 <p>The <code>rnmamod</code> package is currently in development version.</p>
 </div>
@@ -157,7 +171,7 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/league_heatmap.html">league_heatmap</a></span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>, drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></code></pre></div>
 <div style="text-align: center">
-<p><img src="reference/figures/League_Baker.png" width="950" height="700" align="center"><!--- <img src="man/figures/League_Baker.png" width="70%" height="70%" align="center"> ---><br><!--- <img src="man/figures/League_Baker.png" width="70%" height="90%" align="center"> ---></p>
+<p><img src="reference/figures/League_Baker.png" width="850" height="600" align="center"><!--- <img src="man/figures/League_Baker.png" width="70%" height="70%" align="center"> ---><br><!--- <img src="man/figures/League_Baker.png" width="70%" height="90%" align="center"> ---></p>
 </div>
 <p><br></p>
 </div>
@@ -168,7 +182,7 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/rankosucra_plot.html">rankosucra_plot</a></span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>, drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></code></pre></div>
 <div style="text-align: center">
-<p><img src="reference/figures/Sucra_Baker.png" width="800" height="600" align="center"><!--- <img src="man/figures/Sucra_Baker.png" width="70%" height="70%" align="center"> ---><!--- <img src="man/figures/Sucra_Baker.png" width="70%" height="90%" align="center"> ---></p>
+<p><img src="reference/figures/Sucra_Baker.png" width="700" height="500" align="center"><!--- <img src="man/figures/Sucra_Baker.png" width="70%" height="70%" align="center"> ---><!--- <img src="man/figures/Sucra_Baker.png" width="70%" height="90%" align="center"> ---></p>
 </div>
 </div>
 </div>
@@ -177,7 +191,7 @@
 <a href="#funding-source" class="anchor"></a>Funding source</h2>
 The development of <code>rnmamod</code> package is funded by the <strong>German Research Foundation</strong> (Deutsche Forschungsgemeinschaft) (grant no. <a href="https://gepris.dfg.de/gepris/projekt/339420617">SP 1664/1-3</a>)
 <div style="text-align: right">
-<img src="reference/figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="380" height="150" align="right">
+<img src="reference/figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="280" height="100" align="right">
 </div>
 </div>
 </div>
@@ -185,18 +199,24 @@ The development of <code>rnmamod</code> package is funded by the <strong>German 
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+    <div class="links">
+<h2>Links</h2>
+<ul class="list-unstyled">
+<li>Browse source code at <br><a href="https://github.com/LoukiaSpin/rnmamod/">https://​github.com/​LoukiaSpin/​rnmamod/​</a>
+</li>
+</ul>
+</div>
+<div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small>GPL (&gt;= 3) + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Loukia Spineli <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-9515-582X" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Loukia Spineli <br><small class="roles"> Author, maintainer </small>  </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
