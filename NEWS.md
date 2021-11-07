@@ -1,3 +1,3 @@
-## rnmamod, version 0.1.0 
+# rnmamod 0.1.0 _2021-11-07_
 
-First version submitted
+
