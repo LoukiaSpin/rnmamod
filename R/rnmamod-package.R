@@ -34,7 +34,7 @@
 #'   based on Spineli et al., (2021);
 #'
 #'   \bold{rnmamod} also includes a rich suite of visualisation tools to aid in
-#'   interpretation of the results and preparation of the manuscript for
+#'   the interpretation of the results and preparation of the manuscript for
 #'   submission:
 #'   - network plot and description of the evidence base (\code{\link{netplot}})
 #'   following the  PRISMA statement for systematic reviews with network
@@ -93,7 +93,7 @@
 #'   (\code{\link{kld_barplot}}) (Spineli et al., (2021)).
 #'
 #'   Missing participant outcome data are addressed in all models of the package
-#'   after extending the code to incorporating the pattern-mixture model
+#'   after extending the code to incorporate the pattern-mixture model
 #'   (Spineli, 2019; Spineli et al., (2021)).
 #'
 #'   Type \code{help("rnmamod")} to access the documentation of all listed
