@@ -107,6 +107,10 @@
 #'   The development version of \bold{rnmamod} is available on
 #'   [GitHub](https://github.com/LoukiaSpin/rnmamod) under the GPL-3.0 License.
 #'
+#' @name rnmamod-package
+#'
+#' @docType package
+#'
 #' @author {Loukia M. Spineli}
 #'
 #' @references
@@ -174,4 +178,3 @@
 #' meta-analysis. \emph{Res Synth Methods} 2016;\bold{7}(1):80--93.
 #' \doi{10.1002/jrsm.1167}
 #'
-#' @export
