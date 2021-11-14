@@ -108,9 +108,6 @@
 #'   after extending the code to incorporate the pattern-mixture model
 #'   (Spineli, 2019; Spineli et al., (2021)).
 #'
-#'   Type \code{help("rnmamod")} to access the documentation of all listed
-#'   functions of \bold{rnmamod}.
-#'
 #'   Type \code{citation("rnmamod")} on how to cite \bold{rnmamod}.
 #'
 #'   To report possible bugs and errors, send an email to Loukia Spineli
