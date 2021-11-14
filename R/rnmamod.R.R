@@ -114,7 +114,7 @@
 #'   (\email{Spineli.Loukia@mh-hannove.de}).
 #'
 #'   The development version of \bold{rnmamod} is available on
-#'   \href{https://github.com/LoukiaSpin/rnmamod.git}{GitHub} under the
+#'   \href{https://github.com/LoukiaSpin/rnmamod}{GitHub} under the
 #'   GPL-3.0 License.
 #'
 #' @author {Loukia M. Spineli}
@@ -158,7 +158,7 @@
 #' The PRISMA extension statement for reporting of systematic reviews
 #' incorporating network meta-analyses of health care interventions: checklist
 #' and explanations. \emph{Ann Intern Med} 2015;\bold{162}(11):777--84.
-#' \doi{doi: 10.7326/M14-2385}
+#' \doi{10.7326/M14-2385}
 #'
 #' Ruecker G, Schwarzer G. Ranking treatments in frequentist network
 #' meta-analysis works without resampling methods.
