@@ -1,3 +1,14 @@
+#' @name rnmamod
+#' @aliases rnmamod
+#' @docType package
+#'
+#' @title rnmamod: Bayesian Network Meta-analysis with Missing Participant
+#'   Outcome Data in R
+#'
+#' @description
+#'   An R package for performing Bayesian network meta-analysis while handling
+#'   missing participant outcome data properly.
+#'
 #' @details
 #'   R-package \bold{rnmamod} is built upon the WinBUGS program code found in
 #'   the series of tutorial papers on evidence synthesis methods for decision
@@ -175,7 +186,4 @@
 #' node-splitting models for assessment of inconsistency in network
 #' meta-analysis. \emph{Res Synth Methods} 2016;\bold{7}(1):80--93.
 #' \doi{10.1002/jrsm.1167}
-#'
-#' @keywords internal
-"_PACKAGE"
-
+NULL
