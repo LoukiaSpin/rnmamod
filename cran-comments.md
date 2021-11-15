@@ -14,7 +14,7 @@ There was 1 NOTE:
  Maintainer: ‘Loukia Spineli <Spineli.Loukia@mh-hannover.de>’
  New submission
 
-*	Fedora Linux, R-devel, clang, gfortran
+* Fedora Linux, R-devel, clang, gfortran
 
 ERROR: dependencies ‘gemtc’, ‘pcnetmeta’, ‘R2jags’ are not available 
 for package ‘rnmamod’
