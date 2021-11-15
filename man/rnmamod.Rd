@@ -108,16 +108,13 @@ R-package \bold{rnmamod} is built upon the WinBUGS program code found in
   after extending the code to incorporate the pattern-mixture model
   (Spineli, 2019; Spineli et al., (2021)).
 
-  Type \code{help("rnmamod")} to access the documentation of all listed
-  functions of \bold{rnmamod}.
-
   Type \code{citation("rnmamod")} on how to cite \bold{rnmamod}.
 
   To report possible bugs and errors, send an email to Loukia Spineli
   (\email{Spineli.Loukia@mh-hannove.de}).
 
   The development version of \bold{rnmamod} is available on
-  \href{https://github.com/LoukiaSpin/rnmamod.git}{GitHub} under the
+  \href{https://github.com/LoukiaSpin/rnmamod}{GitHub} under the
   GPL-3.0 License.
 }
 \references{
@@ -153,13 +150,11 @@ meta-analysis of randomized controlled trials. \emph{Med Decis Making}
 
 Gelman, A, Rubin, DB. Inference from iterative simulation using multiple
 sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
-\doi{10.1214/ss/1177011136}
 
 Hutton B, Salanti G, Caldwell DM, Chaimani A, Schmid CH, Cameron C, et al.
 The PRISMA extension statement for reporting of systematic reviews
 incorporating network meta-analyses of health care interventions: checklist
 and explanations. \emph{Ann Intern Med} 2015;\bold{162}(11):777--84.
-\doi{doi: 10.7326/M14-2385}
 
 Ruecker G, Schwarzer G. Ranking treatments in frequentist network
 meta-analysis works without resampling methods.
