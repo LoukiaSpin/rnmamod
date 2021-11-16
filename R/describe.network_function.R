@@ -365,8 +365,8 @@ describe_network <- function(data, drug_names, measure) {
                   multi_arm_ns = multi_arm_ns,
                   total_rand_network = total_rand_network,
                   prop_obs_network = prop_obs_network,
-                  table_interventions = knitr::kable(table_interv),
-                  table_comparisons = knitr::kable(table_comp))
+                  table_interventions = table_interv,
+                  table_comparisons = table_comp)
 
 
   if (measure == "OR") {

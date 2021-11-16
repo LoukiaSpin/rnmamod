@@ -190,14 +190,14 @@ netplot <- function(data, drug_names, save_xls, ...) {
 
   # Write the tables as .xlsx
   if (save_xls == TRUE) {
-    writexl::write_xlsx(dat$interventions, "table_interventions.xlsx")
-    writexl::write_xlsx(dat$comparisons, "table_comparisons.xlsx")
+    writexl::write_xlsx(dat$table_interventions, "table_interventions.xlsx")
+    writexl::write_xlsx(dat$table_comparisons, "table_comparisons.xlsx")
   }
 
   results <- list(network_plot = network_plot,
                   network_description = knitr::kable(results),
-                  table_interventions = dat$table_interventions,
-                  table_comparisons = dat$table_comparisons)
+                  table_interventions = knitr::kable(dat$table_interventions),
+                  table_comparisons = knitr::kable(dat$table_comparisons))
 
   return(results)
 }
