@@ -41,6 +41,7 @@ reference:
   - improved_ume
   - mcmc_diagnostics
   - missingness_param_prior
+  - rnmamod
   - robustness_index
   - taylor_continuous
   - taylor_imor

@@ -254,23 +254,23 @@ describe_network <- function(data, drug_names, measure) {
                              2) * 100
 
     # Turn into long format using the 'pairwise' function (netmeta)
-    pair_bin0 <- pairwise(as.list(dat$t),
+    pair_bin <- pairwise(as.list(dat$t),
                           event = as.list(dat$r),
                           n = as.list(dat$N),
                           data = cbind(dat$t, dat$r, dat$N),
                           studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
-    colnames(pair_bin0) <- c("study", "t1", "t2", "r1", "r2", "n1", "n2")
+    colnames(pair_bin) <- c("study", "t1", "t2", "r1", "r2", "n1", "n2")
 
     # Ensure that t1 < t2 and correspondingly for the other elements
-    treat <- treat0 <- pair_bin0[, 2:3]
-    resp <- resp0 <- pair_bin0[, 4:5]
-    rand <- rand0 <- pair_bin0[, 6:7]
-    for (i in seq_len(length(pair_bin0[, 1]))) {
-      treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
-      resp[i, ] <- resp0[i, order(treat0[i, ], na.last = TRUE)]
-      rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
-    }
-    pair_bin <- data.frame(study = pair_bin0$study, treat, resp, rand)
+    #treat <- treat0 <- pair_bin0[, 2:3]
+    #resp <- resp0 <- pair_bin0[, 4:5]
+    #rand <- rand0 <- pair_bin0[, 6:7]
+    #for (i in seq_len(length(pair_bin0[, 1]))) {
+    #  treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
+    #  resp[i, ] <- resp0[i, order(treat0[i, ], na.last = TRUE)]
+    #  rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
+    #}
+    #pair_bin <- data.frame(study = pair_bin0$study, treat, resp, rand)
 
     # Proportion of observed events per trial-comparison
     trial_risk <- apply(pair_bin[, c("r1", "r2")], 1, sum) /
