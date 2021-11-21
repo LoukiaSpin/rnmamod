@@ -148,7 +148,6 @@ metareg_plot <- function(full,
                          drug_names,
                          save_xls) {
 
-  options(warn = -1)
 
   if (length(drug_names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",

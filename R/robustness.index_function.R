@@ -120,7 +120,6 @@
 #' @export
 robustness_index <- function(sens, threshold) {
 
-  options(warn = -1)
 
   if (is.null(sens)) {
     aa <- "Missing participant outcome data have *not* been collected."

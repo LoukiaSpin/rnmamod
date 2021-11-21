@@ -58,8 +58,6 @@
 #' @export
 describe_network <- function(data, drug_names, measure) {
 
-  options(warn = -1)
-
   # Use the 'data_preparation' function
   dat <- data_preparation(data, measure)
 
@@ -106,23 +104,23 @@ describe_network <- function(data, drug_names, measure) {
                                     max)[, 2], 2) * 100
 
   # Turn into long format using the 'pairwise' function (netmeta): MOD
-  pair_mod0 <- pairwise(as.list(dat$t),
+  pair_mod <- pairwise(as.list(dat$t),
                         event = as.list(dat$m),
                         n = as.list(dat$N),
                         data = cbind(dat$t, dat$m, dat$N),
                         studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
-  colnames(pair_mod0) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
+  colnames(pair_mod) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
 
   # Ensure that t1 < t2 and correspondingly for the other elements
-  treat <- treat0 <- pair_mod0[, 2:3]
-  miss <- miss0 <- pair_mod0[, 4:5]
-  rand <- rand0 <- pair_mod0[, 6:7]
-  for (i in seq_len(length(pair_mod0[, 1]))) {
-    treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
-    miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
-    rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
-  }
-  pair_mod <- data.frame(study = pair_mod0$study, treat, miss, rand)
+  #treat <- treat0 <- pair_mod0[, 2:3]
+  #miss <- miss0 <- pair_mod0[, 4:5]
+  #rand <- rand0 <- pair_mod0[, 6:7]
+  #for (i in seq_len(length(pair_mod0[, 1]))) {
+  #  treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
+  #  miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
+  #  rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
+  #}
+  #pair_mod <- data.frame(study = pair_mod0$study, treat, miss, rand)
 
   # Name the interventions in each arm
   pair_mod[, 2] <- drug_names[pair_mod$t1]

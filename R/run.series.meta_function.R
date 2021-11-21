@@ -147,14 +147,14 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
   # For a continuous outcome
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
     # Turn into contrast-level data ('netmeta')
-    pairwise_observed0 <-
+    pairwise_observed <-
       pairwise(as.list(item$t),
                mean = as.list(item$y0),
                sd = as.list(item$sd0),
                n = as.list(item$N),
                data = cbind(item$t, item$y0, item$sd0, item$N),
                studlab = 1:item$ns)[, c(3:5, 7, 10, 8, 11, 6, 9)]
-    colnames(pairwise_observed0) <- c("study",
+    colnames(pairwise_observed) <- c("study",
                                       "arm1",
                                       "arm2",
                                       "y1",
@@ -165,43 +165,43 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
                                       "n2")
 
     # Maintain MOD and merge with 'pairwise_observed'
-    pairwise_mod0 <- pairwise(as.list(item$t),
+    pairwise_mod <- pairwise(as.list(item$t),
                               mean = as.list(item$y0),
                               sd = as.list(item$sd0),
                               n = as.list(item$m),
                               data = cbind(item$t, item$y0, item$sd0, item$m),
                               studlab = 1:item$ns)[, c(6, 9)]
-    colnames(pairwise_mod0) <- c("m1", "m2")
+    colnames(pairwise_mod) <- c("m1", "m2")
 
     # Ensure that t1 < t2 and correspondingly for the other elements
-    treat <- treat0 <- pairwise_observed0[, 2:3]
-    y_mean <- y_mean0 <- pairwise_observed0[, 4:5]
-    sd_mean <- sd_mean0 <- pairwise_observed0[, 6:7]
-    miss <- miss0 <- pairwise_mod0[, 1:2]
-    rand <- rand0 <- pairwise_observed0[, 8:9]
-    for (i in seq_len(length(pairwise_observed0[, 1]))) {
-      treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
-      y_mean[i, ] <- y_mean0[i, order(treat0[i, ], na.last = TRUE)]
-      sd_mean[i, ] <- sd_mean0[i, order(treat0[i, ], na.last = TRUE)]
-      miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
-      rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
-    }
+    #treat <- treat0 <- pairwise_observed0[, 2:3]
+    #y_mean <- y_mean0 <- pairwise_observed0[, 4:5]
+    #sd_mean <- sd_mean0 <- pairwise_observed0[, 6:7]
+    #miss <- miss0 <- pairwise_mod0[, 1:2]
+    #rand <- rand0 <- pairwise_observed0[, 8:9]
+    #for (i in seq_len(length(pairwise_observed0[, 1]))) {
+    #  treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
+    #  y_mean[i, ] <- y_mean0[i, order(treat0[i, ], na.last = TRUE)]
+    #  sd_mean[i, ] <- sd_mean0[i, order(treat0[i, ], na.last = TRUE)]
+    #  miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
+    #  rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
+    #}
 
-    pairwise_observed <- data.frame(study = pairwise_observed0$study,
-                                    treat,
-                                    y_mean,
-                                    sd_mean,
-                                    rand)
-    pairwise_mod <- miss
+    #pairwise_observed <- data.frame(study = pairwise_observed0$study,
+    #                                treat,
+    #                                y_mean,
+    #                                sd_mean,
+    #                                rand)
+    #pairwise_mod <- miss
   } else {
     # Turn into contrast-level data ('netmeta')
-    pairwise_observed0 <-
+    pairwise_observed <-
       pairwise(as.list(item$t),
                event = as.list(item$r),
                n = as.list(item$N),
                data = cbind(item$t, item$r, item$N),
                studlab = 1:item$ns)[, c(3:6, 8, 7, 9)]
-    colnames(pairwise_observed0) <- c("study",
+    colnames(pairwise_observed) <- c("study",
                                       "arm1",
                                       "arm2",
                                       "r1",
@@ -210,30 +210,30 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
                                       "n2")
 
     # Maintain MOD and merge with 'pairwise_observed'
-    pairwise_mod0 <- pairwise(as.list(item$t),
+    pairwise_mod <- pairwise(as.list(item$t),
                              event = as.list(item$m),
                              n = as.list(item$N),
                              data = cbind(item$t, item$m, item$N),
                              studlab = 1:item$ns)[, c(6, 8)]
-    colnames(pairwise_mod0) <- c("m1", "m2")
+    colnames(pairwise_mod) <- c("m1", "m2")
 
     # Ensure that t1 < t2 and correspondingly for the other elements
-    treat <- treat0 <- pairwise_observed0[, 2:3]
-    resp <- resp0 <- pairwise_observed0[, 4:5]
-    miss <- miss0 <- pairwise_mod0[, 1:2]
-    rand <- rand0 <- pairwise_observed0[, 6:7]
-    for (i in seq_len(length(pairwise_observed0[, 1]))) {
-      treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
-      resp[i, ] <- resp0[i, order(treat0[i, ], na.last = TRUE)]
-      miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
-      rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
-    }
+    #treat <- treat0 <- pairwise_observed0[, 2:3]
+    #resp <- resp0 <- pairwise_observed0[, 4:5]
+    #miss <- miss0 <- pairwise_mod0[, 1:2]
+    #rand <- rand0 <- pairwise_observed0[, 6:7]
+    #for (i in seq_len(length(pairwise_observed0[, 1]))) {
+    #  treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
+    #  resp[i, ] <- resp0[i, order(treat0[i, ], na.last = TRUE)]
+    #  miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
+    #  rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
+    #}
 
-    pairwise_observed <- data.frame(study = pairwise_observed0$study,
-                                    treat,
-                                    resp,
-                                    rand)
-    pairwise_mod <- miss
+    #pairwise_observed <- data.frame(study = pairwise_observed0$study,
+    #                                treat,
+    #                                resp,
+    #                                rand)
+    #pairwise_mod <- miss
   }
 
   # The dataset for the analysis

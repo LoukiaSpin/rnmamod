@@ -68,7 +68,6 @@
 #' @export
 heatmap_missing_network <- function(data, drug_names) {
 
-  options(warn = -1)
 
   if (dim(data %>% select(starts_with("m")))[2] == 0) {
     aa <- "Missing participant outcome data have *not* been collected."
@@ -123,23 +122,23 @@ heatmap_missing_network <- function(data, drug_names) {
                           2) * 100
 
   # Turn into long format using the 'pairwise' function (netmeta)
-  pair_mod0 <- pairwise(as.list(dat$t),
+  pair_mod <- pairwise(as.list(dat$t),
                         event = as.list(dat$m),
                         n = as.list(dat$N),
                         data = cbind(dat$t, dat$m, dat$N),
                         studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
-  colnames(pair_mod0) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
+  colnames(pair_mod) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
 
   # Ensure that t1 < t2 and correspondingly for the other elements
-  treat <- treat0 <- pair_mod0[, 2:3]
-  miss <- miss0 <- pair_mod0[, 4:5]
-  rand <- rand0 <- pair_mod0[, 6:7]
-  for (i in seq_len(length(pair_mod0[, 1]))) {
-    treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
-    miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
-    rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
-  }
-  pair_mod <- data.frame(study = pair_mod0$study, treat, miss, rand)
+  #treat <- treat0 <- pair_mod0[, 2:3]
+  #miss <- miss0 <- pair_mod0[, 4:5]
+  #rand <- rand0 <- pair_mod0[, 6:7]
+  #for (i in seq_len(length(pair_mod0[, 1]))) {
+  #  treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
+  #  miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
+  #  rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
+  #}
+  #pair_mod <- data.frame(study = pair_mod0$study, treat, miss, rand)
 
   # The comparison between the second and first arms of each trial
   comp <- paste(pair_mod[, "t2"], "vs", pair_mod[, "t1"])

@@ -67,8 +67,6 @@
 #' @export
 data_preparation <- function(data, measure) {
 
-  options(warn = -1)
-
   # Intervention studied in each arm of every trial
   treat <- if (dim(data %>% select(starts_with("t")))[2] == 0) {
     stop("The information on the individual arms is missing", call. = FALSE)
@@ -137,14 +135,30 @@ data_preparation <- function(data, measure) {
     }
 
     # Order by 'id of t1' < 'id of t1'
+    treat_list <- rand_list <- list()
+    y_obs_list <- sd_obs_list <- se_obs_list <- mod_list <- treat_list
+    for (i in 1:ns) {
+      treat_list[[i]] <- treat[i, ]
+      y_obs_list[[i]] <- y_obs[i, ]
+      sd_obs_list[[i]] <- sd_obs[i, ]
+      se_obs_list[[i]] <- se_obs[i, ]
+      mod_list[[i]] <- mod[i, ]
+      rand_list[[i]] <- rand[i, ]
+    }
+
     y0 <- sd0 <- se0 <- m <- N <- t <- treat
     for (i in 1:ns) {
-      y0[i, ] <- y_obs[i, order(treat[i, ], na.last = TRUE)]
-      sd0[i, ] <- sd_obs[i, order(treat[i, ], na.last = TRUE)]
-      se0[i, ] <- se_obs[i, order(treat[i, ], na.last = TRUE)]
-      m[i, ] <- mod[i, order(treat[i, ], na.last = TRUE)]
-      N[i, ] <- rand[i, order(treat[i, ], na.last = TRUE)]
-      t[i, ] <- sort(treat[i, ], na.last = TRUE)
+      y0[i, ] <- unlist(y_obs_list[[i]])[order(unlist(treat_list[[i]]),
+                                              na.last = TRUE)]
+      sd0[i, ] <- unlist(sd_obs_list[[i]])[order(unlist(treat_list[[i]]),
+                                               na.last = TRUE)]
+      se0[i, ] <- unlist(se_obs_list[[i]])[order(unlist(treat_list[[i]]),
+                                                 na.last = TRUE)]
+      m[i, ] <- unlist(mod_list[[i]])[order(unlist(treat_list[[i]]),
+                                            na.last = TRUE)]
+      N[i, ] <- unlist(rand_list[[i]])[order(unlist(treat_list[[i]]),
+                                             na.last = TRUE)]
+      t[i, ] <- sort(unlist(treat_list[[i]]), na.last = TRUE)
     }
 
     names(y0) <- paste0("y", seq_len(max(na)))
@@ -173,12 +187,23 @@ data_preparation <- function(data, measure) {
     }
 
     # Order by 'id of t1' < 'id of t2' < 'id of t3', and so on
+    treat_list <- event_list <- mod_list <- rand_list <- list()
+    for (i in 1:ns) {
+      treat_list[[i]] <- treat[i, ]
+      event_list[[i]] <- event[i, ]
+      mod_list[[i]] <- mod[i, ]
+      rand_list[[i]] <- rand[i, ]
+    }
+
     r <- m <- N <- t <- treat
     for (i in 1:ns) {
-      r[i, ] <- event[i, order(treat[i, ], na.last = TRUE)]
-      m[i, ] <- mod[i, order(treat[i, ], na.last = TRUE)]
-      N[i, ] <- rand[i, order(treat[i, ], na.last = TRUE)]
-      t[i, ] <- sort(treat[i, ], na.last = TRUE)
+     r[i, ] <- unlist(event_list[[i]])[order(unlist(treat_list[[i]]),
+                                             na.last = TRUE)]
+     m[i, ] <- unlist(mod_list[[i]])[order(unlist(treat_list[[i]]),
+                                           na.last = TRUE)]
+     N[i, ] <- unlist(rand_list[[i]])[order(unlist(treat_list[[i]]),
+                                            na.last = TRUE)]
+     t[i, ] <- sort(unlist(treat_list[[i]]), na.last = TRUE)
     }
 
     names(r) <- paste0("r", seq_len(max(na)))

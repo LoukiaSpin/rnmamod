@@ -94,8 +94,6 @@
 #' @export
 forestplot <- function(full, compar,  drug_names) {
 
-  options(warn = -1)
-
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
     bb <- "The intervention ID, as specified in 'data' is used as"

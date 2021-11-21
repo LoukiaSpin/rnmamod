@@ -76,11 +76,25 @@ improved_ume <- function(t, N, ns, na) {
   treat <- treat0 <- wide_format0[, 2:3]
   resp <- resp0 <- wide_format0[, 4:5]
   rand <- rand0 <- wide_format0[, 6:7]
+  treat_list <- resp_list <- rand_list <- list()
   for (i in seq_len(length(wide_format0[, 1]))) {
-    treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
-    resp[i, ] <- resp0[i, order(treat0[i, ], na.last = TRUE)]
-    rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
+    treat_list[[i]] <- treat0[i, ]
+    resp_list[[i]] <- resp0[i, ]
+    rand_list[[i]] <- rand0[i, ]
   }
+  for (i in seq_len(length(wide_format0[, 1]))) {
+    treat[i, ] <- unlist(treat_list[[i]])[order(unlist(treat_list[[i]]),
+                                                na.last = TRUE)]
+    resp[i, ] <- unlist(resp_list[[i]])[order(unlist(treat_list[[i]]),
+                                               na.last = TRUE)]
+    rand[i, ] <- unlist(rand_list[[i]])[order(unlist(treat_list[[i]]),
+                                              na.last = TRUE)]
+  }
+  #for (i in seq_len(length(wide_format0[, 1]))) {
+  #  treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
+  #  resp[i, ] <- resp0[i, order(treat0[i, ], na.last = TRUE)]
+  #  rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
+  #}
 
   wide_format <- data.frame(study = wide_format0$study, treat, resp, rand)
 
