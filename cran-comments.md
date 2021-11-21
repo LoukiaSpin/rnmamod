@@ -1,3 +1,9 @@
+## Resubmission
+This is a re-submission. In this version, I have:
+
+* Corrected the *'Error in xtfrm.data.frame(x) : cannot xtfrm data frames'* that
+appeared in some functions, tests and vignettes. This error appeared in Debian.
+
 ## Checking and building Windows binary package
 
 * **R-oldrelease: R-oldrelease, currently R-4.0.5**
