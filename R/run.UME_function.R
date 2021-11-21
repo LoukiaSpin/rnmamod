@@ -235,6 +235,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
   if (ns_multi < 1) {
     t1_indic_multi <- 0
     t2_indic_multi <- 0
+    connected <- 1
   } else {
     indic_multi0 <- list()
     for (i in (ns - ns_multi + 1):ns) {
