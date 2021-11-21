@@ -1,5 +1,4 @@
 ## Checking and building Windows binary package
-### Source: https://win-builder.r-project.org/upload.aspx
 
 * **R-oldrelease: R-oldrelease, currently R-4.0.5**
 
