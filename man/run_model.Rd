@@ -334,7 +334,6 @@ missing binary outcome data in network meta-analysis.
 Spineli LM. Modeling missing binary outcome data while preserving
 transitivity assumption yielded more credible network meta-analysis
 results. \emph{J Clin Epidemiol} 2019b;\bold{105}:19--26.
-\doi{10.1016/j.jclinepi.2018.09.002}
 
 Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
 uncertainty due to missing continuous outcome data in pairwise and

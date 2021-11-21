@@ -10,7 +10,7 @@
 #'   \code{\link{run_metareg}}.
 #' @param compar A character to indicate the comparator intervention. It must be
 #'   any name found in \code{drug_names}.
-#' @param cov_value A vector of two elements in the following order: a number
+#' @param cov_value A list of two elements in the following order: a number
 #'   for the covariate value of interest (see 'Arguments' in
 #'   \code{\link{run_metareg}}), and a character to indicate the name of
 #'   the covariate. See also 'Details'.
@@ -148,22 +148,31 @@ metareg_plot <- function(full,
                          drug_names,
                          save_xls) {
 
+  if (length(unique(reg$covariate)) < 3 &
+      !is.element(cov_value[[1]], reg$covariate)) {
+    aa <- "The first element of the argument 'cov_value' is out of the value"
+    stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
+  } else if (length(unique(reg$covariate)) > 2 &
+             (cov_value[[1]] < min(reg$covariate) |
+              cov_value[[1]] > max(reg$covariate))) {
+    aa <- "The first element of the argument 'cov_value' is out of the value"
+    stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
+  }
+
 
   if (length(drug_names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
          call. = FALSE)
   }
 
- if (length(unique(reg$covariate)) < 3 &
-     !is.element(cov_value[1], reg$covariate)) {
-   aa <- "The first element of the argument 'cov_value' is out of the value"
-   stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
- } else if (length(unique(reg$covariate)) > 2 &
-            (cov_value[1] < min(reg$covariate) |
-             cov_value[1] > max(reg$covariate))) {
-   aa <- "The first element of the argument 'cov_value' is out of the value"
-   stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
- }
+  cov_value <- if (missing(cov_value)) {
+    stop("The argument 'cov_value' has not been defined", call. = FALSE)
+  } else if (length(cov_value) < 2) {
+    aa <- "The argument 'cov_value' must be a vector with elements a number and"
+    stop(paste(aa, "a character"), call. = FALSE)
+  } else if (length(cov_value) == 2) {
+    cov_value
+  }
 
   save_xls <- if (missing(save_xls)) {
     FALSE
@@ -180,14 +189,6 @@ metareg_plot <- function(full,
     compar
   }
 
-  cov_value <- if (missing(cov_value)) {
-    stop("The argument 'cov_value' has not been defined", call. = FALSE)
-  } else if (length(cov_value) < 2) {
-    aa <- "The argument 'cov_value' must be a vector with elements a number and"
-    stop(paste(aa, "a character"), call. = FALSE)
-  } else if (length(cov_value) == 2) {
-    cov_value
-  }
 
   covariate <- if (length(unique(reg$covariate)) < 3) {
     unique(reg$covariate)
@@ -195,8 +196,8 @@ metareg_plot <- function(full,
     reg$covariate
   }
 
-  cov_val <- ifelse(length(unique(covariate)) < 3, as.numeric(cov_value[1]),
-                    as.numeric(cov_value[1]) - mean(covariate))
+  cov_val <- ifelse(length(unique(covariate)) < 3, as.numeric(cov_value[[1]]),
+                    as.numeric(cov_value[[1]]) - mean(covariate))
 
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."

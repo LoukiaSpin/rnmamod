@@ -11,7 +11,7 @@
 #'   \code{\link{run_metareg}}.
 #' @param compar A character to indicate the comparator intervention. It must
 #'   be any name found in \code{drug_names}.
-#' @param cov_value A vector of two elements in the following order: a number
+#' @param cov_value A list of two elements in the following order: a number
 #'   for the covariate value of interest (see 'Arguments' in
 #'   \code{\link{run_metareg}}), and a character to indicate the name of
 #'   the covariate. See also 'Details'.
@@ -62,13 +62,13 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   options(warn = -1)
 
   if (length(unique(reg$covariate)) < 3 &
-      !is.element(cov_value[1], reg$covariate)) {
+      !is.element(cov_value[[1]], reg$covariate)) {
     aa <- "The first element of the argument 'cov_value' is out of the value"
     bb <- "range of the analysed covariate"
     stop(paste(aa, bb), call. = FALSE)
   } else if (length(unique(reg$covariate)) > 2 &
-             (cov_value[1] < min(reg$covariate) |
-              cov_value[1] > max(reg$covariate))) {
+             (cov_value[[1]] < min(reg$covariate) |
+              cov_value[[1]] > max(reg$covariate))) {
     aa <- "The first element of the argument 'cov_value' is out of the value"
     bb <- "range of the analysed covariate"
     stop(paste(aa, bb), call. = FALSE)
@@ -116,8 +116,8 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   measure <- effect_measure_name(full$measure)
   model <- full$model
   cov_val <- ifelse(length(unique(reg$covariate)) < 3,
-                    as.numeric(cov_value[1]),
-                    as.numeric(cov_value[1]) - mean(reg$covariate))
+                    as.numeric(cov_value[[1]]),
+                    as.numeric(cov_value[[1]]) - mean(reg$covariate))
 
   # A matrix with all possible comparisons in the network
   poss_pair_comp1 <- data.frame(exp = t(combn(drug_names, 2))[, 2],
@@ -269,7 +269,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
 
   # Forest plots on credible/predictive intervals of comparisons with the
   # selected comparator
-  caption <- paste("Results for", cov_value[2], cov_value[1])
+  caption <- paste("Results for", cov_value[[2]], cov_value[[1]])
 
   forest_plots <- if (model == "RE") {
     ggplot(data = prepare_em,

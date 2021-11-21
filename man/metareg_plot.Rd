@@ -16,7 +16,7 @@ metareg_plot(full, reg, compar, cov_value, drug_names, save_xls)
 \item{compar}{A character to indicate the comparator intervention. It must be
 any name found in \code{drug_names}.}
 
-\item{cov_value}{A vector of two elements in the following order: a number
+\item{cov_value}{A list of two elements in the following order: a number
 for the covariate value of interest (see 'Arguments' in
 \code{\link{run_metareg}}), and a character to indicate the name of
 the covariate. See also 'Details'.}
