@@ -25,10 +25,10 @@ The columns of the data-frame in the argument \code{data} refer to
    \tab \cr
    \strong{m2} \tab The number of MOD in the second arm of the comparison.\cr
    \tab \cr
-   \strong{c1} \tab The number of completers in the first arm of the
+   \strong{n1} \tab The number randomised in the first arm of the
    comparison.\cr
    \tab \cr
-   \strong{c2} \tab The number of completers in the second arm of the
+   \strong{n2} \tab The number randomised in the second arm of the
    comparison.\cr
    \tab \cr
    \strong{t1} \tab An identified for the intervention in the first arm of

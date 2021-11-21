@@ -236,9 +236,9 @@ unrelated_effects_plot <- function(data,
     #pairwise_mod <- miss
 
     # The dataset to perform the unrelated trial effects model
-    pairwise_data <- data.frame(pairwise_observed[, c(1, 4:5)],
+    pairwise_data <- data.frame(pairwise_observed[, 1:3],
                                 pairwise_mod,
-                                pairwise_observed[, c(6:7, 2:3)])
+                                pairwise_observed[, 4:7])
   }
 
  if (is.element(measure, c("MD", "SMD", "ROM"))) {
@@ -256,12 +256,22 @@ unrelated_effects_plot <- function(data,
 
   # Replace intervention id with their original name
   # All possible comparisons - Treat1 (non-baseline arm)
-  for (i in sort(unique(unlist(contrast$t2)))) {
-    contrast[contrast$t2 == i, 9] <- drug_names[i]
-  }
-  # Observed comparisons - Treat2 (baseline arm)
-  for (i in sort(unique(unlist(contrast$t1)))) {
-    contrast[contrast$t1 == i, 8] <- drug_names[i]
+  if (!is.element(measure, c("OR", "ROM"))) {
+    for (i in sort(unique(unlist(contrast$t2)))) {
+      contrast[contrast$t2 == i, 11] <- drug_names[i]
+    }
+    # Observed comparisons - Treat2 (baseline arm)
+    for (i in sort(unique(unlist(contrast$t1)))) {
+      contrast[contrast$t1 == i, 10] <- drug_names[i]
+    }
+  } else {
+    for (i in sort(unique(unlist(contrast$t2)))) {
+      contrast[contrast$t2 == i, 9] <- drug_names[i]
+    }
+    # Observed comparisons - Treat2 (baseline arm)
+    for (i in sort(unique(unlist(contrast$t1)))) {
+      contrast[contrast$t1 == i, 8] <- drug_names[i]
+    }
   }
 
   contrast$lower <- if (!is.element(measure, c("OR", "ROM"))) {
@@ -284,7 +294,12 @@ unrelated_effects_plot <- function(data,
   contrast$char1 <- rep(char[, 1], na)
   contrast$char2 <- rep(char[, 2], na)
   contrast$char3 <- rep(char[, 3], na)
-  table_ute <- contrast[, c(14, 8:9, 2:7, 10:13, 16:18)]
+  table_ute <- if (is.element(measure, c("OR", "ROM"))) {
+    contrast[, c(14, 8:9, 2:7, 10:13, 16:18)]
+  } else {
+    contrast[, c(16, 10:11, 2:9, 17, 12:15, 18:20)]
+  }
+
 
   # Write the table with the EMs from both models as .xlsx
   if (save_xls == TRUE) {

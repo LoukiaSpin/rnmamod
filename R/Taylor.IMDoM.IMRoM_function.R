@@ -49,10 +49,10 @@
 #'    \tab \cr
 #'    \strong{m2} \tab The number of MOD in the second arm of the comparison.\cr
 #'    \tab \cr
-#'    \strong{c1} \tab The number of completers in the first arm of the
+#'    \strong{n1} \tab The number randomised in the first arm of the
 #'    comparison.\cr
 #'    \tab \cr
-#'    \strong{c2} \tab The number of completers in the second arm of the
+#'    \strong{n2} \tab The number randomised in the second arm of the
 #'    comparison.\cr
 #'    \tab \cr
 #'    \strong{t1} \tab An identified for the intervention in the first arm of
@@ -97,9 +97,9 @@ taylor_continuous <- function(data, measure, mean_value, var_value, rho) {
 
   # Calculate the probability of observing the outcomes
   # Control arm
-  a1 <- data[, 8] / (data[, 8] + data[, 6])
+  a1 <- (data[, 8] - data[, 6]) / data[, 8]
   # Experimental arm
-  a2 <- data[, 9] / (data[, 9] + data[, 7])
+  a2 <- (data[, 9] - data[, 7]) / data[, 9]
 
   # Calculate the adjusted-mean for MOD in the randomised sample
   if (measure == "MD" || measure == "SMD") {
@@ -120,10 +120,10 @@ taylor_continuous <- function(data, measure, mean_value, var_value, rho) {
     md <- y_all2 - y_all1
   } else if (measure == "SMD") {
     # Control arm
-    nominator1 <- (data[, 8] - 1) * data[, 4] * data[, 4]
+    nominator1 <- (data[, 8] - data[, 6] - 1) * data[, 4] * data[, 4]
     # Experimental arm
-    nominator2 <- (data[, 9] - 1) * data[, 5] * data[, 5]
-    denominator <- (data[, 8] - 1) + (data[, 9] - 1)
+    nominator2 <- (data[, 9] - data[, 7] - 1) * data[, 5] * data[, 5]
+    denominator <- (data[, 8] - data[, 6] - 1) + (data[, 9] - data[, 7] - 1)
     sd_pooled <- sqrt((nominator1 + nominator2) / denominator)
     # Experimental vs Control
     smd <- (y_all2 - y_all1) / sd_pooled
@@ -148,8 +148,8 @@ taylor_continuous <- function(data, measure, mean_value, var_value, rho) {
   }
 
   # Variance of y.obs per arm
-  beta1 <- (data[, 4] * data[, 4]) / data[, 8]
-  beta2 <- (data[, 5] * data[, 5]) / data[, 9]
+  beta1 <- (data[, 4] * data[, 4]) / (data[, 8] - data[, 6])
+  beta2 <- (data[, 5] * data[, 5]) / (data[, 9] - data[, 7])
 
   # Derivative of y_all by prob of MOD (i.e. a) per arm
   if (measure == "MD" || measure == "SMD") {
@@ -160,8 +160,8 @@ taylor_continuous <- function(data, measure, mean_value, var_value, rho) {
   }
 
   # Variance of prob of MOD
-  d1 <- (a1 * (1 - a1)) / (data[, 8] + data[, 6])
-  d2 <- (a2 * (1 - a2)) / (data[, 9] + data[, 7])
+  d1 <- (a1 * (1 - a1)) / data[, 8]
+  d2 <- (a2 * (1 - a2)) / data[, 9]
 
   # Derivative of link function for MD, SMD and LROM per arm
   if (measure == "MD") {
@@ -207,7 +207,7 @@ taylor_continuous <- function(data, measure, mean_value, var_value, rho) {
                        "mean1", "mean2",
                        "sd1", "sd2",
                        "m1", "m2",
-                       "c1", "c2",
+                       "n1", "n2",
                        "t1", "t2",
                        "EM", "se.EM")
 
