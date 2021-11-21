@@ -172,26 +172,6 @@ unrelated_effects_plot <- function(data,
                               studlab = 1:item$ns)[, c(6, 9)]
     colnames(pairwise_mod) <- c("m1", "m2")
 
-    # Ensure that t1 < t2 and correspondingly for the other elements
-    #treat <- treat0 <- pairwise_observed0[, 2:3]
-    #y_mean <- y_mean0 <- pairwise_observed0[, 4:5]
-    #sd_mean <- sd_mean0 <- pairwise_observed0[, 6:7]
-    #miss <- miss0 <- pairwise_mod0[, 1:2]
-    #rand <- rand0 <- pairwise_observed0[, 8:9]
-    #for (i in seq_len(length(pairwise_observed0[, 1]))) {
-    #  treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
-    #  y_mean[i, ] <- y_mean0[i, order(treat0[i, ], na.last = TRUE)]
-    #  sd_mean[i, ] <- sd_mean0[i, order(treat0[i, ], na.last = TRUE)]
-    #  miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
-    #  rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
-    #}
-
-    #pairwise_observed <- data.frame(study = pairwise_observed0$study,
-    #                                treat,
-    #                                y_mean,
-    #                                sd_mean,
-    #                                rand)
-    #pairwise_mod <- miss
     pairwise_data <- data.frame(pairwise_observed[, c(1, 4:7)],
                                 pairwise_mod,
                                 pairwise_observed[, c(8:9, 2:3)])
@@ -216,24 +196,6 @@ unrelated_effects_plot <- function(data,
                               data = cbind(item$t, item$m, item$N),
                               studlab = 1:item$ns)[, c(6, 8)]
     colnames(pairwise_mod) <- c("m1", "m2")
-
-    # Ensure that t1 < t2 and correspondingly for the other elements
-    #treat <- treat0 <- pairwise_observed0[, 6:7]
-    #resp <- resp0 <- pairwise_observed0[, 2:3]
-    #miss <- miss0 <- pairwise_mod0[, 1:2]
-    #rand <- rand0 <- pairwise_observed0[, 4:5]
-    #for (i in seq_len(length(pairwise_observed0[, 1]))) {
-    #  treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
-    #  resp[i, ] <- resp0[i, order(treat0[i, ], na.last = TRUE)]
-    #  miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
-    #  rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
-    #}
-
-    #pairwise_observed <- data.frame(study = pairwise_observed0$study,
-    #                                treat,
-    #                                resp,
-    #                                rand)
-    #pairwise_mod <- miss
 
     # The dataset to perform the unrelated trial effects model
     pairwise_data <- data.frame(pairwise_observed[, 1:3],

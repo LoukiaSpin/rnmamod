@@ -90,11 +90,6 @@ improved_ume <- function(t, N, ns, na) {
     rand[i, ] <- unlist(rand_list[[i]])[order(unlist(treat_list[[i]]),
                                               na.last = TRUE)]
   }
-  #for (i in seq_len(length(wide_format0[, 1]))) {
-  #  treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
-  #  resp[i, ] <- resp0[i, order(treat0[i, ], na.last = TRUE)]
-  #  rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
-  #}
 
   wide_format <- data.frame(study = wide_format0$study, treat, resp, rand)
 
