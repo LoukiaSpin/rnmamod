@@ -11,7 +11,7 @@ league_heatmap_pred(full, cov_value = NULL, drug_names)
 meta-analysis or \code{\link{run_metareg}} for network meta-regression.
 See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.}
 
-\item{cov_value}{A vector of two elements in the following order: a number
+\item{cov_value}{A list of two elements in the following order: a number
 for the covariate value of interest and a character for the name of the
 covariate. See also 'Details'.}
 
@@ -75,20 +75,8 @@ The rows and columns of the heatmap display the names of
 \examples{
 data("nma.liu2013")
 
-\dontrun{
-# Perform a random-effects network meta-analysis
-res <- run_model(data = nma.liu2013,
-                 measure = "OR",
-                 model = "RE",
-                 assumption = "IDE-ARM",
-                 heter_prior = list("halfnormal", 0, 1),
-                 mean_misspar = c(0, 0),
-                 var_misspar = 1,
-                 D = 1,
-                 n_chains = 3,
-                 n_iter = 10000,
-                 n_burnin = 1000,
-                 n_thin = 1)
+# Read results from 'run_model' (using the default arguments)
+res <- readRDS(system.file('extdata/res_liu.rds', package = 'rnmamod'))
 
 # The names of the interventions in the order they appear in the dataset
 interv_names <- c("placebo", "pramipexole", "serotonin-norepinephrine
@@ -98,7 +86,7 @@ interv_names <- c("placebo", "pramipexole", "serotonin-norepinephrine
 # Create the league heatmap
 league_heatmap_pred(full = res,
                     drug_names = interv_names)
-}
+
 }
 \references{
 Ruecker G, Schwarzer G. Ranking treatments in frequentist network

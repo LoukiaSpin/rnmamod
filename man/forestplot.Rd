@@ -59,13 +59,6 @@ data("nma.liu2013")
 
 # Show the first six trials of the dataset (one-trial-per-row format)
 head(nma.liu2013)
-#            study t1 t2 t3 r1 r2 r3 m1 m2 m3  n1  n2 n3
-#    Richard, 2012  1  3  4 15 16 23  6  8  4  39  42 34
-#     Barone, 2010  1  2 NA 27 38 NA 19 20 NA 152 144 NA
-# Weinbtraub, 2010  1  3 NA  2  5 NA  6  6 NA  27  28 NA
-#      Menza, 2009  1  4  5  4  2  9  6  7  5  17  18 17
-#      Devos, 2008  1  4  5  4  8 11  0  2  1  16  15 17
-#   Antonini, 2006  4  5 NA 10  8 NA  4  4 NA  16  15 NA
 
 # Read results from 'run_model' (using the default arguments)
 res <- readRDS(system.file('extdata/res_liu.rds', package = 'rnmamod'))
