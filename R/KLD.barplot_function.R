@@ -53,28 +53,9 @@
 #' @examples
 #' data("nma.baker2009")
 #'
-#' \dontrun{
-#' # Perform a random-effects network meta-analysis
-#' res <- run_model(data = nma.baker2009,
-#'                  measure = "OR",
-#'                  model = "RE",
-#'                  assumption = "IDE-ARM",
-#'                  heter_prior = list("halfnormal", 0, 1),
-#'                  mean_misspar = c(0, 0),
-#'                  var_.misspar = 1,
-#'                  D = 1,
-#'                  n_chains = 3,
-#'                  n_iter = 10000,
-#'                  n_burnin = 1000,
-#'                  n_thin = 1)
-#'
-#' # Perform the sensitivity analysis (missing-at-random assumption)
-#' res_sens <- run_sensitivity(full = res,
-#'                             var_misspar = 1,
-#'                             n_chains = 3,
-#'                             n_iter = 10000,
-#'                             n_burnin = 1000,
-#'                             n_thin = 1)
+#' # Read results from 'run_sensitivity' (using the default arguments)
+#' res_sens <- readRDS(system.file('extdata/res_sens_baker.rds',
+#'                     package = 'rnmamod'))
 #'
 #' # Calculate the robustness index
 #' robust <- robustness_index(sens = res_sens,
@@ -89,7 +70,7 @@
 #' kld_barplot(robust = robust,
 #'             compar = c("tiotropium", "salmeterol"),
 #'             drug_names = interv_names)
-#' }
+#'
 #' @export
 kld_barplot <- function(robust, compar, drug_names) {
 
@@ -119,10 +100,12 @@ kld_barplot <- function(robust, compar, drug_names) {
     stop("The argument 'compar' needs to be defined", call. = FALSE)
   } else if (length(drug_names) < 3 & missing(compar)) {
     c(drug_names[2], drug_names[1])
-  } else if (!is.element(compar, drug_names)) {
+  } else if (!is.element(compar[1], drug_names) |
+             !is.element(compar[2], drug_names)) {
     stop("The value of 'compar' is not found in the argument 'drug_names'",
          call. = FALSE)
-  } else if (is.element(compar, drug_names)) {
+  } else if (is.element(compar[1], drug_names) |
+             is.element(compar[2], drug_names)) {
     compar
   }
 

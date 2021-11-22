@@ -72,29 +72,9 @@ For the \code{Plot_effect_size} of the selected pairwise
 \examples{
 data("nma.baker2009")
 
-\dontrun{
-# Perform a random-effects network meta-analysis
-res <- run_model(data = nma.baker2009,
-                 measure = "OR",
-                 model = "RE",
-                 assumption = "IDE-ARM",
-                 heter_prior = list("halfnormal", 0, 1),
-                 mean_misspar = c(0, 0),
-                 var_misspar = 1,
-                 D = 1,
-                 n_chains = 3,
-                 n_iter = 10000,
-                 n_burnin = 1000,
-                 n_thin = 1)
-
-# Perform the sensitivity analysis (default values for 'mean_misspar')
-res_sens <- run_sensitivity(full = res,
-                            assumption = "IDE-ARM",
-                            var_misspar = 1,
-                            n_chains = 3,
-                            n_iter = 10000,
-                            n_burnin = 1000,
-                            n_thin = 1)
+# Read results from 'run_sensitivity' (using the default arguments)
+res_sens <- readRDS(system.file('extdata/res_sens_baker.rds',
+                    package = 'rnmamod'))
 
 # The names of the interventions in the order they appear in the dataset
 interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
@@ -105,7 +85,7 @@ interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
 balloon_plot(sens = res_sens,
              compar = c("tiotropium", "salmeterol"),
              drug_names = interv_names)
-}
+
 }
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of

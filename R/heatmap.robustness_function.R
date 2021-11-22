@@ -53,28 +53,9 @@
 #' @examples
 #' data("nma.baker2009")
 #'
-#' \dontrun{
-#' # Perform a random-effects network meta-analysis
-#' res <- run_model(data = nma.baker2009,
-#'                  measure = "OR",
-#'                  model = "RE",
-#'                  assumption = "IDE-ARM",
-#'                  heter_prior = list("halfnormal", 0, 1),
-#'                  mean_misspar = c(0, 0),
-#'                  var_misspar = 1,
-#'                  D = 1,
-#'                  n_chains = 3,
-#'                  n_iter = 10000,
-#'                  n_burnin = 1000,
-#'                  n_thin = 1)
-#'
-#' # Perform the sensitivity analysis (missing-at-random assumption)
-#' res_sens <- run_sensitivity(full = res,
-#'                             var_misspar = 1,
-#'                             n_chains = 3,
-#'                             n_iter = 10000,
-#'                             n_burnin = 1000,
-#'                             n_thin = 1)
+#' # Read results from 'run_sensitivity' (using the default arguments)
+#' res_sens <- readRDS(system.file('extdata/res_sens_baker.rds',
+#'                     package = 'rnmamod'))
 #'
 #' # Calculate the robustness index
 #' robust <- robustness_index(sens = res_sens,
@@ -88,7 +69,7 @@
 #' # Create the heatmap of robustness
 #' heatmap_robustness(robust = robust,
 #'                    drug_names = interv_names)
-#' }
+#'
 #' @export
 heatmap_robustness <- function(robust, drug_names) {
 

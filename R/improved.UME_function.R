@@ -69,7 +69,7 @@ improved_ume <- function(t, N, ns, na) {
                            event = as.list(N),
                            n = as.list(N),
                            data = cbind(t, N, N),
-                          studlab = 1:ns)[, c(3:6, 8, 7, 9)]
+                           studlab = 1:ns)[, c(3:6, 8, 7, 9)]
   colnames(wide_format0)  <- c("study", "t1", "t2", "n1", "n2", "n1", "n2")
 
   # Ensure that t1 < t2 and correspondingly for the other elements

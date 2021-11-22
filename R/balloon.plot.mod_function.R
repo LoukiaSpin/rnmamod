@@ -72,29 +72,9 @@
 #' @examples
 #' data("nma.baker2009")
 #'
-#' \dontrun{
-#' # Perform a random-effects network meta-analysis
-#' res <- run_model(data = nma.baker2009,
-#'                  measure = "OR",
-#'                  model = "RE",
-#'                  assumption = "IDE-ARM",
-#'                  heter_prior = list("halfnormal", 0, 1),
-#'                  mean_misspar = c(0, 0),
-#'                  var_misspar = 1,
-#'                  D = 1,
-#'                  n_chains = 3,
-#'                  n_iter = 10000,
-#'                  n_burnin = 1000,
-#'                  n_thin = 1)
-#'
-#' # Perform the sensitivity analysis (default values for 'mean_misspar')
-#' res_sens <- run_sensitivity(full = res,
-#'                             assumption = "IDE-ARM",
-#'                             var_misspar = 1,
-#'                             n_chains = 3,
-#'                             n_iter = 10000,
-#'                             n_burnin = 1000,
-#'                             n_thin = 1)
+#' # Read results from 'run_sensitivity' (using the default arguments)
+#' res_sens <- readRDS(system.file('extdata/res_sens_baker.rds',
+#'                     package = 'rnmamod'))
 #'
 #' # The names of the interventions in the order they appear in the dataset
 #' interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
@@ -105,7 +85,7 @@
 #' balloon_plot(sens = res_sens,
 #'              compar = c("tiotropium", "salmeterol"),
 #'              drug_names = interv_names)
-#' }
+#'
 #' @export
 balloon_plot <- function(sens, compar, drug_names) {
 
@@ -138,10 +118,12 @@ balloon_plot <- function(sens, compar, drug_names) {
     stop("The argument 'compar' needs to be defined", call. = FALSE)
   } else if (length(drug_names) < 3 & missing(compar)) {
     c(drug_names[2], drug_names[1])
-  } else if (!is.element(compar, drug_names)) {
+  } else if (!is.element(compar[1], drug_names) |
+             !is.element(compar[2], drug_names)) {
     stop("The value of 'compar' is not found in the argument 'drug_names'",
          call. = FALSE)
-  } else if (is.element(compar, drug_names)) {
+  } else if (is.element(compar[1], drug_names) &
+             is.element(compar[2], drug_names)) {
     compar
   }
 
@@ -256,7 +238,7 @@ balloon_plot <- function(sens, compar, drug_names) {
       labs(x = paste(imp, "scenario in", experim),
            y = paste(imp, "scenario in", control),
            color = "") +
-      guides(shape = FALSE, size = FALSE) +
+      guides(shape = "none", size = "none") +
       ggtitle(paste("Summary", effect_measure_name(measure))) +
       theme_bw() +
       theme(axis.text.x = element_text(size = 12,
@@ -319,7 +301,7 @@ balloon_plot <- function(sens, compar, drug_names) {
       labs(x = paste(imp, "scenario in", experim),
            y = paste(imp, "scenario in", control),
            color = "") +
-      guides(shape = FALSE, size = FALSE) +
+      guides(shape = "none", size = "none") +
       ggtitle(paste("Summary", effect_measure_name(measure))) +
       theme_bw() +
       theme(axis.text.x = element_text(size = 12,
@@ -429,7 +411,7 @@ balloon_plot <- function(sens, compar, drug_names) {
            y = axis.name.y,
            color = "") +
       ggtitle("Between-trial standard deviation") +
-      guides(shape = FALSE, size = FALSE) +
+      guides(shape = "none", size = "none") +
       theme_bw() +
       theme(axis.text.x = element_text(size = 12,
                                        angle = 360,

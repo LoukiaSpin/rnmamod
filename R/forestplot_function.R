@@ -57,28 +57,9 @@
 #'
 #' # Show the first six trials of the dataset (one-trial-per-row format)
 #' head(nma.liu2013)
-#' #            study t1 t2 t3 r1 r2 r3 m1 m2 m3  n1  n2 n3
-#' #    Richard, 2012  1  3  4 15 16 23  6  8  4  39  42 34
-#' #     Barone, 2010  1  2 NA 27 38 NA 19 20 NA 152 144 NA
-#' # Weinbtraub, 2010  1  3 NA  2  5 NA  6  6 NA  27  28 NA
-#' #      Menza, 2009  1  4  5  4  2  9  6  7  5  17  18 17
-#' #      Devos, 2008  1  4  5  4  8 11  0  2  1  16  15 17
-#' #   Antonini, 2006  4  5 NA 10  8 NA  4  4 NA  16  15 NA
 #'
-#' \dontrun{
-#' # Perform a random-effects network meta-analysis
-#' res <- run_model(data = nma.liu2013,
-#'                  measure = "OR",
-#'                  model = "RE",
-#'                  assumption = "IDE-ARM",
-#'                  heter_prior = list("halfnormal", 0, 1),
-#'                  mean_misspar = c(0, 0),
-#'                  var_misspar = 1,
-#'                  D = 1,
-#'                  n_chains = 3,
-#'                  n_iter = 10000,
-#'                  n_burnin = 1000,
-#'                  n_thin = 1)
+#' # Read results from 'run_model' (using the default arguments)
+#' res <- readRDS(system.file('extdata/res_liu.rds', package = 'rnmamod'))
 #'
 #' # The names of the interventions in the order they appear in the dataset
 #' interv_names <- c("placebo", "pramipexole", "serotonin-norepinephrine
@@ -89,7 +70,6 @@
 #' forestplot(full = res,
 #'            compar = "placebo",
 #'            drug_names = interv_names)
-#' }
 #'
 #' @export
 forestplot <- function(full, compar,  drug_names) {
@@ -337,7 +317,7 @@ forestplot <- function(full, compar,  drug_names) {
                     aes(x = order, y = mean, ymin = lower, ymax = upper),
                     size = 2, position = position_dodge(width = 0.5),
                     colour = "black", width = 0.0) +
-      geom_point(size = 1.5,  colour = "white", stroke = 0.3,
+      geom_point(size = 1.5, colour = "white", stroke = 0.3,
                  position = position_dodge(width = 0.5)) +
       geom_text(aes(x = order,
                     y = mean,
@@ -390,6 +370,7 @@ forestplot <- function(full, compar,  drug_names) {
                                          size = 12))
   }
 
+
   # Forest plots of SUCRA per intervention
   p2 <- ggplot(data = prepare_sucra[seq_len(len_drug_names), ],
                aes(x = as.factor(order),
@@ -397,7 +378,7 @@ forestplot <- function(full, compar,  drug_names) {
                    ymin = lower,
                    ymax = upper)) +
     geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
-    geom_point(size = 1.5,  colour = "white", stroke = 0.3,
+    geom_point(size = 1.5, colour = "white", stroke = 0.3,
                position = position_dodge(width = 0.5)) +
     geom_text(aes(x = as.factor(order), y = round(mean, 2),
                   label = paste0(round(mean * 100, 0),
@@ -423,8 +404,10 @@ forestplot <- function(full, compar,  drug_names) {
                                       size = 12))
 
   # Bring together both forest-plots
-  forest_plots <- ggarrange(p1, p2, nrow = 1, ncol = 2, labels = c("A)", "B)"),
-                            common.legend = TRUE, legend = "bottom")
+  forest_plots <- suppressWarnings({
+    ggarrange(p1, p2, nrow = 1, ncol = 2,
+              labels = c("A)", "B)"), common.legend = TRUE, legend = "bottom")
+    })
 
   return(forest_plots)
 }

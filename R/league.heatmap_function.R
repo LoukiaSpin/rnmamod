@@ -9,7 +9,7 @@
 #' @param full An object of S3 class \code{\link{run_model}} for network
 #'   meta-analysis or \code{\link{run_metareg}} for network meta-regression.
 #'   See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.
-#' @param cov_value A vector of two elements in the following order: a number
+#' @param cov_value A list of two elements in the following order: a number
 #'   for the covariate value of interest and a character for the name of the
 #'   covariate. See also 'Details'.
 #' @param drug_names A vector of labels with the name of the interventions in
@@ -80,20 +80,8 @@
 #' @examples
 #' data("nma.liu2013")
 #'
-#' \dontrun{
-#' # Perform a random-effects network meta-analysis
-#' res <- run_model(data = nma.liu2013,
-#'                  measure = "OR",
-#'                  model = "RE",
-#'                  assumption = "IDE-ARM",
-#'                  heter_prior = list("halfnormal", 0, 1),
-#'                  mean_misspar = c(0, 0),
-#'                  var_misspar = 1,
-#'                  D = 1,
-#'                  n_chains = 3,
-#'                  n_iter = 10000,
-#'                  n_burnin = 1000,
-#'                  n_thin = 1)
+#' # Read results from 'run_model' (using the default arguments)
+#' res <- readRDS(system.file('extdata/res_liu.rds', package = 'rnmamod'))
 #'
 #' # The names of the interventions in the order they appear in the dataset
 #' interv_names <- c("placebo", "pramipexole", "serotonin-norepinephrine
@@ -103,7 +91,7 @@
 #' # Create the league heatmap
 #' league_heatmap(full = res,
 #'                drug_names = interv_names)
-#' }
+#'
 #' @export
 league_heatmap <- function(full, cov_value = NULL, drug_names) {
 
@@ -126,16 +114,16 @@ league_heatmap <- function(full, cov_value = NULL, drug_names) {
   cov_value <- if (!is.null(full$beta_all) & missing(cov_value)) {
     stop("The argument 'cov_value' has not been defined", call. = FALSE)
   } else if (!is.null(full$beta_all) & length(cov_value) < 2) {
-    aa <- "The argument 'cov_value' must be a vector with elements a number and"
+    aa <- "The argument 'cov_value' must be a list with elements a number and"
     stop(paste(aa, "a character"), call. = FALSE)
   } else if (!is.null(full$beta_all) & length(cov_value) == 2) {
     cov_value
   }
 
   covar <- if (length(unique(full$covariate)) < 3) {
-    as.numeric(cov_value[1])
+    cov_value[[1]]
   } else {
-    as.numeric(cov_value[1]) - mean(full$covariate)
+    cov_value[[1]] - mean(full$covariate)
   }
 
   measure <- full$measure
@@ -249,10 +237,10 @@ league_heatmap <- function(full, cov_value = NULL, drug_names) {
   mat_new$value_sucra <- final_col$value
 
   caption <- if (!is.null(full$beta_all) & length(unique(full$covariate)) > 2) {
-    paste("Posterior mean (95% credible interval) for", cov_value[2],
-          cov_value[1])
+    paste("Posterior mean (95% credible interval) for", cov_value[[2]],
+          cov_value[[1]])
   } else if (!is.null(full$beta_all) & length(unique(full$covariate)) < 3) {
-    paste("Posterior mean (95% credible interval) for", cov_value[2])
+    paste("Posterior mean (95% credible interval) for", cov_value[[2]])
   } else if (is.null(full$beta_all)) {
     paste("Posterior mean (95% credible interval)")
   }
