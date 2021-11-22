@@ -297,29 +297,24 @@ data("nma.baker2009")
 
 # Show the first six trials of the dataset
 head(nma.baker2009)
-#                 study t1 t2 t3 t4 r1 r2 r3 r4 m1 m2 m3 m4  n1  n2 n3 n4
-# Llewellyn-Jones, 1996  1  4 NA NA  3  0 NA NA  1  0 NA NA   8   8 NA NA
-#        Paggiaro, 1998  1  4 NA NA 51 45 NA NA 27 19 NA NA 139 142 NA NA
-#          Mahler, 1999  1  7 NA NA 47 28 NA NA 23  9 NA NA 143 135 NA NA
-#        Casaburi, 2000  1  8 NA NA 41 45 NA NA 18 12 NA NA 191 279 NA NA
-#       van Noord, 2000  1  7 NA NA 18 11 NA NA  8  7 NA NA  50  47 NA NA
-#         Rennard, 2001  1  7 NA NA 41 38 NA NA 29 22 NA NA 135 132 NA NA
 
-\dontrun{
+\donttest{
 # Perform a random-effects network meta-analysis
-run_model(data = nma.baker2009,
-          measure = "OR",
-          model = "RE",
-          assumption = "IDE-ARM",
-          heter_prior = list("halfnormal", 0, 1),
-          mean_misspar = c(0, 0),
-          var_misspar = 1,
-          D = 1,
-          n_chains = 3,
-          n_iter = 10000,
-          n_burnin = 1000,
-          n_thin = 1)
+# Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
+res <- run_model(data = nma.baker2009,
+                 measure = "OR",
+                 model = "RE",
+                 assumption = "IDE-ARM",
+                 heter_prior = list("halfnormal", 0, 1),
+                 mean_misspar = c(0, 0),
+                 var_misspar = 1,
+                 D = 1,
+                 n_chains = 3,
+                 n_iter = 1000,
+                 n_burnin = 100,
+                 n_thin = 1)
 }
+
 }
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome

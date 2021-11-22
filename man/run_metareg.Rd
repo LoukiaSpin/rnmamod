@@ -162,34 +162,25 @@ Performs a one-stage pairwise or network meta-regression while addressing
 \examples{
 data("nma.baker2009")
 
-\dontrun{
-# Perform a random-effects network meta-analysis
-res <- run_model(data = nma.baker2009,
-                 measure = "OR",
-                 model = "RE",
-                 assumption = "IDE-ARM",
-                 heter_prior = list("halfnormal", 0, 1),
-                 mean_misspar = c(0, 0),
-                 var_misspar = 1,
-                 D = 1,
-                 n_chains = 3,
-                 n_iter = 10000,
-                 n_burnin = 1000,
-                 n_thin = 1)
+# Read results from 'run_model' (using the default arguments)
+res <- readRDS(system.file('extdata/res_baker.rds', package = 'rnmamod'))
 
 # Publication year
 pub_year <- c(1996, 1998, 1999, 2000, 2000, 2001, rep(2002, 5), 2003, 2003,
               rep(2005, 4), 2006, 2006, 2007, 2007)
 
+\donttest{
 # Perform a random-effects network meta-regression (exchangeable structure)
-run_metareg(full = res,
-            covariate = pub_year,
-            covar_assumption = "exchangeable",
-            n_chains = 3,
-            n_iter = 10000,
-            n_burnin = 1000,
-            n_thin = 1)
+# Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
+reg <- run_metareg(full = res,
+                   covariate = pub_year,
+                   covar_assumption = "exchangeable",
+                   n_chains = 3,
+                   n_iter = 1000,
+                   n_burnin = 100,
+                   n_thin = 1)
 }
+
 }
 \references{
 Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome

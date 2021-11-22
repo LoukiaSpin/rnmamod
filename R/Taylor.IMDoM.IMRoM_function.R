@@ -83,7 +83,6 @@
 #' @seealso \code{\link[netmeta]{pairwise}}, \code{\link{run_model}},
 #'   \code{\link{unrelated_effects_plot}}
 #'
-#'
 #' @references
 #' Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
 #' uncertainty due to missing continuous outcome data in pairwise and network

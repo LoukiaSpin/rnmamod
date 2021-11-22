@@ -38,20 +38,8 @@
 #' @examples
 #' data("nma.liu2013")
 #'
-#' \dontrun{
-#' # Perform a random-effects network meta-analysis
-#' res <- run_model(data = nma.liu2013,
-#'                  measure = "OR",
-#'                  model = "RE",
-#'                  assumption = "IDE-ARM",
-#'                  heter_prior = list("halfnormal", 0, 1),
-#'                  mean_misspar = c(0, 0),
-#'                  var_misspar = 1,
-#'                  D = 1,
-#'                  n_chains = 3,
-#'                  n_iter = 10000,
-#'                  n_burnin = 1000,
-#'                  n_thin = 1)
+#' # Read results from 'run_model' (using the default arguments)
+#' res <- readRDS(system.file('extdata/res_liu.rds', package = 'rnmamod'))
 #'
 #' # The names of the interventions in the order they appear in the dataset
 #' interv_names <- c("placebo", "pramipexole", "serotonin-norepinephrine
@@ -61,7 +49,7 @@
 #' # Create the integrated rankograms and SUCRA curves
 #' rankosucra_plot(full = res,
 #'                 drug_names = interv_names)
-#' }
+#'
 #' @export
 rankosucra_plot <- function(full, drug_names) {
 

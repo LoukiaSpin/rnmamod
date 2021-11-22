@@ -98,33 +98,15 @@ The DIC of the network meta-analysis model is compared with the DIC
 \examples{
 data("nma.baker2009")
 
-\dontrun{
-# Perform a random-effects network meta-analysis
-res <- run_model(data = nma.baker2009,
-                 measure = "OR",
-                 model = "RE",
-                 assumption = "IDE-ARM",
-                 heter_prior = list("halfnormal", 0, 1),
-                 mean_misspar = c(0, 0),
-                 var_misspar = 1,
-                 D = 0,
-                 n_chains = 3,
-                 n_iter = 10000,
-                 n_burnin = 1000,
-                 n_thin = 1)
+# Read results from 'run_model' (using the default arguments)
+res <- readRDS(system.file('extdata/res_baker.rds', package = 'rnmamod'))
 
-# Publication year
+# Read results from 'run_metareg' (exchangeable structure)
+reg <- readRDS(system.file('extdata/reg_baker.rds', package = 'rnmamod'))
+
+# Publication year as the covariate
 pub_year <- c(1996, 1998, 1999, 2000, 2000, 2001, rep(2002, 5), 2003, 2003,
               rep(2005, 4), 2006, 2006, 2007, 2007)
-
-# Perform a random-effects network meta-regression (exchangeable structure)
-reg <- run_metareg(full = res,
-                   covariate = pub_year,
-                   covar_assumption = "exchangeable",
-                   n_chains = 3,
-                   n_iter = 10000,
-                   n_burnin = 1000,
-                   n_thin = 1)
 
 # The names of the interventions in the order they appear in the dataset
 interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
@@ -136,9 +118,9 @@ interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
 metareg_plot(full = res,
              reg = reg,
              compar = "salmeterol",
-             cov_value = c(2000, "publication year"),
+             cov_value = list(2000, "publication year"),
              drug_names = interv_names)
-}
+
 }
 \references{
 Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries

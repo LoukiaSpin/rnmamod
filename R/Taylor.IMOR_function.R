@@ -71,7 +71,6 @@
 #' @seealso \code{\link[netmeta]{pairwise}}, \code{\link{run_model}},
 #'   \code{\link{unrelated_effects_plot}}
 #'
-#'
 #' @references
 #' White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data
 #' in meta-analysis--part 1: two-stage methods.

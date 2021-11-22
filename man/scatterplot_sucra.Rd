@@ -13,7 +13,7 @@ See 'Value' in \code{\link{run_model}}.}
 \item{reg}{An object of S3 class \code{\link{run_metareg}}. See 'Value' in
 \code{\link{run_metareg}}.}
 
-\item{cov_value}{A vector of two elements in the following order: a number
+\item{cov_value}{A list of two elements in the following order: a number
 for the covariate value of interest (see 'Arguments' in
 \code{\link{run_metareg}}), and a character to indicate the name of
 the covariate. See also 'Details'.}

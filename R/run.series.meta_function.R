@@ -73,36 +73,20 @@
 #'
 #' # Show the first six trials of the dataset (one-trial-per-row format)
 #' head(nma.dogliotti2014)
-#' #            study t1 t2 t3   r1   r2 r3  m1  m2 m3   n1   n2 n3
-#' #     BAATAF, 1990  1  7 NA  195  188 NA   0  21 NA  208  212 NA
-#' #     SPINAF, 1992  1  7 NA  186  172 NA  56  81 NA  265  260 NA
-#' #    SPAF-II, 1994  2  7 NA  480  478 NA  23  38 NA  545  555 NA
-#' #      PATAF, 1999  2  7 NA  243   86 NA  54  42 NA  319  131 NA
-#' # ACTIVE (W), 2006  3  7 NA 2825 3089 NA 410 223 NA 3335 3371 NA
-#' #       JAST, 2006  1  2 NA  338  313 NA  89  96 NA  445  426 NA
 #'
-#' \dontrun{
-#' # Perform a random-effects network meta-analysis
-#' res <- run_model(data = nma.dogliotti2014,
-#'                  measure = "OR",
-#'                  model = "RE",
-#'                  assumption = "IDE-ARM",
-#'                  heter_prior = list("halfnormal", 0, 1),
-#'                  mean_misspar = c(0, 0),
-#'                  var_misspar = 1,
-#'                  D = 1,
-#'                  n_chains = 3,
-#'                  n_iter = 10000,
-#'                  n_burnin = 1000,
-#'                  n_thin = 1)
+#' # Read results from 'run_model' (using the default arguments)
+#' res <- readRDS(system.file('extdata/res_dogliotti.rds', package = 'rnmamod'))
 #'
+#' \donttest{
 #' # Run separate random-effects pairwise meta-analyses
-#' run_series_meta(full = res,
-#'                 n_chains = 3,
-#'                 n_iter = 10000,
-#'                 n_burnin = 1000,
-#'                 n_thin = 1)
+#' # Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
+#' res <- run_series_meta(full = res,
+#'                        n_chains = 3,
+#'                        n_iter = 1000,
+#'                        n_burnin = 100,
+#'                        n_thin = 1)
 #' }
+#'
 #' @export
 run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
 
@@ -133,9 +117,6 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
   }
   mean_misspar <- full$mean_misspar
   var_misspar <- full$var_misspar
-
-  # Turn off warning when variables in the 'data.jag' are not used
-  options(warn = -1)
 
   # Prepare the dataset for the R2jags
   item <- data_preparation(data, measure)
@@ -173,26 +154,6 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
                               studlab = 1:item$ns)[, c(6, 9)]
     colnames(pairwise_mod) <- c("m1", "m2")
 
-    # Ensure that t1 < t2 and correspondingly for the other elements
-    #treat <- treat0 <- pairwise_observed0[, 2:3]
-    #y_mean <- y_mean0 <- pairwise_observed0[, 4:5]
-    #sd_mean <- sd_mean0 <- pairwise_observed0[, 6:7]
-    #miss <- miss0 <- pairwise_mod0[, 1:2]
-    #rand <- rand0 <- pairwise_observed0[, 8:9]
-    #for (i in seq_len(length(pairwise_observed0[, 1]))) {
-    #  treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
-    #  y_mean[i, ] <- y_mean0[i, order(treat0[i, ], na.last = TRUE)]
-    #  sd_mean[i, ] <- sd_mean0[i, order(treat0[i, ], na.last = TRUE)]
-    #  miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
-    #  rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
-    #}
-
-    #pairwise_observed <- data.frame(study = pairwise_observed0$study,
-    #                                treat,
-    #                                y_mean,
-    #                                sd_mean,
-    #                                rand)
-    #pairwise_mod <- miss
   } else {
     # Turn into contrast-level data ('netmeta')
     pairwise_observed <-
@@ -216,24 +177,6 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
                              data = cbind(item$t, item$m, item$N),
                              studlab = 1:item$ns)[, c(6, 8)]
     colnames(pairwise_mod) <- c("m1", "m2")
-
-    # Ensure that t1 < t2 and correspondingly for the other elements
-    #treat <- treat0 <- pairwise_observed0[, 2:3]
-    #resp <- resp0 <- pairwise_observed0[, 4:5]
-    #miss <- miss0 <- pairwise_mod0[, 1:2]
-    #rand <- rand0 <- pairwise_observed0[, 6:7]
-    #for (i in seq_len(length(pairwise_observed0[, 1]))) {
-    #  treat[i, ] <- treat0[i, order(treat0[i, ], na.last = TRUE)]
-    #  resp[i, ] <- resp0[i, order(treat0[i, ], na.last = TRUE)]
-    #  miss[i, ] <- miss0[i, order(treat0[i, ], na.last = TRUE)]
-    #  rand[i, ] <- rand0[i, order(treat0[i, ], na.last = TRUE)]
-    #}
-
-    #pairwise_observed <- data.frame(study = pairwise_observed0$study,
-    #                                treat,
-    #                                resp,
-    #                                rand)
-    #pairwise_mod <- miss
   }
 
   # The dataset for the analysis

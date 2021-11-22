@@ -99,33 +99,15 @@
 #' @examples
 #' data("nma.baker2009")
 #'
-#' \dontrun{
-#' # Perform a random-effects network meta-analysis
-#' res <- run_model(data = nma.baker2009,
-#'                  measure = "OR",
-#'                  model = "RE",
-#'                  assumption = "IDE-ARM",
-#'                  heter_prior = list("halfnormal", 0, 1),
-#'                  mean_misspar = c(0, 0),
-#'                  var_misspar = 1,
-#'                  D = 0,
-#'                  n_chains = 3,
-#'                  n_iter = 10000,
-#'                  n_burnin = 1000,
-#'                  n_thin = 1)
+#' # Read results from 'run_model' (using the default arguments)
+#' res <- readRDS(system.file('extdata/res_baker.rds', package = 'rnmamod'))
 #'
-#' # Publication year
+#' # Read results from 'run_metareg' (exchangeable structure)
+#' reg <- readRDS(system.file('extdata/reg_baker.rds', package = 'rnmamod'))
+#'
+#' # Publication year as the covariate
 #' pub_year <- c(1996, 1998, 1999, 2000, 2000, 2001, rep(2002, 5), 2003, 2003,
 #'               rep(2005, 4), 2006, 2006, 2007, 2007)
-#'
-#' # Perform a random-effects network meta-regression (exchangeable structure)
-#' reg <- run_metareg(full = res,
-#'                    covariate = pub_year,
-#'                    covar_assumption = "exchangeable",
-#'                    n_chains = 3,
-#'                    n_iter = 10000,
-#'                    n_burnin = 1000,
-#'                    n_thin = 1)
 #'
 #' # The names of the interventions in the order they appear in the dataset
 #' interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
@@ -137,9 +119,9 @@
 #' metareg_plot(full = res,
 #'              reg = reg,
 #'              compar = "salmeterol",
-#'              cov_value = c(2000, "publication year"),
+#'              cov_value = list(2000, "publication year"),
 #'              drug_names = interv_names)
-#' }
+#'
 #' @export
 metareg_plot <- function(full,
                          reg,
@@ -168,7 +150,7 @@ metareg_plot <- function(full,
   cov_value <- if (missing(cov_value)) {
     stop("The argument 'cov_value' has not been defined", call. = FALSE)
   } else if (length(cov_value) < 2) {
-    aa <- "The argument 'cov_value' must be a vector with elements a number and"
+    aa <- "The argument 'cov_value' must be a list with elements a number and"
     stop(paste(aa, "a character"), call. = FALSE)
   } else if (length(cov_value) == 2) {
     cov_value
@@ -196,8 +178,8 @@ metareg_plot <- function(full,
     reg$covariate
   }
 
-  cov_val <- ifelse(length(unique(covariate)) < 3, as.numeric(cov_value[[1]]),
-                    as.numeric(cov_value[[1]]) - mean(covariate))
+  cov_val <- ifelse(length(unique(covariate)) < 3, cov_value[[1]],
+                    cov_value[[1]] - mean(covariate))
 
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."

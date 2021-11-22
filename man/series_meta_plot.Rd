@@ -64,27 +64,12 @@ Facilitates the comparison of the consistency model
 \examples{
 data("nma.dogliotti2014")
 
-\dontrun{
-# Perform a random-effects network meta-analysis
-res <- run_model(data = nma.dogliotti2014,
-                 measure = "OR",
-                 model = "RE",
-                 assumption = "IDE-ARM",
-                 heter_prior = list("halfnormal", 0, 1),
-                 mean_misspar = c(0, 0),
-                 var_misspar = 1,
-                 D = 1,
-                 n_chains = 3,
-                 n_iter = 10000,
-                 n_burnin = 1000,
-                 n_thin = 1)
+# Read results from 'run_model' (using the default arguments)
+res <- readRDS(system.file('extdata/res_dogliotti.rds', package = 'rnmamod'))
 
-# Run separate random-effects pairwise meta-analyses
-meta <- run_series_meta(full = res,
-                        n_chains = 3,
-                        n_iter = 10000,
-                        n_burnin = 1000,
-                        n_thin = 1)
+# Read results from 'run_series_meta' (using the default arguments)
+meta <- readRDS(system.file('extdata/meta_dogliotti.rds',
+                package = 'rnmamod'))
 
 # The names of the interventions in the order they appear in the dataset
 interv_names <- c("placebo", "aspirin", "aspirin plus clopidogrel",
@@ -95,7 +80,7 @@ interv_names <- c("placebo", "aspirin", "aspirin plus clopidogrel",
 series_meta_plot(full = res,
                  meta = meta,
                  drug_names = interv_names)
-}
+
 }
 \seealso{
 \code{\link{run_model}}, \code{\link{run_series_meta}}

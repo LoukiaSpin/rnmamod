@@ -215,27 +215,12 @@ The default is <code>FALSE</code> (do not export).</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"nma.dogliotti2014"</span><span class='op'>)</span></span>
 <span class='r-in'></span>
-<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
-<span class='r-in'><span class='co'># Perform a random-effects network meta-analysis</span></span>
-<span class='r-in'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_model.html'>run_model</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>nma.dogliotti2014</span>,</span>
-<span class='r-in'>                 measure <span class='op'>=</span> <span class='st'>"OR"</span>,</span>
-<span class='r-in'>                 model <span class='op'>=</span> <span class='st'>"RE"</span>,</span>
-<span class='r-in'>                 assumption <span class='op'>=</span> <span class='st'>"IDE-ARM"</span>,</span>
-<span class='r-in'>                 heter_prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"halfnormal"</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>,</span>
-<span class='r-in'>                 mean_misspar <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>,</span>
-<span class='r-in'>                 var_misspar <span class='op'>=</span> <span class='fl'>1</span>,</span>
-<span class='r-in'>                 D <span class='op'>=</span> <span class='fl'>1</span>,</span>
-<span class='r-in'>                 n_chains <span class='op'>=</span> <span class='fl'>3</span>,</span>
-<span class='r-in'>                 n_iter <span class='op'>=</span> <span class='fl'>10000</span>,</span>
-<span class='r-in'>                 n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,</span>
-<span class='r-in'>                 n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># Read results from 'run_model' (using the default arguments)</span></span>
+<span class='r-in'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/res_dogliotti.rds'</span>, package <span class='op'>=</span> <span class='st'>'rnmamod'</span><span class='op'>)</span><span class='op'>)</span></span>
 <span class='r-in'></span>
-<span class='r-in'><span class='co'># Run separate random-effects pairwise meta-analyses</span></span>
-<span class='r-in'><span class='va'>meta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_series_meta.html'>run_series_meta</a></span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,</span>
-<span class='r-in'>                        n_chains <span class='op'>=</span> <span class='fl'>3</span>,</span>
-<span class='r-in'>                        n_iter <span class='op'>=</span> <span class='fl'>10000</span>,</span>
-<span class='r-in'>                        n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,</span>
-<span class='r-in'>                        n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># Read results from 'run_series_meta' (using the default arguments)</span></span>
+<span class='r-in'><span class='va'>meta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/meta_dogliotti.rds'</span>,</span>
+<span class='r-in'>                package <span class='op'>=</span> <span class='st'>'rnmamod'</span><span class='op'>)</span><span class='op'>)</span></span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># The names of the interventions in the order they appear in the dataset</span></span>
 <span class='r-in'><span class='va'>interv_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"placebo"</span>, <span class='st'>"aspirin"</span>, <span class='st'>"aspirin plus clopidogrel"</span>,</span>
@@ -246,7 +231,19 @@ The default is <code>FALSE</code> (do not export).</p></td>
 <span class='r-in'><span class='fu'>series_meta_plot</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,</span>
 <span class='r-in'>                 meta <span class='op'>=</span> <span class='va'>meta</span>,</span>
 <span class='r-in'>                 drug_names <span class='op'>=</span> <span class='va'>interv_names</span><span class='op'>)</span></span>
-<span class='r-in'><span class='op'>}</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $tabulated_results</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |Comparison                      |Mean NMA |SD NMA |95% CrI NMA   |Mean MA |SD MA |95% CrI MA    |Median tau |SD tau |95% CrI tau  |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |:-------------------------------|:--------|:------|:-------------|:-------|:-----|:-------------|:----------|:------|:------------|</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |aspirin vs placebo              |1.54     |0.29   |(0.88, 2.83)  |1.40    |0.39  |(0.63, 2.94)  |0.25       |0.31   |(0.01, 1.17) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |vitamin K antagonist vs placebo |2.73     |0.32   |(1.43, 5.46)* |3.00    |0.42  |(1.31, 6.96)* |0.45       |0.34   |(0.03, 1.31) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |vitamin K antagonist vs aspirin |1.78     |0.24   |(1.12, 2.95)* |1.58    |0.39  |(0.75, 3.46)  |0.52       |0.30   |(0.12, 1.30) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $forest_plots</span>
+<span class='r-plt img'><img src='series_meta_plot-1.png' alt='' width='700' height='433' /></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
 </pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

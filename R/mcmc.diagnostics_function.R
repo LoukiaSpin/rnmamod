@@ -66,38 +66,25 @@
 #' sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
 #'
 #' @examples
-#' data("nma.liu2013")
+#' data("nma.baker2009")
 #'
-#' \dontrun{
-#' # Perform a random-effects network meta-analysis
-#' res <- run_model(data = nma.liu2013,
-#'                  measure = "OR",
-#'                  model = "RE",
-#'                  assumption = "IDE-ARM",
-#'                  heter_prior = list("halfnormal", 0, 1),
-#'                  mean_misspar = c(0, 0),
-#'                  var_misspar = 1,
-#'                  D = 1,
-#'                  n_chains = 3,
-#'                  n_iter = 10000,
-#'                  n_burnin = 1000,
-#'                  n_thin = 1)
+#' # Read results from 'run_sensitivity' (using the default arguments)
+#' res <- readRDS(system.file('extdata/res_sens_baker.rds',
+#'                package = 'rnmamod'))
 #'
 #' # Obtain the diagnostic plots and check convergence based on R-hat
 #' mcmc_diagnostics(net = res,
 #'                  par = c("tau", "EM[2,1]", "EM.pred[2,1]"))
-#' }
+#'
 #' @export
 mcmc_diagnostics <- function(net, par) {
-
-  options(warn = -1)
 
   par <- if (!is.null(net$jagsfit) & missing(par)) {
     stop("The argument 'par' needs to be defined", call. = FALSE)
   } else if (is.null(net$jagsfit)) {
     aa <- "The argument 'par' is ignored as it is used only"
     bb <- "for the functions 'run_model', 'run_ume' and 'run_metareg'"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, bb, "\033[0m", "\n")))
+    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, "\033[0m", "\n")))
     NULL
   } else {
     par
@@ -113,7 +100,7 @@ mcmc_diagnostics <- function(net, par) {
     EM <- max(EM0[, 8])
 
     # Predictive effects of all unique pairwise comparisons
-    EM_pred <- t(get_results %>% select(starts_with("EM_pred[")))
+    EM_pred <- t(get_results %>% select(starts_with("EM.pred[")))
 
     # Within-trial effects size
     delta <- t(get_results %>% select(starts_with("delta") & !ends_with(",1]")))
@@ -207,18 +194,18 @@ mcmc_diagnostics <- function(net, par) {
     jagsfit_mcmc <- as.mcmc(jagsfit)
 
     # An HTML file with a panel of diagnostic plots per monitored parameter
-    mcmcplot <- mcmcplot(jagsfit_mcmc, parms = par)
+    mcmc_plot <- mcmcplot(jagsfit_mcmc, parms = par)
   }
 
-  r_hat_max <- c(EM,
-                 max(EM_pred[, 8]),
-                 max(delta[, 8]),
-                 tau,
-                 max(direct),
-                 max(indirect),
-                 max(diff),
-                 phi_r_hat_max,
-                 beta_r_hat_max)
+  r_hat_max <- suppressWarnings({c(EM,
+                                   max(EM_pred[, 8]),
+                                   max(delta[, 8]),
+                                   tau,
+                                   max(direct),
+                                   max(indirect),
+                                   max(diff),
+                                   phi_r_hat_max,
+                                   beta_r_hat_max)})
   for (i in seq_len(length(r_hat_max))) {
     r_hat_max[i] <- ifelse(is.infinite(r_hat_max[i]), NA, r_hat_max[i])
   }

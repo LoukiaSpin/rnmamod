@@ -105,27 +105,11 @@
 #' @examples
 #' data("nma.baker2009")
 #'
-#' \dontrun{
-#' # Perform a random-effects network meta-analysis
-#' res <- run_model(data = nma.baker2009,
-#'                  measure = "OR",
-#'                  model = "RE",
-#'                  assumption = "IDE-ARM",
-#'                  heter_prior = list("halfnormal", 0, 1),
-#'                  mean_misspar = c(0, 0),
-#'                  var_misspar = 1,
-#'                  D = 1,
-#'                  n_chains = 3,
-#'                  n_iter = 10000,
-#'                  n_burnin = 1000,
-#'                  n_thin = 1)
+#' # Read results from 'run_model' (using the default arguments)
+#' res <- readRDS(system.file('extdata/res_baker.rds', package = 'rnmamod'))
 #'
-#' # Run random-effects node-splitting approach
-#' node <- run_nodesplit(full = res,
-#'                       n_chains = 3,
-#'                       n_iter = 10000,
-#'                       n_burnin = 1000,
-#'                       n_thin = 1)
+#' # Read results from 'run_nodesplit' (using the default arguments)
+#' node <- readRDS(system.file('extdata/node_baker.rds', package = 'rnmamod'))
 #'
 #' # The names of the interventions in the order they appear in the dataset
 #' interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
@@ -136,7 +120,7 @@
 #' nodesplit_plot(full = res,
 #'                node = node,
 #'                drug_names = interv_names)
-#' }
+#'
 #' @export
 nodesplit_plot <- function(full, node, drug_names, save_xls) {
 

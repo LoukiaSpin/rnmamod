@@ -8,7 +8,7 @@
 #'   See 'Value' in \code{\link{run_model}}.
 #' @param reg An object of S3 class \code{\link{run_metareg}}. See 'Value' in
 #'   \code{\link{run_metareg}}.
-#' @param cov_value A vector of two elements in the following order: a number
+#' @param cov_value A list of two elements in the following order: a number
 #'   for the covariate value of interest (see 'Arguments' in
 #'   \code{\link{run_metareg}}), and a character to indicate the name of
 #'   the covariate. See also 'Details'.
@@ -55,12 +55,12 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
   options(warn = -1)
 
   if (length(unique(reg$covariate)) < 3 &
-      !is.element(cov_value[1], reg$covariate)) {
+      !is.element(cov_value[[1]], reg$covariate)) {
     stop("The first element of the argument 'cov_value' is out of the value
          range of the analysed covariate", call. = FALSE)
   } else if (length(unique(reg$covariate)) > 2 &
-             (cov_value[1] < min(reg$covariate) |
-              cov_value[1] > max(reg$covariate))) {
+             (cov_value[[1]] < min(reg$covariate) |
+              cov_value[[1]] > max(reg$covariate))) {
     stop("The first element of the argument 'cov_value' is out of the value
          range of the analysed covariate", call. = FALSE)
   }
@@ -86,16 +86,16 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
   cov_value <- if (!is.null(reg$beta_all) & missing(cov_value)) {
     stop("The argument 'cov_value' has not been defined", call. = FALSE)
   } else if (!is.null(reg$beta_all) & length(cov_value) < 2) {
-    stop("The argument 'cov_value' must be a vector with elements a number and a
+    stop("The argument 'cov_value' must be a list with elements a number and a
          character", call. = FALSE)
   } else if (!is.null(reg$beta_all) & length(cov_value) == 2) {
     cov_value
   }
 
   covar <- if (length(unique(reg$covariate)) < 3) {
-    as.numeric(cov_value[1])
+    cov_value[[1]]
   } else {
-    as.numeric(cov_value[1]) - mean(reg$covariate)
+    cov_value[[1]] - mean(reg$covariate)
   }
 
   #Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html
@@ -147,9 +147,9 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
     labs(x = "Network meta-regression SUCRA values (%)",
          y = "Network meta-analysis SUCRA values (%)",
          caption = paste("Results for",
-                         cov_value[2],
+                         cov_value[[2]],
                          ifelse(length(unique(reg$covariate)) < 3, " ",
-                                cov_value[1]))) +
+                                cov_value[[1]]))) +
     theme_classic() +
     theme(axis.title = element_text(color = "black", face = "bold", size = 12),
           axis.text = element_text(color = "black", size = 12),

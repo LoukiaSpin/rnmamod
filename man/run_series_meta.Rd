@@ -78,36 +78,20 @@ data("nma.dogliotti2014")
 
 # Show the first six trials of the dataset (one-trial-per-row format)
 head(nma.dogliotti2014)
-#            study t1 t2 t3   r1   r2 r3  m1  m2 m3   n1   n2 n3
-#     BAATAF, 1990  1  7 NA  195  188 NA   0  21 NA  208  212 NA
-#     SPINAF, 1992  1  7 NA  186  172 NA  56  81 NA  265  260 NA
-#    SPAF-II, 1994  2  7 NA  480  478 NA  23  38 NA  545  555 NA
-#      PATAF, 1999  2  7 NA  243   86 NA  54  42 NA  319  131 NA
-# ACTIVE (W), 2006  3  7 NA 2825 3089 NA 410 223 NA 3335 3371 NA
-#       JAST, 2006  1  2 NA  338  313 NA  89  96 NA  445  426 NA
 
-\dontrun{
-# Perform a random-effects network meta-analysis
-res <- run_model(data = nma.dogliotti2014,
-                 measure = "OR",
-                 model = "RE",
-                 assumption = "IDE-ARM",
-                 heter_prior = list("halfnormal", 0, 1),
-                 mean_misspar = c(0, 0),
-                 var_misspar = 1,
-                 D = 1,
-                 n_chains = 3,
-                 n_iter = 10000,
-                 n_burnin = 1000,
-                 n_thin = 1)
+# Read results from 'run_model' (using the default arguments)
+res <- readRDS(system.file('extdata/res_dogliotti.rds', package = 'rnmamod'))
 
+\donttest{
 # Run separate random-effects pairwise meta-analyses
-run_series_meta(full = res,
-                n_chains = 3,
-                n_iter = 10000,
-                n_burnin = 1000,
-                n_thin = 1)
+# Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
+res <- run_series_meta(full = res,
+                       n_chains = 3,
+                       n_iter = 1000,
+                       n_burnin = 100,
+                       n_thin = 1)
 }
+
 }
 \references{
 Gelman A, Rubin DB. Inference from iterative simulation using multiple

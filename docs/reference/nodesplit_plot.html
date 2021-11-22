@@ -266,27 +266,11 @@ doi: <a href='https://doi.org/10.1111/1467-9868.00353'>10.1111/1467-9868.00353</
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"nma.baker2009"</span><span class='op'>)</span></span>
 <span class='r-in'></span>
-<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
-<span class='r-in'><span class='co'># Perform a random-effects network meta-analysis</span></span>
-<span class='r-in'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_model.html'>run_model</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>nma.baker2009</span>,</span>
-<span class='r-in'>                 measure <span class='op'>=</span> <span class='st'>"OR"</span>,</span>
-<span class='r-in'>                 model <span class='op'>=</span> <span class='st'>"RE"</span>,</span>
-<span class='r-in'>                 assumption <span class='op'>=</span> <span class='st'>"IDE-ARM"</span>,</span>
-<span class='r-in'>                 heter_prior <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"halfnormal"</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>,</span>
-<span class='r-in'>                 mean_misspar <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>,</span>
-<span class='r-in'>                 var_misspar <span class='op'>=</span> <span class='fl'>1</span>,</span>
-<span class='r-in'>                 D <span class='op'>=</span> <span class='fl'>1</span>,</span>
-<span class='r-in'>                 n_chains <span class='op'>=</span> <span class='fl'>3</span>,</span>
-<span class='r-in'>                 n_iter <span class='op'>=</span> <span class='fl'>10000</span>,</span>
-<span class='r-in'>                 n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,</span>
-<span class='r-in'>                 n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># Read results from 'run_model' (using the default arguments)</span></span>
+<span class='r-in'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/res_baker.rds'</span>, package <span class='op'>=</span> <span class='st'>'rnmamod'</span><span class='op'>)</span><span class='op'>)</span></span>
 <span class='r-in'></span>
-<span class='r-in'><span class='co'># Run random-effects node-splitting approach</span></span>
-<span class='r-in'><span class='va'>node</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_nodesplit.html'>run_nodesplit</a></span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,</span>
-<span class='r-in'>                      n_chains <span class='op'>=</span> <span class='fl'>3</span>,</span>
-<span class='r-in'>                      n_iter <span class='op'>=</span> <span class='fl'>10000</span>,</span>
-<span class='r-in'>                      n_burnin <span class='op'>=</span> <span class='fl'>1000</span>,</span>
-<span class='r-in'>                      n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># Read results from 'run_nodesplit' (using the default arguments)</span></span>
+<span class='r-in'><span class='va'>node</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/node_baker.rds'</span>, package <span class='op'>=</span> <span class='st'>'rnmamod'</span><span class='op'>)</span><span class='op'>)</span></span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># The names of the interventions in the order they appear in the dataset</span></span>
 <span class='r-in'><span class='va'>interv_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"placebo"</span>, <span class='st'>"budesonide"</span>, <span class='st'>"budesonide plus formoterol"</span>,</span>
@@ -297,7 +281,42 @@ doi: <a href='https://doi.org/10.1111/1467-9868.00353'>10.1111/1467-9868.00353</
 <span class='r-in'><span class='fu'>nodesplit_plot</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,</span>
 <span class='r-in'>               node <span class='op'>=</span> <span class='va'>node</span>,</span>
 <span class='r-in'>               drug_names <span class='op'>=</span> <span class='va'>interv_names</span><span class='op'>)</span></span>
-<span class='r-in'><span class='op'>}</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $table_effect_size</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |Node                                       | Mean direct| SD direct|95% CrI direct  | Mean indirect| SD indirect|95% CrI indirect | Mean IF| SD IF|95% CrI IF    |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |:------------------------------------------|-----------:|---------:|:---------------|-------------:|-----------:|:----------------|-------:|-----:|:-------------|</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |tiotropium vs placebo                      |       -0.47|      0.22|(-0.91, -0.07)* |         -1.17|        0.53|(-2.26, -0.24)*  |    0.70|  0.51|(-0.21, 1.79) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |tiotropium vs formoterol                   |       -1.57|      0.85|(-3.45, 0.03)   |         -0.09|        0.22|(-0.51, 0.33)    |   -1.48|  0.88|(-3.43, 0.2)  |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |formoterol vs placebo                      |       -0.47|      0.27|(-1.03, 0.05)   |          1.05|        0.98|(-0.52, 3.68)    |   -1.52|  0.97|(-4.14, 0.11) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |salmeterol vs fluticasone                  |       -0.60|      0.24|(-1.08, -0.14)* |         -0.23|        0.21|(-0.64, 0.19)    |   -0.38|  0.32|(-1, 0.22)    |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |salmeterol vs placebo                      |       -0.45|      0.26|(-1.02, -0.04)* |         -0.21|        0.62|(-1.36, 1.1)     |   -0.24|  0.59|(-1.53, 0.82) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |salmeterol vs fluticasone plus salmeterol  |       -0.43|      0.24|(-0.89, 0.02)   |         -0.25|        0.30|(-0.88, 0.31)    |   -0.19|  0.44|(-1.04, 0.75) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |fluticasone plus salmeterol vs fluticasone |       -0.25|      0.24|(-0.74, 0.2)    |         -0.72|        0.45|(-1.57, 0.15)    |    0.46|  0.45|(-0.44, 1.36) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |tiotropium vs salmeterol                   |       -0.85|      0.40|(-1.61, -0.05)* |         -0.05|        0.22|(-0.5, 0.35)     |   -0.79|  0.49|(-1.69, 0.21) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $table_model_assessment</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |Approach                                   |   DIC| Mean deviance|    pD|DIC-based better fit | Median tau| SD tau|95% CrI tau  |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |:------------------------------------------|-----:|-------------:|-----:|:--------------------|----------:|------:|:------------|</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |NMA                                        | 88.81|         54.05| 34.76|-                    |       0.14|   0.09|(0.01, 0.34) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |tiotropium vs placebo                      | 89.16|         53.33| 35.83|Little to choose     |       0.12|   0.10|(0.01, 0.37) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |tiotropium vs formoterol                   | 89.60|         53.62| 35.98|Little to choose     |       0.11|   0.09|(0, 0.32)    |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |formoterol vs placebo                      | 90.02|         53.54| 36.48|Little to choose     |       0.13|   0.10|(0, 0.35)    |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |salmeterol vs fluticasone                  | 90.80|         53.48| 37.32|Little to choose     |       0.11|   0.09|(0.01, 0.33) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |salmeterol vs placebo                      | 90.84|         54.35| 36.49|Little to choose     |       0.12|   0.09|(0, 0.35)    |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |salmeterol vs fluticasone plus salmeterol  | 91.99|         53.60| 38.39|Little to choose     |       0.12|   0.10|(0.01, 0.39) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |fluticasone plus salmeterol vs fluticasone | 92.03|         53.54| 38.49|Little to choose     |       0.13|   0.09|(0.01, 0.35) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |tiotropium vs salmeterol                   | 92.91|         54.08| 38.83|Little to choose     |       0.18|   0.11|(0.01, 0.43) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $intervalplot_inconsistency_factor</span>
+<span class='r-plt img'><img src='nodesplit_plot-1.png' alt='' width='700' height='433' /></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $intervalplot_tau</span>
+<span class='r-plt img'><img src='nodesplit_plot-2.png' alt='' width='700' height='433' /></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
 </pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -91,27 +91,11 @@
 #' @examples
 #' data("nma.liu2013")
 #'
-#' \dontrun{
-#' # Perform a random-effects network meta-analysis (consistency model)
-#' res <- run_model(data = nma.liu2013,
-#'                  measure = "OR",
-#'                  model = "RE",
-#'                  assumption = "IDE-ARM",
-#'                  heter_prior = list("halfnormal", 0, 1),
-#'                  mean_misspar = c(0, 0),
-#'                  var_misspar = 1,
-#'                  D = 1,
-#'                  n_chains = 3,
-#'                  n_iter = 10000,
-#'                  n_burnin = 1000,
-#'                  n_thin = 1)
+#' # Read results from 'run_model' (using the default arguments)
+#' res <- readRDS(system.file('extdata/res_liu.rds', package = 'rnmamod'))
 #'
-#' # Run random-effects unrelated mean effects model
-#' ume <- run_ume(full = res,
-#'                n_chains = 3,
-#'                n_iter = 10000,
-#'                n_burnin = 1000,
-#'                n_thin = 1)
+#' # Read results from 'run_ume' (using the default arguments)
+#' ume <- readRDS(system.file('extdata/ume_liu.rds', package = 'rnmamod'))
 #'
 #' # The names of the interventions in the order they appear in the dataset
 #' interv_names <- c("placebo", "pramipexole", "serotonin-norepinephrine
@@ -122,7 +106,7 @@
 #' ume_plot(full = res,
 #'          ume = ume,
 #'          drug_names = interv_names)
-#' }
+#'
 #' @export
 ume_plot <- function(full, ume, drug_names, save_xls) {
 

@@ -126,28 +126,19 @@ Performs the unrelated mean effects model of Dias et al.,
 \examples{
 data("nma.liu2013")
 
-\dontrun{
-# Perform a random-effects network meta-analysis
-res <- run_model(data = nma.liu2013,
-                 measure = "OR",
-                 model = "RE",
-                 assumption = "IDE-ARM",
-                 heter_prior = list("halfnormal", 0, 1),
-                 mean_misspar = c(0, 0),
-                 var_misspar = 1,
-                 D = 1,
-                 n_chains = 3,
-                 n_iter = 10000,
-                 n_burnin = 1000,
-                 n_thin = 1)
+# Read results from 'run_model' (using the default arguments)
+res <- readRDS(system.file('extdata/res_liu.rds', package = 'rnmamod'))
 
+\donttest{
 # Run random-effects unrelated mean effects model
-run_ume(full = res,
-        n_chains = 3,
-        n_iter = 10000,
-        n_burnin = 1000,
-        n_thin = 1)
+# Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
+res <- run_ume(full = res,
+               n_chains = 3,
+               n_iter = 1000,
+               n_burnin = 100,
+               n_thin = 1)
 }
+
 }
 \references{
 Spineli LM. A novel framework to evaluate the consistency assumption globally
