@@ -50,13 +50,6 @@
 #'
 #' # Return the first six trials of the dataset
 #' head(nma.stowe2011)
-#' #              study t1 t2    y1    y2  sd1  sd2 m1 m2  n1  n2
-#' #   DA (B): Interntl  1  2 -0.30 -1.20 4.36 4.32  7  3  83  84
-#' #      DA (C): Spain  1  2 -2.47 -3.33 3.91 3.48  8  9  20  23
-#' #         DA (C): UK  1  2 -0.70 -2.00 2.24 2.33  2  1  18  19
-#' #      DA (C): USA 1  1  2 -0.77 -2.08 3.32 3.21 19 34  65 123
-#' # DA (Pe): N America  1  2 -0.20 -1.80 4.79 4.81  0  0 187 189
-#' # DA (Pr): CLEOPATRA  1  2 -0.90 -2.80 5.00 2.83  1  1 101 201
 #'
 #' # The names of the interventions in the order they appear in the dataset
 #' interv_names <- c("PBO+LD", "DA+LD", "COMTI+LD", "MAOBI+LD")

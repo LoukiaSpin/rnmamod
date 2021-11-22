@@ -424,7 +424,7 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
   # Create the interval plot for 'between-trial standard deviation'
   p2 <- if (model == "RE") {
     ggplot(data = prepare_tau,
-           aes(x = as.factor(seq_len(length(prepare_tau$node))),
+           aes(x = as.factor(seq_len(length(node))),
                y = median, ymin = lower, ymax = upper)) +
       geom_rect(aes(xmin = 0,
                     xmax = Inf,
@@ -442,7 +442,7 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                  colour = "white",
                  stroke = 0.3,
                  position = position_dodge(width = 0.5)) +
-      geom_text(aes(x = as.factor(seq_len(length(prepare_tau$node))),
+      geom_text(aes(x = as.factor(seq_len(length(node))),
                     y = round(median, 2),
                     label = sprintf("%.2f", median),
                     hjust = -0.2,
@@ -453,15 +453,15 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                 parse = FALSE,
                 position = position_dodge(width = 0.5),
                 inherit.aes = TRUE) +
-      geom_label(aes(x = as.factor(seq_len(length(prepare_tau$node))),
+      geom_label(aes(x = as.factor(seq_len(length(node))),
                      y = upper,
                      label = sprintf("%.2f", DIC)),
                  fill = "beige",
                  colour = "black",
                  fontface = "plain",
                  size = 3.1) +
-      scale_x_discrete(breaks = as.factor(seq_len(length(prepare_tau$node))),
-                       labels = prepare_tau$node[seq_len(length(prepare_tau$node
+      scale_x_discrete(breaks = as.factor(seq_len(length(node))),
+                       labels = node[seq_len(length(node
                                                                 ))]) +
       labs(x = "Split nodes (sorted by DIC in ascending order)",
            y = "Between-trial standard deviation") +

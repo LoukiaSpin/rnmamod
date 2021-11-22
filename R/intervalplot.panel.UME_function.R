@@ -170,7 +170,7 @@ intervalplot_panel_ume <- function(full, ume, drug_names) {
     labs(x = "", y = measure, colour = "Evidence", fill = "") +
     coord_flip() +
     theme_classic() +
-    guides(fill = FALSE) +
+    guides(fill = "none") +
     theme(axis.text.x = element_text(color = "black", size = 11),
           axis.text.y = element_text(color = "black", size = 11),
           axis.title.x = element_text(color = "black", face = "bold",
