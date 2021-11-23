@@ -385,29 +385,27 @@ run_model <- function(data,
   n_thin <- ifelse(missing(n_thin), 1, n_thin)
 
   # Data in list format for R2jags
-  data_jag0 <- list("m" = item$m,
-                    "N" = item$N,
-                    "t" = item$t,
-                    "na" = item$na,
-                    "nt" = item$nt,
-                    "ns" = item$ns,
-                    "ref" = item$ref,
-                    "I" = item$I,
-                    "M" = ifelse(!is.na(item$m), mean_misspar, NA),
-                    "cov.phi" = 0.5 * var_misspar,
-                    "var.phi" = var_misspar,
-                    "meand.phi" = mean_misspar,
-                    "precd.phi" = 1 / var_misspar,
-                    "D" = D,
-                    "heter.prior" = heterog_prior)
+  data_jag <- list("m" = item$m,
+                   "N" = item$N,
+                   "t" = item$t,
+                   "na" = item$na,
+                   "nt" = item$nt,
+                   "ns" = item$ns,
+                   "ref" = item$ref,
+                   "I" = item$I,
+                   "M" = ifelse(!is.na(item$m), mean_misspar, NA),
+                   "cov.phi" = 0.5 * var_misspar,
+                   "var.phi" = var_misspar,
+                   "meand.phi" = mean_misspar,
+                   "precd.phi" = 1 / var_misspar,
+                   "D" = D,
+                   "heter.prior" = heterog_prior)
 
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
-    data_jag0 <- append(data_jag0, list("y.o" = item$y0, "se.o" = item$se0))
+    data_jag <- append(data_jag, list("y.o" = item$y0, "se.o" = item$se0))
   } else if (measure == "OR") {
-    data_jag0 <- append(data_jag0, list("r" = item$r))
+    data_jag <- append(data_jag, list("r" = item$r))
   }
-
-  data_jag <- suppressWarnings({data_jag0})
 
   param_jags <- c("delta",
                   "EM",
@@ -558,7 +556,7 @@ run_model <- function(data,
 
   # Return a list of results
   if (model == "RE") {
-    ma_results <- list(EM = EM,
+    ma_results <- suppressWarnings({list(EM = EM,
                        EM_pred = EM_pred,
                        tau = tau,
                        delta = delta,
@@ -576,13 +574,13 @@ run_model <- function(data,
                        mean_misspar = mean_misspar,
                        var_misspar = var_misspar,
                        D = D,
-                       jagsfit = jagsfit)
-    nma_results <- append(ma_results, list(EM_ref = EM_ref,
+                       jagsfit = jagsfit)})
+    nma_results <- suppressWarnings({append(ma_results, list(EM_ref = EM_ref,
                                            pred_ref = pred_ref,
                                            SUCRA = SUCRA,
-                                           effectiveness = effectiveness))
+                                           effectiveness = effectiveness))})
   } else {
-    ma_results <- list(EM = EM,
+    ma_results <- suppressWarnings({list(EM = EM,
                        dev_o = dev_o,
                        hat_par = hat_par,
                        leverage_o = leverage_o,
@@ -596,10 +594,10 @@ run_model <- function(data,
                        mean_misspar = mean_misspar,
                        var_misspar = var_misspar,
                        D = D,
-                       jagsfit = jagsfit)
-    nma_results <- append(ma_results, list(EM_ref = EM_ref,
+                       jagsfit = jagsfit)})
+    nma_results <- suppressWarnings({append(ma_results, list(EM_ref = EM_ref,
                                            SUCRA = SUCRA,
-                                           effectiveness = effectiveness))
+                                           effectiveness = effectiveness))})
   }
 
   ifelse(item$nt > 2, return(nma_results), return(ma_results))
