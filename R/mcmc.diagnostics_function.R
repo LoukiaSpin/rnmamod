@@ -110,13 +110,13 @@ mcmc_diagnostics <- function(net, par) {
     tau <- tau0[8]
 
     # Direct estimate from split nodes
-    direct <- NULL
+    direct <- NA
 
     # Indirect estimate from split nodes
-    indirect <- NULL
+    indirect <- NA
 
     # Inconsistency factor estimate from split nodes
-    diff <- NULL
+    diff <- NA
 
     item <- data_preparation(net$data, net$measure)
 
@@ -161,10 +161,10 @@ mcmc_diagnostics <- function(net, par) {
     }
 
     # Predictive effects of all unique pairwise comparisons
-    EM_pred <- NULL
+    EM_pred <- NA
 
     # Within-trial effects size
-    delta <- NULL
+    delta <- NA
 
     # Between-trial standard deviation ...
     tau <- if (length(net$tau[1, ]) == 11) {
