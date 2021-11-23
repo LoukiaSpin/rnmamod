@@ -168,7 +168,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
   measure <- full$measure
   model <- full$model
   assumption <- full$assumption
-  heter_prior <- full$heter_prior
+  heterog_prior <- full$heter_prior
   mean_misspar <- full$mean_misspar
   var_misspar <- full$var_misspar
 
@@ -307,12 +307,9 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                                              c("HIE-ARM", "IDE-ARM")),
                                   item$ref, NA),
                    "I" = item$I[order(item$na, na.last = TRUE), ],
-                   "M" = ifelse(!is.na(m), mean_misspar, NA),
-                   "cov.phi" = 0.5 * var_misspar,
-                   "var.phi" = var_misspar,
                    "meand.phi" = mean_misspar,
                    "precd.phi" = 1 / var_misspar,
-                   "heter.prior" = heter_prior,
+                   "heter.prior" = heterog_prior,
                    "t1" = t1_indic,
                    "t2" = t2_indic,
                    "N.obs" = n_obs)
@@ -374,6 +371,20 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                             "N.t.m2" = 1,
                             "t.m2" = 2:5))
     }
+
+  data_jag <- if (is.element(assumption, c("IND-CORR", "IND-UNCORR"))) {
+    append(data_jag, list("M" = ifelse(!is.na(m), mean_misspar, NA),
+                          "cov.phi" = 0.5 * var_misspar,
+                          "var.phi" = var_misspar))
+  } else {
+    data_jag
+  }
+
+  data_jag <- if (model == "RE") {
+    append(data_jag, list("heter.prior" = heterog_prior))
+  } else {
+    data_jag
+  }
 
   # Define the nodes to be monitored
   param_jags <- if (model == "RE") {

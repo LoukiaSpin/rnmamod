@@ -161,7 +161,7 @@ run_nodesplit <- function(full,
   measure <- full$measure
   model <- full$model
   assumption <- full$assumption
-  heter_prior <- full$heter_prior
+  heterog_prior <- full$heter_prior
   mean_misspar <- full$mean_misspar
   var_misspar <- full$var_misspar
   n_chains <- ifelse(missing(n_chains), 2, n_chains)
@@ -301,22 +301,34 @@ run_nodesplit <- function(full,
                             "ref" = item$ref,
                             "I" = item$I,
                             "I.sign" = I_sign[[i]],
-                            "M" = ifelse(!is.na(item$m), mean_misspar, NA),
-                            "cov.phi" = 0.5 * var_misspar,
-                            "var.phi" = var_misspar,
                             "meand.phi" = mean_misspar,
                             "precd.phi" = 1 / var_misspar,
                             "split" = checkPair_node[[i]][, "split"],
                             "m" = m[[i]],
                             "bi" = bi[[i]],
                             "si" = si[[i]],
-                            "pair" = pair[i, ],
-                            "heter.prior" = heter_prior)
+                            "pair" = pair[i, ])
 
       data_jag[[i]]  <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
         append(data_jag[[i]], list("y.o" = y_node[[i]], "se.o" = se_node[[i]]))
       } else if (measure == "OR") {
         append(data_jag[[i]], list("r" = r_node[[i]]))
+      }
+
+      data_jag[[i]] <- if (is.element(assumption,
+                                      c("IND-CORR", "IND-UNCORR"))) {
+        append(data_jag[[i]], list("M" = ifelse(!is.na(item$m), mean_misspar,
+                                                NA),
+                              "cov.phi" = 0.5 * var_misspar,
+                              "var.phi" = var_misspar))
+      } else {
+        data_jag[[i]]
+      }
+
+      data_jag[[i]] <- if (model == "RE") {
+        append(data_jag[[i]], list("heter.prior" = heterog_prior))
+      } else {
+        data_jag[[i]]
       }
 
       # Run the Bayesian analysis

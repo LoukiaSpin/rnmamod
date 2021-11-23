@@ -234,13 +234,9 @@ run_metareg <- function(full,
                    "ns" = item$ns,
                    "ref" = item$ref,
                    "I" = item$I,
-                   "M" = ifelse(!is.na(item$m), mean_misspar, NA),
-                   "cov.phi" = 0.5 * var_misspar,
-                   "var.phi" = var_misspar,
                    "meand.phi" = mean_misspar,
                    "precd.phi" = 1 / var_misspar,
-                   "D" = D,
-                   "heter.prior" = heter_prior)
+                   "D" = D)
 
   data_jag <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
     append(data_jag, list("y.o" = item$y0, "se.o" = item$se0))
@@ -261,6 +257,20 @@ run_metareg <- function(full,
   } else if (!is.vector(covariate)) {
     append(data_jag, list("cov.vector" = rep(0, item$ns),
                           "cov.matrix" = covariate))
+  }
+
+  data_jag <- if (is.element(assumption, c("IND-CORR", "IND-UNCORR"))) {
+    append(data_jag, list("M" = ifelse(!is.na(item$m), mean_misspar, NA),
+                          "cov.phi" = 0.5 * var_misspar,
+                          "var.phi" = var_misspar))
+  } else {
+    data_jag
+  }
+
+  data_jag <- if (model == "RE") {
+    append(data_jag, list("heter.prior" = heterog_prior))
+  } else {
+    data_jag
   }
 
   param_jags <- c("delta",

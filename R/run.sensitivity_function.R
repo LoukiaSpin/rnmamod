@@ -176,7 +176,7 @@ run_sensitivity <- function(full,
   data <- full$data
   measure <- full$measure
   model <- full$model
-  heter_prior <- full$heter_prior
+  heterog_prior <- full$heter_prior
   D <- full$D
   assumption <- if (missing(assumption)) {
     "IDE-ARM"
@@ -250,7 +250,6 @@ run_sensitivity <- function(full,
                           "meand.phi" = mean_misspar[i, ],
                           "precd.phi" = 1 / var_misspar,
                           "D" = D,
-                          "heter.prior" = heter_prior,
                           "eff.mod2" = matrix(0,
                                               nrow = item$ns,
                                               ncol = max(item$na)),
@@ -261,6 +260,12 @@ run_sensitivity <- function(full,
                               list("y.o" = item$y0, "se.o" = item$se0))
     } else if (measure == "OR") {
       data_jag[[i]] <- append(data_jag[[i]], list("r" = item$r))
+    }
+
+    data_jag[[i]] <- if (model == "RE") {
+      append(data_jag[[i]], list("heter.prior" = heterog_prior))
+    } else {
+      data_jag[[i]]
     }
 
     message(paste(i, "out of", length(mean_misspar[, 1]), "total scenarios"))
