@@ -45,8 +45,9 @@ placebo for moderately severe scalp psoriasis. The analysed binary outcome is
 the investigator global assessment response at 4 weeks (`?nma.bottomley2011`).
 
 ```{r set-options, echo = FALSE, comment = NA}
-options(width = 1000)
+orig <- options(width = 1000)
 nma.bottomley2011
+options(orig)
 ```
 
 The dataset has the one-trial-per-row format containing arm-level data for each 

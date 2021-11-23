@@ -1,16 +1,32 @@
 Type: Package
 Package: rnmamod
-Title: rnmamod: Addressing Missing Participants in Network Meta-Analysis
+Title: rnmamod: Bayesian Network Meta-Analysis with Missing Participants 
 Version: 0.1.0
 Authors@R: c(
-    person("Loukia", "Spineli", email = "Spineli.Loukia@mh-hannover.de", role = c("aut", "cre")),
+    person("Loukia", "Spineli", email = "Spineli.Loukia@mh-hannover.de", 
+    role = c("aut", "cre")),
     person("Chrysostomos", "Kalyvas", role = "ctb"),
     person("Katerina", "Papadimitropoulou", role = "ctb")
   )
 Maintainer: Loukia Spineli <Spineli.Loukia@mh-hannover.de>
-Description: Perform pairwise and network meta-analysis with aggregate
-    binary or continuous missing participant outcome data. comprises a suite of core models implemented in a
-#'   systematic review with multiple interventions:
+Description: A comprehensive suite of functions to perform and visualise 
+    pairwise and network meta-analysis with aggregate binary or continuous
+    missing participant outcome data. The package covers core Bayesian one-stage
+    models implemented in a systematic review with multiple interventions, 
+    including fixed-effect and random-effects network meta-analysis, 
+    meta-regression, evaluation of the consistency assumption via the 
+    node-splitting approach and the unrelated mean effects model, and 
+    sensitivity analysis. Missing participant outcome data are addressed in all 
+    models of the package. The package also offers a rich, user-friendly 
+    visualisation toolkit that aids in appraising and interpreting the results 
+    thoroughly and preparing the manuscript for journal submission. 
+    The visualisation tools comprise the network plot, forest plots, panel of 
+    diagnostic plots, heatmaps on the extent of missing participant outcome data
+    in the network, league heatmaps on estimation and prediction, rankograms, 
+    Bland-Altman plot, leverage plot, deviance scatterplot, heatmap of 
+    robustness, and barplot of Kullback-Leibler divergence. The package also 
+    allows the user to export the results to an xlsx file at the working 
+    directory.
 License: GPL (>= 3) 
 URL: https://github.com/LoukiaSpin/rnmamod
 Depends: 

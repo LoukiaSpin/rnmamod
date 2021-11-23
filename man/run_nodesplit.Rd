@@ -125,11 +125,11 @@ res <- readRDS(system.file('extdata/res_liu.rds', package = 'rnmamod'))
 \donttest{
 # Run random-effects node-splitting approach
 # Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
-node <- run_nodesplit(full = res,
-                      n_chains = 3,
-                      n_iter = 1000,
-                      n_burnin = 100,
-                      n_thin = 1)
+run_nodesplit(full = res,
+              n_chains = 3,
+              n_iter = 1000,
+              n_burnin = 100,
+              n_thin = 1)
 }
 
 }

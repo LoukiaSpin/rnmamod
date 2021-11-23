@@ -319,18 +319,18 @@
 #' \donttest{
 #' # Perform a random-effects network meta-analysis
 #' # Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
-#' res <- run_model(data = nma.baker2009,
-#'                  measure = "OR",
-#'                  model = "RE",
-#'                  assumption = "IDE-ARM",
-#'                  heter_prior = list("halfnormal", 0, 1),
-#'                  mean_misspar = c(0, 0),
-#'                  var_misspar = 1,
-#'                  D = 1,
-#'                  n_chains = 3,
-#'                  n_iter = 1000,
-#'                  n_burnin = 100,
-#'                  n_thin = 1)
+#' run_model(data = nma.baker2009,
+#'           measure = "OR",
+#'           model = "RE",
+#'           assumption = "IDE-ARM",
+#'           heter_prior = list("halfnormal", 0, 1),
+#'           mean_misspar = c(0, 0),
+#'           var_misspar = 1,
+#'           D = 0,
+#'           n_chains = 3,
+#'           n_iter = 1000,
+#'           n_burnin = 100,
+#'           n_thin = 1)
 #' }
 #'
 #' @export

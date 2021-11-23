@@ -300,11 +300,11 @@ sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.</p>
 <span class='co'># \donttest{</span>
 <span class='co'># Run random-effects node-splitting approach</span>
 <span class='co'># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span>
-<span class='va'>node</span> <span class='op'>&lt;-</span> <span class='fu'>run_nodesplit</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,
-                      n_chains <span class='op'>=</span> <span class='fl'>3</span>,
-                      n_iter <span class='op'>=</span> <span class='fl'>1000</span>,
-                      n_burnin <span class='op'>=</span> <span class='fl'>100</span>,
-                      n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+<span class='fu'>run_nodesplit</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,
+              n_chains <span class='op'>=</span> <span class='fl'>3</span>,
+              n_iter <span class='op'>=</span> <span class='fl'>1000</span>,
+              n_burnin <span class='op'>=</span> <span class='fl'>100</span>,
+              n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='co'># }</span>
 
 </pre>

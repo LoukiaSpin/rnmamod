@@ -152,11 +152,11 @@
 #' \donttest{
 #' # Run random-effects unrelated mean effects model
 #' # Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
-#' res <- run_ume(full = res,
-#'                n_chains = 3,
-#'                n_iter = 1000,
-#'                n_burnin = 100,
-#'                n_thin = 1)
+#' run_ume(full = res,
+#'         n_chains = 3,
+#'         n_iter = 1000,
+#'         n_burnin = 100,
+#'         n_thin = 1)
 #' }
 #'
 #' @export

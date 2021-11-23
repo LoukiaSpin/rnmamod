@@ -25,7 +25,7 @@
 #'   trials investigating the corresponding intervention, unless specified
 #'   otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function).
 #'
-#'   \code{netplot} also returns the followind data-frames that describe the
+#'   \code{netplot} also returns the following data-frames that describe the
 #'   evidence base:
 #'   \tabular{ll}{
 #'    \code{network_description} \tab The number of: interventions, possible

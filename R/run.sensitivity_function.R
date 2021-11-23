@@ -154,13 +154,13 @@
 #' \donttest{
 #' # Perform the sensitivity analysis (missing-at-random assumption)
 #' # Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
-#' res <- run_sensitivity(full = res,
-#'                        assumption = "IDE-ARM",
-#'                        var_misspar = 1,
-#'                        n_chains = 3,
-#'                        n_iter = 1000,
-#'                        n_burnin = 100,
-#'                        n_thin = 1)
+#' run_sensitivity(full = res,
+#'                 assumption = "IDE-ARM",
+#'                 var_misspar = 1,
+#'                 n_chains = 3,
+#'                 n_iter = 1000,
+#'                 n_burnin = 100,
+#'                 n_thin = 1)
 #' }
 #'
 #' @export

@@ -172,13 +172,13 @@
 #' \donttest{
 #' # Perform a random-effects network meta-regression (exchangeable structure)
 #' # Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
-#' reg <- run_metareg(full = res,
-#'                    covariate = pub_year,
-#'                    covar_assumption = "exchangeable",
-#'                    n_chains = 3,
-#'                    n_iter = 1000,
-#'                    n_burnin = 100,
-#'                    n_thin = 1)
+#' run_metareg(full = res,
+#'             covariate = pub_year,
+#'             covar_assumption = "exchangeable",
+#'             n_chains = 3,
+#'             n_iter = 1000,
+#'             n_burnin = 100,
+#'             n_thin = 1)
 #' }
 #'
 #' @export

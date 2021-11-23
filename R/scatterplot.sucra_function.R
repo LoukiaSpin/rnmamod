@@ -52,8 +52,6 @@
 #' @export
 scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
 
-  options(warn = -1)
-
   if (length(unique(reg$covariate)) < 3 &
       !is.element(cov_value[[1]], reg$covariate)) {
     stop("The first element of the argument 'cov_value' is out of the value
