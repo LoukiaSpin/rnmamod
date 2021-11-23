@@ -194,16 +194,16 @@ mcmc_diagnostics <- function(net, par) {
     tau <- tau0
 
     # Direct estimate from split nodes
-    direct0 <- net$direct[, 7]
-    direct <- max(direct0[, 8])
+    direct0 <- max(net$direct[, 8])
+    direct <- direct0
 
     # Indirect estimate from split nodes
-    indirect0 <- net$indirect[, 7]
-    indirect <- max(indirect0[, 8])
+    indirect0 <- max(net$indirect0[, 8])
+    indirect <- indirect0
 
     # Inconsistency factor estimate from split nodes
-    diff0 <- net$diff[, 7]
-    diff <- max(diff0[, 8])
+    diff0 <- max(net$diff[, 8])
+    diff <- diff0
 
     # Estimated missingness parameter
     phi <- NA
