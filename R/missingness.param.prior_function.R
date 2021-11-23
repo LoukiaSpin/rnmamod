@@ -127,7 +127,7 @@ missingness_param_prior <- function(assumption, mean_misspar) {
              (length(mean_misspar) > 1)) {
     stop("'mean_misspar' must be a scalar", call. = FALSE)
   } else {
-    mean_misspar <- mean_misspar
+    mean_misspar <- ifelse(mean_misspar == 0, 0.0001, mean_misspar)
   }
 
   return(mean_misspar)
