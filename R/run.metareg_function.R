@@ -293,6 +293,13 @@ run_metareg <- function(full,
     append(param_jags, "phi")
   }
 
+  param_jags <- if (model == "RE") {
+    param_jags
+  } else {
+    param_jags[!is.element(param_jags,
+                           c("EM.pred", "pred.ref", "tau", "delta"))]
+  }
+
   # Run the Bayesian analysis
   jagsfit <- jags(data = data_jag,
                   parameters.to.save = param_jags,
