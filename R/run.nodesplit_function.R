@@ -301,8 +301,6 @@ run_nodesplit <- function(full,
                             "ref" = item$ref,
                             "I" = item$I,
                             "I.sign" = I_sign[[i]],
-                            "meand.phi" = mean_misspar,
-                            "precd.phi" = 1 / var_misspar,
                             "split" = checkPair_node[[i]][, "split"],
                             "m" = m[[i]],
                             "bi" = bi[[i]],
@@ -319,10 +317,11 @@ run_nodesplit <- function(full,
                                       c("IND-CORR", "IND-UNCORR"))) {
         append(data_jag[[i]], list("M" = ifelse(!is.na(item$m), mean_misspar,
                                                 NA),
-                              "cov.phi" = 0.5 * var_misspar,
-                              "var.phi" = var_misspar))
+                                   "cov.phi" = 0.5 * var_misspar,
+                                   "var.phi" = var_misspar))
       } else {
-        data_jag[[i]]
+        append(data_jag[[i]], list("meand.phi" = mean_misspar,
+                                   "precd.phi" = 1 / var_misspar))
       }
 
       data_jag[[i]] <- if (model == "RE") {
