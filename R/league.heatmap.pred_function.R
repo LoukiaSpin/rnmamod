@@ -111,6 +111,11 @@ league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
          call. = FALSE)
   }
 
+  if (full$model == "FE") {
+    stop("This function cannot be used for a fixed-effect model",
+         call. = FALSE)
+  }
+
   cov_value <- if (!is.null(full$beta_all) & missing(cov_value)) {
     stop("The argument 'cov_value' has not been defined", call. = FALSE)
   } else if (!is.null(full$beta_all) & length(cov_value) < 2) {
