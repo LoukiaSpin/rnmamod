@@ -488,9 +488,9 @@ run_model <- function(data,
   # Estimated missingness parameter
   phi <- if (length(unique(unlist(item$m))) > 2) {
     t(get_results %>% dplyr::select(starts_with("phi") |
-                                     starts_with("mean.phi") |
-                                     starts_with("mean.phi[") |
-                                     starts_with("phi[")))
+                                    starts_with("mean.phi") |
+                                    starts_with("mean.phi[") |
+                                    starts_with("phi[")))
   } else {
     NA
   }

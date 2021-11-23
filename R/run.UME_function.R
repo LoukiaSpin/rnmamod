@@ -374,12 +374,12 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                           "cov.phi" = 0.5 * var_misspar,
                           "var.phi" = var_misspar))
   } else {
-    append(data_jag, list("precd.phi" = 1 / var_misspar))
+    append(data_jag, list("meand.phi" = mean_misspar,
+                          "precd.phi" = 1 / var_misspar))
   }
 
   data_jag <- if (model == "RE") {
-    append(data_jag, list("meand.phi" = mean_misspar,
-                          "heter.prior" = heterog_prior))
+    append(data_jag, list("heter.prior" = heterog_prior))
   } else {
     data_jag
   }
