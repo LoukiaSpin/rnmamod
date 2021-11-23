@@ -140,16 +140,16 @@ The model runs in \code{JAGS} and the progress of the simulation
   printed on the R console.
 }
 \examples{
-data("nma.baker2009")
+data("pma.taylor2004")
 
 # Read results from 'run_model' (using the default arguments)
-res <- readRDS(system.file('extdata/res_baker.rds', package = 'rnmamod'))
+res <- readRDS(system.file('extdata/res_taylor.rds', package = 'rnmamod'))
 
 \donttest{
 # Perform the sensitivity analysis (missing-at-random assumption)
 # Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
 res <- run_sensitivity(full = res,
-                       assumption = "HIE-ARM",
+                       assumption = "IDE-ARM",
                        var_misspar = 1,
                        n_chains = 3,
                        n_iter = 1000,

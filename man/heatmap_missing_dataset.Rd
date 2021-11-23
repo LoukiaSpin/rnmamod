@@ -39,13 +39,6 @@ data("nma.schwingshackl2014")
 
 # Return the first six trials of the dataset
 head(nma.schwingshackl2014)
-#          study t1 t2 t3    y1    y2 y3  sd1  sd2 sd3 m1 m2 m3 n1 n2 n3
-#   Bacchi, 2012  1  2 NA -0.40 -0.35 NA 0.44 0.48  NA  1  1 NA 20 20 NA
-#       Ku, 2010  1  2 NA -0.60 -0.30 NA 1.20 0.90  NA  0  0 NA 15 13 NA
-#      Moe, 2011  1  2 NA -0.53 -0.35 NA 0.45 0.40  NA  1  2 NA 13 13 NA
-#       Ng, 2010  1  2 NA -0.30 -0.40 NA 0.88 0.60  NA  0  0 NA 30 30 NA
-#   Sukala, 2012  1  2 NA -0.10 -0.10 NA 0.51 0.93  NA  4  4 NA 13 13 NA
-# Balducci, 2009  1  3 NA  6.34  6.65 NA 0.94 1.08  NA  0  0 NA 20 22 NA
 
 # The names of the interventions in the order they appear in the dataset
 interv_names <- c("aerobic", "resistance", "combined training")
