@@ -95,6 +95,12 @@
 #' @export
 league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
 
+
+  if (full$model == "FE") {
+    stop("This function cannot be used for a fixed-effect model",
+         call. = FALSE)
+  }
+
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
     bb <- "The intervention ID, as specified in 'data' is used as"
@@ -111,10 +117,6 @@ league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
          call. = FALSE)
   }
 
-  if (full$model == "FE") {
-    stop("This function cannot be used for a fixed-effect model",
-         call. = FALSE)
-  }
 
   cov_value <- if (!is.null(full$beta_all) & missing(cov_value)) {
     stop("The argument 'cov_value' has not been defined", call. = FALSE)
