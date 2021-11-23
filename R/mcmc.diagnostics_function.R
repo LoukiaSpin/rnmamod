@@ -100,16 +100,28 @@ mcmc_diagnostics <- function(net, par) {
     EM <- max(EM0[, 8])
 
     # Predictive effects of all unique pairwise comparisons
-    EM_pred0 <- t(get_results %>% select(starts_with("EM.pred[")))
-    EM_pred <- max(EM_pred0[, 8])
+    if (net$model == "RE") {
+      EM_pred0 <- t(get_results %>% select(starts_with("EM.pred[")))
+      EM_pred <- max(EM_pred0[, 8])
+    } else {
+      EM_pred <- NA
+    }
 
     # Within-trial effects size
-    delta0 <- t(get_results %>% select(starts_with("delta") & !ends_with(",1]")))
-    delta <- max(delta0[, 8])
+    if (net$model == "RE") {
+      delta0 <- t(get_results %>% select(starts_with("delta") & !ends_with(",1]")))
+      delta <- max(delta0[, 8])
+    } else {
+      delta <- NA
+    }
 
     # Between-trial standard deviation
-    tau0 <- t(get_results %>% select(starts_with("tau")))
-    tau <- tau0[8]
+    if (net$model == "RE") {
+      tau0 <- t(get_results %>% select(starts_with("tau")))
+      tau <- tau0[8]
+    } else {
+      tau <- NA
+    }
 
     # Direct estimate from split nodes
     direct <- NA
