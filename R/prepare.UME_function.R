@@ -220,8 +220,6 @@ prepare_ume <- function(measure, model, assumption, connected) {
                  "\n\t\tEM[t2.bn[i], t1.bn[i]] <- d.m[t2.bn[i], ref.nbase.multi[i]] - d.m[t1.bn[i], ref.nbase.multi[i]]",
                  "\n\t\t}")
   } else if (model == "FE" & connected < 2) {
-    #paste0(code, "\n\t\t\tdelta.m[i, k] <- d.m[t[i, k]] - d.m[t[i, 1]]",
-    #             "\n\t\t\t}}")
     paste0(code, "\n\t\t\tdelta.m[i, k] <- d.m[t[i, k]] - d.m[t[i, 1]]",
                  "\n\t\t\t}}",
                  "\n\td.m[ref.base] <- 0",
@@ -231,7 +229,7 @@ prepare_ume <- function(measure, model, assumption, connected) {
                  "\n\tfor (i in 1:nbase.multi) {",
                  "\n\t\tEM[t2.bn[i], t1.bn[i]] <- d.m[t2.bn[i]] - d.m[t1.bn[i]]",
                  "\n\t\t}")
-  } else if (model == "RE" & connected >= 2) {
+  } else if (model == "FE" & connected >= 2) {
     paste0(code, "\n\t\t\tdelta.m[i, k] <- d.multi[t[i, k], ref.m[i]] - d.multi[t[i, 1], ref.m[i]]",
                  "\n\t\t\t}}",
                  "\n\tfor (i in 1:N.t.m2) {",

@@ -128,24 +128,21 @@ forestplot <- function(full, compar,  drug_names) {
 
   # Posterior results on the predicted estimates of comparisons with the
   # selected comparator as reference
-  pred_ref00 <- cbind(rbind(data.frame(mean = full$EM_pred[, 1],
-                                       lower = full$EM_pred[, 3],
-                                       upper = full$EM_pred[, 7]),
-                           data.frame(mean = full$EM_pred[, 1] * (-1),
-                                      lower = full$EM_pred[, 7] * (-1),
-                                      upper = full$EM_pred[, 3] * (-1))),
-                      poss_pair_comp)
-  pred_subset <- subset(pred_ref00, pred_ref00[5] == compar)
-  pred_ref0 <- rbind(pred_subset[, 1:3], c(rep(NA, 3)))
+  if (model == "RE") {
+    pred_ref00 <- cbind(rbind(data.frame(mean = full$EM_pred[, 1],
+                                         lower = full$EM_pred[, 3],
+                                         upper = full$EM_pred[, 7]),
+                              data.frame(mean = full$EM_pred[, 1] * (-1),
+                                         lower = full$EM_pred[, 7] * (-1),
+                                         upper = full$EM_pred[, 3] * (-1))),
+                        poss_pair_comp)
+    pred_subset <- subset(pred_ref00, pred_ref00[5] == compar)
+    pred_ref0 <- rbind(pred_subset[, 1:3], c(rep(NA, 3)))
 
-  # Sort by SUCRA in decreasing order and remove the reference intervention
-  pred_ref <- if (model == "RE") {
-    pred_ref0[order(sucra_new, decreasing = TRUE), ]
-  } else {
-    NA
+    # Sort by SUCRA in decreasing order and remove the reference intervention
+    pred_ref <- pred_ref0[order(sucra_new, decreasing = TRUE), ]
+    rownames(pred_ref) <- NULL
   }
-  rownames(pred_ref) <- NULL
-
 
   # Sort the drugs by their SUCRA in decreasing order and remove the reference
   # intervention (number 1)
@@ -184,7 +181,7 @@ forestplot <- function(full, compar,  drug_names) {
                               "comparison",
                               "mean", "lower", "upper")
   } else if (is.element(measure, c("Odds ratio", "Ratio of means")) &
-             model == "RE") {
+             model == "FE") {
     prepare_em <- data.frame(as.factor(rev(seq_len(len_drug_names))),
                              drug_names_sorted,
                              round(exp(em_ref), 2))
