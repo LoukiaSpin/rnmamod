@@ -234,7 +234,6 @@ run_metareg <- function(full,
                    "ns" = item$ns,
                    "ref" = item$ref,
                    "I" = item$I,
-                   "meand.phi" = mean_misspar,
                    "D" = D)
 
   data_jag <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
@@ -258,12 +257,13 @@ run_metareg <- function(full,
                           "cov.matrix" = covariate))
   }
 
-  data_jag <- if (is.element(assumption, c("IND-CORR", "IND-UNCORR"))) {
+  data_jag <- if (is.element(assumption, "IND-CORR")) {
     append(data_jag, list("M" = ifelse(!is.na(item$m), mean_misspar, NA),
                           "cov.phi" = 0.5 * var_misspar,
                           "var.phi" = var_misspar))
   } else {
-    append(data_jag, list("precd.phi" = 1 / var_misspar))
+    append(data_jag, list("meand.phi" = mean_misspar,
+                          "precd.phi" = 1 / var_misspar))
   }
 
   data_jag <- if (model == "RE") {

@@ -307,7 +307,6 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                                              c("HIE-ARM", "IDE-ARM")),
                                   item$ref, NA),
                    "I" = item$I[order(item$na, na.last = TRUE), ],
-                   "meand.phi" = mean_misspar,
                    "t1" = t1_indic,
                    "t2" = t2_indic,
                    "N.obs" = n_obs)
@@ -370,7 +369,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                             "t.m2" = 2:5))
     }
 
-  data_jag <- if (is.element(assumption, c("IND-CORR", "IND-UNCORR"))) {
+  data_jag <- if (is.element(assumption, "IND-CORR")) {
     append(data_jag, list("M" = ifelse(!is.na(m), mean_misspar, NA),
                           "cov.phi" = 0.5 * var_misspar,
                           "var.phi" = var_misspar))
@@ -379,7 +378,8 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
   }
 
   data_jag <- if (model == "RE") {
-    append(data_jag, list("heter.prior" = heterog_prior))
+    append(data_jag, list("meand.phi" = mean_misspar,
+                          "heter.prior" = heterog_prior))
   } else {
     data_jag
   }
