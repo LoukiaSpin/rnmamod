@@ -231,5 +231,5 @@ mcmc_diagnostics <- function(net, par) {
                              "Regression coefficient(s) (beta)")
   colnames(convergence) <- c("R.hat max", "convergence status")
 
-  return(list(convergence = suppressWarnings({convergence)}))
+  return(list(convergence = suppressWarnings({convergence})))
 }
