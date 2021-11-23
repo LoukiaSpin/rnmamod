@@ -130,9 +130,26 @@ mcmc_diagnostics <- function(net, par) {
       NA
     }
 
+    phi_r_hat_max <- if (dim(phi)[1] == 1) {
+      phi[8]
+    } else if(dim(phi)[1] > 1) {
+      max(phi[, 8])
+    } else {
+      NA
+    }
+
     # Regression coefficient
     beta <- t(get_results %>% select(starts_with("beta[") |
-                                       starts_with("beta")))
+                                 starts_with("beta")))
+
+    beta_r_hat_max <- if (dim(beta)[1] == 1) {
+      beta[8]
+    } else if(dim(beta)[1] > 1) {
+      max(beta[, 8])
+    } else {
+      NA
+    }
+
   } else {
     # Effect size of pairwise comparisons with at least two trials
     EM <- if (length(net$EM[1, ]) == 11) {
@@ -177,21 +194,21 @@ mcmc_diagnostics <- function(net, par) {
     beta <- NA
   }
 
-  phi_r_hat_max <- if (is.na(phi)) {
-    NA
-  } else if(dim(phi)[1] == 1) {
-    phi[8]
-  } else if(dim(phi)[1] > 1) {
-    max(phi[, 8])
-  }
+  #phi_r_hat_max <- if (is.na(phi)) {
+  #  NA
+  #} else if(dim(phi)[1] == 1) {
+  #  phi[8]
+  #} else if(dim(phi)[1] > 1) {
+  #  max(phi[, 8])
+  #}
 
-  beta_r_hat_max <- if (is.na(beta)) {
-    NA
-  } else if(dim(beta)[1] == 1) {
-    beta[8]
-  } else if(dim(beta)[1] > 1) {
-    max(beta[, 8])
-  }
+  #beta_r_hat_max <- if (is.na(beta)) {
+  #  NA
+  #} else if(dim(beta)[1] == 1) {
+  #  beta[8]
+  #} else if(dim(beta)[1] > 1) {
+  #  max(beta[, 8])
+  #}
 
   if (!is.null(net$jagsfit)) {
     # Turn 'R2jags' object into 'mcmc' object
