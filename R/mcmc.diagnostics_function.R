@@ -177,7 +177,7 @@ mcmc_diagnostics <- function(net, par) {
     beta <- Inf
   }
 
-  phi_r_hat_max <- if (is.null(dim(phi))) {
+  phi_r_hat_max <- if (dim(phi)[1] == 0) {
     Inf
   } else if(dim(phi)[1] == 1) {
     phi[8]
@@ -185,7 +185,7 @@ mcmc_diagnostics <- function(net, par) {
     max(phi[, 8])
   }
 
-  beta_r_hat_max <- if (is.null(dim(beta))) {
+  beta_r_hat_max <- if (dim(beta)[1] == 0) {
     Inf
   } else if(dim(beta)[1] == 1) {
     beta[8]
