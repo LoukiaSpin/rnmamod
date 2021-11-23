@@ -198,7 +198,7 @@ mcmc_diagnostics <- function(net, par) {
     direct <- direct0
 
     # Indirect estimate from split nodes
-    indirect0 <- max(net$indirect0[, 7])
+    indirect0 <- max(net$indirect[, 7])
     indirect <- indirect0
 
     # Inconsistency factor estimate from split nodes
