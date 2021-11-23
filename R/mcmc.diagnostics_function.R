@@ -171,25 +171,25 @@ mcmc_diagnostics <- function(net, par) {
     diff <- net$diff[, 7]
 
     # Estimated missingness parameter
-    phi <- Inf
+    phi <- NA
 
     # Regression coefficient
-    beta <- Inf
+    beta <- NA
   }
 
-  phi_r_hat_max <- if (dim(phi)[1] == 0) {
-    Inf
+  phi_r_hat_max <- if (is.na(phi)) {
+    NA
   } else if(dim(phi)[1] == 1) {
     phi[8]
-  } else {
+  } else if(dim(phi)[1] > 1) {
     max(phi[, 8])
   }
 
-  beta_r_hat_max <- if (dim(beta)[1] == 0) {
-    Inf
+  beta_r_hat_max <- if (is.na(beta)) {
+    NA
   } else if(dim(beta)[1] == 1) {
     beta[8]
-  } else {
+  } else if(dim(beta)[1] > 1) {
     max(beta[, 8])
   }
 
