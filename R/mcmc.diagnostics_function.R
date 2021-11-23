@@ -100,10 +100,12 @@ mcmc_diagnostics <- function(net, par) {
     EM <- max(EM0[, 8])
 
     # Predictive effects of all unique pairwise comparisons
-    EM_pred <- t(get_results %>% select(starts_with("EM.pred[")))
+    EM_pred0 <- t(get_results %>% select(starts_with("EM.pred[")))
+    EM_pred <- max(EM_pred0[, 8])
 
     # Within-trial effects size
-    delta <- t(get_results %>% select(starts_with("delta") & !ends_with(",1]")))
+    delta0 <- t(get_results %>% select(starts_with("delta") & !ends_with(",1]")))
+    delta <- max(delta0[, 8])
 
     # Between-trial standard deviation
     tau0 <- t(get_results %>% select(starts_with("tau")))
@@ -121,31 +123,31 @@ mcmc_diagnostics <- function(net, par) {
     item <- data_preparation(net$data, net$measure)
 
     # Estimated missingness parameter
-    phi <- if (length(unique(unlist(item$m))) > 2) {
+    phi0 <- if (length(unique(unlist(item$m))) > 2) {
       t(get_results %>% select(starts_with("phi") |
-                                starts_with("mean.phi") |
-                                starts_with("mean.phi[") |
-                                starts_with("phi[")))
+                               starts_with("mean.phi") |
+                               starts_with("mean.phi[") |
+                               starts_with("phi[")))
     } else {
       NA
     }
 
-    phi_r_hat_max <- if (dim(phi)[1] == 1) {
-      phi[8]
-    } else if(dim(phi)[1] > 1) {
-      max(phi[, 8])
+    phi <- if (dim(phi0)[1] == 1) {
+      phi0[8]
+    } else if(dim(phi0)[1] > 1) {
+      max(phi0[, 8])
     } else {
       NA
     }
 
     # Regression coefficient
-    beta <- t(get_results %>% select(starts_with("beta[") |
+    beta0 <- t(get_results %>% select(starts_with("beta[") |
                                  starts_with("beta")))
 
-    beta_r_hat_max <- if (dim(beta)[1] == 1) {
-      beta[8]
-    } else if(dim(beta)[1] > 1) {
-      max(beta[, 8])
+    beta <- if (dim(beta0)[1] == 1) {
+      beta0[8]
+    } else if(dim(beta0)[1] > 1) {
+      max(beta0[, 8])
     } else {
       NA
     }
@@ -167,7 +169,7 @@ mcmc_diagnostics <- function(net, par) {
     delta <- NA
 
     # Between-trial standard deviation ...
-    tau <- if (length(net$tau[1, ]) == 11) {
+    tau0 <- if (length(net$tau[1, ]) == 11) {
       #... for each pairwise comparison with at least two trials
       max(net$tau[, 10])
     } else if (length(net$tau[1, ]) == 8) {
@@ -177,15 +179,19 @@ mcmc_diagnostics <- function(net, par) {
       # ... sensitivity analysis to different scenarios on missingness parameter
       max(net$tau[, 5])
     }
+    tau <- tau0
 
     # Direct estimate from split nodes
-    direct <- net$direct[, 7]
+    direct0 <- net$direct[, 7]
+    direct <- max(direct0[, 8])
 
     # Indirect estimate from split nodes
-    indirect <- net$indirect[, 7]
+    indirect0 <- net$indirect[, 7]
+    indirect <- max(indirect0[, 8])
 
     # Inconsistency factor estimate from split nodes
-    diff <- net$diff[, 7]
+    diff0 <- net$diff[, 7]
+    diff <- max(diff0[, 8])
 
     # Estimated missingness parameter
     phi <- NA
@@ -203,16 +209,16 @@ mcmc_diagnostics <- function(net, par) {
   }
 
   r_hat_max <- c(EM,
-                 max(EM_pred[, 8]),
-                 max(delta[, 8]),
+                 EM_pred, #max(EM_pred[, 8]),
+                 delta, #max(delta[, 8]),
                  tau,
-                 max(direct),
-                 max(indirect),
-                 max(diff),
-                 phi_r_hat_max,
-                 beta_r_hat_max)
+                 direct, #max(direct),
+                 indirect, #max(indirect),
+                 diff, #max(diff),
+                 phi,
+                 beta)
   for (i in seq_len(length(r_hat_max))) {
-    r_hat_max[i] <- ifelse(is.infinite(r_hat_max[i]), NA, r_hat_max[i])
+    r_hat_max[i] <- ifelse(is.na(r_hat_max[i]), NA, r_hat_max[i])
   }
 
   # Indicate whether each model parameter achieved or failed to converge
