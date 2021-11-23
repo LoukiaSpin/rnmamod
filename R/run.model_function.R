@@ -393,25 +393,23 @@ run_model <- function(data,
                    "ns" = item$ns,
                    "ref" = item$ref,
                    "I" = item$I,
-                  # "M" = ifelse(!is.na(item$m), mean_misspar, NA),
-                  # "cov.phi" = 0.5 * var_misspar,
-                  # "var.phi" = var_misspar,
                    "meand.phi" = mean_misspar,
                    "precd.phi" = 1 / var_misspar,
                    "D" = D,
                    "heter.prior" = heterog_prior)
 
-  if (is.element(assumption, c("IND-CORR", "IND-UNCORR"))) {
-    data_jag <- append(data_jag, list("M" = ifelse(!is.na(item$m), mean_misspar,
-                                                   NA),
-                                      "cov.phi" = 0.5 * var_misspar,
-                                      "var.phi" = var_misspar))
+  data_jag <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
+    append(data_jag, list("y.o" = item$y0, "se.o" = item$se0))
+  } else if (measure == "OR") {
+    append(data_jag, list("r" = item$r))
   }
 
-  if (is.element(measure, c("MD", "SMD", "ROM"))) {
-    data_jag <- append(data_jag, list("y.o" = item$y0, "se.o" = item$se0))
-  } else if (measure == "OR") {
-    data_jag <- append(data_jag, list("r" = item$r))
+  data_jag <- if (is.element(assumption, c("IND-CORR", "IND-UNCORR"))) {
+    append(data_jag, list("M" = ifelse(!is.na(item$m), mean_misspar, NA),
+                          "cov.phi" = 0.5 * var_misspar,
+                          "var.phi" = var_misspar,))
+  } else {
+    data_jag
   }
 
   param_jags <- c("delta",
