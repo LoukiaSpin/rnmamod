@@ -187,6 +187,7 @@ metareg_plot <- function(full,
     cc <- "intervention names"
     message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
                        "\033[0m", "\n")))
+    as.character(seq_len(length(full$SUCRA[, 1])))
   } else {
     drug_names
   }

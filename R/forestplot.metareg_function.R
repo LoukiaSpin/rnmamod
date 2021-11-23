@@ -267,7 +267,10 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
 
   # Forest plots on credible/predictive intervals of comparisons with the
   # selected comparator
-  caption <- paste("Results for", cov_value[[2]], cov_value[[1]])
+  #caption <- paste("Results for", cov_value[[2]], cov_value[[1]])
+  caption <- paste("Results for", cov_value[[2]],
+                   ifelse(length(unique(reg$covariate)) < 3, " ",
+                          cov_value[[1]]))
 
   forest_plots <- if (model == "RE") {
     ggplot(data = prepare_em,
