@@ -178,12 +178,16 @@ mcmc_diagnostics <- function(net, par) {
   }
 
   phi_r_hat_max <- if (is.null(dim(phi))) {
+    Inf
+  } else if(dim(phi)[1] == 1) {
     phi[8]
   } else {
     max(phi[, 8])
   }
 
   beta_r_hat_max <- if (is.null(dim(beta))) {
+    Inf
+  } else if(dim(beta)[1] == 1) {
     beta[8]
   } else {
     max(beta[, 8])
@@ -197,15 +201,15 @@ mcmc_diagnostics <- function(net, par) {
     mcmc_plot <- mcmcplot(jagsfit_mcmc, parms = par)
   }
 
-  r_hat_max <- suppressWarnings({c(EM,
-                                   max(EM_pred[, 8]),
-                                   max(delta[, 8]),
-                                   tau,
-                                   max(direct),
-                                   max(indirect),
-                                   max(diff),
-                                   phi_r_hat_max,
-                                   beta_r_hat_max)})
+  r_hat_max <- c(EM,
+                 max(EM_pred[, 8]),
+                 max(delta[, 8]),
+                 tau,
+                 max(direct),
+                 max(indirect),
+                 max(diff),
+                 phi_r_hat_max,
+                 beta_r_hat_max)
   for (i in seq_len(length(r_hat_max))) {
     r_hat_max[i] <- ifelse(is.infinite(r_hat_max[i]), NA, r_hat_max[i])
   }
@@ -231,5 +235,5 @@ mcmc_diagnostics <- function(net, par) {
                              "Regression coefficient(s) (beta)")
   colnames(convergence) <- c("R.hat max", "convergence status")
 
-  return(list(convergence = suppressWarnings({convergence})))
+  return(list(convergence = convergence))
 }
