@@ -307,6 +307,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                                              c("HIE-ARM", "IDE-ARM")),
                                   item$ref, NA),
                    "I" = item$I[order(item$na, na.last = TRUE), ],
+                   "meand.phi" = mean_misspar,
                    "t1" = t1_indic,
                    "t2" = t2_indic,
                    "N.obs" = n_obs)
@@ -374,8 +375,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                           "cov.phi" = 0.5 * var_misspar,
                           "var.phi" = var_misspar))
   } else {
-    append(data_jag, list("meand.phi" = mean_misspar,
-                          "precd.phi" = 1 / var_misspar))
+    append(data_jag, list("precd.phi" = 1 / var_misspar))
   }
 
   data_jag <- if (model == "RE") {
