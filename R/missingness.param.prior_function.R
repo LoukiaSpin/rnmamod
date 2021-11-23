@@ -126,7 +126,13 @@ missingness_param_prior <- function(assumption, mean_misspar) {
                                       "IND-UNCORR")) &
              (length(mean_misspar) > 1)) {
     stop("'mean_misspar' must be a scalar", call. = FALSE)
-  } else {
+  } else if (is.element(assumption, c("IDE-TRIAL",
+                                      "IDE-COMMON",
+                                      "HIE-TRIAL",
+                                      "HIE-COMMON",
+                                      "IND-CORR",
+                                      "IND-UNCORR")) &
+             (length(mean_misspar) == 1)) {
     mean_misspar <- ifelse(mean_misspar == 0, 0.0001, mean_misspar)
   }
 

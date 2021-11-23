@@ -307,7 +307,7 @@ run_sensitivity <- function(full,
          measure = measure,
          scenarios = mean_scenarios,
          D = D,
-         heter = heter_prior)
+         heter = heterog_prior)
   } else {
     list(EM = EM,
          measure = measure,

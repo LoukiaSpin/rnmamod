@@ -195,7 +195,7 @@ run_metareg <- function(full,
   measure <- full$measure
   model <- full$model
   assumption <- full$assumption
-  heter_prior <- full$heter_prior
+  heterog_prior <- full$heter_prior
   mean_misspar <- full$mean_misspar
   var_misspar <- full$var_misspar
   D <- full$D

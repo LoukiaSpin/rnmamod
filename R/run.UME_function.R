@@ -309,7 +309,6 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                    "I" = item$I[order(item$na, na.last = TRUE), ],
                    "meand.phi" = mean_misspar,
                    "precd.phi" = 1 / var_misspar,
-                   "heter.prior" = heterog_prior,
                    "t1" = t1_indic,
                    "t2" = t2_indic,
                    "N.obs" = n_obs)
