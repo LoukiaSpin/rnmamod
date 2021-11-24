@@ -101,10 +101,10 @@
 robustness_index <- function(sens, threshold) {
 
 
-  if (is.null(sens)) {
-    aa <- "Missing participant outcome data have *not* been collected."
-    stop(paste(aa, "This function cannot be used."), call. = FALSE)
-  }
+  #if (is.null(sens)) {
+  #  aa <- "Missing participant outcome data have *not* been collected."
+  #  stop(paste(aa, "This function cannot be used."), call. = FALSE)
+  #}
 
   if (is.null(sens$EM)) {
     es_mat <- as.matrix(sens[[1]])
@@ -166,7 +166,8 @@ robustness_index <- function(sens, threshold) {
   }
 
   # A matrix of estimates for all possible comparisons under each scenario
-  mean_mat <- matrix(rep(NA, n_scenar * poss_comp), nrow = n_scenar)
+  #mean_mat <- matrix(rep(NA, n_scenar * poss_comp), nrow = n_scenar)
+  mean_mat <- matrix(NA, nrow = n_scenar, ncol = poss_comp)
   sd_mat <- mean_mat
   for (i in 1:n_scenar) {
     for (j in 1:poss_comp) {
