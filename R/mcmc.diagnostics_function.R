@@ -81,13 +81,13 @@ mcmc_diagnostics <- function(net, par) {
 
   par <- if (!is.null(net$jagsfit) & missing(par)) {
     stop("The argument 'par' needs to be defined", call. = FALSE)
-  } else if (is.null(net$jagsfit)) {
+  } else if (!is.null(net$jagsfit) & !is.null(par)) {
+    par
+  } else if (is.null(net$jagsfit) & !is.null(par)) {
     aa <- "The argument 'par' is ignored as it is used only"
     bb <- "for the functions 'run_model', 'run_ume' and 'run_metareg'"
     message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, "\033[0m", "\n")))
     NULL
-  } else {
-    par
   }
 
   if (!is.null(net$jagsfit)) {
