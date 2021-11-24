@@ -490,7 +490,8 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          jagsfit = jagsfit,
          data = data,
          model = model,
-         measure = measure)
+         measure = measure,
+         assumption = assumption)
   } else {
     list(EM = EM,
          dev_o = dev_o,
@@ -502,7 +503,8 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          jagsfit = jagsfit,
          data = data,
          model = model,
-         measure = measure)
+         measure = measure,
+         assumption = assumption)
   }
 
   # Return different list of results according to a condition
