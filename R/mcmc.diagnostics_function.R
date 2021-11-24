@@ -88,6 +88,8 @@ mcmc_diagnostics <- function(net, par) {
     bb <- "for the functions 'run_model', 'run_ume' and 'run_metareg'"
     message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, "\033[0m", "\n")))
     NULL
+  } else if (is.null(net$jagsfit) & is.null(par)) {
+    NULL
   }
 
   if (!is.null(net$jagsfit)) {
@@ -100,18 +102,18 @@ mcmc_diagnostics <- function(net, par) {
     EM <- max(EM0[, 8])
 
     # Predictive effects of all unique pairwise comparisons
-    if (net$model == "RE") {
+    if (net$model == "RE" & !is.null(net$EM_pred)) {
       EM_pred0 <- t(get_results %>% select(starts_with("EM.pred[")))
       EM_pred <- max(EM_pred0[, 8])
-    } else {
+    } else if (net$model == "FE" || is.null(net$EM_pred)) {
       EM_pred <- NA
     }
 
     # Within-trial effects size
-    if (net$model == "RE") {
+    if (net$model == "RE" & !is.null(net$delta)) {
       delta0 <- t(get_results %>% select(starts_with("delta") & !ends_with(",1]")))
       delta <- max(delta0[, 8])
-    } else {
+    } else if (net$model == "FE" || is.null(net$delta)) {
       delta <- NA
     }
 
@@ -165,7 +167,7 @@ mcmc_diagnostics <- function(net, par) {
     }
 
   } else {
-    if (length(net$EM[1, ]) == 11) {
+    if (!is.null(net$EM) & length(net$EM[1, ]) == 11) {
       # From 'run_model' function
       EM_pred <- NA
       delta <- NA
@@ -186,7 +188,7 @@ mcmc_diagnostics <- function(net, par) {
       direct <- NA
       indirect <- NA
       diff <- NA
-    } else if (!is.null(net$EM)) {
+    } else if (is.null(net$EM)) {
       # From 'run_model' function
       EM <- NA
       EM_pred <- NA
@@ -204,8 +206,8 @@ mcmc_diagnostics <- function(net, par) {
       }
       direct <- max(net$direct[, 7])
       indirect <- max(net$indirect[, 7])
-      diff <-max(net$diff[, 7])
-    } else if (length(net$EM[1, ]) == 6) {
+      diff <- max(net$diff[, 7])
+    } else if (!is.null(net$EM) & length(net$EM[1, ]) == 6) {
       # From 'run_sensitivity' function
       EM <- max(net$EM[, 5])
       tau <- if (!is.null(net$tau)) {
@@ -238,12 +240,12 @@ mcmc_diagnostics <- function(net, par) {
   }
 
   r_hat_max <- c(EM,
-                 EM_pred, #max(EM_pred[, 8]),
-                 delta, #max(delta[, 8]),
+                 EM_pred,
+                 delta,
                  tau,
-                 direct, #max(direct),
-                 indirect, #max(indirect),
-                 diff, #max(diff),
+                 direct,
+                 indirect,
+                 diff,
                  phi,
                  beta)
   #for (i in seq_len(length(r_hat_max))) {
