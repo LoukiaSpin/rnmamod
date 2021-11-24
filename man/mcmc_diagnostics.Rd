@@ -4,7 +4,7 @@
 \alias{mcmc_diagnostics}
 \title{Markov Chain Monte Carlo diagnostics}
 \usage{
-mcmc_diagnostics(net, par)
+mcmc_diagnostics(net, par = NULL)
 }
 \arguments{
 \item{net}{An object of S3 class \code{\link{run_model}},

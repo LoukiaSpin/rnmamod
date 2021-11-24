@@ -140,7 +140,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
                                starts_with("mean.phi") |
                                starts_with("mean.phi[") |
                                starts_with("phi[")))
-    } else {
+    } else if (unique(na.omit(unlist(item$m))) == 0)  {
       NA
     }
 
@@ -148,7 +148,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
       phi0[8]
     } else if(dim(phi0)[1] > 1) {
       max(phi0[, 8])
-    } else {
+    } else if(is.na(phi0)) {
       NA
     }
 
