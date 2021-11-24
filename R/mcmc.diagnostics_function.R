@@ -135,12 +135,12 @@ mcmc_diagnostics <- function(net, par = NULL) {
     item <- data_preparation(net$data, net$measure)
 
     # Estimated missingness parameter
-    phi0 <- if (length(unique(unlist(item$m))) > 2) {
+    phi0 <- if (!is.na(net$phi)) {
       t(get_results %>% select(starts_with("phi") |
                                starts_with("mean.phi") |
                                starts_with("mean.phi[") |
                                starts_with("phi[")))
-    } else if (unique(na.omit(unlist(item$m))) == 0)  {
+    } else if (is.na(net$phi))  {
       NA
     }
 
