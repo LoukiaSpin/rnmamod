@@ -524,13 +524,13 @@ metareg_plot <- function(full,
          table_predictions = knitr::kable(pred_both_models),
          table_model_assessment = knitr::kable(table_model_assess),
          table_regression_coeffients = knitr::kable(reg_coeff),
-         interval_plots = suppressWarnings(print(forest_plots)),
+         interval_plots = suppressWarnings(ggarrange(forest_plots)),
          sucra_scatterplot = sucra_scatterplot)
   } else {
     list(table_estimates = knitr::kable(est_both_models),
          table_model_assessment = knitr::kable(table_model_assess),
          table_regression_coeffients = knitr::kable(reg_coeff),
-         interval_plots = suppressWarnings(print(forest_plots)),
+         interval_plots = suppressWarnings(ggarrange(forest_plots)),
          sucra_scatterplot = sucra_scatterplot)
   }
 
