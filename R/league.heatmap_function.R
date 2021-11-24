@@ -111,13 +111,13 @@ league_heatmap <- function(full, cov_value = NULL, drug_names) {
          call. = FALSE)
   }
 
-  if (length(unique(reg$covariate)) < 3 &
-      !is.element(cov_value[[1]], reg$covariate)) {
+  if (length(unique(full$covariate)) < 3 &
+      !is.element(cov_value[[1]], full$covariate)) {
     aa <- "The first element of the argument 'cov_value' is out of the value"
     stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
-  } else if (length(unique(reg$covariate)) > 2 &
-             (cov_value[[1]] < min(reg$covariate) |
-              cov_value[[1]] > max(reg$covariate))) {
+  } else if (length(unique(full$covariate)) > 2 &
+             (cov_value[[1]] < min(full$covariate) |
+              cov_value[[1]] > max(full$covariate))) {
     aa <- "The first element of the argument 'cov_value' is out of the value"
     stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
   }
