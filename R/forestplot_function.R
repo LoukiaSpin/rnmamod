@@ -401,10 +401,8 @@ forestplot <- function(full, compar,  drug_names) {
                                       size = 12))
 
   # Bring together both forest-plots
-  forest_plots <- suppressWarnings({
-    ggarrange(p1, p2, nrow = 1, ncol = 2,
-              labels = c("A)", "B)"), common.legend = TRUE, legend = "bottom")
-    })
+  forest_plots <- ggarrange(p1, p2, nrow = 1, ncol = 2, labels = c("A)", "B)"),
+                            common.legend = TRUE, legend = "bottom")
 
-  return(forest_plots)
+  suppressWarnings(print(forest_plots))
 }

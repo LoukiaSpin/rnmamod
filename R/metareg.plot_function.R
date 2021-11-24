@@ -456,59 +456,6 @@ metareg_plot <- function(full,
                    "NMA preferred when accounting for model fit and complexity",
                         "There is little to choose between the two models")))
 
-  # Effect estimates and regression coefficients of reference-comparisons
-  # (Sort by NMA-SUCRA in decreasing order)
-  #if (!is.element(measure, c("Odds ratio", "Ratio of means"))) {
-  #  cri_est_nma <- paste0("(", round(em_ref_nma[, 2], 2), ",", " ",
-  #                        round(em_ref_nma[, 3], 2), ")",
-  #                        ifelse(em_ref_nma[, 2] > 0 |
-  #                                 em_ref_nma[, 3] < 0, "*", " "))
-  #  cri_est_nmr <- paste0("(", round(em_ref_nmr[, 2], 2), ",", " ",
-  #                        round(em_ref_nmr[, 3], 2), ")",
-  #                        ifelse(em_ref_nmr[, 2] > 0 |
-  #                                 em_ref_nmr[, 3] < 0, "*", " "))
-  #  cri_pred_nma <- paste0("(", round(pred_ref_nma[, 2], 2), ",", " ",
-  #                         round(pred_ref_nma[, 3], 2), ")",
-  #                         ifelse(pred_ref_nma[, 2] > 0 |
-  #                                  pred_ref_nma[, 3] < 0, "*", " "))
-  #  cri_pred_nmr <- paste0("(", round(pred_ref_nmr[, 2], 2), ",", " ",
-  #                         round(pred_ref_nmr[, 3], 2), ")",
-  #                         ifelse(pred_ref_nmr[, 2] > 0 |
-  #                                  pred_ref_nmr[, 3] < 0, "*", " "))
-  #  cri_beta <- if (is.element(reg$covar_assumption, c("exchangeable",
-  #                                                     "independent"))) {
-  #    paste0("(", round(beta[, 2], 2), ",", " ", round(beta[, 3], 2), ")",
-  #           ifelse(beta[, 2] > 0 | beta[, 3] < 0, "*", " "))
-  #  } else {
-  #    paste0("(", round(reg$beta[2], 2), ",", " ", round(reg$beta[3], 2), ")",
-  #           ifelse(reg$beta[2] > 0 | reg$beta[3] < 0, "*", " "))
-  #  }
-  #} else {
-  #  cri_est_nma <- paste0("(", round(em_ref_nma[, 2], 2), ",", " ",
-  #                        round(em_ref_nma[, 3], 2), ")",
-  #                        ifelse(em_ref_nma[, 2] > 1 |
-  #                                 em_ref_nma[, 3] < 1, "*", " "))
-  #  cri_est_nmr <- paste0("(", round(em_ref_nmr[, 2], 2), ",", " ",
-  #                        round(em_ref_nmr[, 3], 2), ")",
-  #                        ifelse(em_ref_nmr[, 2] > 1 |
-  #                                 em_ref_nmr[, 3] < 1, "*", " "))
-  #  cri_pred_nma <- paste0("(", round(pred_ref_nma[, 2], 2), ",", " ",
-  #                         round(pred_ref_nma[, 3], 2), ")",
-  #                         ifelse(pred_ref_nma[, 2] > 1 |
-  #                                  pred_ref_nma[, 3] < 1, "*", " "))
-  #  cri_pred_nmr <- paste0("(", round(pred_ref_nmr[, 2], 2), ",", " ",
-  #                         round(pred_ref_nmr[, 3], 2), ")",
-  #                         ifelse(pred_ref_nmr[, 2] > 1 |
-  #                                  pred_ref_nmr[, 3] < 1, "*", " "))
-  #  cri_beta <- if (is.element(reg$covar_assumption, c("exchangeable",
-  #                                                     "independent"))) {
-  #    paste0("(", round(beta[, 2], 2), ",", " ", round(beta[, 3], 2), ")",
-  #           ifelse(beta[, 2] > 1 | beta[, 3] < 1, "*", " "))
-  #  } else {
-  #    paste0("(", round(beta[2], 2), ",", " ", round(beta[3], 2), ")",
-  #           ifelse(beta[2] > 1 | beta[3] < 1, "*", " "))
-  #  }
-  #}
 
   # Tabulate results on comparisons with the reference (both models)
   if (model == "RE") {
