@@ -112,11 +112,21 @@ league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
     drug_names
   }
 
+  if (length(unique(reg$covariate)) < 3 &
+      !is.element(cov_value[[1]], reg$covariate)) {
+    aa <- "The first element of the argument 'cov_value' is out of the value"
+    stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
+  } else if (length(unique(reg$covariate)) > 2 &
+             (cov_value[[1]] < min(reg$covariate) |
+              cov_value[[1]] > max(reg$covariate))) {
+    aa <- "The first element of the argument 'cov_value' is out of the value"
+    stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
+  }
+
   if (length(drug_names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
          call. = FALSE)
   }
-
 
   cov_value <- if (!is.null(full$beta_all) & missing(cov_value)) {
     stop("The argument 'cov_value' has not been defined", call. = FALSE)
