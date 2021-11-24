@@ -135,32 +135,29 @@ mcmc_diagnostics <- function(net, par = NULL) {
     item <- data_preparation(net$data, net$measure)
 
     # Estimated missingness parameter
-    phi0 <- if (!is.na(net$phi)) {
-      t(get_results %>% select(starts_with("phi") |
-                               starts_with("mean.phi") |
-                               starts_with("mean.phi[") |
-                               starts_with("phi[")))
-    } else if (is.na(net$phi))  {
+    if (!is.na(net$phi) & is.element(net$assumption,
+                                     c("IDE-COMMON", "HIE-COMMON"))) {
+      phi0 <- t(get_results %>% select(starts_with("phi") |
+                                         starts_with("mean.phi")))
+      phi <- phi0[8]
+    } else if (!is.na(net$phi) & !is.element(net$assumption,
+                                            c("IDE-COMMON", "HIE-COMMON"))) {
+      phi0 <- t(get_results %>% select(starts_with("mean.phi[") |
+                                         starts_with("phi[")))
+      phi <- max(phi0[, 8])
+    } else if (is.na(net$phi)) {
       NA
     }
 
-    phi <- if (dim(phi0)[1] == 1) {
-      phi0[8]
-    } else if(dim(phi0)[1] > 1) {
-      max(phi0[, 8])
-    } else if(is.na(phi0)) {
-      NA
-    }
 
     # Regression coefficient
-    beta0 <- t(get_results %>% select(starts_with("beta[") |
-                                 starts_with("beta")))
-
-    beta <- if (dim(beta0)[1] == 1) {
-      beta0[8]
-    } else if(dim(beta0)[1] > 1) {
-      max(beta0[, 8])
-    } else {
+    if (!is.na(net$beta) & is.element(net$covar_assumption, "common")) {
+      beta0 <- t(get_results %>% select(starts_with("beta")))
+      beta <- beta0[8]
+    } else if(!is.na(net$beta) & !is.element(net$covar_assumption, "common")) {
+      beta0 <- t(get_results %>% select(starts_with("beta[")))
+      beta <- max(beta0[, 8])
+    } else if (is.na(net$beta)) {
       NA
     }
 
