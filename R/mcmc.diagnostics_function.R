@@ -146,7 +146,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
                                          starts_with("phi[")))
       phi <- max(phi0[, 8])
     } else if (is.na(net$phi)) {
-      NA
+      phi <- NA
     }
 
 
@@ -158,7 +158,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
       beta <- ifelse(is.element(net$covar_assumption, "common"),
                      beta0[8], max(beta0[, 8]))
     } else if (is.null(net$beta)) {
-      NA
+      beta <- NA
     }
 
   } else {
