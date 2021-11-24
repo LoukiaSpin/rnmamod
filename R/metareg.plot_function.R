@@ -284,46 +284,133 @@ metareg_plot <- function(full,
                              poss_pair_comp)
     pred_subset_nmr <- subset(pred_ref00_nmr, pred_ref00_nmr[5] == compar)
     pred_ref0_nmr <- rbind(pred_subset_nmr[, 1:3], c(rep(NA, 3)))
-  } else if (model != "RE") {
-    pred_ref00_nma <- NA
-    pred_ref00_nmr <- NA
-  }
 
-  # Sort by SUCRA in decreasing order and remove the reference intervention
-  if (model == "RE") {
+    # Sort by SUCRA in decreasing order and remove the reference intervention
     pred_ref_nma <- pred_ref0_nma[order(sucra_full_new, decreasing = TRUE), ]
     pred_ref_nmr <- pred_ref0_nmr[order(sucra_full_new, decreasing = TRUE), ]
-  } else {
-    NA
+    rownames(pred_ref_nma) <- rownames(pred_ref_nmr) <- NULL
   }
-  rownames(pred_ref_nma) <- rownames(pred_ref_nmr) <- NULL
 
-  if (!is.element(measure, c("Odds ratio", "Ratio of means"))) {
+  if (!is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
     em_ref_nma <- em_ref_nma
     em_ref_nmr <- em_ref_nmr
     pred_ref_nma <- pred_ref_nma
     pred_ref_nmr <- pred_ref_nmr
     beta <- beta
-  } else {
+
+    cri_est_nma <- paste0("(", round(em_ref_nma[, 2], 2), ",", " ",
+                          round(em_ref_nma[, 3], 2), ")",
+                          ifelse(em_ref_nma[, 2] > 0 |
+                                   em_ref_nma[, 3] < 0, "*", " "))
+    cri_est_nmr <- paste0("(", round(em_ref_nmr[, 2], 2), ",", " ",
+                          round(em_ref_nmr[, 3], 2), ")",
+                          ifelse(em_ref_nmr[, 2] > 0 |
+                                   em_ref_nmr[, 3] < 0, "*", " "))
+    cri_pred_nma <- paste0("(", round(pred_ref_nma[, 2], 2), ",", " ",
+                           round(pred_ref_nma[, 3], 2), ")",
+                           ifelse(pred_ref_nma[, 2] > 0 |
+                                    pred_ref_nma[, 3] < 0, "*", " "))
+    cri_pred_nmr <- paste0("(", round(pred_ref_nmr[, 2], 2), ",", " ",
+                           round(pred_ref_nmr[, 3], 2), ")",
+                           ifelse(pred_ref_nmr[, 2] > 0 |
+                                    pred_ref_nmr[, 3] < 0, "*", " "))
+    cri_beta <- if (is.element(reg$covar_assumption, c("exchangeable",
+                                                       "independent"))) {
+      paste0("(", round(beta[, 2], 2), ",", " ", round(beta[, 3], 2), ")",
+             ifelse(beta[, 2] > 0 | beta[, 3] < 0, "*", " "))
+    } else {
+      paste0("(", round(reg$beta[2], 2), ",", " ", round(reg$beta[3], 2), ")",
+             ifelse(reg$beta[2] > 0 | reg$beta[3] < 0, "*", " "))
+    }
+
+  } else if (is.element(measure, c("Odds ratio", "Ratio of means")) &
+             model == "RE") {
     em_ref_nma <- exp(em_ref_nma)
     em_ref_nmr <- exp(em_ref_nmr)
     pred_ref_nma <- exp(pred_ref_nma)
     pred_ref_nmr <- exp(pred_ref_nmr)
     beta <- exp(beta)
+
+    cri_est_nma <- paste0("(", round(em_ref_nma[, 2], 2), ",", " ",
+                          round(em_ref_nma[, 3], 2), ")",
+                          ifelse(em_ref_nma[, 2] > 1 |
+                                   em_ref_nma[, 3] < 1, "*", " "))
+    cri_est_nmr <- paste0("(", round(em_ref_nmr[, 2], 2), ",", " ",
+                          round(em_ref_nmr[, 3], 2), ")",
+                          ifelse(em_ref_nmr[, 2] > 1 |
+                                   em_ref_nmr[, 3] < 1, "*", " "))
+    cri_pred_nma <- paste0("(", round(pred_ref_nma[, 2], 2), ",", " ",
+                           round(pred_ref_nma[, 3], 2), ")",
+                           ifelse(pred_ref_nma[, 2] > 1 |
+                                    pred_ref_nma[, 3] < 1, "*", " "))
+    cri_pred_nmr <- paste0("(", round(pred_ref_nmr[, 2], 2), ",", " ",
+                           round(pred_ref_nmr[, 3], 2), ")",
+                           ifelse(pred_ref_nmr[, 2] > 1 |
+                                    pred_ref_nmr[, 3] < 1, "*", " "))
+    cri_beta <- if (is.element(reg$covar_assumption, c("exchangeable",
+                                                       "independent"))) {
+      paste0("(", round(beta[, 2], 2), ",", " ", round(beta[, 3], 2), ")",
+             ifelse(beta[, 2] > 1 | beta[, 3] < 1, "*", " "))
+    } else {
+      paste0("(", round(beta[2], 2), ",", " ", round(beta[3], 2), ")",
+             ifelse(beta[2] > 1 | beta[3] < 1, "*", " "))
+    }
+
+  } else if (!is.element(measure, c("Odds ratio", "Ratio of means")) &
+             model == "FE") {
+    em_ref_nma <- em_ref_nma
+    em_ref_nmr <- em_ref_nmr
+    beta <- beta
+
+    cri_est_nma <- paste0("(", round(em_ref_nma[, 2], 2), ",", " ",
+                          round(em_ref_nma[, 3], 2), ")",
+                          ifelse(em_ref_nma[, 2] > 0 |
+                                   em_ref_nma[, 3] < 0, "*", " "))
+    cri_est_nmr <- paste0("(", round(em_ref_nmr[, 2], 2), ",", " ",
+                          round(em_ref_nmr[, 3], 2), ")",
+                          ifelse(em_ref_nmr[, 2] > 0 |
+                                   em_ref_nmr[, 3] < 0, "*", " "))
+    cri_beta <- if (is.element(reg$covar_assumption, c("exchangeable",
+                                                       "independent"))) {
+      paste0("(", round(beta[, 2], 2), ",", " ", round(beta[, 3], 2), ")",
+             ifelse(beta[, 2] > 0 | beta[, 3] < 0, "*", " "))
+    } else {
+      paste0("(", round(reg$beta[2], 2), ",", " ", round(reg$beta[3], 2), ")",
+             ifelse(reg$beta[2] > 0 | reg$beta[3] < 0, "*", " "))
+    }
+  } else if (is.element(measure, c("Odds ratio", "Ratio of means")) &
+             model == "FE") {
+    em_ref_nma <- exp(em_ref_nma)
+    em_ref_nmr <- exp(em_ref_nmr)
+    beta <- exp(beta)
+
+    cri_est_nma <- paste0("(", round(em_ref_nma[, 2], 2), ",", " ",
+                          round(em_ref_nma[, 3], 2), ")",
+                          ifelse(em_ref_nma[, 2] > 1 |
+                                   em_ref_nma[, 3] < 1, "*", " "))
+    cri_est_nmr <- paste0("(", round(em_ref_nmr[, 2], 2), ",", " ",
+                          round(em_ref_nmr[, 3], 2), ")",
+                          ifelse(em_ref_nmr[, 2] > 1 |
+                                   em_ref_nmr[, 3] < 1, "*", " "))
+    cri_beta <- if (is.element(reg$covar_assumption, c("exchangeable",
+                                                       "independent"))) {
+      paste0("(", round(beta[, 2], 2), ",", " ", round(beta[, 3], 2), ")",
+             ifelse(beta[, 2] > 1 | beta[, 3] < 1, "*", " "))
+    } else {
+      paste0("(", round(beta[2], 2), ",", " ", round(beta[3], 2), ")",
+             ifelse(beta[2] > 1 | beta[3] < 1, "*", " "))
+    }
+
   }
 
   # Posterior results on between-trial standard deviation under NMA
   tau_nma <- if (model == "RE") {
     round(full$tau, 2)
-  } else {
-    NA
   }
 
   # Posterior results on between-trial standard deviation under meta-regression
   tau_nmr <- if (model == "RE") {
     round(reg$tau, 2)
-  } else {
-    NA
   }
 
   # Posterior mean of model assessment measures under NMA
@@ -337,9 +424,6 @@ metareg_plot <- function(full,
   if (model == "RE") {
     cri_tau_nma <- paste0("(", tau_nma[, 3], ",", " ", tau_nma[, 7], ")")
     cri_tau_nmr <- paste0("(", tau_nmr[, 3], ",", " ", tau_nmr[, 7], ")")
-  } else {
-    cri_tau_nma <- NA
-    cri_tau_nmr <- NA
   }
 
   # Model assessment and between-trial standard deviation for both models
@@ -374,73 +458,85 @@ metareg_plot <- function(full,
 
   # Effect estimates and regression coefficients of reference-comparisons
   # (Sort by NMA-SUCRA in decreasing order)
-  if (!is.element(measure, c("Odds ratio", "Ratio of means"))) {
-    cri_est_nma <- paste0("(", round(em_ref_nma[, 2], 2), ",", " ",
-                          round(em_ref_nma[, 3], 2), ")",
-                          ifelse(em_ref_nma[, 2] > 0 |
-                                   em_ref_nma[, 3] < 0, "*", " "))
-    cri_est_nmr <- paste0("(", round(em_ref_nmr[, 2], 2), ",", " ",
-                          round(em_ref_nmr[, 3], 2), ")",
-                          ifelse(em_ref_nmr[, 2] > 0 |
-                                   em_ref_nmr[, 3] < 0, "*", " "))
-    cri_pred_nma <- paste0("(", round(pred_ref_nma[, 2], 2), ",", " ",
-                           round(pred_ref_nma[, 3], 2), ")",
-                           ifelse(pred_ref_nma[, 2] > 0 |
-                                    pred_ref_nma[, 3] < 0, "*", " "))
-    cri_pred_nmr <- paste0("(", round(pred_ref_nmr[, 2], 2), ",", " ",
-                           round(pred_ref_nmr[, 3], 2), ")",
-                           ifelse(pred_ref_nmr[, 2] > 0 |
-                                    pred_ref_nmr[, 3] < 0, "*", " "))
-    cri_beta <- if (is.element(reg$covar_assumption, c("exchangeable",
-                                                       "independent"))) {
-      paste0("(", round(beta[, 2], 2), ",", " ", round(beta[, 3], 2), ")",
-             ifelse(beta[, 2] > 0 | beta[, 3] < 0, "*", " "))
-    } else {
-      paste0("(", round(reg$beta[2], 2), ",", " ", round(reg$beta[3], 2), ")",
-             ifelse(reg$beta[2] > 0 | reg$beta[3] < 0, "*", " "))
-    }
-  } else {
-    cri_est_nma <- paste0("(", round(em_ref_nma[, 2], 2), ",", " ",
-                          round(em_ref_nma[, 3], 2), ")",
-                          ifelse(em_ref_nma[, 2] > 1 |
-                                   em_ref_nma[, 3] < 1, "*", " "))
-    cri_est_nmr <- paste0("(", round(em_ref_nmr[, 2], 2), ",", " ",
-                          round(em_ref_nmr[, 3], 2), ")",
-                          ifelse(em_ref_nmr[, 2] > 1 |
-                                   em_ref_nmr[, 3] < 1, "*", " "))
-    cri_pred_nma <- paste0("(", round(pred_ref_nma[, 2], 2), ",", " ",
-                           round(pred_ref_nma[, 3], 2), ")",
-                           ifelse(pred_ref_nma[, 2] > 1 |
-                                    pred_ref_nma[, 3] < 1, "*", " "))
-    cri_pred_nmr <- paste0("(", round(pred_ref_nmr[, 2], 2), ",", " ",
-                           round(pred_ref_nmr[, 3], 2), ")",
-                           ifelse(pred_ref_nmr[, 2] > 1 |
-                                    pred_ref_nmr[, 3] < 1, "*", " "))
-    cri_beta <- if (is.element(reg$covar_assumption, c("exchangeable",
-                                                       "independent"))) {
-      paste0("(", round(beta[, 2], 2), ",", " ", round(beta[, 3], 2), ")",
-             ifelse(beta[, 2] > 1 | beta[, 3] < 1, "*", " "))
-    } else {
-      paste0("(", round(beta[2], 2), ",", " ", round(beta[3], 2), ")",
-             ifelse(beta[2] > 1 | beta[3] < 1, "*", " "))
-    }
-  }
+  #if (!is.element(measure, c("Odds ratio", "Ratio of means"))) {
+  #  cri_est_nma <- paste0("(", round(em_ref_nma[, 2], 2), ",", " ",
+  #                        round(em_ref_nma[, 3], 2), ")",
+  #                        ifelse(em_ref_nma[, 2] > 0 |
+  #                                 em_ref_nma[, 3] < 0, "*", " "))
+  #  cri_est_nmr <- paste0("(", round(em_ref_nmr[, 2], 2), ",", " ",
+  #                        round(em_ref_nmr[, 3], 2), ")",
+  #                        ifelse(em_ref_nmr[, 2] > 0 |
+  #                                 em_ref_nmr[, 3] < 0, "*", " "))
+  #  cri_pred_nma <- paste0("(", round(pred_ref_nma[, 2], 2), ",", " ",
+  #                         round(pred_ref_nma[, 3], 2), ")",
+  #                         ifelse(pred_ref_nma[, 2] > 0 |
+  #                                  pred_ref_nma[, 3] < 0, "*", " "))
+  #  cri_pred_nmr <- paste0("(", round(pred_ref_nmr[, 2], 2), ",", " ",
+  #                         round(pred_ref_nmr[, 3], 2), ")",
+  #                         ifelse(pred_ref_nmr[, 2] > 0 |
+  #                                  pred_ref_nmr[, 3] < 0, "*", " "))
+  #  cri_beta <- if (is.element(reg$covar_assumption, c("exchangeable",
+  #                                                     "independent"))) {
+  #    paste0("(", round(beta[, 2], 2), ",", " ", round(beta[, 3], 2), ")",
+  #           ifelse(beta[, 2] > 0 | beta[, 3] < 0, "*", " "))
+  #  } else {
+  #    paste0("(", round(reg$beta[2], 2), ",", " ", round(reg$beta[3], 2), ")",
+  #           ifelse(reg$beta[2] > 0 | reg$beta[3] < 0, "*", " "))
+  #  }
+  #} else {
+  #  cri_est_nma <- paste0("(", round(em_ref_nma[, 2], 2), ",", " ",
+  #                        round(em_ref_nma[, 3], 2), ")",
+  #                        ifelse(em_ref_nma[, 2] > 1 |
+  #                                 em_ref_nma[, 3] < 1, "*", " "))
+  #  cri_est_nmr <- paste0("(", round(em_ref_nmr[, 2], 2), ",", " ",
+  #                        round(em_ref_nmr[, 3], 2), ")",
+  #                        ifelse(em_ref_nmr[, 2] > 1 |
+  #                                 em_ref_nmr[, 3] < 1, "*", " "))
+  #  cri_pred_nma <- paste0("(", round(pred_ref_nma[, 2], 2), ",", " ",
+  #                         round(pred_ref_nma[, 3], 2), ")",
+  #                         ifelse(pred_ref_nma[, 2] > 1 |
+  #                                  pred_ref_nma[, 3] < 1, "*", " "))
+  #  cri_pred_nmr <- paste0("(", round(pred_ref_nmr[, 2], 2), ",", " ",
+  #                         round(pred_ref_nmr[, 3], 2), ")",
+  #                         ifelse(pred_ref_nmr[, 2] > 1 |
+  #                                  pred_ref_nmr[, 3] < 1, "*", " "))
+  #  cri_beta <- if (is.element(reg$covar_assumption, c("exchangeable",
+  #                                                     "independent"))) {
+  #    paste0("(", round(beta[, 2], 2), ",", " ", round(beta[, 3], 2), ")",
+  #           ifelse(beta[, 2] > 1 | beta[, 3] < 1, "*", " "))
+  #  } else {
+  #    paste0("(", round(beta[2], 2), ",", " ", round(beta[3], 2), ")",
+  #           ifelse(beta[2] > 1 | beta[3] < 1, "*", " "))
+  #  }
+  #}
 
   # Tabulate results on comparisons with the reference (both models)
-  est_both_models <- na.omit(data.frame(drug_names_sorted,
-                                        round(em_ref_nma[, 1], 2),
-                                        cri_est_nma,
-                                        round(em_ref_nmr[, 1], 2),
-                                        cri_est_nmr))
-  pred_both_models <- na.omit(data.frame(drug_names_sorted,
-                                         round(pred_ref_nma[, 1], 2),
-                                         cri_pred_nma,
-                                         round(pred_ref_nmr[, 1], 2),
-                                         cri_pred_nmr))
-  colnames(est_both_models) <- colnames(pred_both_models) <-
-    c(paste("versus", compar),
-      "Mean NMA", "95% CrI NMA", "Mean NMR", "95% CrI NMR")
-  rownames(est_both_models) <- rownames(pred_both_models) <- NULL
+  if (model == "RE") {
+    est_both_models <- na.omit(data.frame(drug_names_sorted,
+                                          round(em_ref_nma[, 1], 2),
+                                          cri_est_nma,
+                                          round(em_ref_nmr[, 1], 2),
+                                          cri_est_nmr))
+    pred_both_models <- na.omit(data.frame(drug_names_sorted,
+                                           round(pred_ref_nma[, 1], 2),
+                                           cri_pred_nma,
+                                           round(pred_ref_nmr[, 1], 2),
+                                           cri_pred_nmr))
+    colnames(est_both_models) <- colnames(pred_both_models) <-
+      c(paste("versus", compar),
+        "Mean NMA", "95% CrI NMA", "Mean NMR", "95% CrI NMR")
+    rownames(est_both_models) <- rownames(pred_both_models) <- NULL
+  } else {
+    est_both_models <- na.omit(data.frame(drug_names_sorted,
+                                          round(em_ref_nma[, 1], 2),
+                                          cri_est_nma,
+                                          round(em_ref_nmr[, 1], 2),
+                                          cri_est_nmr))
+    colnames(est_both_models) <- c(paste("versus", compar),
+        "Mean NMA", "95% CrI NMA", "Mean NMR", "95% CrI NMR")
+    rownames(est_both_models) <- NULL
+
+  }
 
   # Results on the regression coefficient
   if (is.element(reg$covar_assumption, c("exchangeable", "independent"))) {
@@ -459,7 +555,7 @@ metareg_plot <- function(full,
   sucra_scatterplot <- scatterplot_sucra(full, reg, cov_value, drug_names)
 
   # Write all tables as .xlsx
-  if (save_xls == TRUE) {
+  if (save_xls == TRUE & model == "RE") {
     write_xlsx(est_both_models, paste0("Table NMA vs NMR_Estimation", ".xlsx"))
     write_xlsx(pred_both_models, paste0("Table NMA vs NMR_Prediction", ".xlsx"))
     write_xlsx(table_model_assess, paste0("Table Model Assessment_NMA vs NMR",
@@ -467,13 +563,30 @@ metareg_plot <- function(full,
     if (is.element(reg$covar_assumption, c("exchangeable", "independent"))) {
       write_xlsx(reg_coeff, paste0("Table NMA vs NMR_Coefficient", ".xlsx"))
     }
+  } else if (save_xls == TRUE & model == "FE") {
+    write_xlsx(est_both_models, paste0("Table NMA vs NMR_Estimation", ".xlsx"))
+    write_xlsx(table_model_assess, paste0("Table Model Assessment_NMA vs NMR",
+                                          ".xlsx"))
+    if (is.element(reg$covar_assumption, c("exchangeable", "independent"))) {
+      write_xlsx(reg_coeff, paste0("Table NMA vs NMR_Coefficient", ".xlsx"))
+    }
+  }
+
+  results <- if (model == "RE") {
+    list(table_estimates = knitr::kable(est_both_models),
+         table_predictions = knitr::kable(pred_both_models),
+         table_model_assessment = knitr::kable(table_model_assess),
+         table_regression_coeffients = knitr::kable(reg_coeff),
+         interval_plots = forest_plots,
+         sucra_scatterplot = sucra_scatterplot)
+  } else {
+    list(table_estimates = knitr::kable(est_both_models),
+         table_model_assessment = knitr::kable(table_model_assess),
+         table_regression_coeffients = knitr::kable(reg_coeff),
+         interval_plots = forest_plots,
+         sucra_scatterplot = sucra_scatterplot)
   }
 
   # Return results
-  return(list(table_estimates = knitr::kable(est_both_models),
-              table_predictions = knitr::kable(pred_both_models),
-              table_model_assessment = knitr::kable(table_model_assess),
-              table_regression_coeffients = knitr::kable(reg_coeff),
-              interval_plots = forest_plots,
-              sucra_scatterplot = sucra_scatterplot))
+  return(results)
 }

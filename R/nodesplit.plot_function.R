@@ -208,8 +208,8 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                             each = length(direct[, 1])))
   colnames(prepare) <- c("node", "mean", "lower", "upper", "evidence")
   prepare$stat_sign <- ifelse(prepare$lower > 0 | prepare$upper < 0,
-                              "statistically significant",
-                              "statistically non-significant")
+                              "strong evidence",
+                              "weak evidence")
   prepare$stat_sign <- ifelse(prepare$evidence != "IF", NA, prepare$stat_sign)
   prepare$DIC <- sort(model_assess$DIC)
 
@@ -259,8 +259,8 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                    paste(measure, "(in logarithmic scale)"), measure),
                  colour = "") +
             coord_flip() +
-            scale_color_manual(breaks = c("statistically significant",
-                                          "statistically non-significant"),
+            scale_color_manual(breaks = c("strong evidence",
+                                          "weak evidence"),
                                values = c("#009E73", "#D55E00"),
                                na.value = "black") +
             theme_classic() +
@@ -274,9 +274,9 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                   legend.text = element_text(color = "black", size = 12),
                   strip.text = element_text(size = 11))
   } else {
-    # Keep nodes with statistically significant inconsistency or with
+    # Keep nodes with strong evidence inconsistency or with
     # inconsistent sign in the direct and indirect estimate
-    selection <- subset(prepare, stat_sign == "statistically significant" |
+    selection <- subset(prepare, stat_sign == "strong evidence" |
                (mean[evidence == "direct"] < 0 &
                   mean[evidence == "indirect"] > 0) |
                (mean[evidence == "direct"] > 0 &
@@ -325,8 +325,8 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                    paste(measure, "(in logarithmic scale)"), measure),
                  colour = "Evidence on inconsistency") +
             coord_flip() +
-            scale_color_manual(breaks = c("statistically significant",
-                                          "statistically non-significant"),
+            scale_color_manual(breaks = c("strong evidence",
+                                          "weak evidence"),
                                values = c("#009E73", "#D55E00"),
                                na.value = "black") +
             theme_classic() +
@@ -363,9 +363,9 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                           "Mean indirect",
                           "SD indirect",
                           "95% CrI indirect",
-                         "Mean IF",
-                         "SD IF",
-                         "95% CrI IF")
+                          "Mean IF",
+                          "SD IF",
+                          "95% CrI IF")
   rownames(table_em) <- NULL
 
   # Find whether at least one split node improve the fit of the model

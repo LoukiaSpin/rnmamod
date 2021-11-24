@@ -75,7 +75,7 @@ heterogeneity_param_prior <- function(measure, model, heter_prior) {
              missing(heter_prior)) {
     list(NA, NA, NA)
   } else if (model == "FE") {
-    message("The argument 'heter_prior' has been ignored.")
+    #message("The argument 'heter_prior' has been ignored.")
     list(NA, NA, NA)
   } else if (model == "RE" &
              measure == "OR" &

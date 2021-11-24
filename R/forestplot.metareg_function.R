@@ -184,19 +184,12 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                            poss_pair_comp)
     pred_subset_nmr <- subset(pred_ref00_nmr, pred_ref00_nmr[5] == compar)
     pred_ref0_nmr <- rbind(pred_subset_nmr[, 1:3], c(rep(NA, 3)))
-  } else if (model != "RE") {
-    pred_ref00_nma <- NA
-    pred_ref00_nmr <- NA
-  }
 
-  # Sort by SUCRA in decreasing order and remove the reference intervention
-  if (model == "RE") {
+    # Sort by SUCRA in decreasing order and remove the reference intervention
     pred_ref_nma <- pred_ref0_nma[order(sucra_new, decreasing = TRUE), ]
     pred_ref_nmr <- pred_ref0_nmr[order(sucra_new, decreasing = TRUE), ]
-  } else {
-    NA
+    rownames(pred_ref_nma) <- rownames(pred_ref_nmr) <- NULL
   }
-  rownames(pred_ref_nma) <- rownames(pred_ref_nmr) <- NULL
 
   # Create a data-frame with credible and predictive intervals of comparisons
   # with the reference intervention
@@ -248,7 +241,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                   "mean", "lower", "upper")
     colnames(prepare_em_nmr) <- colnames(prepare_em_nma)
   } else if (is.element(measure, c("Odds ratio", "Ratio of means")) &
-             model == "RE") {
+             model == "FE") {
     prepare_em_nma <- data.frame(as.factor(rev(seq_len(len_drug))),
                                  drug_names_sorted,
                                  round(exp(em_ref_nma), 2))

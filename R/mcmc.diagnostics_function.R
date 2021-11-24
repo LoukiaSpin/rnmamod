@@ -165,9 +165,9 @@ mcmc_diagnostics <- function(net, par) {
     }
 
   } else {
-    if (length(net$tau[1, ]) == 11) {
+    if (length(net$EM[1, ]) == 11) {
       # From 'run_model' function
-      EM.pred <- NA
+      EM_pred <- NA
       delta <- NA
       phi <- NA
 
@@ -176,15 +176,19 @@ mcmc_diagnostics <- function(net, par) {
 
       # From 'run_series_meta' function
       EM <- max(net$EM[, 10])
-      tau <- max(net$tau[, 10])
+      tau <- if (!is.null(net$tau)) {
+        max(net$tau[, 10])
+      } else {
+        NA
+      }
 
       # From 'run_nodesplit' function
       direct <- NA
       indirect <- NA
       diff <- NA
-    } else if (length(net$tau[1, ]) == 8) {
+    } else if (length(net$EM[1, ]) == 8) {
       # From 'run_model' function
-      EM.pred <- NA
+      EM_pred <- NA
       delta <- NA
       phi <- NA
 
@@ -193,18 +197,26 @@ mcmc_diagnostics <- function(net, par) {
 
       # From 'run_nodesplit' function
       EM <- max(net$EM[, 5])
-      tau <- max(net$tau[, 7])
+      tau <- if (!is.null(net$tau)) {
+        max(net$tau[, 7])
+      } else {
+        NA
+      }
       direct <- max(net$direct[, 7])
       indirect <- max(net$indirect[, 7])
       diff <-max(net$diff[, 7])
-    } else if (length(net$tau[1, ]) == 6) {
+    } else if (length(net$EM[1, ]) == 6) {
       # From 'run_sensitivity' function
       EM <- max(net$EM[, 5])
-      tau <- max(net$tau[, 5])
+      tau <- if (!is.null(net$tau)) {
+        max(net$tau[, 5])
+      } else {
+        NA
+      }
 
       # From 'run_model' function
       delta <- NA
-      EM.pred <- NA
+      EM_pred <- NA
       phi <- NA
 
       # From 'run_metareg' function
@@ -259,5 +271,5 @@ mcmc_diagnostics <- function(net, par) {
                              "Regression coefficient(s) (beta)")
   colnames(convergence) <- c("R.hat max", "convergence status")
 
-  return(list(convergence = convergence))
+  return(convergence)
 }
