@@ -151,13 +151,13 @@ mcmc_diagnostics <- function(net, par = NULL) {
     }
 
     # Regression coefficient
-    if (!is.null(net$beta) & is.element(net$covar_assumption, "common")) {
-      beta0 <- t(get_results %>% select(starts_with("beta")))
+    if (!is.null(net$beta)) {
+      beta0 <- t(get_results %>% select(starts_with("beta.all[")))
       beta <- beta0[8]
-    } else if (!is.null(net$beta) & !is.element(net$covar_assumption,
-                                               "common")) {
-      beta0 <- t(get_results %>% select(starts_with("beta[")))
-      beta <- max(beta0[, 8])
+    #} else if (!is.null(net$beta) & !is.element(net$covar_assumption,
+    #                                           "common")) {
+    #  beta0 <- t(get_results %>% select(starts_with("beta[")))
+    #  beta <- max(beta0[, 8])
     } else if (is.null(net$beta)) {
       beta <- NA
     }
