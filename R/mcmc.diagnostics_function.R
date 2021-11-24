@@ -165,83 +165,56 @@ mcmc_diagnostics <- function(net, par) {
     }
 
   } else {
-    # Effect size of pairwise comparisons with at least two trials
-    #EM <- if (length(net$EM[1, ]) == 11) {
-    #  #... for each pairwise comparison with at least two trials
-    #  max(net$EM[, 10])
-    #} else {
-    #  # ... for split node
-    #  max(net$EM[, 5])
-    #}
-
-    # Predictive effects of all unique pairwise comparisons
-    EM_pred <- NA
-
-    # Within-trial effects size
-    delta <- NA
-
-    # Between-trial standard deviation ...
-    #tau0 <- if (length(net$tau[1, ]) == 11) {
-    #  #... for each pairwise comparison with at least two trials
-    #  max(net$tau[, 10])
-    #} else if (length(net$tau[1, ]) == 8) {
-    #  # ... for split node
-    #  max(net$tau[, 7])
-    #} else if (length(net$tau[1, ]) == 6) {
-    #  # ... sensitivity analysis to different scenarios on missingness parameter
-    #  max(net$tau[, 5])
-    #}
-    #tau <- tau0
-
-
     if (length(net$tau[1, ]) == 11) {
-      #... for each pairwise comparison with at least two trials
+      # From 'run_model' function
+      EM.pred <- NA
+      delta <- NA
+      phi <- NA
+
+      # From 'run_metareg' function
+      beta <- NA
+
+      # From 'run_series_meta' function
       EM <- max(net$EM[, 10])
       tau <- max(net$tau[, 10])
 
-      # Direct estimate from split nodes
+      # From 'run_nodesplit' function
       direct <- NA
-      # Indirect estimate from split nodes
       indirect <- NA
-      # Inconsistency factor estimate from split nodes
       diff <- NA
     } else if (length(net$tau[1, ]) == 8) {
-      # ... for split node
+      # From 'run_model' function
+      EM.pred <- NA
+      delta <- NA
+      phi <- NA
+
+      # From 'run_metareg' function
+      beta <- NA
+
+      # From 'run_nodesplit' function
       EM <- max(net$EM[, 5])
       tau <- max(net$tau[, 7])
-
-      # Direct estimate from split nodes
       direct <- max(net$direct[, 7])
-      # Indirect estimate from split nodes
       indirect <- max(net$indirect[, 7])
-      # Inconsistency factor estimate from split nodes
       diff <-max(net$diff[, 7])
     } else if (length(net$tau[1, ]) == 6) {
-      # ... sensitivity analysis to different scenarios on missingness parameter
+      # From 'run_sensitivity' function
       EM <- max(net$EM[, 5])
       tau <- max(net$tau[, 5])
 
-      # Direct estimate from split nodes
+      # From 'run_model' function
+      delta <- NA
+      EM.pred <- NA
+      phi <- NA
+
+      # From 'run_metareg' function
+      beta <- NA
+
+      # From 'run_nodesplit' function
       direct <- NA
-      # Indirect estimate from split nodes
       indirect <- NA
-      # Inconsistency factor estimate from split nodes
       diff <- NA
     }
-
-    # Indirect estimate from split nodes
-    #indirect0 <- max(net$indirect[, 7])
-    #indirect <- indirect0
-
-    # Inconsistency factor estimate from split nodes
-    #diff0 <- max(net$diff[, 7])
-    #diff <- diff0
-
-    # Estimated missingness parameter
-    phi <- NA
-
-    # Regression coefficient
-    beta <- NA
   }
 
   if (!is.null(net$jagsfit)) {
