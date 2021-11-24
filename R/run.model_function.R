@@ -492,7 +492,7 @@ run_model <- function(data,
                                     starts_with("mean.phi[") |
                                     starts_with("phi[")))
   } else {
-    NA
+    NULL
   }
 
   # Trial-arm deviance contribution for observed outcome

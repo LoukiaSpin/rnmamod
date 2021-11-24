@@ -249,10 +249,6 @@ run_sensitivity <- function(full,
                           "I" = item$I,
                           "meand.phi" = mean_misspar[i, ],
                           "precd.phi" = 1 / var_misspar,
-                          #"eff.mod2" = matrix(0,
-                          #                    nrow = item$ns,
-                          #                    ncol = max(item$na)),
-                          #"eff.mod" = rep(0, item$ns)
                           "D" = D)
 
     if (is.element(measure, c("MD", "SMD", "ROM"))) {
