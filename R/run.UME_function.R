@@ -491,7 +491,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          data = data,
          model = model,
          measure = measure,
-         assumption = assumption)
+         phi = NA)
   } else {
     list(EM = EM,
          dev_o = dev_o,
@@ -504,7 +504,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          data = data,
          model = model,
          measure = measure,
-         assumption = assumption)
+         phi = NA)
   }
 
   # Return different list of results according to a condition

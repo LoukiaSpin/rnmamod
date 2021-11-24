@@ -2,8 +2,7 @@
 #' @aliases rnmamod
 #' @docType package
 #'
-#' @title rnmamod: Bayesian Network Meta-analysis with Missing Participant
-#'   Outcome Data in R
+#' @title Rnmamod: Bayesian Network Meta-analysis with Missing Participants
 #'
 #' @description
 #'   An R package for performing Bayesian network meta-analysis while handling
