@@ -340,21 +340,25 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                           "t.m" = t_indic_multi,
                           "ref.m" = if (connected > 1) {
                             ref_m
-                            } else {
-                              1
-                              },
+                            },
+                          #else {
+                            #1
+                            #},
                           "ref.nbase.multi" = if (connected > 1) {
                             ref_nbase_multi
-                            } else {
-                              1
-                              },
+                            },
+                          #else {
+                          #  1
+                          #  },
                           "N.t.m2" = ifelse(connected > 1,
                                             length(t_indic_multi2), 1),
                           "t.m2" = if (connected > 1) {
                             trm2
-                            } else {
-                              t_indic_multi
-                              }))
+                            }
+                          #else {
+                          #  t_indic_multi
+                          #  }
+                          ))
     } else if (max(na) < 3 || is.null(impr_ume$nbase_multi)) {
       append(data_jag, list("ns.multi" = ns_multi,
                             "t1.bn" = t1_indic,
@@ -363,10 +367,11 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                             "ref.base" = 1,
                             "N.t.m" = length(2:5),
                             "t.m" = 2:5,
-                            "ref.m" = 1,
-                            "ref.nbase.multi" = 1,
-                            "N.t.m2" = 1,
-                            "t.m2" = 2:5))
+                           # "ref.m" = 1,
+                           # "ref.nbase.multi" = 1,
+                           # "N.t.m2" = 1,
+                           # "t.m2" = 2:5
+                            ))
     }
 
   data_jag <- if (is.element(assumption, "IND-CORR")) {
@@ -495,6 +500,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          obs_comp = obs_comp,
          jagsfit = jagsfit,
          data = data,
+         model = model,
          measure = measure)
   } else {
     list(EM = EM,
@@ -506,6 +512,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          obs_comp = obs_comp,
          jagsfit = jagsfit,
          data = data,
+         model = model,
          measure = measure)
   }
 

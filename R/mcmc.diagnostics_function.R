@@ -186,8 +186,9 @@ mcmc_diagnostics <- function(net, par) {
       direct <- NA
       indirect <- NA
       diff <- NA
-    } else if (length(net$EM[1, ]) == 8) {
+    } else if (!is.null(net$EM)) {
       # From 'run_model' function
+      EM <- NA
       EM_pred <- NA
       delta <- NA
       phi <- NA
@@ -196,7 +197,6 @@ mcmc_diagnostics <- function(net, par) {
       beta <- NA
 
       # From 'run_nodesplit' function
-      EM <- max(net$EM[, 5])
       tau <- if (!is.null(net$tau)) {
         max(net$tau[, 7])
       } else {
