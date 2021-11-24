@@ -268,7 +268,7 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                   axis.text.y = element_text(color = "black", size = 12),
                   axis.title.x = element_text(color = "black", size = 12,
                                               face = "bold"),
-                  legend.position = "none",
+                  legend.position = "bottom",
                   legend.title = element_text(color = "black", size = 12,
                                               face = "bold"),
                   legend.text = element_text(color = "black", size = 12),

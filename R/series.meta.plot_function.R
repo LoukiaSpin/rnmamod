@@ -292,7 +292,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
                 axis.text.y = element_text(color = "black", size = 12),
                 axis.title.x = element_text(color = "black", face = "bold",
                                             size = 12),
-                legend.position = "none", legend.justification = c(0.13, 0),
+                legend.position = "bottom", legend.justification = c(0.13, 0),
                 legend.text =  element_text(color = "black", size = 12),
                 legend.title =  element_text(color = "black", face = "bold",
                                              size = 12))
