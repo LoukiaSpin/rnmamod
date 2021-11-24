@@ -350,7 +350,7 @@ run_metareg <- function(full,
     starts_with("effectiveness")))
 
   # Estimated missingness parameter
-  phi <- if (unique(na.omit(unlist(item$m))) != 0) {
+  phi <- if (length(unique(na.omit(unlist(item$m)))) > 1) {
     t(get_results %>% dplyr::select(starts_with("phi") |
                                      starts_with("mean.phi") |
                                      starts_with("mean.phi[") |

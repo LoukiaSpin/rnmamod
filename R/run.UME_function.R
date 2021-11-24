@@ -491,6 +491,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          data = data,
          model = model,
          measure = measure,
+         assumption = assumption,
          phi = NA)
   } else {
     list(EM = EM,
@@ -504,6 +505,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          data = data,
          model = model,
          measure = measure,
+         assumption = assumption,
          phi = NA)
   }
 
