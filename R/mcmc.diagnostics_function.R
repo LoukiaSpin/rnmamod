@@ -135,20 +135,17 @@ mcmc_diagnostics <- function(net, par = NULL) {
     item <- data_preparation(net$data, net$measure)
 
     # Estimated missingness parameter
-    if (!is.na(net$phi) & is.element(net$assumption,
-                                     c("IDE-COMMON", "HIE-COMMON"))) {
-      phi0 <- t(get_results %>% select(starts_with("phi") |
-                                         starts_with("mean.phi")))
-      phi <- phi0[8]
-    } else if (!is.na(net$phi) & !is.element(net$assumption,
-                                            c("IDE-COMMON", "HIE-COMMON"))) {
-      phi0 <- t(get_results %>% select(starts_with("mean.phi[") |
-                                         starts_with("phi[")))
-      phi <- max(phi0[, 8])
-    } else if (is.na(net$phi)) {
+    if (!is.null(net$phi)) {
+      phi0 <- ifelse(is.element(net$assumption, c("IDE-COMMON", "HIE-COMMON")),
+                     t(get_results %>% select(starts_with("phi") |
+                                                starts_with("mean.phi"))),
+                     t(get_results %>% select(starts_with("mean.phi[") |
+                                                starts_with("phi["))))
+      phi <- ifelse(is.element(net$assumption, c("IDE-COMMON", "HIE-COMMON")),
+                    phi0[8], max(phi0[, 8]))
+    } else if (is.na(net$phi) || is.null(net$phi)) {
       phi <- NA
     }
-
 
     # Regression coefficient
     if (!is.null(net$beta)) {
