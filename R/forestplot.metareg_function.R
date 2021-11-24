@@ -265,7 +265,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                    ifelse(length(unique(reg$covariate)) < 3, " ",
                           cov_value[[1]]))
 
-  forest_plots <- if (model == "RE") {
+  forest_plots0 <- if (model == "RE") {
     ggplot(data = prepare_em,
            aes(x = order,
                y = mean,
@@ -451,6 +451,8 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
             legend.title = element_text(color = "black", face = "bold",
                                         size = 12))
   }
+
+  forest_plots <- suppressWarnings({forest_plots0})
 
   return(forest_plots)
 }
