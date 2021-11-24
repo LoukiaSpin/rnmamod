@@ -77,7 +77,7 @@
 #'                  par = c("tau", "EM[2,1]", "EM.pred[2,1]"))
 #'
 #' @export
-mcmc_diagnostics <- function(net, par) {
+mcmc_diagnostics <- function(net, par = NULL) {
 
   par <- if (!is.null(net$jagsfit) & missing(par)) {
     stop("The argument 'par' needs to be defined", call. = FALSE)
@@ -87,8 +87,6 @@ mcmc_diagnostics <- function(net, par) {
     aa <- "The argument 'par' is ignored as it is used only"
     bb <- "for the functions 'run_model', 'run_ume' and 'run_metareg'"
     message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, "\033[0m", "\n")))
-    NULL
-  } else if (is.null(net$jagsfit) & is.null(par)) {
     NULL
   }
 

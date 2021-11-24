@@ -416,7 +416,7 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
   # deviation' for each split node
   if (model == "RE") {
     prepare_tau <- data.frame(comp, tau[, c(3, 5:6)], sort(model_assess$DIC))
-    colnames(prepare_tau) <- c("node", "median", "lower", "upper", "DIC")
+    colnames(prepare_tau) <- c("comp", "median", "lower", "upper", "DIC")
   } else {
     prepare_tau <- NA
   }
@@ -424,7 +424,7 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
   # Create the interval plot for 'between-trial standard deviation'
   p2 <- if (model == "RE") {
     ggplot(data = prepare_tau,
-           aes(x = as.factor(seq_len(length(node))),
+           aes(x = as.factor(seq_len(length(comp))),
                y = median, ymin = lower, ymax = upper)) +
       geom_rect(aes(xmin = 0,
                     xmax = Inf,
@@ -442,7 +442,7 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                  colour = "white",
                  stroke = 0.3,
                  position = position_dodge(width = 0.5)) +
-      geom_text(aes(x = as.factor(seq_len(length(node))),
+      geom_text(aes(x = as.factor(seq_len(length(comp))),
                     y = round(median, 2),
                     label = sprintf("%.2f", median),
                     hjust = -0.2,
@@ -453,16 +453,15 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                 parse = FALSE,
                 position = position_dodge(width = 0.5),
                 inherit.aes = TRUE) +
-      geom_label(aes(x = as.factor(seq_len(length(node))),
+      geom_label(aes(x = as.factor(seq_len(length(comp))),
                      y = upper,
                      label = sprintf("%.2f", DIC)),
                  fill = "beige",
                  colour = "black",
                  fontface = "plain",
                  size = 3.1) +
-      scale_x_discrete(breaks = as.factor(seq_len(length(node))),
-                       labels = node[seq_len(length(node
-                                                                ))]) +
+      scale_x_discrete(breaks = as.factor(seq_len(length(comp))),
+                       labels = comp[seq_len(length(comp))]) +
       labs(x = "Split nodes (sorted by DIC in ascending order)",
            y = "Between-trial standard deviation") +
       theme_classic() +
@@ -487,8 +486,8 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
          intervalplot_inconsistency_factor = p1,
          intervalplot_tau = p2)
   } else {
-    list(table_effect_size = table_em,
-         table_model_assessment = table_assess,
+    list(table_effect_size = knitr::kable(table_em),
+         table_model_assessment = knitr::kable(table_assess),
          intervalplot_inconsistency_factor = p1)
   }
 
