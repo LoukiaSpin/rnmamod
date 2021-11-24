@@ -451,5 +451,5 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                         size = 12))
   }
 
-  suppressWarnings(print(forest_plots))
+  return(forest_plots)
 }
