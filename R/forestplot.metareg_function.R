@@ -260,9 +260,27 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
 
   # Forest plots on credible/predictive intervals of comparisons with the
   # selected comparator
-  caption <- paste("Results for", cov_value[[2]],
+  subtitle <- paste("Results for", cov_value[[2]],
                    ifelse(length(unique(reg$covariate)) < 3, " ",
                           cov_value[[1]]))
+
+  caption <- if (full$D == 0 & is.element(measure,
+                                          c("Odds ratio", "Ratio of means"))) {
+    paste("If", measure, "< 1, favours the first arm; if",
+          measure, "> 1, favours", compar)
+  } else if (full$D == 1 & is.element(measure,
+                                      c("Odds ratio", "Ratio of means"))) {
+    paste("If", measure, "< 1, favours", compar,
+          "; if", measure, "> 1, favours the first arm")
+  } else if (full$D == 0 & !is.element(measure,
+                                      c("Odds ratio", "Ratio of means"))) {
+    paste("If", full$measure, "< 0, favours the first arm; if",
+          full$measure, "> 0, favours", compar)
+  } else if (full$D == 1 & !is.element(measure,
+                                      c("Odds ratio", "Ratio of means"))) {
+    paste("If", measure, "< 0, favours", compar,
+          "; if", measure, "> 0, favours the first arm")
+  }
 
   forest_plots <- if (model == "RE") {
     ggplot(data = prepare_em,
@@ -304,28 +322,29 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                 position = position_dodge(width = 0.5),
                 inherit.aes = TRUE,
                 na.rm = TRUE) +
-      geom_text(aes(x = 0.45,
-                    y = ifelse(is.element(
-                      measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2),
-                    label = ifelse(full$D == 0, "Favours first arm",
-                                   paste("Favours", compar))),
-                size = 3.5,
-                vjust = 0,
-                hjust = 0,
-                color = "black") +
-      geom_text(aes(x = 0.45,
-                    y = ifelse(is.element(
-                      measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2),
-                    label = ifelse(full$D == 0, paste("Favours", compar),
-                                   "Favours first arm")),
-                size = 3.5,
-                vjust = 0,
-                hjust = 0,
-                color = "black") +
+      #geom_text(aes(x = 0.45,
+      #              y = ifelse(is.element(
+      #                measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2),
+      #              label = ifelse(full$D == 0, "Favours first arm",
+      #                             paste("Favours", compar))),
+      #          size = 3.5,
+      #          vjust = 0,
+      #          hjust = 0,
+      #          color = "black") +
+      #geom_text(aes(x = 0.45,
+      #              y = ifelse(is.element(
+      #                measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2),
+      #              label = ifelse(full$D == 0, paste("Favours", compar),
+      #                             "Favours first arm")),
+      #          size = 3.5,
+      #          vjust = 0,
+      #          hjust = 0,
+      #          color = "black") +
       labs(x = "",
            y = measure,
            colour = "Analysis",
-           subtitle = caption) +
+           subtitle = subtitle,
+           caption = caption) +
       facet_wrap(~ interval, ncol = 2, scales = "fixed") +
       scale_x_discrete(breaks = as.factor(seq_len(len_drug)),
                        labels = drug_names_sorted[rev(seq_len(len_drug))]) +
@@ -397,28 +416,29 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                 position = position_dodge(width = 0.5),
                 inherit.aes = TRUE,
                 na.rm = TRUE) +
-      geom_text(aes(x = 0.45,
-                    y = ifelse(is.element(
-                      measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2),
-                    label = ifelse(full$D == 0, "Favours first arm",
-                                   paste("Favours", compar))),
-                size = 3.5,
-                vjust = 0,
-                hjust = 0,
-                color = "black") +
-      geom_text(aes(x = 0.45,
-                    y = ifelse(is.element(
-                      measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2),
-                    label = ifelse(full$D == 0, paste("Favours", compar),
-                                   "Favours first arm")),
-                size = 3.5,
-                vjust = 0,
-                hjust = 0,
-                color = "black") +
+      #geom_text(aes(x = 0.45,
+      #              y = ifelse(is.element(
+      #                measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2),
+      #              label = ifelse(full$D == 0, "Favours first arm",
+      #                             paste("Favours", compar))),
+      #          size = 3.5,
+      #          vjust = 0,
+      #          hjust = 0,
+      #          color = "black") +
+      #geom_text(aes(x = 0.45,
+      #              y = ifelse(is.element(
+      #                measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2),
+      #              label = ifelse(full$D == 0, paste("Favours", compar),
+      #                             "Favours first arm")),
+      #          size = 3.5,
+      #          vjust = 0,
+      #          hjust = 0,
+      #          color = "black") +
       labs(x = "",
            y = measure,
            colour = "Analysis",
-           subtitle = caption) +
+           subtitle = subtitle,
+           caption = caption) +
       scale_x_discrete(breaks = as.factor(seq_len(len_drug)),
                        labels = drug_names_sorted[rev(seq_len(len_drug))]) +
       scale_color_manual(breaks = c("Network meta-analysis",

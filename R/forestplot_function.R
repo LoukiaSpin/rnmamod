@@ -75,13 +75,8 @@
 forestplot <- function(full, compar,  drug_names) {
 
   drug_names <- if (missing(drug_names)) {
-    aa <- "The argument 'drug_names' has not been defined."
-    bb <- "The intervention ID, as specified in 'data' is used as"
-    cc <- "intervention names"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
-                       "\033[0m", "\n")))
-    nt <- length(full$SUCRA[, 1])
-    as.character(1:nt)
+    stop("The argument 'drug_names' has not been defined",
+         call. = FALSE)
   } else {
     drug_names
   }
@@ -202,6 +197,24 @@ forestplot <- function(full, compar,  drug_names) {
 
   # Forest plots on credible/prediction intervals of comparisons with the
   # reference
+  caption <- if (full$D == 0 & is.element(measure,
+                                          c("Odds ratio", "Ratio of means"))) {
+    paste("If", measure, "< 1, favours the first arm; if",
+          measure, "> 1, favours", compar)
+  } else if (full$D == 1 & is.element(measure,
+                                      c("Odds ratio", "Ratio of means"))) {
+    paste("If", measure, "< 1, favours", compar,
+          "; if", measure, "> 1, favours the first arm")
+  } else if (full$D == 0 & !is.element(measure,
+                                       c("Odds ratio", "Ratio of means"))) {
+    paste("If", full$measure, "< 0, favours the first arm; if",
+          full$measure, "> 0, favours", compar)
+  } else if (full$D == 1 & !is.element(measure,
+                                       c("Odds ratio", "Ratio of means"))) {
+    paste("If", measure, "< 0, favours", compar,
+          "; if", measure, "> 0, favours the first arm")
+  }
+
   p1 <- if (model == "RE") {
     ggplot(data = prepare_em[(length(drug_names_sorted) + 1):
                                (length(drug_names_sorted) * 2), ],
@@ -259,21 +272,21 @@ forestplot <- function(full, compar,  drug_names) {
                 parse = FALSE,
                 position = position_dodge(width = 0.5),
                 inherit.aes = TRUE, na.rm = TRUE) +
-      geom_text(aes(x = 0.45,
-                    y = ifelse(is.element(measure,
-                                          c("Odds ratio", "Ratio of means")),
-                               0.2, -0.2),
-                    label = ifelse(full$D == 0, "Favours first arm",
-                                   paste("Favours", compar))),
-                size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      geom_text(aes(x = 0.45,
-                    y = ifelse(is.element(measure,
-                                          c("Odds ratio", "Ratio of means")),
-                               1.2, 0.2),
-                    label = ifelse(full$D == 0, paste("Favours", compar),
-                                   "Favours first arm")),
-                size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      labs(x = "", y = measure, colour = "Analysis") +
+      #geom_text(aes(x = 0.45,
+      #              y = ifelse(is.element(measure,
+      #                                    c("Odds ratio", "Ratio of means")),
+      #                         0.2, -0.2),
+      #              label = ifelse(full$D == 0, "Favours first arm",
+      #                             paste("Favours", compar))),
+      #          size = 3.5, vjust = 0, hjust = 0, color = "black") +
+      #geom_text(aes(x = 0.45,
+      #              y = ifelse(is.element(measure,
+      #                                    c("Odds ratio", "Ratio of means")),
+      #                         1.2, 0.2),
+      #              label = ifelse(full$D == 0, paste("Favours", compar),
+      #                             "Favours first arm")),
+      #          size = 3.5, vjust = 0, hjust = 0, color = "black") +
+      labs(x = "", y = measure, colour = "Analysis", caption = caption) +
       scale_x_discrete(breaks = as.factor(seq_len(len_drug_names)),
                        labels = drug_names_sorted[rev(
                          seq_len(len_drug_names))]) +
@@ -331,18 +344,18 @@ forestplot <- function(full, compar,  drug_names) {
                 parse = FALSE,
                 position = position_dodge(width = 0.5), inherit.aes = TRUE,
                 na.rm = TRUE) +
-      geom_text(aes(x = 0.45,
-                    y = ifelse(is.element(
-                      measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2),
-                    label = ifelse(full$D == 0, "Favours first arm",
-                                   paste("Favours", compar))),
-                size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      geom_text(aes(x = 0.45, y = ifelse(is.element(
-        measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2),
-        label = ifelse(full$D == 0, paste("Favours", compar),
-                       "Favours first arm")),
-                size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      labs(x = "", y = measure) +
+      #geom_text(aes(x = 0.45,
+      #              y = ifelse(is.element(
+      #                measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2),
+      #              label = ifelse(full$D == 0, "Favours first arm",
+      #                             paste("Favours", compar))),
+      #          size = 3.5, vjust = 0, hjust = 0, color = "black") +
+      #geom_text(aes(x = 0.45, y = ifelse(is.element(
+      #  measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2),
+      #  label = ifelse(full$D == 0, paste("Favours", compar),
+      #                 "Favours first arm")),
+      #          size = 3.5, vjust = 0, hjust = 0, color = "black") +
+      labs(x = "", y = measure, caption = caption) +
       scale_x_discrete(breaks = as.factor(seq_len(len_drug_names)),
                        labels = drug_names_sorted[rev(
                          seq_len(len_drug_names))]) +

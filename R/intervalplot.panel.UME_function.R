@@ -99,6 +99,23 @@ intervalplot_panel_ume <- function(full, ume, drug_names) {
 
   # Obtain forestplot
   add <- ifelse(is.element(full$measure, c("OR", "ROM")), 1, 4)
+  caption <- if (full$D == 0 & is.element(measure,
+                                          c("Odds ratio", "Ratio of means"))) {
+    paste("If", measure, "< 1, favours the first arm; if",
+          measure, "> 1, favours thr second arm")
+  } else if (full$D == 1 & is.element(measure,
+                                      c("Odds ratio", "Ratio of means"))) {
+    paste("If", measure, "< 1, favours the second arm",
+          "; if", measure, "> 1, favours the first arm")
+  } else if (full$D == 0 & !is.element(measure,
+                                       c("Odds ratio", "Ratio of means"))) {
+    paste("If", full$measure, "< 0, favours the first arm; if",
+          full$measure, "> 0, favours the second arm")
+  } else if (full$D == 1 & !is.element(measure,
+                                       c("Odds ratio", "Ratio of means"))) {
+    paste("If", measure, "< 0, favours the second arm",
+          "; if", measure, "> 0, favours the first arm")
+  }
 
   ggplot(data = data_set,
          aes(x = as.factor(analysis),
@@ -140,24 +157,24 @@ intervalplot_panel_ume <- function(full, ume, drug_names) {
               parse = FALSE,
               position = position_dodge(width = 0.8),
               inherit.aes = TRUE) +
-    geom_text(aes(x = 0.45,
-                  y = ifelse(is.element(full$measure, c("OR", "ROM")),
-                             0.1, -0.2*add),
-                  label = ifelse(full$D == 0, "Favours first arm",
-                                 "Favours second arm")),
-              size = 3.5,
-              vjust = 0,
-              hjust = 0,
-              color = "black") +
-    geom_text(aes(x = 0.45,
-                  y = ifelse(is.element(full$measure, c("OR", "ROM")),
-                             1.2, 0.2),
-                  label = ifelse(full$D == 0, "Favours second arm",
-                                 "Favours first arm")),
-              size = 3.5,
-              vjust = 0,
-              hjust = 0,
-              color = "black") +
+    #geom_text(aes(x = 0.45,
+    #              y = ifelse(is.element(full$measure, c("OR", "ROM")),
+    #                         0.1, -0.2*add),
+    #              label = ifelse(full$D == 0, "Favours first arm",
+    #                             "Favours second arm")),
+    #          size = 3.5,
+    #          vjust = 0,
+    #          hjust = 0,
+    #          color = "black") +
+    #geom_text(aes(x = 0.45,
+    #              y = ifelse(is.element(full$measure, c("OR", "ROM")),
+    #                         1.2, 0.2),
+    #              label = ifelse(full$D == 0, "Favours second arm",
+    #                             "Favours first arm")),
+    #          size = 3.5,
+    #          vjust = 0,
+    #          hjust = 0,
+    #          color = "black") +
     facet_wrap(vars(factor(comp, levels = unique(data_set$comp))),
                scales = "fixed") +
     scale_fill_manual(breaks = c("yes", "no"),
@@ -167,7 +184,11 @@ intervalplot_panel_ume <- function(full, ume, drug_names) {
     scale_y_continuous(trans = ifelse(
       !is.element(measure, c("Odds ratio", "Ratio of means")),
       "identity", "log10")) +
-    labs(x = "", y = measure, colour = "Evidence", fill = "") +
+    labs(x = "",
+         y = measure,
+         colour = "Evidence",
+         fill = "",
+         caption = caption) +
     coord_flip() +
     theme_classic() +
     guides(fill = "none") +
