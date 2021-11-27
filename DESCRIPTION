@@ -1,6 +1,6 @@
 Type: Package
 Package: rnmamod
-Title: Rnmamod: Bayesian Network Meta-Analysis with Missing Participants 
+Title: Bayesian Network Meta-Analysis with Missing Participants 
 Version: 0.1.0
 Authors@R: c(
     person("Loukia", "Spineli", email = "Spineli.Loukia@mh-hannover.de", 
@@ -25,7 +25,7 @@ Description: A comprehensive suite of functions to perform and visualise
     in the network, league heatmaps on estimation and prediction, rankograms, 
     Bland-Altman plot, leverage plot, deviance scatterplot, heatmap of 
     robustness, and barplot of Kullback-Leibler divergence. The package also 
-    allows the user to export the results to an xlsx file at the working 
+    allows the user to export the results to an Excel file at the working 
     directory.
 License: GPL (>= 3) 
 URL: https://github.com/LoukiaSpin/rnmamod
