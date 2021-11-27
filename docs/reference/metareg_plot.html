@@ -261,31 +261,85 @@ doi: <a href='https://doi.org/10.1111/1467-9868.00353'>10.1111/1467-9868.00353</
     <p>Loukia M. Spineli</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"nma.baker2009"</span><span class='op'>)</span>
-
-<span class='co'># Read results from 'run_model' (using the default arguments)</span>
-<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/res_baker.rds'</span>, package <span class='op'>=</span> <span class='st'>'rnmamod'</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='co'># Read results from 'run_metareg' (exchangeable structure)</span>
-<span class='va'>reg</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/reg_baker.rds'</span>, package <span class='op'>=</span> <span class='st'>'rnmamod'</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='co'># Publication year as the covariate</span>
-<span class='va'>pub_year</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1996</span>, <span class='fl'>1998</span>, <span class='fl'>1999</span>, <span class='fl'>2000</span>, <span class='fl'>2000</span>, <span class='fl'>2001</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2002</span>, <span class='fl'>5</span><span class='op'>)</span>, <span class='fl'>2003</span>, <span class='fl'>2003</span>,
-              <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2005</span>, <span class='fl'>4</span><span class='op'>)</span>, <span class='fl'>2006</span>, <span class='fl'>2006</span>, <span class='fl'>2007</span>, <span class='fl'>2007</span><span class='op'>)</span>
-
-<span class='co'># The names of the interventions in the order they appear in the dataset</span>
-<span class='va'>interv_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"placebo"</span>, <span class='st'>"budesonide"</span>, <span class='st'>"budesonide plus formoterol"</span>,
-                  <span class='st'>"fluticasone"</span>, <span class='st'>"fluticasone plus salmeterol"</span>,
-                  <span class='st'>"formoterol"</span>, <span class='st'>"salmeterol"</span>, <span class='st'>"tiotropium"</span><span class='op'>)</span>
-
-<span class='co'># Plot the results from both models for all comparisons with salmeterol and</span>
-<span class='co'># publication year 2000</span>
-<span class='fu'>metareg_plot</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,
-             reg <span class='op'>=</span> <span class='va'>reg</span>,
-             compar <span class='op'>=</span> <span class='st'>"salmeterol"</span>,
-             cov_value <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fl'>2000</span>, <span class='st'>"publication year"</span><span class='op'>)</span>,
-             drug_names <span class='op'>=</span> <span class='va'>interv_names</span><span class='op'>)</span>
-
+    <pre class="examples"><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"nma.baker2009"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Read results from 'run_model' (using the default arguments)</span></span>
+<span class='r-in'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/res_baker.rds'</span>, package <span class='op'>=</span> <span class='st'>'rnmamod'</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Read results from 'run_metareg' (exchangeable structure)</span></span>
+<span class='r-in'><span class='va'>reg</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/reg_baker.rds'</span>, package <span class='op'>=</span> <span class='st'>'rnmamod'</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Publication year as the covariate</span></span>
+<span class='r-in'><span class='va'>pub_year</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1996</span>, <span class='fl'>1998</span>, <span class='fl'>1999</span>, <span class='fl'>2000</span>, <span class='fl'>2000</span>, <span class='fl'>2001</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2002</span>, <span class='fl'>5</span><span class='op'>)</span>, <span class='fl'>2003</span>, <span class='fl'>2003</span>,</span>
+<span class='r-in'>              <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>2005</span>, <span class='fl'>4</span><span class='op'>)</span>, <span class='fl'>2006</span>, <span class='fl'>2006</span>, <span class='fl'>2007</span>, <span class='fl'>2007</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># The names of the interventions in the order they appear in the dataset</span></span>
+<span class='r-in'><span class='va'>interv_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"placebo"</span>, <span class='st'>"budesonide"</span>, <span class='st'>"budesonide plus formoterol"</span>,</span>
+<span class='r-in'>                  <span class='st'>"fluticasone"</span>, <span class='st'>"fluticasone plus salmeterol"</span>,</span>
+<span class='r-in'>                  <span class='st'>"formoterol"</span>, <span class='st'>"salmeterol"</span>, <span class='st'>"tiotropium"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Plot the results from both models for all comparisons with salmeterol and</span></span>
+<span class='r-in'><span class='co'># publication year 2000</span></span>
+<span class='r-in'><span class='fu'>metareg_plot</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,</span>
+<span class='r-in'>             reg <span class='op'>=</span> <span class='va'>reg</span>,</span>
+<span class='r-in'>             compar <span class='op'>=</span> <span class='st'>"salmeterol"</span>,</span>
+<span class='r-in'>             cov_value <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fl'>2000</span>, <span class='st'>"publication year"</span><span class='op'>)</span>,</span>
+<span class='r-in'>             drug_names <span class='op'>=</span> <span class='va'>interv_names</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> There is little to choose between the two models</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $table_estimates</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |versus salmeterol           | Mean NMA|95% CrI NMA   | Mean NMR|95% CrI NMR   |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |:---------------------------|--------:|:-------------|--------:|:-------------|</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |budesonide                  |     0.57|(0.25, 1.45)  |     0.55|(0.16, 1.85)  |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |budesonide plus formoterol  |     0.76|(0.36, 1.69)  |     0.73|(0.22, 2.49)  |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |tiotropium                  |     0.95|(0.66, 1.32)  |     1.01|(0.63, 1.63)  |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |fluticasone plus salmeterol |     0.99|(0.56, 1.85)  |     1.22|(0.52, 2.86)  |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |fluticasone                 |     1.19|(0.7, 2.2)    |     1.31|(0.57, 2.98)  |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |formoterol                  |     1.44|(0.82, 2.41)  |     1.09|(0.49, 2.43)  |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |placebo                     |     1.60|(1.15, 2.25)* |     1.70|(1.09, 2.65)* |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $table_predictions</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |versus salmeterol           | Mean NMA|95% CrI NMA   | Mean NMR|95% CrI NMR  |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |:---------------------------|--------:|:-------------|--------:|:------------|</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |budesonide                  |     0.57|(0.23, 1.54)  |     0.55|(0.16, 1.94) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |budesonide plus formoterol  |     0.76|(0.34, 1.84)  |     0.73|(0.21, 2.62) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |tiotropium                  |     0.95|(0.57, 1.52)  |     1.01|(0.56, 1.83) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |fluticasone plus salmeterol |     0.99|(0.5, 2.02)   |     1.22|(0.48, 3.06) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |fluticasone                 |     1.19|(0.64, 2.42)  |     1.31|(0.53, 3.21) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |formoterol                  |     1.44|(0.75, 2.65)  |     1.09|(0.46, 2.62) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |placebo                     |     1.59|(1.01, 2.64)* |     1.70|(0.96, 3)    |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $table_model_assessment</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |Analysis              |   DIC| Mean deviance|    pD|Median tau |SD tau |95% CrI tau  |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |:---------------------|-----:|-------------:|-----:|:----------|:------|:------------|</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |Network meta-analysis | 88.81|         54.05| 34.76|0.14       |0.09   |(0.01, 0.34) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |Meta-regression       | 91.23|         53.93| 37.30|0.14       |0.1    |(0, 0.37)    |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $table_regression_coeffients</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |versus salmeterol           | Mean beta|95% CrI beta |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |:---------------------------|---------:|:------------|</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |budesonide                  |      1.00|(0.74, 1.42) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |budesonide plus formoterol  |      1.00|(0.72, 1.41) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |tiotropium                  |      0.97|(0.86, 1.07) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |fluticasone plus salmeterol |      0.95|(0.75, 1.11) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |fluticasone                 |      1.03|(0.9, 1.23)  |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |formoterol                  |      1.06|(0.91, 1.37) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> |placebo                     |      0.96|(0.88, 1.06) |</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $interval_plots</span>
+<span class='r-plt img'><img src='metareg_plot-1.png' alt='' width='700' height='433' /></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $sucra_scatterplot</span>
+<span class='r-plt img'><img src='metareg_plot-2.png' alt='' width='700' height='433' /></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
 </pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

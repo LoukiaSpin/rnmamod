@@ -112,35 +112,9 @@ league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
     drug_names
   }
 
-  if (length(unique(full$covariate)) < 3 &
-      !is.element(cov_value[[1]], full$covariate)) {
-    aa <- "The first element of the argument 'cov_value' is out of the value"
-    stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
-  } else if (length(unique(full$covariate)) > 2 &
-             (cov_value[[1]] < min(full$covariate) |
-              cov_value[[1]] > max(full$covariate))) {
-    aa <- "The first element of the argument 'cov_value' is out of the value"
-    stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
-  }
-
   if (length(drug_names) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
          call. = FALSE)
-  }
-
-  cov_value <- if (!is.null(full$beta_all) & missing(cov_value)) {
-    stop("The argument 'cov_value' has not been defined", call. = FALSE)
-  } else if (!is.null(full$beta_all) & length(cov_value) < 2) {
-    aa <- "The argument 'cov_value' must be a list with elements a number and"
-    stop(paste(aa, "a character"), call. = FALSE)
-  } else if (!is.null(full$beta_all) & length(cov_value) == 2) {
-    cov_value
-  }
-
-  covar <- if (length(unique(full$covariate)) < 3) {
-    cov_value[[1]]
-  } else {
-    cov_value[[1]] - mean(full$covariate)
   }
 
   measure <- full$measure
@@ -158,6 +132,33 @@ league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
     par <- full$EM_pred
     sucra <- full$SUCRA[, 1]
   } else {
+
+    cov_value <- if (missing(cov_value)) {
+      stop("The argument 'cov_value' has not been defined", call. = FALSE)
+    } else if (length(cov_value) != 2) {
+      aa <- "The argument 'cov_value' must be a list with elements a number and"
+      stop(paste(aa, "a character"), call. = FALSE)
+    } else if (length(cov_value) == 2) {
+      cov_value
+    }
+
+    if (length(unique(full$covariate)) < 3 &
+        !is.element(cov_value[[1]], full$covariate)) {
+      aa <- "The first element of the argument 'cov_value' is out of the value"
+      stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
+    } else if (length(unique(full$covariate)) > 2 &
+               (cov_value[[1]] < min(full$covariate) |
+                cov_value[[1]] > max(full$covariate))) {
+      aa <- "The first element of the argument 'cov_value' is out of the value"
+      stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
+    }
+
+    covar <- if (length(unique(full$covariate)) < 3) {
+      cov_value[[1]]
+    } else {
+      cov_value[[1]] - mean(full$covariate)
+    }
+
     par <- full$EM_pred
     par_mean <- full$EM_pred[, 1] + full$beta_all[, 1] * covar
     par_sd <- sqrt(((full$EM_pred[, 2])^2) + ((full$beta_all[, 2] * covar)^2))
