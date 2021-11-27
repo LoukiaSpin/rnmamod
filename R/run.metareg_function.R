@@ -454,7 +454,7 @@ run_metareg <- function(full,
                                            D = full$D))
   } else {
     ma_results <- list(EM = EM,
-                       beta = beta,
+                       beta_all = beta_all,
                        dev_o = dev_o,
                        hat_par = hat_par,
                        leverage_o = leverage_o,
