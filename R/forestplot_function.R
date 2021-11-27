@@ -207,8 +207,8 @@ forestplot <- function(full, compar,  drug_names) {
           "; if", measure, "> 1, favours the first arm")
   } else if (full$D == 0 & !is.element(measure,
                                        c("Odds ratio", "Ratio of means"))) {
-    paste("If", full$measure, "< 0, favours the first arm; if",
-          full$measure, "> 0, favours", compar)
+    paste("If", measure, "< 0, favours the first arm; if",
+          measure, "> 0, favours", compar)
   } else if (full$D == 1 & !is.element(measure,
                                        c("Odds ratio", "Ratio of means"))) {
     paste("If", measure, "< 0, favours", compar,
