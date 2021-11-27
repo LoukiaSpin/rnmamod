@@ -227,6 +227,25 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
 
   # Forest plots of comparisons on effect estimate
   add <- ifelse(is.element(full$measure, c("OR", "ROM")), 1, 4)
+  measure <- effect_measure_name(full$measure)
+
+  caption <- if (full$D == 0 & is.element(measure,
+                                          c("Odds ratio", "Ratio of means"))) {
+    paste("If", measure, "< 1, favours the first arm; if",
+          measure, "> 1, favours", compar)
+  } else if (full$D == 1 & is.element(measure,
+                                      c("Odds ratio", "Ratio of means"))) {
+    paste("If", measure, "< 1, favours", compar,
+          "; if", measure, "> 1, favours the first arm")
+  } else if (full$D == 0 & !is.element(measure,
+                                       c("Odds ratio", "Ratio of means"))) {
+    paste("If", full$measure, "< 0, favours the first arm; if",
+          full$measure, "> 0, favours", compar)
+  } else if (full$D == 1 & !is.element(measure,
+                                       c("Odds ratio", "Ratio of means"))) {
+    paste("If", measure, "< 0, favours", compar,
+          "; if", measure, "> 0, favours the first arm")
+  }
 
   p1 <- ggplot(data = prepare,
                aes(x = as.factor(order),
@@ -256,27 +275,28 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
                     color = "black",
                     size = 4.0,
                     position = position_dodge(width = 0.5)) +
-          geom_text(aes(x = 0.45,
-                        y = ifelse(is.element(full$measure, c("OR", "ROM")),
-                                   0.4, -0.2*add),
-                        label = ifelse(full$D == 0, "Favours first arm",
-                                       "Favours second arm")),
-                    size = 3.5,
-                    vjust = 0,
-                    hjust = 0,
-                    color = "black") +
-          geom_text(aes(x = 0.45,
-                        y = ifelse(is.element(full$measure, c("OR", "ROM")),
-                                   1.2, 0.2),
-                        label = ifelse(full$D == 0, "Favours second arm",
-                                       "Favours first arm")),
-                    size = 3.5,
-                    vjust = 0,
-                    hjust = 0,
-                    color = "black") +
+          #geom_text(aes(x = 0.45,
+          #              y = ifelse(is.element(full$measure, c("OR", "ROM")),
+          #                         0.4, -0.2*add),
+          #              label = ifelse(full$D == 0, "Favours first arm",
+          #                             "Favours second arm")),
+          #          size = 3.5,
+          #          vjust = 0,
+          #          hjust = 0,
+          #          color = "black") +
+          #geom_text(aes(x = 0.45,
+          #              y = ifelse(is.element(full$measure, c("OR", "ROM")),
+          #                         1.2, 0.2),
+          #              label = ifelse(full$D == 0, "Favours second arm",
+          #                             "Favours first arm")),
+          #         size = 3.5,
+          #          vjust = 0,
+          #          hjust = 0,
+          #          color = "black") +
           labs(x = "",
                y = effect_measure_name(full$measure),
-               colour = "Analysis") +
+               colour = "Analysis",
+               caption = caption) +
           scale_x_discrete(breaks = as.factor(seq_len(length(obs_comp))),
                            labels = prepare$comparison[
                              seq_len(length(obs_comp))]) +
