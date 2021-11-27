@@ -213,26 +213,25 @@ The default is <code>FALSE</code> (do not export).</p></td>
     <p>Loukia M. Spineli</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"nma.dogliotti2014"</span><span class='op'>)</span></span>
-<span class='r-in'></span>
-<span class='r-in'><span class='co'># Read results from 'run_model' (using the default arguments)</span></span>
-<span class='r-in'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/res_dogliotti.rds'</span>, package <span class='op'>=</span> <span class='st'>'rnmamod'</span><span class='op'>)</span><span class='op'>)</span></span>
-<span class='r-in'></span>
-<span class='r-in'><span class='co'># Read results from 'run_series_meta' (using the default arguments)</span></span>
-<span class='r-in'><span class='va'>meta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/meta_dogliotti.rds'</span>,</span>
-<span class='r-in'>                package <span class='op'>=</span> <span class='st'>'rnmamod'</span><span class='op'>)</span><span class='op'>)</span></span>
-<span class='r-in'></span>
-<span class='r-in'><span class='co'># The names of the interventions in the order they appear in the dataset</span></span>
-<span class='r-in'><span class='va'>interv_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"placebo"</span>, <span class='st'>"aspirin"</span>, <span class='st'>"aspirin plus clopidogrel"</span>,</span>
-<span class='r-in'>                  <span class='st'>"dabigatran 110 mg"</span>, <span class='st'>"dabigatran 150 mg"</span>, <span class='st'>"rivaroxaban"</span>,</span>
-<span class='r-in'>                  <span class='st'>"vitamin K antagonist"</span>, <span class='st'>"apixaban"</span><span class='op'>)</span></span>
-<span class='r-in'></span>
-<span class='r-in'><span class='co'># Plot the results from both models</span></span>
-<span class='r-in'><span class='fu'>series_meta_plot</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,</span>
-<span class='r-in'>                 meta <span class='op'>=</span> <span class='va'>meta</span>,</span>
-<span class='r-in'>                 drug_names <span class='op'>=</span> <span class='va'>interv_names</span><span class='op'>)</span></span>
-<span class='r-err co'><span class='r-pr'>#&gt;</span> <span class='error'>Error in paste("If", measure, "&lt; 1, favours", compar, "; if", measure,     "&gt; 1, favours the first arm"):</span> Objekt 'compar' nicht gefunden</span>
-<span class='r-in'></span>
+    <pre class="examples"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"nma.dogliotti2014"</span><span class='op'>)</span>
+
+<span class='co'># Read results from 'run_model' (using the default arguments)</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/res_dogliotti.rds'</span>, package <span class='op'>=</span> <span class='st'>'rnmamod'</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='co'># Read results from 'run_series_meta' (using the default arguments)</span>
+<span class='va'>meta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/meta_dogliotti.rds'</span>,
+                package <span class='op'>=</span> <span class='st'>'rnmamod'</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='co'># The names of the interventions in the order they appear in the dataset</span>
+<span class='va'>interv_names</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"placebo"</span>, <span class='st'>"aspirin"</span>, <span class='st'>"aspirin plus clopidogrel"</span>,
+                  <span class='st'>"dabigatran 110 mg"</span>, <span class='st'>"dabigatran 150 mg"</span>, <span class='st'>"rivaroxaban"</span>,
+                  <span class='st'>"vitamin K antagonist"</span>, <span class='st'>"apixaban"</span><span class='op'>)</span>
+
+<span class='co'># Plot the results from both models</span>
+<span class='fu'>series_meta_plot</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,
+                 meta <span class='op'>=</span> <span class='va'>meta</span>,
+                 drug_names <span class='op'>=</span> <span class='va'>interv_names</span><span class='op'>)</span>
+
 </pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

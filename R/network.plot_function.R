@@ -133,11 +133,15 @@ netplot <- function(data, drug_names, save_xls, ...) {
   transform$treatment1 <- as.numeric(as.character(transform$treatment))
 
   # Obtain network plot
-  network_plot <- nma.networkplot(study,
-                                  treatment1,
-                                  data = transform,
-                                  trtname = drug_names,
-                                  multi.show = TRUE, ...)
+  network_plot <- if (length(drug_names) > 2) {
+    nma.networkplot(study,
+                    treatment1,
+                    data = transform,
+                    trtname = drug_names,
+                    multi.show = TRUE, ...)
+  } else {
+    NA
+  }
 
   if (dim(data %>% dplyr::select(starts_with("r")))[2] > 0) {
     measure <- "OR"

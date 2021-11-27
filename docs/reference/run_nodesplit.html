@@ -292,116 +292,21 @@ sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.</p>
     <p>Loukia M. Spineli</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"nma.liu2013"</span><span class='op'>)</span></span>
-<span class='r-in'></span>
-<span class='r-in'><span class='co'># Read results from 'run_model' (using the default arguments)</span></span>
-<span class='r-in'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/res_liu.rds'</span>, package <span class='op'>=</span> <span class='st'>'rnmamod'</span><span class='op'>)</span><span class='op'>)</span></span>
-<span class='r-in'></span>
-<span class='r-in'><span class='co'># \donttest{</span></span>
-<span class='r-in'><span class='co'># Run random-effects node-splitting approach</span></span>
-<span class='r-in'><span class='co'># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span></span>
-<span class='r-in'><span class='fu'>run_nodesplit</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,</span>
-<span class='r-in'>              n_chains <span class='op'>=</span> <span class='fl'>3</span>,</span>
-<span class='r-in'>              n_iter <span class='op'>=</span> <span class='fl'>1000</span>,</span>
-<span class='r-in'>              n_burnin <span class='op'>=</span> <span class='fl'>100</span>,</span>
-<span class='r-in'>              n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> 1 out of 5 split nodes</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Compiling model graph</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Resolving undeclared variables</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Allocating nodes</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Graph information:</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Observed stochastic nodes: 39</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Unobserved stochastic nodes: 77</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Total graph size: 2538</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Initializing model</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> 2 out of 5 split nodes</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Compiling model graph</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Resolving undeclared variables</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Allocating nodes</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Graph information:</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Observed stochastic nodes: 39</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Unobserved stochastic nodes: 77</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Total graph size: 2535</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Initializing model</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> 3 out of 5 split nodes</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Compiling model graph</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Resolving undeclared variables</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Allocating nodes</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Graph information:</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Observed stochastic nodes: 39</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Unobserved stochastic nodes: 77</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Total graph size: 2539</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Initializing model</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> 4 out of 5 split nodes</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Compiling model graph</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Resolving undeclared variables</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Allocating nodes</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Graph information:</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Observed stochastic nodes: 39</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Unobserved stochastic nodes: 77</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Total graph size: 2538</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Initializing model</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> 5 out of 5 split nodes</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Compiling model graph</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Resolving undeclared variables</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Allocating nodes</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Graph information:</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Observed stochastic nodes: 39</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Unobserved stochastic nodes: 77</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>    Total graph size: 2544</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Initializing model</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> $direct</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   treat1 treat2       mean        sd       2.5%    97.5%     Rhat n.eff</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 1      2      1  0.4569921 1.0996127 -1.7810438 2.675252 1.042961    64</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 2      4      1  0.3481521 0.6664940 -0.9150557 1.693172 1.016116   140</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 3      5      1  1.8095744 0.9148393  0.2085485 3.822889 1.048216    56</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 4      4      2 -0.5370164 1.1669469 -2.9010817 1.582377 1.008067   410</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 5      4      3  1.6052275 1.0519354 -0.7011241 3.691963 1.024002   100</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> $indirect</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   treat1 treat2        mean       sd      2.5%    97.5%     Rhat n.eff</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 1      2      1  1.22468392 1.471158 -1.694242 3.981058 1.018064   130</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 2      4      1  1.02072590 1.211544 -1.330777 3.525290 1.000731  2700</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 3      5      1 -0.41099491 1.821607 -4.437378 2.804795 1.042699    83</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 4      4      2  0.09074088 1.092031 -2.236228 2.164116 1.019629   390</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 5      4      3 -0.23526565 1.056744 -2.402181 1.801434 1.029798    76</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> $diff</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   treat1 treat2       mean       sd      2.5%    97.5%     Rhat n.eff</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 1      2      1 -0.7676918 1.700495 -3.873946 2.715280 1.003346   730</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 2      4      1 -0.6725738 1.263741 -3.465549 1.726317 1.007412   320</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 3      5      1  2.2205693 1.763608 -1.113354 6.000685 1.015116   390</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 4      4      2 -0.6277572 1.578240 -3.830823 2.671740 1.005035  2700</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 5      4      3  1.8404931 1.633223 -1.502139 5.035177 1.042758    53</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> $tau</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   treat1 treat2       50%        sd       2.5%    97.5%     Rhat n.eff</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 1      2      1 0.7763761 0.4095607 0.20501082 1.739858 1.007725   280</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 2      4      1 0.7880710 0.4020449 0.11809192 1.715408 1.136265    37</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 3      5      1 0.5490102 0.3779794 0.05814441 1.496177 1.045221    80</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 4      4      2 0.7041921 0.4354579 0.06643632 1.732713 1.035404   110</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 5      4      3 0.6252761 0.4105260 0.09242337 1.637255 1.049247    63</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> $model_assessment</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   treat1 treat2      DIC deviance       pD</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 1      2      1 44.51124 24.16676 20.34447</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 2      4      1 44.13187 23.51070 20.62117</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 3      5      1 44.54135 24.36482 20.17653</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 4      4      2 44.44220 24.56095 19.88125</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 5      4      3 44.57968 24.39544 20.18424</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-in'><span class='co'># }</span></span>
-<span class='r-in'></span>
+    <pre class="examples"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"nma.liu2013"</span><span class='op'>)</span>
+
+<span class='co'># Read results from 'run_model' (using the default arguments)</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>'extdata/res_liu.rds'</span>, package <span class='op'>=</span> <span class='st'>'rnmamod'</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='co'># \donttest{</span>
+<span class='co'># Run random-effects node-splitting approach</span>
+<span class='co'># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span>
+<span class='fu'>run_nodesplit</span><span class='op'>(</span>full <span class='op'>=</span> <span class='va'>res</span>,
+              n_chains <span class='op'>=</span> <span class='fl'>3</span>,
+              n_iter <span class='op'>=</span> <span class='fl'>1000</span>,
+              n_burnin <span class='op'>=</span> <span class='fl'>100</span>,
+              n_thin <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+<span class='co'># }</span>
+
 </pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
