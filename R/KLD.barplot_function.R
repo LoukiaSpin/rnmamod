@@ -51,10 +51,10 @@
 #' \emph{Ann Math Stat} 1951;\bold{22}(1):79--86.
 #'
 #' @examples
-#' data("nma.baker2009")
+#' data("pma.taylor2004")
 #'
 #' # Read results from 'run_sensitivity' (using the default arguments)
-#' res_sens <- readRDS(system.file('extdata/res_sens_baker.rds',
+#' res_sens <- readRDS(system.file('extdata/res_sens_taylor.rds',
 #'                     package = 'rnmamod'))
 #'
 #' # Calculate the robustness index
@@ -62,13 +62,11 @@
 #'                            threshold = 0.28)
 #'
 #' # The names of the interventions in the order they appear in the dataset
-#' interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
-#'                   "fluticasone", "fluticasone plus salmeterol",
-#'                   "formoterol", "salmeterol", "tiotropium")
+#' interv_names <- c("placebo", "inositol")
 #'
 #' # Crate the barplot for the comparison 'tiotropium versus salmeterol'
 #' kld_barplot(robust = robust,
-#'             compar = c("tiotropium", "salmeterol"),
+#'             compar = c("inositol", "placebo"),
 #'             drug_names = interv_names)
 #'
 #' @export

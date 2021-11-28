@@ -200,5 +200,6 @@ intervalplot_panel_ume <- function(full, ume, drug_names) {
           legend.position = "bottom",
           legend.text = element_text(color = "black", size = 11),
           legend.title = element_text(color = "black", face = "bold",
-                                      size = 11))
+                                      size = 11),
+          plot.caption = element_text(hjust = 0.01))
 }

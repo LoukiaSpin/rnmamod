@@ -134,10 +134,10 @@
 #' sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
 #'
 #' @examples
-#' data("nma.liu2013")
+#' data("nma.baker2009")
 #'
 #' # Read results from 'run_model' (using the default arguments)
-#' res <- readRDS(system.file('extdata/res_liu.rds', package = 'rnmamod'))
+#' res <- readRDS(system.file('extdata/res_baker.rds', package = 'rnmamod'))
 #'
 #' \donttest{
 #' # Run random-effects node-splitting approach

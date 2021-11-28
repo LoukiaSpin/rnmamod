@@ -68,9 +68,8 @@
 #' @examples
 #' data("nma.baker2009")
 #'
-#' # Read results from 'run_sensitivity' (using the default arguments)
-#' res <- readRDS(system.file('extdata/res_sens_baker.rds',
-#'                package = 'rnmamod'))
+#' # Read results from 'run_nodesplit' (using the default arguments)
+#' res <- readRDS(system.file('extdata/node_baker.rds', package = 'rnmamod'))
 #'
 #' # Obtain the diagnostic plots and check convergence based on R-hat
 #' mcmc_diagnostics(net = res,

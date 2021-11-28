@@ -375,7 +375,8 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                       size = 12),
             legend.text =  element_text(color = "black", size = 12),
             legend.title = element_text(color = "black", face = "bold",
-                                        size = 12))
+                                        size = 12),
+            plot.caption = element_text(hjust = 0.01))
   } else {
     ggplot(data = prepare_em,
            aes(x = order,
@@ -468,7 +469,8 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
             legend.justification = c(0.23, 0),
             legend.text =  element_text(color = "black", size = 12),
             legend.title = element_text(color = "black", face = "bold",
-                                        size = 12))
+                                        size = 12),
+            plot.caption = element_text(hjust = 0.01))
   }
 
  return(forest_plots)

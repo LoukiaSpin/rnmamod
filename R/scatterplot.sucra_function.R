@@ -151,5 +151,5 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
     theme_classic() +
     theme(axis.title = element_text(color = "black", face = "bold", size = 12),
           axis.text = element_text(color = "black", size = 12),
-          plot.caption = element_text(color = "black", size = 11))
+          plot.caption = element_text(color = "black", size = 11, hjust = 0.01))
 }

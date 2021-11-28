@@ -70,20 +70,18 @@ For the \code{Plot_effect_size} of the selected pairwise
   message will be printed on the R console.
 }
 \examples{
-data("nma.baker2009")
+data("pma.taylor2004")
 
 # Read results from 'run_sensitivity' (using the default arguments)
-res_sens <- readRDS(system.file('extdata/res_sens_baker.rds',
+res_sens <- readRDS(system.file('extdata/res_sens_taylor.rds',
                     package = 'rnmamod'))
 
 # The names of the interventions in the order they appear in the dataset
-interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
-                  "fluticasone", "fluticasone plus salmeterol",
-                  "formoterol", "salmeterol", "tiotropium")
+interv_names <- c("placebo", "inositol")
 
-# Create the enhanced balloon plot for 'tiotropium versus salmeterol'
+# Create the enhanced balloon plot for 'inositol versus placebo'
 balloon_plot(sens = res_sens,
-             compar = c("tiotropium", "salmeterol"),
+             compar = c("inositol", "placebo"),
              drug_names = interv_names)
 
 }

@@ -154,7 +154,7 @@ heatmap_robustness <- function(robust, drug_names) {
          labs(x = "", y = "") +
          theme_bw() +
          theme(legend.position = "none",
-               axis.text.x = element_text(size = 12),
+               axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0),
                axis.text.y = element_text(size = 12))
 
   return(p)

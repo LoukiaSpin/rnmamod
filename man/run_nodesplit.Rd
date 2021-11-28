@@ -117,10 +117,10 @@ Performs the Bayesian node-splitting approach of Dias et al., (2010)
   be stopped and an error message will be printed on the R console.
 }
 \examples{
-data("nma.liu2013")
+data("nma.baker2009")
 
 # Read results from 'run_model' (using the default arguments)
-res <- readRDS(system.file('extdata/res_liu.rds', package = 'rnmamod'))
+res <- readRDS(system.file('extdata/res_baker.rds', package = 'rnmamod'))
 
 \donttest{
 # Run random-effects node-splitting approach

@@ -160,7 +160,7 @@
 #'                 n_chains = 3,
 #'                 n_iter = 1000,
 #'                 n_burnin = 100,
-#'                 n_thin = 1)
+#'                 n_thin = 5)
 #' }
 #'
 #' @export

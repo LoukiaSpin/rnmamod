@@ -42,8 +42,9 @@ data("nma.liu2013")
 res <- readRDS(system.file('extdata/res_liu.rds', package = 'rnmamod'))
 
 # The names of the interventions in the order they appear in the dataset
-interv_names <- c("placebo", "pramipexole", "serotonin-norepinephrine
-                  reuptake inhibitor", "serotonin reuptake inhibitor",
+interv_names <- c("placebo", "pramipexole",
+                  "serotonin-norepinephrine reuptake inhibitor",
+                  "serotonin reuptake inhibitor",
                   "tricyclic antidepressant", "pergolide")
 
 # Create the integrated rankograms and SUCRA curves
