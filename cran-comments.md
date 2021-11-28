@@ -1,3 +1,18 @@
+## Resubmission (28/11/2021)
+This is a re-submission with the following corrections, as requested:
+
+* The length of the title has been reduced to 51 characters.
+
+* I added more details about the package functionality and implemented methods 
+in the Description text. 
+
+* I have unwrapped all examples, and I have replaced dontrun{} with donttest{} 
+in those being executable in > 5 sec.
+
+* I have replaced options(warn=-1) with suppressWarnings().
+
+* I have reset to user's options() (as indicated in the email) in the vignette network_description, where it was needed.  
+
 ## Resubmission (22/11/2021)
 This is a re-submission with the following corrections, as requested:
 
