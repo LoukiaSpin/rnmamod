@@ -1,7 +1,7 @@
 *** 
 
 <!---# rnmamod: package to perform Bayesian network meta-analysis methods--->
-# rnmamod: A Bayesian network meta-analysis package for R 
+# rnmamod: A Bayesian network meta-analysis package for R <img src="man/figures/hexsticker_rnmamod.png" align="right" width="120" />
 
 
 <!-- badges: start -->
