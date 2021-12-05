@@ -3,7 +3,7 @@
 \docType{package}
 \name{rnmamod}
 \alias{rnmamod}
-\title{Rnmamod: Bayesian Network Meta-analysis with Missing Participants}
+\title{rnmamod: Bayesian Network Meta-analysis with Missing Participants}
 \description{
 An R package for performing Bayesian network meta-analysis while handling
   missing participant outcome data properly.
