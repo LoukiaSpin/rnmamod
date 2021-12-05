@@ -2,7 +2,7 @@
 #'
 #' @description
 #'   \code{data_preparation} prepares the dataset in the proper format for
-#'   R2jags ans returns a list of elements that \code{\link{run_model}} inherits
+#'   R2jags and returns a list of elements that \code{\link{run_model}} inherits
 #'   via the argument \code{data}.
 #'
 #' @param data A data-frame of the one-trial-per-row format with arm-level data.
@@ -25,7 +25,7 @@
 #'    \code{I} \tab The pseudo-data-frame \code{I} (see 'Details'
 #'    in \code{\link{run_model}}).\cr
 #'    \tab \cr
-#'    \code{r} \tab The observed number of events of the outcome in each
+#'    \code{r} \tab The number of observed events of the outcome in each
 #'    trial-arm,
 #'    when the outcome is binary.\cr
 #'    \tab \cr
