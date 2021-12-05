@@ -36,6 +36,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -48,18 +50,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -71,9 +67,6 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/model_diagnostics.html">Evaluate the model diagnostics</a>
-    </li>
-    <li>
       <a href="articles/network_description.html">Description of the network</a>
     </li>
     <li>
@@ -87,7 +80,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/">
+  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -104,46 +97,41 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-
-<hr>
-<!---# rnmamod: package to perform Bayesian network meta-analysis methods---><div id="rnmamod-a-bayesian-network-meta-analysis-package-for-r" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#rnmamod-a-bayesian-network-meta-analysis-package-for-r" class="anchor"></a>rnmamod: A Bayesian network meta-analysis package for R</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="rnmamod-bayesian-network-meta-analysis-r-package-">rnmamod: Bayesian network meta-analysis R package <img src="reference/figures/hexsticker_rnmamod.png" align="right" width="200"><a class="anchor" aria-label="anchor" href="#rnmamod-bayesian-network-meta-analysis-r-package-"></a>
+</h1></div>
 <!-- badges: start -->
 
-<div id="contributors" class="section level2">
-<h2 class="hasAnchor">
-<a href="#contributors" class="anchor"></a>Contributors</h2>
-<p><a href="https://orcid.org/0000-0001-9515-582X">Loukia Spineli</a>, <a href="https://orcid.org/0000-0003-0606-4518">Chrysostomos Kalyvas</a>, <a href="https://orcid.org/0000-0002-5732-4044">Katerina Papadimitropoulou</a></p>
+<div class="section level2">
+<h2 id="contributors">Contributors<a class="anchor" aria-label="anchor" href="#contributors"></a>
+</h2>
+<p><a href="https://orcid.org/0000-0001-9515-582X" class="external-link">Loukia Spineli</a>, <a href="https://orcid.org/0000-0003-0606-4518" class="external-link">Chrysostomos Kalyvas</a>, <a href="https://orcid.org/0000-0002-5732-4044" class="external-link">Katerina Papadimitropoulou</a></p>
 </div>
-<div id="description" class="section level2">
-<h2 class="hasAnchor">
-<a href="#description" class="anchor"></a>Description</h2>
+<div class="section level2">
+<h2 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
+</h2>
 <p>The <code>rnmamod</code> package performs one-stage fixed-effect or random-effects Bayesian network meta-analysis (NMA) while adjusting for <em>missing participant outcome data</em> using the pattern-mixture model. In the case of two interventions, the package performs one-stage Bayesian pairwise meta-analysis.</p>
-<p>The package handles data inputs in <em>arm-based format</em>:</p>
-<ul>
-<li>binary data (effect size: odds ratio)<br>
-</li>
-<li>continuous data (effect size: raw and standardised mean differences, ratio of means).</li>
-</ul>
-<!--- The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. ---><p>The <code>rnmamod</code> package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Also includes a rich suite of visualisation tools to aid in interpretation of the results and preparation of NMA manuscript submission. Missing participant outcome data are addressed in all models of the package.</p>
+<p>The package handles data inputs in <em>arm-based format</em>: - binary data (effect size: odds ratio)<br>
+- continuous data (effect size: raw and standardised mean differences, ratio of means).</p>
+<!--- The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. --->
+<p>The <code>rnmamod</code> package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Also includes a rich suite of visualisation tools to aid in interpretation of the results and preparation of NMA manuscript submission. Missing participant outcome data are addressed in all models of the package.</p>
 <!---that aid the interpretation and accommodation of the results in the submitted research work for publication. --->
 <p>The <code>rnmamod</code> package is currently in development version.</p>
 </div>
-<div id="getting-started" class="section level2">
-<h2 class="hasAnchor">
-<a href="#getting-started" class="anchor"></a>Getting started</h2>
+<div class="section level2">
+<h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
 <p>Run the following code to install the development version of the package:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"LoukiaSpin/rnmamod"</span>)</span></code></pre></div>
 </div>
-<div id="example" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example" class="anchor"></a>Example</h2>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
 <!--- We will use the dataset of --->
-<p><a href="https://pubmed.ncbi.nlm.nih.gov/19637942/">Baker et al. (2009)</a> comprising 21 trials comparing seven pharmacologic interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. The exacerbation of COPD (harmful outcome) is the analysed binary outcome.</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/19637942/" class="external-link">Baker et al. (2009)</a> comprising 21 trials comparing seven pharmacologic interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. The exacerbation of COPD (harmful outcome) is the analysed binary outcome.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">nma.baker2009</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nma.baker2009</span><span class="op">)</span>
 <span class="co">#&gt;                 study t1 t2 t3 t4 r1 r2 r3 r4 m1 m2 m3 m4  n1  n2 n3 n4</span>
 <span class="co">#&gt; Llewellyn-Jones, 1996  1  4 NA NA  3  0 NA NA  1  0 NA NA   8   8 NA NA</span>
 <span class="co">#&gt;        Paggiaro, 1998  1  4 NA NA 51 45 NA NA 27 19 NA NA 139 142 NA NA</span>
@@ -151,30 +139,30 @@
 <span class="co">#&gt;        Casaburi, 2000  1  8 NA NA 41 45 NA NA 18 12 NA NA 191 279 NA NA</span>
 <span class="co">#&gt;       van Noord, 2000  1  7 NA NA 18 11 NA NA  8  7 NA NA  50  47 NA NA</span>
 <span class="co">#&gt;         Rennard, 2001  1  7 NA NA 41 38 NA NA 29 22 NA NA 135 132 NA NA</span></code></pre></div>
-<div id="network-plot" class="section level3">
-<h3 class="hasAnchor">
-<a href="#network-plot" class="anchor"></a>Network plot</h3>
-<p>Create the network plot using the <em>nma.networkplot</em> function of the <a href="https://CRAN.R-project.org/package=netmeta">pcnetmeta</a> R package:</p>
+<div class="section level3">
+<h3 id="network-plot">Network plot<a class="anchor" aria-label="anchor" href="#network-plot"></a>
+</h3>
+<p>Create the network plot using the <em>nma.networkplot</em> function of the <a href="https://CRAN.R-project.org/package=netmeta" class="external-link">pcnetmeta</a> R package:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># The names of the interventions in the order they appear in the dataset</span>
-<span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"budesonide"</span>, <span class="st">"budesonide plus formoterol"</span>, <span class="st">"fluticasone"</span>, <span class="st">"fluticasone plus salmeterol"</span>, <span class="st">"formoterol"</span>, <span class="st">"salmeterol"</span>, <span class="st">"tiotropium"</span><span class="op">)</span>
+<span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"budesonide"</span>, <span class="st">"budesonide plus formoterol"</span>, <span class="st">"fluticasone"</span>, <span class="st">"fluticasone plus salmeterol"</span>, <span class="st">"formoterol"</span>, <span class="st">"salmeterol"</span>, <span class="st">"tiotropium"</span><span class="op">)</span>
 
 <span class="fu"><a href="reference/netplot.html">netplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.baker2009</span>, drug_names <span class="op">=</span> <span class="va">interv_names</span>, text.cex <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></code></pre></div>
 <div style="text-align: center">
 <p><img src="reference/figures/Network_Baker.png" width="800" height="551" align="center"></p>
 </div>
 </div>
-<div id="perform-bayesian-random-effects-network-meta-analysis" class="section level3">
-<h3 class="hasAnchor">
-<a href="#perform-bayesian-random-effects-network-meta-analysis" class="anchor"></a>Perform Bayesian random-effects network meta-analysis</h3>
+<div class="section level3">
+<h3 id="perform-bayesian-random-effects-network-meta-analysis">Perform Bayesian random-effects network meta-analysis<a class="anchor" aria-label="anchor" href="#perform-bayesian-random-effects-network-meta-analysis"></a>
+</h3>
 <p>The following code performs a Bayesian random-effects network meta-analysis under the <em>missing at random assumption</em> while using an intervention-specific informative missingness odds ratio (<code>assumption = "IDE-ARM"</code>) in the logarithmic scale:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/run_model.html">run_model</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.baker2009</span>,
                  measure <span class="op">=</span> <span class="st">"OR"</span>,
                  model <span class="op">=</span> <span class="st">"RE"</span>,
                  assumption <span class="op">=</span> <span class="st">"IDE-ARM"</span>,
-                 heter_prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"halfnormal"</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,
-                 mean_misspar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, 
+                 heter_prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"halfnormal"</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,
+                 mean_misspar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, 
                  var_misspar <span class="op">=</span> <span class="fl">1</span>,
                  D <span class="op">=</span> <span class="fl">0</span>,
                  n_chains <span class="op">=</span> <span class="fl">3</span>,
@@ -182,9 +170,9 @@
                  n_burnin <span class="op">=</span> <span class="fl">1000</span>,
                  n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="league-table" class="section level3">
-<h3 class="hasAnchor">
-<a href="#league-table" class="anchor"></a>League table</h3>
+<div class="section level3">
+<h3 id="league-table">League table<a class="anchor" aria-label="anchor" href="#league-table"></a>
+</h3>
 <p>Illustrate all possible pairwise comparisons of the interventions using a league heatmap. Interventions are sorted in decreasing order by their posterior mean SUCRA (surface under the cumulative ranking) value in the main diagonal:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/league_heatmap.html">league_heatmap</a></span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>, drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></code></pre></div>
@@ -193,9 +181,9 @@
 </div>
 <p><br></p>
 </div>
-<div id="rankogram-with-sucra-curves" class="section level3">
-<h3 class="hasAnchor">
-<a href="#rankogram-with-sucra-curves" class="anchor"></a>Rankogram with SUCRA curves</h3>
+<div class="section level3">
+<h3 id="rankogram-with-sucra-curves">Rankogram with SUCRA curves<a class="anchor" aria-label="anchor" href="#rankogram-with-sucra-curves"></a>
+</h3>
 <p>The following code presents the hierarchy of the interventions in the network using integrated rankograms and SUCRA curves:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/rankosucra_plot.html">rankosucra_plot</a></span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>, drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></code></pre></div>
@@ -204,57 +192,69 @@
 </div>
 </div>
 </div>
-<div id="funding-source" class="section level2">
-<h2 class="hasAnchor">
-<a href="#funding-source" class="anchor"></a>Funding source</h2>
-The development of <code>rnmamod</code> package is funded by the <strong>German Research Foundation</strong> (Deutsche Forschungsgemeinschaft) (grant no. <a href="https://gepris.dfg.de/gepris/projekt/339420617">SP 1664/1-3</a>)
+<div class="section level2">
+<h2 id="funding-source">Funding source<a class="anchor" aria-label="anchor" href="#funding-source"></a>
+</h2>
+The development of <code>rnmamod</code> package is funded by the <strong>German Research Foundation</strong> (Deutsche Forschungsgemeinschaft) (grant no. <a href="https://gepris.dfg.de/gepris/projekt/339420617" class="external-link">SP 1664/1-3</a>)
 <div style="text-align: right">
 <img src="reference/figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="280" height="100" align="right">
 </div>
 </div>
 </div>
-
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/LoukiaSpin/rnmamod/">https://​github.com/​LoukiaSpin/​rnmamod/​</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=rnmamod" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">Browse source code</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>GPL (&gt;= 3) </li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Loukia Spineli <br><small class="roles"> Author, maintainer </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html#citation">Citing rnmamod</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/LoukiaSpin/rnmamod/actions"><img src="https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://github.com/LoukiaSpin/rnmamod/actions"><img src="https://img.shields.io/github/license/LoukiaSpin/rnmamod.svg" alt="license"></a></li>
+<li>Loukia Spineli <br><small class="roles"> Author, maintainer </small>  </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/LoukiaSpin/rnmamod/actions" class="external-link"><img src="https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://CRAN.R-project.org/package=rnmamod" class="external-link"><img src="https://www.r-pkg.org/badges/version/rnmamod" alt="CRAN status"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Loukia Spineli.</p>
+  <p></p>
+<p>Developed by Loukia Spineli.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
 </div>
 
       </footer>
@@ -262,6 +262,8 @@ The development of <code>rnmamod</code> package is funded by the <strong>German 
 
   
 
+
+  
 
   </body>
 </html>
