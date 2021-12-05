@@ -1,5 +1,5 @@
 
-# rnmamod: A Bayesian network meta-analysis package for R   <img src="man/figures/hexsticker_rnmamod.png" align="right" width="120" />             
+# rnmamod: A Bayesian network meta-analysis package for R   <img src="man/figures/hexsticker_rnmamod.png" align="right" width="200" />             
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
