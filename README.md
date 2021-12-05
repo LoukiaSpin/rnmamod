@@ -6,7 +6,8 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
-[![license](https://img.shields.io/github/license/LoukiaSpin/rnmamod.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
+<!--- [![license](https://img.shields.io/github/license/LoukiaSpin/rnmamod.svg)](https://github.com/LoukiaSpin/rnmamod/actions) --->
+[![CRAN status](https://www.r-pkg.org/badges/version/rnmamod)](https://CRAN.R-project.org/package=rnmamod)
 <!-- badges: end -->
   
 
