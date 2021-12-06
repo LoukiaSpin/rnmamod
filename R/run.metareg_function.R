@@ -212,7 +212,6 @@ run_metareg <- function(full,
   covar_assumption <- if (missing(covar_assumption)) {
     stop("The argument 'covar_assumption' needs to be defined.",
          call. = FALSE)
-    #"NO"
   } else if (!is.element(covar_assumption,
                          c("exchangeable", "independent", "common"))) {
     stop("Insert 'NO', 'exchangeable', 'independent', or 'common'",

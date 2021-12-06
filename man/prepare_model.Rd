@@ -2,7 +2,8 @@
 % Please edit documentation in R/prepare.model_function.R
 \name{prepare_model}
 \alias{prepare_model}
-\title{WinBUGS code for Bayesian pairwise or network meta-analysis}
+\title{WinBUGS code for Bayesian pairwise or network meta-analysis and
+meta-regression}
 \usage{
 prepare_model(measure, model, covar_assumption, assumption)
 }
@@ -40,9 +41,10 @@ An R character vector object to be passed to \code{\link{run_model}}
 \description{
 The WinBUGS code, as written by Dias et al., (2013) to run a one-stage
   Bayesian network meta-analysis, extended to incorporate the pattern-mixture
-  model for binary or continuous missing participant outcome data. In the
-  case of two interventions, the code boils down to a one-stage Bayesian
-  pairwise meta-analysis with pattern-mixture model.
+  model for binary or continuous missing participant outcome data. The model
+  has been also extended to incorporate a trial-level covariate to apply
+  meta-regression. In the case of two interventions, the code boils down to
+  a one-stage Bayesian pairwise meta-analysis with pattern-mixture model.
 }
 \details{
 \code{prepare_model} creates the model in the JAGS dialect
@@ -51,6 +53,17 @@ The WinBUGS code, as written by Dias et al., (2013) to run a one-stage
   \code{\link[base]{textConnection}} function.
 }
 \references{
+Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
+heterogeneity and inconsistency in mixed treatment comparisons: Application
+to stroke prevention treatments in individuals with non-rheumatic atrial
+fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
+\doi{10.1002/sim.3594}
+
+Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
+making 2: a generalized linear modeling framework for pairwise and network
+meta-analysis of randomized controlled trials. \emph{Med Decis Making}
+2013;\bold{33}(5):607--617. \doi{10.1177/0272989X12458724}
+
 Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 data in network meta-analysis: a one-stage pattern-mixture model approach.
 \emph{Stat Methods Med Res} 2021. \doi{10.1177/0962280220983544}
@@ -63,17 +76,6 @@ missing binary outcome data in network meta-analysis.
 Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account
 for uncertainty due to missing binary outcome data in pairwise meta-analysis.
 \emph{Stat Med} 2015;\bold{34}(12):2062--2080. \doi{10.1002/sim.6475}
-
-Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
-making 2: a generalized linear modeling framework for pairwise and network
-meta-analysis of randomized controlled trials. \emph{Med Decis Making}
-2013;\bold{33}(5):607--617. \doi{10.1177/0272989X12458724}
-
-Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
-heterogeneity and inconsistency in mixed treatment comparisons: Application
-to stroke prevention treatments in individuals with non-rheumatic atrial
-fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
-\doi{10.1002/sim.3594}
 }
 \seealso{
 \code{\link[R2jags]{jags}}, \code{\link{run_metareg}},

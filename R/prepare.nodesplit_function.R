@@ -43,6 +43,10 @@
 #'   \code{\link{run_nodesplit}}, \code{\link[base]{textConnection}},
 #'
 #' @references
+#' Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
+#' treatment comparison meta-analysis.
+#' \emph{Stat Med} 2010;\bold{29}(7-8):932--44. \doi{10.1002/sim.3767}
+#'
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 #' data in network meta-analysis: a one-stage pattern-mixture model approach.
 #' \emph{Stat Methods Med Res} 2021. \doi{10.1177/0962280220983544}
@@ -52,221 +56,217 @@
 #' \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
 #' \doi{10.1186/s12874-019-0731-y}
 #'
-#' Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
-#' treatment comparison meta-analysis.
-#' \emph{Stat Med} 2010;\bold{29}(7-8):932--44. \doi{10.1002/sim.3767}
-#'
 #' @export
 prepare_nodesplit <- function(measure, model, assumption) {
 
-  code <- paste0("model\n{",
-                 "\n\tfor (i in 1:ns) {")
+  stringcode <- "model {
+                    for (i in 1:ns) {\n"
 
-  code <- if (model == "RE") {
-    paste0(code, "\n\t\tdelta[i, 1] <- 0",
-                 "\n\t\tj[i, 1] <- 0",
-                 "\n\t\tw[i, 1] <- 0",
-                 "\n\t\tu[i] ~ dnorm(0, .0001)")
+  stringcode <- if (model == "RE") {
+    paste(stringcode, "delta[i, 1] <- 0
+                       j[i, 1] <- 0
+                       w[i, 1] <- 0
+                       u[i] ~ dnorm(0, .0001)\n")
   } else {
-    paste0(code, "\n\t\tu[i] ~ dnorm(0, .0001)")
+    paste(stringcode, "u[i] ~ dnorm(0, .0001)\n")
   }
 
-
-  code <- if (measure == "SMD") {
-    paste0(code, "\n\t\ttheta[i, 1] <- u[i]",
-                 "\n\t\tsigma[i] <- sqrt(sum(nom[i, 1:na[i]])/(sum(c[i, 1:na[i]]) - na[i]))",
-                 "\n\t\ta[i] <- sum(N[i, 1:na[i]] - 1)/2",
-                 "\n\t\tb[i] <- sum(N[i, 1:na[i]] - 1)/(2*sigma[i]*sigma[i])",
-                 "\n\t\tvar.pooled[i] ~ dgamma(a[i], b[i])",
-                 "\n\t\tsd.pooled[i] <- sqrt(var.pooled[i])")
+  stringcode <- if (measure == "SMD") {
+    paste(stringcode, "theta[i, 1] <- u[i]
+                       sigma[i] <- sqrt(sum(nom[i, 1:na[i]])/(sum(c[i, 1:na[i]]) - na[i]))
+                       a[i] <- sum(N[i, 1:na[i]] - 1)/2
+                       b[i] <- sum(N[i, 1:na[i]] - 1)/(2*sigma[i]*sigma[i])
+                       var.pooled[i] ~ dgamma(a[i], b[i])
+                       sd.pooled[i] <- sqrt(var.pooled[i])\n")
   } else if (measure == "MD" || measure == "ROM") {
-    paste0(code, "\n\t\ttheta[i, 1] <- u[i]")
+    paste(stringcode, "theta[i, 1] <- u[i]\n")
   } else if (measure == "OR") {
-    paste0(code, "\n\t\tlogit(p[i, 1]) <- u[i]")
+    paste(stringcode, "logit(p[i, 1]) <- u[i]\n")
   }
 
-  code <- paste0(code, "\n\t\tfor (k in 1:na[i]) {")
+  stringcode <- paste(stringcode, "for (k in 1:na[i]) {\n")
 
-  code <- if (measure == "SMD") {
-    paste0(code, "\n\t\t\tprec.o[i, k] <- pow(se.o[i, k], -2)",
-                 "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])",
-                 "\n\t\t\tc[i, k] <- N[i, k] - mod[i, k]",
-                 "\n\t\t\tsd.obs[i, k] <- se.o[i, k]*sqrt(c[i, k])",
-                 "\n\t\t\tnom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1)")
+  stringcode <- if (measure == "SMD") {
+    paste(stringcode, "prec.o[i, k] <- pow(se.o[i, k], -2)
+                       y.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])
+                       c[i, k] <- N[i, k] - mod[i, k]
+                       sd.obs[i, k] <- se.o[i, k]*sqrt(c[i, k])
+                       nom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1)\n")
   } else if (measure == "MD" || measure == "ROM") {
-    paste0(code, "\n\t\t\tprec.o[i, k] <- pow(se.o[i, k], -2)",
-                 "\n\t\t\ty.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])")
+    paste(stringcode, "prec.o[i, k] <- pow(se.o[i, k], -2)
+                       y.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])\n")
   } else if (measure == "OR") {
-    paste0(code, "\n\t\t\tr[i, k] ~ dbin(p_o[i, k], obs[i, k])",
-                 "\n\t\t\tobs[i, k] <- N[i, k] - mod[i, k]")
+    paste(stringcode, "r[i, k] ~ dbin(p_o[i, k], obs[i, k])
+                       obs[i, k] <- N[i, k] - mod[i, k]\n")
   }
 
-  code <- if (measure == "MD" || measure == "SMD") {
-    paste0(code, "\n\t\t\ttheta.o[i, k] <- theta[i, k] - phi.m[i, k]*q[i, k]")
+  stringcode <- if (measure == "MD" || measure == "SMD") {
+    paste(stringcode, "theta.o[i, k] <- theta[i, k] - phi.m[i, k]*q[i, k]\n")
   } else if (measure == "ROM") {
-    paste0(code, "\n\t\t\ttheta.o[i, k] <- theta[i, k]/(1 - q[i, k]*(1 - exp(phi.m[i, k])))")
+    paste(stringcode, "theta.o[i, k] <- theta[i, k]/(1 - q[i, k]*(1 - exp(phi.m[i, k])))\n")
   } else if (measure == "OR") {
-    paste0(code, "\n\t\t\tp_o[i, k] <- max(0, min(1, ((-((q[i, k] - p[i, k])*(1 - exp(phi.m[i, k])) - 1) - sqrt((pow(((q[i, k] - p[i, k])*(1 - exp(phi.m[i, k])) - 1), 2)) -
-                                       ((4*p[i, k])*(1 - q[i, k])*(1 - exp(phi.m[i, k])))))/(2*(1 - q[i, k])*(1 - exp(phi.m[i, k]))))))")
+    paste(stringcode, "p_o[i, k] <- max(0, min(1, ((-((q[i, k] - p[i, k])*(1 - exp(phi.m[i, k])) - 1) - sqrt((pow(((q[i, k] - p[i, k])*(1 - exp(phi.m[i, k])) - 1), 2)) -
+                                       ((4*p[i, k])*(1 - q[i, k])*(1 - exp(phi.m[i, k])))))/(2*(1 - q[i, k])*(1 - exp(phi.m[i, k]))))))\n")
   }
 
-  code <- paste0(code, "\n\t\t\tq[i, k] <- q0[i, k]*I[i, k]",
-                       "\n\t\t\tm[i, k] ~ dbin(q0[i, k], N[i, k])",
-                       "\n\t\t\tq0[i, k] ~ dunif(0, 1)")
+  stringcode <- paste(stringcode, "q[i, k] <- q0[i, k]*I[i, k]
+                                   m[i, k] ~ dbin(q0[i, k], N[i, k])
+                                   q0[i, k] ~ dunif(0, 1)\n")
 
-  code <- if (measure == "MD" || measure == "SMD" || measure == "ROM") {
-    paste0(code, "\n\t\t\that.par[i, k] <- theta.o[i, k]",
-                 "\n\t\t\tdev.o[i, k] <- (y.o[i, k] - theta.o[i, k])*(y.o[i, k] - theta.o[i, k])*prec.o[i, k]")
+  stringcode <- if (measure == "MD" || measure == "SMD" || measure == "ROM") {
+    paste(stringcode, "hat.par[i, k] <- theta.o[i, k]
+                       dev.o[i, k] <- (y.o[i, k] - theta.o[i, k])*(y.o[i, k] - theta.o[i, k])*prec.o[i, k]\n")
   } else if (measure == "OR") {
-    paste0(code, "\n\t\t\that.par[i, k] <- rhat[i, k]",
-                 "\n\t\t\trhat[i, k] <- p_o[i, k]*obs[i, k]",
-                 "\n\t\t\tdev.o[i, k] <- 2*(r[i, k]*(log(r[i, k]) - log(rhat[i, k])) + (obs[i, k] - r[i, k])*(log(obs[i, k] - r[i, k]) - log(obs[i, k] - rhat[i, k])))")
+    paste(stringcode, "hat.par[i, k] <- rhat[i, k]
+                       rhat[i, k] <- p_o[i, k]*obs[i, k]
+                       dev.o[i, k] <- 2*(r[i, k]*(log(r[i, k]) - log(rhat[i, k])) + (obs[i, k] - r[i, k])*(log(obs[i, k] - r[i, k]) - log(obs[i, k] - rhat[i, k])))\n")
   }
 
-  code <- paste0(code, "\n\t\t\tindex[i, k] <- split[i]*(equals(t[i, k], pair[1]) + equals(t[i, k], pair[2]))",
-                       "\n\t\t\t}",
-                       "\n\t\tresdev.o[i] <- sum(dev.o[i, 1:na[i]])")
+  stringcode <- paste(stringcode, "index[i, k] <- split[i]*(equals(t[i, k], pair[1]) + equals(t[i, k], pair[2]))
+                                   }
+                                   resdev.o[i] <- sum(dev.o[i, 1:na[i]])\n")
 
-  code <- paste0(code, "\n\t\tfor (k in 2:na[i]) {")
+  stringcode <- paste(stringcode, "for (k in 2:na[i]) {\n")
 
-  code <- if (measure == "MD") {
-    paste0(code, "\n\t\t\ttheta[i, k] <- u[i] + delta[i, k]")
+  stringcode <- if (measure == "MD") {
+    paste(stringcode, "theta[i, k] <- u[i] + delta[i, k]\n")
   } else if (measure == "SMD") {
-    paste0(code, "\n\t\t\ttheta[i, k] <- u[i] + sd.pooled[i]*delta[i, k]")
+    paste(stringcode, "theta[i, k] <- u[i] + sd.pooled[i]*delta[i, k]\n")
   } else if (measure == "ROM") {
-    paste0(code, "\n\t\t\ttheta[i, k] <- u[i]*exp(delta[i, k])")
+    paste(stringcode, "theta[i, k] <- u[i]*exp(delta[i, k])\n")
   } else if (measure == "OR") {
-    paste0(code, "\n\t\t\tlogit(p[i, k]) <- u[i] + delta[i, k]")
+    paste(stringcode, "logit(p[i, k]) <- u[i] + delta[i, k]\n")
   }
 
-  code <- if (model == "RE") {
-    paste0(code, "\n\t\t\tdelta[i, k] ~ dnorm(md[i, k], precd[i, k])",
-                 "\n\t\t\tmd[i, k] <- ((d[si[i, k]] - d[bi[i]])*I.sign[i, k] + sw[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]",
-                 "\n\t\t\tj[i, k] <- k - (equals(1, split[i])*step(k - 3))",
-                 "\n\t\t\tprecd[i, k] <- prec*2*(j[i, k] - 1)/j[i, k]",
-                 "\n\t\t\tw[i, k] <- ((delta[i, k] - (d[si[i, k]] - d[bi[i]]))*I.sign[i, k])*(1 - index[i, k])",
-                 "\n\t\t\tsw[i, k] <- sum(w[i, 1:(k - 1)])/(j[i, k] - 1)")
+  stringcode <- if (model == "RE") {
+    paste(stringcode, "delta[i, k] ~ dnorm(md[i, k], precd[i, k])
+                       md[i, k] <- ((d[si[i, k]] - d[bi[i]])*I.sign[i, k] + sw[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]
+                       j[i, k] <- k - (equals(1, split[i])*step(k - 3))
+                       precd[i, k] <- prec*2*(j[i, k] - 1)/j[i, k]
+                       w[i, k] <- ((delta[i, k] - (d[si[i, k]] - d[bi[i]]))*I.sign[i, k])*(1 - index[i, k])
+                       sw[i, k] <- sum(w[i, 1:(k - 1)])/(j[i, k] - 1)
+                       }}\n")
   } else {
-    paste0(code, "\n\t\t\tdelta[i, k] <- ((d[si[i, k]] - d[bi[i]])*I.sign[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]")
+    paste(stringcode, "delta[i, k] <- ((d[si[i, k]] - d[bi[i]])*I.sign[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]
+                       }}\n")
   }
 
-  code <- paste0(code, "\n\t\t\t}}",
-                       "\n\ttotresdev.o <- sum(resdev.o[])",
-                       "\n\td[ref] <- 0",
-                       "\n\tfor (t in 1:(ref - 1)) {",
-                       "\n\t\td[t] ~ dnorm(0, 0.0001)",
-                       "\n\t\t}",
-                       "\n\tfor (t in (ref + 1):nt) {",
-                       "\n\t\td[t] ~ dnorm(0, 0.0001)",
-                       "\n\t\t}")
+  stringcode <- paste(stringcode, "totresdev.o <- sum(resdev.o[])
+                                   d[ref] <- 0
+                                   for (t in 1:(ref - 1)) {
+                                     d[t] ~ dnorm(0, 0.0001)
+                                   }
+                                   for (t in (ref + 1):nt) {
+                                     d[t] ~ dnorm(0, 0.0001)
+                                   }\n")
 
-  code <- if (assumption == "HIE-ARM") {
-    paste0(code, "\n\tfor (i in 1:ns) {",
-                 "\n\t\tfor (k in 1:na[i]) {",
-                 "\n\t\t\tphi.m[i, k] <- phi[i, k]",
-                 "\n\t\t\tphi[i, k] ~ dnorm(mean.phi[t[i, k]], prec.phi[t[i, k]])",
-                 "\n\t\t\t}}",
-                 "\n\tmean.phi[ref] ~ dnorm(meand.phi[2], precd.phi)",
-                 "\n\tprec.phi[ref] <- pow(sd.phi[ref], -2)",
-                 "\n\tsd.phi[ref] ~ dunif(0, psi.phi)",
-                 "\n\tfor (t in 1:(ref - 1)) {",
-                 "\n\t\tmean.phi[t] ~ dnorm(meand.phi[1], precd.phi)",
-                 "\n\t\tprec.phi[t] <- pow(sd.phi[t], -2)",
-                 "\n\t\tsd.phi[t] ~ dunif(0, psi.phi)",
-                 "\n\t\t}",
-                 "\n\tfor (t in (ref + 1):nt) {",
-                 "\n\t\tmean.phi[t] ~ dnorm(meand.phi[1], precd.phi)",
-                 "\n\t\tprec.phi[t] <- pow(sd.phi[t], -2)",
-                 "\n\t\tsd.phi[t] ~ dunif(0, psi.phi)",
-                 "\n\t\t}",
-                 "\n\tpsi.phi <- pow(precd.phi, -2)")
+  stringcode <- if (assumption == "HIE-ARM") {
+    paste(stringcode, "for (i in 1:ns) {
+                         for (k in 1:na[i]) {
+                           phi.m[i, k] <- phi[i, k]
+                           phi[i, k] ~ dnorm(mean.phi[t[i, k]], prec.phi[t[i, k]])
+                       }}
+                       mean.phi[ref] ~ dnorm(meand.phi[2], precd.phi)
+                       prec.phi[ref] <- pow(sd.phi[ref], -2)
+                       sd.phi[ref] ~ dunif(0, psi.phi)
+                       for (t in 1:(ref - 1)) {
+                         mean.phi[t] ~ dnorm(meand.phi[1], precd.phi)
+                         prec.phi[t] <- pow(sd.phi[t], -2)
+                         sd.phi[t] ~ dunif(0, psi.phi)
+                       }
+                       for (t in (ref + 1):nt) {
+                         mean.phi[t] ~ dnorm(meand.phi[1], precd.phi)
+                         prec.phi[t] <- pow(sd.phi[t], -2)
+                         sd.phi[t] ~ dunif(0, psi.phi)
+                       }
+                       psi.phi <- pow(precd.phi, -2)\n")
   } else if (assumption == "HIE-TRIAL") {
-    paste0(code, "\n\tfor (i in 1:ns) {",
-                 "\n\t\tfor (k in 1:na[i]) {",
-                 "\n\t\t\tphi.m[i, k] <- phi[i, k]",
-                 "\n\t\t\tphi[i, k] ~ dnorm(mean.phi[i], prec.phi[i])",
-                 "\n\t\t\t}}",
-                 "\n\tfor (i in 1:ns) {",
-                 "\n\t\tmean.phi[i] ~ dnorm(meand.phi, precd.phi)",
-                 "\n\t\tprec.phi[i] <- pow(sd.phi[i], -2)",
-                 "\n\t\tsd.phi[i] ~ dunif(0, psi.phi)",
-                 "\n\t\t}",
-                 "\n\tpsi.phi <- pow(precd.phi, -2)")
+    paste(stringcode, "for (i in 1:ns) {
+                         for (k in 1:na[i]) {
+                           phi.m[i, k] <- phi[i, k]
+                           phi[i, k] ~ dnorm(mean.phi[i], prec.phi[i])
+                       }}
+                       for (i in 1:ns) {
+                         mean.phi[i] ~ dnorm(meand.phi, precd.phi)
+                         prec.phi[i] <- pow(sd.phi[i], -2)
+                         sd.phi[i] ~ dunif(0, psi.phi)
+                       }
+                       psi.phi <- pow(precd.phi, -2)\n")
   } else if (assumption == "HIE-COMMON") {
-    paste0(code, "\n\tfor (i in 1:ns) {",
-                 "\n\t\tfor (k in 1:na[i]) {",
-                 "\n\t\t\tphi.m[i, k] <- phi[i, k]",
-                 "\n\t\t\tphi[i, k] ~ dnorm(mean.phi, prec.phi)",
-                 "\n\t\t\t}}",
-                 "\n\tmean.phi ~ dnorm(meand.phi, precd.phi)",
-                 "\n\tprec.phi <- pow(sd.phi, -2)",
-                 "\n\tsd.phi ~ dunif(0, psi.phi)",
-                 "\n\tpsi.phi <- pow(precd.phi, -2)")
+    paste(stringcode, "for (i in 1:ns) {
+                         for (k in 1:na[i]) {
+                           phi.m[i, k] <- phi[i, k]
+                           phi[i, k] ~ dnorm(mean.phi, prec.phi)
+                       }}
+                       mean.phi ~ dnorm(meand.phi, precd.phi)
+                       prec.phi <- pow(sd.phi, -2)
+                       sd.phi ~ dunif(0, psi.phi)
+                       psi.phi <- pow(precd.phi, -2)\n")
   } else if (assumption == "IDE-ARM") {
-    paste0(code, "\n\tfor (i in 1:ns) {",
-                 "\n\t\tfor (k in 1:na[i]) {",
-                 "\n\t\t\tphi.m[i, k] <- phi[t[i, k]]",
-                 "\n\t\t\t}}",
-                 "\n\tphi[ref] ~ dnorm(meand.phi[2], precd.phi)",
-                 "\n\tfor (t in 1:(ref - 1)) {",
-                 "\n\t\tphi[t] ~ dnorm(meand.phi[1], precd.phi)",
-                 "\n\t\t}",
-                 "\n\tfor (t in (ref + 1):nt) {",
-                 "\n\t\tphi[t] ~ dnorm(meand.phi[1], precd.phi)",
-                 "\n\t\t}")
+    paste(stringcode, "for (i in 1:ns) {
+                         for (k in 1:na[i]) {
+                           phi.m[i, k] <- phi[t[i, k]]
+                       }}
+                       phi[ref] ~ dnorm(meand.phi[2], precd.phi)
+                       for (t in 1:(ref - 1)) {
+                         phi[t] ~ dnorm(meand.phi[1], precd.phi)
+                       }
+                       for (t in (ref + 1):nt) {
+                         phi[t] ~ dnorm(meand.phi[1], precd.phi)
+                       }\n")
   } else if (assumption == "IDE-TRIAL") {
-    paste0(code, "\n\tfor (i in 1:ns) {",
-                 "\n\t\tfor (k in 1:na[i]) {",
-                 "\n\t\t\tphi.m[i, k] <- phi[i]",
-                 "\n\t\t\t}}",
-                 "\n\tfor (i in 1:ns) {",
-                 "\n\t\tphi[i] ~ dnorm(meand.phi, precd.phi)",
-                 "\n\t\t}")
+    paste(stringcode, "for (i in 1:ns) {
+                         for (k in 1:na[i]) {
+                           phi.m[i, k] <- phi[i]
+                       }}
+                       for (i in 1:ns) {
+                         phi[i] ~ dnorm(meand.phi, precd.phi)
+                       }\n")
   } else if (assumption == "IDE-COMMON") {
-    paste0(code, "\n\tfor (i in 1:ns) {",
-                 "\n\t\tfor (k in 1:na[i]) {",
-                 "\n\t\t\tphi.m[i, k] <- phi",
-                 "\n\t\t\t}}",
-                 "\n\t\tphi ~ dnorm(meand.phi, precd.phi)")
+    paste(stringcode, "for (i in 1:ns) {
+                         for (k in 1:na[i]) {
+                           phi.m[i, k] <- phi
+                       }}
+                       phi ~ dnorm(meand.phi, precd.phi)\n")
   } else if (assumption == "IND-CORR") {
-    paste0(code, "\n\tfor (i in 1:ns) {",
-                 "\n\t\tfor (k in 1:na[i]) {",
-                 "\n\t\t\tphi.m[i, k] <- phi[i, k]",
-                 "\n\t\t\tfor (l in 1:na[i]) {",
-                 "\n\t\t\t\tV[i, k, l] <- cov.phi*(1 - equals(k, l)) + var.phi*equals(k, l)",
-                 "\n\t\t\t\t}}",
-                 "\n\t\tOmega[i, 1:na[i], 1:na[i]] <- inverse(V[i, 1:na[i], 1:na[i]])",
-                 "\n\t\tphi[i, 1:na[i]] ~ dmnorm(M[i, 1:na[i]], Omega[i, 1:na[i], 1:na[i]])",
-                 "\n\t\t}")
+    paste(stringcode, "for (i in 1:ns) {
+                         for (k in 1:na[i]) {
+                           phi.m[i, k] <- phi[i, k]
+                           for (l in 1:na[i]) {
+                             V[i, k, l] <- cov.phi*(1 - equals(k, l)) + var.phi*equals(k, l)
+                         }}
+                         Omega[i, 1:na[i], 1:na[i]] <- inverse(V[i, 1:na[i], 1:na[i]])
+                         phi[i, 1:na[i]] ~ dmnorm(M[i, 1:na[i]], Omega[i, 1:na[i], 1:na[i]])
+                       }\n")
   } else if (assumption == "IND-UNCORR") {
-    paste0(code, "\n\tfor (i in 1:ns) {",
-                 "\n\t\tfor (k in 1:na[i]) {",
-                 "\n\t\t\tphi.m[i, k] <- phi[i, k]",
-                 "\n\t\t\tphi[i, k] ~ dnorm(meand.phi, precd.phi)",
-                 "\n\t\t\t}}")
+    paste(stringcode, "for (i in 1:ns) {
+                         for (k in 1:na[i]) {
+                           phi.m[i, k] <- phi[i, k]
+                           phi[i, k] ~ dnorm(meand.phi, precd.phi)
+                       }}\n")
   }
 
-  code <- paste0(code, "\n\tfor (c in 1:(nt - 1)) {",
-                       "\n\t\tfor (k in (c + 1):nt) {",
-                       "\n\t\t\tEM[k, c] <- d[k] - d[c]",
-                       "\n\t\t\t}}",
-                       "\n\tdirect ~ dnorm(0, .0001)",
-                       "\n\tdiff <- direct - EM[pair[2], pair[1]]")
+  stringcode <- paste(stringcode, "for (c in 1:(nt - 1)) {
+                                     for (k in (c + 1):nt) {
+                                       EM[k, c] <- d[k] - d[c]
+                                   }}
+                                   direct ~ dnorm(0, .0001)
+                                   diff <- direct - EM[pair[2], pair[1]]\n")
 
-  code <- if (model == "RE") {
-    paste0(code, "\n\tprec <- pow(tau, -2)",
-                 "\n\ttau.a ~ dnorm(0, heter.prior[2])I(0, )",
-                 "\n\ttau.b ~ dunif(0, heter.prior[2])",
-                 "\n\ttau2.c ~ dlnorm(heter.prior[1], heter.prior[2])",
-                 "\n\tlog.tau2.d ~ dt(heter.prior[1], heter.prior[2], 5) ",
-                 "\n\ttau <- tau.a*equals(heter.prior[3], 1) + tau.b*equals(heter.prior[3], 2)+
-                  pow(tau2, 0.5)*equals(heter.prior[3], 3) + pow(tau2, 0.5)*equals(heter.prior[3], 4)",
-                 "\n\ttau2 <- tau2.c*equals(heter.prior[3], 3) + exp(log.tau2.d)*equals(heter.prior[3], 4)")
+  stringcode <- if (model == "RE") {
+    paste(stringcode, "prec <- pow(tau, -2)
+                       tau.a ~ dnorm(0, heter.prior[2])I(0, )
+                       tau.b ~ dunif(0, heter.prior[2])
+                       tau2.c ~ dlnorm(heter.prior[1], heter.prior[2])
+                       log.tau2.d ~ dt(heter.prior[1], heter.prior[2], 5)
+                       tau <- tau.a*equals(heter.prior[3], 1) + tau.b*equals(heter.prior[3], 2) +
+                       pow(tau2, 0.5)*equals(heter.prior[3], 3) + pow(tau2, 0.5)*equals(heter.prior[3], 4)
+                       tau2 <- tau2.c*equals(heter.prior[3], 3) + exp(log.tau2.d)*equals(heter.prior[3], 4)\n")
   } else {
-    paste0(code, "")
+    paste(stringcode, " ")
   }
 
-  code <- paste0(code, "\n}")
+  stringcode <- paste(stringcode, "\n}")
 
-  return(code)
+  return(stringcode)
 }
