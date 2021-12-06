@@ -26,11 +26,14 @@ Missing participant outcome data are addressed in all models of the package.
 
 <!---that aid the interpretation and accommodation of the results in the submitted research work for publication. --->
 
-The `rnmamod` package is currently in development version.
-
 ## Getting started
 
-Run the following code to install the development version of the package:
+Run the following code to install and load the package from CRAN:
+
+    install("rnmamod")
+    library(rnmamod)
+
+or run the following code to install the development version of the package:
 
     install.packages("devtools")
     devtools::install_github("LoukiaSpin/rnmamod")
