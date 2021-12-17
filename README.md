@@ -32,7 +32,7 @@ Missing participant outcome data are addressed in all models of the package.
 
 Run the following code to install and load the package from CRAN:
 
-    install("rnmamod")
+    install.packages("rnmamod")
     library(rnmamod)
 
 or run the following code to install the development version of the package:
