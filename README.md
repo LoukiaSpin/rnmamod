@@ -4,7 +4,7 @@
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/rnmamod)](https://CRAN.R-project.org/package=rnmamod)
-[![downloads](https://cranlogs.r-pkg.org/badges/grand-total/rnmamod)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/rnmamod)]
 <!-- badges: end -->
   
 
