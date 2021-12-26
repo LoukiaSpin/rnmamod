@@ -3,8 +3,6 @@
 
 Official Git repository of `rnmamod` R package
 
-In **R Views** [November 2021: "Top 40" New CRAN Packages](https://rviews.rstudio.com/2021/12/21/november-2021-top-40-new-cran-packages/)
-
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/rnmamod)](https://CRAN.R-project.org/package=rnmamod)
@@ -12,6 +10,7 @@ In **R Views** [November 2021: "Top 40" New CRAN Packages](https://rviews.rstudi
 [![CRAN total downloads](https://cranlogs.r-pkg.org/badges/grand-total/rnmamod)](https://cranlogs.r-pkg.org/badges/grand-total/rnmamod)
 <!-- badges: end -->
   
+In **R Views** [November 2021: "Top 40" New CRAN Packages](https://rviews.rstudio.com/2021/12/21/november-2021-top-40-new-cran-packages/)
 
 ## Contributors
 
