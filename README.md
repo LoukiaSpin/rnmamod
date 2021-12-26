@@ -2,6 +2,7 @@
 # rnmamod: Bayesian network meta-analysis R package   <img src="man/figures/hexsticker_rnmamod.png" align="right" width="200" />     
 
 Official Git repository of `rnmamod` R package
+In **R Views** [November 2021: "Top 40" New CRAN Packages](https://rviews.rstudio.com/2021/12/21/november-2021-top-40-new-cran-packages/)
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
