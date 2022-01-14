@@ -40,7 +40,7 @@ test_that("The summary log ORs and between-trial sd agree (no missing outcome da
   #colnames(resnode.fe) <- rownames(resnode.fe) <- NULL
 
   ## Random-effects NMA
-  res.re <- run_model(data = data.rnmamod, measure = "OR", model = "RE", heter_prior = list("halfnormal", 0, 1), D = 0)
+  res.re <- run_model(data = data.rnmamod, measure = "OR", model = "RE", heter_prior = list("halfnormal", 0, 1), D = 0, ref = 1)
   node.re2 <- run_nodesplit(res.re)
   resnode.re <- rbind(node.re2$direct[c(3, 5:6)], node.re2$indirect[c(3, 5:6)])
   colnames(resnode.re) <- rownames(resnode.re) <- NULL

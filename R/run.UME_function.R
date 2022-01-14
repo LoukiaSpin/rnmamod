@@ -171,6 +171,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
   heterog_prior <- full$heter_prior
   mean_misspar <- full$mean_misspar
   var_misspar <- full$var_misspar
+  ref <- full$ref
 
   # Prepare the dataset for the R2jags
   item <- data_preparation(data, measure)
@@ -305,7 +306,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                    "ns" = ns,
                    "ref" = ifelse(is.element(assumption,
                                              c("HIE-ARM", "IDE-ARM")),
-                                  item$ref, NA),
+                                  ref, NA),
                    "I" = item$I[order(item$na, na.last = TRUE), ],
                    "t1" = t1_indic,
                    "t2" = t2_indic,

@@ -209,7 +209,7 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
   meta <- list()
   for (i in 1:n_comp) {
     message(paste(i, "out of", n_comp, "observed comparisons"))
-    # 'D' does not matter in pairwise meta-analysis
+    # 'D' and 'base_risk' do not matter in pairwise meta-analysis
     meta[[i]] <-
       run_model(data =
                   pairwise_data[pairwise_data$arm1 == keep_comp[i, 1] &
@@ -221,6 +221,8 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
                 mean_misspar,
                 var_misspar,
                 D = 1,
+                ref = 1,
+                base_risk = 0.5,
                 n_chains,
                 n_iter,
                 n_burnin,

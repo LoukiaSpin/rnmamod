@@ -199,6 +199,9 @@ run_metareg <- function(full,
   mean_misspar <- full$mean_misspar
   var_misspar <- full$var_misspar
   D <- full$D
+  ref <- full$ref
+  base_risk <- full$base_risk
+  indic <- full$indic
 
   # Prepare the dataset for the R2jags
   item <- data_preparation(data, measure)
@@ -231,14 +234,15 @@ run_metareg <- function(full,
                    "na" = item$na,
                    "nt" = item$nt,
                    "ns" = item$ns,
-                   "ref" = item$ref,
+                   "ref" = ref,
                    "I" = item$I,
+                   "indic" = indic,
                    "D" = D)
 
   data_jag <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
     append(data_jag, list("y.o" = item$y0, "se.o" = item$se0))
   } else if (measure == "OR") {
-    append(data_jag, list("r" = item$r))
+    append(data_jag, list("r" = item$r, "base_risk" = base_risk))
   }
 
   data_jag <- if (length(unique(covariate)) > 2) {
@@ -299,6 +303,12 @@ run_metareg <- function(full,
                            c("EM.pred", "pred.ref", "tau", "delta"))]
   }
 
+  param_jags <- if (measure == "OR") {
+    append(param_jags, c("RR", "RD", "abs_risk"))
+  } else {
+    param_jags
+  }
+
   # Run the Bayesian analysis
   jagsfit <- jags(data = data_jag,
                   parameters.to.save = param_jags,
@@ -316,6 +326,15 @@ run_metareg <- function(full,
 
   # Effect size of all unique pairwise comparisons
   EM <- t(get_results %>% dplyr::select(starts_with("EM[")))
+
+  # Unique absolute risks for all interventions (only binary data)
+  abs_risk <- t(get_results %>% dplyr::select(starts_with("abs_risk[")))
+
+  # Relative risks obtained via absolute risks (only binary data)
+  RR <- t(get_results %>% dplyr::select(starts_with("RR[")))
+
+  # Risk difference obtained via absolute risks (only binary data)
+  RD <- t(get_results %>% dplyr::select(starts_with("RD[")))
 
   # Effect size of all comparisons with the reference intervention
   EM_ref <- t(get_results %>% dplyr::select(starts_with("EM.ref[")))
@@ -427,7 +446,7 @@ run_metareg <- function(full,
   model_assessment <- data.frame(DIC, pD, dev)
 
   # Return a list of results
-  if (model == "RE") {
+  if (model == "RE" & !is.element(measure, "OR")) {
     ma_results <- list(EM = EM,
                        EM_pred = EM_pred,
                        tau = tau,
@@ -451,8 +470,58 @@ run_metareg <- function(full,
                                            SUCRA = SUCRA,
                                            effectiveness = effectiveness,
                                            D = full$D))
-  } else {
+  } else if (model == "RE" & is.element(measure, "OR")) {
     ma_results <- list(EM = EM,
+                       EM_pred = EM_pred,
+                       RR = RR,
+                       RD = RD,
+                       abs_risk = abs_risk,
+                       tau = tau,
+                       delta = delta,
+                       beta_all = beta_all,
+                       dev_o = dev_o,
+                       hat_par = hat_par,
+                       leverage_o = leverage_o,
+                       sign_dev_o = sign_dev_o,
+                       phi = phi,
+                       model_assessment = model_assessment,
+                       measure = measure,
+                       model = model,
+                       assumption = assumption,
+                       covariate = covariate,
+                       covar_assumption = covar_assumption,
+                       jagsfit = jagsfit,
+                       data = data)
+    nma_results <- append(ma_results, list(EM_ref = EM_ref,
+                                           pred_ref = pred_ref,
+                                           SUCRA = SUCRA,
+                                           effectiveness = effectiveness,
+                                           D = full$D))
+  } else if (model == "FE" & !is.element(measure, "OR")) {
+    ma_results <- list(EM = EM,
+                       beta_all = beta_all,
+                       dev_o = dev_o,
+                       hat_par = hat_par,
+                       leverage_o = leverage_o,
+                       sign_dev_o = sign_dev_o,
+                       phi = phi,
+                       model_assessment = model_assessment,
+                       measure = measure,
+                       model = model,
+                       assumption = assumption,
+                       covariate = covariate,
+                       covar_assumption = covar_assumption,
+                       jagsfit = jagsfit,
+                       data = data)
+    nma_results <- append(ma_results, list(EM_ref = EM_ref,
+                                           SUCRA = SUCRA,
+                                           effectiveness = effectiveness,
+                                           D = full$D))
+  } else if (model == "FE" & is.element(measure, "OR")) {
+    ma_results <- list(EM = EM,
+                       RR = RR,
+                       RD = RD,
+                       abs_risk = abs_risk,
                        beta_all = beta_all,
                        dev_o = dev_o,
                        hat_par = hat_par,

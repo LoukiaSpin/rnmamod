@@ -43,7 +43,7 @@
 #'    all arms. When the outcome is continuous, this element is omitted. \cr
 #'   }
 #'
-#'   The two data-frames include\code{table_interventions} and
+#'   The two data-frames include \code{table_interventions} and
 #'   \code{table_comparisons}. See 'Value' in \code{\link{netplot}} for these
 #'   data-frames.
 #'
@@ -51,7 +51,7 @@
 #' facilitate the calculations.
 #'
 #' @seealso \code{\link{data_preparation}}, \code{\link{netplot}},
-#'   \code{\link{run_model}},
+#'   \code{\link{run_model}}
 #'
 #' @author {Loukia M. Spineli}
 #'

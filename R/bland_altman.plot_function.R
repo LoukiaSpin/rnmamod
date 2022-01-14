@@ -32,11 +32,11 @@
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link{data_preparation}}, \code{\link{run_model}},
-#'   \code{\link{ume_plot}}, \code{\link{run_ume}}
+#'   \code{\link{run_ume}}, \code{\link{ume_plot}}
 #'
 #' @references
 #' Bland JM, Altman DG. Measuring agreement in method comparison studies.
-#' \emph{Stat Methods Med Res} 1999;\bold{8}:135--60
+#' \emph{Stat Methods Med Res} 1999;\bold{8}:135--60.
 #'
 #' @export
 bland_altman_plot <- function(model1, model2, colour) {

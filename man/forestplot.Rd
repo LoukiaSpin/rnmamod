@@ -10,7 +10,7 @@ forestplot(full, compar, drug_names)
 \item{full}{An object of S3 class \code{\link{run_model}}. See 'Value' in
 \code{\link{run_model}}.}
 
-\item{compar}{A character to indicate the comparator intervention. it must be
+\item{compar}{A character to indicate the comparator intervention. It must be
 any name found in \code{drug_names}.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
@@ -68,7 +68,7 @@ interv_names <- c("placebo", "pramipexole", "serotonin-norepinephrine
 reuptake inhibitor", "serotonin reuptake inhibitor", "tricyclic
 antidepressant", "pergolide")
 
-# Create the league heatmap
+# Create the forest plot
 forestplot(full = res,
            compar = "placebo",
            drug_names = interv_names)

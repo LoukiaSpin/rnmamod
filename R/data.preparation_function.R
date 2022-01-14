@@ -16,33 +16,31 @@
 #'   to \code{\link{run_model}}:
 #'   \tabular{ll}{
 #'    \code{m} \tab The number of missing participant outcome data in each
-#'    trial-arm (see 'Details' in the \code{\link{run_model}} function).\cr
+#'    trial-arm (see 'Details').\cr
 #'    \tab \cr
 #'    \code{N} \tab The number of randomised participants in each trial-arm.\cr
 #'    \tab \cr
 #'    \code{t} \tab The intervention identifier in each trial-arm.\cr
 #'    \tab \cr
-#'    \code{I} \tab The pseudo-data-frame \code{I} (see 'Details'
-#'    in \code{\link{run_model}}).\cr
+#'    \code{I} \tab The pseudo-data-frame \code{I} (see 'Details').\cr
 #'    \tab \cr
 #'    \code{r} \tab The number of observed events of the outcome in each
 #'    trial-arm,
 #'    when the outcome is binary.\cr
 #'    \tab \cr
 #'    \code{y0} \tab The observed mean value of the outcome in each trial-arm,
-#'    when the outcome is continuous\cr
+#'    when the outcome is continuous.\cr
 #'    \tab \cr
 #'    \code{se0} \tab The observed standard deviation of the outcome in each
-#'    trial-arm,
-#'    when the outcome is continuous\cr
+#'    trial-arm, when the outcome is continuous.\cr
 #'   }
 #'
 #' @details \code{data_preparation} prepares the data for the Bayesian analysis.
-#'   \code{data_preparation} checks whether the element \strong{m} exists in the
-#'   \code{data} argument (See 'Format' in \code{\link{run_model}}). If this
-#'   element is missing, \code{data_preparation} creates a pseudo-data-frame for
-#'   \strong{m} that has the zero value for the observed trial-arms, and
-#'   \code{NA} for the unobserved trial-arms, and the pseudo-data-frame \code{I}
+#'   It checks whether the element \strong{m} exists in the \code{data} argument
+#'   (See 'Format' in \code{\link{run_model}}). If this element is missing,
+#'   \code{data_preparation} creates a pseudo-data-frame for \strong{m} that has
+#'   the zero value for the observed trial-arms, and \code{NA} for the
+#'   unobserved trial-arms, and the pseudo-data-frame \code{I}
 #'   that is identical with the pseudo-data-frame for \code{m}. If the element
 #'   \strong{m} exists in the \code{data} and has values only for some
 #'   trial-arms, the pseudo-data-frame for \strong{m} is identical to \strong{m}
@@ -79,8 +77,6 @@ data_preparation <- function(data, measure) {
   na <- apply(treat, 1, function(x) length(which(!is.na(x))))
   # Total number of interventions
   nt <- length(table(as.matrix(treat)))
-  # The intervention with identifier '1' is the reference of the network
-  ref <- 1
 
   measure <- if (missing(measure)) {
     stop("The argument 'measure' needs to be defined", call. = FALSE)
@@ -246,7 +242,6 @@ data_preparation <- function(data, measure) {
                   na = na,
                   nt = nt,
                   ns = ns,
-                  ref = ref,
                   measure = measure)
 
   results <- if (is.element(measure, c("MD", "SMD", "ROM"))) {

@@ -164,6 +164,8 @@ run_nodesplit <- function(full,
   heterog_prior <- full$heter_prior
   mean_misspar <- full$mean_misspar
   var_misspar <- full$var_misspar
+  ref <- full$ref
+  indic <- full$indic
   n_chains <- ifelse(missing(n_chains), 2, n_chains)
   n_iter <- ifelse(missing(n_iter), 10000, n_iter)
   n_burnin <- ifelse(missing(n_burnin), 1000, n_burnin)
@@ -298,7 +300,8 @@ run_nodesplit <- function(full,
                             "na" = na..,
                             "nt" = item$nt,
                             "ns" = item$ns,
-                            "ref" = item$ref,
+                            "ref" = ref,
+                            "indic" = indic,
                             "I" = item$I,
                             "I.sign" = I_sign[[i]],
                             "split" = checkPair_node[[i]][, "split"],

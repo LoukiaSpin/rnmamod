@@ -178,6 +178,8 @@ run_sensitivity <- function(full,
   model <- full$model
   heterog_prior <- full$heter_prior
   D <- full$D
+  ref <- full$ref
+  indic <- full$indic
   assumption <- if (missing(assumption)) {
     "IDE-ARM"
   } else if(!is.element(assumption, c("IDE-ARM", "HIE-ARM"))) {
@@ -245,7 +247,8 @@ run_sensitivity <- function(full,
                           "na" = item$na,
                           "nt" = item$nt,
                           "ns" = item$ns,
-                          "ref" = item$ref,
+                          "ref" = ref,
+                          "indic" = indic,
                           "I" = item$I,
                           "meand.phi" = mean_misspar[i, ],
                           "precd.phi" = 1 / var_misspar,

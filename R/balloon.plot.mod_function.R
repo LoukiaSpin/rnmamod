@@ -18,20 +18,21 @@
 #'   the order of the interventions as they appear in
 #'   \code{data} is used, instead.
 #'
-#' @return \code{balloon_plot} returns two enhanced balloon plots for one
+#' @return
+#'   \code{balloon_plot} returns two enhanced balloon plots for one
 #'   comparison (see 'Details'):
 #'   \tabular{ll}{
-#'    \code{Plot_effect_size} \tab The enhanced balloon plot for the
+#'    \code{plot_effect_size} \tab The enhanced balloon plot for the
 #'    summary effect size (according to the argument \code{measure} inherited
-#'    by \code{\link{run_sensitivity}}) of one pairwise comparison.\cr
+#'    by \code{\link{run_sensitivity}}) for one pairwise comparison.\cr
 #'    \tab \cr
-#'    \code{Plot_tau} \tab The enhanced balloon plot for tau. When the
+#'    \code{plot_tau} \tab The enhanced balloon plot for \emph{tau}. When the
 #'    fixed-effect model has been performed in \code{\link{run_sensitivity}},
-#'    the function will not return the \code{Plot_tau}.\cr
-#' }
+#'    the function will not return the \code{plot_tau}.\cr
+#'   }
 #'
 #' @details
-#'   For the \code{Plot_effect_size} of the selected pairwise
+#'   For the \code{plot_effect_size} of the selected pairwise
 #'   comparison, the different colours and sizes of the bubbles reflect the
 #'   posterior standard deviation and the posterior mean, respectively.
 #'   A colour key appears below the plot.
@@ -46,16 +47,16 @@
 #'   the x-axis refers to the 'experimental' intervention, and the y-axis refers
 #'   to the 'control' intervention.
 #'
-#'   The same enhanced balloon plot is created for tau (\code{Plot_tau}).
+#'   The same enhanced balloon plot is created for \emph{tau} (\code{plot_tau}).
 #'   However, filled bubbles indicate low statistical heterogeneity
-#'   (the posterior median of tau is lower than the median of the
+#'   (the posterior median of \emph{tau} is lower than the median of the
 #'   prior distribution for the heterogeneity parameter),
 #'   and crossed bubbles indicate considerable statistical heterogeneity
-#'   (the posterior median of tau exceeds the median of the prior
+#'   (the posterior median of \emph{tau} exceeds the median of the prior
 #'   distribution for the heterogeneity parameter).
 #'
-#'   \code{balloon_plot_mod} can be used only when missing participant
-#'   outcome data have been extracted for at least one trial.
+#'   \code{balloon_plot} can be used only when missing participant
+#'   outcome data have been extracted for at least one ↨
 #'   Otherwise, the execution of the function will be stopped and an error
 #'   message will be printed on the R console.
 #'

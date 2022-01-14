@@ -91,7 +91,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                        b[i] <- sum(N[i, 1:na[i]] - 1)/(2*sigma[i]*sigma[i])
                        var.pooled[i] ~ dgamma(a[i], b[i])
                        sd.pooled[i] <- sqrt(var.pooled[i])\n")
-  } else if (measure == "MD" || measure == "ROM") {
+  } else if (is.element(measure, c("MD", "ROM"))) {
     paste(stringcode, "theta[i, 1] <- u[i]\n")
   } else if (measure == "OR") {
     paste(stringcode, "logit(p[i, 1]) <- u[i]\n")
@@ -105,7 +105,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                        c[i, k] <- N[i, k] - m[i, k]
                        sd.obs[i, k] <- se.o[i, k]*sqrt(c[i, k])
                        nom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1)\n")
-  } else if (measure == "MD" || measure == "ROM") {
+  } else if (is.element(measure, c("MD", "ROM"))) {
     paste(stringcode, "prec.o[i, k] <- pow(se.o[i, k], -2)
                        y.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])\n")
   } else if (measure == "OR") {
@@ -113,7 +113,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                        obs[i, k] <- N[i, k] - m[i, k]\n")
   }
 
-  stringcode <- if (measure == "MD" || measure == "SMD") {
+  stringcode <- if (is.element(measure, c("MD", "SMD"))) {
     paste(stringcode, "theta.o[i, k] <- theta[i, k] - phi.m[i, k]*q[i, k]\n")
   } else if (measure == "ROM") {
     paste(stringcode, "theta.o[i, k] <- theta[i, k]/(1 - q[i, k]*(1 - exp(phi.m[i, k])))\n")
@@ -126,7 +126,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                                    m[i, k] ~ dbin(q0[i, k], N[i, k])
                                    q0[i, k] ~ dunif(0, 1)\n")
 
-  stringcode <- if (measure == "MD" || measure == "SMD" || measure == "ROM") {
+  stringcode <- if (!is.element(measure, "OR")) {
     paste(stringcode, "hat.par[i, k] <- theta.o[i, k]
                        dev.o[i, k] <- (y.o[i, k] - theta.o[i, k])*(y.o[i, k] - theta.o[i, k])*prec.o[i, k]
                        }\n")
@@ -153,13 +153,13 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
   stringcode <- if (model == "RE") {
     paste(stringcode, "delta.star[i, k] <- delta[i, k] + Beta[i, k]
                        delta[i, k] ~ dnorm(md[i, k], precd[i, k])
-                       md[i, k] <- d[t[i, k]] - d[t[i, 1]] + sw[i, k]
+                       md[i, k] <- (d[t[i, k]]*indic[i, k] - d[t[i, 1]]*indic[i, 1]) + sw[i, k]
                        precd[i, k] <- 2*prec*(k - 1)/k
-                       w[i, k] <- delta[i, k] - (d[t[i, k]] - d[t[i, 1]])
+                       w[i, k] <- delta[i, k] - (d[t[i, k]]*indic[i, k] - d[t[i, 1]]*indic[i, 1])
                        sw[i, k] <- sum(w[i, 1:(k - 1)])/(k - 1)
                        }}\n")
   } else {
-    paste(stringcode, "delta.star[i, k] <- d[t[i, k]] - d[t[i, 1]] + Beta[i, k]
+    paste(stringcode, "delta.star[i, k] <- (d[t[i, k]]*indic[i, k] - d[t[i, 1]]*indic[i, 1]) + Beta[i, k]
                        }}\n")
   }
 
@@ -171,7 +171,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
   } else if (is.element(covar_assumption, c("exchangeable", "independent"))) {
     paste(stringcode, "for (i in 1:ns) {
                          for (k in 2:na[i]) {
-                           Beta[i, k] <- (beta[t[i, k]] - beta[t[i, 1]])*(cov.vector[i]*(1 - equals(cov.vector[i], 0)) + cov.matrix[i, k]*equals(cov.vector[i], 0))
+                           Beta[i, k] <- (beta[t[i, k]]*indic[i, k] - beta[t[i, 1]]*indic[i, 1])*(cov.vector[i]*(1 - equals(cov.vector[i], 0)) + cov.matrix[i, k]*equals(cov.vector[i], 0))
                        }}\n")
   } else if (covar_assumption == "common") {
     paste(stringcode, "for (i in 1:ns) {
@@ -182,39 +182,61 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
 
   stringcode <- paste(stringcode, "totresdev.o <- sum(resdev.o[])
                                    d[ref] <- 0
+                                   d.n[ref] <- 0
                                    for (t in 1:(ref - 1)) {
                                      d[t] ~ dnorm(0, 0.0001)
+                                     d.n[t] <- d[t]*(1 - (1 - step(t - ref))) + d[t]*(-1)*(1 - step(t - ref))
                                    }
                                    for (t in (ref + 1):nt) {
                                      d[t] ~ dnorm(0, 0.0001)
+                                     d.n[t] <- d[t]*(1 - (1 - step(t - ref))) + d[t]*(-1)*(1 - step(t - ref))
                                    }\n")
+
+  stringcode <- if (measure == "OR") {
+    paste(stringcode, "for (t in 1:nt) {
+                         abs_risk[t] <- exp((d.n[t] + log(base_risk)) - log(1 + base_risk*(exp(d.n[t]) - 1)))
+                       }
+                       for (c in 1:(nt - 1)) {
+                         for (k in (c + 1):nt) {
+                           RR[k, c] <- log(abs_risk[k]) - log(abs_risk[c])
+                           RD[k, c] <- abs_risk[k] - abs_risk[c]
+                       }}\n")
+  } else {
+    paste(stringcode, " ")
+  }
 
   stringcode <- if (covar_assumption == "exchangeable") {
     paste(stringcode, "beta[ref] <- 0
+                       beta.n[ref] <- 0
                        for (t in 1:(ref - 1)) {
                          beta[t] ~ dnorm(mean.B, prec.B)
+                         beta.n[t] <- beta[t]*(1 - (1 - step(t - ref))) + beta[t]*(-1)*(1 - step(t - ref))
                        }
                        for (t in (ref + 1):nt) {
                          beta[t] ~ dnorm(mean.B, prec.B)
+                         beta.n[t] <- beta[t]*(1 - (1 - step(t - ref))) + beta[t]*(-1)*(1 - step(t - ref))
                        }
                        mean.B ~ dnorm(0, .0001)
                        prec.B <- 1/pow(beta.SD,2)
                        beta.SD ~ dnorm(0, 1)I(0, )
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           beta.all[k, c] <- beta[k] - beta[c]
+                           beta.all[k, c] <- beta.n[k] - beta.n[c]
                        }}\n")
   } else if (covar_assumption == "independent") {
     paste(stringcode, "beta[ref] <- 0
+                       beta.n[ref] <- 0
                        for (t in 1:(ref - 1)) {
                          beta[t] ~ dnorm(0, 0.0001)
+                         beta.n[t] <- beta[t]*(1 - (1 - step(t - ref))) + beta[t]*(-1)*(1 - step(t - ref))
                        }
                        for (t in (ref + 1):nt) {
                          beta[t] ~ dnorm(0, 0.0001)
+                         beta.n[t] <- beta[t]*(1 - (1 - step(t - ref))) + beta[t]*(-1)*(1 - step(t - ref))
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           beta.all[k, c] <- beta[k] - beta[c]
+                           beta.all[k, c] <- beta.n[k] - beta.n[c]
                        }}\n")
   } else if (covar_assumption == "common") {
     paste(stringcode, "beta ~ dnorm(0, 0.0001)
@@ -223,7 +245,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                             beta.all[k, c] <- 0
                        }}
                        for (t in (ref + 1):nt) {
-                         beta.all[t, ref] <- beta
+                         beta.all[t, ref] <- beta*(1 - (1 - step(t - ref))) + beta*(-1)*(1 - step(t - ref))
                        }\n")
   } else if (covar_assumption == "NO") {
     paste(stringcode, " ")
@@ -315,7 +337,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                        }}\n")
   }
 
-  stringcode <- paste(stringcode, "sorted <- rank(d[])
+  stringcode <- paste(stringcode, "sorted <- rank(d.n[])
                                    for (t in 1:nt) {
                                      order[t] <- (nt + 1 - sorted[t])*equals(D, 1) + sorted[t]*(1 - equals(D, 1))
                                      most.effective[t] <- equals(order[t], 1)
@@ -328,28 +350,28 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
 
   stringcode <- if (model == "RE") {
     paste(stringcode, "for (t in 1:(ref - 1)) {
-                         EM.ref[t] <- d[t] - d[ref]
+                         EM.ref[t] <- d[t]
                          pred.ref[t] ~ dnorm(EM.ref[t], prec)
                        }
                        for (t in (ref + 1):nt) {
-                         EM.ref[t] <- d[t] - d[ref]
+                         EM.ref[t] <- d[t]
                          pred.ref[t] ~ dnorm(EM.ref[t], prec)
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           EM[k, c] <- d[k] - d[c]
+                           EM[k, c] <- d.n[k] - d.n[c]
                            EM.pred[k, c] ~ dnorm(EM[k, c], prec)
                        }}\n")
   } else {
     paste(stringcode, "for (t in 1:(ref - 1)) {
-                          EM.ref[t] <- d[t] - d[ref]
+                          EM.ref[t] <- d[t]
                        }
                        for (t in (ref + 1):nt) {
-                         EM.ref[t] <- d[t] - d[ref]
+                         EM.ref[t] <- d[t]
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           EM[k, c] <- d[k] - d[c]
+                           EM[k, c] <- d.n[k] - d.n[c]
                        }}\n")
   }
 

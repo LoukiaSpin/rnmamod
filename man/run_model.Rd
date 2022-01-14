@@ -55,6 +55,8 @@ run_model(
   mean_misspar,
   var_misspar,
   D,
+  ref,
+  base_risk = NULL,
   n_chains,
   n_iter,
   n_burnin,
@@ -113,6 +115,16 @@ the default argument is 0.04}
 Set \code{D = 1} for beneficial outcome and \code{D = 0} for harmful
 outcome.}
 
+\item{ref}{An integer specifying the reference intervention. The number
+should match the intervention identifier under element \strong{t} in
+\code{data}.}
+
+\item{base_risk}{A number in the interval (0, 1) that indicates the baseline
+for the selected reference intervention. If \code{base_risk} has not been
+defined, the function uses the median event risk for the reference
+intervention as calculated from the corresponding trials in \code{data}.
+This argument is only relevant for binary outcome.}
+
 \item{n_chains}{Positive integer specifying the number of chains for the
 MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function
 of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
@@ -151,7 +163,7 @@ A list of R2jags output on the summaries of the posterior
    \code{phi} \tab The informative missingness parameter.\cr
   }
 
-    For a fixed-effect NMA, the output additionally includes:
+  For a fixed-effect NMA, the output additionally includes:
   \tabular{ll}{
    \code{EM_ref} \tab The estimated summary effect measure
    (according to the argument \code{measure}) of all comparisons
@@ -192,6 +204,11 @@ A list of R2jags output on the summaries of the posterior
 
   Furthermore, the output includes the following elements:
   \tabular{ll}{
+   \code{RR} \tab The relative risk (RR) as a function of the absolute risks
+   of the corresponding interventions. \cr
+   \code{RD} \tab The risk difference (RD) as a function of the absolute
+   risks of the corresponding interventions. \cr
+   \code{abs_risk} \tab The absolute risks for each intervention. \cr
    \code{leverage_o} \tab The leverage for the observed outcome
    at each trial-arm.\cr
    \tab \cr
@@ -242,9 +259,7 @@ The model runs in \code{JAGS} and the progress of the simulation
   first column in \strong{t} as being the control arm for every trial. Thus,
   this sorting ensures that interventions with a lower identifier are
   consistently treated as the control arm in each trial. This case is
-  relevant in non-star-shaped networks. By default, \code{run_model} treats
-  the intervention with identifier equal to one as the reference intervention
-  of the network.
+  relevant in non-star-shaped networks.
 
   To perform a Bayesian PMA or NMA, the \code{\link{prepare_model}} function
   is called which contains the WinBUGS code as written by Dias et al., (2013)
@@ -282,15 +297,24 @@ The model runs in \code{JAGS} and the progress of the simulation
   In the case of a network, the first value is considered for all
   non-reference interventions and the second value is considered for the
   reference intervention of the network (i.e., the intervention with
-  identifier equal to one). This is necessary to ensure transitivity in the
-  assumptions for the missingness parameter across the network (Spineli,
-  2019b).
+  identifier equal to \code{ref}). This is necessary to ensure transitivity
+  in the assumptions for the missingness parameter across the network
+  (Spineli, 2019b).
 
   Currently, there are no empirically-based prior distributions for the
   informative missingness parameters. The user may refer to
   White et al., (2008); Mavridis et al., (2015); Turner et al., (2015) and
   Spineli (2019) to determine \code{mean_misspar} and select a proper value
   for \code{var_misspar}.
+
+  To obtain unique absolute risks for each intervention, the NMA model has
+  been extended to incorporate the transitive risks framework, namely, an
+  intervention has the same absolute risk regardless of the comparator in a
+  trial. The absolute risks are function of the odds ratio and the selected
+  baseline risk for the reference intervention (\code{ref}) (Appendix in Dias
+  et al., 2013). We advocate using the OR to RR or RR as an effect measure
+  for its desired mathematical properties. Then, RR and RD can be obtained as
+  a function of the absolute risks.
 }
 \examples{
 data("nma.baker2009")
@@ -309,9 +333,10 @@ run_model(data = nma.baker2009,
           mean_misspar = c(0, 0),
           var_misspar = 1,
           D = 0,
+          ref = 1,
           n_chains = 3,
-          n_iter = 1000,
-          n_burnin = 100,
+          n_iter = 10000,
+          n_burnin = 1000,
           n_thin = 1)
 }
 

@@ -140,24 +140,27 @@ prepare_nodesplit <- function(measure, model, assumption) {
 
   stringcode <- if (model == "RE") {
     paste(stringcode, "delta[i, k] ~ dnorm(md[i, k], precd[i, k])
-                       md[i, k] <- ((d[si[i, k]] - d[bi[i]])*I.sign[i, k] + sw[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]
+                       md[i, k] <- ((d[si[i, k]]*indic[i, k] - d[bi[i]]*indic[i, 1])*I.sign[i, k] + sw[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]
                        j[i, k] <- k - (equals(1, split[i])*step(k - 3))
                        precd[i, k] <- prec*2*(j[i, k] - 1)/j[i, k]
-                       w[i, k] <- ((delta[i, k] - (d[si[i, k]] - d[bi[i]]))*I.sign[i, k])*(1 - index[i, k])
+                       w[i, k] <- ((delta[i, k] - (d[si[i, k]]*indic[i, k] - d[bi[i]]*indic[i, 1]))*I.sign[i, k])*(1 - index[i, k])
                        sw[i, k] <- sum(w[i, 1:(k - 1)])/(j[i, k] - 1)
                        }}\n")
   } else {
-    paste(stringcode, "delta[i, k] <- ((d[si[i, k]] - d[bi[i]])*I.sign[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]
+    paste(stringcode, "delta[i, k] <- ((d[si[i, k]]*indic[i, k] - d[bi[i]]*indic[i, 1])*I.sign[i, k])*(1 - index[i, m[i, k]]) + direct*index[i, m[i, k]]
                        }}\n")
   }
 
   stringcode <- paste(stringcode, "totresdev.o <- sum(resdev.o[])
                                    d[ref] <- 0
+                                   d.n[ref] <- 0
                                    for (t in 1:(ref - 1)) {
                                      d[t] ~ dnorm(0, 0.0001)
+                                     d.n[t] <- d[t]*(1 - (1 - step(t - ref))) + d[t]*(-1)*(1 - step(t - ref))
                                    }
                                    for (t in (ref + 1):nt) {
                                      d[t] ~ dnorm(0, 0.0001)
+                                     d.n[t] <- d[t]*(1 - (1 - step(t - ref))) + d[t]*(-1)*(1 - step(t - ref))
                                    }\n")
 
   stringcode <- if (assumption == "HIE-ARM") {
@@ -248,7 +251,7 @@ prepare_nodesplit <- function(measure, model, assumption) {
 
   stringcode <- paste(stringcode, "for (c in 1:(nt - 1)) {
                                      for (k in (c + 1):nt) {
-                                       EM[k, c] <- d[k] - d[c]
+                                       EM[k, c] <- d.n[k] - d.n[c]
                                    }}
                                    direct ~ dnorm(0, .0001)
                                    diff <- direct - EM[pair[2], pair[1]]\n")

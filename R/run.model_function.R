@@ -48,6 +48,14 @@
 #' @param D A binary number for the direction of the outcome.
 #'   Set \code{D = 1} for beneficial outcome and \code{D = 0} for harmful
 #'   outcome.
+#' @param ref An integer specifying the reference intervention. The number
+#'   should match the intervention identifier under element \strong{t} in
+#'   \code{data}.
+#' @param base_risk A number in the interval (0, 1) that indicates the baseline
+#'   for the selected reference intervention. If \code{base_risk} has not been
+#'   defined, the function uses the median event risk for the reference
+#'   intervention as calculated from the corresponding trials in \code{data}.
+#'   This argument is only relevant for binary outcome.
 #' @param n_chains Positive integer specifying the number of chains for the
 #'   MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function
 #'   of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
@@ -123,7 +131,7 @@
 #'    \code{phi} \tab The informative missingness parameter.\cr
 #'   }
 #'
-#'     For a fixed-effect NMA, the output additionally includes:
+#'   For a fixed-effect NMA, the output additionally includes:
 #'   \tabular{ll}{
 #'    \code{EM_ref} \tab The estimated summary effect measure
 #'    (according to the argument \code{measure}) of all comparisons
@@ -164,6 +172,11 @@
 #'
 #'   Furthermore, the output includes the following elements:
 #'   \tabular{ll}{
+#'    \code{RR} \tab The relative risk (RR) as a function of the absolute risks
+#'    of the corresponding interventions. \cr
+#'    \code{RD} \tab The risk difference (RD) as a function of the absolute
+#'    risks of the corresponding interventions. \cr
+#'    \code{abs_risk} \tab The absolute risks for each intervention. \cr
 #'    \code{leverage_o} \tab The leverage for the observed outcome
 #'    at each trial-arm.\cr
 #'    \tab \cr
@@ -208,9 +221,7 @@
 #'   first column in \strong{t} as being the control arm for every trial. Thus,
 #'   this sorting ensures that interventions with a lower identifier are
 #'   consistently treated as the control arm in each trial. This case is
-#'   relevant in non-star-shaped networks. By default, \code{run_model} treats
-#'   the intervention with identifier equal to one as the reference intervention
-#'   of the network.
+#'   relevant in non-star-shaped networks.
 #'
 #'   To perform a Bayesian PMA or NMA, the \code{\link{prepare_model}} function
 #'   is called which contains the WinBUGS code as written by Dias et al., (2013)
@@ -248,15 +259,24 @@
 #'   In the case of a network, the first value is considered for all
 #'   non-reference interventions and the second value is considered for the
 #'   reference intervention of the network (i.e., the intervention with
-#'   identifier equal to one). This is necessary to ensure transitivity in the
-#'   assumptions for the missingness parameter across the network (Spineli,
-#'   2019b).
+#'   identifier equal to \code{ref}). This is necessary to ensure transitivity
+#'   in the assumptions for the missingness parameter across the network
+#'   (Spineli, 2019b).
 #'
 #'   Currently, there are no empirically-based prior distributions for the
 #'   informative missingness parameters. The user may refer to
 #'   White et al., (2008); Mavridis et al., (2015); Turner et al., (2015) and
 #'   Spineli (2019) to determine \code{mean_misspar} and select a proper value
 #'   for \code{var_misspar}.
+#'
+#'   To obtain unique absolute risks for each intervention, the NMA model has
+#'   been extended to incorporate the transitive risks framework, namely, an
+#'   intervention has the same absolute risk regardless of the comparator in a
+#'   trial. The absolute risks are function of the odds ratio and the selected
+#'   baseline risk for the reference intervention (\code{ref}) (Appendix in Dias
+#'   et al., 2013). We advocate using the OR to RR or RR as an effect measure
+#'   for its desired mathematical properties. Then, RR and RD can be obtained as
+#'   a function of the absolute risks.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -327,9 +347,10 @@
 #'           mean_misspar = c(0, 0),
 #'           var_misspar = 1,
 #'           D = 0,
+#'           ref = 1,
 #'           n_chains = 3,
-#'           n_iter = 1000,
-#'           n_burnin = 100,
+#'           n_iter = 10000,
+#'           n_burnin = 1000,
 #'           n_thin = 1)
 #' }
 #'
@@ -342,6 +363,8 @@ run_model <- function(data,
                       mean_misspar,
                       var_misspar,
                       D,
+                      ref,
+                      base_risk = NULL,
                       n_chains,
                       n_iter,
                       n_burnin,
@@ -369,6 +392,23 @@ run_model <- function(data,
   } else {
     D
   }
+  ref <- if (missing(ref)) {
+    1
+  } else if (ref < 1 || ref > item$nt) {
+    stop(paste("The argument 'ref' must be an integer from 1 to", item$nt),
+         call. = FALSE)
+  } else {
+    ref
+  }
+  base_risk <- if (measure == "OR" & missing(base_risk)) {
+    describe_network(data = data,
+                     drug_names = 1:item$nt,
+                     measure = "OR")$table_interventions[ref, 7]/100
+  } else if (measure == "OR" & (base_risk < 0 || base_risk > 1)) {
+    stop("The argument 'base_risk' must be a probability", call. = FALSE)
+  } else {
+    base_risk
+  }
   mean_misspar <- missingness_param_prior(assumption, mean_misspar)
   heterog_prior <- heterogeneity_param_prior(measure, model, heter_prior)
   var_misspar <- if (missing(var_misspar) &
@@ -384,6 +424,20 @@ run_model <- function(data,
   n_burnin <- ifelse(missing(n_burnin), 1000, n_burnin)
   n_thin <- ifelse(missing(n_thin), 1, n_thin)
 
+  # Sign of basic parameters in relation to 'ref'
+  indic <- matrix(NA, nrow = item$ns, ncol = max(item$na))
+  for (i in 1:item$ns) {
+    for (k in 1:max(item$na)) {
+      indic[i, k] <- if (item$t[i, k] < ref & !is.na(item$t[i, k])) {
+        -1
+      } else if (item$t[i, k] >= ref & !is.na(item$t[i, k])) {
+        1
+      } else if (is.na(item$t[i, k])) {
+        NA
+      }
+    }
+  }
+
   # Data in list format for R2jags
   data_jag <- list("m" = item$m,
                    "N" = item$N,
@@ -391,14 +445,15 @@ run_model <- function(data,
                    "na" = item$na,
                    "nt" = item$nt,
                    "ns" = item$ns,
-                   "ref" = item$ref,
+                   "ref" = ref,
                    "I" = item$I,
+                   "indic" = indic,
                    "D" = D)
 
   data_jag <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
     append(data_jag, list("y.o" = item$y0, "se.o" = item$se0))
   } else if (measure == "OR") {
-    append(data_jag, list("r" = item$r))
+    append(data_jag, list("r" = item$r, "base_risk" = base_risk))
   }
 
   data_jag <- if (is.element(assumption, "IND-CORR")) {
@@ -442,6 +497,12 @@ run_model <- function(data,
                            c("EM.pred", "pred.ref", "tau", "delta"))]
   }
 
+  param_jags <- if (measure == "OR") {
+    append(param_jags, c("RR", "RD", "abs_risk"))
+  } else {
+    param_jags
+  }
+
   # Run the Bayesian analysis
   jagsfit <- jags(data = data_jag,
                   parameters.to.save = param_jags,
@@ -461,6 +522,15 @@ run_model <- function(data,
 
   # Effect size of all unique pairwise comparisons
   EM <- t(get_results %>% dplyr::select(starts_with("EM[")))
+
+  # Unique absolute risks for all interventions (only binary data)
+  abs_risk <- t(get_results %>% dplyr::select(starts_with("abs_risk[")))
+
+  # Relative risks obtained via absolute risks (only binary data)
+  RR <- t(get_results %>% dplyr::select(starts_with("RR[")))
+
+  # Risk difference obtained via absolute risks (only binary data)
+  RD <- t(get_results %>% dplyr::select(starts_with("RD[")))
 
   # Effect size of all comparisons with the reference intervention
   EM_ref <- t(get_results %>% dplyr::select(starts_with("EM.ref[")))
@@ -564,7 +634,7 @@ run_model <- function(data,
   model_assessment <- data.frame(DIC, pD, dev)
 
   # Return a list of results
-  if (model == "RE") {
+  if (model == "RE" & !is.element(measure, "OR")) {
     ma_results <- list(EM = EM,
                        EM_pred = EM_pred,
                        tau = tau,
@@ -583,12 +653,45 @@ run_model <- function(data,
                        mean_misspar = mean_misspar,
                        var_misspar = var_misspar,
                        D = D,
+                       ref = ref,
+                       base_risk = base_risk,
+                       indic = indic,
                        jagsfit = jagsfit)
     nma_results <- append(ma_results, list(EM_ref = EM_ref,
                                            pred_ref = pred_ref,
                                            SUCRA = SUCRA,
                                            effectiveness = effectiveness))
-  } else {
+  } else if (model == "RE" & is.element(measure, "OR")) {
+    ma_results <- list(EM = EM,
+                       EM_pred = EM_pred,
+                       RR = RR,
+                       RD = RD,
+                       abs_risk = abs_risk,
+                       tau = tau,
+                       delta = delta,
+                       dev_o = dev_o,
+                       hat_par = hat_par,
+                       leverage_o = leverage_o,
+                       sign_dev_o = sign_dev_o,
+                       phi = phi,
+                       model_assessment = model_assessment,
+                       data = data,
+                       measure = measure,
+                       model = model,
+                       assumption = assumption,
+                       heter_prior = heterog_prior,
+                       mean_misspar = mean_misspar,
+                       var_misspar = var_misspar,
+                       D = D,
+                       ref = ref,
+                       base_risk = base_risk,
+                       indic = indic,
+                       jagsfit = jagsfit)
+    nma_results <- append(ma_results, list(EM_ref = EM_ref,
+                                           pred_ref = pred_ref,
+                                           SUCRA = SUCRA,
+                                           effectiveness = effectiveness))
+  } else if (model == "FE" & !is.element(measure, "OR")) {
     ma_results <- list(EM = EM,
                        dev_o = dev_o,
                        hat_par = hat_par,
@@ -603,6 +706,34 @@ run_model <- function(data,
                        mean_misspar = mean_misspar,
                        var_misspar = var_misspar,
                        D = D,
+                       ref = ref,
+                       base_risk = base_risk,
+                       indic = indic,
+                       jagsfit = jagsfit)
+    nma_results <- append(ma_results, list(EM_ref = EM_ref,
+                                           SUCRA = SUCRA,
+                                           effectiveness = effectiveness))
+  } else if (model == "FE" & is.element(measure, "OR")) {
+    ma_results <- list(EM = EM,
+                       RR = RR,
+                       RD = RD,
+                       abs_risk = abs_risk,
+                       dev_o = dev_o,
+                       hat_par = hat_par,
+                       leverage_o = leverage_o,
+                       sign_dev_o = sign_dev_o,
+                       phi = phi,
+                       model_assessment = model_assessment,
+                       data = data,
+                       measure = measure,
+                       model = model,
+                       assumption = assumption,
+                       mean_misspar = mean_misspar,
+                       var_misspar = var_misspar,
+                       D = D,
+                       ref = ref,
+                       base_risk = base_risk,
+                       indic = indic,
                        jagsfit = jagsfit)
     nma_results <- append(ma_results, list(EM_ref = EM_ref,
                                            SUCRA = SUCRA,
