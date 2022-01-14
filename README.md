@@ -1,11 +1,16 @@
 
-# rnmamod: Bayesian network meta-analysis R package   <img src="man/figures/hexsticker_rnmamod.png" align="right" width="200" />             
+# rnmamod: Bayesian network meta-analysis R package   <img src="man/figures/hexsticker_rnmamod.png" align="right" width="200" />     
+
+Official Git repository of `rnmamod` R package
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/rnmamod)](https://CRAN.R-project.org/package=rnmamod)
+[![CRAN release data](https://www.r-pkg.org/badges/last-release/rnmamod)](https://www.r-pkg.org/badges/last-release/rnmamod)
+[![CRAN total downloads](https://cranlogs.r-pkg.org/badges/grand-total/rnmamod)](https://cranlogs.r-pkg.org/badges/grand-total/rnmamod)
 <!-- badges: end -->
   
+In **R Views** [November 2021: "Top 40" New CRAN Packages](https://rviews.rstudio.com/2021/12/21/november-2021-top-40-new-cran-packages/)
 
 ## Contributors
 
@@ -13,7 +18,7 @@
 
 ## Description 
 
-The `rnmamod` package performs one-stage fixed-effect or random-effects Bayesian network meta-analysis (NMA) while adjusting for *missing participant outcome data* using the pattern-mixture model. In the case of two interventions, the package performs one-stage Bayesian pairwise meta-analysis. 
+The `rnmamod` package performs one-stage fixed-effect or random-effects Bayesian network meta-analysis (NMA) while adjusting for *missing participant outcome data* (MOD) using the pattern-mixture model. In the case of two interventions, the package performs one-stage Bayesian pairwise meta-analysis. Standard aggregate data NMA is a special case of NMA with MOD, where either all studies or no studies have MOD available, respectively. 
 
 The package handles data inputs in *arm-based format*:
 - binary data (effect size: odds ratio)  
@@ -30,7 +35,7 @@ Missing participant outcome data are addressed in all models of the package.
 
 Run the following code to install and load the package from CRAN:
 
-    install("rnmamod")
+    install.packages("rnmamod")
     library(rnmamod)
 
 or run the following code to install the development version of the package:
@@ -119,4 +124,4 @@ rankosucra_plot(full = res, drug_names = interv_names)
 
 ## Funding source
 
-The development of `rnmamod` package is funded by the **German Research Foundation** (Deutsche Forschungsgemeinschaft) (grant no. [SP 1664/1-3](https://gepris.dfg.de/gepris/projekt/339420617)) <div style="text-align: right"> <img src="man/figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="280" height="100" align="right"></div>
+The development of the `rnmamod` package is funded by the **German Research Foundation** (Deutsche Forschungsgemeinschaft) (grant no. [SP 1664/1-3](https://gepris.dfg.de/gepris/projekt/339420617)) <div style="text-align: right"> <img src="man/figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="280" height="100" align="right"></div>
