@@ -4,17 +4,17 @@
 #'   monitored parameters of the Bayesian models. The Gelman-Rubin convergence
 #'   diagnostic and relevant diagnostic plots are applied.
 #'
-#' @param net An object of S3 class \code{\link{run_model}},
-#'   \code{\link{run_series_meta}}, \code{\link{run_nodesplit}},
-#'   \code{\link{run_ume}}, \code{\link{run_sensitivity}} and
-#'   \code{\link{run_metareg}}. See 'Value' in the functions above.
+#' @param net An object of S3 class \code{\link{run_metareg}},
+#'   \code{\link{run_model}}, \code{\link{run_nodesplit}},
+#'   \code{\link{run_sensitivity}}, \code{\link{run_series_meta}}, and
+#'   \code{\link{run_ume}}. See 'Value' in the functions above.
 #' @param par A vector of three character strings that refer to three monitored
 #'   parameters in \code{jagsfit} which is an object of S3 class
-#'   \code{\link{run_model}}, \code{\link{run_ume}} and
-#'   \code{\link{run_metareg}}. These three selected parameters will be
+#'   \code{\link{run_metareg}}, \code{\link{run_model}}, and
+#'   \code{\link{run_ume}}. These three selected parameters will be
 #'   considered in the diagnostic plots (see 'Value'). This argument will be
-#'   ignored for objects of S3 class \code{\link{run_series_meta}},
-#'   \code{\link{run_nodesplit}}, or \code{\link{run_sensitivity}}.
+#'   ignored for objects of S3 class \code{\link{run_nodesplit}},
+#'   \code{\link{run_sensitivity}}, or \code{\link{run_series_meta}}.
 #'
 #' @return \code{mcmc_diagnostics} returns a data-frame that contains the
 #'   Gelman-Rubin convergence diagnostic, R-hat, and convergence status of the
@@ -42,11 +42,13 @@
 #'    \code{beta} \tab The regression coefficient.\cr
 #'   }
 #'   \code{mcmc_diagnostics} also uses the \code{\link[mcmcplots]{mcmcplot}}
-#'   function to create an HTML file with a panel of diagnostic plots
-#'   (trace, density, and autocorrelation) for each monitored parameter.
+#'   function of the R-package
+#'   \href{https://CRAN.R-project.org/package=mcmcplots}{mcmcplots} to create an
+#'   HTML file with a panel of diagnostic plots (trace, density, and
+#'   autocorrelation) for each monitored parameter.
 #'
 #' @details For each monitored parameter, \code{mcmc_diagnostics} considers the
-#'   maximum R-hat and compares it with the threshold 1.1: convergence is
+#'   maximum R-hat and compares it with the threshold 1.1. Convergence is
 #'   achieved for the monitored parameter, when the maximum R-hat is below that
 #'   threshold; otherwise, the Markov Chain Monte Carlo algorithm has not
 #'   converged for that parameter. If the monitored parameter is a vector with
@@ -56,10 +58,10 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link[mcmcplots]{mcmcplot}}, \code{\link{run_metareg}},
-#'   \code{\link{run_model}}, \code{\link{run_nodesplit}},
-#'   \code{\link{run_sensitivity}}, \code{\link{run_series_meta}},
-#'   \code{\link{run_ume}}
+#' @seealso \href{https://CRAN.R-project.org/package=mcmcplots}{mcmcplots},
+#'   \code{\link{run_metareg}}, \code{\link{run_model}},
+#'   \code{\link{run_nodesplit}}, \code{\link{run_sensitivity}},
+#'   \code{\link{run_series_meta}}, \code{\link{run_ume}}
 #'
 #' @references
 #' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple
@@ -71,7 +73,7 @@
 #' # Read results from 'run_nodesplit' (using the default arguments)
 #' res <- readRDS(system.file('extdata/node_baker.rds', package = 'rnmamod'))
 #'
-#' # Obtain the diagnostic plots and check convergence based on R-hat
+#' # Check convergence based on R-hat
 #' mcmc_diagnostics(net = res,
 #'                  par = c("tau", "EM[2,1]", "EM.pred[2,1]"))
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/forestplot.metareg_function.R
 \name{forestplot_metareg}
 \alias{forestplot_metareg}
-\title{Comparator-specific forest-plot for network meta-regression}
+\title{Comparator-specific forest plot for network meta-regression}
 \usage{
 forestplot_metareg(full, reg, compar, cov_value, drug_names)
 }
@@ -38,8 +38,8 @@ A panel of two forest plots: (1) a forest plot on the estimated
 \description{
 This function illustrates a forest plot of the posterior mean
   and 95\% credible and predictive interval of comparisons with the selected
-  intervention of the network under the network meta-analysis and network
-  meta-regression.
+  intervention of the network under the network meta-analysis \emph{and}
+  network meta-regression.
 }
 \details{
 In both plots, the y-axis displays all interventions in the

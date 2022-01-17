@@ -2,7 +2,7 @@
 % Please edit documentation in R/heatmap.missing.network_function.R
 \name{heatmap_missing_network}
 \alias{heatmap_missing_network}
-\title{Heatmap of proportion of missing participant outcome data in the network}
+\title{Heatmap of proportion of missing participants in the network}
 \usage{
 heatmap_missing_network(data, drug_names)
 }
@@ -16,9 +16,9 @@ the order they appear in the argument \code{data}. If the argument
 appear in \code{data} is used, instead.}
 }
 \value{
-A heatmap of the proportion of MOD in each intervention and observed
-  comparison in the network. Each cell annotates the median, minimum and
-  maximum (the latter two in parenthesis) proportion of MOD across the
+A heatmap with the proportion of MOD in each intervention and
+  observed comparison in the network. Each cell annotates the median, minimum
+  and maximum (the latter two in parenthesis) proportion of MOD across the
   corresponding trials.
   The proportion of MOD in each intervention and observed comparison are
   depicted in the main diagonal and lower off-diagonal with white and black
@@ -38,8 +38,9 @@ A heatmap of the proportion of MOD in each intervention and observed
   calculating the proportion of total missing participants in each trial and
   then summarising across the corresponding trials.
 
-  The \code{heatmap_missing_network} function is redundant for a pairwise
-  meta-analysis.
+  \code{heatmap_missing_network} can be used only for a network of
+  interventions. Otherwise, the execution of the function will be stopped and
+  an error message will be printed on the R console.
 }
 \description{
 Illustrates the distribution of missing participant outcome data

@@ -61,21 +61,21 @@ robust <- robustness_index(sens = res_sens,
 # The names of the interventions in the order they appear in the dataset
 interv_names <- c("placebo", "inositol")
 
-# Crate the barplot for the comparison 'tiotropium versus salmeterol'
+# Create the barplot for the comparison 'inositol versus placebo'
 kld_barplot(robust = robust,
             compar = c("inositol", "placebo"),
             drug_names = interv_names)
 
 }
 \references{
+Kullback S, Leibler RA. On information and sufficiency.
+\emph{Ann Math Stat} 1951;\bold{22}(1):79--86.
+
 Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
 primary analysis results: A case study on missing outcome data in pairwise
 and network meta-analysis.
 \emph{Res Synth Methods} 2021;\bold{12}(4):475--490.
 \doi{10.1002/jrsm.1478}
-
-Kullback S, Leibler RA. On information and sufficiency.
-\emph{Ann Math Stat} 1951;\bold{22}(1):79--86.
 }
 \seealso{
 \code{\link{robustness_index}}, \code{\link{run_model}},

@@ -1,4 +1,4 @@
-#' Heatmap of proportion of missing participant outcome data in the network
+#' Heatmap of proportion of missing participants in the network
 #'
 #' @description Illustrates the distribution of missing participant outcome data
 #'  (MOD) and the associated risk of bias for each intervention and observed
@@ -11,9 +11,9 @@
 #'   \code{drug_names} is not defined, the order of the interventions as they
 #'   appear in \code{data} is used, instead.
 #'
-#' @return A heatmap of the proportion of MOD in each intervention and observed
-#'   comparison in the network. Each cell annotates the median, minimum and
-#'   maximum (the latter two in parenthesis) proportion of MOD across the
+#' @return A heatmap with the proportion of MOD in each intervention and
+#'   observed comparison in the network. Each cell annotates the median, minimum
+#'   and maximum (the latter two in parenthesis) proportion of MOD across the
 #'   corresponding trials.
 #'   The proportion of MOD in each intervention and observed comparison are
 #'   depicted in the main diagonal and lower off-diagonal with white and black
@@ -33,8 +33,9 @@
 #'   calculating the proportion of total missing participants in each trial and
 #'   then summarising across the corresponding trials.
 #'
-#'   The \code{heatmap_missing_network} function is redundant for a pairwise
-#'   meta-analysis.
+#'   \code{heatmap_missing_network} can be used only for a network of
+#'   interventions. Otherwise, the execution of the function will be stopped and
+#'   an error message will be printed on the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'

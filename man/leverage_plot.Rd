@@ -7,9 +7,9 @@
 leverage_plot(net, drug_names, title)
 }
 \arguments{
-\item{net}{An object of S3 class \code{\link{run_model}},
-\code{\link{run_metareg}}, or \code{\link{run_ume}}.
-See 'Value' in \code{\link{run_model}}, \code{\link{run_metareg}}, or
+\item{net}{An object of S3 class \code{\link{run_metareg}},
+\code{\link{run_model}}, or \code{\link{run_ume}}.
+See 'Value' in \code{\link{run_metareg}}, \code{\link{run_model}}, or
 \code{\link{run_ume}}.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
@@ -53,7 +53,7 @@ treatment comparison meta-analysis.
 }
 \seealso{
 \code{\link{data_preparation}}, \code{\link{run_metareg}},
-  \code{\link{run_model}}, \code{\link{ume_plot}}, \code{\link{run_ume}}
+  \code{\link{run_model}}, \code{\link{run_ume}}, \code{\link{ume_plot}}
 }
 \author{
 {Loukia M. Spineli}

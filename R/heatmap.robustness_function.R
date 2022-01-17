@@ -1,7 +1,7 @@
 #' Heatmap of robustness
 #'
 #' @description Facilitates the detection of comparisons that are associated
-#'   with lack of robustness in the context of a sensitivity analysis.
+#'   with a lack of robustness in the context of a sensitivity analysis.
 #'
 #' @param robust An object of S3 class \code{\link{robustness_index}}.
 #'   See 'Value' in \code{\link{robustness_index}}.
@@ -17,13 +17,14 @@
 #'   heatmap matrix with the robustness index value of all possible pairwise
 #'   comparisons.
 #'
-#' @details The heatmap illustrates the robustness index for each possible
+#' @details The heatmap illustrates the robustness index (RI) for each possible
 #'   pairwise comparison in the network. The pairwise comparisons are read from
 #'   left to right. Comparisons highlighted with green or red colour imply
 #'   robust or frail conclusions for the primary analysis, respectively.
-#'   This corresponds to robustness index below or at least the selected
-#'   threshold of robustness (see 'Details' in \code{\link{robustness_index}}).
-#'   The robustness index value of each pairwise comparison also appears in the
+#'   This corresponds to RI below or at least the selected threshold of
+#'   robustness. \code{heatmap_robustness} uses the threshold of
+#'   robustness selected in the \code{\link{robustness_index}} function.
+#'   The RI value of each pairwise comparison also appears in the
 #'   corresponding cell.
 #'   When there is at least one comparison with frail conclusions, the primary
 #'   analysis results may be questionable for the whole network
@@ -31,9 +32,6 @@
 #'
 #'   \code{heatmap_robustness} is \emph{not} restricted to the sensitivity
 #'   analysis concerning the impact of missing participant outcome data.
-#'
-#'   \code{heatmap_robustness} uses the threshold of robustness selected in the
-#'   \code{\link{robustness_index}} function.
 #'
 #'   \code{heatmap_robustness} can be used only for a network of interventions.
 #'   Otherwise, the execution of the function will be stopped and an

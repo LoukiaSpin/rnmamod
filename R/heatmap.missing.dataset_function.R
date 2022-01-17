@@ -1,7 +1,8 @@
-#' Heatmap of proportion of missing participant outcome data in the dataset
+#' Heatmap of proportion of missing participants in the dataset
 #'
-#' @description Illustrates the risk of bias associated with missing participant
-#'   outcome data (MOD) in each arm of every trial in the dataset.
+#' @description Illustrates the proportion of missing participant outcome data
+#'   (MOD) and the associated risk of bias in each arm of every trial in the
+#'   dataset.
 #'
 #' @param data A data-frame of a one-trial-per-row format containing arm-level
 #'   data of each trial. See 'Format' in \code{\link[rnmamod]{run_model}}.

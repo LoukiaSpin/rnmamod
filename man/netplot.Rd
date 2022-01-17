@@ -2,7 +2,7 @@
 % Please edit documentation in R/network.plot_function.R
 \name{netplot}
 \alias{netplot}
-\title{Network plot and description}
+\title{Network plot and description of the evidence base}
 \usage{
 netplot(data, drug_names, save_xls, ...)
 }
@@ -25,7 +25,7 @@ The default is \code{FALSE} (do not export).}
 }
 \value{
 A network plot with coloured closed-loops informed by multi-arm
-  trials. Each node indicates an intervention and each link an observed
+  trials. Each node indicates an intervention and each edge an observed
   pairwise comparison. The edge thickness is proportional to the number of
   trials investigating the corresponding comparison, unless
   specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}}

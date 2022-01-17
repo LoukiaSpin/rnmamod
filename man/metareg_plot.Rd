@@ -29,14 +29,14 @@ instead.}
 
 \item{save_xls}{Logical to indicate whether to export the tabulated results
 to an 'xlsx' file (via the \code{\link[writexl]{write_xlsx}}
-function) to the working directory of the user. The default is \code{FALSE}
-(do not export).}
+function of the R-package
+\href{https://CRAN.R-project.org/package=writexl}{writexl}) to the working
+directory of the user. The default is \code{FALSE} (do not export).}
 }
 \value{
 \code{metareg_plot} prints on the R console a message on the most
-  parsimonious model (if any) based on the deviance information criterion
-  (DIC; in red text). Furthermore, the function returns the following list of
-   elements:
+  parsimonious model (if any) based on the DIC (in red text). Furthermore,
+  the function returns the following list of elements:
   \tabular{ll}{
    \code{table_estimates} \tab The posterior mean, and 95\% credible interval
    of the summary effect measure (according to the argument \code{measure}
@@ -54,12 +54,12 @@ function) to the working directory of the user. The default is \code{FALSE}
    number of effective parameters, and the posterior median and 95\% credible
    interval of between-trial standard deviation (\emph{tau}) under each model
    (Spiegelhalter et al., (2002)). When a fixed-effect model has been
-   performed, \code{metareg_plot} does not return results on tau.\cr
+   performed, \code{metareg_plot} does not return results on \emph{tau}.\cr
    \tab \cr
    \code{table_regression_coeffients} \tab The posterior mean and 95\%
    credible interval of the regression coefficient(s).\cr
    \tab \cr
-   \code{interval_plots} \tab The panel of forest-plots on the estimated and
+   \code{interval_plots} \tab The panel of forest plots on the estimated and
    predicted effect sizes of comparisons with the selected intervention under
    network meta-analysis and network meta-regression based on the specified
    \code{cov_value}. See 'Details' and 'Value' in
@@ -74,21 +74,23 @@ function) to the working directory of the user. The default is \code{FALSE}
 \description{
 Illustrates the effect estimates, predictions and regression
   coefficients of comparisons with a specific comparator and also exports
-  these results to an Excel format.
+  these results to an Excel file.
 }
 \details{
-The DIC of the network meta-analysis model is compared with the DIC
-  of the network meta-regression model. If the difference in DIC exceeds 5,
-  the network meta-regression model is preferred; if the difference in DIC is
-  less than -5, the network meta-analysis model is preferred; otherwise,
-  there is little to choose between the compared models.
+The deviance information criterion (DIC) of the network
+  meta-analysis model is compared with the DIC of the network meta-regression
+  model. If the difference in DIC exceeds 5, the network meta-regression
+  model is preferred; if the difference in DIC is less than -5, the network
+  meta-analysis model is preferred; otherwise, there is little to choose
+  between the compared models.
 
   When the covariate is binary, specify in the second element of
   \code{cov_value} the name of the level for which the output will be
   created.
 
   Furthermore, \code{metareg_plot} exports all tabulated results to separate
-  'xlsx' files (via the \code{\link[writexl]{write_xlsx}} function)
+  'xlsx' files (via the \code{\link[writexl]{write_xlsx}} function of the
+  R-package \href{https://CRAN.R-project.org/package=writexl}{writexl})
   to the working directory of the user.
 
   \code{metareg_plot} can be used only for a network of interventions. In the
@@ -135,7 +137,7 @@ model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616.
 \seealso{
 \code{\link{forestplot_metareg}}, \code{\link{run_metareg}},
   \code{\link{run_model}}, \code{\link{scatterplot_sucra}},
-  \code{\link[writexl]{write_xlsx}}
+  \href{https://CRAN.R-project.org/package=writexl}{writexl}
 }
 \author{
 {Loukia M. Spineli}

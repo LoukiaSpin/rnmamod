@@ -2,7 +2,7 @@
 % Please edit documentation in R/heatmap.missing.dataset_function.R
 \name{heatmap_missing_dataset}
 \alias{heatmap_missing_dataset}
-\title{Heatmap of proportion of missing participant outcome data in the dataset}
+\title{Heatmap of proportion of missing participants in the dataset}
 \usage{
 heatmap_missing_dataset(data, trial_names, drug_names)
 }
@@ -31,8 +31,9 @@ A heatmap presenting the proportion of MOD in each trial-arm of the
   respectively. The function is also applicable for a pairwise meta-analysis.
 }
 \description{
-Illustrates the risk of bias associated with missing participant
-  outcome data (MOD) in each arm of every trial in the dataset.
+Illustrates the proportion of missing participant outcome data
+  (MOD) and the associated risk of bias in each arm of every trial in the
+  dataset.
 }
 \examples{
 data("nma.schwingshackl2014")

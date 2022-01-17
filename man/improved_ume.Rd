@@ -2,7 +2,7 @@
 % Please edit documentation in R/improved.UME_function.R
 \name{improved_ume}
 \alias{improved_ume}
-\title{A function to detect the frail comparisons in multi-arm trials}
+\title{Detect the frail comparisons in multi-arm trials}
 \usage{
 improved_ume(t, N, ns, na)
 }
@@ -12,7 +12,7 @@ intervention identifier in each arm of every trial (see 'Details' below,
 and 'Format' in \code{\link{run_model}}).}
 
 \item{N}{A data-frame of the one-trial-per-row format containing the number
-of participants randomised on the assigned intervention in each arm of
+of participants randomised to the assigned intervention in each arm of
 every trial (see 'Details' below, and 'Format' in \code{\link{run_model}}).}
 
 \item{ns}{A scale parameter on the number trials.}
@@ -21,8 +21,8 @@ every trial (see 'Details' below, and 'Format' in \code{\link{run_model}}).}
 each trial.}
 }
 \value{
-The output of \code{improved_ume} is a list of elements that are used
-  by \code{\link{run_ume}}:
+The output of \code{improved_ume} is a list of elements that are
+  inherited by \code{\link{run_ume}}:
   \tabular{ll}{
    \code{nbase_multi} \tab A scalar parameter on the number of frail
    comparisons.\cr
@@ -37,7 +37,7 @@ The output of \code{improved_ume} is a list of elements that are used
    intervention of the multi-arm trials that contain the frail
    comparisons.\cr
    \tab \cr
-   \code{obs_comp} \tab A data-frame that indicates how many two-arms and
+   \code{obs_comp} \tab A data-frame that indicates how many two-arm and
    multi-arm trials have included each pairwise comparison observed in the
    network.\cr
   }
@@ -60,14 +60,15 @@ Detects the frail comparisons in multi-arm trials, that is,
   (see, 'Value').
 }
 \references{
-Spineli LM. A novel framework to evaluate the consistency assumption globally
-in a network of interventions. \emph{submitted} 2021.
-
 Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis
 for decision making 4: inconsistency in networks of evidence based on
 randomized controlled trials.
 \emph{Med Decis Making} 2013;\bold{33}(5):641--56.
 \doi{10.1177/0272989X12455847}
+
+Spineli LM. A revised framework to evaluate the consistency assumption
+globally in a network of interventions. \emph{Med Decis Making} 2021.
+\doi{10.1177/0272989X211068005}
 }
 \seealso{
 \code{\link{data_preparation}}, \code{\link{run_model}},

@@ -1,9 +1,9 @@
-#' Comparator-specific forest-plot for network meta-regression
+#' Comparator-specific forest plot for network meta-regression
 #'
 #' @description This function illustrates a forest plot of the posterior mean
 #'   and 95\% credible and predictive interval of comparisons with the selected
-#'   intervention of the network under the network meta-analysis and network
-#'   meta-regression.
+#'   intervention of the network under the network meta-analysis \emph{and}
+#'   network meta-regression.
 #'
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
 #'   \code{\link{run_model}}.
@@ -266,20 +266,20 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
 
   caption <- if (full$D == 0 & is.element(measure,
                                           c("Odds ratio", "Ratio of means"))) {
-    paste("If", measure, "< 1, favours the first arm; if",
+    paste(measure, "< 1, favours the first arm.",
           measure, "> 1, favours", compar)
   } else if (full$D == 1 & is.element(measure,
                                       c("Odds ratio", "Ratio of means"))) {
-    paste("If", measure, "< 1, favours", compar,
-          "; if", measure, "> 1, favours the first arm")
+    paste(measure, "< 1, favours", compar,
+          ".", measure, "> 1, favours the first arm")
   } else if (full$D == 0 & !is.element(measure,
                                       c("Odds ratio", "Ratio of means"))) {
-    paste("If", measure, "< 0, favours the first arm; if",
+    paste(measure, "< 0, favours the first arm.",
           measure, "> 0, favours", compar)
   } else if (full$D == 1 & !is.element(measure,
                                       c("Odds ratio", "Ratio of means"))) {
-    paste("If", measure, "< 0, favours", compar,
-          "; if", measure, "> 0, favours the first arm")
+    paste(measure, "< 0, favours", compar,
+          ".", measure, "> 0, favours the first arm")
   }
 
   forest_plots <- if (model == "RE") {

@@ -1,11 +1,11 @@
 #' League heatmap for prediction
 #'
 #' @description
-#'   Creates a heatmap with the predicted effec size of all possible
+#'   Creates a heatmap with the predicted effect measure for all possible
 #'   comparisons of interventions in the network. \code{league_heatmap_pred} can
-#'    be used only for a random-effects network meta-analysis and network
-#'    meta-regression. \code{league_heatmap_pred} is applied for one outcome
-#'    only.
+#'   be used \emph{only} for a random-effects network meta-analysis and network
+#'   meta-regression. \code{league_heatmap_pred} is applied for one outcome
+#'   only.
 #'
 #' @param full An object of S3 class \code{\link{run_model}} for network
 #'   meta-analysis or \code{\link{run_metareg}} for network meta-regression.

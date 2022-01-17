@@ -28,11 +28,11 @@ A league heatmap of the posterior mean and 95\% predictive interval
   and the posterior mean of the SUCRA values in the diagonal.
 }
 \description{
-Creates a heatmap with the predicted effec size of all possible
+Creates a heatmap with the predicted effect measure for all possible
   comparisons of interventions in the network. \code{league_heatmap_pred} can
-   be used only for a random-effects network meta-analysis and network
-   meta-regression. \code{league_heatmap_pred} is applied for one outcome
-   only.
+  be used \emph{only} for a random-effects network meta-analysis and network
+  meta-regression. \code{league_heatmap_pred} is applied for one outcome
+  only.
 }
 \details{
 The rows and columns of the heatmap display the names of

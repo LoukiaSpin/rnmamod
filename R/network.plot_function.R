@@ -1,4 +1,4 @@
-#' Network plot and description
+#' Network plot and description of the evidence base
 #'
 #' @description Illustrates the network plot for one outcome and summarises the
 #'   characteristics of the evidence base.
@@ -17,13 +17,16 @@
 #'   \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}.
 #'
 #' @return A network plot with coloured closed-loops informed by multi-arm
-#'   trials. Each node indicates an intervention and each link an observed
+#'   trials. Each node indicates an intervention and each edge an observed
 #'   pairwise comparison. The edge thickness is proportional to the number of
 #'   trials investigating the corresponding comparison, unless
 #'   specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}}
-#'   function). The size of the node is weighted by the total number of
+#'   function of the R-package
+#'   \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}).
+#'   The size of the node is weighted by the total number of
 #'   trials investigating the corresponding intervention, unless specified
-#'   otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function).
+#'   otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function of the
+#'   R-package \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}).
 #'
 #'   \code{netplot} also returns the following data-frames that describe the
 #'   evidence base:
@@ -62,13 +65,13 @@
 #'   \code{\link{run_model}}.
 #'
 #' @references
-#' van Valkenhoef G, Kuiper J. gemtc: Network Meta-Analysis Using
-#' Bayesian Methods. \emph{R package version 1.0-1}. 2021.
-#' \url{https://CRAN.R-project.org/package=gemtc}
-#'
 #' Lin L, Zhang J, Hodges JS, Chu H. Performing Arm-Based Network Meta-Analysis
 #' in R with the pcnetmeta Package.
 #' \emph{J Stat Softw} 2017;\bold{80}(5): 1--25. \doi{10.18637/jss.v080.i05}
+#'
+#' van Valkenhoef G, Kuiper J. gemtc: Network Meta-Analysis Using
+#' Bayesian Methods. \emph{R package version 1.0-1}. 2021.
+#' \url{https://CRAN.R-project.org/package=gemtc}
 #'
 #' @author {Loukia M. Spineli}
 #'
