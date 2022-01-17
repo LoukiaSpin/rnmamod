@@ -1,9 +1,9 @@
 #' Pharmacological interventions for chronic obstructive pulmonary disease
 #'
 #' @description A dataset of 21 trials comparing seven pharmacologic
-#'   interventions with each other and placebo in chronic obstructive
-#'   pulmonary disease (COPD) patients. The exacerbation of COPD is the analysed
-#'   binary outcome.
+#'   interventions with each other and placebo in patients with chronic
+#'   obstructive pulmonary disease (COPD). The exacerbation of COPD is the
+#'   analysed binary outcome.
 #'
 #' @format A data-frame with 21 rows of arm-based data and 17 columns (maximum
 #'    number of 4 arms).
@@ -18,8 +18,8 @@
 #' @usage data(nma.baker2009)
 #' @source
 #' Baker WL, Baker EL, Coleman CI. Pharmacologic treatments for chronic
-#' obstructive pulmonary disease: a mixed-treatment
-#' comparison meta-analysis. \emph{Pharmacotherapy} 2009;\bold{29}(8):891--905.
+#' obstructive pulmonary disease: a mixed-treatment comparison meta-analysis.
+#' \emph{Pharmacotherapy} 2009;\bold{29}(8):891--905.
 #' \doi{10.1592/phco.29.8.891}
 NULL
 
@@ -46,7 +46,7 @@ NULL
 #' formulation calcipotriol and betamethasone dipropionate gel in the
 #' treatment of moderately severe scalp psoriasis: a systematic review of direct
 #' and indirect evidence. \emph{Curr Med Res Opin} 2011;\bold{27}(1):251--268.
-#' [doi{10.1185/03007995.2010.541022}
+#' \doi{10.1185/03007995.2010.541022}
 NULL
 
 #' Oral antithrombotics for stroke episode
@@ -77,8 +77,8 @@ NULL
 #'
 #' @description A dataset of 11 trials comparing the effectiveness of five
 #'   antidepressants and placebo in Parkinson's disease. The analysed binary
-#'   outcome is the number of patients with a reduction of at least 50% from the
-#'   baseline score.
+#'   outcome is the number of patients with a reduction of at least 50/% from
+#'   the baseline score.
 #'
 #' @format A data frame with 11 rows of arm-based data and 13 columns (maximum
 #'   number of 3 arms).
@@ -95,8 +95,31 @@ NULL
 #' @source
 #' Liu J, Dong J, Wang L, Yan P, Sun S. Comparative efficacy and acceptability
 #' of antidepressants in Parkinson's disease: a network meta-analysis.
-#' \emph{PLOS ONE} 2013;\bold{8}(10):e76651.
+#' \emph{PLoS One} 2013;\bold{8}(10):e76651.
 #' \doi{10.1371/journal.pone.0076651}
+NULL
+
+#' Paroxetine versus placebo for depressive disorders
+#'
+#' @description A pairwise meta-analysis of 4 trials comparing paroxetine with
+#'   placebo for depressive disorders in children and adolescents.
+#'   The analysed binary outcome is remission or response as defined in the
+#'   trials.
+#'
+#' @format A data frame with 4 rows of arm-based data and 9 columns.
+#'
+#' @details The interventions have been coded as follows:
+#'   1, placebo; 2, paroxetine.
+#'
+#' @docType data
+#' @keywords datasets
+#' @name pma.hetrick2012
+#' @usage data(pma.hetrick2012)
+#' @source
+#' Hetrick SE, McKenzie JE, Cox GR, Simmons MB, Merry SN. Newer generation
+#' antidepressants for depressive disorders in children and adolescents.
+#' \emph{Cochrane Database Syst Rev} 2012;\bold{11}:CD004851.
+#' \doi{10.1002/14651858.CD004851.pub3}
 NULL
 
 #' Inositol versus glucose for depressive episode
@@ -121,26 +144,28 @@ NULL
 #' \doi{10.1002/14651858.CD004049.pub2}
 NULL
 
-#' Paroxetine versus placeboe for depressive disorders
+#' Training modalities for patients with type 2 diabetes
 #'
-#' @description A pairwise meta-analysis of 4 trials comparing paroxetine with
-#'   placebo for depressive disorders in children and adolescents.
-#'   The analysed binary outcome is remission or response as defined in trial.
+#' @description A dataset of 14 trials comparing three different training
+#'   modalities (a triangle network) for patients with type 2 diabetes.
+#'   The analysed continuous outcome is change from baseline in HbA1c levels.
 #'
-#' @format A data frame with 4 rows of arm-based data and 9 columns.
+#' @format A data frame with 14 rows of arm-based data and 16 columns (maximum
+#'   number of 3 arms).
 #'
-#' @details The interventions have been coded as follows:
-#'   1, placebo; 2, paroxetine.
+#' @details The interventions have been coded as follows: 1, aerobic;
+#'   2, resistance; and 3, combined training;
 #'
 #' @docType data
 #' @keywords datasets
-#' @name pma.hetrick2012
-#' @usage data(pma.hetrick2012)
+#' @name nma.schwingshackl2014
+#' @usage data(nma.schwingshackl2014)
 #' @source
-#' Hetrick SE, McKenzie JE, Cox GR, Simmons MB, Merry SN. Newer generation
-#' antidepressants for depressive disorders in children and adolescents.
-#' \emph{Cochrane Database Syst Rev} 2012;\bold{11}:CD004851.
-#' \doi{10.1002/14651858.CD004851.pub3}
+#' Schwingshackl L, Missbach B, Dias S, et al. M Impact of different training
+#' modalities on glycaemic control and blood lipids in patients with type 2
+#' diabetes: a systematic review and network meta-analysis.
+#' \emph{Diabetologia} 2014;\bold{57}(9):1789--1797.
+#' \doi{10.1007/s00125-014-3303-z}
 NULL
 
 #' Antiparkinsonian interventions for later Parkinson's disease
@@ -166,28 +191,4 @@ NULL
 #' Stowe R, Ives N, Clarke CE, et al. Meta-analysis of the comparative efficacy
 #' and safety of adjuvant treatment to levodopa in later Parkinson's disease.
 #' \emph{Mov Disord} 2011;\bold{26}(4):587--598. \doi{10.1002/mds.23517}
-NULL
-
-#' Training modalities for patients with type 2 diabetes
-#'
-#' @description A dataset of 14 trials comparing three different training
-#'   modalities (a triangle network) for patients with type 2 diabetese.
-#'   The analysed continuous outcome is change from baseline in HbA1c levels.
-#'
-#' @format A data frame with 14 rows of arm-based data and 16 columns (maximum
-#'   number of 3 arms).
-#'
-#' @details The interventions have been coded as follows: 1, aerobic;
-#'   2, resistance; and 3, combined training;
-#'
-#' @docType data
-#' @keywords datasets
-#' @name nma.schwingshackl2014
-#' @usage data(nma.schwingshackl2014)
-#' @source
-#' Schwingshackl L, Missbach B, Dias S, et al. M Impact of different training
-#' modalities on glycaemic control and blood lipids in patients with type 2
-#' diabetes: a systematic review and network meta-analysis.
-#' \emph{Diabetologia} 2014;\bold{57}(9):1789--1797.
-#' \doi{10.1007/s00125-014-3303-z}
 NULL
