@@ -23,22 +23,22 @@ that is a potential effect modifier. See 'Details'.}
 
 \item{covar_assumption}{Character string indicating the structure of the
 intervention-by-covariate interaction, as described in
-Cooper et al., (2009). Set \code{covar_assumption} equal to
+Cooper et al. (2009). Set \code{covar_assumption} equal to
 \code{"exchangeable"}, \code{"independent"}, or \code{"common"}.}
 
 \item{n_chains}{Positive integer specifying the number of chains for the
-MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function
+MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
 of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 2.}
 
 \item{n_iter}{Positive integer specifying the number of Markov chains for the
-MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function
+MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
 of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 10000.}
 
 \item{n_burnin}{Positive integer specifying the number of iterations to
 discard at the beginning of the MCMC sampling; an argument of the
-\code{\link[R2jags]{jags}} function of the R-package
+\code{\link[R2jags:jags]{jags}} function of the R-package
 \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1000.}
 
@@ -95,8 +95,7 @@ A list of R2jags outputs on the summaries of the posterior
    \code{tau} \tab The between-trial standard deviation.\cr
   }
 
-  For a random-effects NMA, the output additionally
-  includes:
+  For a random-effects NMA, the output additionally includes:
   \tabular{ll}{
    \code{pred_ref} \tab The predicted summary effect measure
    (according to the argument \code{measure} defined in
@@ -123,15 +122,15 @@ A list of R2jags outputs on the summaries of the posterior
    model assessment: deviance information criterion,
    number of effective parameters, and total residual deviance.\cr
    \tab \cr
-   \code{jagsfit} \tab An object of S3 class \code{\link[R2jags]{jags}}
+   \code{jagsfit} \tab An object of S3 class \code{\link[R2jags:jags]{jags}}
    with the posterior results on all monitored parameters to be used
    in the \code{\link{mcmc_diagnostics}} function.\cr
   }
   The \code{run_metareg} function also returns the arguments \code{data},
   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
-  \code{mean_misspar}, \code{var_misspar}, and \code{D}
-  that have been specified by the user in \code{\link{run_model}} (see
-  'Arguments' in \code{\link{run_model}}).
+  \code{mean_misspar}, \code{var_misspar}, \code{D}, \code{ref}, and
+  \code{base_risk} that have been specified by the user in
+  \code{\link{run_model}} (see 'Arguments' in \code{\link{run_model}}).
 }
 \description{
 Performs a one-stage pairwise or network meta-regression while addressing
@@ -141,18 +140,18 @@ Performs a one-stage pairwise or network meta-regression while addressing
 \details{
 \code{run_metareg} inherits the arguments \code{data},
   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
-  \code{mean_misspar}, and \code{var_misspar} from \code{\link{run_model}}
-  (now contained in the argument \code{full}). This prevents specifying a
-  different Bayesian model from that considered in \code{\link{run_model}}.
-  Therefore, the user needs first to apply \code{\link{run_model}}, and then
-  use \code{run_metareg} (see 'Examples').
+  \code{mean_misspar}, \code{var_misspar}, \code{ref}, and \code{base_risk}
+  from \code{\link{run_model}} (now contained in the argument \code{full}).
+  This prevents specifying a different Bayesian model from that considered in
+  \code{\link{run_model}}. Therefore, the user needs first to apply
+  \code{\link{run_model}}, and then use \code{run_metareg} (see 'Examples').
 
   The model runs in \code{JAGS} and the progress of the simulation appears on
   the R console. The output of \code{run_metareg} is used as an S3 object by
   other functions of the package to be processed further and provide an
   end-user-ready output.
 
-  The models described in Spineli (2019), and Spineli et al., (2021) have
+  The models described in Spineli et al. (2021), and Spineli (2019) have
   been extended to incorporate one \emph{study-level covariate} variable
   following the assumptions of Cooper et al. (2009) for the structure of the
   intervention-by-covariate interaction. The covariate can be either a
@@ -183,15 +182,6 @@ run_metareg(full = res,
 
 }
 \references{
-Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
-data in network meta-analysis: a one-stage pattern-mixture model approach.
-\emph{Stat Methods Med Res} 2021. \doi{10.1177/0962280220983544}
-
-Spineli LM. An empirical comparison of Bayesian modelling strategies for
-missing binary outcome data in network meta-analysis.
-\emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-\doi{10.1186/s12874-019-0731-y}
-
 Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
 heterogeneity and inconsistency in mixed treatment comparisons: Application
 to stroke prevention treatments in individuals with non-rheumatic atrial
@@ -200,9 +190,20 @@ fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
 
 Gelman A, Rubin DB. Inference from iterative simulation using multiple
 sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
+
+Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
+data in network meta-analysis: a one-stage pattern-mixture model approach.
+\emph{Stat Methods Med Res} 2021;\bold{30}(4):958--975.
+\doi{10.1177/0962280220983544}
+
+Spineli LM. An empirical comparison of Bayesian modelling strategies for
+missing binary outcome data in network meta-analysis.
+\emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
+\doi{10.1186/s12874-019-0731-y}
 }
 \seealso{
-\code{\link[R2jags]{jags}}, \code{\link{run_model}}
+\href{https://CRAN.R-project.org/package=R2jags}{jags},
+  \code{\link{run_model}}
 }
 \author{
 {Loukia M. Spineli}

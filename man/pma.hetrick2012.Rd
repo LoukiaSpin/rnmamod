@@ -3,7 +3,7 @@
 \docType{data}
 \name{pma.hetrick2012}
 \alias{pma.hetrick2012}
-\title{Paroxetine versus placeboe for depressive disorders}
+\title{Paroxetine versus placebo for depressive disorders}
 \format{
 A data frame with 4 rows of arm-based data and 9 columns.
 }
@@ -19,7 +19,8 @@ data(pma.hetrick2012)
 \description{
 A pairwise meta-analysis of 4 trials comparing paroxetine with
   placebo for depressive disorders in children and adolescents.
-  The analysed binary outcome is remission or response as defined in trial.
+  The analysed binary outcome is remission or response as defined in the
+  trials.
 }
 \details{
 The interventions have been coded as follows:

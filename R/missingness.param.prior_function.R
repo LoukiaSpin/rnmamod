@@ -38,7 +38,7 @@
 #'   \code{mean_misspar} because the same missingness scenario is applied to all
 #'   trials and trial-arms of the dataset, respectively. When \code{assumption}
 #'   is \code{"IDE-ARM"} or \code{"HIE-ARM"}, a maximum of two
-#'   \emph{different or same} numeric values can be assigned as a vector to
+#'   \emph{different or identical} numeric values can be assigned as a vector to
 #'   \code{mean_misspars}: the first value refers to the experimental arm,
 #'   and the second value refers to the control arm of a trial.
 #'   In the case of a network, the first value is considered for all

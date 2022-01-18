@@ -6,26 +6,26 @@
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
 #'   \code{\link{run_model}}.
 #' @param n_chains Integer specifying the number of chains for the MCMC
-#'   sampling; an argument of the \code{\link[R2jags]{jags}} function of the
-#'   R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   sampling; an argument of the \code{\link[R2jags:jags]{jags}} function of
+#'   the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 #'   The default argument is 2.
 #' @param n_iter Positive integer specifying the number of Markov chains for the
-#'   MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function of
-#'   the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
+#'   of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 #'   The default argument is 10000.
 #' @param n_burnin Positive integer specifying the number of iterations to
 #'   discard at the beginning of the MCMC sampling; an argument of the
-#'   \code{\link[R2jags]{jags}} function of the R-package
+#'   \code{\link[R2jags:jags]{jags}} function of the R-package
 #'   \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 #'   The default argument is 1000.
 #' @param n_thin Positive integer specifying the thinning rate for the MCMC
-#'   sampling; an argument of the \code{\link[R2jags]{jags}} function of the
-#'   R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   sampling; an argument of the \code{\link[R2jags:jags]{jags}} function of
+#'   the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 #'   The default argument is 1.
 #'
 #' @return An R2jags output on the summaries of the posterior distribution, and
-#'   the Gelman-Rubin convergence diagnostic of the following monitored
-#'   parameters:
+#'   the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the
+#'   following monitored parameters:
 #'   \tabular{ll}{
 #'    \code{EM} \tab The summary effect estimate (according to the argument
 #'    \code{measure} defined in \code{\link{run_model}}) of each observed
@@ -48,10 +48,10 @@
 #'   in \code{JAGS}. The progress of the simulation appears on the R console.
 #'   The number of times a pairwise meta-analysis is preformed is also printed
 #'   on the console (in red) and is equal to the number of  pairwise comparisons
-#'   observed in the network (see 'Examples').
+#'   observed in the network that include at least two trials (see 'Examples').
 #'
 #'   The output of \code{run_series_meta} is not end-user-ready. The
-#'   \code{\link{series_meta_plot}} function uses the output of
+#'   \code{\link{series_meta_plot}} function inherits the output of
 #'   \code{run_series_meta} as an S3 object and processes it further to provide
 #'   an end-user-ready output.
 #'
@@ -61,8 +61,8 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link[R2jags]{jags}}, \code{\link{run_model}},
-#'   \code{\link{series_meta_plot}},
+#' @seealso \href{https://CRAN.R-project.org/package=R2jags}{jags},
+#'   \code{\link{run_model}}, \code{\link{series_meta_plot}}
 #'
 #' @references
 #' Gelman A, Rubin DB. Inference from iterative simulation using multiple

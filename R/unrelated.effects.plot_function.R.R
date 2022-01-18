@@ -22,39 +22,41 @@
 #'   instead.
 #' @param mean_misspar A numeric value for the mean of the normal distribution
 #'   of the informative missingness parameter (see 'Details'). The default
-#'   argument is 0 and corresponds to the missing-at-random assumption.
+#'   argument is 0 and corresponds to the missing-at-random assumption. The same
+#'   value is considered across all trials of the dataset.
 #' @param var_misspar A positive non-zero number for the variance of the
 #'   normal distribution of the informative missingness parameter.
 #'   When the \code{measure} is \code{"OR"}, \code{"MD"}, or \code{"SMD"}
 #'   the default argument is 1. When the \code{measure} is \code{"ROM"}
-#'   the default argument is 0.04
+#'   the default argument is 0.04. The same value is considered across all
+#'   trials of the dataset.
 #' @param rho A numeric value in the interval [-1, 1] that indicates the
 #'   correlation coefficient between two informative missingness parameters in
 #'   a trial. The same value is considered across all trials of the dataset.
 #'   The default argument is 0 and corresponds to uncorrelated missingness
 #'   parameters.
 #' @param save_xls Logical to indicate whether to export the tabulated results
-#'   to an 'xlsx' file (via the \code{\link[writexl]{write_xlsx}}
-#'   function) to the working directory of the user. The default is \code{FALSE}
-#'   (do not export).
+#'   to an 'xlsx' file (via the \code{\link[writexl:write_xlsx]{write_xlsx}}
+#'   function of the R-package
+#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}) to the working
+#'   directory of the user. The default is \code{FALSE} (do not export).
 #'
 #' @return A panel of interval plots for each observed comparison in the
 #'   network, when there are up to 15 trials in the \code{data}. Otherwise, an
-#'   Excel file with the arm-level data of each trial (as defined in
-#'   \code{data}), the corresponding effect measure and 95\% confidence
-#'   interval, the interventions compared, and the three characteristics
-#'   (as defined in \code{char}). For datasets with more than 15 trials,
-#'   the plot becomes cluttered and it is difficult to identify  the trial
-#'   names. Hence, exporting the results in an Excel file is a viable
-#'   alternative.
+#'   Excel file with the \code{data} in the long format, the effect measure and
+#'   95\% confidence interval of the within-trial comparisons, the interventions
+#'   compared, and the three characteristics (as defined in \code{char}).
+#'   For datasets with more than 15 trials, the plot becomes cluttered and it is
+#'   difficult to identify the trial-names. Hence, exporting the results in an
+#'   Excel file is a viable alternative.
 #'
 #' @details The unrelated trial effects model may be an alternative to network
-#'   meta-analysis, when the latter is not deemed appropriate (e.g.,
+#'   meta-analysis, when the latter is not deemed appropriate (e.g., there is
 #'   considerable statistical heterogeneity, or substantial intransitivity). In
 #'   the presence of missing participant outcome data (MOD), the effect size and
 #'   standard error are adjusted by applying the pattern-mixture model with
-#'   Taylor series in trial-arms with MOD (White et al., 2008;
-#'   Mavridis et al., 2015). The \code{unrelated_effects_plot} function calls
+#'   Taylor series in trial-arms with MOD (Mavridis et al., 2015;
+#'   White et al., 2008). The \code{unrelated_effects_plot} function calls
 #'   the \code{\link{taylor_imor}} and \code{\link{taylor_continuous}} functions
 #'   (for binary and continuous outcome, respectively) to employ pattern-mixture
 #'   model with Taylor series. The \code{unrelated_effects_plot} function
@@ -75,10 +77,11 @@
 #'   corresponding interval and point estimate. Ideally, each characteristic
 #'   should have no more than three categories; otherwise, the plot becomes
 #'   cluttered. For now, the \code{unrelated_effects_plot} function uses the
-#'   default color palette, line-types and point-shapes.
+#'   default colour palette, line-types and point-shapes.
 #'
 #' @seealso \code{\link{run_model}}, \code{\link{taylor_continuous}},
-#'   \code{\link{taylor_imor}}
+#'   \code{\link{taylor_imor}},
+#'   \href{https://CRAN.R-project.org/package=writexl}{write_xlsx}
 #'
 #' @references
 #' Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for

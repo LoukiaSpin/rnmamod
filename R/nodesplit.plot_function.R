@@ -19,10 +19,10 @@
 #'   the order of the interventions as they appear in \code{data} is used,
 #'   instead.
 #' @param save_xls Logical to indicate whether to export the tabulated results
-#'   to an 'xlsx' file (via the \code{\link[writexl]{write_xlsx}} function of
-#'   the R-package \href{https://CRAN.R-project.org/package=writexl}{writexl})
-#'   to the working directory of the user. The default is \code{FALSE} (do not
-#'   export).
+#'   to an 'xlsx' file (via the \code{\link[writexl:write_xlsx]{write_xlsx}}
+#'   function of the R-package
+#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}) at the working
+#'   directory of the user. The default is \code{FALSE} (do not export).
 #'
 #' @return \code{nodesplit_plot} returns the following list of elements:
 #'   \tabular{ll}{
@@ -75,14 +75,16 @@
 #'   between the compared models.
 #'
 #'   The split nodes have been automatically selected via the
-#'   \code{\link[gemtc]{mtc.nodesplit.comparisons}} function of the
-#'   R-package \href{https://CRAN.R-project.org/package=gemtc}{gemtc}.
+#'   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}}
+#'   function of the R-package
+#'   \href{https://CRAN.R-project.org/package=gemtc}{gemtc}.
 #'   See 'Details' in \code{\link{run_nodesplit}}.
 #'
 #'   Furthermore, \code{nodesplit_plot} exports both data-frames to separate
-#'   'xlsx' files (via the \code{\link[writexl]{write_xlsx}} function of the
-#'   R-package \href{https://CRAN.R-project.org/package=writexl}{writexl}) to
-#'   the working directory of the user.
+#'   'xlsx' files (via the \code{\link[writexl:write_xlsx]{write_xlsx}} function
+#'   of the R-package
+#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}) to the working
+#'   directory of the user.
 #'
 #'   \code{nodesplit_plot} can be used only for a network of interventions and
 #'   when there is at least one split node. Otherwise, the execution of the
@@ -91,8 +93,10 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \href{https://CRAN.R-project.org/package=gemtc}{gemtc},
-#'   \code{\link{run_model}}, \code{\link{run_nodesplit}}
+#' @seealso
+#'   \href{https://CRAN.R-project.org/package=gemtc}{mtc.nodesplit.comparisons},
+#'   \code{\link{run_model}}, \code{\link{run_nodesplit}},
+#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}
 #'
 #' @references
 #' Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed

@@ -1,4 +1,4 @@
-#' End-user-ready results for series of pairwise meta-analyses
+#' End-user-ready results for a series of pairwise meta-analyses
 #'
 #' @description Facilitates the comparison of the consistency model
 #'   (via \code{\link{run_model}}) with a series of pairwise meta-analyses
@@ -16,13 +16,15 @@
 #'   the order of the interventions as they appear in \code{data} is used,
 #'   instead.
 #' @param save_xls Logical to indicate whether to export the tabulated results
-#'   to an 'xlsx' file at the working directory of the user.
-#'   The default is \code{FALSE} (do not export).
+#'   to an 'xlsx' file (via the \code{\link[writexl:write_xlsx]{write_xlsx}}
+#'   function of the R-package
+#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}) at the working
+#'   directory of the user. The default is \code{FALSE} (do not export).
 #'
 #' @return The R console prints the data-frame with the estimated summary effect
 #'   sizes and between-trial standard deviation of comparisons under both
 #'   models. The comparisons have at least two trials. In the case of a
-#'   fixed-effect model, the data-frame is printed without results on
+#'   fixed-effect model, the data-frame is printed without the results on the
 #'   between-trial standard deviation.
 #'
 #'   Furthermore, \code{series_meta_plot} exports the data-frame to an 'xlsx'
@@ -30,7 +32,7 @@
 #'
 #'   \code{series_meta_plot} returns a panel of two forest plots: (1) a
 #'   forest plot on the posterior mean and 95\% credible interval of the summary
-#'   effect size of the observed comparisons from network meta-analysis and the
+#'   effect size for the observed comparisons from network meta-analysis and the
 #'   corresponding pairwise meta-analyses, and (2) a forest plot on the
 #'   posterior median and 95\% credible interval of the between-trial standard
 #'   deviation for these observed comparisons. The estimated
@@ -38,19 +40,20 @@
 #'   rectangle in the forest plot. When a fixed-effect model has been fitted,
 #'   only the forest plot on the estimated summary effect sizes is shown.
 #'
+#' @details \code{series_meta_plot} can be used only for a network of
+#'   interventions. Otherwise, the execution of the function will be stopped and
+#'   an error message will be printed on the R console.
+#'
 #'   The user can detect any inconsistencies in the estimated
 #'   effects from the compared models and explore the gains in precision
 #'   stemming from applying network meta-analysis. Furthermore, the user can
 #'   investigate the plausibility of the common between-trial heterogeneity
 #'   assumption which is typically considered in network meta-analysis.
 #'
-#' @details \code{series_meta_plot} can be used only for a network of
-#'   interventions. Otherwise, the execution of the function will be stopped and
-#'   an error message will be printed on the R console.
-#'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run_model}}, \code{\link{run_series_meta}}
+#' @seealso \code{\link{run_model}}, \code{\link{run_series_meta}},
+#'   \href{https://CRAN.R-project.org/package=writexl}{write_xlsx}
 #'
 #' @examples
 #' data("nma.dogliotti2014")
@@ -231,20 +234,20 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
 
   caption <- if (full$D == 0 & is.element(measure,
                                           c("Odds ratio", "Ratio of means"))) {
-    paste("If", measure, "< 1, favours the first arm; if",
-          measure, "> 1, favours thr second arm")
+    paste(measure, "< 1, favours the first arm.",
+          measure, "> 1, favours the second arm")
   } else if (full$D == 1 & is.element(measure,
                                       c("Odds ratio", "Ratio of means"))) {
-    paste("If", measure, "< 1, favours the second arm",
-          "; if", measure, "> 1, favours the first arm")
+    paste(measure, "< 1, favours the second arm.",
+          measure, "> 1, favours the first arm")
   } else if (full$D == 0 & !is.element(measure,
                                        c("Odds ratio", "Ratio of means"))) {
-    paste("If", measure, "< 0, favours the first arm; if",
+    paste(measure, "< 0, favours the first arm.",
           measure, "> 0, favours the second arm")
   } else if (full$D == 1 & !is.element(measure,
                                        c("Odds ratio", "Ratio of means"))) {
-    paste("If", measure, "< 0, favours the second arm",
-          "; if", measure, "> 0, favours the first arm")
+    paste(measure, "< 0, favours the second arm.",
+          measure, "> 0, favours the first arm")
   }
 
   p1 <- ggplot(data = prepare,

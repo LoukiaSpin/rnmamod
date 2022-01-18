@@ -8,7 +8,7 @@ heatmap_missing_network(data, drug_names)
 }
 \arguments{
 \item{data}{A data-frame of a one-trial-per-row format containing arm-level
-data of each trial. See 'Format' in \code{\link[rnmamod]{run_model}}.}
+data of each trial. See 'Format' in \code{\link{run_model}}.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data}. If the argument

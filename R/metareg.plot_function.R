@@ -20,9 +20,9 @@
 #'   the order of the interventions as they appear in \code{data} is used,
 #'   instead.
 #' @param save_xls Logical to indicate whether to export the tabulated results
-#'   to an 'xlsx' file (via the \code{\link[writexl]{write_xlsx}}
+#'   to an 'xlsx' file (via the \code{\link[writexl:write_xlsx]{write_xlsx}}
 #'   function of the R-package
-#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}) to the working
+#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}) at the working
 #'   directory of the user. The default is \code{FALSE} (do not export).
 #'
 #' @return \code{metareg_plot} prints on the R console a message on the most
@@ -74,9 +74,10 @@
 #'   created.
 #'
 #'   Furthermore, \code{metareg_plot} exports all tabulated results to separate
-#'   'xlsx' files (via the \code{\link[writexl]{write_xlsx}} function of the
-#'   R-package \href{https://CRAN.R-project.org/package=writexl}{writexl})
-#'   to the working directory of the user.
+#'   'xlsx' files (via the \code{\link[writexl:write_xlsx]{write_xlsx}} function
+#'   of the R-package
+#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}) to the working
+#'   directory of the user.
 #'
 #'   \code{metareg_plot} can be used only for a network of interventions. In the
 #'   case of two interventions, the execution of the function will be stopped
@@ -86,7 +87,7 @@
 #'
 #' @seealso \code{\link{forestplot_metareg}}, \code{\link{run_metareg}},
 #'   \code{\link{run_model}}, \code{\link{scatterplot_sucra}},
-#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}
+#'   \href{https://CRAN.R-project.org/package=writexl}{write_xlsx}
 #'
 #' @references
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries

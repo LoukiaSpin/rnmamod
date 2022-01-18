@@ -41,8 +41,8 @@
 #'    \tab \cr
 #'    \code{beta} \tab The regression coefficient.\cr
 #'   }
-#'   \code{mcmc_diagnostics} also uses the \code{\link[mcmcplots]{mcmcplot}}
-#'   function of the R-package
+#'   \code{mcmc_diagnostics} also uses the
+#'   \code{\link[mcmcplots:mcmcplot]{mcmcplot}} function of the R-package
 #'   \href{https://CRAN.R-project.org/package=mcmcplots}{mcmcplots} to create an
 #'   HTML file with a panel of diagnostic plots (trace, density, and
 #'   autocorrelation) for each monitored parameter.
@@ -58,7 +58,7 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \href{https://CRAN.R-project.org/package=mcmcplots}{mcmcplots},
+#' @seealso \href{https://CRAN.R-project.org/package=mcmcplots}{mcmcplot},
 #'   \code{\link{run_metareg}}, \code{\link{run_model}},
 #'   \code{\link{run_nodesplit}}, \code{\link{run_sensitivity}},
 #'   \code{\link{run_series_meta}}, \code{\link{run_ume}}

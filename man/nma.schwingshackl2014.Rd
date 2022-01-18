@@ -20,7 +20,7 @@ data(nma.schwingshackl2014)
 }
 \description{
 A dataset of 14 trials comparing three different training
-  modalities (a triangle network) for patients with type 2 diabetese.
+  modalities (a triangle network) for patients with type 2 diabetes.
   The analysed continuous outcome is change from baseline in HbA1c levels.
 }
 \details{

@@ -24,23 +24,27 @@
 #'
 #' @return An R character vector object to be passed to
 #'   \code{\link{run_nodesplit}} through the
-#'   \code{\link[base]{textConnection}} function as the argument \code{object}.
+#'   \code{\link[base:textConnection]{textConnection}} function as the argument
+#'   \code{object}.
 #'
 #' @details This functions creates the model in the JAGS dialect of the BUGS
 #'   language. The output of this function constitutes the argument
-#'   \code{model.file} of \code{\link[R2jags]{jags}} via the
-#'   \code{\link[base]{textConnection}} function.
+#'   \code{model.file} of \code{\link[R2jags:jags]{jags}} (in the R-package
+#'   \href{https://CRAN.R-project.org/package=R2jags}{R2jags}) via the
+#'   \code{\link[base:textConnection]{textConnection}} function.
 #'
 #'   The split nodes have been automatically selected via the
-#'   \code{\link[gemtc]{mtc.nodesplit.comparisons}} function of the
-#'   R-package \href{https://CRAN.R-project.org/package=gemtc}{gemtc}.
+#'   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}}
+#'   function of the R-package
+#'   \href{https://CRAN.R-project.org/package=gemtc}{gemtc}.
 #'   See 'Details' in \code{\link{run_nodesplit}}.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link[R2jags]{jags}},
-#'   \code{\link[gemtc]{mtc.nodesplit.comparisons}},
-#'   \code{\link{run_nodesplit}}, \code{\link[base]{textConnection}},
+#' @seealso \href{https://CRAN.R-project.org/package=R2jags}{jags},
+#'   \href{https://CRAN.R-project.org/package=gemtc}{mtc.nodesplit.comparisons},
+#'   \code{\link{run_nodesplit}},
+#'   \code{\link[base:textConnection]{textConnection}}
 #'
 #' @references
 #' Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
@@ -49,7 +53,8 @@
 #'
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 #' data in network meta-analysis: a one-stage pattern-mixture model approach.
-#' \emph{Stat Methods Med Res} 2021. \doi{10.1177/0962280220983544}
+#' \emph{Stat Methods Med Res} 2021;\bold{30}(4):958--975.
+#' \doi{10.1177/0962280220983544}
 #'
 #' Spineli LM. An empirical comparison of Bayesian modelling strategies for
 #' missing binary outcome data in network meta-analysis.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/series.meta.plot_function.R
 \name{series_meta_plot}
 \alias{series_meta_plot}
-\title{End-user-ready results for series of pairwise meta-analyses}
+\title{End-user-ready results for a series of pairwise meta-analyses}
 \usage{
 series_meta_plot(full, meta, drug_names, save_xls)
 }
@@ -20,14 +20,16 @@ the order of the interventions as they appear in \code{data} is used,
 instead.}
 
 \item{save_xls}{Logical to indicate whether to export the tabulated results
-to an 'xlsx' file at the working directory of the user.
-The default is \code{FALSE} (do not export).}
+to an 'xlsx' file (via the \code{\link[writexl:write_xlsx]{write_xlsx}}
+function of the R-package
+\href{https://CRAN.R-project.org/package=writexl}{writexl}) at the working
+directory of the user. The default is \code{FALSE} (do not export).}
 }
 \value{
 The R console prints the data-frame with the estimated summary effect
   sizes and between-trial standard deviation of comparisons under both
   models. The comparisons have at least two trials. In the case of a
-  fixed-effect model, the data-frame is printed without results on
+  fixed-effect model, the data-frame is printed without the results on the
   between-trial standard deviation.
 
   Furthermore, \code{series_meta_plot} exports the data-frame to an 'xlsx'
@@ -35,19 +37,13 @@ The R console prints the data-frame with the estimated summary effect
 
   \code{series_meta_plot} returns a panel of two forest plots: (1) a
   forest plot on the posterior mean and 95\% credible interval of the summary
-  effect size of the observed comparisons from network meta-analysis and the
+  effect size for the observed comparisons from network meta-analysis and the
   corresponding pairwise meta-analyses, and (2) a forest plot on the
   posterior median and 95\% credible interval of the between-trial standard
   deviation for these observed comparisons. The estimated
   between-trial standard deviation from network meta-analysis appears as a
   rectangle in the forest plot. When a fixed-effect model has been fitted,
   only the forest plot on the estimated summary effect sizes is shown.
-
-  The user can detect any inconsistencies in the estimated
-  effects from the compared models and explore the gains in precision
-  stemming from applying network meta-analysis. Furthermore, the user can
-  investigate the plausibility of the common between-trial heterogeneity
-  assumption which is typically considered in network meta-analysis.
 }
 \description{
 Facilitates the comparison of the consistency model
@@ -60,6 +56,12 @@ Facilitates the comparison of the consistency model
 \code{series_meta_plot} can be used only for a network of
   interventions. Otherwise, the execution of the function will be stopped and
   an error message will be printed on the R console.
+
+  The user can detect any inconsistencies in the estimated
+  effects from the compared models and explore the gains in precision
+  stemming from applying network meta-analysis. Furthermore, the user can
+  investigate the plausibility of the common between-trial heterogeneity
+  assumption which is typically considered in network meta-analysis.
 }
 \examples{
 data("nma.dogliotti2014")
@@ -83,7 +85,8 @@ series_meta_plot(full = res,
 
 }
 \seealso{
-\code{\link{run_model}}, \code{\link{run_series_meta}}
+\code{\link{run_model}}, \code{\link{run_series_meta}},
+  \href{https://CRAN.R-project.org/package=writexl}{write_xlsx}
 }
 \author{
 {Loukia M. Spineli}

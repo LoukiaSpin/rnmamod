@@ -25,10 +25,10 @@ The columns of the data-frame in the argument \code{data} refer to
    \strong{n2} \tab The number of participants randomised in the second arm
    of the comparison.\cr
    \tab \cr
-   \strong{t1} \tab An identified for the intervention in the first arm of
+   \strong{t1} \tab An identifier for the intervention in the first arm of
    the comparison.\cr
    \tab \cr
-   \strong{t2} \tab An identified for the intervention in the second arm of
+   \strong{t2} \tab An identifier for the intervention in the second arm of
    the comparison.\cr
   }
 }
@@ -75,12 +75,11 @@ Applies the pattern-mixture model under a specific assumption
 \details{
 The \code{taylor_imor} function is found in the
   \code{\link{unrelated_effects_plot}} function. The latter uses the
-  the \code{\link[netmeta]{pairwise}} function from the package
+  the \code{\link[netmeta:pairwise]{pairwise}} function from the package
   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}
-  to transform the dataset from the wide arm-based format
-  (see, 'Arguments' for \code{data} in
-  \code{\link{unrelated_effects_plot}}) into the long-arm based
-  format.
+  to transform the dataset from the wide arm-based format into the long-arm
+  based format (see, 'Arguments' for \code{data} in
+  \code{\link{unrelated_effects_plot}}).
 }
 \references{
 White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data
@@ -88,8 +87,8 @@ in meta-analysis--part 1: two-stage methods.
 \emph{Stat Med} 2008;\bold{27}(5):711--27. \doi{10.1002/sim.3008}
 }
 \seealso{
-\code{\link[netmeta]{pairwise}}, \code{\link{run_model}},
-  \code{\link{unrelated_effects_plot}}
+\href{https://CRAN.R-project.org/package=netmeta}{pairwise},
+  \code{\link{run_model}}, \code{\link{unrelated_effects_plot}}
 }
 \author{
 {Loukia M. Spineli}

@@ -16,22 +16,28 @@ not defined, the order of the interventions as they appear in \code{data}
 is used, instead.}
 
 \item{save_xls}{Logical to indicate whether to export the tabulated results
-to an 'xlsx' file at the working directory of the user.
-The default is \code{FALSE} (do not export).}
+to an 'xlsx' file (via the \code{\link[writexl:write_xlsx]{write_xlsx}}
+function of the R-package
+\href{https://CRAN.R-project.org/package=writexl}{writexl}) at the working
+directory of the user. The default is \code{FALSE} (do not export).}
 
 \item{...}{Additional arguments of the
-\code{\link[pcnetmeta]{nma.networkplot}} function of the R-package
-\href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}.}
+\code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}} function of the
+R-package \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}.}
 }
 \value{
 A network plot with coloured closed-loops informed by multi-arm
   trials. Each node indicates an intervention and each edge an observed
   pairwise comparison. The edge thickness is proportional to the number of
   trials investigating the corresponding comparison, unless
-  specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}}
-  function). The size of the node is weighted by the total number of
+  specified otherwise (see
+  \code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}} function of the
+  R-package \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}).
+  The size of the node is weighted by the total number of
   trials investigating the corresponding intervention, unless specified
-  otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function).
+  otherwise (see \code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}}
+  function of the R-package
+  \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}).
 
   \code{netplot} also returns the following data-frames that describe the
   evidence base:
@@ -61,13 +67,19 @@ Illustrates the network plot for one outcome and summarises the
 }
 \details{
 \code{netplot} draws the network plot using the
-  \code{\link[pcnetmeta]{nma.networkplot}} function
+  \code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}} function
   of the R-package
   \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}.
-  The \code{\link[gemtc]{mtc.data.studyrow}} function of the R-package
-  \href{https://CRAN.R-project.org/package=gemtc}{gemtc} is additionally used
-  to convert \code{data} from the required one-trial-per-row format into the
-  one-arm-per-row format.
+  The \code{\link[gemtc:mtc.data.studyrow]{mtc.data.studyrow}} function of
+  the R-package href{https://CRAN.R-project.org/package=gemtc}{gemtc} is
+  additionally used to convert \code{data} from the required
+  one-trial-per-row format into the one-arm-per-row format.
+
+  Furthermore, \code{netplot} exports the data-frames to separate
+  'xlsx' files (via the \code{\link[writexl:write_xlsx]{write_xlsx}} function
+  of the R-package
+  \href{https://CRAN.R-project.org/package=writexl}{writexl}) at the working
+  directory of the user.
 }
 \examples{
 data("nma.bottomley2011")
@@ -87,19 +99,20 @@ netplot(data = nma.bottomley2011,
 
 }
 \references{
-van Valkenhoef G, Kuiper J. gemtc: Network Meta-Analysis Using
-Bayesian Methods. \emph{R package version 1.0-1}. 2021.
-\url{https://CRAN.R-project.org/package=gemtc}
-
 Lin L, Zhang J, Hodges JS, Chu H. Performing Arm-Based Network Meta-Analysis
 in R with the pcnetmeta Package.
 \emph{J Stat Softw} 2017;\bold{80}(5): 1--25. \doi{10.18637/jss.v080.i05}
+
+van Valkenhoef G, Kuiper J. gemtc: Network Meta-Analysis Using
+Bayesian Methods. \emph{R package version 1.0-1}. 2021.
+\url{https://CRAN.R-project.org/package=gemtc}
 }
 \seealso{
 \code{\link{data_preparation}},
-  \href{https://CRAN.R-project.org/package=gemtc}{gemtc},
-  \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta},
-  \code{\link{run_model}}.
+  \href{https://CRAN.R-project.org/package=gemtc}{mtc.data.studyrow},
+  \href{https://CRAN.R-project.org/package=pcnetmeta}{nma.networkplot},
+  \code{\link{run_model}}
+  \href{https://CRAN.R-project.org/package=writexl}{writexl}
 }
 \author{
 {Loukia M. Spineli}

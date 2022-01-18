@@ -13,9 +13,9 @@ See 'Value' in \code{\link{run_model}}.}
 \item{reg}{An object of S3 class \code{\link{run_metareg}}. See 'Value' in
 \code{\link{run_metareg}}.}
 
-\item{cov_value}{A list of two elements in the following order: a number
+\item{cov_value}{A list of two elements in the following order: 1) a number
 for the covariate value of interest (see 'Arguments' in
-\code{\link{run_metareg}}), and a character to indicate the name of
+\code{\link{run_metareg}}), and 2) a character to indicate the name of
 the covariate. See also 'Details'.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
@@ -37,8 +37,8 @@ Creates a scatterplot to compare the SUCRA values from the
 \details{
 The names of the interventions appear above each point in the plot.
   Three coloured rectangles appear in the scatterplot: a red rectangle for
-  SUCRA values up to 50\%, a yellow rectangular refer to SUCRA values between
-  50% and 80%, and a green rectangle for SUCRA values over 80\%.
+  SUCRA values up to 50\%, a yellow rectangular for SUCRA values between
+  50\% and 80\%, and a green rectangle for SUCRA values over 80\%.
   Interventions falling at the green area are considered as the highest
   ranked interventions, whilst interventions falling at the red area are
   considered as the lowest ranked interventions.
@@ -55,7 +55,7 @@ The names of the interventions appear above each point in the plot.
 Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 for presenting results from multiple-treatment meta-analysis: an overview and
 tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
-[\doi{10.1016/j.jclinepi.2010.03.016}]
+\doi{10.1016/j.jclinepi.2010.03.016}
 }
 \seealso{
 \code{\link{run_metareg}}, \code{\link{run_model}}

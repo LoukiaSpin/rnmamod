@@ -5,7 +5,7 @@
 #'  comparison in the network.
 #'
 #' @param data A data-frame of a one-trial-per-row format containing arm-level
-#'   data of each trial. See 'Format' in \code{\link[rnmamod]{run_model}}.
+#'   data of each trial. See 'Format' in \code{\link{run_model}}.
 #' @param drug_names A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data}. If the argument
 #'   \code{drug_names} is not defined, the order of the interventions as they

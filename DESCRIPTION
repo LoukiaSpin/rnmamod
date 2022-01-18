@@ -48,8 +48,6 @@ Imports:
     R2jags,
     reshape2,
     scales,
-    stats,
-    utils,
     writexl
 Suggests: 
     rmarkdown,

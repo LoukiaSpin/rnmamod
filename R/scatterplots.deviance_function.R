@@ -22,10 +22,10 @@
 #'
 #' @details \code{scatterplots_dev} is integrated in the \code{\link{ume_plot}}
 #'   function to compare the models regarding the posterior mean of deviance.
-#'   This scatterplot has also been considered by Dias et al., (2013).
+#'   This scatterplot has also been considered by Dias et al. (2013).
 #'   When the majority of data points are scattered across the diagonal line,
 #'   we may conclude that the compared models have a good agreement. Data points
-#'   systematically scattered above and below the diagonal line may
+#'   systematically scattered above or below the diagonal line may
 #'   contribute more to the poor fit of the unrelated mean effects model and the
 #'   consistency model, respectively.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/run.sensitivity_function.R
 \name{run_sensitivity}
 \alias{run_sensitivity}
-\title{Perform sensitivity analysis for aggregate missing outcome participant data}
+\title{Perform sensitivity analysis for  missing outcome participant data}
 \usage{
 run_sensitivity(
   full,
@@ -26,8 +26,8 @@ The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"},
 and \code{"HIE"} stand for identical, and hierarchical, respectively.}
 
 \item{mean_scenarios}{A vector with numeric values for the mean of the normal
- distribution of the informative missingness parameter (see 'Details').
-The vector should have a length of 5 or larger \emph{positive odd integer}.
+distribution of the informative missingness parameter (see 'Details').
+The vector should have a length of 5 or larger.
 The missing-at-random (MAR) assumption should be the median of the vector,
 so that the same number of informative scenarios appear before and after
 the MAR. The default arguments are c(-log(3), -log(2), log(0.9999), log(2),
@@ -41,23 +41,23 @@ distribution of the informative missingness parameter. When the
 \code{measure} is \code{"ROM"}, the default argument is 0.04}
 
 \item{n_chains}{Integer specifying the number of chains for the MCMC
-sampling; an argument of the \code{\link[R2jags]{jags}} function of the
-R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+sampling; an argument of the \code{\link[R2jags:jags]{jags}} function of
+the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 2.}
 
 \item{n_iter}{Integer specifying the number of Markov chains for the MCMC
-sampling; an argument of the \code{\link[R2jags]{jags}} function of the
-R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+sampling; an argument of the \code{\link[R2jags:jags]{jags}} function of
+the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 10000.}
 
 \item{n_burnin}{Integer specifying the number of iterations to discard at the
 beginning of the MCMC sampling; an argument of the
-\code{\link[R2jags]{jags}} function of the R-package
+\code{\link[R2jags:jags]{jags}} function of the R-package
 \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1000.}
 
 \item{n_thin}{Integer specifying the thinning rate for the MCMC sampling; an
-argument of the \code{\link[R2jags]{jags}} function of the R-package
+argument of the \code{\link[R2jags:jags]{jags}} function of the R-package
 \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1.}
 }
@@ -73,7 +73,6 @@ A list of R2jags outputs on the summaries of the posterior
    \code{tau} \tab The between-trial standard deviation. This element does
    not appear in the case of a fixed-effect PMA.\cr
   }
-
   In a random-effects NMA, \code{EM} refer to all possible pairwise
   comparisons of interventions in the network. Furthermore, \code{tau} is
   typically assumed to be common for all observed comparisons in the network.
@@ -88,14 +87,14 @@ The model runs in \code{JAGS} and the progress of the simulation
   appears on the R console. The number of times \code{run_sensitivity} is
   used appears on the R console as a text in red and it equals the
   \bold{number of scenarios} defined as \emph{the square of the length of the
-  \code{mean_scenarios} vector}  (see 'Examples').
+  vector specified in \code{mean_scenarios}} (see 'Examples').
   The output of \code{run_sensitivity} is used as an S3 object by other
   functions of the package function to be processed further and provide an
   end-user-ready output.
 
-  In the case of PMA, \code{EM} and \code{tau} have as many rows as the
-  number of scenarios considered. In the case of NMA, each possible pairwise
-  comparison is estimated as many times as the number of scenarios
+  In the case of PMA, \code{EM} and \code{tau} are estimated as many times
+  as the number of scenarios considered. In the case of NMA, each possible
+  pairwise comparison is estimated as many times as the number of scenarios
   considered.
 
   The informative missingness parameter is assumed to differ only across the
@@ -121,16 +120,16 @@ The model runs in \code{JAGS} and the progress of the simulation
   will be stopped and the error 'Invalid parent values' will be printed on
   the R console. Currently, there are no empirically-based prior
   distributions for the informative missingness parameters. The users may
-  refer to White et al., (2008), Mavridis et al., (2015), Turner et al.,
-  (2015) and Spineli (2019) to determine \code{mean_scenarios} for an
+  refer to Spineli (2019), Mavridis et al. (2015), Turner et al. (2015), and
+  White et al. (2008)  to determine \code{mean_scenarios} for an
   informative missingness mechanism and select a proper value for
   \code{var_misspar}.
 
   \code{run_sensitivity} inherits the arguments \code{data},
-  \code{measure}, \code{model}, and \code{heter_prior} from
+  \code{measure}, \code{model}, \code{heter_prior}, and \code{ref} from
   \code{\link{run_model}} (now contained in the argument \code{full}). This
   prevents specifying a different Bayesian model from that considered in the
-  primary analysis (via \code{run_model}). Therefore, the user needs first to
+  primary analysis (via \code{\link{run_model}}). Therefore, the user needs first to
   apply \code{\link{run_model}}, and then use \code{run_sensitivity}
   (see 'Examples').
 
@@ -146,7 +145,7 @@ data("pma.taylor2004")
 res <- readRDS(system.file('extdata/res_taylor.rds', package = 'rnmamod'))
 
 \donttest{
-# Perform the sensitivity analysis (missing-at-random assumption)
+# Perform the sensitivity analysis (default arguments)
 # Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
 run_sensitivity(full = res,
                 assumption = "IDE-ARM",
@@ -159,6 +158,14 @@ run_sensitivity(full = res,
 
 }
 \references{
+Gelman, A, Rubin, DB. Inference from iterative simulation using multiple
+sequences. Stat Sci. 1992;7:457--472.
+
+Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
+uncertainty due to missing continuous outcome data in pairwise and network
+meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--741.
+\doi{10.1002/sim.6365}
+
 Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
 primary analysis results: A case study on missing outcome data in pairwise
 and network meta-analysis.
@@ -170,11 +177,6 @@ missing binary outcome data in network meta-analysis.
 \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
 \doi{10.1186/s12874-019-0731-y}
 
-Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
-uncertainty due to missing continuous outcome data in pairwise and network
-meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--741.
-\doi{10.1002/sim.6365}
-
 Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account for
 uncertainty due to missing binary outcome data in pairwise meta-analysis.
 \emph{Stat Med} 2015;\bold{34}(12):2062--2080. \doi{10.1002/sim.6475}
@@ -182,12 +184,10 @@ uncertainty due to missing binary outcome data in pairwise meta-analysis.
 White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data
 in meta-analysis--part 1: two-stage methods.
 \emph{Stat Med} 2008;\bold{27}(5):711--727. \doi{10.1002/sim.3008}
-
-Gelman, A, Rubin, DB. Inference from iterative simulation using multiple
-sequences. Stat Sci. 1992;7:457--472.
 }
 \seealso{
-\code{\link{run_model}}
+\href{https://CRAN.R-project.org/package=R2jags}{jags},
+  \code{\link{run_model}}
 }
 \author{
 {Loukia M. Spineli}

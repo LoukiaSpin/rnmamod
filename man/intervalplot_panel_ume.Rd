@@ -48,7 +48,7 @@ globally in a network of interventions. \emph{Med Decis Making} 2021.
 }
 \seealso{
 \code{\link{improved_ume}} \code{\link{run_model}},
-  \code{\link{ume_plot}}, \code{\link{run_ume}}
+  \code{\link{run_ume}}, \code{\link{ume_plot}}
 }
 \author{
 {Loukia M. Spineli}

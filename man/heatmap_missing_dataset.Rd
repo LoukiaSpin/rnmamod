@@ -8,7 +8,7 @@ heatmap_missing_dataset(data, trial_names, drug_names)
 }
 \arguments{
 \item{data}{A data-frame of a one-trial-per-row format containing arm-level
-data of each trial. See 'Format' in \code{\link[rnmamod]{run_model}}.}
+data of each trial. See 'Format' in \code{\link{run_model}}.}
 
 \item{trial_names}{A vector of labels with the name of the trials in the
 order they appear in the argument \code{data}. If \code{trial_names} is not

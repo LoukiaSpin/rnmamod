@@ -31,10 +31,10 @@ The columns of the data-frame in the argument \code{data} refer to
    \strong{n2} \tab The number randomised in the second arm of the
    comparison.\cr
    \tab \cr
-   \strong{t1} \tab An identified for the intervention in the first arm of
+   \strong{t1} \tab An identifier for the intervention in the first arm of
    the comparison.\cr
    \tab \cr
-   \strong{t2} \tab An identified for the intervention in the second arm of
+   \strong{t2} \tab An identifier for the intervention in the second arm of
    the comparison.\cr
   }
 }
@@ -60,7 +60,8 @@ means, the mean value is defined in the logarithmic scale.}
 \item{var_value}{A positive non-zero number for the variance of the normal
 distribution of the informative missingness parameter. When the
 \code{measure} is \code{"MD"}, or \code{"SMD"} the default argument is 1;
-When the \code{measure} is \code{"ROM"} the default argument is 0.04}
+When the \code{measure} is \code{"ROM"} the default argument is 0.04. The
+same value is considered for all trial-arms of the dataset.}
 
 \item{rho}{A numeric value in the interval [-1, 1] that indicates the
 correlation coefficient between two informative missingness parameters in
@@ -88,12 +89,11 @@ Applies the pattern-mixture model under a specific assumption
 \details{
 The \code{taylor_continuous} function is found in the
   \code{\link{unrelated_effects_plot}} function. The latter uses the
-  the \code{\link[netmeta]{pairwise}} function from the package
+  the \code{\link[netmeta:pairwise]{pairwise}} function from the package
   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}
-  to transform the dataset from the wide arm-based format
-  (see, 'Arguments' for \code{data} in
-  \code{\link{unrelated_effects_plot}})
-  into the long-arm based format.
+  to transform the dataset from the wide arm-based format into the long-arm
+  based format (see, 'Arguments' for \code{data} in
+  \code{\link{unrelated_effects_plot}}).
 }
 \references{
 Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
@@ -102,8 +102,8 @@ meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--41.
 \doi{10.1002/sim.6365}
 }
 \seealso{
-\code{\link[netmeta]{pairwise}}, \code{\link{run_model}},
-  \code{\link{unrelated_effects_plot}}
+\href{https://CRAN.R-project.org/package=netmeta}{pairwise},
+  \code{\link{run_model}}, \code{\link{unrelated_effects_plot}}
 }
 \author{
 {Loukia M. Spineli}

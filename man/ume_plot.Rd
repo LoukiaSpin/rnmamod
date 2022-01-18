@@ -2,7 +2,7 @@
 % Please edit documentation in R/UME.plot_function.R
 \name{ume_plot}
 \alias{ume_plot}
-\title{End-user-ready results for unrelated mean effects model}
+\title{End-user-ready results for the unrelated mean effects model}
 \usage{
 ume_plot(full, ume, drug_names, save_xls)
 }
@@ -20,27 +20,27 @@ the order of the interventions as they appear in \code{data} is used,
 instead.}
 
 \item{save_xls}{Logical to indicate whether to export the tabulated results
-to an 'xlsx' file (via the \code{\link[writexl]{write_xlsx}}
-function) to the working directory of the user. The default is \code{FALSE}
-(do not export).}
+to an 'xlsx' file (via the \code{\link[writexl:write_xlsx]{write_xlsx}}
+function of the R-package
+\href{https://CRAN.R-project.org/package=writexl}{writexl}) to the working
+directory of the user. The default is \code{FALSE} (do not export).}
 }
 \value{
 \code{ume_plot} prints on the R console a message on the most
-  parsimonious model (if any) based on the deviance information criterion
-  (DIC; in red text). Then, the function returns the following list of
-  elements:
+  parsimonious model (if any) based on the DIC (red text). Then, the function
+  returns the following list of elements:
   \tabular{ll}{
    \code{table_effect_size} \tab The posterior mean, posterior standard
    deviation, and 95\% credible interval of the summary effect size for each
-   pairwise comparison observed in the network under the consistency model
+   pairwise comparisons observed in the network under the consistency model
    and the unrelated mean effects model.\cr
    \tab \cr
    \code{table_model_assessment} \tab The DIC, number of effective
    parameters, and total residual deviance under the consistency model and
-   the unrelated mean effects model (Spiegelhalter et al., (2002)).\cr
+   the unrelated mean effects model (Spiegelhalter et al., 2002).\cr
    \tab \cr
    \code{table_tau} \tab The posterior median and 95\% credible interval of
-   tau under the consistency model and the unrelated mean effects
+   \emph{tau} under the consistency model and the unrelated mean effects
    model. When a fixed-effect model has been performed, \code{ume_plot} does
    not return this element.\cr
    \tab \cr
@@ -48,7 +48,7 @@ function) to the working directory of the user. The default is \code{FALSE}
    posterior mean deviance contribution of the individual data points under
    the consistency model and the unrelated mean effects model. See 'Details'
    and 'Value' in \code{\link{scatterplots_dev}} and
-   \code{\link{bland_altman_plot}}.\cr
+   \code{\link{bland_altman_plot}}, respectively.\cr
    \tab \cr
    \code{levarage_plots} \tab The leverage plot under the consistency model
    and the unrelated mean effects model, separately. See 'Details' and
@@ -62,23 +62,24 @@ function) to the working directory of the user. The default is \code{FALSE}
 }
 \description{
 \code{ume_plot} hosts a toolkit of functions that facilitates
-  the comparison of the consistency model (via \code{run_model}) with the
-  unrelated mean effects model (via \code{run_ume}) regarding the posterior
-  summaries of the summary effect size for the pairwise comparisons observed
-  in the network, the between-trial standard deviation (tau) and model
-  assessment parameters.
+  the comparison of the consistency model (via \code{\link{run_model}}) with
+  the unrelated mean effects model (via \code{\link{run_ume}}) regarding the
+  posterior summaries of the summary effect size for the pairwise comparisons
+  observed in the network, the between-trial standard deviation (tau) and
+  model assessment parameters.
 }
 \details{
-The DIC of the consistency model is compared with the DIC of the
-  unrelated mean effects model (Dias et al., (2013)). If the difference in
-  DIC exceeds 5, the unrelated mean effects model is preferred; if the
-  difference in DIC is less than -5, the consistency is preferred; otherwise,
-  there is little to choose between the compared models.
+The deviance information criterion (DIC) of the consistency model is
+  compared with the DIC of the unrelated mean effects model
+  (Dias et al., 2013). If the difference in DIC exceeds 5, the unrelated mean
+  effects model is preferred. If the difference in DIC is less than -5, the
+  consistency is preferred; otherwise, there is little to choose between the
+  compared models.
 
   Furthermore, \code{ume_plot} exports \code{table_effect_size} and
   \code{table_model_assessment} to separate 'xlsx' files (via the
-  \code{\link[writexl]{write_xlsx}} function) to the working directory of the
-   user.
+  \code{\link[writexl:write_xlsx]{write_xlsx}} function) to the working
+  directory of the user.
 
   \code{ume_plot} can be used only for a network of interventions. In the
   case of two interventions, the execution of the function will be stopped
@@ -108,7 +109,7 @@ ume_plot(full = res,
 Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis
 for decision making 4: inconsistency in networks of evidence based on
 randomized controlled trials.
-\emph{Med Decis Making} 2013a;\bold{33}(5):641--56.
+\emph{Med Decis Making} 2013;\bold{33}(5):641--56.
 \doi{10.1177/0272989X12455847}
 
 Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of
@@ -118,7 +119,8 @@ model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616.
 \seealso{
 \code{\link{bland_altman_plot}},
   \code{\link{intervalplot_panel_ume}}, \code{\link{leverage_plot}},
-  \code{\link{run_model}}, \code{\link{run_ume}}.
+  \code{\link{run_model}}, \code{\link{run_ume}},
+  \href{https://CRAN.R-project.org/package=writexl}{write_xlsx}
 }
 \author{
 {Loukia M. Spineli}

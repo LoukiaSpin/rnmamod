@@ -46,8 +46,8 @@ ignored for objects of S3 class \code{\link{run_nodesplit}},
    \tab \cr
    \code{beta} \tab The regression coefficient.\cr
   }
-  \code{mcmc_diagnostics} also uses the \code{\link[mcmcplots]{mcmcplot}}
-  function of the R-package
+  \code{mcmc_diagnostics} also uses the
+  \code{\link[mcmcplots:mcmcplot]{mcmcplot}} function of the R-package
   \href{https://CRAN.R-project.org/package=mcmcplots}{mcmcplots} to create an
   HTML file with a panel of diagnostic plots (trace, density, and
   autocorrelation) for each monitored parameter.
@@ -83,7 +83,7 @@ Gelman, A, Rubin, DB. Inference from iterative simulation using multiple
 sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
 }
 \seealso{
-\href{https://CRAN.R-project.org/package=mcmcplots}{mcmcplots},
+\href{https://CRAN.R-project.org/package=mcmcplots}{mcmcplot},
   \code{\link{run_metareg}}, \code{\link{run_model}},
   \code{\link{run_nodesplit}}, \code{\link{run_sensitivity}},
   \code{\link{run_series_meta}}, \code{\link{run_ume}}

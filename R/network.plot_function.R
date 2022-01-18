@@ -10,23 +10,26 @@
 #'   not defined, the order of the interventions as they appear in \code{data}
 #'   is used, instead.
 #' @param save_xls Logical to indicate whether to export the tabulated results
-#'   to an 'xlsx' file at the working directory of the user.
-#'   The default is \code{FALSE} (do not export).
+#'   to an 'xlsx' file (via the \code{\link[writexl:write_xlsx]{write_xlsx}}
+#'   function of the R-package
+#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}) at the working
+#'   directory of the user. The default is \code{FALSE} (do not export).
 #' @param ... Additional arguments of the
-#'   \code{\link[pcnetmeta]{nma.networkplot}} function of the R-package
-#'   \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}.
+#'   \code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}} function of the
+#'   R-package \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}.
 #'
 #' @return A network plot with coloured closed-loops informed by multi-arm
 #'   trials. Each node indicates an intervention and each edge an observed
 #'   pairwise comparison. The edge thickness is proportional to the number of
 #'   trials investigating the corresponding comparison, unless
-#'   specified otherwise (see \code{\link[pcnetmeta]{nma.networkplot}}
-#'   function of the R-package
-#'   \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}).
+#'   specified otherwise (see
+#'   \code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}} function of the
+#'   R-package \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}).
 #'   The size of the node is weighted by the total number of
 #'   trials investigating the corresponding intervention, unless specified
-#'   otherwise (see \code{\link[pcnetmeta]{nma.networkplot}} function of the
-#'   R-package \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}).
+#'   otherwise (see \code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}}
+#'   function of the R-package
+#'   \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}).
 #'
 #'   \code{netplot} also returns the following data-frames that describe the
 #'   evidence base:
@@ -51,18 +54,25 @@
 #'   }
 #'
 #' @details \code{netplot} draws the network plot using the
-#'   \code{\link[pcnetmeta]{nma.networkplot}} function
+#'   \code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}} function
 #'   of the R-package
 #'   \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}.
-#'   The \code{\link[gemtc]{mtc.data.studyrow}} function of the R-package
-#'   \href{https://CRAN.R-project.org/package=gemtc}{gemtc} is additionally used
-#'   to convert \code{data} from the required one-trial-per-row format into the
-#'   one-arm-per-row format.
+#'   The \code{\link[gemtc:mtc.data.studyrow]{mtc.data.studyrow}} function of
+#'   the R-package href{https://CRAN.R-project.org/package=gemtc}{gemtc} is
+#'   additionally used to convert \code{data} from the required
+#'   one-trial-per-row format into the one-arm-per-row format.
+#'
+#'   Furthermore, \code{netplot} exports the data-frames to separate
+#'   'xlsx' files (via the \code{\link[writexl:write_xlsx]{write_xlsx}} function
+#'   of the R-package
+#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}) at the working
+#'   directory of the user.
 #'
 #' @seealso \code{\link{data_preparation}},
-#'   \href{https://CRAN.R-project.org/package=gemtc}{gemtc},
-#'   \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta},
-#'   \code{\link{run_model}}.
+#'   \href{https://CRAN.R-project.org/package=gemtc}{mtc.data.studyrow},
+#'   \href{https://CRAN.R-project.org/package=pcnetmeta}{nma.networkplot},
+#'   \code{\link{run_model}}
+#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}
 #'
 #' @references
 #' Lin L, Zhang J, Hodges JS, Chu H. Performing Arm-Based Network Meta-Analysis
