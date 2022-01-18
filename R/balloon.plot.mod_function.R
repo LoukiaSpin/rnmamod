@@ -32,8 +32,8 @@
 #'   }
 #'
 #' @details
-#'   For the \code{plot_effect_size} of the selected pairwise
-#'   comparison, the different colours and sizes of the bubbles reflect the
+#'   For the \code{plot_effect_size} of the selected pairwise comparison,
+#'   the different colours and sizes of the bubbles reflect the
 #'   posterior standard deviation and the posterior mean, respectively.
 #'   A colour key appears below the plot.
 #'   The size of the bubble is proportional to the corresponding posterior mean.
