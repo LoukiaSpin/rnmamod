@@ -16,6 +16,10 @@ In **R Views** [November 2021: "Top 40" New CRAN Packages](https://rviews.rstudi
 
 [Loukia Spineli](https://orcid.org/0000-0001-9515-582X), [Chrysostomos Kalyvas](https://orcid.org/0000-0003-0606-4518), [Katerina Papadimitropoulou](https://orcid.org/0000-0002-5732-4044)
 
+## Website
+
+[here](https://loukiaspin.github.io/rnmamod/)
+
 ## Description 
 
 The `rnmamod` package performs one-stage fixed-effect or random-effects Bayesian network meta-analysis (NMA) while adjusting for *missing participant outcome data* (MOD) using the pattern-mixture model. In the case of two interventions, the package performs one-stage Bayesian pairwise meta-analysis. Standard aggregate data NMA is a special case of NMA with MOD, where either all studies or no studies have MOD available, respectively. 
