@@ -18,7 +18,7 @@ In **R Views** [November 2021: "Top 40" New CRAN Packages](https://rviews.rstudi
 
 ## Website
 
-The [website](https://loukiaspin.github.io/rnmamod/) of `rnmamod` currently includes two short tutorials (*Description of the network* and *Perform network meta-analysis*). You will also find a structured reference list to facilitate accessing the documentation of the functions in the package.
+The [website](https://loukiaspin.github.io/rnmamod/) of `rnmamod` currently includes two short tutorials (*Description of the network* and *Perform network meta-analysis*). There is also a structured reference list to facilitate access to the documentation of the functions available in the package.
 
 ## Description 
 
