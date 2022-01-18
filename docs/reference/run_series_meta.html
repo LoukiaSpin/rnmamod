@@ -67,7 +67,9 @@
  pairwise comparison with at least two trials in the network.</p>
     </div>
 
-    <div id="ref-usage">Usage,<div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">run_series_meta</span><span class="op">(</span><span class="va">full</span>, <span class="va">n_chains</span>, <span class="va">n_iter</span>, <span class="va">n_burnin</span>, <span class="va">n_thin</span><span class="op">)</span></code></pre></div></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">run_series_meta</span><span class="op">(</span><span class="va">full</span>, <span class="va">n_chains</span>, <span class="va">n_iter</span>, <span class="va">n_burnin</span>, <span class="va">n_thin</span><span class="op">)</span></code></pre></div>
+    </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
@@ -76,13 +78,13 @@
 <code><a href="run_model.html">run_model</a></code>.</p></dd>
 <dt>n_chains</dt>
 <dd><p>Integer specifying the number of chains for the MCMC
-sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of the
-R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
+sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of
+the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 2.</p></dd>
 <dt>n_iter</dt>
 <dd><p>Positive integer specifying the number of Markov chains for the
-MCMC sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of
-the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
+MCMC sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function
+of the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 10000.</p></dd>
 <dt>n_burnin</dt>
 <dd><p>Positive integer specifying the number of iterations to
@@ -92,15 +94,15 @@ discard at the beginning of the MCMC sampling; an argument of the
 The default argument is 1000.</p></dd>
 <dt>n_thin</dt>
 <dd><p>Positive integer specifying the thinning rate for the MCMC
-sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of the
-R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
+sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of
+the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 1.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     <p>An R2jags output on the summaries of the posterior distribution, and
-  the Gelman-Rubin convergence diagnostic of the following monitored
-  parameters:</p><table class="table table"><tr><td><code>EM</code></td><td>The summary effect estimate (according to the argument
+  the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the
+  following monitored parameters:</p><table class="table table"><tr><td><code>EM</code></td><td>The summary effect estimate (according to the argument
    <code>measure</code> defined in <code><a href="run_model.html">run_model</a></code>) of each observed
    pairwise comparison with at least two trials in the network.</td></tr><tr><td></td><td></td></tr><tr><td><code>tau</code></td><td>The between-trial standard deviation for pairwise
    comparisons with at least two trials, when the random-effects model has
@@ -118,9 +120,9 @@ The default argument is 1.</p></dd>
   in <code>JAGS</code>. The progress of the simulation appears on the R console.
   The number of times a pairwise meta-analysis is preformed is also printed
   on the console (in red) and is equal to the number of  pairwise comparisons
-  observed in the network (see 'Examples').</p>
+  observed in the network that include at least two trials (see 'Examples').</p>
 <p>The output of <code>run_series_meta</code> is not end-user-ready. The
-  <code><a href="series_meta_plot.html">series_meta_plot</a></code> function uses the output of
+  <code><a href="series_meta_plot.html">series_meta_plot</a></code> function inherits the output of
   <code>run_series_meta</code> as an S3 object and processes it further to provide
   an end-user-ready output.</p>
 <p><code>run_series_meta</code> can be used only for a network of interventions.
@@ -134,8 +136,8 @@ sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>, <code><a href="run_model.html">run_model</a></code>,
-  <code><a href="series_meta_plot.html">series_meta_plot</a></code>,</p></div>
+    <div class="dont-index"><p><a href="https://CRAN.R-project.org/package=R2jags" class="external-link">jags</a>,
+  <code><a href="run_model.html">run_model</a></code>, <code><a href="series_meta_plot.html">series_meta_plot</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -174,7 +176,7 @@ sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 867</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 942</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -185,7 +187,7 @@ sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 29</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 1045</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 1122</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -196,29 +198,29 @@ sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 28</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 37</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 1398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 1479</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $EM</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   t1 t2      mean        sd       2.5%         25%       50%       75%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1  2 0.2226369 0.3911566 -0.6219298 -0.01601335 0.2471926 0.4910962</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1  7 1.0359528 0.3554227  0.2423029  0.82682191 1.0716664 1.2365569</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2  7 0.5465517 0.3948350 -0.1641265  0.29495956 0.5320297 0.7680890</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       97.5%     Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.9097669 1.009412   430</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.7382234 1.014367   150</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1.3900395 1.037016    59</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   t1 t2      mean        sd       2.5%       25%       50%       75%    97.5%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1  2 0.3346681 0.3993701 -0.5113775 0.1453671 0.3288106 0.5518431 1.069487</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1  7 1.1039137 0.4345674  0.2340755 0.8437781 1.0990071 1.3837696 1.962916</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2  7 0.5131636 0.3807061 -0.2238901 0.2772760 0.4969491 0.7365492 1.320853</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Rhat n.eff</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.023177   220</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.014509   190</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1.009409   450</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $tau</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   t1 t2    median        sd        2.5%       25%       50%       75%    97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1  2 0.3812359 0.3061555 0.025869874 0.1576309 0.3070517 0.5236637 1.157791</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1  7 0.3883529 0.3468217 0.000268449 0.1070468 0.3180425 0.5796855 1.240657</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2  7 0.5818636 0.3553593 0.092341881 0.3390032 0.5194383 0.7460522 1.406340</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1  2 0.4063795 0.4119822 0.015951256 0.1419419 0.2884759 0.5080868 1.770678</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1  7 0.5025628 0.3390522 0.006411937 0.2615725 0.4527988 0.6806994 1.317734</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2  7 0.5439480 0.3000862 0.020782284 0.3378827 0.5121203 0.7010845 1.268985</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.035099    80</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.263647    20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1.013072   160</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.033673    90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.110729    45</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1.167559    52</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span class="co"># }</span></span>
 <span class="r-in"></span>
@@ -236,7 +238,7 @@ sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer></div>

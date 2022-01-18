@@ -3,7 +3,7 @@
   facilitates the comparison of the consistency model
   (via run_model) with the node-splitting approach
   (via run_nodesplit) regarding the posterior summaries of the
-  the direct and indirect effects and inconsistency factor of the split
+  direct and indirect effects and inconsistency factor of the split
   nodes, the between-trial standard deviation and model assessment
   parameters (Spiegelhalter et al., (2002)) after each split node in the
   network."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -73,13 +73,15 @@
   facilitates the comparison of the consistency model
   (via <code><a href="run_model.html">run_model</a></code>) with the node-splitting approach
   (via <code><a href="run_nodesplit.html">run_nodesplit</a></code>) regarding the posterior summaries of the
-  the direct and indirect effects and inconsistency factor of the split
+  direct and indirect effects and inconsistency factor of the split
   nodes, the between-trial standard deviation and model assessment
   parameters (Spiegelhalter et al., (2002)) after each split node in the
   network.</p>
     </div>
 
-    <div id="ref-usage">Usage,<div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nodesplit_plot</span><span class="op">(</span><span class="va">full</span>, <span class="va">node</span>, <span class="va">drug_names</span>, <span class="va">save_xls</span><span class="op">)</span></code></pre></div></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nodesplit_plot</span><span class="op">(</span><span class="va">full</span>, <span class="va">node</span>, <span class="va">drug_names</span>, <span class="va">save_xls</span><span class="op">)</span></code></pre></div>
+    </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
@@ -98,21 +100,21 @@ instead.</p></dd>
 <dt>save_xls</dt>
 <dd><p>Logical to indicate whether to export the tabulated results
 to an 'xlsx' file (via the <code><a href="https://docs.ropensci.org/writexl/reference/write_xlsx.html" class="external-link">write_xlsx</a></code>
-function) to the working directory of the user. The default is <code>FALSE</code>
-(do not export).</p></dd>
+function of the R-package
+<a href="https://CRAN.R-project.org/package=writexl" class="external-link">writexl</a>) at the working
+directory of the user. The default is <code>FALSE</code> (do not export).</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     <p><code>nodesplit_plot</code> returns the following list of elements:</p><table class="table table"><tr><td><code>table_effect_size</code></td><td>A data-frame with the posterior mean,
    posterior standard deviation and 95% credible interval of the direct and
    indirect effect and the inconsistency factor of each split node.</td></tr><tr><td></td><td></td></tr><tr><td><code>table_model_assessment</code></td><td>A data-frame with the model assessment
-   parameters (deviance information criterion (DIC), posterior mean of total
-   residual deviance, and number of effective parameters), the posterior
-   median, posterior standard deviation and 95% credible interval of
-   tau under the consistency model and after each split node. See
-   'Details'.</td></tr><tr><td></td><td></td></tr><tr><td><code>intervalplot_inconsistency_factor</code></td><td>A panel of interval plots on
+   parameters (DIC, posterior mean of total residual deviance, and number of
+   effective parameters), the posterior median, posterior standard deviation
+   and 95% credible interval of <em>tau</em> under the consistency model and
+   after each split node. See 'Details'.</td></tr><tr><td></td><td></td></tr><tr><td><code>intervalplot_inconsistency_factor</code></td><td>A panel of interval plots on
    the direct and indirect effect of the split nodes and the corresponding
-   inconsistency factor. See 'Details'.</td></tr><tr><td></td><td></td></tr><tr><td><code>intervalplot_tau</code></td><td>An interval plot on tau after each
+   inconsistency factor. See 'Details'.</td></tr><tr><td></td><td></td></tr><tr><td><code>intervalplot_tau</code></td><td>An interval plot on <em>tau</em> after each
    split node. See 'Details'.</td></tr></table></div>
     <div id="details">
     <h2>Details</h2>
@@ -126,16 +128,16 @@ function) to the working directory of the user. The default is <code>FALSE</code
   the direct and indirect effect), and red otherwise. If there are more than
   30 split nodes, the function presents the interval plots on split nodes
   with conclusive inconsistency factor (green intervals) or those with
-  inconsistent sign in the direct and indirect effect.</p>
-<p><code>intervalplot_tau</code> is a interval plot on the median and 95% credible
+  an opposite sign in the direct and indirect effect.</p>
+<p><code>intervalplot_tau</code> is an interval plot on the median and 95% credible
   interval of <em>tau</em> after each split node. The lines that correspond to
-  the split nodes are sorted in ascending order of the DIC which appears at
-  the top of each line.
-  The 95% credible interval of tau under the consistency model
+  the split nodes are sorted in ascending order of the deviance information
+  criterion (DIC) which appears at the top of each line.
+  The 95% credible interval of <em>tau</em> under the consistency model
   appears as a rectangle in the interval plot. When a fixed-effect model has
   been performed, <code>nodesplit_plot</code> does not return the
   <code>intervalplot_tau</code>.</p>
-<p>The <code>table_model_assessment</code> also includes the column
+<p><code>table_model_assessment</code> also includes the column
   <em>DIC-based better fit</em> that indicates the preferred model in terms of
   parsimony for each split node. Therefore, the DIC of the model after each
   split node is compared with the DIC of the consistency model
@@ -144,12 +146,15 @@ function) to the working directory of the user. The default is <code>FALSE</code
   after the split node is preferred; otherwise, there is little to choose
   between the compared models.</p>
 <p>The split nodes have been automatically selected via the
-  <code><a href="https://rdrr.io/pkg/gemtc/man/mtc.nodesplit.html" class="external-link">mtc.nodesplit.comparisons</a></code> function of the
-  R-package <a href="https://CRAN.R-project.org/package=gemtc" class="external-link">gemtc</a>.
+  <code><a href="https://rdrr.io/pkg/gemtc/man/mtc.nodesplit.html" class="external-link">mtc.nodesplit.comparisons</a></code>
+  function of the R-package
+  <a href="https://CRAN.R-project.org/package=gemtc" class="external-link">gemtc</a>.
   See 'Details' in <code><a href="run_nodesplit.html">run_nodesplit</a></code>.</p>
 <p>Furthermore, <code>nodesplit_plot</code> exports both data-frames to separate
-  'xlsx' files (via the <code><a href="https://docs.ropensci.org/writexl/reference/write_xlsx.html" class="external-link">write_xlsx</a></code> function) to the
-  working directory of the user.</p>
+  'xlsx' files (via the <code><a href="https://docs.ropensci.org/writexl/reference/write_xlsx.html" class="external-link">write_xlsx</a></code> function
+  of the R-package
+  <a href="https://CRAN.R-project.org/package=writexl" class="external-link">writexl</a>) to the working
+  directory of the user.</p>
 <p><code>nodesplit_plot</code> can be used only for a network of interventions and
   when there is at least one split node. Otherwise, the execution of the
   function will be stopped and an error message will be printed on the R
@@ -166,8 +171,9 @@ doi: <a href="https://doi.org/10.1111/1467-9868.00353" class="external-link">10.
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="run_model.html">run_model</a></code>, <code><a href="run_nodesplit.html">run_nodesplit</a></code>,
-  <code><a href="https://rdrr.io/pkg/gemtc/man/mtc.nodesplit.html" class="external-link">mtc.nodesplit.comparisons</a></code></p></div>
+    <div class="dont-index"><p><a href="https://CRAN.R-project.org/package=gemtc" class="external-link">mtc.nodesplit.comparisons</a>,
+  <code><a href="run_model.html">run_model</a></code>, <code><a href="run_nodesplit.html">run_nodesplit</a></code>,
+  <a href="https://CRAN.R-project.org/package=writexl" class="external-link">writexl</a></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -212,7 +218,7 @@ doi: <a href="https://doi.org/10.1111/1467-9868.00353" class="external-link">10.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |Approach                                   |   DIC| Mean deviance|    pD|DIC-based better fit | Median tau| SD tau|95% CrI tau  |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |:------------------------------------------|-----:|-------------:|-----:|:--------------------|----------:|------:|:------------|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |NMA                                        | 88.95|         54.24| 34.71|-                    |       0.13|   0.08|(0.02, 0.33) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |NMA                                        | 88.67|         53.99| 34.68|-                    |       0.14|   0.09|(0.01, 0.35) |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |formoterol vs placebo                      | 89.38|         53.09| 36.29|Little to choose     |       0.13|   0.09|(0.01, 0.34) |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |tiotropium vs formoterol                   | 89.47|         53.06| 36.42|Little to choose     |       0.12|   0.09|(0.01, 0.35) |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |tiotropium vs placebo                      | 89.87|         53.50| 36.37|Little to choose     |       0.12|   0.09|(0.01, 0.34) |</span>
@@ -243,7 +249,7 @@ doi: <a href="https://doi.org/10.1111/1467-9868.00353" class="external-link">10.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer></div>

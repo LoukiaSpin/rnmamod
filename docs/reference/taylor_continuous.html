@@ -73,7 +73,9 @@
   (Mavridis et al., 2015).</p>
     </div>
 
-    <div id="ref-usage">Usage,<div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">taylor_continuous</span><span class="op">(</span><span class="va">data</span>, <span class="va">measure</span>, <span class="va">mean_value</span>, <span class="va">var_value</span>, <span class="va">rho</span><span class="op">)</span></code></pre></div></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">taylor_continuous</span><span class="op">(</span><span class="va">data</span>, <span class="va">measure</span>, <span class="va">mean_value</span>, <span class="va">var_value</span>, <span class="va">rho</span><span class="op">)</span></code></pre></div>
+    </div>
 
     <div id="format">
     <h2>Format</h2>
@@ -84,8 +86,8 @@
    first arm of the comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>sd2</strong></td><td>The observed standard deviation of the outcome in the
    second arm of the comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>m1</strong></td><td>The number of MOD in the first arm of the comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>m2</strong></td><td>The number of MOD in the second arm of the comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>n1</strong></td><td>The number randomised in the first arm of the
    comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>n2</strong></td><td>The number randomised in the second arm of the
-   comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>t1</strong></td><td>An identified for the intervention in the first arm of
-   the comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>t2</strong></td><td>An identified for the intervention in the second arm of
+   comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>t1</strong></td><td>An identifier for the intervention in the first arm of
+   the comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>t2</strong></td><td>An identifier for the intervention in the second arm of
    the comparison.</td></tr></table></div>
     <div id="arguments">
     <h2>Arguments</h2>
@@ -108,7 +110,8 @@ means, the mean value is defined in the logarithmic scale.</p></dd>
 <dd><p>A positive non-zero number for the variance of the normal
 distribution of the informative missingness parameter. When the
 <code>measure</code> is <code>"MD"</code>, or <code>"SMD"</code> the default argument is 1;
-When the <code>measure</code> is <code>"ROM"</code> the default argument is 0.04</p></dd>
+When the <code>measure</code> is <code>"ROM"</code> the default argument is 0.04. The
+same value is considered for all trial-arms of the dataset.</p></dd>
 <dt>rho</dt>
 <dd><p>A numeric value in the interval [-1, 1] that indicates the
 correlation coefficient between two informative missingness parameters in
@@ -127,10 +130,9 @@ parameters.</p></dd>
   <code><a href="unrelated_effects_plot.html">unrelated_effects_plot</a></code> function. The latter uses the
   the <code><a href="https://rdrr.io/pkg/netmeta/man/pairwise.html" class="external-link">pairwise</a></code> function from the package
   <a href="https://CRAN.R-project.org/package=netmeta" class="external-link">netmeta</a>
-  to transform the dataset from the wide arm-based format
-  (see, 'Arguments' for <code>data</code> in
-  <code><a href="unrelated_effects_plot.html">unrelated_effects_plot</a></code>)
-  into the long-arm based format.</p>
+  to transform the dataset from the wide arm-based format into the long-arm
+  based format (see, 'Arguments' for <code>data</code> in
+  <code><a href="unrelated_effects_plot.html">unrelated_effects_plot</a></code>).</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -141,8 +143,8 @@ doi: <a href="https://doi.org/10.1002/sim.6365" class="external-link">10.1002/si
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/netmeta/man/pairwise.html" class="external-link">pairwise</a></code>, <code><a href="run_model.html">run_model</a></code>,
-  <code><a href="unrelated_effects_plot.html">unrelated_effects_plot</a></code></p></div>
+    <div class="dont-index"><p><a href="https://CRAN.R-project.org/package=netmeta" class="external-link">pairwise</a>,
+  <code><a href="run_model.html">run_model</a></code>, <code><a href="unrelated_effects_plot.html">unrelated_effects_plot</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -161,7 +163,7 @@ doi: <a href="https://doi.org/10.1002/sim.6365" class="external-link">10.1002/si
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer></div>

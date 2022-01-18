@@ -100,8 +100,10 @@
 <div class="section level1">
 <div class="page-header"><h1 id="rnmamod-bayesian-network-meta-analysis-r-package-">rnmamod: Bayesian network meta-analysis R package <img src="reference/figures/hexsticker_rnmamod.png" align="right" width="200"><a class="anchor" aria-label="anchor" href="#rnmamod-bayesian-network-meta-analysis-r-package-"></a>
 </h1></div>
+<p>Official Git repository of <code>rnmamod</code> R package</p>
 <!-- badges: start -->
 
+<p>In <strong>R Views</strong> <a href="https://rviews.rstudio.com/2021/12/21/november-2021-top-40-new-cran-packages/" class="external-link">November 2021: “Top 40” New CRAN Packages</a></p>
 <div class="section level2">
 <h2 id="contributors">Contributors<a class="anchor" aria-label="anchor" href="#contributors"></a>
 </h2>
@@ -110,7 +112,7 @@
 <div class="section level2">
 <h2 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
 </h2>
-<p>The <code>rnmamod</code> package performs one-stage fixed-effect or random-effects Bayesian network meta-analysis (NMA) while adjusting for <em>missing participant outcome data</em> using the pattern-mixture model. In the case of two interventions, the package performs one-stage Bayesian pairwise meta-analysis.</p>
+<p>The <code>rnmamod</code> package performs one-stage fixed-effect or random-effects Bayesian network meta-analysis (NMA) while adjusting for <em>missing participant outcome data</em> (MOD) using the pattern-mixture model. In the case of two interventions, the package performs one-stage Bayesian pairwise meta-analysis. Standard aggregate data NMA is a special case of NMA with MOD, where either all studies or no studies have MOD available, respectively.</p>
 <p>The package handles data inputs in <em>arm-based format</em>: - binary data (effect size: odds ratio)<br>
 - continuous data (effect size: raw and standardised mean differences, ratio of means).</p>
 <!--- The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. --->
@@ -121,7 +123,7 @@
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
 <p>Run the following code to install and load the package from CRAN:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"rnmamod"</span>)</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"rnmamod"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnmamod)</span></code></pre></div>
 <p>or run the following code to install the development version of the package:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span>
@@ -197,7 +199,7 @@
 <div class="section level2">
 <h2 id="funding-source">Funding source<a class="anchor" aria-label="anchor" href="#funding-source"></a>
 </h2>
-The development of <code>rnmamod</code> package is funded by the <strong>German Research Foundation</strong> (Deutsche Forschungsgemeinschaft) (grant no. <a href="https://gepris.dfg.de/gepris/projekt/339420617" class="external-link">SP 1664/1-3</a>)
+The development of the <code>rnmamod</code> package is funded by the <strong>German Research Foundation</strong> (Deutsche Forschungsgemeinschaft) (grant no. <a href="https://gepris.dfg.de/gepris/projekt/339420617" class="external-link">SP 1664/1-3</a>)
 <div style="text-align: right">
 <img src="reference/figures/dfg_logo_schriftzug_blau_foerderung_en.png" width="280" height="100" align="right">
 </div>
@@ -242,6 +244,8 @@ The development of <code>rnmamod</code> package is funded by the <strong>German 
 <ul class="list-unstyled">
 <li><a href="https://github.com/LoukiaSpin/rnmamod/actions" class="external-link"><img src="https://github.com/LoukiaSpin/rnmamod/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://CRAN.R-project.org/package=rnmamod" class="external-link"><img src="https://www.r-pkg.org/badges/version/rnmamod" alt="CRAN status"></a></li>
+<li><a href="https://www.r-pkg.org/badges/last-release/rnmamod" class="external-link"><img src="https://www.r-pkg.org/badges/last-release/rnmamod" alt="CRAN release data"></a></li>
+<li><a href="https://cranlogs.r-pkg.org/badges/grand-total/rnmamod" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/rnmamod" alt="CRAN total downloads"></a></li>
 </ul>
 </div>
 
@@ -256,7 +260,7 @@ The development of <code>rnmamod</code> package is funded by the <strong>German 
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>

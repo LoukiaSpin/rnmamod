@@ -69,23 +69,25 @@
   diagnostic and relevant diagnostic plots are applied.</p>
     </div>
 
-    <div id="ref-usage">Usage,<div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mcmc_diagnostics</span><span class="op">(</span><span class="va">net</span>, par <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mcmc_diagnostics</span><span class="op">(</span><span class="va">net</span>, par <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>net</dt>
-<dd><p>An object of S3 class <code><a href="run_model.html">run_model</a></code>,
-<code><a href="run_series_meta.html">run_series_meta</a></code>, <code><a href="run_nodesplit.html">run_nodesplit</a></code>,
-<code><a href="run_ume.html">run_ume</a></code>, <code><a href="run_sensitivity.html">run_sensitivity</a></code> and
-<code><a href="run_metareg.html">run_metareg</a></code>. See 'Value' in the functions above.</p></dd>
+<dd><p>An object of S3 class <code><a href="run_metareg.html">run_metareg</a></code>,
+<code><a href="run_model.html">run_model</a></code>, <code><a href="run_nodesplit.html">run_nodesplit</a></code>,
+<code><a href="run_sensitivity.html">run_sensitivity</a></code>, <code><a href="run_series_meta.html">run_series_meta</a></code>, and
+<code><a href="run_ume.html">run_ume</a></code>. See 'Value' in the functions above.</p></dd>
 <dt>par</dt>
 <dd><p>A vector of three character strings that refer to three monitored
 parameters in <code>jagsfit</code> which is an object of S3 class
-<code><a href="run_model.html">run_model</a></code>, <code><a href="run_ume.html">run_ume</a></code> and
-<code><a href="run_metareg.html">run_metareg</a></code>. These three selected parameters will be
+<code><a href="run_metareg.html">run_metareg</a></code>, <code><a href="run_model.html">run_model</a></code>, and
+<code><a href="run_ume.html">run_ume</a></code>. These three selected parameters will be
 considered in the diagnostic plots (see 'Value'). This argument will be
-ignored for objects of S3 class <code><a href="run_series_meta.html">run_series_meta</a></code>,
-<code><a href="run_nodesplit.html">run_nodesplit</a></code>, or <code><a href="run_sensitivity.html">run_sensitivity</a></code>.</p></dd>
+ignored for objects of S3 class <code><a href="run_nodesplit.html">run_nodesplit</a></code>,
+<code><a href="run_sensitivity.html">run_sensitivity</a></code>, or <code><a href="run_series_meta.html">run_series_meta</a></code>.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -94,13 +96,16 @@ ignored for objects of S3 class <code><a href="run_series_meta.html">run_series_
   following monitored parameters:</p><table class="table table"><tr><td><code>EM</code></td><td>The estimated summary effect measure.</td></tr><tr><td></td><td></td></tr><tr><td><code>EM_pred</code></td><td>The predicted summary effect measure.</td></tr><tr><td></td><td></td></tr><tr><td><code>delta</code></td><td>The estimated trial-specific effect measure.</td></tr><tr><td></td><td></td></tr><tr><td><code>tau</code></td><td>The between-trial standard deviation.</td></tr><tr><td></td><td></td></tr><tr><td><code>direct</code></td><td>The direct estimate of the split node
    (see 'Value' in <code><a href="run_nodesplit.html">run_nodesplit</a></code>).</td></tr><tr><td></td><td></td></tr><tr><td><code>indirect</code></td><td>The indirect estimate of the split node
    (see 'Value' in <code><a href="run_nodesplit.html">run_nodesplit</a></code>).</td></tr><tr><td></td><td></td></tr><tr><td><code>IF</code></td><td>The inconsistency factor of the split node
-   (see 'Value' in <code><a href="run_nodesplit.html">run_nodesplit</a></code>).</td></tr><tr><td></td><td></td></tr><tr><td><code>phi</code></td><td>The informative missingness parameter.</td></tr><tr><td></td><td></td></tr><tr><td><code>beta</code></td><td>The regression coefficient.</td></tr></table><p><code>mcmc_diagnostics</code> also uses the <code><a href="https://rdrr.io/pkg/mcmcplots/man/mcmcplot.html" class="external-link">mcmcplot</a></code>  function to create an HTML file with a panel of diagnostic plots
-  (trace, density, and autocorrelation) for each monitored parameter.</p>
+   (see 'Value' in <code><a href="run_nodesplit.html">run_nodesplit</a></code>).</td></tr><tr><td></td><td></td></tr><tr><td><code>phi</code></td><td>The informative missingness parameter.</td></tr><tr><td></td><td></td></tr><tr><td><code>beta</code></td><td>The regression coefficient.</td></tr></table><p><code>mcmc_diagnostics</code> also uses the
+<code><a href="https://rdrr.io/pkg/mcmcplots/man/mcmcplot.html" class="external-link">mcmcplot</a></code> function of the R-package
+<a href="https://CRAN.R-project.org/package=mcmcplots" class="external-link">mcmcplots</a> to create an
+  HTML file with a panel of diagnostic plots (trace, density, and
+  autocorrelation) for each monitored parameter.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
     <p>For each monitored parameter, <code>mcmc_diagnostics</code> considers the
-  maximum R-hat and compares it with the threshold 1.1: convergence is
+  maximum R-hat and compares it with the threshold 1.1. Convergence is
   achieved for the monitored parameter, when the maximum R-hat is below that
   threshold; otherwise, the Markov Chain Monte Carlo algorithm has not
   converged for that parameter. If the monitored parameter is a vector with
@@ -115,10 +120,10 @@ sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/mcmcplots/man/mcmcplot.html" class="external-link">mcmcplot</a></code>, <code><a href="run_metareg.html">run_metareg</a></code>,
-  <code><a href="run_model.html">run_model</a></code>, <code><a href="run_nodesplit.html">run_nodesplit</a></code>,
-  <code><a href="run_sensitivity.html">run_sensitivity</a></code>, <code><a href="run_series_meta.html">run_series_meta</a></code>,
-  <code><a href="run_ume.html">run_ume</a></code></p></div>
+    <div class="dont-index"><p><a href="https://CRAN.R-project.org/package=mcmcplots" class="external-link">mcmcplot</a>,
+  <code><a href="run_metareg.html">run_metareg</a></code>, <code><a href="run_model.html">run_model</a></code>,
+  <code><a href="run_nodesplit.html">run_nodesplit</a></code>, <code><a href="run_sensitivity.html">run_sensitivity</a></code>,
+  <code><a href="run_series_meta.html">run_series_meta</a></code>, <code><a href="run_ume.html">run_ume</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -132,7 +137,7 @@ sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.</p>
 <span class="r-in"><span class="co"># Read results from 'run_nodesplit' (using the default arguments)</span></span>
 <span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/node_baker.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># Obtain the diagnostic plots and check convergence based on R-hat</span></span>
+<span class="r-in"><span class="co"># Check convergence based on R-hat</span></span>
 <span class="r-in"><span class="fu">mcmc_diagnostics</span><span class="op">(</span>net <span class="op">=</span> <span class="va">res</span>,</span>
 <span class="r-in">                 par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tau"</span>, <span class="st">"EM[2,1]"</span>, <span class="st">"EM.pred[2,1]"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">The argument 'par' is ignored as it is used only for the functions 'run_model', 'run_ume' and 'run_metareg'</span></span>
@@ -162,7 +167,7 @@ sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer></div>

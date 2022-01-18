@@ -71,7 +71,9 @@
   observed in the network.</p>
     </div>
 
-    <div id="ref-usage">Usage,<div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">intervalplot_panel_ume</span><span class="op">(</span><span class="va">full</span>, <span class="va">ume</span>, <span class="va">drug_names</span><span class="op">)</span></code></pre></div></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">intervalplot_panel_ume</span><span class="op">(</span><span class="va">full</span>, <span class="va">ume</span>, <span class="va">drug_names</span><span class="op">)</span></code></pre></div>
+    </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
@@ -100,21 +102,22 @@ instead.</p></dd>
     <p><code>intervalplot_panel_ume</code> is integrated in the
   <code><a href="ume_plot.html">ume_plot</a></code> function. The consistency model and the unrelated
   mean effects model are abbreviated in the y-axis as 'NMA model' and
-  'UME model'. The intervals are highlighted with green, when the
-  corresponding summary effect sizes do not cross the vertical line of no
+  'UME model', respectively. The intervals are highlighted with green, when
+  the corresponding summary effect sizes do not cross the vertical line of no
   difference, and red otherwise. Grey panels refer to the frail comparisons
-  as detected by the <code><a href="run_ume.html">run_ume</a></code> function (see 'Details' in
-  <code><a href="run_ume.html">run_ume</a></code>).</p>
+  as detected by the <code><a href="improved_ume.html">improved_ume</a></code> function (see 'Details' in
+  <code><a href="improved_ume.html">improved_ume</a></code>).</p>
     </div>
     <div id="references">
     <h2>References</h2>
-    <p>Spineli LM. A novel framework to evaluate the consistency assumption globally
-in a network of interventions. <em>submitted</em> 2021.</p>
+    <p>Spineli LM. A revised framework to evaluate the consistency assumption
+globally in a network of interventions. <em>Med Decis Making</em> 2021.
+doi: <a href="https://doi.org/10.1177/0272989X211068005" class="external-link">10.1177/0272989X211068005</a></p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="run_model.html">run_model</a></code>, <code><a href="ume_plot.html">ume_plot</a></code>,
-  <code><a href="run_ume.html">run_ume</a></code></p></div>
+    <div class="dont-index"><p><code><a href="improved_ume.html">improved_ume</a></code> <code><a href="run_model.html">run_model</a></code>,
+  <code><a href="run_ume.html">run_ume</a></code>, <code><a href="ume_plot.html">ume_plot</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -133,7 +136,7 @@ in a network of interventions. <em>submitted</em> 2021.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer></div>

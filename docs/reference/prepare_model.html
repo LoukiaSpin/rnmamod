@@ -78,7 +78,9 @@ meta-regression</h1>
   a one-stage Bayesian pairwise meta-analysis with pattern-mixture model.</p>
     </div>
 
-    <div id="ref-usage">Usage,<div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">prepare_model</span><span class="op">(</span><span class="va">measure</span>, <span class="va">model</span>, <span class="va">covar_assumption</span>, <span class="va">assumption</span><span class="op">)</span></code></pre></div></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">prepare_model</span><span class="op">(</span><span class="va">measure</span>, <span class="va">model</span>, <span class="va">covar_assumption</span>, <span class="va">assumption</span><span class="op">)</span></code></pre></div>
+    </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
@@ -95,8 +97,8 @@ respectively. The default argument is <code>"RE"</code>.</p></dd>
 <dd><p>Character string indicating the structure of the
 intervention-by-covariate interaction, as described in
 Cooper et al., (2009). Set <code>covar_assumption</code> equal to one of the
-following: <code>"NO"</code>, when no meta-regression is performed; otherwise,
-<code>"exchangeable"</code>, <code>"independent"</code>, and <code>"common"</code>.</p></dd>
+following, when meta-regression is performed: <code>"exchangeable"</code>,
+<code>"independent"</code>, and <code>"common"</code>.</p></dd>
 <dt>assumption</dt>
 <dd><p>Character string indicating the structure of the
 informative missingness parameter. Set <code>assumption</code> equal to one of
@@ -110,14 +112,16 @@ uncorrelated, respectively.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An R character vector object to be passed to <code><a href="run_model.html">run_model</a></code>  and <code><a href="run_metareg.html">run_metareg</a></code>  through the
-<code><a href="https://rdrr.io/r/base/textconnections.html" class="external-link">textConnection</a></code> function as the argument <code>object</code>.</p>
+    <p>An R character vector object to be passed to <code><a href="run_model.html">run_model</a></code>  and <code><a href="run_metareg.html">run_metareg</a></code> through the
+<code><a href="https://rdrr.io/r/base/textconnections.html" class="external-link">textConnection</a></code> function as the argument
+<code>object</code>.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
     <p><code>prepare_model</code> creates the model in the JAGS dialect
   of the BUGS language. The output of this function constitutes the argument
-  <code>model.file</code> of <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> via the
+  <code>model.file</code> of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function (in the
+  R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>) via the
   <code><a href="https://rdrr.io/r/base/textconnections.html" class="external-link">textConnection</a></code> function.</p>
     </div>
     <div id="references">
@@ -133,7 +137,8 @@ meta-analysis of randomized controlled trials. <em>Med Decis Making</em>
 2013;<b>33</b>(5):607--617. doi: <a href="https://doi.org/10.1177/0272989X12458724" class="external-link">10.1177/0272989X12458724</a></p>
 <p>Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 data in network meta-analysis: a one-stage pattern-mixture model approach.
-<em>Stat Methods Med Res</em> 2021. doi: <a href="https://doi.org/10.1177/0962280220983544" class="external-link">10.1177/0962280220983544</a></p>
+<em>Stat Methods Med Res</em> 2021;<b>30</b>(4):958--975.
+doi: <a href="https://doi.org/10.1177/0962280220983544" class="external-link">10.1177/0962280220983544</a></p>
 <p>Spineli LM. An empirical comparison of Bayesian modelling strategies for
 missing binary outcome data in network meta-analysis.
 <em>BMC Med Res Methodol</em> 2019;<b>19</b>(1):86.
@@ -144,8 +149,9 @@ for uncertainty due to missing binary outcome data in pairwise meta-analysis.
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>, <code><a href="run_metareg.html">run_metareg</a></code>,
-  <code><a href="run_model.html">run_model</a></code>, <code><a href="https://rdrr.io/r/base/textconnections.html" class="external-link">textConnection</a></code></p></div>
+    <div class="dont-index"><p><code><a href="run_metareg.html">run_metareg</a></code>, <code><a href="run_model.html">run_model</a></code>,
+   <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">jags</a>,
+   <code><a href="https://rdrr.io/r/base/textconnections.html" class="external-link">textConnection</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -164,7 +170,7 @@ for uncertainty due to missing binary outcome data in pairwise meta-analysis.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer></div>

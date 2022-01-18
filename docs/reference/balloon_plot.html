@@ -73,7 +73,9 @@
   <code><a href="run_sensitivity.html">run_sensitivity</a></code>.</p>
     </div>
 
-    <div id="ref-usage">Usage,<div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">balloon_plot</span><span class="op">(</span><span class="va">sens</span>, <span class="va">compar</span>, <span class="va">drug_names</span><span class="op">)</span></code></pre></div></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">balloon_plot</span><span class="op">(</span><span class="va">sens</span>, <span class="va">compar</span>, <span class="va">drug_names</span><span class="op">)</span></code></pre></div>
+    </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
@@ -94,14 +96,14 @@ the order of the interventions as they appear in
     <div id="value">
     <h2>Value</h2>
     <p><code>balloon_plot</code> returns two enhanced balloon plots for one
-  comparison (see 'Details'):</p><table class="table table"><tr><td><code>Plot_effect_size</code></td><td>The enhanced balloon plot for the
+  comparison (see 'Details'):</p><table class="table table"><tr><td><code>plot_effect_size</code></td><td>The enhanced balloon plot for the
    summary effect size (according to the argument <code>measure</code> inherited
-   by <code><a href="run_sensitivity.html">run_sensitivity</a></code>) of one pairwise comparison.</td></tr><tr><td></td><td></td></tr><tr><td><code>Plot_tau</code></td><td>The enhanced balloon plot for tau. When the
+   by <code><a href="run_sensitivity.html">run_sensitivity</a></code>) for one pairwise comparison.</td></tr><tr><td></td><td></td></tr><tr><td><code>plot_tau</code></td><td>The enhanced balloon plot for <em>tau</em>. When the
    fixed-effect model has been performed in <code><a href="run_sensitivity.html">run_sensitivity</a></code>,
-   the function will not return the <code>Plot_tau</code>.</td></tr></table></div>
+   the function will not return the <code>plot_tau</code>.</td></tr></table></div>
     <div id="details">
     <h2>Details</h2>
-    <p>For the <code>Plot_effect_size</code> of the selected pairwise
+    <p>For the <code>plot_effect_size</code> of the selected pairwise
   comparison, the different colours and sizes of the bubbles reflect the
   posterior standard deviation and the posterior mean, respectively.
   A colour key appears below the plot.
@@ -115,15 +117,15 @@ the order of the interventions as they appear in
   <code>mean_scenarios</code> of the <code><a href="run_sensitivity.html">run_sensitivity</a></code>:
   the x-axis refers to the 'experimental' intervention, and the y-axis refers
   to the 'control' intervention.</p>
-<p>The same enhanced balloon plot is created for tau (<code>Plot_tau</code>).
+<p>The same enhanced balloon plot is created for <em>tau</em> (<code>plot_tau</code>).
   However, filled bubbles indicate low statistical heterogeneity
-  (the posterior median of tau is lower than the median of the
+  (the posterior median of <em>tau</em> is lower than the median of the
   prior distribution for the heterogeneity parameter),
   and crossed bubbles indicate considerable statistical heterogeneity
-  (the posterior median of tau exceeds the median of the prior
+  (the posterior median of <em>tau</em> exceeds the median of the prior
   distribution for the heterogeneity parameter).</p>
-<p><code>balloon_plot_mod</code> can be used only when missing participant
-  outcome data have been extracted for at least one trial.
+<p><code>balloon_plot</code> can be used only when missing participant
+  outcome data have been extracted for at least one ↨
   Otherwise, the execution of the function will be stopped and an error
   message will be printed on the R console.</p>
     </div>
@@ -179,7 +181,7 @@ and network meta-analysis. <em>Res Synth Methods</em>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer></div>

@@ -69,7 +69,9 @@
   for a specific level or value of the investigated covariate.</p>
     </div>
 
-    <div id="ref-usage">Usage,<div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">scatterplot_sucra</span><span class="op">(</span><span class="va">full</span>, <span class="va">reg</span>, <span class="va">cov_value</span>, <span class="va">drug_names</span><span class="op">)</span></code></pre></div></div>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">scatterplot_sucra</span><span class="op">(</span><span class="va">full</span>, <span class="va">reg</span>, <span class="va">cov_value</span>, <span class="va">drug_names</span><span class="op">)</span></code></pre></div>
+    </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
@@ -80,9 +82,9 @@ See 'Value' in <code><a href="run_model.html">run_model</a></code>.</p></dd>
 <dd><p>An object of S3 class <code><a href="run_metareg.html">run_metareg</a></code>. See 'Value' in
 <code><a href="run_metareg.html">run_metareg</a></code>.</p></dd>
 <dt>cov_value</dt>
-<dd><p>A list of two elements in the following order: a number
+<dd><p>A list of two elements in the following order: 1) a number
 for the covariate value of interest (see 'Arguments' in
-<code><a href="run_metareg.html">run_metareg</a></code>), and a character to indicate the name of
+<code><a href="run_metareg.html">run_metareg</a></code>), and 2) a character to indicate the name of
 the covariate. See also 'Details'.</p></dd>
 <dt>drug_names</dt>
 <dd><p>A vector of labels with the name of the interventions in
@@ -101,8 +103,8 @@ instead.</p></dd>
     <h2>Details</h2>
     <p>The names of the interventions appear above each point in the plot.
   Three coloured rectangles appear in the scatterplot: a red rectangle for
-  SUCRA values up to 50%, a yellow rectangular refer to SUCRA values between
-  50<!-- % and 80%, and a green rectangle for SUCRA values over 80\%. -->
+  SUCRA values up to 50%, a yellow rectangular for SUCRA values between
+  50% and 80%, and a green rectangle for SUCRA values over 80%.
   Interventions falling at the green area are considered as the highest
   ranked interventions, whilst interventions falling at the red area are
   considered as the lowest ranked interventions.</p>
@@ -118,8 +120,7 @@ instead.</p></dd>
     <p>Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 for presenting results from multiple-treatment meta-analysis: an overview and
 tutorial. <em>J Clin Epidemiol</em> 2011;<b>64</b>(2):163--71.
-[doi: <a href="https://doi.org/10.1016/j.jclinepi.2010.03.016" class="external-link">10.1016/j.jclinepi.2010.03.016</a>
-]</p>
+doi: <a href="https://doi.org/10.1016/j.jclinepi.2010.03.016" class="external-link">10.1016/j.jclinepi.2010.03.016</a></p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -142,7 +143,7 @@ tutorial. <em>J Clin Epidemiol</em> 2011;<b>64</b>(2):163--71.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer></div>
