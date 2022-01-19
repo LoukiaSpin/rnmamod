@@ -40,7 +40,7 @@ An R character vector object to be passed to \code{\link{run_model}}
   \code{object}.
 }
 \description{
-The WinBUGS code, as written by Dias et al., (2013) to run a one-stage
+The WinBUGS code, as written by Dias et al. (2013) to run a one-stage
   Bayesian network meta-analysis, extended to incorporate the pattern-mixture
   model for binary or continuous missing participant outcome data. The model
   has been also extended to incorporate a trial-level covariate to apply
@@ -82,7 +82,7 @@ for uncertainty due to missing binary outcome data in pairwise meta-analysis.
 }
 \seealso{
 \code{\link{run_metareg}}, \code{\link{run_model}},
-   \href{https://CRAN.R-project.org/package=R2jags}{jags},
+   \code{\link[R2jags:jags]{jags}},
    \code{\link[base:textConnection]{textConnection}}
 }
 \author{

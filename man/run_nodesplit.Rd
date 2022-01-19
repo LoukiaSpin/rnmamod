@@ -35,30 +35,23 @@ The default argument is 1.}
 An R2jags output on the summaries of the posterior distribution,
   and the Gelman-Rubin convergence diagnostic of the
   following monitored parameters:
-  \tabular{ll}{
-   \code{direct} \tab The summary effect measure (according to the
-   argument \code{measure} defined in \code{\link{run_model}}) of each
-   split node based on the corresponding trials.\cr
-   \tab \cr
-   \code{indirect} \tab The indirect summary effect measure (according to the
-   argument \code{measure} defined in \code{\link{run_model}}) of each split
-   node based on the remaining network after removing (splitting) the
-   corresponding node.\cr
-   \tab \cr
-   \code{diff} \tab The inconsistency parameter for each split node
-   defined as the difference between the direct and indirect effect
-   of the corresponding split node.\cr
-   \tab \cr
-   \code{tau} \tab The between-trial standard deviation after
-   each split node, when the random-effects model has been specified.\cr
-  }
+  \item{direct}{The summary effect measure (according to the argument
+  \code{measure} defined in \code{\link{run_model}}) of each split node based
+  on the corresponding trials.}
+  \item{indirect}{The indirect summary effect measure (according to the
+  argument \code{measure} defined in \code{\link{run_model}}) of each split
+  node based on the remaining network after removing (splitting) the
+  corresponding node.}
+  \item{diff}{The inconsistency parameter for each split node defined as the
+  difference between the direct and indirect effect of the corresponding
+  split node.}
+  \item{tau}{The between-trial standard deviation after each split node, when
+  the random-effects model has been specified.}
 
   Furthermore, the output includes the following element:
-  \tabular{ll}{
-   \code{model_assessment} \tab A data-frame on the measures of model
-   assessment after each split node: deviance information criterion,
-   total residual deviance, and number of effective parameters.\cr
-  }
+  \item{model_assessment}{A data-frame on the measures of model assessment
+  after each split node: deviance information criterion,
+  total residual deviance, and number of effective parameters.}
 }
 \description{
 Performs the Bayesian node-splitting approach of Dias et al. (2010)
@@ -159,9 +152,8 @@ meta-analysis. \emph{Res Synth Methods} 2016;\bold{7}(1):80--93.
 \doi{10.1002/jrsm.1167}
 }
 \seealso{
-\href{https://CRAN.R-project.org/package=R2jags}{jags},
-  \href{https://CRAN.R-project.org/package=gemtc}{mtc.nodesplit},
-  \href{https://CRAN.R-project.org/package=gemtc}{mtc.nodesplit.comparisons},
+\code{\link[R2jags:jags]{jags}},
+  \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}},
   \code{\link{nodesplit_plot}}, \code{\link{prepare_nodesplit}},
   \code{\link{run_model}},
 }

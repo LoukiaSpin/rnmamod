@@ -119,8 +119,7 @@ in meta-analysis--part 1: two-stage methods.
 }
 \seealso{
 \code{\link{run_model}}, \code{\link{taylor_continuous}},
-  \code{\link{taylor_imor}},
-  \href{https://CRAN.R-project.org/package=writexl}{write_xlsx}
+  \code{\link{taylor_imor}}, \code{\link[writexl:write_xlsx]{write_xlsx}}
 }
 \author{
 {Loukia M. Spineli}

@@ -86,7 +86,7 @@ series_meta_plot(full = res,
 }
 \seealso{
 \code{\link{run_model}}, \code{\link{run_series_meta}},
-  \href{https://CRAN.R-project.org/package=writexl}{write_xlsx}
+  \code{\link[writexl:write_xlsx]{write_xlsx}}
 }
 \author{
 {Loukia M. Spineli}

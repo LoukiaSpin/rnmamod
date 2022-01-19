@@ -6,36 +6,28 @@
 \format{
 The columns of the data-frame in the argument \code{data} refer to
   the following ordered elements for a continuous outcome:
-  \tabular{ll}{
-   \strong{id} \tab A unique identifier for each trial.\cr
-   \tab \cr
-   \strong{y1} \tab The observed mean outcome in the first arm of the
-   comparison.\cr
-   \tab \cr
-   \strong{y2} \tab The observed mean outcome in the second arm of the
-   comparison.\cr
-   \tab \cr
-   \strong{sd1} \tab The observed standard deviation of the outcome in the
-   first arm of the comparison.\cr
-   \tab \cr
-   \strong{sd2} \tab The observed standard deviation of the outcome in the
-   second arm of the comparison.\cr
-   \tab \cr
-   \strong{m1} \tab The number of MOD in the first arm of the comparison.\cr
-   \tab \cr
-   \strong{m2} \tab The number of MOD in the second arm of the comparison.\cr
-   \tab \cr
-   \strong{n1} \tab The number randomised in the first arm of the
-   comparison.\cr
-   \tab \cr
-   \strong{n2} \tab The number randomised in the second arm of the
-   comparison.\cr
-   \tab \cr
-   \strong{t1} \tab An identifier for the intervention in the first arm of
-   the comparison.\cr
-   \tab \cr
-   \strong{t2} \tab An identifier for the intervention in the second arm of
-   the comparison.\cr
+  \tabular{rl}{
+  \bold{id} \tab A unique identifier for each trial.\cr
+  \bold{y1} \tab The observed mean outcome in the first arm of the
+  comparison.\cr
+  \bold{y2} \tab The observed mean outcome in the second arm of the
+  comparison.\cr
+  \bold{sd1} \tab The observed standard deviation of the outcome in the
+  first arm of the comparison.\cr
+  \bold{sd2} \tab The observed standard deviation of the outcome in the
+  second arm of the comparison.\cr
+  \bold{m1} \tab The number of missing participants in the first arm of
+  the comparison.\cr
+  \bold{m2} \tab The number of missing participants in the second arm of
+  the comparison.\cr
+  \bold{n1} \tab The number randomised in the first arm of the
+  comparison.\cr
+  \bold{n2} \tab The number randomised in the second arm of the
+  comparison.\cr
+  \bold{t1} \tab An identifier for the intervention in the first arm of
+  the comparison.\cr
+  \bold{t2} \tab An identifier for the intervention in the second arm of
+  the comparison.\cr
   }
 }
 \usage{
@@ -71,19 +63,16 @@ parameters.}
 }
 \value{
 A data-frame that additionally includes the following elements:
-  \tabular{ll}{
-   \strong{EM} \tab The effect size adjusted for MOD and obtained using the
-   Taylor series.\cr
-   \tab \cr
-   \strong{se.EM} \tab The standard error of the effect size adjusted for MOD
-   and obtained using the Taylor series.\cr
-  }
+  \item{EM}{The effect size adjusted for the missing participants and
+  obtained using the Taylor series.}
+  \item{se.EM}{The standard error of the effect size adjusted for the missing
+  participants and obtained using the Taylor series.}
 }
 \description{
 Applies the pattern-mixture model under a specific assumption
   about the informative missingness parameter in trial-arms with
-  \bold{continuous} missing participant outcome data (MOD) and uses the
-  Taylor series to obtain the effect size and standard error for each trial
+  \bold{continuous} missing participant outcome data and uses the Taylor
+  series to obtain the effect size and standard error for each trial
   (Mavridis et al., 2015).
 }
 \details{

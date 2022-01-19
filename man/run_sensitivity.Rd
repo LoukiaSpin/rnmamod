@@ -65,20 +65,21 @@ The default argument is 1.}
 A list of R2jags outputs on the summaries of the posterior
   distribution, and the Gelman-Rubin convergence diagnostic
   (Gelman et al., 1992) of the following monitored parameters for a
-  random-effects PMA:
+  random-effects pairwise meta-analysis:
   \item{EM}{The estimated summary effect measure (according to the
    argument \code{measure} defined in \code{\link{run_model}}).}
   \item{tau}{The between-trial standard deviation. This element does
-   not appear in the case of a fixed-effect PMA.}
+   not appear in the case of a fixed-effect pairwise meta-analysis.}
 
-  In a random-effects NMA, \code{EM} refer to all possible pairwise
-  comparisons of interventions in the network. Furthermore, \code{tau} is
-  typically assumed to be common for all observed comparisons in the network.
+  In a random-effects network meta-analysis, \code{EM} refer to all possible
+  pairwise comparisons of interventions in the network. Furthermore,
+  \code{tau} is typically assumed to be common for all observed comparisons
+  in the network.
 }
 \description{
 Performs a sensitivity analysis by applying pairwise
-  meta-analysis (PMA) or network meta-analysis (NMA) for a series of
-  different scenarios about the informative missingness parameter,
+  meta-analysis or network meta-analysis for a series of different scenarios
+  about the informative missingness parameter,
 }
 \details{
 The model runs in \code{JAGS} and the progress of the simulation
@@ -90,10 +91,10 @@ The model runs in \code{JAGS} and the progress of the simulation
   functions of the package function to be processed further and provide an
   end-user-ready output.
 
-  In the case of PMA, \code{EM} and \code{tau} are estimated as many times
-  as the number of scenarios considered. In the case of NMA, each possible
-  pairwise comparison is estimated as many times as the number of scenarios
-  considered.
+  In the case of pairwise meta-analysis, \code{EM} and \code{tau} are
+  estimated as many times as the number of scenarios considered.
+  In the case of network meta-analysis, each possible pairwise comparison is
+  estimated as many times as the number of scenarios considered.
 
   The informative missingness parameter is assumed to differ only across the
   interventions of the dataset. Therefore, the user can specify the
@@ -184,8 +185,7 @@ in meta-analysis--part 1: two-stage methods.
 \emph{Stat Med} 2008;\bold{27}(5):711--727. \doi{10.1002/sim.3008}
 }
 \seealso{
-\href{https://CRAN.R-project.org/package=R2jags}{jags},
-  \code{\link{run_model}}
+\code{\link[R2jags:jags]{jags}}, \code{\link{run_model}}
 }
 \author{
 {Loukia M. Spineli}

@@ -53,7 +53,7 @@
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link{run_model}}, \code{\link{run_series_meta}},
-#'   \href{https://CRAN.R-project.org/package=writexl}{write_xlsx}
+#'   \code{\link[writexl:write_xlsx]{write_xlsx}}
 #'
 #' @examples
 #' data("nma.dogliotti2014")

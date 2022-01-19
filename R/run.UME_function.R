@@ -1,9 +1,9 @@
 #' Perform the unrelated mean effects model
 #'
 #' @description Performs the unrelated mean effects model of Dias et al. (2013)
-#'   that has been refined (Spineli, 2021a) and extended to address aggregate
+#'   that has been refined (Spineli, 2021) and extended to address aggregate
 #'   binary and continuous missing participant outcome data via the
-#'   pattern-mixture model (Spineli et al. 2021b; Spineli, 2019). This model
+#'   pattern-mixture model (Spineli et al. 2021; Spineli, 2019). This model
 #'   offers a global evaluation of the plausibility of the consistency
 #'   assumption in the network.
 #'
@@ -30,41 +30,30 @@
 #' @return An R2jags output on the summaries of the posterior distribution, and
 #'   the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the
 #'   following monitored parameters:
-#'   \tabular{ll}{
-#'    \code{EM} \tab The summary effect estimate (according to the argument
-#'    \code{measure} defined in \code{\link{run_model}}) for each pairwise
-#'    comparison observed in the network.\cr
-#'    \tab \cr
-#'    \code{dev_o} \tab The deviance contribution of each trial-arm based on the
-#'    observed outcome.\cr
-#'    \tab \cr
-#'    \code{hat_par} \tab The fitted outcome at each trial-arm.\cr
-#'    \tab \cr
-#'    \code{tau} \tab The between-trial standard deviation (assumed common
-#'    across the observed pairwise comparisons) for the whole network, when a
-#'    random-effects model has been specified.\cr
-#'    \tab \cr
-#'    \code{m_tau} \tab The between-trial standard deviation (assumed common
-#'    across the observed pairwise comparisons) for the subset of multi-arm
-#'    trials, when a random-effects model has been specified.\cr
-#'   }
+#'   \item{EM}{The summary effect estimate (according to the argument
+#'   \code{measure} defined in \code{\link{run_model}}) for each pairwise
+#'   comparison observed in the network.}
+#'   \item{dev_o}{The deviance contribution of each trial-arm based on the
+#'   observed outcome.}
+#'   \item{hat_par}{The fitted outcome at each trial-arm.}
+#'   \item{tau}{The between-trial standard deviation (assumed common across the
+#'   observed pairwise comparisons) for the whole network, when a random-effects
+#'   model has been specified.}
+#'   \item{m_tau}{The between-trial standard deviation (assumed common
+#'   across the observed pairwise comparisons) for the subset of multi-arm
+#'   trials, when a random-effects model has been specified.}
 #'
 #'   The output also includes the following elements:
-#'   \tabular{ll}{
-#'    \code{leverage_o} \tab The leverage for the observed outcome at each
-#'    trial-arm.\cr
-#'    \tab \cr
-#'    \code{sign_dev_o} \tab The sign of the difference between observed and
-#'    fitted outcome at each trial-arm.\cr
-#'    \tab \cr
-#'    \code{model_assessment} \tab A data-frame on the measures of model
-#'    assessment: deviance information criterion, number of effective
-#'    parameters, and total residual deviance.\cr
-#'    \tab \cr
-#'    \code{jagsfit} \tab An object of S3 class \code{\link[R2jags:jags]{jags}}
-#'    with the posterior results on all monitored parameters to be used in the
-#'    \code{\link{mcmc_diagnostics}} function.\cr
-#'   }
+#'   \item{leverage_o}{The leverage for the observed outcome at each trial-arm.}
+#'   \item{sign_dev_o}{The sign of the difference between observed and fitted
+#'   outcome at each trial-arm.}
+#'   \item{model_assessment}{A data-frame on the measures of model assessment:
+#'   deviance information criterion, number of effective parameters, and total
+#'   residual deviance.}
+#'   \item{jagsfit}{An object of S3 class \code{\link[R2jags:jags]{jags}} with
+#'   the posterior results on all monitored parameters to be used in the
+#'   \code{\link{mcmc_diagnostics}} function.}
+#'
 #'   Furthermore, \code{run_ume} returns a character vector with the pairwise
 #'   comparisons observed in the network, \code{obs_comp}, and a character
 #'   vector with comparisons between the non-baseline interventions observed in
@@ -82,7 +71,7 @@
 #'   Initially, \code{run_ume} calls the \code{\link{improved_ume}} function to
 #'   identify the \emph{frail comparisons}, that is, comparisons between
 #'   non-baseline interventions in multi-arm trials not investigated in any
-#'   two-arm trial of the network (Spineli, 2021a). The 'original' model of
+#'   two-arm trial of the network (Spineli, 2021). The 'original' model of
 #'   Dias et al. (2013) omits the frail comparisons from the estimation
 #'   process. Consequently, the number of estimated summary effects is less
 #'   than those obtained by performing separate pairwise meta-analyses
@@ -97,7 +86,7 @@
 #'   \code{\link{prepare_ume}} has been also refined to account for the
 #'   multi-arm trials by assigning conditional univariate normal distributions
 #'   on the basic parameters of these trials, that is, effect parameters between
-#'   non-baseline arms and the baseline arm (Spineli, 2021a).
+#'   non-baseline arms and the baseline arm (Spineli, 2021).
 #'
 #'   \code{run_ume} runs Bayesian unrelated mean effects model in \code{JAGS}.
 #'   The progress of the simulation appears on the R console.
@@ -112,7 +101,7 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \href{https://CRAN.R-project.org/package=R2jags}{R2jags},
+#' @seealso \code{\link[R2jags:jags]{jags}},
 #'   \code{\link{prepare_ume}}, \code{\link{run_model}},
 #'   \code{\link{run_series_meta}}, \code{\link{ume_plot}}
 #'
@@ -128,11 +117,11 @@
 #'
 #' Spineli LM. A Revised Framework to Evaluate the Consistency Assumption
 #' Globally in a Network of Interventions.
-#' \emph{Med Decis Making} 2021a. \doi{10.1177/0272989X211068005}
+#' \emph{Med Decis Making} 2021. \doi{10.1177/0272989X211068005}
 #'
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 #' data in network meta-analysis: a one-stage pattern-mixture model approach.
-#' \emph{Stat Methods Med Res} 2021b;\bold{30}(4):958--975.
+#' \emph{Stat Methods Med Res} 2021;\bold{30}(4):958--975.
 #' \doi{10.1177/0962280220983544}
 #'
 #' Spineli LM. An empirical comparison of Bayesian modelling strategies for

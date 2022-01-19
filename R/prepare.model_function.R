@@ -2,7 +2,7 @@
 #' meta-regression
 #'
 #' @description
-#'   The WinBUGS code, as written by Dias et al., (2013) to run a one-stage
+#'   The WinBUGS code, as written by Dias et al. (2013) to run a one-stage
 #'   Bayesian network meta-analysis, extended to incorporate the pattern-mixture
 #'   model for binary or continuous missing participant outcome data. The model
 #'   has been also extended to incorporate a trial-level covariate to apply
@@ -45,7 +45,7 @@
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link{run_metareg}}, \code{\link{run_model}},
-#'    \href{https://CRAN.R-project.org/package=R2jags}{jags},
+#'    \code{\link[R2jags:jags]{jags}},
 #'    \code{\link[base:textConnection]{textConnection}}
 #'
 #' @references

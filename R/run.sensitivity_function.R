@@ -1,8 +1,8 @@
 #' Perform sensitivity analysis for missing participant outcome data
 #'
 #' @description Performs a sensitivity analysis by applying pairwise
-#'   meta-analysis (PMA) or network meta-analysis (NMA) for a series of
-#'   different scenarios about the informative missingness parameter,
+#'   meta-analysis or network meta-analysis for a series of different scenarios
+#'   about the informative missingness parameter,
 #'
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
 #'   \code{\link{run_model}}.
@@ -45,15 +45,16 @@
 #' @return A list of R2jags outputs on the summaries of the posterior
 #'   distribution, and the Gelman-Rubin convergence diagnostic
 #'   (Gelman et al., 1992) of the following monitored parameters for a
-#'   random-effects PMA:
+#'   random-effects pairwise meta-analysis:
 #'   \item{EM}{The estimated summary effect measure (according to the
 #'    argument \code{measure} defined in \code{\link{run_model}}).}
 #'   \item{tau}{The between-trial standard deviation. This element does
-#'    not appear in the case of a fixed-effect PMA.}
+#'    not appear in the case of a fixed-effect pairwise meta-analysis.}
 #'
-#'   In a random-effects NMA, \code{EM} refer to all possible pairwise
-#'   comparisons of interventions in the network. Furthermore, \code{tau} is
-#'   typically assumed to be common for all observed comparisons in the network.
+#'   In a random-effects network meta-analysis, \code{EM} refer to all possible
+#'   pairwise comparisons of interventions in the network. Furthermore,
+#'   \code{tau} is typically assumed to be common for all observed comparisons
+#'   in the network.
 #'
 #' @details The model runs in \code{JAGS} and the progress of the simulation
 #'   appears on the R console. The number of times \code{run_sensitivity} is
@@ -64,10 +65,10 @@
 #'   functions of the package function to be processed further and provide an
 #'   end-user-ready output.
 #'
-#'   In the case of PMA, \code{EM} and \code{tau} are estimated as many times
-#'   as the number of scenarios considered. In the case of NMA, each possible
-#'   pairwise comparison is estimated as many times as the number of scenarios
-#'   considered.
+#'   In the case of pairwise meta-analysis, \code{EM} and \code{tau} are
+#'   estimated as many times as the number of scenarios considered.
+#'   In the case of network meta-analysis, each possible pairwise comparison is
+#'   estimated as many times as the number of scenarios considered.
 #'
 #'   The informative missingness parameter is assumed to differ only across the
 #'   interventions of the dataset. Therefore, the user can specify the
@@ -112,8 +113,7 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \href{https://CRAN.R-project.org/package=R2jags}{jags},
-#'   \code{\link{run_model}}
+#' @seealso \code{\link[R2jags:jags]{jags}}, \code{\link{run_model}}
 #'
 #' @references
 #' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple

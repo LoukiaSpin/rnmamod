@@ -1,6 +1,6 @@
 #' WinBUGS code for the node-splitting approach
 #'
-#' @description The WinBUGS code, as written by Dias et al., (2010) to run a
+#' @description The WinBUGS code, as written by Dias et al. (2010) to run a
 #'   one-stage Bayesian node-splitting model, extended to incorporate the
 #'   pattern-mixture model for binary or continuous missing participant outcome
 #'   data.
@@ -41,8 +41,8 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \href{https://CRAN.R-project.org/package=R2jags}{jags},
-#'   \href{https://CRAN.R-project.org/package=gemtc}{mtc.nodesplit.comparisons},
+#' @seealso \code{\link[R2jags:jags]{jags}},
+#'   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}},
 #'   \code{\link{run_nodesplit}},
 #'   \code{\link[base:textConnection]{textConnection}}
 #'

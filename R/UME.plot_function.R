@@ -4,8 +4,8 @@
 #'   the comparison of the consistency model (via \code{\link{run_model}}) with
 #'   the unrelated mean effects model (via \code{\link{run_ume}}) regarding the
 #'   posterior summaries of the summary effect size for the pairwise comparisons
-#'   observed in the network, the between-trial standard deviation (tau) and
-#'   model assessment parameters.
+#'   observed in the network, the between-trial standard deviation (\emph{tau})
+#'   and model assessment parameters.
 #'
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
 #'   \code{\link{run_model}}.
@@ -25,36 +25,29 @@
 #' @return \code{ume_plot} prints on the R console a message on the most
 #'   parsimonious model (if any) based on the DIC (red text). Then, the function
 #'   returns the following list of elements:
-#'   \tabular{ll}{
-#'    \code{table_effect_size} \tab The posterior mean, posterior standard
-#'    deviation, and 95\% credible interval of the summary effect size for each
-#'    pairwise comparisons observed in the network under the consistency model
-#'    and the unrelated mean effects model.\cr
-#'    \tab \cr
-#'    \code{table_model_assessment} \tab The DIC, number of effective
-#'    parameters, and total residual deviance under the consistency model and
-#'    the unrelated mean effects model (Spiegelhalter et al., 2002).\cr
-#'    \tab \cr
-#'    \code{table_tau} \tab The posterior median and 95\% credible interval of
-#'    \emph{tau} under the consistency model and the unrelated mean effects
-#'    model. When a fixed-effect model has been performed, \code{ume_plot} does
-#'    not return this element.\cr
-#'    \tab \cr
-#'    \code{scatterplots} \tab The scatterplot and the Bland-Altman plot on the
-#'    posterior mean deviance contribution of the individual data points under
-#'    the consistency model and the unrelated mean effects model. See 'Details'
-#'    and 'Value' in \code{\link{scatterplots_dev}} and
-#'    \code{\link{bland_altman_plot}}, respectively.\cr
-#'    \tab \cr
-#'    \code{levarage_plots} \tab The leverage plot under the consistency model
-#'    and the unrelated mean effects model, separately. See 'Details' and
-#'    'Value' in \code{\link{leverage_plot}}.\cr
-#'    \tab \cr
-#'    \code{intervalplots} \tab A panel of interval plots on the summary effect
-#'    size under the consistency model and the unrelated mean effects model for
-#'    each pairwise comparison observed in the network. See 'Details' and
-#'    'Value' in \code{\link{intervalplot_panel_ume}}.\cr
-#'   }
+#'   \item{table_effect_size}{The posterior mean, posterior standard
+#'   deviation, and 95\% credible interval of the summary effect size for each
+#'   pairwise comparisons observed in the network under the consistency model
+#'   and the unrelated mean effects model.}
+#'   \item{table_model_assessment}{The DIC, number of effective
+#'   parameters, and total residual deviance under the consistency model and
+#'   the unrelated mean effects model (Spiegelhalter et al., 2002).}
+#'   \item{table_tau}{The posterior median and 95\% credible interval of
+#'   \emph{tau} under the consistency model and the unrelated mean effects
+#'   model. When a fixed-effect model has been performed, \code{ume_plot} does
+#'   not return this element.}
+#'   \item{scatterplots}{The scatterplot and the Bland-Altman plot on the
+#'   posterior mean deviance contribution of the individual data points under
+#'   the consistency model and the unrelated mean effects model. See 'Details'
+#'   and 'Value' in \code{\link{scatterplots_dev}} and
+#'   \code{\link{bland_altman_plot}}, respectively.}
+#'   \item{levarage_plots}{The leverage plot under the consistency model
+#'   and the unrelated mean effects model, separately. See 'Details' and
+#'   'Value' in \code{\link{leverage_plot}}.}
+#'   \item{intervalplots}{A panel of interval plots on the summary effect
+#'   size under the consistency model and the unrelated mean effects model for
+#'   each pairwise comparison observed in the network. See 'Details' and
+#'   'Value' in \code{\link{intervalplot_panel_ume}}.}
 #'
 #' @details The deviance information criterion (DIC) of the consistency model is
 #'   compared with the DIC of the unrelated mean effects model
@@ -77,7 +70,7 @@
 #' @seealso \code{\link{bland_altman_plot}},
 #'   \code{\link{intervalplot_panel_ume}}, \code{\link{leverage_plot}},
 #'   \code{\link{run_model}}, \code{\link{run_ume}},
-#'   \href{https://CRAN.R-project.org/package=writexl}{write_xlsx}
+#'   \code{\link[writexl:write_xlsx]{write_xlsx}}
 #'
 #' @references
 #' Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis

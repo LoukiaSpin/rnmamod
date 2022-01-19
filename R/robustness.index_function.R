@@ -26,36 +26,33 @@
 #' @return \code{robustness_index} prints on the R console a message in green
 #'   text on the threshold of robustness determined by the user.
 #'   Then, the function returns the following list of elements:
-#'   \tabular{ll}{
-#'    \code{robust_index} \tab A numeric scalar or vector on the robustness
-#'    index values. In the case of a pairwise meta-analysis (PMA),
-#'    \code{robust_index} is scalar as only one summary effect size is obtained.
-#'    In the case of network meta-analysis (NMA), \code{robust_index} is a
-#'    vector with length equal to the number of possible pairwise comparisons;
-#'    one robustness index per possible comparison.\cr
-#'    \tab \cr
-#'    \code{robust} \tab A character or character vector (of same length with
-#'    \code{robust_index}) on whether the primary analysis results are
-#'    \emph{robust} or \emph{frail} to the different re-analyses.\cr
-#'    \tab \cr
-#'    \code{kld} \tab A vector or matrix on the Kullback-Leibler divergence
-#'    (KLD) measure in the summary effect size from a subsequent re-analysis to
-#'    the primary analysis. In the case of a PMA, \code{kld} is a vector with
-#'    length equal to the number of total analyses. The latter equals the square
-#'    of the number of scenarios indicated in the argument \code{mean_scenarios}
-#'    of \code{\link{run_sensitivity}}, in the case of missing participant
-#'    outcome data; otherwise, the length of the character vector in argument
-#'    \code{sens}. One KLD value is obtained per analysis. In the case of NMA,
-#'    \code{robust_index} is a matrix with number of rows equal to the number of
-#'    total analyses and number of columns equal to the number of possible
-#'    pairwise comparisons; one KLD value per analysis and possible
-#'    comparison.\cr
-#'   }
+#'   \item{robust_index}{A numeric scalar or vector on the robustness
+#'   index values. In the case of a pairwise meta-analysis,
+#'   \code{robust_index} is scalar as only one summary effect size is obtained.
+#'   In the case of network meta-analysis, \code{robust_index} is a vector with
+#'   length equal to the number of possible pairwise comparisons;
+#'   one robustness index per possible comparison.}
+#'   \item{robust}{A character or character vector (of same length with
+#'   \code{robust_index}) on whether the primary analysis results are
+#'   \emph{robust} or \emph{frail} to the different re-analyses.}
+#'   \item{kld}{A vector or matrix on the Kullback-Leibler divergence
+#'   (KLD) measure in the summary effect size from a subsequent re-analysis to
+#'   the primary analysis. In the case of a pairwise meta-analysis, \code{kld}
+#'   is a vector with length equal to the number of total analyses. The latter
+#'   equals the square of the number of scenarios indicated in the argument
+#'   \code{mean_scenarios} of \code{\link{run_sensitivity}}, in the case of
+#'   missing participant outcome data; otherwise, the length of the character
+#'   vector in argument \code{sens}.
+#'   One KLD value is obtained per analysis. In the case of network
+#'   meta-analysis, \code{robust_index} is a matrix with number of rows equal to
+#'   the number of total analyses and number of columns equal to the number of
+#'   possible pairwise comparisons; one KLD value per analysis and possible
+#'   comparison.}
 #'
 #' @details The user may consider the values 0.28 and 0.17 in the argument
 #'   \code{threshold} for binary and continuous outcome data (the default
 #'   values), respectively, or consider other plausible values.
-#'   Spineli et al., (2021) offers a discussion on specifying the
+#'   Spineli et al. (2021) offers a discussion on specifying the
 #'   \code{threshold} of robustness.
 #'
 #'   In the case of missing participant outcome data, the primary analysis is

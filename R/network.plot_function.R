@@ -33,25 +33,20 @@
 #'
 #'   \code{netplot} also returns the following data-frames that describe the
 #'   evidence base:
-#'   \tabular{ll}{
-#'    \code{network_description} \tab The number of: interventions, possible
-#'    comparisons, direct and indirect comparisons, number of trials in total,
-#'    number of two-arm and multi-arm trials, number of randomised participants,
-#'    and proportion of participants completing the trial (completers).
-#'    When the outcome is binary, the number of trials with at least one zero
-#'    event, and the number of trials with all zero events are also
-#'    presented. \cr
-#'    \tab \cr
-#'    \code{table_interventions} \tab For each intervention, the
-#'    number of trials, number of randomised participants, and proportion of
-#'    completers. When the outcome is binary, the data-frame presents also the
-#'    corresponding proportion of total observed events, the minimum, median and
-#'    maximum proportion of observed events across the corresponding trials. \cr
-#'    \tab \cr
-#'    \code{table_comparisons} \tab Identical structure to
-#'    \code{table_interventions} but for each observed comparison in the
-#'    network. \cr
-#'   }
+#'   \item{network_description}{The number of: interventions, possible
+#'   comparisons, direct and indirect comparisons, number of trials in total,
+#'   number of two-arm and multi-arm trials, number of randomised participants,
+#'   and proportion of participants completing the trial (completers).
+#'   When the outcome is binary, the number of trials with at least one zero
+#'   event, and the number of trials with all zero events are also
+#'   presented.}
+#'   \item{table_interventions}{For each intervention, the number of trials,
+#'   number of randomised participants, and proportion of completers. When the
+#'   outcome is binary, the data-frame presents also the corresponding
+#'   proportion of total observed events, the minimum, median and maximum
+#'   proportion of observed events across the corresponding trials.}
+#'   \item{table_comparisons}{Identical structure to \code{table_interventions}
+#'   but for each observed comparison in the network.}
 #'
 #' @details \code{netplot} draws the network plot using the
 #'   \code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}} function
@@ -69,10 +64,10 @@
 #'   directory of the user.
 #'
 #' @seealso \code{\link{data_preparation}},
-#'   \href{https://CRAN.R-project.org/package=gemtc}{mtc.data.studyrow},
-#'   \href{https://CRAN.R-project.org/package=pcnetmeta}{nma.networkplot},
+#'   \code{\link[gemtc:mtc.data.studyrow]{mtc.data.studyrow}},
+#'   \code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}},
 #'   \code{\link{run_model}}
-#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}
+#'   \code{\link[writexl:write_xlsx]{write_xlsx}}
 #'
 #' @references
 #' Lin L, Zhang J, Hodges JS, Chu H. Performing Arm-Based Network Meta-Analysis

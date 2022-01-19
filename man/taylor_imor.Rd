@@ -6,30 +6,22 @@
 \format{
 The columns of the data-frame in the argument \code{data} refer to
   the following ordered elements for a binary outcome:
-  \tabular{ll}{
-   \strong{id} \tab A unique identifier for each trial.\cr
-   \tab \cr
-   \strong{r1} \tab The observed  number of events in the first arm of the
-   comparison.\cr
-   \tab \cr
-   \strong{r2} \tab The observed  number of events in the second arm of the
-   comparison.\cr
-   \tab \cr
-   \strong{m1} \tab The number of MOD in the first arm of the comparison.\cr
-   \tab \cr
-   \strong{m2} \tab The number of MOD in the second arm of the comparison.\cr
-   \tab \cr
-   \strong{n1} \tab The number of participants randomised in the first arm of
-   the comparison.\cr
-   \tab \cr
-   \strong{n2} \tab The number of participants randomised in the second arm
-   of the comparison.\cr
-   \tab \cr
-   \strong{t1} \tab An identifier for the intervention in the first arm of
-   the comparison.\cr
-   \tab \cr
-   \strong{t2} \tab An identifier for the intervention in the second arm of
-   the comparison.\cr
+  \tabular{rl}{
+  \bold{id} \tab A unique identifier for each trial.\cr
+  \bold{r1} \tab The observed  number of events in the first arm of the
+  comparison.\cr
+  \bold{r2} \tab The observed  number of events in the second arm of the
+  comparison.\cr
+  \bold{m1} \tab The number of MOD in the first arm of the comparison.\cr
+  \bold{m2} \tab The number of MOD in the second arm of the comparison.\cr
+  \bold{n1} \tab The number of participants randomised in the first arm of
+  the comparison.\cr
+  \bold{n2} \tab The number of participants randomised in the second arm
+  of the comparison.\cr
+  \bold{t1} \tab An identifier for the intervention in the first arm of
+  the comparison.\cr
+  \bold{t2} \tab An identifier for the intervention in the second arm of
+  the comparison.\cr
   }
 }
 \usage{
@@ -57,13 +49,10 @@ argument is 0 and corresponds to uncorrelated missingness parameters.}
 }
 \value{
 A data-frame that additionally includes the following elements:
-  \tabular{ll}{
-   \strong{EM} \tab The odds ratio in the logarithmic scale (log OR) adjusted
-   for MOD and obtained using the Taylor series.\cr
-   \tab \cr
-   \strong{se.EM} \tab The standard error of the log OR adjusted for MOD and
-   obtained using the Taylor series.\cr
-  }
+  \item{EM}{The odds ratio in the logarithmic scale (log OR) adjusted
+  for MOD and obtained using the Taylor series.}
+  \item{se.EM}{The standard error of the log OR adjusted for MOD and
+  obtained using the Taylor series.}
 }
 \description{
 Applies the pattern-mixture model under a specific assumption
@@ -87,8 +76,8 @@ in meta-analysis--part 1: two-stage methods.
 \emph{Stat Med} 2008;\bold{27}(5):711--27. \doi{10.1002/sim.3008}
 }
 \seealso{
-\href{https://CRAN.R-project.org/package=netmeta}{pairwise},
-  \code{\link{run_model}}, \code{\link{unrelated_effects_plot}}
+\code{\link[netmeta:pairwise]{pairwise}}, \code{\link{run_model}},
+  \code{\link{unrelated_effects_plot}}
 }
 \author{
 {Loukia M. Spineli}

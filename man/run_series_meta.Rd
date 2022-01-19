@@ -35,19 +35,16 @@ The default argument is 1.}
 An R2jags output on the summaries of the posterior distribution, and
   the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the
   following monitored parameters:
-  \tabular{ll}{
-   \code{EM} \tab The summary effect estimate (according to the argument
-   \code{measure} defined in \code{\link{run_model}}) of each observed
-   pairwise comparison with at least two trials in the network.\cr
-   \tab \cr
-   \code{tau} \tab The between-trial standard deviation for pairwise
-   comparisons with at least two trials, when the random-effects model has
-   been specified.\cr
-  }
+  \item{EM}{The summary effect estimate (according to the argument
+  \code{measure} defined in \code{\link{run_model}}) of each observed
+  pairwise comparison with at least two trials in the network.}
+  \item{tau}{The between-trial standard deviation for pairwise comparisons
+  with at least two trials, when the random-effects model has been
+  specified.}
 }
 \description{
-Performs a Bayesian pairwise meta-analysis for each
- pairwise comparison with at least two trials in the network.
+Performs a Bayesian pairwise meta-analysis for each pairwise
+  comparison with at least two trials in the network.
 }
 \details{
 \code{run_series_meta} inherits the arguments \code{data},
@@ -98,7 +95,7 @@ Gelman A, Rubin DB. Inference from iterative simulation using multiple
 sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
 }
 \seealso{
-\href{https://CRAN.R-project.org/package=R2jags}{jags},
+\code{\link[R2jags:jags]{jags}},
   \code{\link{run_model}}, \code{\link{series_meta_plot}}
 }
 \author{

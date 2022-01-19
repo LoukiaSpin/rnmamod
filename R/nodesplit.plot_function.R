@@ -6,7 +6,7 @@
 #'   (via \code{\link{run_nodesplit}}) regarding the posterior summaries of the
 #'   direct and indirect effects and inconsistency factor of the split
 #'   nodes, the between-trial standard deviation and model assessment
-#'   parameters (Spiegelhalter et al., (2002)) after each split node in the
+#'   parameters (Spiegelhalter et al., 2002) after each split node in the
 #'   network.
 #'
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
@@ -25,24 +25,19 @@
 #'   directory of the user. The default is \code{FALSE} (do not export).
 #'
 #' @return \code{nodesplit_plot} returns the following list of elements:
-#'   \tabular{ll}{
-#'    \code{table_effect_size} \tab A data-frame with the posterior mean,
-#'    posterior standard deviation and 95\% credible interval of the direct and
-#'    indirect effect and the inconsistency factor of each split node.\cr
-#'    \tab \cr
-#'    \code{table_model_assessment} \tab A data-frame with the model assessment
-#'    parameters (DIC, posterior mean of total residual deviance, and number of
-#'    effective parameters), the posterior median, posterior standard deviation
-#'    and 95\% credible interval of \emph{tau} under the consistency model and
-#'    after each split node. See 'Details'.\cr
-#'    \tab \cr
-#'    \code{intervalplot_inconsistency_factor} \tab A panel of interval plots on
-#'    the direct and indirect effect of the split nodes and the corresponding
-#'    inconsistency factor. See 'Details'.\cr
-#'    \tab \cr
-#'    \code{intervalplot_tau} \tab An interval plot on \emph{tau} after each
-#'    split node. See 'Details'.\cr
-#'   }
+#'   \item{table_effect_size}{A data-frame with the posterior mean,
+#'   posterior standard deviation and 95\% credible interval of the direct and
+#'   indirect effect and the inconsistency factor of each split node.}
+#'   \item{table_model_assessment}{A data-frame with the model assessment
+#'   parameters (DIC, posterior mean of total residual deviance, and number of
+#'   effective parameters), the posterior median, posterior standard deviation
+#'   and 95\% credible interval of \emph{tau} under the consistency model and
+#'   after each split node. See 'Details'.}
+#'   \item{intervalplot_inconsistency_factor}{A panel of interval plots on
+#'   the direct and indirect effect of the split nodes and the corresponding
+#'   inconsistency factor. See 'Details'.}
+#'   \item{intervalplot_tau}{An interval plot on \emph{tau} after each
+#'   split node. See 'Details'.}
 #'
 #' @details \code{intervalplot_inconsistency_factor} includes as many interval
 #'   plots as the number of split nodes in the network. Each interval plot
@@ -69,7 +64,7 @@
 #'   \emph{DIC-based better fit} that indicates the preferred model in terms of
 #'   parsimony for each split node. Therefore, the DIC of the model after each
 #'   split node is compared with the DIC of the consistency model
-#'   (Dias et al., (2010)). If the difference in DIC exceeds 5, the consistency
+#'   (Dias et al., 2010). If the difference in DIC exceeds 5, the consistency
 #'   model is preferred; if the difference in DIC is less than -5, the model
 #'   after the split node is preferred; otherwise, there is little to choose
 #'   between the compared models.
@@ -94,9 +89,9 @@
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso
-#'   \href{https://CRAN.R-project.org/package=gemtc}{mtc.nodesplit.comparisons},
+#'   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}},
 #'   \code{\link{run_model}}, \code{\link{run_nodesplit}},
-#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}
+#'   \code{\link[writexl:write_xlsx]{write_xlsx}}
 #'
 #' @references
 #' Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed

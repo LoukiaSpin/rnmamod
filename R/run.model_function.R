@@ -106,91 +106,72 @@
 #'   The number of rows in \code{data} equals the number of collected trials.
 #'   Each element appears in \code{data} as many times as the maximum number of
 #'   interventions compared in a trial of the dataset.
-#'   In pairwise meta-analysis (PMA), the maximum number of arms is inherently
-#'   two. The same holds for a network meta-analysis (NMA) without multi-arm
-#'   trials.
-#'   In the case of NMA with multi-arm trials, the maximum number of arms
-#'   exceeds two. See 'Examples' that illustrates the structure of \code{data}
-#'   for a network with a maximum number of four arms.
+#'   In pairwise meta-analysis, the maximum number of arms is inherently two.
+#'   The same holds for a network meta-analysis without multi-arm trials.
+#'   In the case of network meta-analysis with multi-arm trials, the maximum
+#'   number of arms exceeds two. See 'Examples' that illustrates the structure
+#'   of \code{data} for a network with a maximum number of four arms.
 #'   It is not a prerequisite of \code{run_model} that the multi-arm trials
 #'   appear at the bottom of the dataset.
 #'
 #' @return A list of R2jags output on the summaries of the posterior
 #'   distribution, and the Gelman-Rubin convergence diagnostic
 #'   (Gelman et al., 1992) of the following monitored parameters for a
-#'   fixed-effect PMA:
-#'   \tabular{ll}{
-#'    \code{EM} \tab The estimated summary effect measure (according to the
-#'    argument \code{measure}).\cr
-#'    \tab \cr
-#'    \code{dev_o} \tab The deviance contribution of each trial-arm based
-#'    on the observed outcome.\cr
-#'    \tab \cr
-#'    \code{hat_par} \tab The fitted outcome at each trial-arm.\cr
-#'    \tab \cr
-#'    \code{phi} \tab The informative missingness parameter.\cr
-#'   }
+#'   fixed-effect pairwise meta-analysis:
+#'   \item{EM}{The estimated summary effect measure (according to the argument
+#'   \code{measure}).}
+#'   \item{dev_o}{The deviance contribution of each trial-arm based on the
+#'   observed outcome.}
+#'   \item{hat_par}{The fitted outcome at each trial-arm.}
+#'   \item{phi}{The informative missingness parameter.}
 #'
-#'   For a fixed-effect NMA, the output additionally includes:
-#'   \tabular{ll}{
-#'    \code{EM_ref} \tab The estimated summary effect measure
+#'   For a fixed-effect network meta-analysis, the output additionally includes:
+#'   \item{EM_ref}{The estimated summary effect measure (according to the
+#'   argument \code{measure}) of all comparisons with the reference
+#'   intervention.}
+#'   \item{SUCRA}{The surface under the cumulative ranking curve for each
+#'   intervention.}
+#'   \item{effectiveneness}{The ranking probability of each intervention for
+#'   every rank.}
+#'
+#'   For a random-effects pairwise meta-analysis, the output additionally
+#'   includes the following elements:
+#'   \item{EM_pred}{The predicted summary effect measure (according to the
+#'   argument \code{measure}).}
+#'   \item{delta}{The estimated trial-specific effect measure (according to the
+#'   argument \code{measure}).}
+#'   \item{tau}{The between-trial standard deviation.}
+#'
+#'   For a random-effects network meta-analysis, the output additionally
+#'   includes:
+#'   \item{pred_ref}{The predicted summary effect measure
 #'    (according to the argument \code{measure}) of all comparisons
-#'    with the reference intervention.\cr
-#'    \tab \cr
-#'    \code{SUCRA} \tab The surface under the cumulative ranking curve
-#'    for each intervention.\cr
-#'    \tab \cr
-#'    \code{effectiveneness} \tab The ranking probability of each intervention
-#'     for every rank.\cr
-#'   }
+#'    with the reference intervention.}
 #'
-#'   For a random-effects PMA, the output additionally includes the
-#'   following elements:
-#'   \tabular{ll}{
-#'    \code{EM_pred} \tab The predicted summary effect measure
-#'    (according to the argument \code{measure}).\cr
-#'    \tab \cr
-#'    \code{delta} \tab The estimated trial-specific effect measure
-#'    (according to the argument \code{measure}).\cr
-#'    \tab \cr
-#'    \code{tau} \tab The between-trial standard deviation.\cr
-#'   }
-#'
-#'   For a random-effects NMA, the output additionally includes:
-#'   \tabular{ll}{
-#'    \code{pred_ref} \tab The predicted summary effect measure
-#'    (according to the argument \code{measure}) of all comparisons
-#'    with the reference intervention.\cr
-#'   }
-#'   In NMA, \code{EM} and \code{EM_pred} refer to all possible pairwise
-#'   comparisons of interventions in the network. Furthermore, \code{tau} is
-#'   typically assumed to be common for all observed comparisons in the network.
-#'   For a multi-arm trial, we estimate a total of \emph{T-1} \code{delta} for
-#'   comparisons with the baseline intervention of the trial (found in the first
-#'   column of the element \bold{t}), with \emph{T} being the number of
-#'   interventions in the trial.
+#'   In network meta-analysis, \code{EM} and \code{EM_pred} refer to all
+#'   possible pairwise comparisons of interventions in the network. Furthermore,
+#'   \code{tau} is typically assumed to be common for all observed comparisons
+#'   in the network. For a multi-arm trial, we estimate a total of \emph{T-1}
+#'   \code{delta} for comparisons with the baseline intervention of the trial
+#'   (found in the first column of the element \bold{t}), with \emph{T} being
+#'   the number of interventions in the trial.
 #'
 #'   Furthermore, the output includes the following elements:
-#'   \tabular{ll}{
-#'    \code{RR} \tab The relative risk as a function of the absolute risks
-#'    of the corresponding interventions. \cr
-#'    \code{RD} \tab The risk difference as a function of the absolute
-#'    risks of the corresponding interventions. \cr
-#'    \code{abs_risk} \tab The absolute risks for each intervention. \cr
-#'    \code{leverage_o} \tab The leverage for the observed outcome
-#'    at each trial-arm.\cr
-#'    \tab \cr
-#'    \code{sign_dev_o} \tab The sign of the difference between
-#'    observed and fitted outcome at each trial-arm.\cr
-#'    \tab \cr
-#'    \code{model_assessment} \tab A data-frame on the measures of
-#'    model assessment: deviance information criterion,
-#'    number of effective parameters, and total residual deviance.\cr
-#'    \tab \cr
-#'    \code{jagsfit} \tab An object of S3 class \code{\link[R2jags:jags]{jags}}
-#'    with the posterior results on all monitored parameters to be used
-#'    in the \code{\link{mcmc_diagnostics}} function.\cr
-#'   }
+#'   \item{RR}{The relative risk as a function of the absolute risks
+#'   of the corresponding interventions.}
+#'   \item{RD}{The risk difference as a function of the absolute risks of the
+#'   corresponding interventions.}
+#'   \item{abs_risk}{The absolute risks for each intervention.}
+#'   \item{leverage_o}{The leverage for the observed outcome at each trial-arm.}
+#'   \item{sign_dev_o}{The sign of the difference between observed and fitted
+#'   outcome at each trial-arm.}
+#'   \item{model_assessment}{A data-frame on the measures of model assessment:
+#'   deviance information criterion, number of effective parameters, and total
+#'   residual deviance.}
+#'   \item{jagsfit}{An object of S3 class \code{\link[R2jags:jags]{jags}} with
+#'   the posterior results on all monitored parameters to be used in the
+#'   \code{\link{mcmc_diagnostics}} function.}
+#'
 #'   The \code{run_model} function also returns the arguments \code{data},
 #'   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
 #'   \code{mean_misspar}, \code{var_misspar}, \code{D}, \code{ref} and
@@ -225,12 +206,12 @@
 #'   consistently treated as the control arm in each trial. This case is
 #'   relevant in non-star-shaped networks.
 #'
-#'   To perform a Bayesian PMA or NMA, the \code{\link{prepare_model}} function
-#'   is called which contains the WinBUGS code as written by Dias et al. (2013)
-#'   for binomial and normal likelihood to analyse binary and continuous data,
-#'   respectively. \code{\link{prepare_model}} uses the consistency model (as
-#'   described in Lu and Ades (2006)) to estimate all possible comparisons in
-#'   the network.
+#'   To perform a Bayesian pairwise or network meta-analysis, the
+#'   \code{\link{prepare_model}} function is called which contains the WinBUGS
+#'   code as written by Dias et al. (2013) for binomial and normal likelihood to
+#'   analyse binary and continuous data, respectively.
+#'   \code{\link{prepare_model}} uses the consistency model (as described in
+#'   Lu and Ades (2006)) to estimate all possible comparisons in the network.
 #'   It also accounts for the multi-arm trials by assigning conditional
 #'   univariate normal distributions on the basic parameters of these trials,
 #'   namely, effect parameters between the non-baseline arms and the baseline
@@ -271,21 +252,20 @@
 #'   determine \code{mean_misspar} and select a proper value for
 #'   \code{var_misspar}.
 #'
-#'   To obtain unique absolute risks for each intervention, the NMA model has
-#'   been extended to incorporate the transitive risks framework, namely, an
-#'   intervention has the same absolute risk regardless of the comparator
-#'   interventions in a trial. The absolute risks are a function of the odds
-#'   ratio and the selected baseline risk for the reference intervention
-#'   (\code{ref}) (Appendix in Dias et al., 2013). We advocate using the OR as
-#'   an effect measure for its desired mathematical properties. Then, the
-#'   relative risk (RR) and risk difference (RD) can be obtained as a function
+#'   To obtain unique absolute risks for each intervention, the network
+#'   meta-analysis model has been extended to incorporate the transitive risks
+#'   framework, namely, an intervention has the same absolute risk regardless of
+#'   the comparator interventions in a trial. The absolute risks are a function
+#'   of the odds ratio and the selected baseline risk for the reference
+#'   intervention (\code{ref}) (Appendix in Dias et al., 2013). We advocate
+#'   using the OR as an effect measure for its desired mathematical properties.
+#'   Then, the relative risk and risk difference can be obtained as a function
 #'   of the absolute risks.
 #'
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link{data_preparation}},
-#'   \code{\link{heterogeneity_param_prior}},
-#'   \href{https://CRAN.R-project.org/package=R2jags}{jags},
+#'   \code{\link{heterogeneity_param_prior}}, \code{\link[R2jags:jags]{jags}},
 #'   \code{\link{missingness_param_prior}}, \code{\link{prepare_model}}
 #'
 #' @references

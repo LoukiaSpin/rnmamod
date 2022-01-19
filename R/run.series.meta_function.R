@@ -1,7 +1,7 @@
 #' Perform a series of Bayesian pairwise meta-analyses
 #'
-#' @description Performs a Bayesian pairwise meta-analysis for each
-#'  pairwise comparison with at least two trials in the network.
+#' @description Performs a Bayesian pairwise meta-analysis for each pairwise
+#'   comparison with at least two trials in the network.
 #'
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
 #'   \code{\link{run_model}}.
@@ -26,15 +26,12 @@
 #' @return An R2jags output on the summaries of the posterior distribution, and
 #'   the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the
 #'   following monitored parameters:
-#'   \tabular{ll}{
-#'    \code{EM} \tab The summary effect estimate (according to the argument
-#'    \code{measure} defined in \code{\link{run_model}}) of each observed
-#'    pairwise comparison with at least two trials in the network.\cr
-#'    \tab \cr
-#'    \code{tau} \tab The between-trial standard deviation for pairwise
-#'    comparisons with at least two trials, when the random-effects model has
-#'    been specified.\cr
-#'   }
+#'   \item{EM}{The summary effect estimate (according to the argument
+#'   \code{measure} defined in \code{\link{run_model}}) of each observed
+#'   pairwise comparison with at least two trials in the network.}
+#'   \item{tau}{The between-trial standard deviation for pairwise comparisons
+#'   with at least two trials, when the random-effects model has been
+#'   specified.}
 #'
 #' @details \code{run_series_meta} inherits the arguments \code{data},
 #'   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
@@ -61,7 +58,7 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \href{https://CRAN.R-project.org/package=R2jags}{jags},
+#' @seealso \code{\link[R2jags:jags]{jags}},
 #'   \code{\link{run_model}}, \code{\link{series_meta_plot}}
 #'
 #' @references

@@ -35,7 +35,7 @@ An R character vector object to be passed to \code{\link{run_ume}}
   the argument \code{object}.
 }
 \description{
-The WinBUGS code, as written by Dias et al., (2013) to run a
+The WinBUGS code, as written by Dias et al. (2013) to run a
   one-stage Bayesian unrelated mean effects model, refined (Spineli, 2021),
   and extended to incorporate the pattern-mixture model for binary or
   continuous missing participant outcome data.
@@ -69,8 +69,8 @@ missing binary outcome data in network meta-analysis.
 \doi{10.1186/s12874-019-0731-y}
 }
 \seealso{
-\href{https://CRAN.R-project.org/package=R2jags}{jags},
-  \code{\link{run_ume}}, \code{\link[base:textConnection]{textConnection}}
+\code{\link[R2jags:jags]{jags}}, \code{\link{run_ume}},
+  \code{\link[base:textConnection]{textConnection}}
 }
 \author{
 {Loukia M. Spineli}

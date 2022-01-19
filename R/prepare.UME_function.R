@@ -1,6 +1,6 @@
 #' WinBUGS code for the unrelated mean effects model
 #'
-#' @description The WinBUGS code, as written by Dias et al., (2013) to run a
+#' @description The WinBUGS code, as written by Dias et al. (2013) to run a
 #'   one-stage Bayesian unrelated mean effects model, refined (Spineli, 2021),
 #'   and extended to incorporate the pattern-mixture model for binary or
 #'   continuous missing participant outcome data.
@@ -36,8 +36,8 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \href{https://CRAN.R-project.org/package=R2jags}{jags},
-#'   \code{\link{run_ume}}, \code{\link[base:textConnection]{textConnection}}
+#' @seealso \code{\link[R2jags:jags]{jags}}, \code{\link{run_ume}},
+#'   \code{\link[base:textConnection]{textConnection}}
 #'
 #' @references
 #' Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis
