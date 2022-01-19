@@ -14,26 +14,17 @@
 #'
 #' @return A list of data-frames on the following elements to be passed
 #'   to \code{\link{run_model}}:
-#'   \tabular{ll}{
-#'    \code{m} \tab The number of missing participant outcome data in each
-#'    trial-arm (see 'Details').\cr
-#'    \tab \cr
-#'    \code{N} \tab The number of randomised participants in each trial-arm.\cr
-#'    \tab \cr
-#'    \code{t} \tab The intervention identifier in each trial-arm.\cr
-#'    \tab \cr
-#'    \code{I} \tab The pseudo-data-frame \code{I} (see 'Details').\cr
-#'    \tab \cr
-#'    \code{r} \tab The number of observed events of the outcome in each
-#'    trial-arm,
-#'    when the outcome is binary.\cr
-#'    \tab \cr
-#'    \code{y0} \tab The observed mean value of the outcome in each trial-arm,
-#'    when the outcome is continuous.\cr
-#'    \tab \cr
-#'    \code{se0} \tab The observed standard deviation of the outcome in each
-#'    trial-arm, when the outcome is continuous.\cr
-#'   }
+#'   \item{m}{The number of missing participant outcome data in each
+#'   trial-arm (see 'Details').}
+#'   \item{N}{The number of randomised participants in each trial-arm.}
+#'   \item{t}{The intervention identifier in each trial-arm.}
+#'   \item{I}{The pseudo-data-frame \code{I} (see 'Details').}
+#'   \item{r}{The number of observed events of the outcome in each
+#'   trial-arm, when the outcome is binary.}
+#'   \item{y0}{The observed mean value of the outcome in each trial-arm,
+#'   when the outcome is continuous.}
+#'   \item{se0}{The observed standard deviation of the outcome in each
+#'   trial-arm, when the outcome is continuous.}
 #'
 #' @details \code{data_preparation} prepares the data for the Bayesian analysis.
 #'   It checks whether the element \strong{m} exists in the \code{data} argument

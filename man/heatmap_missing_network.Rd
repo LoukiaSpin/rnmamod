@@ -16,19 +16,21 @@ the order they appear in the argument \code{data}. If the argument
 appear in \code{data} is used, instead.}
 }
 \value{
-A heatmap with the proportion of MOD in each intervention and
-  observed comparison in the network. Each cell annotates the median, minimum
-  and maximum (the latter two in parenthesis) proportion of MOD across the
-  corresponding trials.
-  The proportion of MOD in each intervention and observed comparison are
-  depicted in the main diagonal and lower off-diagonal with white and black
-  colour, respectively, The pairwise comparisons are read from left to right.
+A heatmap with the proportion of missing participants in each
+  intervention and observed comparison in the network. Each cell annotates
+  the median, minimum and maximum (the latter two in parenthesis) proportion
+  of missing participants across the corresponding trials.
+  The proportion of missing participants in each intervention and observed
+  comparison are depicted in the main diagonal and lower off-diagonal with
+  white and black colour, respectively. The pairwise comparisons are read
+  from left to right.
 
   The 'five-and-twenty' rule of Sackett and colleagues (1997) is used to
-  characterise the \bold{median} proportion of MOD as being associated with
-  low (up to 5\%), moderate (more than 5\% and up to 20\%), and high risk of
-  bias (more than 20\%). Low, moderate, and high risk of bias associated with
-  MOD is indicated using green, orange, and red colour, respectively.
+  characterise the \bold{median} proportion of missing participants as being
+  associated with low (up to 5\%), moderate (more than 5\% and up to 20\%),
+  and high risk of bias (more than 20\%). Low, moderate, and high risk of
+  bias associated with missing participants is indicated using green, orange,
+  and red colour, respectively.
 
   The summary statistics (median, minimum and maximum) for each intervention
   (main diagonal; white font) result from calculating the proportion of
@@ -43,9 +45,9 @@ A heatmap with the proportion of MOD in each intervention and
   an error message will be printed on the R console.
 }
 \description{
-Illustrates the distribution of missing participant outcome data
- (MOD) and the associated risk of bias for each intervention and observed
- comparison in the network.
+Illustrates the distribution of missing participants and the
+  associated risk of bias for each intervention and observed comparison in
+  the network.
 }
 \examples{
 data("nma.stowe2011")

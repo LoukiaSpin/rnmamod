@@ -39,11 +39,11 @@ Generates the prior distribution (weakly informative or empirically-based)
 \details{
 The names of the (current) prior distributions follow the JAGS syntax.
   The mean and precision of \code{"lognormal"} and \code{"logt"} should align
-  with the values proposed by Turner et al., (2015) and Rhodes et al., (2015)
+  with the values proposed by Turner et al. (2015) and Rhodes et al. (2015)
   for the corresponding empirically-based prior distributions when
   \code{measure} is \code{"OR"} or \code{"SMD"}, respectively.
-  The users may refer to Dias et al., (2013) to determine the minimum and
-  maximum value of the uniform distribution, and to Friede et al., (2017)
+  The users may refer to Dias et al. (2013) to determine the minimum and
+  maximum value of the uniform distribution, and to Friede et al. (2017)
   to determine the mean and precision of the half-normal distribution.
   When \code{model} is \code{"FE"}, \code{heterogeneity_param_prior}
   is ignored in \code{\link{run_model}}.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/run.sensitivity_function.R
 \name{run_sensitivity}
 \alias{run_sensitivity}
-\title{Perform sensitivity analysis for  missing outcome participant data}
+\title{Perform sensitivity analysis for missing participant outcome data}
 \usage{
 run_sensitivity(
   full,
@@ -66,13 +66,11 @@ A list of R2jags outputs on the summaries of the posterior
   distribution, and the Gelman-Rubin convergence diagnostic
   (Gelman et al., 1992) of the following monitored parameters for a
   random-effects PMA:
-  \tabular{ll}{
-   \code{EM} \tab The estimated summary effect measure (according to the
-   argument \code{measure} defined in \code{\link{run_model}}).\cr
-   \tab \cr
-   \code{tau} \tab The between-trial standard deviation. This element does
-   not appear in the case of a fixed-effect PMA.\cr
-  }
+  \item{EM}{The estimated summary effect measure (according to the
+   argument \code{measure} defined in \code{\link{run_model}}).}
+  \item{tau}{The between-trial standard deviation. This element does
+   not appear in the case of a fixed-effect PMA.}
+
   In a random-effects NMA, \code{EM} refer to all possible pairwise
   comparisons of interventions in the network. Furthermore, \code{tau} is
   typically assumed to be common for all observed comparisons in the network.

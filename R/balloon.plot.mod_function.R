@@ -21,15 +21,12 @@
 #' @return
 #'   \code{balloon_plot} returns two enhanced balloon plots for one
 #'   comparison (see 'Details'):
-#'   \tabular{ll}{
-#'    \code{plot_effect_size} \tab The enhanced balloon plot for the
-#'    summary effect size (according to the argument \code{measure} inherited
-#'    by \code{\link{run_sensitivity}}) for one pairwise comparison.\cr
-#'    \tab \cr
-#'    \code{plot_tau} \tab The enhanced balloon plot for \emph{tau}. When the
-#'    fixed-effect model has been performed in \code{\link{run_sensitivity}},
-#'    the function will not return the \code{plot_tau}.\cr
-#'   }
+#'   \item{plot_effect_size}{The enhanced balloon plot for the
+#'   summary effect size (according to the argument \code{measure} inherited
+#'   by \code{\link{run_sensitivity}}) for one pairwise comparison.}
+#'   \item{plot_tau}{The enhanced balloon plot for \emph{tau}. When the
+#'   fixed-effect model has been performed in \code{\link{run_sensitivity}},
+#'   the function will not return the \code{plot_tau}.}
 #'
 #' @details
 #'   For the \code{plot_effect_size} of the selected pairwise comparison,

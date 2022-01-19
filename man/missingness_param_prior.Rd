@@ -39,8 +39,8 @@ Generates the mean value of the distribution of the missingness parameter
   Turner et al., 2015; White et al., 2008), the informative missingness
   difference of means when \code{measure} is \code{"MD"} or \code{"SMD"},
   and the informative missingness ratio of means in the logarithmic scale
-  when \code{measure} is \code{"ROM"} (Mavridis et al., 2015;
-  Spineli et al., 2021).
+  when \code{measure} is \code{"ROM"} (Spineli et al., 2021;
+  Mavridis et al., 2015).
 
   When \code{assumption} is trial-specific (i.e., \code{"IDE-TRIAL"} or
   \code{"HIE-TRIAL"}), or independent (i.e., \code{"IND-CORR"} or
@@ -60,7 +60,7 @@ Generates the mean value of the distribution of the missingness parameter
 
   Currently, there are no empirically-based prior distributions for the
   informative missingness parameters. The users may refer to
-  Mavridis et al., (2015) and Spineli (2019) to determine \code{mean_misspar}
+  Mavridis et al. (2015) and Spineli (2019) to determine \code{mean_misspar}
   for an informative missingness parameter.
 }
 \references{

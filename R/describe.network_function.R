@@ -17,31 +17,20 @@
 #'
 #' @return A list of scalar results and two data-frames to be passed to
 #'   \code{\link{netplot}}. The scalar results include:
-#'   \tabular{ll}{
-#'    \code{direct_comp} \tab The number of observed comparisons in the
-#'    network. \cr
-#'    \tab \cr
-#'    \code{two_arm_ns} \tab The number of two-arm trials in the network. \cr
-#'    \tab \cr
-#'    \code{multi_arm_ns} \tab The number of multi-arm trials in the
-#'    network. \cr
-#'    \tab \cr
-#'    \code{total_rand_network} \tab The total number of randomised participants
-#'     in the network. \cr
-#'    \tab \cr
-#'    \code{prop_obs_network} \tab The proportion of participants who completed
-#'     the trial. \cr
-#'    \tab \cr
-#'    \code{prop_event_network} \tab The proportion of observed events in the
-#'    network. When the outcome is continuous, this element is omitted. \cr
-#'    \tab \cr
-#'    \code{trial_zero_event} \tab The number of trials with at least one arm
-#'    with zero events. When the outcome is continuous, this element is
-#'    omitted. \cr
-#'    \tab \cr
-#'    \code{trial_all_zero_event} \tab The number of trials with zero events in
-#'    all arms. When the outcome is continuous, this element is omitted. \cr
-#'   }
+#'   \item{direct_comp}{The number of observed comparisons in the network.}
+#'   \item{two_arm_ns}{The number of two-arm trials in the network.}
+#'   \item{multi_arm_ns}{The number of multi-arm trials in the network.}
+#'   \item{total_rand_network}{The total number of randomised participants
+#'   in the network.}
+#'   \item{prop_obs_network}{The proportion of participants who completed
+#'   the trial.}
+#'   \item{prop_event_network}{The proportion of observed events in the
+#'   network. When the outcome is continuous, this element is omitted.}
+#'   \item{trial_zero_event}{The number of trials with at least one arm
+#'   with zero events. When the outcome is continuous, this element is
+#'   omitted.}
+#'   \item{trial_all_zero_event}{The number of trials with zero events in
+#'   all arms. When the outcome is continuous, this element is omitted.}
 #'
 #'   The two data-frames include \code{table_interventions} and
 #'   \code{table_comparisons}. See 'Value' in \code{\link{netplot}} for these

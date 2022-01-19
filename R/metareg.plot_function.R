@@ -28,39 +28,32 @@
 #' @return \code{metareg_plot} prints on the R console a message on the most
 #'   parsimonious model (if any) based on the DIC (in red text). Furthermore,
 #'   the function returns the following list of elements:
-#'   \tabular{ll}{
-#'    \code{table_estimates} \tab The posterior mean, and 95\% credible interval
-#'    of the summary effect measure (according to the argument \code{measure}
-#'    defined in \code{\link{run_model}}) for each comparison with the selected
-#'    intervention under network meta-analysis and network meta-regression
-#'    based on the specified \code{cov_value}.\cr
-#'    \tab \cr
-#'    \code{table_predictions} \tab The posterior mean, and 95\% predictive
-#'    interval of the summary effect measure (according to the argument
-#'    \code{measure} defined in \code{\link{run_model}}) for each comparison
-#'    with the selected intervention under network meta-analysis and network
-#'    meta-regression based on the specified \code{cov_value}.\cr
-#'    \tab \cr
-#'    \code{table_model_assessment} \tab The DIC, total residual deviance,
-#'    number of effective parameters, and the posterior median and 95\% credible
-#'    interval of between-trial standard deviation (\emph{tau}) under each model
-#'    (Spiegelhalter et al., (2002)). When a fixed-effect model has been
-#'    performed, \code{metareg_plot} does not return results on \emph{tau}.\cr
-#'    \tab \cr
-#'    \code{table_regression_coeffients} \tab The posterior mean and 95\%
-#'    credible interval of the regression coefficient(s).\cr
-#'    \tab \cr
-#'    \code{interval_plots} \tab The panel of forest plots on the estimated and
-#'    predicted effect sizes of comparisons with the selected intervention under
-#'    network meta-analysis and network meta-regression based on the specified
-#'    \code{cov_value}. See 'Details' and 'Value' in
-#'    \code{\link{forestplot_metareg}}.\cr
-#'    \tab \cr
-#'    \code{sucra_scatterplot} \tab A scatterplot of the SUCRA values from the
-#'    network meta-analysis against the SUCRA values from the network
-#'    meta-regression based on the specified \code{cov_value}. See 'Details'
-#'    and 'Value' in \code{\link{scatterplot_sucra}}.
-#' }
+#'   \item{table_estimates}{The posterior mean, and 95\% credible interval
+#'   of the summary effect measure (according to the argument \code{measure}
+#'   defined in \code{\link{run_model}}) for each comparison with the selected
+#'   intervention under network meta-analysis and network meta-regression
+#'   based on the specified \code{cov_value}.}
+#'   \item{table_predictions}{The posterior mean, and 95\% predictive
+#'   interval of the summary effect measure (according to the argument
+#'   \code{measure} defined in \code{\link{run_model}}) for each comparison
+#'   with the selected intervention under network meta-analysis and network
+#'   meta-regression based on the specified \code{cov_value}.}
+#'   \item{table_model_assessment}{The DIC, total residual deviance,
+#'   number of effective parameters, and the posterior median and 95\% credible
+#'   interval of between-trial standard deviation (\emph{tau}) under each model
+#'   (Spiegelhalter et al., 2002). When a fixed-effect model has been
+#'   performed, \code{metareg_plot} does not return results on \emph{tau}.}
+#'   \item{table_regression_coeffients}{The posterior mean and 95\%
+#'   credible interval of the regression coefficient(s).}
+#'   \item{interval_plots}{The panel of forest plots on the estimated and
+#'   predicted effect sizes of comparisons with the selected intervention under
+#'   network meta-analysis and network meta-regression based on the specified
+#'   \code{cov_value}. See 'Details' and 'Value' in
+#'   \code{\link{forestplot_metareg}}.}
+#'   \item{sucra_scatterplot}{A scatterplot of the SUCRA values from the
+#'   network meta-analysis against the SUCRA values from the network
+#'   meta-regression based on the specified \code{cov_value}. See 'Details'
+#'   and 'Value' in \code{\link{scatterplot_sucra}}.}
 #'
 #' @details The deviance information criterion (DIC) of the network
 #'   meta-analysis model is compared with the DIC of the network meta-regression
@@ -87,7 +80,7 @@
 #'
 #' @seealso \code{\link{forestplot_metareg}}, \code{\link{run_metareg}},
 #'   \code{\link{run_model}}, \code{\link{scatterplot_sucra}},
-#'   \href{https://CRAN.R-project.org/package=writexl}{write_xlsx}
+#'   \code{\link[writexl:write_xlsx]{write_xlsx}}
 #'
 #' @references
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries

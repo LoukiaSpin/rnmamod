@@ -23,15 +23,12 @@ the order of the interventions as they appear in
 \value{
 \code{balloon_plot} returns two enhanced balloon plots for one
   comparison (see 'Details'):
-  \tabular{ll}{
-   \code{plot_effect_size} \tab The enhanced balloon plot for the
-   summary effect size (according to the argument \code{measure} inherited
-   by \code{\link{run_sensitivity}}) for one pairwise comparison.\cr
-   \tab \cr
-   \code{plot_tau} \tab The enhanced balloon plot for \emph{tau}. When the
-   fixed-effect model has been performed in \code{\link{run_sensitivity}},
-   the function will not return the \code{plot_tau}.\cr
-  }
+  \item{plot_effect_size}{The enhanced balloon plot for the
+  summary effect size (according to the argument \code{measure} inherited
+  by \code{\link{run_sensitivity}}) for one pairwise comparison.}
+  \item{plot_tau}{The enhanced balloon plot for \emph{tau}. When the
+  fixed-effect model has been performed in \code{\link{run_sensitivity}},
+  the function will not return the \code{plot_tau}.}
 }
 \description{
 Creates the enhanced balloon plot for the summary effect size and
@@ -41,8 +38,8 @@ Creates the enhanced balloon plot for the summary effect size and
   \code{\link{run_sensitivity}}.
 }
 \details{
-For the \code{plot_effect_size} of the selected pairwise
-  comparison, the different colours and sizes of the bubbles reflect the
+For the \code{plot_effect_size} of the selected pairwise comparison,
+  the different colours and sizes of the bubbles reflect the
   posterior standard deviation and the posterior mean, respectively.
   A colour key appears below the plot.
   The size of the bubble is proportional to the corresponding posterior mean.

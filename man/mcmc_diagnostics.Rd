@@ -24,28 +24,19 @@ ignored for objects of S3 class \code{\link{run_nodesplit}},
 \code{mcmc_diagnostics} returns a data-frame that contains the
   Gelman-Rubin convergence diagnostic, R-hat, and convergence status of the
   following monitored parameters:
-  \tabular{ll}{
-   \code{EM} \tab The estimated summary effect measure.\cr
-   \tab \cr
-   \code{EM_pred} \tab The predicted summary effect measure.\cr
-   \tab \cr
-   \code{delta} \tab The estimated trial-specific effect measure.\cr
-   \tab \cr
-   \code{tau} \tab The between-trial standard deviation.\cr
-   \tab \cr
-   \code{direct} \tab The direct estimate of the split node
-   (see 'Value' in \code{\link{run_nodesplit}}).\cr
-   \tab \cr
-   \code{indirect} \tab The indirect estimate of the split node
-   (see 'Value' in \code{\link{run_nodesplit}}).\cr
-   \tab \cr
-   \code{IF} \tab The inconsistency factor of the split node
-   (see 'Value' in \code{\link{run_nodesplit}}).\cr
-   \tab \cr
-   \code{phi} \tab The informative missingness parameter.\cr
-   \tab \cr
-   \code{beta} \tab The regression coefficient.\cr
-  }
+  \code{EM} {The estimated summary effect measure.}
+  \code{EM_pred} {The predicted summary effect measure.}
+  \code{delta} {The estimated trial-specific effect measure.}
+  \code{tau} {The between-trial standard deviation.}
+  \code{direct} {The direct estimate of the split node (see 'Value' in
+  \code{\link{run_nodesplit}}).}
+  \code{indirect} {The indirect estimate of the split node
+  (see 'Value' in \code{\link{run_nodesplit}}).}
+  \code{IF} {The inconsistency factor of the split node (see 'Value' in
+  \code{\link{run_nodesplit}}).}
+  \code{phi} {The informative missingness parameter.}
+  \code{beta} {The regression coefficient.}
+
   \code{mcmc_diagnostics} also uses the
   \code{\link[mcmcplots:mcmcplot]{mcmcplot}} function of the R-package
   \href{https://CRAN.R-project.org/package=mcmcplots}{mcmcplots} to create an
@@ -83,7 +74,7 @@ Gelman, A, Rubin, DB. Inference from iterative simulation using multiple
 sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
 }
 \seealso{
-\href{https://CRAN.R-project.org/package=mcmcplots}{mcmcplot},
+\code{\link[mcmcplots:mcmcplot]{mcmcplot}},
   \code{\link{run_metareg}}, \code{\link{run_model}},
   \code{\link{run_nodesplit}}, \code{\link{run_sensitivity}},
   \code{\link{run_series_meta}}, \code{\link{run_ume}}

@@ -23,30 +23,22 @@ each trial.}
 \value{
 The output of \code{improved_ume} is a list of elements that are
   inherited by \code{\link{run_ume}}:
-  \tabular{ll}{
-   \code{nbase_multi} \tab A scalar parameter on the number of frail
-   comparisons.\cr
-   \tab \cr
-   \code{t1_bn} \tab A vector with numeric values referring to the first arm
-   of each frail comparison.\cr
-   \tab \cr
-   \code{t2_bn} \tab A vector with numeric values referring to the second arm
-   of each frail comparison.\cr
-   \tab \cr
-   \code{base} \tab A vector with numeric values referring to the baseline
-   intervention of the multi-arm trials that contain the frail
-   comparisons.\cr
-   \tab \cr
-   \code{obs_comp} \tab A data-frame that indicates how many two-arm and
-   multi-arm trials have included each pairwise comparison observed in the
-   network.\cr
-  }
+  \item{nbase_multi}{A scalar parameter on the number of frail comparisons.}
+  \item{t1_bn}{A vector with numeric values referring to the first arm of
+  each frail comparison.}
+  \item{t2_bn}{A vector with numeric values referring to the second arm of
+  each frail comparison.}
+  \item{base}{A vector with numeric values referring to the baseline
+  intervention of the multi-arm trials that contain the frail comparisons.}
+  \item{obs_comp}{A data-frame that indicates how many two-arm and
+  multi-arm trials have included each pairwise comparison observed in the
+  network.}
 }
 \description{
 Detects the frail comparisons in multi-arm trials, that is,
   comparisons between non-baseline interventions not investigated in any
   two-arm trial in the network (Spineli, 2021). The 'original' model of
-  Dias et al., (2013) omits the frail comparisons from the estimation process
+  Dias et al. (2013) omits the frail comparisons from the estimation process
   of the unrelated mean effects model. Consequently, their posterior
   distribution coincides with the prior distribution yielding implausible
   posterior standard deviations.

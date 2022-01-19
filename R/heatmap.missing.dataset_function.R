@@ -1,8 +1,7 @@
 #' Heatmap of proportion of missing participants in the dataset
 #'
-#' @description Illustrates the proportion of missing participant outcome data
-#'   (MOD) and the associated risk of bias in each arm of every trial in the
-#'   dataset.
+#' @description Illustrates the proportion of missing participants and the
+#'   associated risk of bias in each arm of every trial in the dataset.
 #'
 #' @param data A data-frame of a one-trial-per-row format containing arm-level
 #'   data of each trial. See 'Format' in \code{\link{run_model}}.
@@ -15,13 +14,14 @@
 #'   not defined, the order of the interventions as they appear in \code{data}
 #'   is used, instead.
 #'
-#' @return A heatmap presenting the proportion of MOD in each trial-arm of the
-#'   dataset. The columns and the rows of the heatmap correspond to the
-#'   interventions and trials, respectively. The 'five-and-twenty' rule of
-#'   Sackett and colleagues (1997) is used to characterise the proportion of MOD
-#'   as being associated with low (up to 5\%), moderate (more than 5\% and up to
-#'   20\%), and high risk of bias (more than 20\%). Low, moderate, and high risk
-#'   of bias due to MOD are indicated using green, orange, and red colour,
+#' @return A heatmap presenting the proportion of missing participants in each
+#'   trial-arm of the dataset. The columns and the rows of the heatmap
+#'   correspond to the interventions and trials, respectively.
+#'   The 'five-and-twenty' rule of Sackett and colleagues (1997) is used to
+#'   characterise the proportion of missing participants as being associated
+#'   with low (up to 5\%), moderate (more than 5\% and up to 20\%), and high
+#'   risk of bias (more than 20\%). Low, moderate, and high risk of bias due to
+#'   missing participants are indicated using green, orange, and red colour,
 #'   respectively. The function is also applicable for a pairwise meta-analysis.
 #'
 #' @author {Loukia M. Spineli}

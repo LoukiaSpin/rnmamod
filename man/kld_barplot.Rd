@@ -22,12 +22,12 @@ the order of the interventions as they appear in \code{data} is used,
 instead.}
 }
 \value{
-\code{kld_barplot} returns a panel of barplots on the KLD measure for
-  each re-analysis.
+\code{kld_barplot} returns a panel of barplots on the
+  Kullback-Leibler divergence measure for each re-analysis.
 }
 \description{
-Produces a barplot with the Kullback-Leibler divergence (KLD)
-  measure from each re-analysis to the primary analysis for a pairwise
+Produces a barplot with the Kullback-Leibler divergence measure
+  from each re-analysis to the primary analysis for a pairwise
   comparison. Currently, \code{kld_barplot} is used concerning the impact of
   missing participant outcome data.
 }
@@ -37,7 +37,7 @@ Produces a barplot with the Kullback-Leibler divergence (KLD)
   function. The scenarios for the missingness parameter (see 'Details' in
   \code{\link{run_sensitivity}}) in the compared interventions are split to
   \emph{Extreme}, \emph{Sceptical}, and \emph{Optimistic} following the
-  classification of Spineli et al., (2021). In each class, bars will green,
+  classification of Spineli et al. (2021). In each class, bars will green,
   orange, and red colour refer to scenarios without distance, less distant,
   and more distant from the primary analysis
   (the missing-at-random assumption).
