@@ -3,8 +3,8 @@
   the comparison of the consistency model (via run_model) with
   the unrelated mean effects model (via run_ume) regarding the
   posterior summaries of the summary effect size for the pairwise comparisons
-  observed in the network, the between-trial standard deviation (tau) and
-  model assessment parameters."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
+  observed in the network, the between-trial standard deviation (tau)
+  and model assessment parameters."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]--></head><body data-spy="scroll" data-target="#toc">
@@ -71,8 +71,8 @@
   the comparison of the consistency model (via <code><a href="run_model.html">run_model</a></code>) with
   the unrelated mean effects model (via <code><a href="run_ume.html">run_ume</a></code>) regarding the
   posterior summaries of the summary effect size for the pairwise comparisons
-  observed in the network, the between-trial standard deviation (tau) and
-  model assessment parameters.</p>
+  observed in the network, the between-trial standard deviation (<em>tau</em>)
+  and model assessment parameters.</p>
     </div>
 
     <div id="ref-usage">
@@ -104,24 +104,37 @@ directory of the user. The default is <code>FALSE</code> (do not export).</p></d
     <h2>Value</h2>
     <p><code>ume_plot</code> prints on the R console a message on the most
   parsimonious model (if any) based on the DIC (red text). Then, the function
-  returns the following list of elements:</p><table class="table table"><tr><td><code>table_effect_size</code></td><td>The posterior mean, posterior standard
-   deviation, and 95% credible interval of the summary effect size for each
-   pairwise comparisons observed in the network under the consistency model
-   and the unrelated mean effects model.</td></tr><tr><td></td><td></td></tr><tr><td><code>table_model_assessment</code></td><td>The DIC, number of effective
-   parameters, and total residual deviance under the consistency model and
-   the unrelated mean effects model (Spiegelhalter et al., 2002).</td></tr><tr><td></td><td></td></tr><tr><td><code>table_tau</code></td><td>The posterior median and 95% credible interval of
-   <em>tau</em> under the consistency model and the unrelated mean effects
-   model. When a fixed-effect model has been performed, <code>ume_plot</code> does
-   not return this element.</td></tr><tr><td></td><td></td></tr><tr><td><code>scatterplots</code></td><td>The scatterplot and the Bland-Altman plot on the
-   posterior mean deviance contribution of the individual data points under
-   the consistency model and the unrelated mean effects model. See 'Details'
-   and 'Value' in <code><a href="scatterplots_dev.html">scatterplots_dev</a></code> and
-   <code><a href="bland_altman_plot.html">bland_altman_plot</a></code>, respectively.</td></tr><tr><td></td><td></td></tr><tr><td><code>levarage_plots</code></td><td>The leverage plot under the consistency model
-   and the unrelated mean effects model, separately. See 'Details' and
-   'Value' in <code><a href="leverage_plot.html">leverage_plot</a></code>.</td></tr><tr><td></td><td></td></tr><tr><td><code>intervalplots</code></td><td>A panel of interval plots on the summary effect
-   size under the consistency model and the unrelated mean effects model for
-   each pairwise comparison observed in the network. See 'Details' and
-   'Value' in <code><a href="intervalplot_panel_ume.html">intervalplot_panel_ume</a></code>.</td></tr></table></div>
+  returns the following list of elements:</p>
+<dl><dt>table_effect_size</dt>
+<dd><p>The posterior mean, posterior standard
+  deviation, and 95% credible interval of the summary effect size for each
+  pairwise comparisons observed in the network under the consistency model
+  and the unrelated mean effects model.</p></dd>
+<dt>table_model_assessment</dt>
+<dd><p>The DIC, number of effective
+  parameters, and total residual deviance under the consistency model and
+  the unrelated mean effects model (Spiegelhalter et al., 2002).</p></dd>
+<dt>table_tau</dt>
+<dd><p>The posterior median and 95% credible interval of
+  <em>tau</em> under the consistency model and the unrelated mean effects
+  model. When a fixed-effect model has been performed, <code>ume_plot</code> does
+  not return this element.</p></dd>
+<dt>scatterplots</dt>
+<dd><p>The scatterplot and the Bland-Altman plot on the
+  posterior mean deviance contribution of the individual data points under
+  the consistency model and the unrelated mean effects model. See 'Details'
+  and 'Value' in <code><a href="scatterplots_dev.html">scatterplots_dev</a></code> and
+  <code><a href="bland_altman_plot.html">bland_altman_plot</a></code>, respectively.</p></dd>
+<dt>levarage_plots</dt>
+<dd><p>The leverage plot under the consistency model
+  and the unrelated mean effects model, separately. See 'Details' and
+  'Value' in <code><a href="leverage_plot.html">leverage_plot</a></code>.</p></dd>
+<dt>intervalplots</dt>
+<dd><p>A panel of interval plots on the summary effect
+  size under the consistency model and the unrelated mean effects model for
+  each pairwise comparison observed in the network. See 'Details' and
+  'Value' in <code><a href="intervalplot_panel_ume.html">intervalplot_panel_ume</a></code>.</p></dd>
+</dl></div>
     <div id="details">
     <h2>Details</h2>
     <p>The deviance information criterion (DIC) of the consistency model is
@@ -154,7 +167,7 @@ doi: <a href="https://doi.org/10.1111/1467-9868.00353" class="external-link">10.
     <div class="dont-index"><p><code><a href="bland_altman_plot.html">bland_altman_plot</a></code>,
   <code><a href="intervalplot_panel_ume.html">intervalplot_panel_ume</a></code>, <code><a href="leverage_plot.html">leverage_plot</a></code>,
   <code><a href="run_model.html">run_model</a></code>, <code><a href="run_ume.html">run_ume</a></code>,
-  <a href="https://CRAN.R-project.org/package=writexl" class="external-link">write_xlsx</a></p></div>
+  <code><a href="https://docs.ropensci.org/writexl/reference/write_xlsx.html" class="external-link">write_xlsx</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>

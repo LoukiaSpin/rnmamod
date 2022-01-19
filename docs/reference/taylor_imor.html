@@ -80,13 +80,13 @@
     <div id="format">
     <h2>Format</h2>
     <p>The columns of the data-frame in the argument <code>data</code> refer to
-  the following ordered elements for a binary outcome:</p><table class="table table"><tr><td><strong>id</strong></td><td>A unique identifier for each trial.</td></tr><tr><td></td><td></td></tr><tr><td><strong>r1</strong></td><td>The observed  number of events in the first arm of the
-   comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>r2</strong></td><td>The observed  number of events in the second arm of the
-   comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>m1</strong></td><td>The number of MOD in the first arm of the comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>m2</strong></td><td>The number of MOD in the second arm of the comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>n1</strong></td><td>The number of participants randomised in the first arm of
-   the comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>n2</strong></td><td>The number of participants randomised in the second arm
-   of the comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>t1</strong></td><td>An identifier for the intervention in the first arm of
-   the comparison.</td></tr><tr><td></td><td></td></tr><tr><td><strong>t2</strong></td><td>An identifier for the intervention in the second arm of
-   the comparison.</td></tr></table></div>
+  the following ordered elements for a binary outcome:</p><table class="table table"><tr><td><b>id</b></td><td>A unique identifier for each trial.</td></tr><tr><td><b>r1</b></td><td>The observed  number of events in the first arm of the
+  comparison.</td></tr><tr><td><b>r2</b></td><td>The observed  number of events in the second arm of the
+  comparison.</td></tr><tr><td><b>m1</b></td><td>The number of MOD in the first arm of the comparison.</td></tr><tr><td><b>m2</b></td><td>The number of MOD in the second arm of the comparison.</td></tr><tr><td><b>n1</b></td><td>The number of participants randomised in the first arm of
+  the comparison.</td></tr><tr><td><b>n2</b></td><td>The number of participants randomised in the second arm
+  of the comparison.</td></tr><tr><td><b>t1</b></td><td>An identifier for the intervention in the first arm of
+  the comparison.</td></tr><tr><td><b>t2</b></td><td>An identifier for the intervention in the second arm of
+  the comparison.</td></tr></table></div>
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
@@ -111,9 +111,14 @@ argument is 0 and corresponds to uncorrelated missingness parameters.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data-frame that additionally includes the following elements:</p><table class="table table"><tr><td><strong>EM</strong></td><td>The odds ratio in the logarithmic scale (log OR) adjusted
-   for MOD and obtained using the Taylor series.</td></tr><tr><td></td><td></td></tr><tr><td><strong>se.EM</strong></td><td>The standard error of the log OR adjusted for MOD and
-   obtained using the Taylor series.</td></tr></table></div>
+    <p>A data-frame that additionally includes the following elements:</p>
+<dl><dt>EM</dt>
+<dd><p>The odds ratio in the logarithmic scale (log OR) adjusted
+  for MOD and obtained using the Taylor series.</p></dd>
+<dt>se.EM</dt>
+<dd><p>The standard error of the log OR adjusted for MOD and
+  obtained using the Taylor series.</p></dd>
+</dl></div>
     <div id="details">
     <h2>Details</h2>
     <p>The <code>taylor_imor</code> function is found in the
@@ -132,8 +137,8 @@ in meta-analysis--part 1: two-stage methods.
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><a href="https://CRAN.R-project.org/package=netmeta" class="external-link">pairwise</a>,
-  <code><a href="run_model.html">run_model</a></code>, <code><a href="unrelated_effects_plot.html">unrelated_effects_plot</a></code></p></div>
+    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/netmeta/man/pairwise.html" class="external-link">pairwise</a></code>, <code><a href="run_model.html">run_model</a></code>,
+  <code><a href="unrelated_effects_plot.html">unrelated_effects_plot</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>

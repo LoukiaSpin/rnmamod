@@ -101,31 +101,39 @@ re-analysis results. See 'Details' below.</p></dd>
     <h2>Value</h2>
     <p><code>robustness_index</code> prints on the R console a message in green
   text on the threshold of robustness determined by the user.
-  Then, the function returns the following list of elements:</p><table class="table table"><tr><td><code>robust_index</code></td><td>A numeric scalar or vector on the robustness
-   index values. In the case of a pairwise meta-analysis (PMA),
-   <code>robust_index</code> is scalar as only one summary effect size is obtained.
-   In the case of network meta-analysis (NMA), <code>robust_index</code> is a
-   vector with length equal to the number of possible pairwise comparisons;
-   one robustness index per possible comparison.</td></tr><tr><td></td><td></td></tr><tr><td><code>robust</code></td><td>A character or character vector (of same length with
-   <code>robust_index</code>) on whether the primary analysis results are
-   <em>robust</em> or <em>frail</em> to the different re-analyses.</td></tr><tr><td></td><td></td></tr><tr><td><code>kld</code></td><td>A vector or matrix on the Kullback-Leibler divergence
-   (KLD) measure in the summary effect size from a subsequent re-analysis to
-   the primary analysis. In the case of a PMA, <code>kld</code> is a vector with
-   length equal to the number of total analyses. The latter equals the square
-   of the number of scenarios indicated in the argument <code>mean_scenarios</code>
-   of <code><a href="run_sensitivity.html">run_sensitivity</a></code>, in the case of missing participant
-   outcome data; otherwise, the length of the character vector in argument
-   <code>sens</code>. One KLD value is obtained per analysis. In the case of NMA,
-   <code>robust_index</code> is a matrix with number of rows equal to the number of
-   total analyses and number of columns equal to the number of possible
-   pairwise comparisons; one KLD value per analysis and possible
-   comparison.</td></tr></table></div>
+  Then, the function returns the following list of elements:</p>
+<dl><dt>robust_index</dt>
+<dd><p>A numeric scalar or vector on the robustness
+  index values. In the case of a pairwise meta-analysis,
+  <code>robust_index</code> is scalar as only one summary effect size is obtained.
+  In the case of network meta-analysis, <code>robust_index</code> is a vector with
+  length equal to the number of possible pairwise comparisons;
+  one robustness index per possible comparison.</p></dd>
+<dt>robust</dt>
+<dd><p>A character or character vector (of same length with
+  <code>robust_index</code>) on whether the primary analysis results are
+  <em>robust</em> or <em>frail</em> to the different re-analyses.</p></dd>
+<dt>kld</dt>
+<dd><p>A vector or matrix on the Kullback-Leibler divergence
+  (KLD) measure in the summary effect size from a subsequent re-analysis to
+  the primary analysis. In the case of a pairwise meta-analysis, <code>kld</code>
+  is a vector with length equal to the number of total analyses. The latter
+  equals the square of the number of scenarios indicated in the argument
+  <code>mean_scenarios</code> of <code><a href="run_sensitivity.html">run_sensitivity</a></code>, in the case of
+  missing participant outcome data; otherwise, the length of the character
+  vector in argument <code>sens</code>.
+  One KLD value is obtained per analysis. In the case of network
+  meta-analysis, <code>robust_index</code> is a matrix with number of rows equal to
+  the number of total analyses and number of columns equal to the number of
+  possible pairwise comparisons; one KLD value per analysis and possible
+  comparison.</p></dd>
+</dl></div>
     <div id="details">
     <h2>Details</h2>
     <p>The user may consider the values 0.28 and 0.17 in the argument
   <code>threshold</code> for binary and continuous outcome data (the default
   values), respectively, or consider other plausible values.
-  Spineli et al., (2021) offers a discussion on specifying the
+  Spineli et al. (2021) offers a discussion on specifying the
   <code>threshold</code> of robustness.</p>
 <p>In the case of missing participant outcome data, the primary analysis is
   considered to be the middle of the numbers in the argument

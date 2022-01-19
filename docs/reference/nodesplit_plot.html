@@ -5,7 +5,7 @@
   (via run_nodesplit) regarding the posterior summaries of the
   direct and indirect effects and inconsistency factor of the split
   nodes, the between-trial standard deviation and model assessment
-  parameters (Spiegelhalter et al., (2002)) after each split node in the
+  parameters (Spiegelhalter et al., 2002) after each split node in the
   network."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -75,7 +75,7 @@
   (via <code><a href="run_nodesplit.html">run_nodesplit</a></code>) regarding the posterior summaries of the
   direct and indirect effects and inconsistency factor of the split
   nodes, the between-trial standard deviation and model assessment
-  parameters (Spiegelhalter et al., (2002)) after each split node in the
+  parameters (Spiegelhalter et al., 2002) after each split node in the
   network.</p>
     </div>
 
@@ -106,16 +106,25 @@ directory of the user. The default is <code>FALSE</code> (do not export).</p></d
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>nodesplit_plot</code> returns the following list of elements:</p><table class="table table"><tr><td><code>table_effect_size</code></td><td>A data-frame with the posterior mean,
-   posterior standard deviation and 95% credible interval of the direct and
-   indirect effect and the inconsistency factor of each split node.</td></tr><tr><td></td><td></td></tr><tr><td><code>table_model_assessment</code></td><td>A data-frame with the model assessment
-   parameters (DIC, posterior mean of total residual deviance, and number of
-   effective parameters), the posterior median, posterior standard deviation
-   and 95% credible interval of <em>tau</em> under the consistency model and
-   after each split node. See 'Details'.</td></tr><tr><td></td><td></td></tr><tr><td><code>intervalplot_inconsistency_factor</code></td><td>A panel of interval plots on
-   the direct and indirect effect of the split nodes and the corresponding
-   inconsistency factor. See 'Details'.</td></tr><tr><td></td><td></td></tr><tr><td><code>intervalplot_tau</code></td><td>An interval plot on <em>tau</em> after each
-   split node. See 'Details'.</td></tr></table></div>
+    <p><code>nodesplit_plot</code> returns the following list of elements:</p>
+<dl><dt>table_effect_size</dt>
+<dd><p>A data-frame with the posterior mean,
+  posterior standard deviation and 95% credible interval of the direct and
+  indirect effect and the inconsistency factor of each split node.</p></dd>
+<dt>table_model_assessment</dt>
+<dd><p>A data-frame with the model assessment
+  parameters (DIC, posterior mean of total residual deviance, and number of
+  effective parameters), the posterior median, posterior standard deviation
+  and 95% credible interval of <em>tau</em> under the consistency model and
+  after each split node. See 'Details'.</p></dd>
+<dt>intervalplot_inconsistency_factor</dt>
+<dd><p>A panel of interval plots on
+  the direct and indirect effect of the split nodes and the corresponding
+  inconsistency factor. See 'Details'.</p></dd>
+<dt>intervalplot_tau</dt>
+<dd><p>An interval plot on <em>tau</em> after each
+  split node. See 'Details'.</p></dd>
+</dl></div>
     <div id="details">
     <h2>Details</h2>
     <p><code>intervalplot_inconsistency_factor</code> includes as many interval
@@ -141,7 +150,7 @@ directory of the user. The default is <code>FALSE</code> (do not export).</p></d
   <em>DIC-based better fit</em> that indicates the preferred model in terms of
   parsimony for each split node. Therefore, the DIC of the model after each
   split node is compared with the DIC of the consistency model
-  (Dias et al., (2010)). If the difference in DIC exceeds 5, the consistency
+  (Dias et al., 2010). If the difference in DIC exceeds 5, the consistency
   model is preferred; if the difference in DIC is less than -5, the model
   after the split node is preferred; otherwise, there is little to choose
   between the compared models.</p>
@@ -171,9 +180,9 @@ doi: <a href="https://doi.org/10.1111/1467-9868.00353" class="external-link">10.
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><a href="https://CRAN.R-project.org/package=gemtc" class="external-link">mtc.nodesplit.comparisons</a>,
+    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/gemtc/man/mtc.nodesplit.html" class="external-link">mtc.nodesplit.comparisons</a></code>,
   <code><a href="run_model.html">run_model</a></code>, <code><a href="run_nodesplit.html">run_nodesplit</a></code>,
-  <a href="https://CRAN.R-project.org/package=writexl" class="external-link">writexl</a></p></div>
+  <code><a href="https://docs.ropensci.org/writexl/reference/write_xlsx.html" class="external-link">write_xlsx</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>

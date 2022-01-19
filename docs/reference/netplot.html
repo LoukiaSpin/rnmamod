@@ -106,19 +106,25 @@ R-package <a href="https://CRAN.R-project.org/package=pcnetmeta" class="external
   otherwise (see <code><a href="https://rdrr.io/pkg/pcnetmeta/man/nma.networkplot.html" class="external-link">nma.networkplot</a></code>  function of the R-package
 <a href="https://CRAN.R-project.org/package=pcnetmeta" class="external-link">pcnetmeta</a>).
 <code>netplot</code> also returns the following data-frames that describe the
-  evidence base:</p><table class="table table"><tr><td><code>network_description</code></td><td>The number of: interventions, possible
-   comparisons, direct and indirect comparisons, number of trials in total,
-   number of two-arm and multi-arm trials, number of randomised participants,
-   and proportion of participants completing the trial (completers).
-   When the outcome is binary, the number of trials with at least one zero
-   event, and the number of trials with all zero events are also
-   presented.</td></tr><tr><td></td><td></td></tr><tr><td><code>table_interventions</code></td><td>For each intervention, the
-   number of trials, number of randomised participants, and proportion of
-   completers. When the outcome is binary, the data-frame presents also the
-   corresponding proportion of total observed events, the minimum, median and
-   maximum proportion of observed events across the corresponding trials.</td></tr><tr><td></td><td></td></tr><tr><td><code>table_comparisons</code></td><td>Identical structure to
-   <code>table_interventions</code> but for each observed comparison in the
-   network.</td></tr></table></div>
+  evidence base:</p>
+<dl><dt>network_description</dt>
+<dd><p>The number of: interventions, possible
+  comparisons, direct and indirect comparisons, number of trials in total,
+  number of two-arm and multi-arm trials, number of randomised participants,
+  and proportion of participants completing the trial (completers).
+  When the outcome is binary, the number of trials with at least one zero
+  event, and the number of trials with all zero events are also
+  presented.</p></dd>
+<dt>table_interventions</dt>
+<dd><p>For each intervention, the number of trials,
+  number of randomised participants, and proportion of completers. When the
+  outcome is binary, the data-frame presents also the corresponding
+  proportion of total observed events, the minimum, median and maximum
+  proportion of observed events across the corresponding trials.</p></dd>
+<dt>table_comparisons</dt>
+<dd><p>Identical structure to <code>table_interventions</code>
+  but for each observed comparison in the network.</p></dd>
+</dl></div>
     <div id="details">
     <h2>Details</h2>
     <p><code>netplot</code> draws the network plot using the
@@ -147,10 +153,10 @@ Bayesian Methods. <em>R package version 1.0-1</em>. 2021.
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="data_preparation.html">data_preparation</a></code>,
-  <a href="https://CRAN.R-project.org/package=gemtc" class="external-link">mtc.data.studyrow</a>,
-  <a href="https://CRAN.R-project.org/package=pcnetmeta" class="external-link">nma.networkplot</a>,
+  <code><a href="https://rdrr.io/pkg/gemtc/man/mtc.data.studyrow.html" class="external-link">mtc.data.studyrow</a></code>,
+  <code><a href="https://rdrr.io/pkg/pcnetmeta/man/nma.networkplot.html" class="external-link">nma.networkplot</a></code>,
   <code><a href="run_model.html">run_model</a></code>
-  <a href="https://CRAN.R-project.org/package=writexl" class="external-link">writexl</a></p></div>
+  <code><a href="https://docs.ropensci.org/writexl/reference/write_xlsx.html" class="external-link">write_xlsx</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>

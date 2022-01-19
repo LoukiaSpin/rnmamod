@@ -93,10 +93,11 @@ ignored for objects of S3 class <code><a href="run_nodesplit.html">run_nodesplit
     <h2>Value</h2>
     <p><code>mcmc_diagnostics</code> returns a data-frame that contains the
   Gelman-Rubin convergence diagnostic, R-hat, and convergence status of the
-  following monitored parameters:</p><table class="table table"><tr><td><code>EM</code></td><td>The estimated summary effect measure.</td></tr><tr><td></td><td></td></tr><tr><td><code>EM_pred</code></td><td>The predicted summary effect measure.</td></tr><tr><td></td><td></td></tr><tr><td><code>delta</code></td><td>The estimated trial-specific effect measure.</td></tr><tr><td></td><td></td></tr><tr><td><code>tau</code></td><td>The between-trial standard deviation.</td></tr><tr><td></td><td></td></tr><tr><td><code>direct</code></td><td>The direct estimate of the split node
-   (see 'Value' in <code><a href="run_nodesplit.html">run_nodesplit</a></code>).</td></tr><tr><td></td><td></td></tr><tr><td><code>indirect</code></td><td>The indirect estimate of the split node
-   (see 'Value' in <code><a href="run_nodesplit.html">run_nodesplit</a></code>).</td></tr><tr><td></td><td></td></tr><tr><td><code>IF</code></td><td>The inconsistency factor of the split node
-   (see 'Value' in <code><a href="run_nodesplit.html">run_nodesplit</a></code>).</td></tr><tr><td></td><td></td></tr><tr><td><code>phi</code></td><td>The informative missingness parameter.</td></tr><tr><td></td><td></td></tr><tr><td><code>beta</code></td><td>The regression coefficient.</td></tr></table><p><code>mcmc_diagnostics</code> also uses the
+  following monitored parameters:
+<code>EM</code>The estimated summary effect measure.<code>EM_pred</code>The predicted summary effect measure.<code>delta</code>The estimated trial-specific effect measure.<code>tau</code>The between-trial standard deviation.<code>direct</code>The direct estimate of the split node (see 'Value' in
+  <code><a href="run_nodesplit.html">run_nodesplit</a></code>).<code>indirect</code>The indirect estimate of the split node
+  (see 'Value' in <code><a href="run_nodesplit.html">run_nodesplit</a></code>).<code>IF</code>The inconsistency factor of the split node (see 'Value' in
+  <code><a href="run_nodesplit.html">run_nodesplit</a></code>).<code>phi</code>The informative missingness parameter.<code>beta</code>The regression coefficient.<code>mcmc_diagnostics</code> also uses the
 <code><a href="https://rdrr.io/pkg/mcmcplots/man/mcmcplot.html" class="external-link">mcmcplot</a></code> function of the R-package
 <a href="https://CRAN.R-project.org/package=mcmcplots" class="external-link">mcmcplots</a> to create an
   HTML file with a panel of diagnostic plots (trace, density, and
@@ -120,7 +121,7 @@ sequences. <em>Stat Sci</em> 1992;<b>7</b>:457--472.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><a href="https://CRAN.R-project.org/package=mcmcplots" class="external-link">mcmcplot</a>,
+    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/mcmcplots/man/mcmcplot.html" class="external-link">mcmcplot</a></code>,
   <code><a href="run_metareg.html">run_metareg</a></code>, <code><a href="run_model.html">run_model</a></code>,
   <code><a href="run_nodesplit.html">run_nodesplit</a></code>, <code><a href="run_sensitivity.html">run_sensitivity</a></code>,
   <code><a href="run_series_meta.html">run_series_meta</a></code>, <code><a href="run_ume.html">run_ume</a></code></p></div>

@@ -106,27 +106,40 @@ directory of the user. The default is <code>FALSE</code> (do not export).</p></d
     <h2>Value</h2>
     <p><code>metareg_plot</code> prints on the R console a message on the most
   parsimonious model (if any) based on the DIC (in red text). Furthermore,
-  the function returns the following list of elements:</p><table class="table table"><tr><td><code>table_estimates</code></td><td>The posterior mean, and 95% credible interval
-   of the summary effect measure (according to the argument <code>measure</code>
-   defined in <code><a href="run_model.html">run_model</a></code>) for each comparison with the selected
-   intervention under network meta-analysis and network meta-regression
-   based on the specified <code>cov_value</code>.</td></tr><tr><td></td><td></td></tr><tr><td><code>table_predictions</code></td><td>The posterior mean, and 95% predictive
-   interval of the summary effect measure (according to the argument
-   <code>measure</code> defined in <code><a href="run_model.html">run_model</a></code>) for each comparison
-   with the selected intervention under network meta-analysis and network
-   meta-regression based on the specified <code>cov_value</code>.</td></tr><tr><td></td><td></td></tr><tr><td><code>table_model_assessment</code></td><td>The DIC, total residual deviance,
-   number of effective parameters, and the posterior median and 95% credible
-   interval of between-trial standard deviation (<em>tau</em>) under each model
-   (Spiegelhalter et al., (2002)). When a fixed-effect model has been
-   performed, <code>metareg_plot</code> does not return results on <em>tau</em>.</td></tr><tr><td></td><td></td></tr><tr><td><code>table_regression_coeffients</code></td><td>The posterior mean and 95%
-   credible interval of the regression coefficient(s).</td></tr><tr><td></td><td></td></tr><tr><td><code>interval_plots</code></td><td>The panel of forest plots on the estimated and
-   predicted effect sizes of comparisons with the selected intervention under
-   network meta-analysis and network meta-regression based on the specified
-   <code>cov_value</code>. See 'Details' and 'Value' in
-   <code><a href="forestplot_metareg.html">forestplot_metareg</a></code>.</td></tr><tr><td></td><td></td></tr><tr><td><code>sucra_scatterplot</code></td><td>A scatterplot of the SUCRA values from the
-   network meta-analysis against the SUCRA values from the network
-   meta-regression based on the specified <code>cov_value</code>. See 'Details'
-   and 'Value' in <code><a href="scatterplot_sucra.html">scatterplot_sucra</a></code>.</td></tr></table></div>
+  the function returns the following list of elements:</p>
+<dl><dt>table_estimates</dt>
+<dd><p>The posterior mean, and 95% credible interval
+  of the summary effect measure (according to the argument <code>measure</code>
+  defined in <code><a href="run_model.html">run_model</a></code>) for each comparison with the selected
+  intervention under network meta-analysis and network meta-regression
+  based on the specified <code>cov_value</code>.</p></dd>
+<dt>table_predictions</dt>
+<dd><p>The posterior mean, and 95% predictive
+  interval of the summary effect measure (according to the argument
+  <code>measure</code> defined in <code><a href="run_model.html">run_model</a></code>) for each comparison
+  with the selected intervention under network meta-analysis and network
+  meta-regression based on the specified <code>cov_value</code>.</p></dd>
+<dt>table_model_assessment</dt>
+<dd><p>The DIC, total residual deviance,
+  number of effective parameters, and the posterior median and 95% credible
+  interval of between-trial standard deviation (<em>tau</em>) under each model
+  (Spiegelhalter et al., 2002). When a fixed-effect model has been
+  performed, <code>metareg_plot</code> does not return results on <em>tau</em>.</p></dd>
+<dt>table_regression_coeffients</dt>
+<dd><p>The posterior mean and 95%
+  credible interval of the regression coefficient(s).</p></dd>
+<dt>interval_plots</dt>
+<dd><p>The panel of forest plots on the estimated and
+  predicted effect sizes of comparisons with the selected intervention under
+  network meta-analysis and network meta-regression based on the specified
+  <code>cov_value</code>. See 'Details' and 'Value' in
+  <code><a href="forestplot_metareg.html">forestplot_metareg</a></code>.</p></dd>
+<dt>sucra_scatterplot</dt>
+<dd><p>A scatterplot of the SUCRA values from the
+  network meta-analysis against the SUCRA values from the network
+  meta-regression based on the specified <code>cov_value</code>. See 'Details'
+  and 'Value' in <code><a href="scatterplot_sucra.html">scatterplot_sucra</a></code>.</p></dd>
+</dl></div>
     <div id="details">
     <h2>Details</h2>
     <p>The deviance information criterion (DIC) of the network
@@ -161,7 +174,7 @@ doi: <a href="https://doi.org/10.1111/1467-9868.00353" class="external-link">10.
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="forestplot_metareg.html">forestplot_metareg</a></code>, <code><a href="run_metareg.html">run_metareg</a></code>,
   <code><a href="run_model.html">run_model</a></code>, <code><a href="scatterplot_sucra.html">scatterplot_sucra</a></code>,
-  <a href="https://CRAN.R-project.org/package=writexl" class="external-link">write_xlsx</a></p></div>
+  <code><a href="https://docs.ropensci.org/writexl/reference/write_xlsx.html" class="external-link">write_xlsx</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>

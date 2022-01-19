@@ -110,17 +110,29 @@ The default argument is 1.</p></dd>
     <h2>Value</h2>
     <p>An R2jags output on the summaries of the posterior distribution,
   and the Gelman-Rubin convergence diagnostic of the
-  following monitored parameters:</p><table class="table table"><tr><td><code>direct</code></td><td>The summary effect measure (according to the
-   argument <code>measure</code> defined in <code><a href="run_model.html">run_model</a></code>) of each
-   split node based on the corresponding trials.</td></tr><tr><td></td><td></td></tr><tr><td><code>indirect</code></td><td>The indirect summary effect measure (according to the
-   argument <code>measure</code> defined in <code><a href="run_model.html">run_model</a></code>) of each split
-   node based on the remaining network after removing (splitting) the
-   corresponding node.</td></tr><tr><td></td><td></td></tr><tr><td><code>diff</code></td><td>The inconsistency parameter for each split node
-   defined as the difference between the direct and indirect effect
-   of the corresponding split node.</td></tr><tr><td></td><td></td></tr><tr><td><code>tau</code></td><td>The between-trial standard deviation after
-   each split node, when the random-effects model has been specified.</td></tr></table><p>Furthermore, the output includes the following element:</p><table class="table table"><tr><td><code>model_assessment</code></td><td>A data-frame on the measures of model
-   assessment after each split node: deviance information criterion,
-   total residual deviance, and number of effective parameters.</td></tr></table></div>
+  following monitored parameters:</p>
+<dl><dt>direct</dt>
+<dd><p>The summary effect measure (according to the argument
+  <code>measure</code> defined in <code><a href="run_model.html">run_model</a></code>) of each split node based
+  on the corresponding trials.</p></dd>
+<dt>indirect</dt>
+<dd><p>The indirect summary effect measure (according to the
+  argument <code>measure</code> defined in <code><a href="run_model.html">run_model</a></code>) of each split
+  node based on the remaining network after removing (splitting) the
+  corresponding node.</p></dd>
+<dt>diff</dt>
+<dd><p>The inconsistency parameter for each split node defined as the
+  difference between the direct and indirect effect of the corresponding
+  split node.</p></dd>
+<dt>tau</dt>
+<dd><p>The between-trial standard deviation after each split node, when
+  the random-effects model has been specified.</p></dd>
+</dl><p>Furthermore, the output includes the following element:</p>
+<dl><dt>model_assessment</dt>
+<dd><p>A data-frame on the measures of model assessment
+  after each split node: deviance information criterion,
+  total residual deviance, and number of effective parameters.</p></dd>
+</dl></div>
     <div id="details">
     <h2>Details</h2>
     <p><code>run_nodesplit</code> inherits the arguments <code>data</code>,
@@ -189,9 +201,8 @@ doi: <a href="https://doi.org/10.1002/jrsm.1167" class="external-link">10.1002/j
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><a href="https://CRAN.R-project.org/package=R2jags" class="external-link">jags</a>,
-  <a href="https://CRAN.R-project.org/package=gemtc" class="external-link">mtc.nodesplit</a>,
-  <a href="https://CRAN.R-project.org/package=gemtc" class="external-link">mtc.nodesplit.comparisons</a>,
+    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>,
+  <code><a href="https://rdrr.io/pkg/gemtc/man/mtc.nodesplit.html" class="external-link">mtc.nodesplit.comparisons</a></code>,
   <code><a href="nodesplit_plot.html">nodesplit_plot</a></code>, <code><a href="prepare_nodesplit.html">prepare_nodesplit</a></code>,
   <code><a href="run_model.html">run_model</a></code>,</p></div>
     </div>
@@ -304,59 +315,59 @@ doi: <a href="https://doi.org/10.1002/jrsm.1167" class="external-link">10.1002/j
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $direct</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   treat1 treat2       mean        sd       2.5%       97.5%     Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1 -0.3873277 0.2652071 -0.8850601  0.14721105 1.219244    15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 -0.3821269 0.2115759 -0.7496827  0.03083592 1.070070    34</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1 -0.5095922 0.2257975 -0.9582121 -0.10202194 1.058869    97</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4 -0.2016000 0.2028216 -0.5572348  0.24760477 1.010899   340</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 -0.5552726 0.2400957 -0.9940370 -0.09525698 1.076570    37</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 -0.3662018 0.2293609 -0.8236182  0.02330352 1.274012    11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 -1.8184461 0.9012724 -3.7395398 -0.34102766 1.141065    20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 -0.9230884 0.3733013 -1.6453089 -0.21158625 1.249862    12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   treat1 treat2       mean        sd       2.5%        97.5%     Rhat n.eff</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1 -0.4260244 0.2043189 -0.8240061  0.006905684 1.013987   450</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 -0.6207286 0.2235990 -1.0348453 -0.181520765 1.254332    13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1 -0.6142802 0.2319593 -1.0296245 -0.182016282 1.576723     7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4 -0.1513790 0.2125605 -0.6223254  0.194622369 1.124793    23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 -0.5449496 0.2383361 -1.0235659 -0.061871259 1.026904    87</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 -0.4348256 0.2151137 -0.8805343  0.005947830 1.015599   360</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 -1.7122923 0.9021977 -3.5299128 -0.019909152 1.088107    33</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 -0.8720894 0.3660333 -1.5619485 -0.149797443 1.242308    12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $indirect</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   treat1 treat2        mean        sd       2.5%      97.5%     Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1  1.11199032 0.8348653 -0.2751997  2.9237964 1.099119    35</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 -0.11396826 0.6454612 -1.6030600  1.1359320 1.134041    23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1 -1.28932269 0.5389905 -2.6470268 -0.4390495 1.090383    43</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4 -0.65594832 0.5199095 -1.6044752  0.2993950 1.337477    10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 -0.17875473 0.1924316 -0.5713523  0.2171103 1.149972    18</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 -0.25810269 0.2626253 -0.8003076  0.2136960 1.328514    10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 -0.08281475 0.2134203 -0.5480264  0.3000090 1.015870   190</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 -0.05217033 0.2136210 -0.4970179  0.3620076 1.068706    37</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1  0.98660854 0.7786255 -0.4655886  2.6367982 1.069042    35</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 -0.39044838 0.6204541 -1.6515931  0.8532592 1.031054    82</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1 -1.79141830 0.7924242 -3.2766879 -0.3965316 1.264677    12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4 -0.74717765 0.3571373 -1.4090449  0.0419487 1.225468    13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 -0.21916942 0.2237198 -0.6607624  0.2167690 1.063500    38</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 -0.31521412 0.2711974 -0.8301784  0.1978488 1.171475    16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 -0.05908925 0.1909420 -0.4692070  0.2860590 1.050192    57</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 -0.01764719 0.2191612 -0.5182623  0.3474076 1.062693    43</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $diff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   treat1 treat2       mean        sd       2.5%       97.5%     Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1 -1.4993180 0.8849486 -3.3701256  0.02144620 1.079643    37</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 -0.2681587 0.6015260 -1.4115475  1.13106402 1.093922    36</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1  0.7797305 0.5217343 -0.1151459  1.97934652 1.095209    37</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4  0.4543483 0.5715536 -0.6500159  1.53748044 1.261940    13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 -0.3765179 0.3047378 -0.9824054  0.22804060 1.040973   200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 -0.1080991 0.3928108 -0.8648647  0.60567711 1.542617     7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 -1.7356314 0.9460156 -3.6621207 -0.16801150 1.147205    19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 -0.8709181 0.4651929 -1.7156156  0.07989799 1.204026    14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   treat1 treat2       mean        sd        2.5%      97.5%     Rhat n.eff</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1 -1.4126329 0.8010519 -3.10919025 0.04961144 1.077400    34</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 -0.2302802 0.5778000 -1.37900392 0.91948821 1.008686   930</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1  1.1771381 0.7179978 -0.04428144 2.49742262 1.196623    15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4  0.5957987 0.3683580 -0.27520987 1.24006205 1.092431    28</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 -0.3257802 0.3175845 -0.93142804 0.29067934 1.051187    44</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 -0.1196114 0.3772940 -0.91996426 0.60513913 1.078007    34</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 -1.6532031 0.9348473 -3.46137428 0.19970768 1.103918    27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 -0.8544422 0.4528424 -1.70537985 0.15497461 1.241893    12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $tau</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   treat1 treat2       50%         sd        2.5%     97.5%     Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1 0.1324154 0.09329003 0.010349812 0.3472648 1.621362     7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 0.1707689 0.08746981 0.024244409 0.3589821 1.364009    11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1 0.1623430 0.08539552 0.024193983 0.3356758 1.046820    69</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4 0.1026571 0.07632202 0.013461669 0.2968045 1.133453    27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 0.1120171 0.08363083 0.024057362 0.3477892 1.011957   390</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 0.1072796 0.08705009 0.005372873 0.3402534 1.294016    16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 0.1324767 0.08561449 0.011583450 0.3332715 1.276182    14</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 0.1886068 0.09575736 0.037947102 0.3941237 1.247859    14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   treat1 treat2        50%         sd        2.5%     97.5%     Rhat n.eff</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1 0.13295610 0.07716093 0.016907175 0.3122890 1.096902    73</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 0.14251880 0.09836835 0.008810835 0.3589458 1.270602    15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1 0.11233709 0.08244377 0.013534923 0.3004815 1.452799     9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4 0.06935735 0.08972232 0.001879428 0.3069354 1.490436     8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 0.15600574 0.07416634 0.055951774 0.3332944 1.011398   350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 0.14518258 0.09000010 0.023210835 0.3634770 1.094541    33</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 0.11202252 0.08041243 0.008025215 0.3102506 1.197712    16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 0.14707475 0.11867082 0.010382611 0.4340239 1.049308    65</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $model_assessment</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   treat1 treat2      DIC deviance       pD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1 89.99540 53.45429 36.54111</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 90.16538 53.22395 36.94143</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1 89.96739 53.06466 36.90274</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4 91.18939 53.66989 37.51950</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 90.78190 52.97499 37.80692</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 91.54991 54.40724 37.14267</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 89.12296 53.31364 35.80932</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 92.01071 53.59451 38.41620</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1 88.17248 53.49266 34.67982</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 90.83132 54.19436 36.63696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1 88.45031 52.51950 35.93081</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4 88.81425 52.71329 36.10096</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 91.48515 53.15663 38.32852</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 91.39985 53.65983 37.74002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 89.34540 54.08642 35.25898</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 92.93502 54.81065 38.12437</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span class="co"># }</span></span>
 <span class="r-in"></span>
