@@ -267,62 +267,46 @@ describe_network <- function(data, drug_names, measure) {
                                      by = list(comp), max)[, 2], 2) * 100
   }
 
-  if (measure == "OR") {
-    # Tabulate summary statistics per intervention
-    table_interv <- data.frame(drug_names,
-                               as.data.frame(table(unlist(dat$t)))[, 2],
-                               total_rand_partic_interv,
-                               prop_obs_partic_interv,
-                               total_risk_interv,
-                               min_risk_interv,
-                               median_risk_interv,
-                               max_risk_interv)
-    colnames(table_interv) <- c("Interventions",
-                                "Total trials",
-                                "Total randomised",
-                                "Completers (%)",
-                                "Total events (%)",
-                                "Min. events (%)",
-                                "Median events (%)",
-                                "Max. events (%)")
-
-    # Tabulate summary statistics per observed comparison
-    table_comp <- data.frame(as.data.frame(table(comp))[, 1],
-                             as.data.frame(table(comp))[, 2],
-                             total_rand_partic_comp,
-                             prop_obs_partic_comp,
-                             total_risk_comp,
-                             min_risk_comp,
-                             median_risk_comp,
-                             max_risk_comp)
-    colnames(table_comp) <- c("Comparisons",
-                              "Total trials",
-                              "Total randomised",
-                              "Completers (%)",
-                              "Total events (%)",
-                              "Min. events (%)",
-                              "Median events (%)",
-                              "Max. events (%)")
-  } else {
-    # Tabulate summary statistics per intervention
-    table_interv <- data.frame(drug_names,
-                               as.data.frame(table(unlist(dat$t)))[, 2],
-                               total_rand_partic_interv,
-                               prop_obs_partic_interv)
-    colnames(table_interv) <- c("Interventions",
-                                "Total trials",
-                                "Total randomised",
-                                "Completers (%)")
-
-    # Tabulate summary statistics per observed comparison
-    table_comp <- data.frame(as.data.frame(table(comp))[, 1],
-                             as.data.frame(table(comp))[, 2],
-                             total_rand_partic_comp,
-                             prop_obs_partic_comp)
-    colnames(table_comp) <- c("Comparisons",
+  # Tabulate summary statistics per intervention
+  table_interv <- data.frame(drug_names,
+                             as.data.frame(table(unlist(dat$t)))[, 2],
+                             total_rand_partic_interv,
+                             prop_obs_partic_interv)
+  colnames(table_interv) <- c("Interventions",
                               "Total trials",
                               "Total randomised",
                               "Completers (%)")
+
+  if (measure == "OR") {
+    table_interv <- cbind(table_interv, data.frame(total_risk_interv,
+                                                   min_risk_interv,
+                                                   median_risk_interv,
+                                                   max_risk_interv))
+    colnames(table_interv)[5:8] <- c("Total events (%)",
+                                     "Min. events (%)",
+                                     "Median events (%)",
+                                     "Max. events (%)")
+  }
+
+  # Tabulate summary statistics per observed comparison
+  table_comp <- data.frame(as.data.frame(table(comp))[, 1],
+                           as.data.frame(table(comp))[, 2],
+                           total_rand_partic_comp,
+                           prop_obs_partic_comp)
+  colnames(table_comp) <- c("Comparisons",
+                            "Total trials",
+                            "Total randomised",
+                            "Completers (%)")
+
+  if (measure == "OR") {
+    table_comp <- cbind(table_comp, data.frame(total_risk_comp,
+                                               min_risk_comp,
+                                               median_risk_comp,
+                                               max_risk_comp))
+    colnames(table_comp)[5:8] <- c("Total events (%)",
+                                   "Min. events (%)",
+                                   "Median events (%)",
+                                   "Max. events (%)")
   }
 
   results <- list(direct_comp = direct_comp,
@@ -335,12 +319,9 @@ describe_network <- function(data, drug_names, measure) {
 
 
   if (measure == "OR") {
-    results <- append(results,
-                      list(prop_event_network = prop_event_network,
-                           trial_zero_event = trial_zero_event,
-                           trial_all_zero_event = trial_all_zero_event))
-  } else {
-    results
+    results <- append(results, list(prop_event_network = prop_event_network,
+                               trial_zero_event = trial_zero_event,
+                               trial_all_zero_event = trial_all_zero_event))
   }
 
   return(results)

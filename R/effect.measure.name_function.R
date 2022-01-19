@@ -1,14 +1,15 @@
-effect_measure_name <- function(name) {
+effect_measure_name <- function(x) {
 
-  spell_out <- if (name == "OR") {
-    "Odds ratio"
-  } else if (name == "MD") {
-    "Mean difference"
-  } else if (name == "SMD") {
-    "Standardised mean difference"
-  } else if (name == "ROM") {
-    "Ratio of means"
+  abbrev <- c("OR", "MD", "SMD", "ROM")
+  name <- c("Odds ratio",
+            "Mean difference",
+            "Standardised mean difference",
+            "Ratio of means")
+
+  if (is.element(x, abbrev)) {
+    name[which(x == abbrev)]
+  } else {
+    message("Insert 'OR', 'MD', 'SMD', or 'ROM'")
   }
 
-  return(spell_out)
 }
