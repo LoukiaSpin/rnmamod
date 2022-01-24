@@ -199,10 +199,28 @@ netplot <- function(data, drug_names, save_xls, ...) {
     writexl::write_xlsx(dat$table_comparisons, "table_comparisons.xlsx")
   }
 
-  results <- list(network_plot = network_plot,
-                  network_description = knitr::kable(results),
-                  table_interventions = knitr::kable(dat$table_interventions),
-                  table_comparisons = knitr::kable(dat$table_comparisons))
+  # Obtain the element 'm_pseudo'
+  na_missing <- data_preparation(data = data, measure = measure)$m_pseudo
+  na_missing_trials <- length(which(unlist(na_missing) == -1))
 
-  return(results)
+  # Return all the results
+  return(list(network_plot = network_plot,
+              network_description =
+                knitr::kable(results,
+                             align = "ll",
+                             caption = "Description of the Network"),
+              table_interventions =
+                knitr::kable(dat$table_interventions,
+                             align = "lccccccc",
+                             caption = "Interventions"),
+              table_comparisons =
+                knitr::kable(dat$table_comparisons,
+                           align = "lccccccc",
+                           caption = "Observed comparisons")))
+
+  # Whether there are trials without information on missing participants
+  if (na_missing_trials > 0 & na_missing_trials < sum(na..)) {
+    aa <- "trial-arms without information on the number of missing participants"
+    message(paste("Note: There are", na_missing_trials, aa))
+  }
 }

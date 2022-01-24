@@ -9,10 +9,12 @@
 #'   meta-regression. In the case of two interventions, the code boils down to
 #'   a one-stage Bayesian pairwise meta-analysis with pattern-mixture model.
 #'
-#' @param measure Character string indicating the effect measure with values
-#'   \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
-#'   mean difference, standardised mean difference and ratio of means,
-#'   respectively.
+#' @param measure Character string indicating the effect measure. For a binary
+#'   outcome, the following can be considered: \code{"OR"}, \code{"RR"} or
+#'   \code{"RD"} for the odds ratio, relative risk, and risk difference,
+#'   respectively. For a continuous outcome, the following can be considered:
+#'   \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for mean difference,
+#'   standardised mean difference and ratio of means, respectively.
 #' @param model Character string indicating the analysis model with values
 #'   \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model,
 #'   respectively. The default argument is \code{"RE"}.
@@ -97,7 +99,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                        sd.pooled[i] <- sqrt(var.pooled[i])\n")
   } else if (is.element(measure, c("MD", "ROM"))) {
     paste(stringcode, "theta[i, 1] <- u[i]\n")
-  } else if (measure == "OR") {
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
     paste(stringcode, "logit(p[i, 1]) <- u[i]\n")
   }
 
@@ -112,7 +114,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
   } else if (is.element(measure, c("MD", "ROM"))) {
     paste(stringcode, "prec.o[i, k] <- pow(se.o[i, k], -2)
                        y.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])\n")
-  } else if (measure == "OR") {
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
     paste(stringcode, "r[i, k] ~ dbin(p_o[i, k], obs[i, k])
                        obs[i, k] <- N[i, k] - m[i, k]\n")
   }
@@ -121,7 +123,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
     paste(stringcode, "theta.o[i, k] <- theta[i, k] - phi.m[i, k]*q[i, k]\n")
   } else if (measure == "ROM") {
     paste(stringcode, "theta.o[i, k] <- theta[i, k]/(1 - q[i, k]*(1 - exp(phi.m[i, k])))\n")
-  } else if (measure == "OR") {
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
     paste(stringcode, "p_o[i, k] <- max(0, min(1, ((-((q[i, k] - p[i, k])*(1 - exp(phi.m[i, k])) - 1) - sqrt((pow(((q[i, k] - p[i, k])*(1 - exp(phi.m[i, k])) - 1), 2)) -
                                        ((4*p[i, k])*(1 - q[i, k])*(1 - exp(phi.m[i, k])))))/(2*(1 - q[i, k])*(1 - exp(phi.m[i, k]))))))\n")
   }
@@ -130,11 +132,11 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                                    m[i, k] ~ dbin(q0[i, k], N[i, k])
                                    q0[i, k] ~ dunif(0, 1)\n")
 
-  stringcode <- if (!is.element(measure, "OR")) {
+  stringcode <- if (!is.element(measure, c("OR", "RR", "RD"))) {
     paste(stringcode, "hat.par[i, k] <- theta.o[i, k]
                        dev.o[i, k] <- (y.o[i, k] - theta.o[i, k])*(y.o[i, k] - theta.o[i, k])*prec.o[i, k]
                        }\n")
-  } else if (measure == "OR") {
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
     paste(stringcode, "hat.par[i, k] <- rhat[i, k]
                        rhat[i, k] <- p_o[i, k]*obs[i, k]
                        dev.o[i, k] <- 2*(r[i, k]*(log(r[i, k]) - log(rhat[i, k])) + (obs[i, k] - r[i, k])*(log(obs[i, k] - r[i, k]) - log(obs[i, k] - rhat[i, k])))
@@ -150,7 +152,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
     paste(stringcode, "theta[i, k] <- u[i] + sd.pooled[i]*delta.star[i, k]\n")
   } else if (measure == "ROM") {
     paste(stringcode, "theta[i, k] <- u[i]*exp(delta.star[i, k])\n")
-  } else if (measure == "OR") {
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
     paste(stringcode, "logit(p[i, k]) <- u[i] + delta.star[i, k]\n")
   }
 
@@ -196,15 +198,14 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                                      d.n[t] <- d[t]*(1 - (1 - step(t - ref))) + d[t]*(-1)*(1 - step(t - ref))
                                    }\n")
 
-  stringcode <- if (measure == "OR") {
-    paste(stringcode, "for (t in 1:nt) {
+  stringcode <- if (is.element(measure, c("OR", "RR", "RD"))) {
+    paste(stringcode, "abs_risk[ref] <- base_risk
+                       for (t in 1:(ref - 1)) {
                          abs_risk[t] <- exp((d.n[t] + log(base_risk)) - log(1 + base_risk*(exp(d.n[t]) - 1)))
                        }
-                       for (c in 1:(nt - 1)) {
-                         for (k in (c + 1):nt) {
-                           RR[k, c] <- log(abs_risk[k]) - log(abs_risk[c])
-                           RD[k, c] <- abs_risk[k] - abs_risk[c]
-                       }}\n")
+                       for (t in (ref + 1):nt) {
+                         abs_risk[t] <- exp((d.n[t] + log(base_risk)) - log(1 + base_risk*(exp(d.n[t]) - 1)))
+                       }\n")
   } else {
     paste(stringcode, " ")
   }
@@ -341,8 +342,24 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                        }}\n")
   }
 
-  stringcode <- paste(stringcode, "sorted <- rank(d.n[])
-                                   for (t in 1:nt) {
+  stringcode <- if (!is.element(measure, c("RR", "RD"))) {
+    paste(stringcode, "sorted <- rank(d.n[])\n")
+  } else if (is.element(measure, c("RR", "RD"))) {
+    paste(stringcode, "EM.ref[ref] <- 0
+                       sorted <- rank(EM.ref[])
+                       sorted.LOR <- rank(d.n[])
+                       for (t in 1:nt) {
+                         order.LOR[t] <- (nt + 1 - sorted.LOR[t])*equals(D, 1) + sorted.LOR[t]*(1 - equals(D, 1))
+                         most.effective.LOR[t] <- equals(order.LOR[t], 1)
+                         for (l in 1:nt) {
+                           effectiveness.LOR[t, l] <- equals(order.LOR[t], l)
+                           cumeffectiveness.LOR[t, l] <- sum(effectiveness.LOR[t, 1:l])
+                         }
+                         SUCRA.LOR[t] <- sum(cumeffectiveness.LOR[t, 1:(nt - 1)])/(nt - 1)
+                       }\n")
+  }
+
+  stringcode <- paste(stringcode, "for (t in 1:nt) {
                                      order[t] <- (nt + 1 - sorted[t])*equals(D, 1) + sorted[t]*(1 - equals(D, 1))
                                      most.effective[t] <- equals(order[t], 1)
                                      for (l in 1:nt) {
@@ -352,31 +369,64 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                                      SUCRA[t] <- sum(cumeffectiveness[t, 1:(nt - 1)])/(nt - 1)
                                    }\n")
 
-  stringcode <- if (model == "RE") {
-    paste(stringcode, "for (t in 1:(ref - 1)) {
-                         EM.ref[t] <- d[t]
-                         pred.ref[t] ~ dnorm(EM.ref[t], prec)
-                       }
-                       for (t in (ref + 1):nt) {
-                         EM.ref[t] <- d[t]
-                         pred.ref[t] ~ dnorm(EM.ref[t], prec)
-                       }
-                       for (c in 1:(nt - 1)) {
+  stringcode <- if (model == "RE" & !is.element(measure, c("RR", "RD"))) {
+    paste(stringcode, "for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
                            EM[k, c] <- d.n[k] - d.n[c]
                            EM.pred[k, c] ~ dnorm(EM[k, c], prec)
                        }}\n")
-  } else {
-    paste(stringcode, "for (t in 1:(ref - 1)) {
-                          EM.ref[t] <- d[t]
-                       }
-                       for (t in (ref + 1):nt) {
-                         EM.ref[t] <- d[t]
-                       }
-                       for (c in 1:(nt - 1)) {
+  } else if (model == "FE" & !is.element(measure, c("RR", "RD"))) {
+    paste(stringcode, "for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
                            EM[k, c] <- d.n[k] - d.n[c]
                        }}\n")
+  } else if (model == "RE" & measure == "RR") {
+    paste(stringcode, "for (t in 1:(ref - 1)) {
+                         EM.ref.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
+                         EM.ref[t] <- EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                       }
+                       for (t in (ref + 1):nt) {
+                         EM.ref.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
+                         EM.ref[t] <- EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                       }
+                       for (c in 1:(nt - 1)) {
+                         for (k in (c + 1):nt) {
+                           EM[k, c] <- log(abs_risk[k]) - log(abs_risk[c])
+                           EM.LOR[k, c] <- d.n[k] - d.n[c]
+                           EM.pred.LOR[k, c] ~ dnorm(EM.LOR[k, c], prec)
+                           EM.pred[k, c] <- EM.pred.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.pred.LOR[k, c])))
+                       }}\n")
+  } else if (model == "RE" & measure == "RD") {
+    paste(stringcode, "for (t in 1:(ref - 1)) {
+                         EM.ref.RR.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
+                         EM.ref.RR[t] <- EM.ref.RR.n[t]*(1 - (1 - step(t - ref))) + EM.ref.RR.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1) - base_risk
+                         EM.ref[t] <-  EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                       }
+                       for (t in (ref + 1):nt) {
+                         EM.ref.RR.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
+                         EM.ref.RR[t] <- EM.ref.RR.n[t]*(1 - (1 - step(t - ref))) + EM.ref.RR.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1) - base_risk
+                         EM.ref[t] <-  EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                       }
+                       for (c in 1:(nt - 1)) {
+                         for (k in (c + 1):nt) {
+                           EM[k, c] <- abs_risk[k] - abs_risk[c]
+                           EM.LOR[k, c] <- d.n[k] - d.n[c]
+                           EM.pred.LOR[k, c] ~ dnorm(EM.LOR[k, c], prec)
+                           EM.pred.LRR[k, c] <- EM.pred.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.pred.LOR[k, c])))
+                           EM.pred[k, c] <- abs_risk[c]*(1 - exp(EM.pred.LRR[k, c]))
+                       }}\n")
+  } else if (model == "FE" & measure == "RR") {
+    paste(stringcode, "for (c in 1:(nt - 1)) {
+                         for (k in (c + 1):nt) {
+                           EM[k, c] <- log(abs_risk[k]) - log(abs_risk[c])
+                        }}\n")
+  } else if (model == "FE" & measure == "RD") {
+    paste(stringcode, "for (c in 1:(nt - 1)) {
+                         for (k in (c + 1):nt) {
+                           EM[k, c] <- abs_risk[k] - abs_risk[c]
+                        }}\n")
   }
 
   stringcode <- if (model == "RE") {

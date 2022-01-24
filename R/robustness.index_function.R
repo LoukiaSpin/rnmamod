@@ -99,14 +99,18 @@ robustness_index <- function(sens, threshold) {
 
 
   if (is.null(sens$EM)) {
-    es_mat <- as.matrix(sens[[1]])
     measure <- sens[[2]]
+    es_mat <- as.matrix(sens[[1]])
     scenarios <- sens[[3]]
     n_scenar <- length(scenarios)
     primary_scenar <- 1
   } else {
-    es_mat <- sens$EM
     measure <- sens$measure
+    es_mat <- if (is.element(measure, c("RR", "RD"))) {
+      sens$EM_LOR
+    } else {
+      sens$EM
+    }
     scenarios <- sens$scenarios
     n_scenar <- length(scenarios)^2
     primary_scenar <- median(seq_len(n_scenar))
@@ -115,6 +119,12 @@ robustness_index <- function(sens, threshold) {
       stop("Missing participant outcome data have *not* been collected.
            This function cannot be used.", call. = FALSE)
     }
+  }
+
+  measure <- if (is.element(measure, c("RR", "RD"))) {
+    "OR"
+  } else {
+    measure
   }
 
   # The quadratic formula for the roots of the general quadratic equation

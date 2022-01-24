@@ -3,8 +3,8 @@
 #' @description Applies the pattern-mixture model under a specific assumption
 #'   about the informative missingness parameter in trial-arms with
 #'   \bold{binary} missing participant outcome data (MOD) and uses the Taylor
-#'   series to obtain the effect size and standard error for each trial
-#'   (White et al., 2008).
+#'   series to obtain the odds ratio (in the logarithmic scale) and standard
+#'   error for each trial (White et al., 2008).
 #'
 #' @param data A data-frame in the long arm-based format. Two-arm trials occupy
 #'   one row in the data-frame. Multi-arm trials occupy as many rows as the

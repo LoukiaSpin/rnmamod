@@ -66,6 +66,10 @@
 #'   \code{cov_value} the name of the level for which the output will be
 #'   created.
 #'
+#'   For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
+#'   (risk difference) in \code{\link{run_model}}, \code{metareg_plot}
+#'   currently presents the results in the odds ratio scale.
+#'
 #'   Furthermore, \code{metareg_plot} exports all tabulated results to separate
 #'   'xlsx' files (via the \code{\link[writexl:write_xlsx]{write_xlsx}} function
 #'   of the R-package
@@ -189,11 +193,30 @@ metareg_plot <- function(full,
   }
 
   model <- full$model
-  measure <- effect_measure_name(full$measure)
+  measure <- if (is.element(full$measure, c("RR", "RD"))) {
+    "OR"
+  } else {
+    full$measure
+  }
+  em_full <- if (is.element(full$measure, c("RR", "RD"))) {
+    full$EM_LOR
+  } else {
+    full$EM
+  }
+  pred_full <- if (is.element(full$measure, c("RR", "RD"))) {
+    full$EM_pred_LOR
+  } else {
+    full$EM_pred
+  }
+  sucra_full0 <- if (is.element(full$measure, c("RR", "RD"))) {
+    full$SUCRA_LOR
+  } else {
+    full$SUCRA
+  }
 
   # Posterior results on the SUCRA value under NMA
-  sucra_full <- round(full$SUCRA, 2)
-  sucra_full_order <- round(full$SUCRA, 2)[order(sucra_full[, 1],
+  sucra_full <- round(sucra_full0, 2)
+  sucra_full_order <- round(sucra_full0, 2)[order(sucra_full[, 1],
                                                  decreasing = TRUE), ]
 
   # Sort the drugs by their NMA-SUCRA in decreasing order
@@ -207,12 +230,12 @@ metareg_plot <- function(full,
   poss_pair_comp <- rbind(poss_pair_comp1, poss_pair_comp2)
 
   # Posterior results on NMA for comparisons with the selected intervention
-  em_ref00_nma <- cbind(rbind(data.frame(mean = full$EM[, 1],
-                                         lower = full$EM[, 3],
-                                         upper = full$EM[, 7]),
-                              data.frame(mean = full$EM[, 1] * (-1),
-                                         lower = full$EM[, 7] * (-1),
-                                         upper = full$EM[, 3] * (-1))),
+  em_ref00_nma <- cbind(rbind(data.frame(mean = em_full[, 1],
+                                         lower = em_full[, 3],
+                                         upper = em_full[, 7]),
+                              data.frame(mean = em_full[, 1] * (-1),
+                                         lower = em_full[, 7] * (-1),
+                                         upper = em_full[, 3] * (-1))),
                         poss_pair_comp)
   em_subset_nma <- subset(em_ref00_nma, em_ref00_nma[5] == compar)
   em_ref0_nma <- rbind(em_subset_nma[, 1:3], c(rep(NA, 3)))
@@ -258,12 +281,12 @@ metareg_plot <- function(full,
   # Posterior results on the predicted estimates of comparisons with the
   # selected comparator as reference
   if (model == "RE") {
-    pred_ref00_nma <- cbind(rbind(data.frame(mean = full$EM_pred[, 1],
-                                             lower = full$EM_pred[, 3],
-                                             upper = full$EM_pred[, 7]),
-                                  data.frame(mean = full$EM_pred[, 1] * (-1),
-                                             lower = full$EM_pred[, 7] * (-1),
-                                             upper = full$EM_pred[, 3] * (-1))),
+    pred_ref00_nma <- cbind(rbind(data.frame(mean = pred_full[, 1],
+                                             lower = pred_full[, 3],
+                                             upper = pred_full[, 7]),
+                                  data.frame(mean = pred_full[, 1] * (-1),
+                                             lower = pred_full[, 7] * (-1),
+                                             upper = pred_full[, 3] * (-1))),
                             poss_pair_comp)
     pred_subset_nma <- subset(pred_ref00_nma, pred_ref00_nma[5] == compar)
     pred_ref0_nma <- rbind(pred_subset_nma[, 1:3], c(rep(NA, 3)))
@@ -287,7 +310,7 @@ metareg_plot <- function(full,
     rownames(pred_ref_nma) <- rownames(pred_ref_nmr) <- NULL
   }
 
-  if (!is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
+  if (!is.element(measure, c("OR", "RR", "ROM")) & model == "RE") {
     em_ref_nma <- em_ref_nma
     em_ref_nmr <- em_ref_nmr
     pred_ref_nma <- pred_ref_nma
@@ -319,8 +342,7 @@ metareg_plot <- function(full,
              ifelse(reg$beta[2] > 0 | reg$beta[3] < 0, "*", " "))
     }
 
-  } else if (is.element(measure, c("Odds ratio", "Ratio of means")) &
-             model == "RE") {
+  } else if (is.element(measure, c("OR", "RR", "ROM")) & model == "RE") {
     em_ref_nma <- exp(em_ref_nma)
     em_ref_nmr <- exp(em_ref_nmr)
     pred_ref_nma <- exp(pred_ref_nma)
@@ -352,8 +374,7 @@ metareg_plot <- function(full,
              ifelse(beta[2] > 1 | beta[3] < 1, "*", " "))
     }
 
-  } else if (!is.element(measure, c("Odds ratio", "Ratio of means")) &
-             model == "FE") {
+  } else if (!is.element(measure, c("OR", "RR", "ROM")) & model == "FE") {
     em_ref_nma <- em_ref_nma
     em_ref_nmr <- em_ref_nmr
     beta <- beta
@@ -374,8 +395,7 @@ metareg_plot <- function(full,
       paste0("(", round(reg$beta[2], 2), ",", " ", round(reg$beta[3], 2), ")",
              ifelse(reg$beta[2] > 0 | reg$beta[3] < 0, "*", " "))
     }
-  } else if (is.element(measure, c("Odds ratio", "Ratio of means")) &
-             model == "FE") {
+  } else if (is.element(measure, c("OR", "RR", "ROM")) & model == "FE") {
     em_ref_nma <- exp(em_ref_nma)
     em_ref_nmr <- exp(em_ref_nmr)
     beta <- exp(beta)

@@ -6,10 +6,12 @@
 #'   \code{\link{run_model}} inherits \code{heterogeneity_param_prior} via the
 #'   argument \code{heter_prior}.
 #'
-#' @param measure Character string indicating the effect measure with values
-#'   \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
-#'   mean difference, standardised mean difference and ratio of means,
-#'   respectively.
+#' @param measure Character string indicating the effect measure. For a binary
+#'   outcome, the following can be considered: \code{"OR"}, \code{"RR"} or
+#'   \code{"RD"} for the odds ratio, relative risk, and risk difference,
+#'   respectively. For a continuous outcome, the following can be considered:
+#'   \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for mean difference,
+#'   standardised mean difference and ratio of means, respectively.
 #' @param model Character string indicating the analysis model with values
 #'   \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model,
 #'   respectively. The default argument is \code{"RE"}.
@@ -78,7 +80,7 @@ heterogeneity_param_prior <- function(measure, model, heter_prior) {
     #message("The argument 'heter_prior' has been ignored.")
     list(NA, NA, NA)
   } else if (model == "RE" &
-             measure == "OR" &
+             is.element(measure, c("OR", "RR", "RD")) &
              heter_prior[[1]] != "halfnormal" &
              heter_prior[[1]] != "uniform" &
              heter_prior[[1]] != "lognormal") {
@@ -107,11 +109,11 @@ heterogeneity_param_prior <- function(measure, model, heter_prior) {
              heter_prior[[1]] == "logt") {
     as.numeric(c(heter_prior[[2]], heter_prior[[3]], 4))
   } else if (model == "RE" &
-             measure == "OR" &
+             is.element(measure, c("OR", "RR", "RD")) &
              heter_prior[[1]] == "lognormal")  {
     as.numeric(c(heter_prior[[2]], heter_prior[[3]], 3))
   } else if (model == "RE" &
-             measure != "OR" &
+             !is.element(measure, c("OR", "RR", "RD")) &
              heter_prior[[1]] == "lognormal") {
     stop("Not the proper prior distribution for continuous outcome",
          call. = FALSE)
@@ -126,7 +128,7 @@ heterogeneity_param_prior <- function(measure, model, heter_prior) {
     bb <- "Choose a half-normal or a uniform prior distribution, instead"
     stop(paste(aa, bb), call. = FALSE)
   } else if (model == "RE" &
-             measure == "OR" &
+             is.element(measure, c("OR", "RR", "RD")) &
              heter_prior[[1]] == "logt") {
     stop("This is not the proper prior distribution for binary outcome",
          call. = FALSE)

@@ -111,8 +111,28 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
     cov_value
   }
 
-  measure <- effect_measure_name(full$measure)
   model <- full$model
+  measure <- if (is.element(full$measure, c("RR", "RD"))) {
+    "OR"
+  } else {
+    full$measure
+  }
+  em_full <- if (is.element(full$measure, c("RR", "RD"))) {
+    full$EM_LOR
+  } else {
+    full$EM
+  }
+  pred_full <- if (is.element(full$measure, c("RR", "RD"))) {
+    full$EM_pred_LOR
+  } else {
+    full$EM_pred
+  }
+  sucra_full <- if (is.element(full$measure, c("RR", "RD"))) {
+    full$SUCRA_LOR
+  } else {
+    full$SUCRA
+  }
+
   cov_val <- ifelse(length(unique(reg$covariate)) < 3,
                     cov_value[[1]],
                     cov_value[[1]] - mean(reg$covariate))
@@ -125,17 +145,17 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   poss_pair_comp <- rbind(poss_pair_comp1, poss_pair_comp2)
 
   # Effect size of all possible pairwise comparisons (NMA)
-  em_ref00_nma <- cbind(rbind(data.frame(mean = full$EM[, 1],
-                                         lower = full$EM[, 3],
-                                         upper = full$EM[, 7]),
-                              data.frame(mean = full$EM[, 1] * (-1),
-                                         lower = full$EM[, 7] * (-1),
-                                         upper = full$EM[, 3] * (-1))),
+  em_ref00_nma <- cbind(rbind(data.frame(mean = em_full[, 1],
+                                         lower = em_full[, 3],
+                                         upper = em_full[, 7]),
+                              data.frame(mean = em_full[, 1] * (-1),
+                                         lower = em_full[, 7] * (-1),
+                                         upper = em_full[, 3] * (-1))),
                         poss_pair_comp)
   em_subset_nma <- subset(em_ref00_nma, em_ref00_nma[5] == compar)
   em_ref0_nma <- rbind(em_subset_nma[, 1:3], c(rep(NA, 3)))
-  sucra_new <- data.frame(full$SUCRA[, 1],
-                          drug_names)[order(match(data.frame(full$SUCRA[, 1],
+  sucra_new <- data.frame(sucra_full[, 1],
+                          drug_names)[order(match(data.frame(sucra_full[, 1],
                                                              drug_names)[, 2],
                                                   em_subset_nma[, 4])), 1]
   em_ref_nma <- em_ref0_nma[order(sucra_new, decreasing = TRUE), ]
@@ -161,12 +181,12 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   # Posterior results on the predicted estimates of comparisons with the
   # selected comparator as reference
   if (model == "RE") {
-    pred_ref00_nma <- cbind(rbind(data.frame(mean = full$EM_pred[, 1],
-                                             lower = full$EM_pred[, 3],
-                                             upper = full$EM_pred[, 7]),
-                                  data.frame(mean = full$EM_pred[, 1] * (-1),
-                                             lower = full$EM_pred[, 7] * (-1),
-                                             upper = full$EM_pred[, 3] * (-1))),
+    pred_ref00_nma <- cbind(rbind(data.frame(mean = pred_full[, 1],
+                                             lower = pred_full[, 3],
+                                             upper = pred_full[, 7]),
+                                  data.frame(mean = pred_full[, 1] * (-1),
+                                             lower = pred_full[, 7] * (-1),
+                                             upper = pred_full[, 3] * (-1))),
                             poss_pair_comp)
     pred_subset_nma <- subset(pred_ref00_nma, pred_ref00_nma[5] == compar)
     pred_ref0_nma <- rbind(pred_subset_nma[, 1:3], c(rep(NA, 3)))
@@ -193,7 +213,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
 
   # Create a data-frame with credible and predictive intervals of comparisons
   # with the reference intervention
-  if (!is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
+  if (!is.element(measure, c("OR", "ROM")) & model == "RE") {
     prepare_em_nma <- data.frame(as.factor(rep(rev(seq_len(len_drug)), 2)),
                                  rep(drug_names_sorted, 2),
                                  round(rbind(em_ref_nma, pred_ref_nma), 2),
@@ -209,8 +229,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                   "mean", "lower", "upper",
                                   "interval")
     colnames(prepare_em_nmr) <- colnames(prepare_em_nma)
-  } else if (is.element(measure, c("Odds ratio", "Ratio of means")) &
-             model == "RE") {
+  } else if (is.element(measure, c("OR", "ROM")) & model == "RE") {
     prepare_em_nma <- data.frame(as.factor(rep(rev(seq_len(len_drug)), 2)),
                                  rep(drug_names_sorted, 2),
                                  round(rbind(exp(em_ref_nma),
@@ -228,8 +247,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                   "mean", "lower", "upper",
                                   "interval")
     colnames(prepare_em_nmr) <- colnames(prepare_em_nma)
-  } else if (!is.element(measure, c("Odds ratio", "Ratio of means")) &
-             model == "FE") {
+  } else if (!is.element(measure, c("OR", "ROM")) & model == "FE") {
     prepare_em_nma <- data.frame(as.factor(rev(seq_len(len_drug))),
                                  drug_names_sorted,
                                  round(em_ref_nma, 2))
@@ -240,8 +258,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                   "comparison",
                                   "mean", "lower", "upper")
     colnames(prepare_em_nmr) <- colnames(prepare_em_nma)
-  } else if (is.element(measure, c("Odds ratio", "Ratio of means")) &
-             model == "FE") {
+  } else if (is.element(measure, c("OR", "ROM")) & model == "FE") {
     prepare_em_nma <- data.frame(as.factor(rev(seq_len(len_drug))),
                                  drug_names_sorted,
                                  round(exp(em_ref_nma), 2))
@@ -264,22 +281,19 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                    ifelse(length(unique(reg$covariate)) < 3, " ",
                           cov_value[[1]]))
 
-  caption <- if (full$D == 0 & is.element(measure,
-                                          c("Odds ratio", "Ratio of means"))) {
-    paste(measure, "< 1, favours the first arm.",
-          measure, "> 1, favours", compar)
-  } else if (full$D == 1 & is.element(measure,
-                                      c("Odds ratio", "Ratio of means"))) {
-    paste(measure, "< 1, favours", compar,
-          ".", measure, "> 1, favours the first arm")
-  } else if (full$D == 0 & !is.element(measure,
-                                      c("Odds ratio", "Ratio of means"))) {
-    paste(measure, "< 0, favours the first arm.",
-          measure, "> 0, favours", compar)
-  } else if (full$D == 1 & !is.element(measure,
-                                      c("Odds ratio", "Ratio of means"))) {
-    paste(measure, "< 0, favours", compar,
-          ".", measure, "> 0, favours the first arm")
+  measure2 <- effect_measure_name(measure)
+  caption <- if (full$D == 0 & is.element(measure, c("OR", "ROM"))) {
+    paste(measure2, "< 1, favours the first arm.",
+          measure2, "> 1, favours", compar)
+  } else if (full$D == 1 & is.element(measure, c("OR", "ROM"))) {
+    paste(measure2, "< 1, favours", compar,
+          ".", measure2, "> 1, favours the first arm")
+  } else if (full$D == 0 & !is.element(measure, c("OR", "ROM"))) {
+    paste(measure2, "< 0, favours the first arm.",
+          measure2, "> 0, favours", compar)
+  } else if (full$D == 1 & !is.element(measure, c("OR", "ROM"))) {
+    paste(measure2, "< 0, favours", compar,
+          ".", measure2, "> 0, favours the first arm")
   }
 
   forest_plots <- if (model == "RE") {
@@ -291,7 +305,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                group = analysis,
                colour = analysis)) +
       geom_hline(yintercept = ifelse(!is.element(
-        measure, c("Odds ratio", "Ratio of means")), 0, 1),
+        measure, c("OR", "ROM")), 0, 1),
         lty = 1,
         size = 1,
         col = "grey60") +
@@ -322,26 +336,8 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                 position = position_dodge(width = 0.5),
                 inherit.aes = TRUE,
                 na.rm = TRUE) +
-      #geom_text(aes(x = 0.45,
-      #              y = ifelse(is.element(
-      #                measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2),
-      #              label = ifelse(full$D == 0, "Favours first arm",
-      #                             paste("Favours", compar))),
-      #          size = 3.5,
-      #          vjust = 0,
-      #          hjust = 0,
-      #          color = "black") +
-      #geom_text(aes(x = 0.45,
-      #              y = ifelse(is.element(
-      #                measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2),
-      #              label = ifelse(full$D == 0, paste("Favours", compar),
-      #                             "Favours first arm")),
-      #          size = 3.5,
-      #          vjust = 0,
-      #          hjust = 0,
-      #          color = "black") +
       labs(x = "",
-           y = measure,
+           y = measure2,
            colour = "Analysis",
            subtitle = subtitle,
            caption = caption) +
@@ -353,7 +349,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                          values = c("black", "#D55E00")) +
       geom_label(aes(x = unique(order[is.na(mean)]),
                      y = ifelse(!is.element(
-                       measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65),
+                       measure, c("OR", "ROM")), -0.2, 0.65),
                      hjust = 0,
                      vjust = 1,
                      label = "Comparator intervention"),
@@ -362,7 +358,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                  fontface = "plain",
                  size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(
-        measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
+        measure, c("OR", "ROM")), "identity", "log10")) +
       coord_flip() +
       theme_classic() +
       theme(axis.text.x = element_text(color = "black", size = 12),
@@ -386,7 +382,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                group = analysis,
                colour = analysis)) +
       geom_hline(yintercept = ifelse(!is.element(
-        measure, c("Odds ratio", "Ratio of means")), 0, 1),
+        measure, c("OR", "ROM")), 0, 1),
         lty = 1,
         size = 1,
         col = "grey60") +
@@ -417,26 +413,8 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                 position = position_dodge(width = 0.5),
                 inherit.aes = TRUE,
                 na.rm = TRUE) +
-      #geom_text(aes(x = 0.45,
-      #              y = ifelse(is.element(
-      #                measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2),
-      #              label = ifelse(full$D == 0, "Favours first arm",
-      #                             paste("Favours", compar))),
-      #          size = 3.5,
-      #          vjust = 0,
-      #          hjust = 0,
-      #          color = "black") +
-      #geom_text(aes(x = 0.45,
-      #              y = ifelse(is.element(
-      #                measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2),
-      #              label = ifelse(full$D == 0, paste("Favours", compar),
-      #                             "Favours first arm")),
-      #          size = 3.5,
-      #          vjust = 0,
-      #          hjust = 0,
-      #          color = "black") +
       labs(x = "",
-           y = measure,
+           y = measure2,
            colour = "Analysis",
            subtitle = subtitle,
            caption = caption) +
@@ -447,7 +425,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                          values = c("black", "#D55E00")) +
       geom_label(aes(x = unique(order[is.na(mean)]),
                      y = ifelse(!is.element(
-                       measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65),
+                       measure, c("OR", "ROM")), -0.2, 0.65),
                      hjust = 0,
                      vjust = 1,
                      label = "Comparator intervention"),
@@ -456,7 +434,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                  fontface = "plain",
                  size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(
-        measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
+        measure, c("OR", "ROM")), "identity", "log10")) +
       coord_flip() +
       theme_classic() +
       theme(axis.text.x = element_text(color = "black", size = 12),

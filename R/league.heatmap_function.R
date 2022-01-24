@@ -126,7 +126,6 @@ league_heatmap <- function(full, cov_value = NULL, drug_names) {
     par <- full$EM
     sucra <- full$SUCRA[, 1]
   } else {
-
     cov_value <- if (missing(cov_value)) {
       stop("The argument 'cov_value' has not been defined", call. = FALSE)
     } else if (length(cov_value) != 2) {
@@ -200,7 +199,7 @@ league_heatmap <- function(full, cov_value = NULL, drug_names) {
 
   # Symmetric matrix for effect measure and its bounds after ordering rows and
   # columns from the best to the worst intervention
-  if (measure != "OR" & measure != "ROM") {
+  if (!is.element(measure, c("OR", "RR", "ROM"))) {
     point <- point1[drug_order_col, drug_order_row]
     lower <- lower1[drug_order_col, drug_order_row]
     upper <- upper1[drug_order_col, drug_order_row]
@@ -278,13 +277,14 @@ league_heatmap <- function(full, cov_value = NULL, drug_names) {
          scale_fill_gradientn(colours = c("blue", "white", "#D55E00"),
                               values = rescale(
                                 c(min(mat_new$value2, na.rm = TRUE),
-                                  ifelse(measure != "OR" & measure != "ROM", 0,
-                                         1),
+                                  ifelse(!is.element(measure,
+                                                     c("OR", "RR", "ROM")),
+                                         0, 1),
                                   max(mat_new$value2, na.rm = TRUE))),
                               limits = c(min(mat_new$value2, na.rm = TRUE),
                                          max(mat_new$value2, na.rm = TRUE))) +
          scale_x_discrete(position = "top") +
-         labs(x = "", y = "", caption =  caption) +
+         labs(x = "", y = "", caption = caption) +
          theme_bw() +
          theme(legend.position = "none",
                axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0),

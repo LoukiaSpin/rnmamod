@@ -56,6 +56,11 @@
 #'   consistency is preferred; otherwise, there is little to choose between the
 #'   compared models.
 #'
+#'   For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
+#'   (risk difference) in \code{\link{run_model}}, \code{ume_plot} currently
+#'   presents the results from network meta-analysis and node-splitting in the
+#'   odds ratio scale.
+#'
 #'   Furthermore, \code{ume_plot} exports \code{table_effect_size} and
 #'   \code{table_model_assessment} to separate 'xlsx' files (via the
 #'   \code{\link[writexl:write_xlsx]{write_xlsx}} function) to the working
@@ -129,10 +134,18 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
   }
 
   model <- full$model
-  measure <- full$measure
+  measure <- if (is.element(full$measure, c("RR", "RD"))) {
+    "OR"
+  } else {
+    full$measure
+  }
 
-  # Posterior results on the effect estimates under NMA
-  em_full <- full$EM[, c(1:3, 7)]
+  # Posterior results on the effect estimates under
+  em_full <- if (is.element(full$measure, c("RR", "RD"))) {
+    full$EM_LOR[, c(1:3, 7)]
+  } else {
+    full$EM[, c(1:3, 7)]
+  }
   em_full[, c(1, 3, 4)] <- if (is.element(measure, c("OR", "ROM"))) {
     exp(em_full[, c(1, 3, 4)])
   } else {

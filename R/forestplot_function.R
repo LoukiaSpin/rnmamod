@@ -102,7 +102,7 @@ forestplot <- function(full, compar,  drug_names) {
                                 comp = t(combn(drug_names, 2))[, 2])
   poss_pair_comp  <- rbind(poss_pair_comp1, poss_pair_comp2)
 
-  measure <- effect_measure_name(full$measure)
+  measure <- full$measure
   model <- full$model
   sucra <- full$SUCRA
   em_ref00 <- cbind(rbind(data.frame(mean = full$EM[, 1],
@@ -146,7 +146,7 @@ forestplot <- function(full, compar,  drug_names) {
 
   # Create a data-frame with credible and prediction intervals of comparisons
   # with the reference intervention
-  if (!is.element(measure, c("Odds ratio", "Ratio of means")) & model == "RE") {
+  if (!is.element(measure, c("OR", "RR", "ROM")) & model == "RE") {
     prepare_em <- data.frame(as.factor(rep(rev(seq_len(len_drug_names)), 2)),
                              rep(drug_names_sorted, 2),
                              round(rbind(em_ref, pred_ref), 2),
@@ -156,7 +156,7 @@ forestplot <- function(full, compar,  drug_names) {
                               "comparison",
                               "mean", "lower", "upper",
                               "interval")
-  } else if (is.element(measure, c("Odds ratio", "Ratio of means")) &
+  } else if (is.element(measure, c("OR", "RR", "ROM")) &
              model == "RE") {
     prepare_em <- data.frame(as.factor(rep(rev(seq_len(len_drug_names)), 2)),
                              rep(drug_names_sorted, 2),
@@ -167,7 +167,7 @@ forestplot <- function(full, compar,  drug_names) {
                               "comparison",
                               "mean", "lower", "upper",
                               "interval")
-  } else if (!is.element(measure, c("Odds ratio", "Ratio of means")) &
+  } else if (!is.element(measure, c("OR", "RR", "ROM")) &
              model == "FE") {
     prepare_em <- data.frame(as.factor(rev(seq_len(len_drug_names))),
                              drug_names_sorted,
@@ -175,7 +175,7 @@ forestplot <- function(full, compar,  drug_names) {
     colnames(prepare_em) <- c("order",
                               "comparison",
                               "mean", "lower", "upper")
-  } else if (is.element(measure, c("Odds ratio", "Ratio of means")) &
+  } else if (is.element(measure, c("OR", "RR", "ROM")) &
              model == "FE") {
     prepare_em <- data.frame(as.factor(rev(seq_len(len_drug_names))),
                              drug_names_sorted,
@@ -197,22 +197,19 @@ forestplot <- function(full, compar,  drug_names) {
 
   # Forest plots on credible/prediction intervals of comparisons with the
   # reference
-  caption <- if (full$D == 0 & is.element(measure,
-                                          c("Odds ratio", "Ratio of means"))) {
-    paste("If", measure, "< 1, favours the first arm; if",
-          measure, "> 1, favours", compar)
-  } else if (full$D == 1 & is.element(measure,
-                                      c("Odds ratio", "Ratio of means"))) {
-    paste("If", measure, "< 1, favours", compar,
-          "; if", measure, "> 1, favours the first arm")
-  } else if (full$D == 0 & !is.element(measure,
-                                       c("Odds ratio", "Ratio of means"))) {
-    paste("If", measure, "< 0, favours the first arm; if",
-          measure, "> 0, favours", compar)
-  } else if (full$D == 1 & !is.element(measure,
-                                       c("Odds ratio", "Ratio of means"))) {
-    paste("If", measure, "< 0, favours", compar,
-          "; if", measure, "> 0, favours the first arm")
+  measure2 <- effect_measure_name(full$measure)
+  caption <- if (full$D == 0 & is.element(measure, c("OR", "RR", "ROM"))) {
+    paste("If", measure2, "< 1, favours the first arm; if",
+          measure2, "> 1, favours", compar)
+  } else if (full$D == 1 & is.element(measure, c("OR", "RR", "ROM"))) {
+    paste("If", measure2, "< 1, favours", compar,
+          "; if", measure2, "> 1, favours the first arm")
+  } else if (full$D == 0 & !is.element(measure, c("OR", "RR", "ROM"))) {
+    paste("If", measure2, "< 0, favours the first arm; if",
+          measure2, "> 0, favours", compar)
+  } else if (full$D == 1 & !is.element(measure, c("OR", "RR", "ROM"))) {
+    paste("If", measure2, "< 0, favours", compar,
+          "; if", measure2, "> 0, favours the first arm")
   }
 
   p1 <- if (model == "RE") {
@@ -224,8 +221,7 @@ forestplot <- function(full, compar,  drug_names) {
                ymax = upper,
                colour = interval)) +
       geom_hline(yintercept = ifelse(!is.element(measure,
-                                                 c("Odds ratio",
-                                                   "Ratio of means")), 0, 1),
+                                                 c("OR", "RR", "ROM")), 0, 1),
                  lty = 1,
                  size = 1,
                  col = "grey60") +
@@ -272,29 +268,14 @@ forestplot <- function(full, compar,  drug_names) {
                 parse = FALSE,
                 position = position_dodge(width = 0.5),
                 inherit.aes = TRUE, na.rm = TRUE) +
-      #geom_text(aes(x = 0.45,
-      #              y = ifelse(is.element(measure,
-      #                                    c("Odds ratio", "Ratio of means")),
-      #                         0.2, -0.2),
-      #              label = ifelse(full$D == 0, "Favours first arm",
-      #                             paste("Favours", compar))),
-      #          size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      #geom_text(aes(x = 0.45,
-      #              y = ifelse(is.element(measure,
-      #                                    c("Odds ratio", "Ratio of means")),
-      #                         1.2, 0.2),
-      #              label = ifelse(full$D == 0, paste("Favours", compar),
-      #                             "Favours first arm")),
-      #          size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      labs(x = "", y = measure, colour = "Analysis", caption = caption) +
+      labs(x = "", y = measure2, colour = "Analysis", caption = caption) +
       scale_x_discrete(breaks = as.factor(seq_len(len_drug_names)),
                        labels = drug_names_sorted[rev(
                          seq_len(len_drug_names))]) +
       scale_color_manual(breaks = c("Credible interval", "Prediction interval"),
                          values = c("black", "#D55E00")) +
       geom_label(aes(x = order[is.na(mean)],
-                     y = ifelse(!is.element(measure,
-                                            c("Odds ratio", "Ratio of means")),
+                     y = ifelse(!is.element(measure, c("OR", "RR", "ROM")),
                                 -0.2, 0.65),
                      hjust = 0,
                      vjust = 1,
@@ -304,7 +285,7 @@ forestplot <- function(full, compar,  drug_names) {
                  fontface = "plain",
                  size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(
-        measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
+        measure, c("OR", "RR", "ROM")), "identity", "log10")) +
       coord_flip() +
       theme_classic() +
        theme(axis.text.x = element_text(color = "black", size = 12),
@@ -320,7 +301,7 @@ forestplot <- function(full, compar,  drug_names) {
     ggplot(data = prepare_em,
            aes(x = order, y = mean, ymin = lower, ymax = upper)) +
       geom_hline(yintercept = ifelse(!is.element(
-        measure, c("Odds ratio", "Ratio of means")), 0, 1),
+        measure, c("OR", "RR", "ROM")), 0, 1),
         lty = 2, size = 1.3, col = "grey53") +
       geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
       geom_errorbar(data = prepare_em[seq_len(len_drug_names), ],
@@ -344,29 +325,18 @@ forestplot <- function(full, compar,  drug_names) {
                 parse = FALSE,
                 position = position_dodge(width = 0.5), inherit.aes = TRUE,
                 na.rm = TRUE) +
-      #geom_text(aes(x = 0.45,
-      #              y = ifelse(is.element(
-      #                measure, c("Odds ratio", "Ratio of means")), 0.2, -0.2),
-      #              label = ifelse(full$D == 0, "Favours first arm",
-      #                             paste("Favours", compar))),
-      #          size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      #geom_text(aes(x = 0.45, y = ifelse(is.element(
-      #  measure, c("Odds ratio", "Ratio of means")), 1.2, 0.2),
-      #  label = ifelse(full$D == 0, paste("Favours", compar),
-      #                 "Favours first arm")),
-      #          size = 3.5, vjust = 0, hjust = 0, color = "black") +
-      labs(x = "", y = measure, caption = caption) +
+      labs(x = "", y = measure2, caption = caption) +
       scale_x_discrete(breaks = as.factor(seq_len(len_drug_names)),
                        labels = drug_names_sorted[rev(
                          seq_len(len_drug_names))]) +
       geom_label(aes(x = order[is.na(mean)],
                      y = ifelse(!is.element(
-                       measure, c("Odds ratio", "Ratio of means")), -0.2, 0.65),
+                       measure, c("OR", "RR", "ROM")), -0.2, 0.65),
                      hjust = 0, vjust = 1, label = "Comparator intervention"),
                  fill = "beige", colour = "black", fontface = "plain",
                  size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(
-        measure, c("Odds ratio", "Ratio of means")), "identity", "log10")) +
+        measure, c("OR", "RR", "ROM")), "identity", "log10")) +
       coord_flip(clip = "off") +
       theme_classic() +
       theme(axis.text.x = element_text(color = "black", size = 12),

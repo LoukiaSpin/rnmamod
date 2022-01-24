@@ -232,9 +232,6 @@ mcmc_diagnostics <- function(net, par = NULL) {
                  diff,
                  phi,
                  beta)
-  #for (i in seq_len(length(r_hat_max))) {
-  #  r_hat_max[i] <- ifelse(is.na(r_hat_max[i]), NA, r_hat_max[i])
-  #}
 
   # Indicate whether each model parameter achieved or failed to converge
   conv <- rep(NA, length(r_hat_max))

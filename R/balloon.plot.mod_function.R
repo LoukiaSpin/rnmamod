@@ -179,13 +179,13 @@ balloon_plot <- function(sens, compar, drug_names) {
   colnames(mat) <- c("active", "control", "value", "sd_value", "significance")
 
   # Enhanced balloon plot for summary effect size of the selected comparison
-  labels <- if (is.element(measure, c("OR", "ROM"))) {
+  labels <- if (is.element(measure, c("OR", "RR", "ROM"))) {
     as.character(fractions(exp(scenarios)))
   } else {
     as.character(scenarios)
   }
 
-  imp <- if (is.element(measure, "OR")) {
+  imp <- if (is.element(measure, c("OR", "RR", "RD"))) {
     "IMOR"
   } else if (is.element(measure, c("MD", "SMD"))) {
     "IMDoM"
@@ -193,7 +193,7 @@ balloon_plot <- function(sens, compar, drug_names) {
     "IMRoM"
   }
 
-  bubble_es <- if (is.element(measure, c("OR", "ROM"))) {
+  bubble_es <- if (is.element(measure, c("OR", "RR", "ROM"))) {
    ggplot(mat, aes(x = active,
                    y = control,
                    color = sd_value,
@@ -257,7 +257,7 @@ balloon_plot <- function(sens, compar, drug_names) {
                                         face = "bold"),
             panel.grid.minor = element_blank(),
             panel.background = element_rect(fill = "grey86"))
-  } else if (is.element(measure, c("MD", "SMD"))) {
+  } else if (is.element(measure, c("MD", "RD", "SMD"))) {
     ggplot(mat, aes(x = active,
                     y = control,
                     color = sd_value,
@@ -350,14 +350,14 @@ balloon_plot <- function(sens, compar, drug_names) {
   }
 
   # Enhanced balloon plot for the between-trial standard deviation
-  axis.name.x <- if (is.element(measure, "OR")) {
+  axis.name.x <- if (is.element(measure, c("OR", "RR", "RD"))) {
     "IMOR scenario in experimental"
   } else if (is.element(measure, c("MD", "SMD"))) {
     "IMDoM scenario in experimental"
   } else if (is.element(measure, "ROM")) {
     "IMRoM scenario in experimental"
   }
-  axis.name.y <- if (is.element(measure, "OR")) {
+  axis.name.y <- if (is.element(measure, c("OR", "RR", "RD"))) {
     "IMOR scenario in control"
   } else if (is.element(measure, c("MD", "SMD"))) {
     "IMDoM scenario in control"

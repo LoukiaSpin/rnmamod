@@ -5,10 +5,12 @@
 #'   pattern-mixture model for binary or continuous missing participant outcome
 #'   data.
 #'
-#' @param measure Character string indicating the effect measure with values
-#'   \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
-#'   mean difference, standardised mean difference and ratio of means,
-#'   respectively.
+#' @param measure Character string indicating the effect measure. For a binary
+#'   outcome, the following can be considered: \code{"OR"}, \code{"RR"} or
+#'   \code{"RD"} for the odds ratio, relative risk, and risk difference,
+#'   respectively. For a continuous outcome, the following can be considered:
+#'   \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for mean difference,
+#'   standardised mean difference and ratio of means, respectively.
 #' @param model Character string indicating the analysis model with values
 #'   \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model,
 #'   respectively. The default argument is \code{"RE"}.
@@ -33,6 +35,12 @@
 #'   \href{https://CRAN.R-project.org/package=R2jags}{R2jags}) via the
 #'   \code{\link[base:textConnection]{textConnection}} function.
 #'
+#'   \code{prepare_nodesplit} inherits \code{measure}, \code{model}, and
+#'   \code{assumption} from the \code{\link{run_model}} function. For a binary
+#'   outcome, when \code{measure} is "RR" (relative risk) or "RD"
+#'   (risk difference) in \code{\link{run_model}}, \code{prepare_nodesplit}
+#'   currently considers the WinBUGS code for the odds ratio.
+#'
 #'   The split nodes have been automatically selected via the
 #'   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}}
 #'   function of the R-package
@@ -42,6 +50,7 @@
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link[R2jags:jags]{jags}},
+#'   \code{\link{run_model}},
 #'   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}},
 #'   \code{\link{run_nodesplit}},
 #'   \code{\link[base:textConnection]{textConnection}}
@@ -83,9 +92,9 @@ prepare_nodesplit <- function(measure, model, assumption) {
                        b[i] <- sum(N[i, 1:na[i]] - 1)/(2*sigma[i]*sigma[i])
                        var.pooled[i] ~ dgamma(a[i], b[i])
                        sd.pooled[i] <- sqrt(var.pooled[i])\n")
-  } else if (measure == "MD" || measure == "ROM") {
+  } else if (is.element(measure, c("MD", "ROM"))) {
     paste(stringcode, "theta[i, 1] <- u[i]\n")
-  } else if (measure == "OR") {
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
     paste(stringcode, "logit(p[i, 1]) <- u[i]\n")
   }
 
@@ -97,19 +106,19 @@ prepare_nodesplit <- function(measure, model, assumption) {
                        c[i, k] <- N[i, k] - mod[i, k]
                        sd.obs[i, k] <- se.o[i, k]*sqrt(c[i, k])
                        nom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1)\n")
-  } else if (measure == "MD" || measure == "ROM") {
+  } else if (is.element(measure, c("MD", "ROM"))) {
     paste(stringcode, "prec.o[i, k] <- pow(se.o[i, k], -2)
                        y.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])\n")
-  } else if (measure == "OR") {
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
     paste(stringcode, "r[i, k] ~ dbin(p_o[i, k], obs[i, k])
                        obs[i, k] <- N[i, k] - mod[i, k]\n")
   }
 
-  stringcode <- if (measure == "MD" || measure == "SMD") {
+  stringcode <- if (is.element(measure, c("MD", "SMD"))) {
     paste(stringcode, "theta.o[i, k] <- theta[i, k] - phi.m[i, k]*q[i, k]\n")
   } else if (measure == "ROM") {
     paste(stringcode, "theta.o[i, k] <- theta[i, k]/(1 - q[i, k]*(1 - exp(phi.m[i, k])))\n")
-  } else if (measure == "OR") {
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
     paste(stringcode, "p_o[i, k] <- max(0, min(1, ((-((q[i, k] - p[i, k])*(1 - exp(phi.m[i, k])) - 1) - sqrt((pow(((q[i, k] - p[i, k])*(1 - exp(phi.m[i, k])) - 1), 2)) -
                                        ((4*p[i, k])*(1 - q[i, k])*(1 - exp(phi.m[i, k])))))/(2*(1 - q[i, k])*(1 - exp(phi.m[i, k]))))))\n")
   }
@@ -118,10 +127,10 @@ prepare_nodesplit <- function(measure, model, assumption) {
                                    m[i, k] ~ dbin(q0[i, k], N[i, k])
                                    q0[i, k] ~ dunif(0, 1)\n")
 
-  stringcode <- if (measure == "MD" || measure == "SMD" || measure == "ROM") {
+  stringcode <- if (!is.element(measure, c("OR", "RR", "RD"))) {
     paste(stringcode, "hat.par[i, k] <- theta.o[i, k]
                        dev.o[i, k] <- (y.o[i, k] - theta.o[i, k])*(y.o[i, k] - theta.o[i, k])*prec.o[i, k]\n")
-  } else if (measure == "OR") {
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
     paste(stringcode, "hat.par[i, k] <- rhat[i, k]
                        rhat[i, k] <- p_o[i, k]*obs[i, k]
                        dev.o[i, k] <- 2*(r[i, k]*(log(r[i, k]) - log(rhat[i, k])) + (obs[i, k] - r[i, k])*(log(obs[i, k] - r[i, k]) - log(obs[i, k] - rhat[i, k])))\n")
@@ -139,7 +148,7 @@ prepare_nodesplit <- function(measure, model, assumption) {
     paste(stringcode, "theta[i, k] <- u[i] + sd.pooled[i]*delta[i, k]\n")
   } else if (measure == "ROM") {
     paste(stringcode, "theta[i, k] <- u[i]*exp(delta[i, k])\n")
-  } else if (measure == "OR") {
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
     paste(stringcode, "logit(p[i, k]) <- u[i] + delta[i, k]\n")
   }
 

@@ -213,7 +213,7 @@ league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
 
   # Symmetric matrix for effect measure and its bounds after ordering rows and
   # columns from the best to the worst intervention
-  if (measure != "OR" & measure != "ROM") {
+  if (!is.element(measure, c("OR", "RR", "ROM"))) {
     point <- point1[drug_order_col, drug_order_row]
     lower <- lower1[drug_order_col, drug_order_row]
     upper <- upper1[drug_order_col, drug_order_row]
@@ -288,7 +288,8 @@ league_heatmap_pred <- function(full, cov_value = NULL, drug_names) {
     scale_fill_gradientn(colours = c("#009E73", "white", "#D55E00"),
                          values = rescale(
                            c(min(mat_new$value2, na.rm = TRUE),
-                             ifelse(measure != "OR" & measure != "ROM", 0, 1),
+                             ifelse(!is.element(measure, c("OR", "RR", "ROM")),
+                                    0, 1),
                              max(mat_new$value2, na.rm = TRUE))),
                          limits = c(min(mat_new$value2, na.rm = TRUE),
                                     max(mat_new$value2, na.rm = TRUE))) +

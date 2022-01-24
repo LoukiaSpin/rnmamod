@@ -69,6 +69,10 @@
 #'   after the split node is preferred; otherwise, there is little to choose
 #'   between the compared models.
 #'
+#'   For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
+#'   (risk difference) in \code{\link{run_model}}, \code{nodesplit_plot}
+#'   currently presents the results in the odds ratio scale.
+#'
 #'   The split nodes have been automatically selected via the
 #'   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}}
 #'   function of the R-package
@@ -135,7 +139,11 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
   }
 
   data <- full$data
-  measure <- full$measure
+  measure <- if (is.element(full$measure, c("RR", "RD"))) {
+    "OR"
+  } else {
+    full$measure
+  }
   item <- data_preparation(data, measure)
   if (item$nt < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
@@ -159,7 +167,7 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
   model_assess_nma <- full$model_assessment
 
   # Effect measure
-  measure <- effect_measure_name(full$measure)
+  measure2 <- effect_measure_name(measure)
 
   # Analysis model
   model <- full$model
@@ -255,8 +263,8 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                        scales = "fixed") +
             labs(x = "",
                  y = ifelse(
-                   is.element(measure, c("Odds ratio", "Ratio of means")),
-                   paste(measure, "(in logarithmic scale)"), measure),
+                   is.element(measure, c("OR", "ROM")),
+                   paste(measure2, "(in logarithmic scale)"), measure2),
                  colour = "") +
             coord_flip() +
             scale_color_manual(breaks = c("strong evidence",
@@ -321,8 +329,8 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
             scale_y_continuous(trans = "identity") +
             labs(x = "",
                  y = ifelse(
-                   is.element(measure, c("Odds ratio", "Ratio of means")),
-                   paste(measure, "(in logarithmic scale)"), measure),
+                   is.element(measure, c("OR", "ROM")),
+                   paste(measure2, "(in logarithmic scale)"), measure2),
                  colour = "Evidence on inconsistency") +
             coord_flip() +
             scale_color_manual(breaks = c("strong evidence",

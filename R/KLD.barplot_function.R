@@ -119,12 +119,13 @@ kld_barplot <- function(robust, compar, drug_names) {
 
 
   # Define the scenarios
-  scenarios <- if (is.element(robust$measure, c("OR", "ROM"))) {
+  measure <- robust$measure
+  scenarios <- if (is.element(measure, c("OR", "ROM"))) {
     cbind(rep(as.character(fractions(exp(robust$scenarios))),
               each = length(robust$scenarios)),
           rep(as.character(fractions(exp(robust$scenarios))),
               times = length(robust$scenarios)))
-  } else if (is.element(robust$measure, c("MD", "SMD"))) {
+  } else if (!is.element(measure, c("OR", "ROM"))) {
     cbind(rep(robust$scenarios, each = length(robust$scenarios)),
           rep(robust$scenarios, times = length(robust$scenarios)))
   }
@@ -140,9 +141,6 @@ kld_barplot <- function(robust, compar, drug_names) {
            "more distant",
            ifelse(abs(ranked_scenarios[, 1] - ranked_scenarios[, 2]) == 1,
                   "less distant", "no distance"))
-
-
-
 
   # Characterise the scenarios to extreme, sceptical, and optimistic with
   # respect to their position from MAR

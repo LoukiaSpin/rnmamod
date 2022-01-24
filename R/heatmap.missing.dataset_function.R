@@ -23,6 +23,16 @@
 #'   risk of bias (more than 20\%). Low, moderate, and high risk of bias due to
 #'   missing participants are indicated using green, orange, and red colour,
 #'   respectively. The function is also applicable for a pairwise meta-analysis.
+#'   If missing participants have not been reported for a trial-arm, the
+#'   corresponding cell is indicated in grey.
+#'
+#' @details When the number of missing participants has not been extracted for
+#'   any arm of the trials, the execution of the function will be stopped and
+#'   an error message will be printed on the R console.
+#'
+#'   When there are more than 80 trials, the value on the proportion of missing
+#'   participants will not appear on the heatmap. This is because the number on
+#'   the cells will not be distinguishable.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -50,17 +60,26 @@
 #' @export
 heatmap_missing_dataset <- function(data, trial_names, drug_names) {
 
-  m <- if (dim(data %>% select(starts_with("m")))[2] == 0) {
+
+  if (dim(data %>% select(starts_with("m")))[2] == 0) {
     aa <- "Missing participant outcome data have *not* been collected."
     stop(paste(aa, "This function cannot be used."), call. = FALSE)
-  } else {
-    data %>% select(starts_with("m"))
   }
-  n <- data %>% select(starts_with("n"))
-  t <- data %>% select(starts_with("t"))
-  nt <- length(table(as.matrix(t)))
-  ns <- length(m[, 1])
-  na..  <- rep(0, length(m[, 1]))
+
+  if (dim(data %>% dplyr::select(starts_with("r")))[2] > 0) {
+    measure <- "OR"
+  } else {
+    measure <- "MD"
+  }
+
+  # Use the 'data.preparation' function
+  dat <- data_preparation(data, measure)
+  m <- dat$m_pseudo
+  n <- dat$N
+  t <- dat$t
+  nt <- dat$nt
+  ns <- dat$ns
+  na..  <- dat$na
   for (i in seq_len(length(m[, 1]))) {
     na..[i] <- table(!is.na(t[i, ]))["TRUE"]
   }
@@ -119,21 +138,27 @@ heatmap_missing_dataset <- function(data, trial_names, drug_names) {
   transform$m_prop <-
     round((transform$response / transform$sampleSize) * 100, 0)
 
+  # Some necessary transformations
+  labeling <-
+    ifelse(transform$m_prop >= 0, paste0(transform$m_prop, "%"), " ")
+
   # For more than 80 trials do not show text on tiles
   if (ns < 80) {
     ggplot(transform,
            aes(factor(treatment, levels = drug_names),
                factor(study, levels = trial_names),
-               fill = ifelse(m_prop <= 5, "low",
-                             ifelse(m_prop > 20, "high", "moderate")))) +
+               fill = ifelse(m_prop < 0, "not reported",
+                             ifelse(m_prop >= 0 & m_prop <= 5, "low",
+                                    ifelse(m_prop > 20, "high", "moderate"))))
+           ) +
       geom_tile(colour = "white") +
       geom_text(aes(factor(treatment, levels = drug_names),
                     factor(study, levels = trial_names),
-                    label = paste0(m_prop, "%"),
+                    label = labeling,
                     fontface = "plain"),
                 size = rel(3.8)) +
-      scale_fill_manual(breaks = c("low", "moderate", "high"),
-                        values = c("#009E73", "orange", "#D55E00")) +
+      scale_fill_manual(breaks = c("low", "moderate", "high", "not reported"),
+                        values = c("#009E73", "orange", "#D55E00", "grey")) +
       scale_x_discrete(position = "top") +
       labs(x = "", y = "", fill = "Risk of bias due to missing participants") +
       theme_classic() +
@@ -146,11 +171,13 @@ heatmap_missing_dataset <- function(data, trial_names, drug_names) {
     ggplot(transform,
            aes(factor(treatment, levels = drug_names),
                factor(study, levels = trial_names),
-               fill = ifelse(m_prop <= 5, "low",
-                             ifelse(m_prop > 20, "high", "moderate")))) +
+               fill = ifelse(m_prop < 0, "not reported",
+                             ifelse(m_prop >= 0 & m_prop <= 5, "low",
+                                    ifelse(m_prop > 20, "high", "moderate"))))
+           ) +
       geom_tile(colour = "white") +
-      scale_fill_manual(breaks = c("low", "moderate", "high"),
-                        values = c("green3", "orange", "firebrick1")) +
+      scale_fill_manual(breaks = c("low", "moderate", "high", "not reported"),
+                        values = c("#009E73", "orange", "#D55E00", "greyk1")) +
       scale_x_discrete(position = "top") +
       labs(x = "", y = "", fill = "Risk of bias due to missing participants") +
       theme_classic() +

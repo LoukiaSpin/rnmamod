@@ -7,10 +7,12 @@
 #'
 #' @param data A data-frame of the one-trial-per-row format with arm-level data.
 #'   See 'Format' in \code{\link{run_model}}.
-#' @param measure Character string indicating the effect measure with values
-#'   \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
-#'   mean difference, standardised mean difference and ratio of means,
-#'   respectively.
+#' @param measure Character string indicating the effect measure. For a binary
+#'   outcome, the following can be considered: \code{"OR"}, \code{"RR"} or
+#'   \code{"RD"} for the odds ratio, relative risk, and risk difference,
+#'   respectively. For a continuous outcome, the following can be considered:
+#'   \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for mean difference,
+#'   standardised mean difference and ratio of means, respectively.
 #'
 #' @return A list of data-frames on the following elements to be passed
 #'   to \code{\link{run_model}}:
@@ -72,14 +74,14 @@ data_preparation <- function(data, measure) {
   measure <- if (missing(measure)) {
     stop("The argument 'measure' needs to be defined", call. = FALSE)
   } else if ((dim(data %>% select(starts_with("r")))[2] > 0) &
-             !is.element(measure, c("MD", "SMD", "ROM", "OR"))) {
-    stop("Insert 'OR'", call. = FALSE)
+             !is.element(measure, c("MD", "SMD", "ROM", "OR", "RR", "RD"))) {
+    stop("Insert 'OR', 'RR', or 'RD'", call. = FALSE)
   } else if ((dim(data %>% select(starts_with("r")))[2] == 0) &
-             !is.element(measure, c("MD", "SMD", "ROM", "OR"))) {
+             !is.element(measure, c("MD", "SMD", "ROM", "OR", "RR", "RD"))) {
     stop("Insert 'MD', 'SMD' or 'ROM'", call. = FALSE)
   } else if ((dim(data %>% select(starts_with("r")))[2] > 0) &
              is.element(measure, c("MD", "SMD", "ROM"))) {
-    stop("Insert 'OR' for a  binary outcome", call. = FALSE)
+    stop("Insert 'OR', 'RR', or 'RD' for a  binary outcome", call. = FALSE)
   } else if ((dim(data %>% select(starts_with("r")))[2] == 0) &
              is.element(measure, "OR")) {
     stop("Insert 'MD', 'SMD' or 'ROM' for a continuous outcome", call. = FALSE)
@@ -202,7 +204,7 @@ data_preparation <- function(data, measure) {
   # Indicate the trials with fully reported missing outcome data (for each arm)
   # If a trial reports missing participant outcome data partially or not at all,
   # insert 'NA'.
-  I <- m_new <- m
+  I <- m_new <- m_pseudo <- m
   for (i in 1:ns) {
     for (k in 1:na[i]) {
       I[i, k] <- if (is.na(m[i, k]) & !is.na(N[i, k])) {
@@ -220,13 +222,23 @@ data_preparation <- function(data, measure) {
       } else if (!is.na(m[i, k]) & !is.na(N[i, k])) {
         m[i, k]
       }
+
+      # Matrix that indicates with -1 the trial-arms with non-reported missing
+      # participants
+      m_pseudo[i, k] <- if (!is.na(t[i, k]) & is.na(m[i, k])) {
+        -1
+      } else if (is.na(m[i, k]) & is.na(N[i, k])) {
+        NA
+      } else if (!is.na(m[i, k]) & !is.na(N[i, k])) {
+        m[i, k]
+      }
     }
   }
-
   names(I) <- paste0("I", seq_len(max(na)))
 
   # Return results
-  results <- list(m = m_new,
+  results <- list(m_pseudo = m_pseudo,
+                  m = m_new,
                   N = N,
                   t = t,
                   I = I,
@@ -237,7 +249,7 @@ data_preparation <- function(data, measure) {
 
   results <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
     append(results, list(y0 = y0, se0 = se0, sd0 = sd0))
-  } else {
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
     append(results, list(r = r))
   }
 

@@ -10,10 +10,12 @@
 #'   the order they appear in the argument \code{data}. If \code{drug_names} is
 #'   not defined, the order of the interventions as they appear in \code{data}
 #'   is used, instead.
-#' @param measure Character string indicating the effect measure with values
-#'   \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
-#'   mean difference, standardised mean difference and ratio of means,
-#'   respectively.
+#' @param measure Character string indicating the effect measure. For a binary
+#'   outcome, the following can be considered: \code{"OR"}, \code{"RR"} or
+#'   \code{"RD"} for the odds ratio, relative risk, and risk difference,
+#'   respectively. For a continuous outcome, the following can be considered:
+#'   \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for mean difference,
+#'   standardised mean difference and ratio of means, respectively.
 #'
 #' @return A list of scalar results and two data-frames to be passed to
 #'   \code{\link{netplot}}. The scalar results include:
@@ -66,7 +68,7 @@ describe_network <- function(data, drug_names, measure) {
 
   # Proportion of completers per intervention (in %)
   prop_obs_partic_interv <- round(total_obs_partic_interv /
-                                    total_rand_partic_interv, 2) * 100
+                                  total_rand_partic_interv, 2) * 100
 
   # Proportion of missing outcome data (MOD) per intervention (in %)
   prop_mod_interv <- 100 - prop_obs_partic_interv
@@ -182,7 +184,7 @@ describe_network <- function(data, drug_names, measure) {
                                   "Median missing (%)",
                                   "Max. missing (%)")
 
-  if (measure == "OR") {
+  if (is.element(measure, c("OR", "RR", "RD"))) {
     # Proportion of observed events per trial-arm
     arm_risk <- dat$r / (dat$N - dat$m)
 
@@ -277,7 +279,7 @@ describe_network <- function(data, drug_names, measure) {
                               "Total randomised",
                               "Completers (%)")
 
-  if (measure == "OR") {
+  if (is.element(measure, c("OR", "RR", "RD"))) {
     table_interv <- cbind(table_interv, data.frame(total_risk_interv,
                                                    min_risk_interv,
                                                    median_risk_interv,
@@ -298,7 +300,7 @@ describe_network <- function(data, drug_names, measure) {
                             "Total randomised",
                             "Completers (%)")
 
-  if (measure == "OR") {
+  if (is.element(measure, c("OR", "RR", "RD"))) {
     table_comp <- cbind(table_comp, data.frame(total_risk_comp,
                                                min_risk_comp,
                                                median_risk_comp,
@@ -318,7 +320,7 @@ describe_network <- function(data, drug_names, measure) {
                   table_comparisons = table_comp)
 
 
-  if (measure == "OR") {
+  if (is.element(measure, c("OR", "RR", "RD"))) {
     results <- append(results, list(prop_event_network = prop_event_network,
                                trial_zero_event = trial_zero_event,
                                trial_all_zero_event = trial_all_zero_event))
