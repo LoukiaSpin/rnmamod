@@ -7,10 +7,12 @@
 #'
 #' @param data A data-frame of the one-trial-per-row format with arm-level data.
 #'   See 'Format' for the specification of the columns.
-#' @param measure Character string indicating the effect measure with values
-#'   \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
-#'   mean difference, standardised mean difference and ratio of means,
-#'   respectively.
+#' @param measure Character string indicating the effect measure. For a binary
+#'   outcome, the following can be considered: \code{"OR"}, \code{"RR"} or
+#'   \code{"RD"} for the odds ratio, relative risk, and risk difference,
+#'   respectively. For a continuous outcome, the following can be considered:
+#'   \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for mean difference,
+#'   standardised mean difference and ratio of means, respectively.
 #' @param model Character string indicating the analysis model with values
 #'   \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model,
 #'   respectively. The default argument is \code{"RE"}.
@@ -55,7 +57,7 @@
 #'   risk for the selected reference intervention. If \code{base_risk} has not
 #'   been defined, the function uses the median event risk for the reference
 #'   intervention as calculated from the corresponding trials in \code{data}.
-#'   This argument is only relevant for binary outcome.
+#'   This argument is only relevant for binary outcomes.
 #' @param n_chains Positive integer specifying the number of chains for the
 #'   MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
 #'   of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
@@ -126,9 +128,6 @@
 #'   \item{phi}{The informative missingness parameter.}
 #'
 #'   For a fixed-effect network meta-analysis, the output additionally includes:
-#'   \item{EM_ref}{The estimated summary effect measure (according to the
-#'   argument \code{measure}) of all comparisons with the reference
-#'   intervention.}
 #'   \item{SUCRA}{The surface under the cumulative ranking curve for each
 #'   intervention.}
 #'   \item{effectiveneness}{The ranking probability of each intervention for
@@ -142,12 +141,6 @@
 #'   argument \code{measure}).}
 #'   \item{tau}{The between-trial standard deviation.}
 #'
-#'   For a random-effects network meta-analysis, the output additionally
-#'   includes:
-#'   \item{pred_ref}{The predicted summary effect measure
-#'    (according to the argument \code{measure}) of all comparisons
-#'    with the reference intervention.}
-#'
 #'   In network meta-analysis, \code{EM} and \code{EM_pred} refer to all
 #'   possible pairwise comparisons of interventions in the network. Furthermore,
 #'   \code{tau} is typically assumed to be common for all observed comparisons
@@ -157,11 +150,15 @@
 #'   the number of interventions in the trial.
 #'
 #'   Furthermore, the output includes the following elements:
-#'   \item{RR}{The relative risk as a function of the absolute risks
-#'   of the corresponding interventions.}
+#'   \item{LRR}{The relative risk in the logarithmic scale as a function of the
+#'   absolute risks of the corresponding interventions. This appears only when
+#'   \code{measure = "OR"}, \code{measure = "RR"}, or \code{measure = "RD"}.}
 #'   \item{RD}{The risk difference as a function of the absolute risks of the
-#'   corresponding interventions.}
-#'   \item{abs_risk}{The absolute risks for each intervention.}
+#'   corresponding interventions. This appears only when \code{measure = "OR"},
+#'   \code{measure = "RR"}, or \code{measure = "RD"}.}
+#'   \item{abs_risk}{The absolute risks for each intervention. This appears only
+#'   when \code{measure = "OR"}, \code{measure = "RR"}, or
+#'   \code{measure = "RD"}.}
 #'   \item{leverage_o}{The leverage for the observed outcome at each trial-arm.}
 #'   \item{sign_dev_o}{The sign of the difference between observed and fitted
 #'   outcome at each trial-arm.}
@@ -255,12 +252,15 @@
 #'   To obtain unique absolute risks for each intervention, the network
 #'   meta-analysis model has been extended to incorporate the transitive risks
 #'   framework, namely, an intervention has the same absolute risk regardless of
-#'   the comparator interventions in a trial. The absolute risks are a function
-#'   of the odds ratio and the selected baseline risk for the reference
-#'   intervention (\code{ref}) (Appendix in Dias et al., 2013). We advocate
-#'   using the OR as an effect measure for its desired mathematical properties.
-#'   Then, the relative risk and risk difference can be obtained as a function
-#'   of the absolute risks.
+#'   the comparator interventions in a trial (Spineli et al., 2017).
+#'   The absolute risks are a function of the odds ratio and the selected
+#'   baseline risk for the reference intervention (\code{ref}) (Appendix in
+#'   Dias et al., 2013). We advocate using the OR as an effect measure for its
+#'   desired mathematical properties. Then, the relative risk and risk
+#'   difference can be obtained as a function of the absolute risks. Hence,
+#'   regardless of the selected \code{measure} for a binary outcome,
+#'   \code{run_model} performs pairwise or network meta-analysis based on the
+#'   odds ratio.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -306,6 +306,12 @@
 #' transitivity assumption yielded more credible network meta-analysis
 #' results. \emph{J Clin Epidemiol} 2019b;\bold{105}:19--26.
 #'
+#' Spineli LM, Brignardello-Petersen R, Heen AF, Achille F, Brandt L,
+#' Guyatt GH, et al. Obtaining absolute effect estimates to facilitate shared
+#' decision making in the context of multiple-treatment comparisons.
+#' Abstracts of the Global Evidence Summit, Cape Town, South Africa.
+#' \emph{Cochrane Database of Systematic Reviews} 2017;\bold{9}(Suppl 1):18911.
+#'
 #' Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account
 #' for uncertainty due to missing binary outcome data in pairwise
 #' meta-analysis. \emph{Stat Med} 2015;\bold{34}(12):2062--2080.
@@ -325,7 +331,7 @@
 #' # Perform a random-effects network meta-analysis
 #' # Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
 #' run_model(data = nma.baker2009,
-#'           measure = "OR",
+#'           measure = "RD",
 #'           model = "RE",
 #'           assumption = "IDE-ARM",
 #'           heter_prior = list("halfnormal", 0, 1),
@@ -334,8 +340,8 @@
 #'           D = 0,
 #'           ref = 1,
 #'           n_chains = 3,
-#'           n_iter = 10000,
-#'           n_burnin = 1000,
+#'           n_iter = 1000,
+#'           n_burnin = 100,
 #'           n_thin = 1)
 #' }
 #'
@@ -385,11 +391,13 @@ run_model <- function(data,
   } else {
     ref
   }
-  base_risk <- if (measure == "OR" & missing(base_risk)) {
+  base_risk <- if (is.element(measure, c("OR", "RR", "RD")) &
+                   missing(base_risk)) {
     describe_network(data = data,
                      drug_names = 1:item$nt,
-                     measure = "OR")$table_interventions[ref, 7]/100
-  } else if (measure == "OR" & (base_risk < 0 || base_risk > 1)) {
+                     measure = measure)$table_interventions[ref, 7]/100
+  } else if (is.element(measure, c("OR", "RR", "RD")) &
+             (base_risk < 0 || base_risk > 1)) {
     stop("The argument 'base_risk' must be a probability", call. = FALSE)
   } else {
     base_risk
@@ -397,7 +405,7 @@ run_model <- function(data,
   mean_misspar <- missingness_param_prior(assumption, mean_misspar)
   heterog_prior <- heterogeneity_param_prior(measure, model, heter_prior)
   var_misspar <- if (missing(var_misspar) &
-                     is.element(measure, c("OR", "MD", "SMD"))) {
+                     is.element(measure, c("OR", "RR", "RD", "MD", "SMD"))) {
     1
   } else if (missing(var_misspar) & measure == "ROM") {
     0.2^2
@@ -437,7 +445,7 @@ run_model <- function(data,
 
   data_jag <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
     append(data_jag, list("y.o" = item$y0, "se.o" = item$se0))
-  } else if (measure == "OR") {
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
     append(data_jag, list("r" = item$r, "base_risk" = base_risk))
   }
 
@@ -456,17 +464,15 @@ run_model <- function(data,
     data_jag
   }
 
-  param_jags <- c("delta",
-                  "EM",
-                  "EM.ref",
-                  "EM.pred",
-                  "pred.ref",
-                  "tau",
+  param_jags <- c("EM",
                   "SUCRA",
                   "effectiveness",
                   "dev.o",
                   "totresdev.o",
-                  "hat.par")
+                  "hat.par",
+                  "EM.pred",
+                  "tau",
+                  "delta")
 
   param_jags <- if (is.element(assumption,
                                c("HIE-COMMON", "HIE-TRIAL", "HIE-ARM"))) {
@@ -475,15 +481,23 @@ run_model <- function(data,
     append(param_jags, "phi")
   }
 
-  param_jags <- if (model == "RE") {
+  param_jags <- if (model == "RE" & !is.element(measure, c("RR", "RD"))) {
     param_jags
-  } else {
+  } else if (model == "RE" & is.element(measure, c("RR", "RD"))) {
+    append(param_jags, "EM.pred.LOR")
+  } else if (model == "FE") {
     param_jags[!is.element(param_jags,
-                           c("EM.pred", "pred.ref", "tau", "delta"))]
+                           c("EM.pred", "tau", "delta"))]
   }
 
-  param_jags <- if (measure == "OR") {
-    append(param_jags, c("RR", "RD", "abs_risk"))
+  param_jags <- if (is.element(measure, c("OR", "RR", "RD"))) {
+    append(param_jags, "abs_risk")
+  } else {
+    param_jags
+  }
+
+  param_jags <- if (is.element(measure, c("RR", "RD"))) {
+    append(param_jags, c("SUCRA.LOR", "EM.LOR"))
   } else {
     param_jags
   }
@@ -508,29 +522,29 @@ run_model <- function(data,
   # Effect size of all unique pairwise comparisons
   EM <- t(get_results %>% dplyr::select(starts_with("EM[")))
 
-  # Unique absolute risks for all interventions (only binary data)
-  abs_risk <- t(get_results %>% dplyr::select(starts_with("abs_risk[")))
-
-  # Relative risks obtained via absolute risks (only binary data)
-  RR <- t(get_results %>% dplyr::select(starts_with("RR[")))
-
-  # Risk difference obtained via absolute risks (only binary data)
-  RD <- t(get_results %>% dplyr::select(starts_with("RD[")))
-
-  # Effect size of all comparisons with the reference intervention
-  EM_ref <- t(get_results %>% dplyr::select(starts_with("EM.ref[")))
-
   # Predictive effects of all unique pairwise comparisons
   EM_pred <- t(get_results %>% dplyr::select(starts_with("EM.pred[")))
 
-  # Predictive effects of all comparisons with the reference intervention
-  pred_ref <- t(get_results %>% dplyr::select(starts_with("pred.ref[")))
+  # Unique absolute risks for all interventions (only binary data)
+  abs_risk <- t(get_results %>% dplyr::select(starts_with("abs_risk[")))
+
+  # Estimated og odds ratio of all unique pairwise comparisons
+  # (when RR and RD have been selected as effect measures)
+  EM_LOR <- t(get_results %>% dplyr::select(starts_with("EM.LOR[")))
+
+  # Predicted log odds ratio of all unique pairwise comparisons
+  # (when RR and RD have been selected as effect measures)
+  EM_pred_LOR <- t(get_results %>% dplyr::select(starts_with("EM.pred.LOR[")))
 
   # Between-trial standard deviation
   tau <- t(get_results %>% dplyr::select(starts_with("tau")))
 
   # SUrface under the Cumulative RAnking curve values
-  SUCRA <- t(get_results %>% dplyr::select(starts_with("SUCRA")))
+  SUCRA <- t(get_results %>% dplyr::select(starts_with("SUCRA[")))
+
+  # SUrface under the Cumulative RAnking curve values
+  # (when RR and RD have been selected as effect measures)
+  SUCRA_LOR <- t(get_results %>% dplyr::select(starts_with("SUCRA.LOR[")))
 
   # Within-trial effects size
   delta <- t(get_results %>% dplyr::select(starts_with("delta") &
@@ -619,110 +633,89 @@ run_model <- function(data,
   model_assessment <- data.frame(DIC, pD, dev)
 
   # Return a list of results
-  if (model == "RE" & !is.element(measure, "OR")) {
-    ma_results <- list(EM = EM,
-                       EM_pred = EM_pred,
-                       tau = tau,
-                       delta = delta,
-                       dev_o = dev_o,
-                       hat_par = hat_par,
-                       leverage_o = leverage_o,
-                       sign_dev_o = sign_dev_o,
-                       phi = phi,
-                       model_assessment = model_assessment,
-                       data = data,
-                       measure = measure,
-                       model = model,
-                       assumption = assumption,
-                       heter_prior = heterog_prior,
-                       mean_misspar = mean_misspar,
-                       var_misspar = var_misspar,
-                       D = D,
-                       ref = ref,
-                       base_risk = base_risk,
-                       indic = indic,
-                       jagsfit = jagsfit)
-    nma_results <- append(ma_results, list(EM_ref = EM_ref,
-                                           pred_ref = pred_ref,
-                                           SUCRA = SUCRA,
-                                           effectiveness = effectiveness))
-  } else if (model == "RE" & is.element(measure, "OR")) {
-    ma_results <- list(EM = EM,
-                       EM_pred = EM_pred,
-                       RR = RR,
-                       RD = RD,
-                       abs_risk = abs_risk,
-                       tau = tau,
-                       delta = delta,
-                       dev_o = dev_o,
-                       hat_par = hat_par,
-                       leverage_o = leverage_o,
-                       sign_dev_o = sign_dev_o,
-                       phi = phi,
-                       model_assessment = model_assessment,
-                       data = data,
-                       measure = measure,
-                       model = model,
-                       assumption = assumption,
-                       heter_prior = heterog_prior,
-                       mean_misspar = mean_misspar,
-                       var_misspar = var_misspar,
-                       D = D,
-                       ref = ref,
-                       base_risk = base_risk,
-                       indic = indic,
-                       jagsfit = jagsfit)
-    nma_results <- append(ma_results, list(EM_ref = EM_ref,
-                                           pred_ref = pred_ref,
-                                           SUCRA = SUCRA,
-                                           effectiveness = effectiveness))
-  } else if (model == "FE" & !is.element(measure, "OR")) {
-    ma_results <- list(EM = EM,
-                       dev_o = dev_o,
-                       hat_par = hat_par,
-                       leverage_o = leverage_o,
-                       sign_dev_o = sign_dev_o,
-                       phi = phi,
-                       model_assessment = model_assessment,
-                       data = data,
-                       measure = measure,
-                       model = model,
-                       assumption = assumption,
-                       mean_misspar = mean_misspar,
-                       var_misspar = var_misspar,
-                       D = D,
-                       ref = ref,
-                       base_risk = base_risk,
-                       indic = indic,
-                       jagsfit = jagsfit)
-    nma_results <- append(ma_results, list(EM_ref = EM_ref,
-                                           SUCRA = SUCRA,
-                                           effectiveness = effectiveness))
-  } else if (model == "FE" & is.element(measure, "OR")) {
-    ma_results <- list(EM = EM,
-                       RR = RR,
-                       RD = RD,
-                       abs_risk = abs_risk,
-                       dev_o = dev_o,
-                       hat_par = hat_par,
-                       leverage_o = leverage_o,
-                       sign_dev_o = sign_dev_o,
-                       phi = phi,
-                       model_assessment = model_assessment,
-                       data = data,
-                       measure = measure,
-                       model = model,
-                       assumption = assumption,
-                       mean_misspar = mean_misspar,
-                       var_misspar = var_misspar,
-                       D = D,
-                       ref = ref,
-                       base_risk = base_risk,
-                       indic = indic,
-                       jagsfit = jagsfit)
-    nma_results <- append(ma_results, list(EM_ref = EM_ref,
-                                           SUCRA = SUCRA,
-                                           effectiveness = effectiveness))
+  results <- list(EM = EM,
+                  dev_o = dev_o,
+                  hat_par = hat_par,
+                  leverage_o = leverage_o,
+                  sign_dev_o = sign_dev_o,
+                  phi = phi,
+                  model_assessment = model_assessment,
+                  data = data,
+                  measure = measure,
+                  model = model,
+                  assumption = assumption,
+                  mean_misspar = mean_misspar,
+                  var_misspar = var_misspar,
+                  D = D,
+                  ref = ref,
+                  indic = indic,
+                  jagsfit = jagsfit)
+  if (model == "RE" & !is.element(measure, c("OR", "RR", "RD"))) {
+    ma_results <- append(results, list(EM_pred = EM_pred,
+                                       tau = tau,
+                                       delta = delta,
+                                       heter_prior = heterog_prior))
+    nma_results <- append(results, list(EM_pred = EM_pred,
+                                        tau = tau,
+                                        delta = delta,
+                                        heter_prior = heterog_prior,
+                                        SUCRA = SUCRA,
+                                        effectiveness = effectiveness))
+  } else if (model == "RE" & measure == "OR") {
+    ma_results <- append(results, list(EM_pred = EM_pred,
+                                       tau = tau,
+                                       delta = delta,
+                                       heter_prior = heterog_prior,
+                                       abs_risk = abs_risk,
+                                       base_risk = base_risk))
+    nma_results <- append(results, list(EM_pred = EM_pred,
+                                        tau = tau,
+                                        delta = delta,
+                                        heter_prior = heterog_prior,
+                                        base_risk = base_risk,
+                                        SUCRA = SUCRA,
+                                        effectiveness = effectiveness,
+                                        abs_risk = abs_risk,
+                                        base_risk = base_risk))
+  } else if (model == "RE" & is.element(measure, c("RR", "RD"))) {
+    ma_results <- append(results, list(EM_pred = EM_pred,
+                                       EM_LOR = EM_LOR,
+                                       EM_pred_LOR = EM_pred_LOR,
+                                       tau = tau,
+                                       delta = delta,
+                                       heter_prior = heterog_prior,
+                                       abs_risk = abs_risk,
+                                       base_risk = base_risk))
+    nma_results <- append(results, list(EM_pred = EM_pred,
+                                        EM_LOR = EM_LOR,
+                                        EM_pred_LOR = EM_pred_LOR,
+                                        tau = tau,
+                                        delta = delta,
+                                        heter_prior = heterog_prior,
+                                        SUCRA = SUCRA,
+                                        SUCRA_LOR = SUCRA_LOR,
+                                        effectiveness = effectiveness,
+                                        abs_risk = abs_risk,
+                                        base_risk = base_risk))
+  } else if (model == "FE" & !is.element(measure, c("OR", "RR", "RD"))) {
+    ma_results <- results
+    nma_results <- append(results, list(SUCRA = SUCRA,
+                                        effectiveness = effectiveness))
+  } else if (model == "FE" & measure == "OR") {
+    ma_results <- append(results, list(abs_risk = abs_risk))
+    nma_results <- append(results, list(SUCRA = SUCRA,
+                                        effectiveness = effectiveness,
+                                        abs_risk = abs_risk,
+                                        base_risk = base_risk))
+  } else if (model == "FE" & is.element(measure, c("RR", "RD"))) {
+    ma_results <- append(results, list(EM_LOR = EM_LOR,
+                                       abs_risk = abs_risk))
+    nma_results <- append(results, list(EM_LOR = EM_LOR,
+                                        SUCRA = SUCRA,
+                                        SUCRA_LOR = SUCRA_LOR,
+                                        effectiveness = effectiveness,
+                                        abs_risk = abs_risk,
+                                        base_risk = base_risk))
   }
 
   ifelse(item$nt > 2, return(nma_results), return(ma_results))

@@ -178,6 +178,7 @@ run_sensitivity <- function(full,
   D <- full$D
   ref <- full$ref
   indic <- full$indic
+  base_risk <- full$base_risk
   assumption <- if (missing(assumption)) {
     "IDE-ARM"
   } else if(!is.element(assumption, c("IDE-ARM", "HIE-ARM"))) {
@@ -197,12 +198,13 @@ run_sensitivity <- function(full,
 
   # Scenarios for missingness mechanism in an intervention (PMID: 30223064)
   mean_scenarios <- if (missing(mean_scenarios) &
-                        is.element(measure, c("MD", "SMD"))) {
+                        is.element(measure, c("MD", "RD", "SMD"))) {
     aa <- "The following vector of scenarios was considered by default:"
     bb <- "c(-2, -1, 0, 1, 2)"
     message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, "\033[0m", "\n")))
     c(-2, -1, 0, 1, 2)
-  } else if (missing(mean_scenarios) & is.element(measure, c("OR", "ROM"))) {
+  } else if (missing(mean_scenarios) & is.element(measure,
+                                                  c("OR", "RR", "ROM"))) {
     aa <- "The following vector of scenarios was considered by default:"
     bb <- "c(-log(3), -log(2), log(0.9999), log(2), log(3))"
     message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, "\033[0m", "\n")))
@@ -213,8 +215,7 @@ run_sensitivity <- function(full,
   } else {
     mean_scenarios
   }
-  var_misspar <- ifelse(missing(var_misspar) &
-                          (is.element(measure, c("OR", "MD", "SMD"))), 1,
+  var_misspar <- ifelse(missing(var_misspar) & measure != "ROM", 1,
                         ifelse(missing(var_misspar) & measure == "ROM", 0.2^2,
                                var_misspar))
   n_chains <- ifelse(missing(n_chains), 2, n_chains)
@@ -237,6 +238,12 @@ run_sensitivity <- function(full,
     c("EM")
   }
 
+  param_jags <- if (is.element(measure, c("RR", "RD"))) {
+    append(param_jags, "EM.LOR")
+  } else {
+    param_jags
+  }
+
   # Calculate time needed for all models
   for (i in seq_len(length(mean_misspar[, 1]))) {
     data_jag[[i]] <- list("m" = item$m,
@@ -255,8 +262,9 @@ run_sensitivity <- function(full,
     if (is.element(measure, c("MD", "SMD", "ROM"))) {
       data_jag[[i]] <- append(data_jag[[i]],
                               list("y.o" = item$y0, "se.o" = item$se0))
-    } else if (measure == "OR") {
-      data_jag[[i]] <- append(data_jag[[i]], list("r" = item$r))
+    } else if (is.element(measure, c("OR", "RR", "RD"))) {
+      data_jag[[i]] <- append(data_jag[[i]], list("r" = item$r,
+                                                  "base_risk" = base_risk))
     }
 
     data_jag[[i]] <- if (model == "RE") {
@@ -280,33 +288,69 @@ run_sensitivity <- function(full,
   }
 
   # Obtain the posterior distribution of the necessary model paramters
+  get_results <- list()
+  for (i in seq_len(length(mean_misspar[, 1]))) {
+    get_results[[i]] <- as.data.frame(t(jagsfit[[i]]$BUGSoutput$summary))
+  }
+
   EM <- do.call(rbind,
                 lapply(
                   seq_len(length(mean_misspar[, 1])),
-                  function(i) jagsfit[[i]]$BUGSoutput$summary[
-                    1:(item$nt * (item$nt - 1) * 0.5),
-                    c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]))
+                  function(i) t(get_results[[i]] %>%
+                                  dplyr::select(starts_with("EM[")))))
+  #EM <- do.call(rbind,
+  #              lapply(
+  #                seq_len(length(mean_misspar[, 1])),
+  #                function(i) jagsfit[[i]]$BUGSoutput$summary[
+  #                  1:(item$nt * (item$nt - 1) * 0.5),
+  #                  c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]))
+
+  if (is.element(measure, c("RR", "RD"))) {
+    EM_LOR <- do.call(rbind,
+                      lapply(
+                        seq_len(length(mean_misspar[, 1])),
+                        function(i) t(get_results[[i]] %>%
+                                        dplyr::select(starts_with("EM.LOR[")))))
+  }
+
   if (model == "RE") {
     tau <- do.call(rbind,
-                   lapply(
-                     seq_len(length(mean_misspar[, 1])),
-                     function(i) jagsfit[[i]]$BUGSoutput$summary[
-                       "tau", c("50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff"
-                                )]))
-  } else {
-    tau <- NA
+                  lapply(
+                    seq_len(length(mean_misspar[, 1])),
+                    function(i) t(get_results[[i]] %>%
+                                    dplyr::select(starts_with("tau")))))
+    #tau <- do.call(rbind,
+    #               lapply(
+    #                 seq_len(length(mean_misspar[, 1])),
+    #                 function(i) jagsfit[[i]]$BUGSoutput$summary[
+    #                   "tau", c("50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff"
+    #                            )]))
   }
 
   # Return results
-  results <- if (model == "RE") {
+  results <- if (model == "RE" & !is.element(measure, c("RR", "OR"))) {
     list(EM = EM,
          tau = tau,
          measure = measure,
          scenarios = mean_scenarios,
          D = D,
          heter = heterog_prior)
-  } else {
+  } else if (model == "FE" & !is.element(measure, c("RR", "OR"))) {
     list(EM = EM,
+         measure = measure,
+         scenarios = mean_scenarios,
+         D = D)
+  } else if (model == "RE" & is.element(measure, c("RR", "OR"))) {
+    list(EM = EM,
+         EM_LOR = EM_LOR,
+         tau = tau,
+         measure = measure,
+         scenarios = mean_scenarios,
+         D = D,
+         heter = heterog_prior)
+  } else if (model == "FE" & is.element(measure, c("RR", "OR"))) {
+    list(EM = EM,
+         EM_LOR = EM_LOR,
          measure = measure,
          scenarios = mean_scenarios,
          D = D)

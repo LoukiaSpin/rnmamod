@@ -77,6 +77,10 @@
 #'   than those obtained by performing separate pairwise meta-analyses
 #'   (see \code{\link{run_series_meta}}).
 #'
+#'   For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
+#'   (risk difference) in \code{\link{run_model}}, \code{run_ume} currently
+#'   considers the odds ratio as effect measure.
+#'
 #'   \code{run_ume} calls the \code{\link{prepare_ume}} function which contains
 #'   the WinBUGS code as written by Dias et al. (2013) for binomial and normal
 #'   likelihood to analyse binary and continuous outcome data, respectively.
@@ -151,7 +155,11 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
 
   # Default arguments
   data <- full$data
-  measure <- full$measure
+  measure <- if (is.element(full$measure, c("RR", "RD"))) {
+    "OR"
+  } else {
+    full$measure
+  }
   model <- full$model
   assumption <- full$assumption
   heterog_prior <- full$heter_prior

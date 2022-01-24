@@ -7,10 +7,12 @@
 prepare_nodesplit(measure, model, assumption)
 }
 \arguments{
-\item{measure}{Character string indicating the effect measure with values
-\code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
-mean difference, standardised mean difference and ratio of means,
-respectively.}
+\item{measure}{Character string indicating the effect measure. For a binary
+outcome, the following can be considered: \code{"OR"}, \code{"RR"} or
+\code{"RD"} for the odds ratio, relative risk, and risk difference,
+respectively. For a continuous outcome, the following can be considered:
+\code{"MD"}, \code{"SMD"}, or \code{"ROM"} for mean difference,
+standardised mean difference and ratio of means, respectively.}
 
 \item{model}{Character string indicating the analysis model with values
 \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model,
@@ -45,6 +47,12 @@ This functions creates the model in the JAGS dialect of the BUGS
   \href{https://CRAN.R-project.org/package=R2jags}{R2jags}) via the
   \code{\link[base:textConnection]{textConnection}} function.
 
+  \code{prepare_nodesplit} inherits \code{measure}, \code{model}, and
+  \code{assumption} from the \code{\link{run_model}} function. For a binary
+  outcome, when \code{measure} is "RR" (relative risk) or "RD"
+  (risk difference) in \code{\link{run_model}}, \code{prepare_nodesplit}
+  currently considers the WinBUGS code for the odds ratio.
+
   The split nodes have been automatically selected via the
   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}}
   function of the R-package
@@ -68,6 +76,7 @@ missing binary outcome data in network meta-analysis.
 }
 \seealso{
 \code{\link[R2jags:jags]{jags}},
+  \code{\link{run_model}},
   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}},
   \code{\link{run_nodesplit}},
   \code{\link[base:textConnection]{textConnection}}

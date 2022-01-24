@@ -44,9 +44,6 @@
 #'
 #'   For a fixed-effect network meta-analysis, the output additionally
 #'   includes:
-#'   \item{EM_ref}{The estimated summary effect measure (according to the
-#'   argument \code{measure} defined in \code{\link{run_model}}) of all
-#'   comparisons with the reference intervention.}
 #'   \item{SUCRA}{The surface under the cumulative ranking (SUCRA) curve for
 #'   each intervention.}
 #'   \item{effectiveneness}{The ranking probability of each intervention for
@@ -62,12 +59,6 @@
 #'   is the number of interventions in the trial.}
 #'   \item{tau}{The between-trial standard deviation.}
 #'
-#'   For a random-effects network meta-analysis, the output additionally
-#'   includes:
-#'   \item{pred_ref}{The predicted summary effect measure (according to the
-#'   argument \code{measure} defined in \code{\link{run_model}}) of all
-#'   comparisons with the reference intervention.
-#'   }
 #'   In network meta-analysis, \code{EM} and \code{EM_pred} refer to all
 #'   possible pairwise comparisons of interventions in the network. Furthermore,
 #'   \code{tau} is typically assumed to be common for all observed comparisons
@@ -101,6 +92,10 @@
 #'   This prevents specifying a different Bayesian model from that considered in
 #'   \code{\link{run_model}}. Therefore, the user needs first to apply
 #'   \code{\link{run_model}}, and then use \code{run_metareg} (see 'Examples').
+#'
+#'   For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
+#'   (risk difference) in \code{\link{run_model}}, \code{run_metareg} currently
+#'   considers the odds ratio as effect measure.
 #'
 #'   The model runs in \code{JAGS} and the progress of the simulation appears on
 #'   the R console. The output of \code{run_metareg} is used as an S3 object by
@@ -171,7 +166,11 @@ run_metareg <- function(full,
 
 
   data <- full$data
-  measure <- full$measure
+  measure <- if (is.element(full$measure, c("RR", "RD"))) {
+    "OR"
+  } else {
+    full$measure
+  }
   model <- full$model
   assumption <- full$assumption
   heterog_prior <- full$heter_prior
@@ -179,8 +178,8 @@ run_metareg <- function(full,
   var_misspar <- full$var_misspar
   D <- full$D
   ref <- full$ref
-  base_risk <- full$base_risk
   indic <- full$indic
+  base_risk <- full$base_risk
 
   # Prepare the dataset for the R2jags
   item <- data_preparation(data, measure)
@@ -256,9 +255,7 @@ run_metareg <- function(full,
 
   param_jags <- c("delta",
                   "EM",
-                  "EM.ref",
                   "EM.pred",
-                  "pred.ref",
                   "tau",
                   "beta",
                   "beta.all",
@@ -279,13 +276,7 @@ run_metareg <- function(full,
     param_jags
   } else {
     param_jags[!is.element(param_jags,
-                           c("EM.pred", "pred.ref", "tau", "delta"))]
-  }
-
-  param_jags <- if (measure == "OR") {
-    append(param_jags, c("RR", "RD", "abs_risk"))
-  } else {
-    param_jags
+                           c("EM.pred", "tau", "delta"))]
   }
 
   # Run the Bayesian analysis
@@ -306,23 +297,8 @@ run_metareg <- function(full,
   # Effect size of all unique pairwise comparisons
   EM <- t(get_results %>% dplyr::select(starts_with("EM[")))
 
-  # Unique absolute risks for all interventions (only binary data)
-  abs_risk <- t(get_results %>% dplyr::select(starts_with("abs_risk[")))
-
-  # Relative risks obtained via absolute risks (only binary data)
-  RR <- t(get_results %>% dplyr::select(starts_with("RR[")))
-
-  # Risk difference obtained via absolute risks (only binary data)
-  RD <- t(get_results %>% dplyr::select(starts_with("RD[")))
-
-  # Effect size of all comparisons with the reference intervention
-  EM_ref <- t(get_results %>% dplyr::select(starts_with("EM.ref[")))
-
   # Predictive effects of all unique pairwise comparisons
   EM_pred <- t(get_results %>% dplyr::select(starts_with("EM.pred[")))
-
-  # Predictive effects of all comparisons with the reference intervention
-  pred_ref <- t(get_results %>% dplyr::select(starts_with("pred.ref[")))
 
   # Between-trial standard deviation
   tau <- t(get_results %>% dplyr::select(starts_with("tau")))
@@ -425,7 +401,7 @@ run_metareg <- function(full,
   model_assessment <- data.frame(DIC, pD, dev)
 
   # Return a list of results
-  if (model == "RE" & !is.element(measure, "OR")) {
+  if (model == "RE") {
     ma_results <- list(EM = EM,
                        EM_pred = EM_pred,
                        tau = tau,
@@ -444,39 +420,10 @@ run_metareg <- function(full,
                        covar_assumption = covar_assumption,
                        jagsfit = jagsfit,
                        data = data)
-    nma_results <- append(ma_results, list(EM_ref = EM_ref,
-                                           pred_ref = pred_ref,
-                                           SUCRA = SUCRA,
+    nma_results <- append(ma_results, list(SUCRA = SUCRA,
                                            effectiveness = effectiveness,
                                            D = full$D))
-  } else if (model == "RE" & is.element(measure, "OR")) {
-    ma_results <- list(EM = EM,
-                       EM_pred = EM_pred,
-                       RR = RR,
-                       RD = RD,
-                       abs_risk = abs_risk,
-                       tau = tau,
-                       delta = delta,
-                       beta_all = beta_all,
-                       dev_o = dev_o,
-                       hat_par = hat_par,
-                       leverage_o = leverage_o,
-                       sign_dev_o = sign_dev_o,
-                       phi = phi,
-                       model_assessment = model_assessment,
-                       measure = measure,
-                       model = model,
-                       assumption = assumption,
-                       covariate = covariate,
-                       covar_assumption = covar_assumption,
-                       jagsfit = jagsfit,
-                       data = data)
-    nma_results <- append(ma_results, list(EM_ref = EM_ref,
-                                           pred_ref = pred_ref,
-                                           SUCRA = SUCRA,
-                                           effectiveness = effectiveness,
-                                           D = full$D))
-  } else if (model == "FE" & !is.element(measure, "OR")) {
+  } else if (model == "FE") {
     ma_results <- list(EM = EM,
                        beta_all = beta_all,
                        dev_o = dev_o,
@@ -492,31 +439,7 @@ run_metareg <- function(full,
                        covar_assumption = covar_assumption,
                        jagsfit = jagsfit,
                        data = data)
-    nma_results <- append(ma_results, list(EM_ref = EM_ref,
-                                           SUCRA = SUCRA,
-                                           effectiveness = effectiveness,
-                                           D = full$D))
-  } else if (model == "FE" & is.element(measure, "OR")) {
-    ma_results <- list(EM = EM,
-                       RR = RR,
-                       RD = RD,
-                       abs_risk = abs_risk,
-                       beta_all = beta_all,
-                       dev_o = dev_o,
-                       hat_par = hat_par,
-                       leverage_o = leverage_o,
-                       sign_dev_o = sign_dev_o,
-                       phi = phi,
-                       model_assessment = model_assessment,
-                       measure = measure,
-                       model = model,
-                       assumption = assumption,
-                       covariate = covariate,
-                       covar_assumption = covar_assumption,
-                       jagsfit = jagsfit,
-                       data = data)
-    nma_results <- append(ma_results, list(EM_ref = EM_ref,
-                                           SUCRA = SUCRA,
+    nma_results <- append(ma_results, list(SUCRA = SUCRA,
                                            effectiveness = effectiveness,
                                            D = full$D))
   }

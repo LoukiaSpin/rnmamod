@@ -58,8 +58,8 @@ A data-frame that additionally includes the following elements:
 Applies the pattern-mixture model under a specific assumption
   about the informative missingness parameter in trial-arms with
   \bold{binary} missing participant outcome data (MOD) and uses the Taylor
-  series to obtain the effect size and standard error for each trial
-  (White et al., 2008).
+  series to obtain the odds ratio (in the logarithmic scale) and standard
+  error for each trial (White et al., 2008).
 }
 \details{
 The \code{taylor_imor} function is found in the

@@ -7,10 +7,12 @@
 heterogeneity_param_prior(measure, model, heter_prior)
 }
 \arguments{
-\item{measure}{Character string indicating the effect measure with values
-\code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
-mean difference, standardised mean difference and ratio of means,
-respectively.}
+\item{measure}{Character string indicating the effect measure. For a binary
+outcome, the following can be considered: \code{"OR"}, \code{"RR"} or
+\code{"RD"} for the odds ratio, relative risk, and risk difference,
+respectively. For a continuous outcome, the following can be considered:
+\code{"MD"}, \code{"SMD"}, or \code{"ROM"} for mean difference,
+standardised mean difference and ratio of means, respectively.}
 
 \item{model}{Character string indicating the analysis model with values
 \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model,

@@ -40,6 +40,10 @@ Creates a panel of interval plots on the summary effect sizes
   difference, and red otherwise. Grey panels refer to the frail comparisons
   as detected by the \code{\link{improved_ume}} function (see 'Details' in
   \code{\link{improved_ume}}).
+
+  For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
+  (risk difference) in \code{\link{run_model}}, \code{intervalplot_panel_ume}
+  currently presents the results in the odds ratio scale.
 }
 \references{
 Spineli LM. A revised framework to evaluate the consistency assumption

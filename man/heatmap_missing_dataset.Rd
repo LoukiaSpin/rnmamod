@@ -30,10 +30,21 @@ A heatmap presenting the proportion of missing participants in each
   risk of bias (more than 20\%). Low, moderate, and high risk of bias due to
   missing participants are indicated using green, orange, and red colour,
   respectively. The function is also applicable for a pairwise meta-analysis.
+  If missing participants have not been reported for a trial-arm, the
+  corresponding cell is indicated in grey.
 }
 \description{
 Illustrates the proportion of missing participants and the
   associated risk of bias in each arm of every trial in the dataset.
+}
+\details{
+When the number of missing participants has not been extracted for
+  any arm of the trials, the execution of the function will be stopped and
+  an error message will be printed on the R console.
+
+  When there are more than 80 trials, the value on the proportion of missing
+  participants will not appear on the heatmap. This is because the number on
+  the cells will not be distinguishable.
 }
 \examples{
 data("nma.schwingshackl2014")

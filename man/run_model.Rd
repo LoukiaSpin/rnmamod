@@ -66,10 +66,12 @@ run_model(
 \item{data}{A data-frame of the one-trial-per-row format with arm-level data.
 See 'Format' for the specification of the columns.}
 
-\item{measure}{Character string indicating the effect measure with values
-\code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
-mean difference, standardised mean difference and ratio of means,
-respectively.}
+\item{measure}{Character string indicating the effect measure. For a binary
+outcome, the following can be considered: \code{"OR"}, \code{"RR"} or
+\code{"RD"} for the odds ratio, relative risk, and risk difference,
+respectively. For a continuous outcome, the following can be considered:
+\code{"MD"}, \code{"SMD"}, or \code{"ROM"} for mean difference,
+standardised mean difference and ratio of means, respectively.}
 
 \item{model}{Character string indicating the analysis model with values
 \code{"RE"}, or \code{"FE"} for the random-effects and fixed-effect model,
@@ -122,7 +124,7 @@ should match the intervention identifier under element \strong{t} in
 risk for the selected reference intervention. If \code{base_risk} has not
 been defined, the function uses the median event risk for the reference
 intervention as calculated from the corresponding trials in \code{data}.
-This argument is only relevant for binary outcome.}
+This argument is only relevant for binary outcomes.}
 
 \item{n_chains}{Positive integer specifying the number of chains for the
 MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
@@ -158,9 +160,6 @@ A list of R2jags output on the summaries of the posterior
   \item{phi}{The informative missingness parameter.}
 
   For a fixed-effect network meta-analysis, the output additionally includes:
-  \item{EM_ref}{The estimated summary effect measure (according to the
-  argument \code{measure}) of all comparisons with the reference
-  intervention.}
   \item{SUCRA}{The surface under the cumulative ranking curve for each
   intervention.}
   \item{effectiveneness}{The ranking probability of each intervention for
@@ -174,12 +173,6 @@ A list of R2jags output on the summaries of the posterior
   argument \code{measure}).}
   \item{tau}{The between-trial standard deviation.}
 
-  For a random-effects network meta-analysis, the output additionally
-  includes:
-  \item{pred_ref}{The predicted summary effect measure
-   (according to the argument \code{measure}) of all comparisons
-   with the reference intervention.}
-
   In network meta-analysis, \code{EM} and \code{EM_pred} refer to all
   possible pairwise comparisons of interventions in the network. Furthermore,
   \code{tau} is typically assumed to be common for all observed comparisons
@@ -189,11 +182,15 @@ A list of R2jags output on the summaries of the posterior
   the number of interventions in the trial.
 
   Furthermore, the output includes the following elements:
-  \item{RR}{The relative risk as a function of the absolute risks
-  of the corresponding interventions.}
+  \item{LRR}{The relative risk in the logarithmic scale as a function of the
+  absolute risks of the corresponding interventions. This appears only when
+  \code{measure = "OR"}, \code{measure = "RR"}, or \code{measure = "RD"}.}
   \item{RD}{The risk difference as a function of the absolute risks of the
-  corresponding interventions.}
-  \item{abs_risk}{The absolute risks for each intervention.}
+  corresponding interventions. This appears only when \code{measure = "OR"},
+  \code{measure = "RR"}, or \code{measure = "RD"}.}
+  \item{abs_risk}{The absolute risks for each intervention. This appears only
+  when \code{measure = "OR"}, \code{measure = "RR"}, or
+  \code{measure = "RD"}.}
   \item{leverage_o}{The leverage for the observed outcome at each trial-arm.}
   \item{sign_dev_o}{The sign of the difference between observed and fitted
   outcome at each trial-arm.}
@@ -293,12 +290,15 @@ The model runs in \code{JAGS} and the progress of the simulation
   To obtain unique absolute risks for each intervention, the network
   meta-analysis model has been extended to incorporate the transitive risks
   framework, namely, an intervention has the same absolute risk regardless of
-  the comparator interventions in a trial. The absolute risks are a function
-  of the odds ratio and the selected baseline risk for the reference
-  intervention (\code{ref}) (Appendix in Dias et al., 2013). We advocate
-  using the OR as an effect measure for its desired mathematical properties.
-  Then, the relative risk and risk difference can be obtained as a function
-  of the absolute risks.
+  the comparator interventions in a trial (Spineli et al., 2017).
+  The absolute risks are a function of the odds ratio and the selected
+  baseline risk for the reference intervention (\code{ref}) (Appendix in
+  Dias et al., 2013). We advocate using the OR as an effect measure for its
+  desired mathematical properties. Then, the relative risk and risk
+  difference can be obtained as a function of the absolute risks. Hence,
+  regardless of the selected \code{measure} for a binary outcome,
+  \code{run_model} performs pairwise or network meta-analysis based on the
+  odds ratio.
 }
 \examples{
 data("nma.baker2009")
@@ -310,7 +310,7 @@ head(nma.baker2009)
 # Perform a random-effects network meta-analysis
 # Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
 run_model(data = nma.baker2009,
-          measure = "OR",
+          measure = "RD",
           model = "RE",
           assumption = "IDE-ARM",
           heter_prior = list("halfnormal", 0, 1),
@@ -319,8 +319,8 @@ run_model(data = nma.baker2009,
           D = 0,
           ref = 1,
           n_chains = 3,
-          n_iter = 10000,
-          n_burnin = 1000,
+          n_iter = 1000,
+          n_burnin = 100,
           n_thin = 1)
 }
 
@@ -362,6 +362,12 @@ missing binary outcome data in network meta-analysis.
 Spineli LM. Modeling missing binary outcome data while preserving
 transitivity assumption yielded more credible network meta-analysis
 results. \emph{J Clin Epidemiol} 2019b;\bold{105}:19--26.
+
+Spineli LM, Brignardello-Petersen R, Heen AF, Achille F, Brandt L,
+Guyatt GH, et al. Obtaining absolute effect estimates to facilitate shared
+decision making in the context of multiple-treatment comparisons.
+Abstracts of the Global Evidence Summit, Cape Town, South Africa.
+\emph{Cochrane Database of Systematic Reviews} 2017;\bold{9}(Suppl 1):18911.
 
 Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account
 for uncertainty due to missing binary outcome data in pairwise

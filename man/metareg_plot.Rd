@@ -81,6 +81,10 @@ The deviance information criterion (DIC) of the network
   \code{cov_value} the name of the level for which the output will be
   created.
 
+  For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
+  (risk difference) in \code{\link{run_model}}, \code{metareg_plot}
+  currently presents the results in the odds ratio scale.
+
   Furthermore, \code{metareg_plot} exports all tabulated results to separate
   'xlsx' files (via the \code{\link[writexl:write_xlsx]{write_xlsx}} function
   of the R-package

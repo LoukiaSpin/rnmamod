@@ -15,10 +15,12 @@ the order they appear in the argument \code{data}. If \code{drug_names} is
 not defined, the order of the interventions as they appear in \code{data}
 is used, instead.}
 
-\item{measure}{Character string indicating the effect measure with values
-\code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,
-mean difference, standardised mean difference and ratio of means,
-respectively.}
+\item{measure}{Character string indicating the effect measure. For a binary
+outcome, the following can be considered: \code{"OR"}, \code{"RR"} or
+\code{"RD"} for the odds ratio, relative risk, and risk difference,
+respectively. For a continuous outcome, the following can be considered:
+\code{"MD"}, \code{"SMD"}, or \code{"ROM"} for mean difference,
+standardised mean difference and ratio of means, respectively.}
 }
 \value{
 A list of scalar results and two data-frames to be passed to

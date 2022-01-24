@@ -61,9 +61,6 @@ A list of R2jags outputs on the summaries of the posterior
 
   For a fixed-effect network meta-analysis, the output additionally
   includes:
-  \item{EM_ref}{The estimated summary effect measure (according to the
-  argument \code{measure} defined in \code{\link{run_model}}) of all
-  comparisons with the reference intervention.}
   \item{SUCRA}{The surface under the cumulative ranking (SUCRA) curve for
   each intervention.}
   \item{effectiveneness}{The ranking probability of each intervention for
@@ -79,12 +76,6 @@ A list of R2jags outputs on the summaries of the posterior
   is the number of interventions in the trial.}
   \item{tau}{The between-trial standard deviation.}
 
-  For a random-effects network meta-analysis, the output additionally
-  includes:
-  \item{pred_ref}{The predicted summary effect measure (according to the
-  argument \code{measure} defined in \code{\link{run_model}}) of all
-  comparisons with the reference intervention.
-  }
   In network meta-analysis, \code{EM} and \code{EM_pred} refer to all
   possible pairwise comparisons of interventions in the network. Furthermore,
   \code{tau} is typically assumed to be common for all observed comparisons
@@ -124,6 +115,10 @@ Performs a one-stage pairwise or network meta-regression while addressing
   This prevents specifying a different Bayesian model from that considered in
   \code{\link{run_model}}. Therefore, the user needs first to apply
   \code{\link{run_model}}, and then use \code{run_metareg} (see 'Examples').
+
+  For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
+  (risk difference) in \code{\link{run_model}}, \code{run_metareg} currently
+  considers the odds ratio as effect measure.
 
   The model runs in \code{JAGS} and the progress of the simulation appears on
   the R console. The output of \code{run_metareg} is used as an S3 object by

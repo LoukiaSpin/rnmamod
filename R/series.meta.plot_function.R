@@ -44,6 +44,10 @@
 #'   interventions. Otherwise, the execution of the function will be stopped and
 #'   an error message will be printed on the R console.
 #'
+#'   For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
+#'   (risk difference) in \code{\link{run_model}}, \code{series_meta_plot}
+#'   currently presents the results in the odds ratio scale.
+#'
 #'   The user can detect any inconsistencies in the estimated
 #'   effects from the compared models and explore the gains in precision
 #'   stemming from applying network meta-analysis. Furthermore, the user can
@@ -102,7 +106,16 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
   }
 
   # Posterior results on the effect estimates under NMA
-  em_full0 <- full$EM
+  measure <- if (is.element(full$measure, c("RR", "RD"))) {
+    "OR"
+  } else {
+    full$measure
+  }
+  em_full0 <- if (is.element(full$measure, c("RR", "RD"))) {
+    full$EM_LOR
+  } else {
+    full$EM
+  }
 
   # Posterior results on the effect estimates under separate MAs
   em_meta0 <- meta$EM
@@ -127,18 +140,18 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
   # Keep only the comparisons with at least two trials
   em_full <- em_full0[is.element(possible_comp$poss_comp[, 4], obs_comp),
                       c(1:3, 7)]
-  em_full[, c(1, 3:4)] <- if (is.element(full$measure, c("OR", "ROM"))) {
+  em_full[, c(1, 3:4)] <- if (is.element(measure, c("OR", "ROM"))) {
     exp(em_full[, c(1, 3:4)])
-  } else if (is.element(full$measure, c("MD", "SMD"))) {
+  } else if (is.element(measure, c("MD", "SMD"))) {
     em_full[, c(1, 3:4)]
   }
   em_full_clean <- format(round(em_full, 2), nsmall = 2)
 
   # Effect estimate of separate MAs
   em_meta <- round(em_meta0[, c(3:5, 9)], 2)
-  em_meta[, c(1, 3:4)] <- if (is.element(full$measure, c("OR", "ROM"))) {
+  em_meta[, c(1, 3:4)] <- if (is.element(measure, c("OR", "ROM"))) {
     exp(em_meta[, c(1, 3:4)])
-  } else if (is.element(full$measure, c("MD", "SMD"))) {
+  } else if (is.element(measure, c("MD", "SMD"))) {
     em_meta[, c(1, 3:4)]
   }
   em_meta_clean <- format(round(em_meta, 2), nsmall = 2)
@@ -151,7 +164,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
   }
 
   # Credible intervals for comparisons with at least two trials
-  cri_full_clean <- if (is.element(full$measure, c("OR", "ROM"))) {
+  cri_full_clean <- if (is.element(measure, c("OR", "ROM"))) {
     paste0("(", em_full_clean[, 3], ",", " ", em_full_clean[, 4], ")",
            ifelse(as.numeric(em_full_clean[, 3]) > 1 |
                     as.numeric(em_full_clean[, 4]) < 1, "*", " "))
@@ -162,7 +175,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
   }
 
   # The 95% CrIs of the effect estimate of separate MAs
-  cri_meta_clean <- if (is.element(full$measure, c("OR", "ROM"))) {
+  cri_meta_clean <- if (is.element(measure, c("OR", "ROM"))) {
     paste0("(", em_meta_clean[, 3], ",", " ", em_meta_clean[, 4], ")",
            ifelse(as.numeric(em_meta_clean[, 3]) > 1 |
                     as.numeric(em_meta_clean[, 4]) < 1, "*", " "))
@@ -229,25 +242,21 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
   }
 
   # Forest plots of comparisons on effect estimate
-  add <- ifelse(is.element(full$measure, c("OR", "ROM")), 1, 4)
-  measure <- effect_measure_name(full$measure)
+  add <- ifelse(is.element(measure, c("OR", "ROM")), 1, 4)
+  measure2 <- effect_measure_name(measure)
 
-  caption <- if (full$D == 0 & is.element(measure,
-                                          c("Odds ratio", "Ratio of means"))) {
-    paste(measure, "< 1, favours the first arm.",
-          measure, "> 1, favours the second arm")
-  } else if (full$D == 1 & is.element(measure,
-                                      c("Odds ratio", "Ratio of means"))) {
-    paste(measure, "< 1, favours the second arm.",
-          measure, "> 1, favours the first arm")
-  } else if (full$D == 0 & !is.element(measure,
-                                       c("Odds ratio", "Ratio of means"))) {
-    paste(measure, "< 0, favours the first arm.",
-          measure, "> 0, favours the second arm")
-  } else if (full$D == 1 & !is.element(measure,
-                                       c("Odds ratio", "Ratio of means"))) {
-    paste(measure, "< 0, favours the second arm.",
-          measure, "> 0, favours the first arm")
+  caption <- if (full$D == 0 & is.element(measure, c("OR", "ROM"))) {
+    paste(measure2, "< 1, favours the first arm.",
+          measure2, "> 1, favours the second arm")
+  } else if (full$D == 1 & is.element(measure, c("OR", "ROM"))) {
+    paste(measure2, "< 1, favours the second arm.",
+          measure2, "> 1, favours the first arm")
+  } else if (full$D == 0 & !is.element(measure, c("OR", "ROM"))) {
+    paste(measure2, "< 0, favours the first arm.",
+          measure2, "> 0, favours the second arm")
+  } else if (full$D == 1 & !is.element(measure, c("OR", "ROM"))) {
+    paste(measure2, "< 0, favours the second arm.",
+          measure2, "> 0, favours the first arm")
   }
 
   p1 <- ggplot(data = prepare,
@@ -260,7 +269,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
           geom_linerange(size = 2,
                          position = position_dodge(width = 0.5)) +
           geom_hline(yintercept =
-                       ifelse(!is.element(full$measure, c("OR", "ROM")), 0, 1),
+                       ifelse(!is.element(measure, c("OR", "ROM")), 0, 1),
                      lty = 1,
                      size = 1,
                      col = "grey53") +
@@ -278,33 +287,15 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
                     color = "black",
                     size = 4.0,
                     position = position_dodge(width = 0.5)) +
-          #geom_text(aes(x = 0.45,
-          #              y = ifelse(is.element(full$measure, c("OR", "ROM")),
-          #                         0.4, -0.2*add),
-          #              label = ifelse(full$D == 0, "Favours first arm",
-          #                             "Favours second arm")),
-          #          size = 3.5,
-          #          vjust = 0,
-          #          hjust = 0,
-          #          color = "black") +
-          #geom_text(aes(x = 0.45,
-          #              y = ifelse(is.element(full$measure, c("OR", "ROM")),
-          #                         1.2, 0.2),
-          #              label = ifelse(full$D == 0, "Favours second arm",
-          #                             "Favours first arm")),
-          #         size = 3.5,
-          #          vjust = 0,
-          #          hjust = 0,
-          #          color = "black") +
           labs(x = "",
-               y = effect_measure_name(full$measure),
+               y = measure2,
                colour = "Analysis",
                caption = caption) +
           scale_x_discrete(breaks = as.factor(seq_len(length(obs_comp))),
                            labels = prepare$comparison[
                              seq_len(length(obs_comp))]) +
           scale_y_continuous(trans =
-                               ifelse(!is.element(full$measure, c("OR", "ROM")),
+                               ifelse(!is.element(measure, c("OR", "ROM")),
                                       "identity", "log10")) +
           scale_color_manual(breaks = c("Network meta-analysis",
                                         "Pairwise meta-analysis"),

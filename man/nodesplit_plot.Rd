@@ -82,6 +82,10 @@ directory of the user. The default is \code{FALSE} (do not export).}
   after the split node is preferred; otherwise, there is little to choose
   between the compared models.
 
+  For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
+  (risk difference) in \code{\link{run_model}}, \code{nodesplit_plot}
+  currently presents the results in the odds ratio scale.
+
   The split nodes have been automatically selected via the
   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}}
   function of the R-package

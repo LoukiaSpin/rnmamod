@@ -30,7 +30,9 @@ A heatmap with the proportion of missing participants in each
   associated with low (up to 5\%), moderate (more than 5\% and up to 20\%),
   and high risk of bias (more than 20\%). Low, moderate, and high risk of
   bias associated with missing participants is indicated using green, orange,
-  and red colour, respectively.
+  and red colour, respectively. If missing participants have not been
+  reported for an intervention or comparison, the corresponding cell is
+  indicated in grey.
 
   The summary statistics (median, minimum and maximum) for each intervention
   (main diagonal; white font) result from calculating the proportion of
@@ -42,7 +44,9 @@ A heatmap with the proportion of missing participants in each
 
   \code{heatmap_missing_network} can be used only for a network of
   interventions. Otherwise, the execution of the function will be stopped and
-  an error message will be printed on the R console.
+  an error message will be printed on the R console. Likewise, when the
+  number of missing participants has not been extracted for any arm of the
+  trials.
 }
 \description{
 Illustrates the distribution of missing participants and the

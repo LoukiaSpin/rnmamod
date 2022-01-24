@@ -46,6 +46,12 @@ This functions creates the model in the JAGS dialect of the BUGS
   \code{model.file} of \code{\link[R2jags:jags]{jags}} (in the R-package
   \href{https://CRAN.R-project.org/package=R2jags}{R2jags}) via the
   \code{\link[base:textConnection]{textConnection}} function.
+
+  \code{prepare_ume} inherits \code{measure}, \code{model}, and
+  \code{assumption} from the \code{\link{run_model}} function. For a binary
+  outcome, when \code{measure} is "RR" (relative risk) or "RD"
+  (risk difference) in \code{\link{run_model}}, \code{prepare_ume}
+  currently considers the WinBUGS code for the odds ratio.
 }
 \references{
 Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis
@@ -69,8 +75,8 @@ missing binary outcome data in network meta-analysis.
 \doi{10.1186/s12874-019-0731-y}
 }
 \seealso{
-\code{\link[R2jags:jags]{jags}}, \code{\link{run_ume}},
-  \code{\link[base:textConnection]{textConnection}}
+\code{\link[R2jags:jags]{jags}}, \code{\link{run_model}},
+  \code{\link{run_ume}}, \code{\link[base:textConnection]{textConnection}}
 }
 \author{
 {Loukia M. Spineli}

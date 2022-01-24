@@ -21,7 +21,6 @@
 #' @return A scatterplot of the SUCRA values under the network meta-analysis
 #'   (y-axis) against the SUCRA values under the network meta-regression
 #'   (x-axis) for a specific level or value of the investigated covariate.
-
 #'
 #' @details The names of the interventions appear above each point in the plot.
 #'   Three coloured rectangles appear in the scatterplot: a red rectangle for
@@ -96,6 +95,12 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
     cov_value[[1]] - mean(reg$covariate)
   }
 
+  sucra_full <- if (is.element(full$measure, c("RR", "RD"))) {
+    full$SUCRA_LOR
+  } else {
+    full$SUCRA
+  }
+
   #Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html
   reflect_triangle <- function(m, from = c("lower", "upper")) {
     ix <- switch(match.arg(from),
@@ -105,7 +110,7 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
     m
   }
 
-  sucra_nma <- round(full$SUCRA[, 1] * 100, 0)
+  sucra_nma <- round(sucra_full[, 1] * 100, 0)
   par_mean <- reg$EM[, 1] + reg$beta_all[, 1] * covar
   par_sd <- sqrt(((reg$EM[, 2])^2) + ((reg$beta_all[, 2] * covar)^2))
   z_test <- par_mean / par_sd

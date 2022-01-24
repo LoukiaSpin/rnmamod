@@ -69,6 +69,11 @@ The deviance information criterion (DIC) of the consistency model is
   consistency is preferred; otherwise, there is little to choose between the
   compared models.
 
+  For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
+  (risk difference) in \code{\link{run_model}}, \code{ume_plot} currently
+  presents the results from network meta-analysis and node-splitting in the
+  odds ratio scale.
+
   Furthermore, \code{ume_plot} exports \code{table_effect_size} and
   \code{table_model_assessment} to separate 'xlsx' files (via the
   \code{\link[writexl:write_xlsx]{write_xlsx}} function) to the working

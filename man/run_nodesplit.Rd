@@ -71,6 +71,10 @@ Performs the Bayesian node-splitting approach of Dias et al. (2010)
   \code{\link{run_model}}, and then use \code{run_nodesplit}
   (see 'Examples').
 
+  For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
+  (risk difference) in \code{\link{run_model}}, \code{run_nodesplit}
+  currently performs node-splitting using the odds ratio as effect measure.
+
   To perform the Bayesian node-splitting approach, the
   \code{\link{prepare_nodesplit}} function is called which contains the
   WinBUGS code as written by Dias et al. (2010) for binomial and normal
@@ -155,7 +159,7 @@ meta-analysis. \emph{Res Synth Methods} 2016;\bold{7}(1):80--93.
 \code{\link[R2jags:jags]{jags}},
   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}},
   \code{\link{nodesplit_plot}}, \code{\link{prepare_nodesplit}},
-  \code{\link{run_model}},
+  \code{\link{run_model}}
 }
 \author{
 {Loukia M. Spineli}

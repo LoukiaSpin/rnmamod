@@ -57,6 +57,10 @@ Facilitates the comparison of the consistency model
   interventions. Otherwise, the execution of the function will be stopped and
   an error message will be printed on the R console.
 
+  For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
+  (risk difference) in \code{\link{run_model}}, \code{series_meta_plot}
+  currently presents the results in the odds ratio scale.
+
   The user can detect any inconsistencies in the estimated
   effects from the compared models and explore the gains in precision
   stemming from applying network meta-analysis. Furthermore, the user can
