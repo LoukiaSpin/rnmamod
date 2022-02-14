@@ -17,6 +17,8 @@
 #'   \code{\link{run_model}}. If \code{drug_names} is not defined,
 #'   the order of the interventions as they appear in \code{data} is used,
 #'   instead.
+#' @param show A vector of labels with the name of the interventions to present
+#'   in the league table.
 #'
 #' @return A heatmap of the league table showing the posterior mean and 95\%
 #'   credible interval for all possible comparisons in the off-diagonals, and
@@ -93,9 +95,9 @@
 #'                drug_names = interv_names)
 #'
 #' @export
-league_heatmap <- function(full, cov_value = NULL, drug_names) {
+league_heatmap <- function(full, cov_value = NULL, drug_names, show = NULL) {
 
-  drug_names <- if (missing(drug_names)) {
+  drug_names0 <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
     bb <- "The intervention ID, as specified in 'data' is used as"
     cc <- "intervention names"
@@ -111,7 +113,26 @@ league_heatmap <- function(full, cov_value = NULL, drug_names) {
          call. = FALSE)
   }
 
+  ## KATI PAIZEI LATHOS ME TO IF!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  show0 <- if (length(unique(!is.element(show, drug_names0))) > 1) {
+    stop("Make sure that the argument 'show' is contained in 'drug_names'",
+         call. = FALSE)
+  } else if (length(unique(!is.element(show, drug_names0))) == 1 &
+             length(show) < 3) {
+    stop("The argument 'show' must have length greater than 2",
+         call. = FALSE)
+  } else if (length(unique(!is.element(show, drug_names0))) == 1 &
+             length(show) > 2) {
+    cbind(combn(show, 2)[2,], combn(show, 2)[1,])
+  }
+
   measure <- full$measure
+
+  drug_names <- if (!is.matrix(show0)) {
+    drug_names0
+  } else {
+    subset(drug_names0, is.element(drug_names0, show))
+  }
 
   #Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html
   reflect_triangle <- function(m, from = c("lower", "upper")) {
@@ -123,8 +144,19 @@ league_heatmap <- function(full, cov_value = NULL, drug_names) {
   }
 
   if (is.null(full$beta_all)) {
-    par <- full$EM
-    sucra <- full$SUCRA[, 1]
+    if (is.null(show)) {
+      par <- full$EM
+      sucra <- full$SUCRA[, 1]
+    } else {
+      par0 <- full$EM
+      sucra0 <- full$SUCRA[, 1]
+      select <- cbind(combn(drug_names0, 2)[2,], combn(drug_names0, 2)[1,])
+      par <- na.omit(subset(data.frame(par0, select),
+                            is.element(select[, 1], show) &
+                              is.element(select[, 2], show)))
+      sucra <- na.omit(subset(data.frame(sucra0, drug_names0),
+                              is.element(drug_names0, show)))[, 1]
+    }
   } else {
     cov_value <- if (missing(cov_value)) {
       stop("The argument 'cov_value' has not been defined", call. = FALSE)
@@ -152,24 +184,51 @@ league_heatmap <- function(full, cov_value = NULL, drug_names) {
       cov_value[[1]] - mean(full$covariate)
     }
 
-    par_mean <- full$EM[, 1] + full$beta_all[, 1] * covar
-    par_sd <- sqrt(((full$EM[, 2])^2) + ((full$beta_all[, 2] * covar)^2))
-    par_lower <- par_mean - 1.96 * par_sd
-    par_upper <- par_mean + 1.96 * par_sd
-    par <- data.frame(par_mean, par_sd, par_lower, full$EM[, 4:6], par_upper)
-    z_test <- par_mean / par_sd
-    z_test_mat <- matrix(NA,
-                         nrow = length(drug_names),
-                         ncol = length(drug_names))
-    z_test_mat[lower.tri(z_test_mat, diag = FALSE)] <- z_test * (-1)
-    z_test_mat <- reflect_triangle(z_test_mat, from = "lower")
-    prob_diff <- if (full$D == 0) {
-      pnorm(z_test_mat)
+    if (is.null(show)) {
+      par_mean <- full$EM[, 1] + full$beta_all[, 1] * covar
+      par_sd <- sqrt(((full$EM[, 2])^2) + ((full$beta_all[, 2] * covar)^2))
+      par_lower <- par_mean - 1.96 * par_sd
+      par_upper <- par_mean + 1.96 * par_sd
+      par <- data.frame(par_mean, par_sd, par_lower, full$EM[, 4:6], par_upper)
+      z_test <- par_mean / par_sd
+      z_test_mat <- matrix(NA,
+                           nrow = length(drug_names),
+                           ncol = length(drug_names))
+      z_test_mat[lower.tri(z_test_mat, diag = FALSE)] <- z_test * (-1)
+      z_test_mat <- reflect_triangle(z_test_mat, from = "lower")
+      prob_diff <- if (full$D == 0) {
+        pnorm(z_test_mat)
+      } else {
+        1 - pnorm(z_test_mat)
+      }
+      # The p-scores per intervention
+      sucra <- apply(prob_diff, 1, sum, na.rm = TRUE) / (length(drug_names) - 1)
     } else {
-      1 - pnorm(z_test_mat)
+      select <- cbind(combn(drug_names0, 2)[2,], combn(drug_names0, 2)[1,])
+      par_mean <- full$EM[, 1] + full$beta_all[, 1] * covar
+      par_sd <- sqrt(((full$EM[, 2])^2) + ((full$beta_all[, 2] * covar)^2))
+      par_lower <- par_mean - 1.96 * par_sd
+      par_upper <- par_mean + 1.96 * par_sd
+      par0 <- data.frame(par_mean, par_sd, par_lower, full$EM[, 4:6], par_upper)
+      par <- na.omit(subset(data.frame(par0, select),
+                            is.element(select[, 1], show) &
+                              is.element(select[, 2], show)))
+      z_test <- par_mean / par_sd
+      z_test_mat <- matrix(NA,
+                           nrow = length(drug_names0),
+                           ncol = length(drug_names0))
+      z_test_mat[lower.tri(z_test_mat, diag = FALSE)] <- z_test * (-1)
+      z_test_mat <- reflect_triangle(z_test_mat, from = "lower")
+      prob_diff <- if (full$D == 0) {
+        pnorm(z_test_mat)
+      } else {
+        1 - pnorm(z_test_mat)
+      }
+      # The p-scores per intervention
+      sucra0 <- apply(prob_diff, 1, sum, na.rm = TRUE) / (length(drug_names0) - 1)
+      sucra <- na.omit(subset(data.frame(sucra0, drug_names0),
+                              is.element(drug_names0, show)))[, 1]
     }
-    # The p-scores per intervention
-    sucra <- apply(prob_diff, 1, sum, na.rm = TRUE) / (length(drug_names) - 1)
   }
 
   # Matrix of effect measure for all possible comparisons

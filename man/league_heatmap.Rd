@@ -4,7 +4,7 @@
 \alias{league_heatmap}
 \title{League heatmap for estimation}
 \usage{
-league_heatmap(full, cov_value = NULL, drug_names)
+league_heatmap(full, cov_value = NULL, drug_names, show = NULL)
 }
 \arguments{
 \item{full}{An object of S3 class \code{\link{run_model}} for network
@@ -20,6 +20,8 @@ the order they appear in the argument \code{data} of
 \code{\link{run_model}}. If \code{drug_names} is not defined,
 the order of the interventions as they appear in \code{data} is used,
 instead.}
+
+\item{show}{blah blah}
 }
 \value{
 A heatmap of the league table showing the posterior mean and 95\%
