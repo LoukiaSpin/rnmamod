@@ -35,10 +35,15 @@
 #'   effect size for the observed comparisons from network meta-analysis and the
 #'   corresponding pairwise meta-analyses, and (2) a forest plot on the
 #'   posterior median and 95\% credible interval of the between-trial standard
-#'   deviation for these observed comparisons. The estimated
-#'   between-trial standard deviation from network meta-analysis appears as a
-#'   rectangle in the forest plot. When a fixed-effect model has been fitted,
-#'   only the forest plot on the estimated summary effect sizes is shown.
+#'   deviation for these observed comparisons. The estimated median and 95\%
+#'   credible intervals of the between-trial standard deviation from network
+#'   meta-analysis appear in the forest plot as a solid and two dotted parallel
+#'   blue lines, respectively. The different levels of heterogeneity appear as
+#'   green, yellow, orange, and red rectangulars to indicate a low, reasonable,
+#'   fairly high, and fairly extreme heterogeneity, respectively, following the
+#'   classification of Spiegelhalter et al (2004).
+#'   When a fixed-effect model has been fitted, only the forest plot on the
+#'   estimated summary effect sizes is shown.
 #'
 #' @details \code{series_meta_plot} can be used only for a network of
 #'   interventions. Otherwise, the execution of the function will be stopped and
@@ -58,6 +63,10 @@
 #'
 #' @seealso \code{\link{run_model}}, \code{\link{run_series_meta}},
 #'   \code{\link[writexl:write_xlsx]{write_xlsx}}
+#'
+#' @references
+#' Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian approaches to clinical trials
+#' and health-care evaluation. John Wiley and Sons, Chichester, 2004.
 #'
 #' @examples
 #' data("nma.dogliotti2014")
@@ -287,10 +296,6 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
                     color = "black",
                     size = 4.0,
                     position = position_dodge(width = 0.5)) +
-          labs(x = "",
-               y = measure2,
-               colour = "Analysis",
-               caption = caption) +
           scale_x_discrete(breaks = as.factor(seq_len(length(obs_comp))),
                            labels = prepare$comparison[
                              seq_len(length(obs_comp))]) +
@@ -300,6 +305,10 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
           scale_color_manual(breaks = c("Network meta-analysis",
                                         "Pairwise meta-analysis"),
                              values = c("#009E73", "#D55E00")) +
+          labs(x = "",
+               y = measure2,
+               colour = "Analysis",
+               caption = caption) +
           coord_flip() +
           theme_classic() +
           theme(axis.text.x = element_text(color = "black", size = 12),
@@ -313,23 +322,37 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
 
   # Forest plots of comparisons-specific between-trial standard deviation
   p2 <- if (model == "RE") {
-    ggplot(data = prepare_tau,
+   ggplot(data = prepare_tau,
            aes(x = as.factor(seq_len(length(obs_comp))),
                y = as.numeric(median),
                ymin = as.numeric(lower),
                ymax = as.numeric(upper))) +
-      geom_rect(aes(xmin = 0,
-                    xmax = Inf,
-                    ymin = tau_full[3],
-                    ymax = tau_full[7]),
-                fill = "#1f93ff",
-                alpha = 0.1) +
-      geom_linerange(size = 2,
-                     position = position_dodge(width = 0.5)) +
+      geom_rect(aes(xmin = 0, xmax = Inf, ymin = 0, ymax = 0.099,
+                    fill = "low"),
+                alpha = 0.02) +
+      geom_rect(aes(xmin = 0, xmax = Inf, ymin = 0.1, ymax = 0.5,
+                    fill = "reasonable"),
+                alpha = 0.02) +
+      geom_rect(aes(xmin = 0, xmax = Inf, ymin = 0.5, ymax = 1.0,
+                    fill = "fairly high"),
+                alpha = 0.02) +
+      geom_rect(aes(xmin = 0, xmax = Inf, ymin = 1.0, ymax = Inf,
+                    fill = "fairly extreme"),
+                alpha = 0.02) +
       geom_hline(yintercept = tau_full[5],
                  lty = 1,
                  size = 1,
                  col = "#006CD1") +
+      geom_hline(yintercept = tau_full[3],
+                 lty = 3,
+                 size = 1,
+                 col = "#006CD1") +
+      geom_hline(yintercept = tau_full[7],
+                 lty = 3,
+                 size = 1,
+                 col = "#006CD1") +
+      geom_linerange(size = 2,
+                     position = position_dodge(width = 0.5)) +
       geom_point(size = 1.5,
                  colour = "white",
                  stroke = 0.3,
@@ -350,21 +373,30 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
       scale_x_discrete(breaks = as.factor(seq_len(length(obs_comp))),
                        labels = prepare_tau$comparison[
                          seq_len(length(obs_comp))]) +
-      labs(x = "", y = "Between-trial standard deviation") +
+      scale_fill_manual(name = "Heterogeneity",
+                        values = c("low" = "#009E73",
+                                   "reasonable" = "orange",
+                                   "fairly high" = "#D55E00",
+                                   "fairly extreme" = "red")) +
+      labs(x = "", y = "Between-trial standard deviation", caption = " ") +
       coord_flip() +
       theme_classic() +
       theme(axis.text.x = element_text(color = "black", size = 12),
             axis.text.y = element_text(color = "black", size = 12),
             axis.title.x = element_text(color = "black", face = "bold",
-                                        size = 12))
-  } else {
-    NA
+                                        size = 12),
+            legend.position = "bottom",
+            legend.text =  element_text(color = "black", size = 12),
+            legend.title =  element_text(color = "black", face = "bold",
+                                         size = 12))
   }
 
   # Bring together both forest-plots
   forest_plots <- if (model == "RE") {
-    ggarrange(p1, p2, nrow = 1, ncol = 2, labels = c("A)", "B)"),
-              common.legend = TRUE, legend = "bottom")
+    ggarrange(p1, p2 + guides(fill = guide_legend(override.aes =
+                                                    list(alpha = 0.4))),
+              nrow = 1, ncol = 2, labels = c("A)", "B)"),
+              common.legend = FALSE, legend = "bottom")
   } else {
     p1
   }

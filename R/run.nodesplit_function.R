@@ -514,12 +514,20 @@ run_nodesplit <- function(full,
          indirect = EM,
          diff = diff,
          tau = tau,
-         model_assessment = model_assessment)
+         model_assessment = model_assessment,
+         n_chains = n_chains,
+         n_iter = n_iter,
+         n_burnin = n_burnin,
+         n_thin = n_thin)
   } else {
     list(direct = direct,
          indirect = EM,
          diff = diff,
-         model_assessment = model_assessment)
+         model_assessment = model_assessment,
+         n_chains = n_chains,
+         n_iter = n_iter,
+         n_burnin = n_burnin,
+         n_thin = n_thin)
   }
 
   return(results)

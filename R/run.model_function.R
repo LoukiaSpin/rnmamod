@@ -649,7 +649,11 @@ run_model <- function(data,
                   D = D,
                   ref = ref,
                   indic = indic,
-                  jagsfit = jagsfit)
+                  jagsfit = jagsfit,
+                  n_chains = n_chains,
+                  n_iter = n_iter,
+                  n_burnin = n_burnin,
+                  n_thin = n_thin)
   if (model == "RE" & !is.element(measure, c("OR", "RR", "RD"))) {
     ma_results <- append(results, list(EM_pred = EM_pred,
                                        tau = tau,

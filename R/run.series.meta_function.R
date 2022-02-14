@@ -255,9 +255,17 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
   # Return results based on the model
   return_results <- if (model == "RE") {
     list(EM = EM,
-         tau = tau)
+         tau = tau,
+         n_chains = n_chains,
+         n_iter = n_iter,
+         n_burnin = n_burnin,
+         n_thin = n_thin)
   } else {
-    list(EM = EM)
+    list(EM = EM,
+         n_chains = n_chains,
+         n_iter = n_iter,
+         n_burnin = n_burnin,
+         n_thin = n_thin)
   }
 
   return(return_results)

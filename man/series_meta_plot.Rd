@@ -40,10 +40,15 @@ The R console prints the data-frame with the estimated summary effect
   effect size for the observed comparisons from network meta-analysis and the
   corresponding pairwise meta-analyses, and (2) a forest plot on the
   posterior median and 95\% credible interval of the between-trial standard
-  deviation for these observed comparisons. The estimated
-  between-trial standard deviation from network meta-analysis appears as a
-  rectangle in the forest plot. When a fixed-effect model has been fitted,
-  only the forest plot on the estimated summary effect sizes is shown.
+  deviation for these observed comparisons. The estimated median and 95\%
+  credible intervals of the between-trial standard deviation from network
+  meta-analysis appear in the forest plot as a solid and two dotted parallel
+  blue lines, respectively. The different levels of heterogeneity appear as
+  green, yellow, orange, and red rectangulars to indicate a low, reasonable,
+  fairly high, and fairly extreme heterogeneity, respectively, following the
+  classification of Spiegelhalter et al (2004).
+  When a fixed-effect model has been fitted, only the forest plot on the
+  estimated summary effect sizes is shown.
 }
 \description{
 Facilitates the comparison of the consistency model
@@ -87,6 +92,10 @@ series_meta_plot(full = res,
                  meta = meta,
                  drug_names = interv_names)
 
+}
+\references{
+Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian approaches to clinical trials
+and health-care evaluation. John Wiley and Sons, Chichester, 2004.
 }
 \seealso{
 \code{\link{run_model}}, \code{\link{run_series_meta}},

@@ -2,7 +2,8 @@
 #'
 #' @description Evaluates whether convergence has been achieved for the
 #'   monitored parameters of the Bayesian models. The Gelman-Rubin convergence
-#'   diagnostic and relevant diagnostic plots are applied.
+#'   diagnostic, the Markov Chain Monte Carl (MCMC) error and relevant
+#'   diagnostic plots are applied.
 #'
 #' @param net An object of S3 class \code{\link{run_metareg}},
 #'   \code{\link{run_model}}, \code{\link{run_nodesplit}},
@@ -17,8 +18,8 @@
 #'   \code{\link{run_sensitivity}}, or \code{\link{run_series_meta}}.
 #'
 #' @return \code{mcmc_diagnostics} returns a data-frame that contains the
-#'   Gelman-Rubin convergence diagnostic, R-hat, and convergence status of the
-#'   following monitored parameters:
+#'   Gelman-Rubin convergence diagnostic, R-hat, the MCMC error, and the
+#'   convergence status of the following monitored parameters:
 #'   \code{EM} {The estimated summary effect measure.}
 #'   \code{EM_pred} {The predicted summary effect measure.}
 #'   \code{delta} {The estimated trial-specific effect measure.}
@@ -39,13 +40,14 @@
 #'   autocorrelation) for each monitored parameter.
 #'
 #' @details For each monitored parameter, \code{mcmc_diagnostics} considers the
-#'   maximum R-hat and compares it with the threshold 1.1. Convergence is
-#'   achieved for the monitored parameter, when the maximum R-hat is below that
-#'   threshold; otherwise, the Markov Chain Monte Carlo algorithm has not
-#'   converged for that parameter. If the monitored parameter is a vector with
-#'   the posterior results, there is only one R-hat. If the monitored parameter
-#'   is a matrix of the posterior results, there are as many R-hats as the
-#'   number of rows for that parameter.
+#'   maximum R-hat and MCMC error and compares them with the thresholds 1.1
+#'   and 5/%, respectively. Convergence is achieved for the monitored parameter,
+#'   when the maximum R-hat and MCMC error are below the corresponding
+#'   thresholds; otherwise, the MCMC algorithm has not converged for that
+#'   parameter. If the monitored parameter is a vector with the posterior
+#'   results, there is only one R-hat and one MCMC error. If the monitored
+#'   parameter is a matrix of the posterior results, there are as many R-hats
+#'   and MCMC errors as the number of rows for that parameter.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -82,6 +84,8 @@ mcmc_diagnostics <- function(net, par = NULL) {
     NULL
   }
 
+  save_res <- ((net$n_iter - net$n_burnin) * net$n_chains) / net$n_thin
+
   if (!is.null(net$jagsfit)) {
     jagsfit <- net$jagsfit
     # Turn results into a data-frame to select model parameters (using 'dplyr')
@@ -90,13 +94,15 @@ mcmc_diagnostics <- function(net, par = NULL) {
     # Effect size of all unique pairwise comparisons
     EM0 <- t(get_results %>% select(starts_with("EM[")))
     EM <- max(EM0[, 8])
+    EM_mcmc_error <- max(EM0[, 2]/sqrt(save_res))
 
     # Predictive effects of all unique pairwise comparisons
     if (net$model == "RE" & !is.null(net$EM_pred)) {
       EM_pred0 <- t(get_results %>% select(starts_with("EM.pred[")))
       EM_pred <- max(EM_pred0[, 8])
+      EM_pred_mcmc_error <- max(EM_pred0[, 2]/sqrt(save_res))
     } else if (net$model == "FE" || is.null(net$EM_pred)) {
-      EM_pred <- NA
+      EM_pred <- EM_pred_mcmc_error <- NA
     }
 
     # Within-trial effects size
@@ -104,26 +110,28 @@ mcmc_diagnostics <- function(net, par = NULL) {
       delta0 <- t(get_results %>% select(starts_with("delta") &
                                            !ends_with(",1]")))
       delta <- max(delta0[, 8])
+      delta_mcmc_error <- max(delta0[, 2]/sqrt(save_res))
     } else if (net$model == "FE" || is.null(net$delta)) {
-      delta <- NA
+      delta <- delta_mcmc_error <- NA
     }
 
     # Between-trial standard deviation
     if (net$model == "RE") {
       tau0 <- t(get_results %>% select(starts_with("tau")))
       tau <- tau0[8]
+      tau_mcmc_error <- tau0[2]/sqrt(save_res)
     } else {
-      tau <- NA
+      tau <- tau_mcmc_error <- NA
     }
 
     # Direct estimate from split nodes
-    direct <- NA
+    direct <- direct_mcmc_error <- NA
 
     # Indirect estimate from split nodes
-    indirect <- NA
+    indirect <- indirect_mcmc_error <- NA
 
     # Inconsistency factor estimate from split nodes
-    diff <- NA
+    diff <- diff_mcmc_error <- NA
 
     item <- data_preparation(net$data, net$measure)
 
@@ -133,85 +141,96 @@ mcmc_diagnostics <- function(net, par = NULL) {
       phi0 <- t(get_results %>% select(starts_with("phi") |
                                             starts_with("mean.phi")))
       phi <- phi0[8]
+      phi_mcmc_error <- phi0[2]/sqrt(save_res)
     } else if (!is.null(net$phi) & !is.element(net$assumption,
                                                c("IDE-COMMON", "HIE-COMMON"))) {
       phi0 <- t(get_results %>% select(starts_with("mean.phi[") |
                                          starts_with("phi[")))
       phi <- max(phi0[, 8])
+      phi_mcmc_error <- max(phi0[, 2]/sqrt(save_res))
     } else if (is.null(net$phi)) {
-      phi <- NA
+      phi <- phi_mcmc_error <- NA
     }
 
     # Regression coefficient
     if (!is.null(net$beta_all)) {
       beta0 <- t(get_results %>% select(starts_with("beta.all[")))
       beta <- max(beta0[, 8])
+      beta_mcmc_error <- max(beta0[, 2]/sqrt(save_res))
     } else if (is.null(net$beta)) {
-      beta <- NA
+      beta <- beta_mcmc_error <- NA
     }
 
   } else {
     if (!is.null(net$EM) & length(net$EM[1, ]) == 11) {
       # From 'run_model' function
-      EM_pred <- NA
-      delta <- NA
-      phi <- NA
+      EM_pred <- EM_pred_mcmc_error <- NA
+      delta <- delta_mcmc_error <- NA
+      phi <- phi_mcmc_error <- NA
 
       # From 'run_metareg' function
-      beta <- NA
+      beta <- beta_mcmc_error <- NA
 
       # From 'run_series_meta' function
       EM <- max(net$EM[, 10])
-      tau <- if (!is.null(net$tau)) {
-        max(net$tau[, 10])
+      EM_mcmc_error <- max(net$EM[, 4]/sqrt(save_res))
+      if (!is.null(net$tau)) {
+        tau <- max(net$tau[, 10])
+        tau_mcmc_error <- max(net$tau[, 4]/sqrt(save_res))
       } else {
-        NA
+        tau <- tau_mcmc_error <- NA
       }
 
       # From 'run_nodesplit' function
-      direct <- NA
-      indirect <- NA
-      diff <- NA
+      direct <- direct_mcmc_error <- NA
+      indirect <- indirect_mcmc_error <- NA
+      diff <- diff_mcmc_error <- NA
     } else if (is.null(net$EM)) {
       # From 'run_model' function
-      EM <- NA
-      EM_pred <- NA
-      delta <- NA
-      phi <- NA
+      EM <- EM_mcmc_error <- NA
+      EM_pred <- EM_pred_mcmc_error <- NA
+      delta <- delta_mcmc_error <- NA
+      phi <- phi_mcmc_error <- NA
 
       # From 'run_metareg' function
-      beta <- NA
+      beta <- beta_mcmc_error <- NA
 
       # From 'run_nodesplit' function
-      tau <- if (!is.null(net$tau)) {
-        max(net$tau[, 7])
+      if (!is.null(net$tau)) {
+        tau <- max(net$tau[, 7])
+        tau_mcmc_error <- max(net$tau[, 4]/sqrt(save_res))
       } else {
-        NA
+        tau <- tau_mcmc_error <- NA
       }
       direct <- max(net$direct[, 7])
+      direct_mcmc_error <- max(net$direct[, 4]/sqrt(save_res))
       indirect <- max(net$indirect[, 7])
+      indirect_mcmc_error <- max(net$indirect[, 4]/sqrt(save_res))
       diff <- max(net$diff[, 7])
-    } else if (!is.null(net$EM) & length(net$EM[1, ]) == 6) {
+      diff_mcmc_error <- max(net$diff[, 4]/sqrt(save_res))
+    } else if (!is.null(net$EM) & length(net$EM[1, ]) == 9) {
       # From 'run_sensitivity' function
-      EM <- max(net$EM[, 5])
-      tau <- if (!is.null(net$tau)) {
-        max(net$tau[, 5])
+      EM <- max(net$EM[, 8])
+      EM_mcmc_error <- max(net$EM[, 2]/sqrt(save_res))
+      if (!is.null(net$tau)) {
+        tau <- max(net$tau[, 8])
+        tau_mcmc_error <- max(net$tau[, 2]/sqrt(save_res))
       } else {
-        NA
+        tau <- tau_mcmc_error <- NA
       }
 
       # From 'run_model' function
-      delta <- NA
-      EM_pred <- NA
-      phi <- NA
+      delta <- delta_mcmc_error <- NA
+      EM_pred <- EM_pred_mcmc_error <- NA
+      phi <- phi_mcmc_error <- NA
 
       # From 'run_metareg' function
-      beta <- NA
+      beta <- beta_mcmc_error <- NA
 
       # From 'run_nodesplit' function
-      direct <- NA
-      indirect <- NA
-      diff <- NA
+      direct <- direct_mcmc_error <- NA
+      indirect <- indirect_mcmc_error <- NA
+      diff <- diff_mcmc_error <- NA
     }
   }
 
@@ -233,16 +252,29 @@ mcmc_diagnostics <- function(net, par = NULL) {
                  phi,
                  beta)
 
+  mcmc_error_max <- c(EM_mcmc_error,
+                      EM_pred_mcmc_error,
+                      delta_mcmc_error,
+                      tau_mcmc_error,
+                      direct_mcmc_error,
+                      indirect_mcmc_error,
+                      diff_mcmc_error,
+                      phi_mcmc_error,
+                      beta_mcmc_error)
+
   # Indicate whether each model parameter achieved or failed to converge
   conv <- rep(NA, length(r_hat_max))
   for (i in seq_len(length(r_hat_max))) {
     conv[i] <- ifelse(is.na(r_hat_max[i]), "Not applicable",
-                      ifelse(!is.na(r_hat_max[i]) & r_hat_max[i] < 1.1,
+                      ifelse(!is.na(r_hat_max[i]) & r_hat_max[i] < 1.1 &
+                               mcmc_error_max[i] < 0.005,
                              "achieved", "failed"))
   }
 
   # A data-frame on convergence for all monitored parameters using the Rhat
-  convergence <- data.frame(r_hat_max, conv)
+  convergence <- data.frame(round(r_hat_max, 2),
+                            round(mcmc_error_max * 100, 1),
+                            conv)
   rownames(convergence) <- c("Effect estimates (EM)",
                              "Predictions (EM_pred)",
                              "Within-trial estimates (delta)",
@@ -252,7 +284,11 @@ mcmc_diagnostics <- function(net, par = NULL) {
                              "Inconsistency factor(s) (node-splitting; diff)",
                              "Informative missingness parameter(s) (phi)",
                              "Regression coefficient(s) (beta)")
-  colnames(convergence) <- c("R.hat max", "convergence status")
+  colnames(convergence) <- c("max R-hat",
+                             "max MCMC error (%)",
+                             "convergence status")
 
-  return(convergence)
+  return(knitr::kable(convergence,
+                      align = "ccl",
+                      caption = "Markov Chain Monte Carlo diagnostic measures"))
 }

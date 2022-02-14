@@ -366,7 +366,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
             axis.title.x = element_text(color = "black", face = "bold",
                                         size = 12),
             legend.position = "bottom",
-            legend.justification = c(0.23, 0),
+            legend.justification = c(0.43, 0),
             strip.text = element_text(color = "black", face = "bold",
                                       size = 12),
             legend.text =  element_text(color = "black", size = 12),

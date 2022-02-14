@@ -487,7 +487,11 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          model = model,
          measure = measure,
          assumption = assumption,
-         phi = NULL)
+         phi = NULL,
+         n_chains = n_chains,
+         n_iter = n_iter,
+         n_burnin = n_burnin,
+         n_thin = n_thin)
   } else {
     list(EM = EM,
          dev_o = dev_o,
@@ -501,7 +505,11 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          model = model,
          measure = measure,
          assumption = assumption,
-         phi = NULL)
+         phi = NULL,
+         n_chains = n_chains,
+         n_iter = n_iter,
+         n_burnin = n_burnin,
+         n_thin = n_thin)
   }
 
   # Return different list of results according to a condition

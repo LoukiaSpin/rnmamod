@@ -419,7 +419,11 @@ run_metareg <- function(full,
                        covariate = covariate,
                        covar_assumption = covar_assumption,
                        jagsfit = jagsfit,
-                       data = data)
+                       data = data,
+                       n_chains = n_chains,
+                       n_iter = n_iter,
+                       n_burnin = n_burnin,
+                       n_thin = n_thin)
     nma_results <- append(ma_results, list(SUCRA = SUCRA,
                                            effectiveness = effectiveness,
                                            D = full$D))
@@ -438,7 +442,11 @@ run_metareg <- function(full,
                        covariate = covariate,
                        covar_assumption = covar_assumption,
                        jagsfit = jagsfit,
-                       data = data)
+                       data = data,
+                       n_chains = n_chains,
+                       n_iter = n_iter,
+                       n_burnin = n_burnin,
+                       n_thin = n_thin)
     nma_results <- append(ma_results, list(SUCRA = SUCRA,
                                            effectiveness = effectiveness,
                                            D = full$D))

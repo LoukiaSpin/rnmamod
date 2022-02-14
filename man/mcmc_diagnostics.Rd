@@ -22,8 +22,8 @@ ignored for objects of S3 class \code{\link{run_nodesplit}},
 }
 \value{
 \code{mcmc_diagnostics} returns a data-frame that contains the
-  Gelman-Rubin convergence diagnostic, R-hat, and convergence status of the
-  following monitored parameters:
+  Gelman-Rubin convergence diagnostic, R-hat, the MCMC error, and the
+  convergence status of the following monitored parameters:
   \code{EM} {The estimated summary effect measure.}
   \code{EM_pred} {The predicted summary effect measure.}
   \code{delta} {The estimated trial-specific effect measure.}
@@ -46,17 +46,19 @@ ignored for objects of S3 class \code{\link{run_nodesplit}},
 \description{
 Evaluates whether convergence has been achieved for the
   monitored parameters of the Bayesian models. The Gelman-Rubin convergence
-  diagnostic and relevant diagnostic plots are applied.
+  diagnostic, the Markov Chain Monte Carl (MCMC) error and relevant
+  diagnostic plots are applied.
 }
 \details{
 For each monitored parameter, \code{mcmc_diagnostics} considers the
-  maximum R-hat and compares it with the threshold 1.1. Convergence is
-  achieved for the monitored parameter, when the maximum R-hat is below that
-  threshold; otherwise, the Markov Chain Monte Carlo algorithm has not
-  converged for that parameter. If the monitored parameter is a vector with
-  the posterior results, there is only one R-hat. If the monitored parameter
-  is a matrix of the posterior results, there are as many R-hats as the
-  number of rows for that parameter.
+  maximum R-hat and MCMC error and compares them with the thresholds 1.1
+  and 5/%, respectively. Convergence is achieved for the monitored parameter,
+  when the maximum R-hat and MCMC error are below the corresponding
+  thresholds; otherwise, the MCMC algorithm has not converged for that
+  parameter. If the monitored parameter is a vector with the posterior
+  results, there is only one R-hat and one MCMC error. If the monitored
+  parameter is a matrix of the posterior results, there are as many R-hats
+  and MCMC errors as the number of rows for that parameter.
 }
 \examples{
 data("nma.baker2009")

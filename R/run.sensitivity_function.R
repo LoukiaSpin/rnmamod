@@ -334,12 +334,20 @@ run_sensitivity <- function(full,
          measure = measure,
          scenarios = mean_scenarios,
          D = D,
-         heter = heterog_prior)
+         heter = heterog_prior,
+         n_chains = n_chains,
+         n_iter = n_iter,
+         n_burnin = n_burnin,
+         n_thin = n_thin)
   } else if (model == "FE" & !is.element(measure, c("RR", "OR"))) {
     list(EM = EM,
          measure = measure,
          scenarios = mean_scenarios,
-         D = D)
+         D = D,
+         n_chains = n_chains,
+         n_iter = n_iter,
+         n_burnin = n_burnin,
+         n_thin = n_thin)
   } else if (model == "RE" & is.element(measure, c("RR", "OR"))) {
     list(EM = EM,
          EM_LOR = EM_LOR,
@@ -347,13 +355,21 @@ run_sensitivity <- function(full,
          measure = measure,
          scenarios = mean_scenarios,
          D = D,
-         heter = heterog_prior)
+         heter = heterog_prior,
+         n_chains = n_chains,
+         n_iter = n_iter,
+         n_burnin = n_burnin,
+         n_thin = n_thin)
   } else if (model == "FE" & is.element(measure, c("RR", "OR"))) {
     list(EM = EM,
          EM_LOR = EM_LOR,
          measure = measure,
          scenarios = mean_scenarios,
-         D = D)
+         D = D,
+         n_chains = n_chains,
+         n_iter = n_iter,
+         n_burnin = n_burnin,
+         n_thin = n_thin)
   }
 
   return(results)

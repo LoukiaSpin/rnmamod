@@ -248,12 +248,14 @@ league_heatmap <- function(full, cov_value = NULL, drug_names) {
   mat_new$value_sucra <- final_col$value
 
   caption <- if (!is.null(full$beta_all) & length(unique(full$covariate)) > 2) {
-    paste("Posterior mean (95% credible interval) for", cov_value[[2]],
-          cov_value[[1]])
+    paste("Posterior mean", effect_measure_name(measure),
+          "(95% credible interval) for", cov_value[[2]], cov_value[[1]])
   } else if (!is.null(full$beta_all) & length(unique(full$covariate)) < 3) {
-    paste("Posterior mean (95% credible interval) for", cov_value[[2]])
+    paste("Posterior mean", effect_measure_name(measure),
+          "(95% credible interval) for", cov_value[[2]])
   } else if (is.null(full$beta_all)) {
-    paste("Posterior mean (95% credible interval)")
+    paste("Posterior mean", effect_measure_name(measure),
+          "(95% credible interval)")
   }
 
   # The league table as a heatmap

@@ -62,7 +62,7 @@ For the \code{plot_effect_size} of the selected pairwise comparison,
   distribution for the heterogeneity parameter).
 
   \code{balloon_plot} can be used only when missing participant
-  outcome data have been extracted for at least one ↨
+  outcome data have been extracted for at least one trial.
   Otherwise, the execution of the function will be stopped and an error
   message will be printed on the R console.
 }

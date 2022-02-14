@@ -268,7 +268,6 @@ forestplot <- function(full, compar,  drug_names) {
                 parse = FALSE,
                 position = position_dodge(width = 0.5),
                 inherit.aes = TRUE, na.rm = TRUE) +
-      labs(x = "", y = measure2, colour = "Analysis", caption = caption) +
       scale_x_discrete(breaks = as.factor(seq_len(len_drug_names)),
                        labels = drug_names_sorted[rev(
                          seq_len(len_drug_names))]) +
@@ -286,6 +285,7 @@ forestplot <- function(full, compar,  drug_names) {
                  size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(
         measure, c("OR", "RR", "ROM")), "identity", "log10")) +
+      labs(x = "", y = measure2, colour = "Analysis", caption = caption) +
       coord_flip() +
       theme_classic() +
        theme(axis.text.x = element_text(color = "black", size = 12),
@@ -325,7 +325,6 @@ forestplot <- function(full, compar,  drug_names) {
                 parse = FALSE,
                 position = position_dodge(width = 0.5), inherit.aes = TRUE,
                 na.rm = TRUE) +
-      labs(x = "", y = measure2, caption = caption) +
       scale_x_discrete(breaks = as.factor(seq_len(len_drug_names)),
                        labels = drug_names_sorted[rev(
                          seq_len(len_drug_names))]) +
@@ -337,6 +336,7 @@ forestplot <- function(full, compar,  drug_names) {
                  size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(
         measure, c("OR", "RR", "ROM")), "identity", "log10")) +
+      labs(x = "", y = measure2, caption = caption) +
       coord_flip(clip = "off") +
       theme_classic() +
       theme(axis.text.x = element_text(color = "black", size = 12),
@@ -371,7 +371,8 @@ forestplot <- function(full, compar,  drug_names) {
                         hjust = 0, vjust = -0.5),
               color = "black", size = 4.0, check_overlap = FALSE, parse = FALSE,
               position = position_dodge(width = 0.5), inherit.aes = TRUE) +
-    labs(x = "", y = "Surface under the cumulative ranking curve value") +
+    labs(x = "", y = "Surface under the cumulative ranking curve value",
+         caption = " ") +
     scale_x_discrete(breaks = as.factor(seq_len(len_drug_names)),
                      labels = prepare_sucra$intervention[rev(
                        seq_len(len_drug_names))]) +

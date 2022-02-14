@@ -53,7 +53,7 @@
 #'   distribution for the heterogeneity parameter).
 #'
 #'   \code{balloon_plot} can be used only when missing participant
-#'   outcome data have been extracted for at least one ↨
+#'   outcome data have been extracted for at least one trial.
 #'   Otherwise, the execution of the function will be stopped and an error
 #'   message will be printed on the R console.
 #'
@@ -90,10 +90,18 @@ balloon_plot <- function(sens, compar, drug_names) {
          call. = FALSE)
   }
 
-  es_all <- sens$EM
+  es_all <- if (is.element(sens$measure, c("RR", "RD"))) {
+    sens$EM_LOR
+  } else {
+    sens$EM
+  }
   D <- sens$D
   scenarios <- sens$scenarios
-  measure <- sens$measure
+  measure <- if (is.element(sens$measure, c("RR", "RD"))) {
+    "OR"
+  } else {
+    sens$measure
+  }
   tau_all <- sens$tau
 
   # Define the position and number of the scenarios
