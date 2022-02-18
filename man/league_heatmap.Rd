@@ -53,12 +53,43 @@ Provides a heatmap of the estimated effect measure for all possible
   meta-regression. It is applied for one and two outcomes.
 }
 \details{
-The function displays the effect measure defined in
+\code{heatmap_league} offers the following options to display the
+  estimated effect measure for all (or some) pairwise comparisons:
+  \itemize{
+   \item one outcome, with results in the lower triangle referring to
+   comparisons in the opposite direction after converting negative values
+   into positive values (in absolute or logarithmic scale), and vice versa.
+   Darker shades of red and blue correspond to larger treatment effects in
+   the upper and lower triangle, respectively, for a beneficial outcome, and
+   vice versa for a harmful outcome;
+   \item two outcomes for the same model, namely, network meta-analysis (via
+   \code{\link{run_model}}) or network meta-regression (via
+   \code{\link{run_metareg}}).
+   When one of the outcomes includes more interventions, the argument
+   \code{full1} should be considered for that outcome.
+   The effect size direction and cell colour align with the description for
+   one outcome;
+   \item two models for the same outcome, namely, network meta-analysis
+   versus network meta-regression, or network meta-analysis versus series of
+   pairwise meta-analyses. The effect size direction and cell colour align
+   with the description for one outcome.
+  }
+
+  Comparisons between interventions should be read from left to right.
+  Therefore, each cell refers to the corresponding row-defining intervention
+  against the column-defining intervention.
+  Results that indicate strong evidence in favour of the row-defining
+  intervention (i.e. the respective 95\% credible interval does not include
+  the null value) are indicated in bold.
+
+  The function displays the effect measure defined in
   \code{\link{run_model}}. For binary outcome, it can display the odds ratio,
   relative risk, and risk difference. See 'Details' in
   \code{\link{run_model}} for the relative risk, and risk difference.
   For continuous outcome, it can display the mean difference, standardised
-  mean difference, and ratio of means.
+  mean difference, and ratio of means. Odds ratios, relative risks and ratio
+  of means are reported in the original scale after exponentiation of the
+  logarithmic scale.
 
   The rows and columns of the heatmap display the names of
   interventions  sorted by decreasing order from the best to the worst
@@ -75,21 +106,6 @@ The function displays the effect measure defined in
   taking into account the covariate value in the argument \code{cov_value}.
   P-score is the 'frequentist analogue to SUCRA'
   (Ruecker and Schwarzer, 2015).
-
-  Results in the lower triangle refer to comparisons in the opposite
-  direction after converting negative values into positive values
-  (in absolute or logarithmic scale), and vice versa. Darker shades of red
-  and blue correspond to larger treatment effects in the upper and lower
-  triangle, respectively, for a beneficial outcome, and vice versa for a
-  harmful outcome. Odds ratios and ratio of means are reported in the
-  original scale after exponentiation of the logarithmic scale.
-
-  Comparisons between interventions should be read from left to right.
-  Therefore, each cell refers to the corresponding row-defining intervention
-  against the column-defining intervention.
-  Results that indicate strong evidence in favour of the row-defining
-  intervention (i.e. the respective 95\% credible interval does not include
-  the null value) are indicated in bold.
 
   In the case of network meta-regression, when the covariate is binary,
   specify in the second element of \code{cov_value} the name of the level

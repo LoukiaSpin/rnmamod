@@ -31,7 +31,7 @@
    - allow the user to illustrate the results of two outcomes for the same model
    (i.e. via run_model or run_metareg) or the results of two models on the same 
    outcome (plausible pairwise comparisons include: (i) run_model versus 
-   run_metareg, and (ii) run_model versus run_series_meta)
+   run_metareg, and (ii) run_model versus run_series_meta).
  * Function series_meta_plot:
    - presents the extent of heterogeneity in the forest plot of tau using 
    different colours for low, reasonable, fairly high, and fairly extreme tau 
