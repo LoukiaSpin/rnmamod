@@ -4,27 +4,42 @@
 #'   Provides a heatmap of the estimated effect measure for all possible
 #'   comparisons of interventions in the network. \code{league_heatmap} can be
 #'   used for a random-effects or fixed-effect network meta-analysis and network
-#'    meta-regression. It is applied for one outcome only.
+#'   meta-regression. It is applied for one and two outcomes.
 #'
-#' @param full An object of S3 class \code{\link{run_model}} for network
-#'   meta-analysis or \code{\link{run_metareg}} for network meta-regression.
+#' @param full1 An object of S3 class \code{\link{run_model}} for network
+#'   meta-analysis, or \code{\link{run_metareg}} for network meta-regression.
+#'   See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.
+#' @param full2 An object of S3 class \code{\link{run_model}} for network
+#'   meta-analysis, \code{\link{run_metareg}} for network meta-regression, or
+#'   \code{\link{run_series_meta}} for a series of pairwise meta-analyses.
 #'   See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.
 #' @param cov_value A list of two elements in the following order: a number
 #'   for the covariate value of interest and a character for the name of the
 #'   covariate. See also 'Details'.
-#' @param drug_names A vector of labels with the name of the interventions in
+#' @param drug_names1 A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data} of
-#'   \code{\link{run_model}}. If \code{drug_names} is not defined,
-#'   the order of the interventions as they appear in \code{data} is used,
-#'   instead.
-#' @param show A vector of labels with the name of the interventions to present
-#'   in the league table.
+#'   \code{\link{run_model}} for \code{full1}.
+#' @param drug_names2 A vector of labels with the name of the interventions in
+#'   the order they appear in the argument \code{data} of
+#'   \code{\link{run_model}} for \code{full2}.
+#' @param show A vector of at least three character strings that refer to the
+#'   names of the interventions \emph{exactly} as defined in \code{drug_names1}.
+#'   Then, the league table will be created for these interventions only.
+#'   If \code{show} is not defined, the league table will present all
+#'   interventions as defined in \code{drug_names1}.
 #'
 #' @return A heatmap of the league table showing the posterior mean and 95\%
 #'   credible interval for all possible comparisons in the off-diagonals, and
 #'   the posterior mean of the SUCRA values in the diagonal.
 #'
-#' @details The rows and columns of the heatmap display the names of
+#' @details The function displays the effect measure defined in
+#'   \code{\link{run_model}}. For binary outcome, it can display the odds ratio,
+#'   relative risk, and risk difference. See 'Details' in
+#'   \code{\link{run_model}} for the relative risk, and risk difference.
+#'   For continuous outcome, it can display the mean difference, standardised
+#'   mean difference, and ratio of means.
+#'
+#'   The rows and columns of the heatmap display the names of
 #'   interventions  sorted by decreasing order from the best to the worst
 #'   based on their SUCRA value (Salanti et al., 2011). The off-diagonals
 #'   contain the posterior mean and 95\% credible interval of the effect measure
@@ -91,44 +106,75 @@
 #'                   "tricyclic antidepressant", "pergolide")
 #'
 #' # Create the league heatmap
-#' league_heatmap(full = res,
-#'                drug_names = interv_names)
+#' league_heatmap(full1 = res,
+#'                drug_names1 = interv_names)
 #'
 #' @export
-league_heatmap <- function(full, cov_value = NULL, drug_names, show = NULL) {
+league_heatmap <- function(full1,
+                           full2 = NULL,
+                           cov_value = NULL,
+                           drug_names1,
+                           drug_names2 = NULL,
+                           show = NULL) {
 
-  drug_names0 <- if (missing(drug_names)) {
-    aa <- "The argument 'drug_names' has not been defined."
-    bb <- "The intervention ID, as specified in 'data' is used as"
-    cc <- "intervention names"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
-                       "\033[0m", "\n")))
-    as.character(seq_len(length(full$SUCRA[, 1])))
-  } else {
-    drug_names
+  measure <- if (is.null(full2) || (!is.null(full2) &
+                                full1$measure == full2$measure)) {
+    full1$measure
+  } else if (!is.null(full2) & full1$measure != full2$measure) {
+    stop("'full1' and 'full2' must have the same effect measure", call. = FALSE)
   }
 
-  if (length(drug_names) < 3) {
+  drug_names1 <- if (missing(drug_names1)) {
+    #aa <- "The argument 'drug_names' has not been defined."
+    #bb <- "The intervention ID, as specified in 'data' is used as"
+    #cc <- "intervention names"
+    #message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
+    #                   "\033[0m", "\n")))
+    #as.character(seq_len(length(full$SUCRA[, 1])))
+    stop("The argument 'drug_names1' has not been defined.", call. = FALSE)
+  } else {
+    drug_names1
+  }
+
+  if (length(drug_names1) < 3) {
     stop("This function is *not* relevant for a pairwise meta-analysis",
          call. = FALSE)
   }
 
-  ## KATI PAIZEI LATHOS ME TO IF!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  show0 <- if (length(unique(!is.element(show, drug_names0))) > 1) {
-    stop("Make sure that the argument 'show' is contained in 'drug_names'",
+  drug_names2 <- if (!is.null(full2) & is.null(drug_names2)) {
+    #aa <- "The argument 'drug_names' has not been defined."
+    #bb <- "The intervention ID, as specified in 'data' is used as"
+    #cc <- "intervention names"
+    #message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
+    #                   "\033[0m", "\n")))
+    #as.character(seq_len(length(full$SUCRA[, 1])))
+    stop("The argument 'drug_names2' has not been defined.", call. = FALSE)
+  } else if (!is.null(full2) & !is.null(drug_names2)) {
+    drug_names2
+  }
+
+  drug_names0 <- if (is.null(full2) || (!is.null(full2) &
+                     length(drug_names1) >= length(drug_names2))) {
+    drug_names1
+  } else if (!is.null(full2) & length(drug_names1) < length(drug_names2)) {
+    stop("'drug_names1' must have greater length than 'drug_names2'",
          call. = FALSE)
+    drug_names2
+  }
+
+  show0 <- if (length(unique(!is.element(show, drug_names0))) > 1) {
+    aa <- "All elements of the argument 'show' must be found in 'drug_names1'"
+    bb <- "or 'drug_names2'"
+    stop(paste(aa, bb), call. = FALSE)
   } else if (length(unique(!is.element(show, drug_names0))) == 1 &
              length(show) < 3) {
-    stop("The argument 'show' must have length greater than 2",
-         call. = FALSE)
+    stop("The argument 'show' must have length greater than 2", call. = FALSE)
   } else if (length(unique(!is.element(show, drug_names0))) == 1 &
              length(show) > 2) {
     cbind(combn(show, 2)[2,], combn(show, 2)[1,])
   }
 
-  measure <- full$measure
-
-  drug_names <- if (!is.matrix(show0)) {
+  drug_names <- if (is.null(show0)) {
     drug_names0
   } else {
     subset(drug_names0, is.element(drug_names0, show))
@@ -143,20 +189,23 @@ league_heatmap <- function(full, cov_value = NULL, drug_names, show = NULL) {
     m
   }
 
-  if (is.null(full$beta_all)) {
-    if (is.null(show)) {
-      par <- full$EM
-      sucra <- full$SUCRA[, 1]
+  select <- cbind(combn(drug_names0, 2)[2, ], combn(drug_names0, 2)[1, ])
+  ## First outcome or model
+  if (is.null(full1$beta_all)) {
+    par <- if (is.null(show0)) {
+      full1$EM
     } else {
-      par0 <- full$EM
-      sucra0 <- full$SUCRA[, 1]
-      select <- cbind(combn(drug_names0, 2)[2,], combn(drug_names0, 2)[1,])
-      par <- na.omit(subset(data.frame(par0, select),
-                            is.element(select[, 1], show) &
-                              is.element(select[, 2], show)))
-      sucra <- na.omit(subset(data.frame(sucra0, drug_names0),
-                              is.element(drug_names0, show)))[, 1]
+      na.omit(subset(data.frame(full1$EM, select),
+                     is.element(select[, 1], show) &
+                       is.element(select[, 2], show)))
     }
+    sucra <- if (is.null(show0)) {
+      full1$SUCRA[, 1]
+    } else {
+      na.omit(subset(data.frame(full1$SUCRA[, 1], drug_names0),
+                     is.element(drug_names0, show)))[, 1]
+    }
+
   } else {
     cov_value <- if (missing(cov_value)) {
       stop("The argument 'cov_value' has not been defined", call. = FALSE)
@@ -167,71 +216,64 @@ league_heatmap <- function(full, cov_value = NULL, drug_names, show = NULL) {
       cov_value
     }
 
-    if (length(unique(full$covariate)) < 3 &
-        !is.element(cov_value[[1]], full$covariate)) {
+    if (length(unique(full1$covariate)) < 3 &
+        !is.element(cov_value[[1]], full1$covariate)) {
       aa <- "The first element of the argument 'cov_value' is out of the value"
       stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
-    } else if (length(unique(full$covariate)) > 2 &
-               (cov_value[[1]] < min(full$covariate) |
-                cov_value[[1]] > max(full$covariate))) {
+    } else if (length(unique(full1$covariate)) > 2 &
+               (cov_value[[1]] < min(full1$covariate) |
+                cov_value[[1]] > max(full1$covariate))) {
       aa <- "The first element of the argument 'cov_value' is out of the value"
       stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
     }
 
-    covar <- if (length(unique(full$covariate)) < 3) {
+    covar <- if (length(unique(full1$covariate)) < 3) {
       cov_value[[1]]
     } else {
-      cov_value[[1]] - mean(full$covariate)
+      cov_value[[1]] - mean(full1$covariate)
     }
 
-    if (is.null(show)) {
-      par_mean <- full$EM[, 1] + full$beta_all[, 1] * covar
-      par_sd <- sqrt(((full$EM[, 2])^2) + ((full$beta_all[, 2] * covar)^2))
-      par_lower <- par_mean - 1.96 * par_sd
-      par_upper <- par_mean + 1.96 * par_sd
-      par <- data.frame(par_mean, par_sd, par_lower, full$EM[, 4:6], par_upper)
-      z_test <- par_mean / par_sd
-      z_test_mat <- matrix(NA,
-                           nrow = length(drug_names),
-                           ncol = length(drug_names))
-      z_test_mat[lower.tri(z_test_mat, diag = FALSE)] <- z_test * (-1)
-      z_test_mat <- reflect_triangle(z_test_mat, from = "lower")
-      prob_diff <- if (full$D == 0) {
-        pnorm(z_test_mat)
-      } else {
-        1 - pnorm(z_test_mat)
-      }
-      # The p-scores per intervention
-      sucra <- apply(prob_diff, 1, sum, na.rm = TRUE) / (length(drug_names) - 1)
+    par_mean <- full1$EM[, 1] + full1$beta_all[, 1] * covar
+    par_sd <- sqrt(((full1$EM[, 2])^2) + ((full1$beta_all[, 2] * covar)^2))
+    par_lower <- par_mean - 1.96 * par_sd
+    par_upper <- par_mean + 1.96 * par_sd
+    par0 <- data.frame(par_mean, par_sd, par_lower, full1$EM[, 4:6], par_upper)
+    par <- if (is.null(show0)) {
+      par0
     } else {
-      select <- cbind(combn(drug_names0, 2)[2,], combn(drug_names0, 2)[1,])
-      par_mean <- full$EM[, 1] + full$beta_all[, 1] * covar
-      par_sd <- sqrt(((full$EM[, 2])^2) + ((full$beta_all[, 2] * covar)^2))
-      par_lower <- par_mean - 1.96 * par_sd
-      par_upper <- par_mean + 1.96 * par_sd
-      par0 <- data.frame(par_mean, par_sd, par_lower, full$EM[, 4:6], par_upper)
-      par <- na.omit(subset(data.frame(par0, select),
-                            is.element(select[, 1], show) &
-                              is.element(select[, 2], show)))
-      z_test <- par_mean / par_sd
-      z_test_mat <- matrix(NA,
-                           nrow = length(drug_names0),
-                           ncol = length(drug_names0))
-      z_test_mat[lower.tri(z_test_mat, diag = FALSE)] <- z_test * (-1)
-      z_test_mat <- reflect_triangle(z_test_mat, from = "lower")
-      prob_diff <- if (full$D == 0) {
-        pnorm(z_test_mat)
-      } else {
-        1 - pnorm(z_test_mat)
-      }
-      # The p-scores per intervention
-      sucra0 <- apply(prob_diff, 1, sum, na.rm = TRUE) / (length(drug_names0) - 1)
-      sucra <- na.omit(subset(data.frame(sucra0, drug_names0),
-                              is.element(drug_names0, show)))[, 1]
+      na.omit(subset(data.frame(par0, select),
+                     is.element(select[, 1], show) &
+                       is.element(select[, 2], show)))
+    }
+    z_test <- par_mean / par_sd
+    z_test_mat <- matrix(NA,
+                         nrow = length(drug_names),
+                         ncol = length(drug_names))
+    z_test_mat[lower.tri(z_test_mat, diag = FALSE)] <- z_test * (-1)
+    z_test_mat <- reflect_triangle(z_test_mat, from = "lower")
+    prob_diff <- if (full1$D == 0) {
+      pnorm(z_test_mat)
+    } else {
+      1 - pnorm(z_test_mat)
+    }
+    # The p-scores per intervention
+    sucra0 <- apply(prob_diff, 1, sum, na.rm = TRUE) / (length(drug_names0) - 1)
+    sucra <- if (is.null(show0)) {
+      sucra0
+    } else {
+      na.omit(subset(data.frame( sucra0, drug_names0),
+                     is.element(drug_names0, show)))[, 1]
     }
   }
 
-  # Matrix of effect measure for all possible comparisons
+  # Interventions order based on their SUCRA value (from best to worst)
+  drug_order <- order(-sucra)
+
+  # Order interventions based on their SUCRA value (from best to worst)
+  order_drug <- drug_names[order(-sucra)]
+  len_drug <- length(order_drug)
+
+  # First: Matrix of effect measure for all possible comparisons
   # Lower triangle
   point0 <- matrix(NA, nrow = length(drug_names), ncol = length(drug_names))
   lower0 <- upper0 <- point0
@@ -249,43 +291,190 @@ league_heatmap <- function(full, cov_value = NULL, drug_names, show = NULL) {
   upper1 <- reflect_triangle(lower0, from = "lower")
   upper1[lower.tri(upper1, diag = FALSE)] <- round(par[, 7], 2)
 
-  # Interventions order based on their SUCRA value (from best to worst)
-  drug_order_col <- drug_order_row <- order(-sucra)
-
-  # Order interventions based on their SUCRA value (from best to worst)
-  order_drug <- drug_names[order(-sucra)]
-  len_drug <- length(order_drug)
-
-  # Symmetric matrix for effect measure and its bounds after ordering rows and
-  # columns from the best to the worst intervention
+  # First: Symmetric matrix for effect measure and its bounds after ordering
+  # rows and columns from the best to the worst intervention
   if (!is.element(measure, c("OR", "RR", "ROM"))) {
-    point <- point1[drug_order_col, drug_order_row]
-    lower <- lower1[drug_order_col, drug_order_row]
-    upper <- upper1[drug_order_col, drug_order_row]
+    point <- point1[drug_order, drug_order]
+    lower <- lower1[drug_order, drug_order]
+    upper <- upper1[drug_order, drug_order]
 
     # Spot the statistically significant comparisons (i.e. the 95% CrI does not
     # include the value of no difference)
-    signif_status <- melt(ifelse(upper < 0 | lower > 0,
-                                 "significant", "non-significant"),
-                          na.rm = FALSE)[3]
-    signif_status[is.na(signif_status)] <- 0
+    signif <- ifelse(upper < 0 | lower > 0, 1, 0)
+    signif[is.na(signif)] <- 0
   } else {
-    point <- round(exp(point1[drug_order_col, drug_order_row]), 2)
-    lower <- round(exp(lower1[drug_order_col, drug_order_row]), 2)
-    upper <- round(exp(upper1[drug_order_col, drug_order_row]), 2)
+    point <- round(exp(point1[drug_order, drug_order]), 2)
+    lower <- round(exp(lower1[drug_order, drug_order]), 2)
+    upper <- round(exp(upper1[drug_order, drug_order]), 2)
 
     # Spot the statistically significant comparisons (i.e. the 95% CrI does not
     # include the value of no difference)
-    signif_status <- melt(ifelse(upper < 1 | lower > 1,
-                                 "significant", "non-significant"),
-                          na.rm = FALSE)[3]
-    signif_status[is.na(signif_status)] <- 1
+    signif <- ifelse(upper < 1 | lower > 1, 1, 0)
+    signif[is.na(signif)] <- 1
+    signif_status <- melt(signif, na.rm = FALSE)[3]
+  }
+
+  # Second outcome or model
+  if (!is.null(full2) & is.null(full2$beta_all)) {
+    par2 <- if (is.null(show0)) {
+      full2$EM
+    } else {
+      na.omit(subset(data.frame(full2$EM, select),
+                     is.element(select[, 1], show) &
+                       is.element(select[, 2], show)))
+    }
+    sucra2 <- if (is.null(show0)) {
+      full2$SUCRA[, 1]
+    } else {
+      na.omit(subset(data.frame(full2$SUCRA[, 1], drug_names0),
+                     is.element(drug_names0, show)))[, 1]
+    }
+  } else if (!is.null(full2) & !is.null(full2$beta_all)) {
+    cov_value <- if (missing(cov_value)) {
+      stop("The argument 'cov_value' has not been defined", call. = FALSE)
+    } else if (length(cov_value) != 2) {
+      aa <- "The argument 'cov_value' must be a list with elements a number and"
+      stop(paste(aa, "a character"), call. = FALSE)
+    } else if (length(cov_value) == 2) {
+      cov_value
+    }
+
+    # Covariate value shall be the same with that for the first outcome or model
+    if (length(unique(full1$covariate)) < 3 &
+        !is.element(cov_value[[1]], full1$covariate)) {
+      aa <- "The first element of the argument 'cov_value' is out of the value"
+      stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
+    } else if (length(unique(full1$covariate)) > 2 &
+               (cov_value[[1]] < min(full1$covariate) |
+                cov_value[[1]] > max(full1$covariate))) {
+      aa <- "The first element of the argument 'cov_value' is out of the value"
+      stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
+    }
+
+    covar <- if (length(unique(full1$covariate)) < 3) {
+      cov_value[[1]]
+    } else {
+      cov_value[[1]] - mean(full1$covariate)
+    }
+
+    par_mean2 <- full2$EM[, 1] + full2$beta_all[, 1] * covar
+    par_sd2 <- sqrt(((full2$EM[, 2])^2) + ((full2$beta_all[, 2] * covar)^2))
+    par_lower2 <- par_mean - 1.96 * par_sd
+    par_upper2 <- par_mean + 1.96 * par_sd
+    par20 <- data.frame(par_mean2, par_sd2, par_lower2, full2$EM[, 4:6],
+                        par_upper2)
+    par2 <- if (is.null(show0)) {
+      par20
+    } else {
+      na.omit(subset(data.frame(par20, select),
+                     is.element(select[, 1], show) &
+                       is.element(select[, 2], show)))
+    }
+    z_test2 <- par_mean2 / par_sd2
+    z_test_mat2 <- matrix(NA,
+                         nrow = length(drug_names),
+                         ncol = length(drug_names))
+    z_test_mat2[lower.tri(z_test_mat2, diag = FALSE)] <- z_test2 * (-1)
+    z_test_mat2 <- reflect_triangle(z_test_mat2, from = "lower")
+    prob_diff2 <- if (full1$D == 0) {
+      pnorm(z_test_mat2)
+    } else {
+      1 - pnorm(z_test_mat2)
+    }
+    # The p-scores per intervention
+    sucra20 <- apply(prob_diff2, 1, sum, na.rm = TRUE) / (length(drug_names0) - 1)
+    sucra2 <- if (is.null(show0)) {
+      sucra20
+    } else {
+      na.omit(subset(data.frame(sucra20, drug_names0),
+                     is.element(drug_names0, show)))[, 1]
+    }
+  }
+
+  if (!is.null(full2)) {
+    # Second: Matrix of effect measure for all possible comparisons
+    # Lower triangle
+    point20 <- matrix(NA,
+                      nrow = length(drug_names2),
+                      ncol = length(drug_names2))
+    lower20 <- upper20 <- point20
+    point20[lower.tri(point20, diag = FALSE)] <- round(par2[, 1], 2)
+    # Incorporate upper triangle
+    point21 <- reflect_triangle(point20, from = "lower")
+
+    # Matrix of lower and upper bound of effect measure (all possible comparisons)
+    # Lower triangle
+    lower20[lower.tri(lower20, diag = FALSE)] <- round(par2[, 3], 2)
+    upper20[lower.tri(upper20, diag = FALSE)] <- round(par2[, 7], 2)
+    # Incorporate upper triangle
+    lower21 <- reflect_triangle(upper20, from = "lower")
+    lower21[lower.tri(lower21, diag = FALSE)] <- round(par2[, 3], 2)
+    upper21 <- reflect_triangle(lower20, from = "lower")
+    upper21[lower.tri(upper21, diag = FALSE)] <- round(par2[, 7], 2)
+    rownames(point21) <- colnames(point21) <- drug_names2
+    rownames(lower21) <- colnames(lower21) <- drug_names2
+    rownames(upper21) <- colnames(upper21) <- drug_names2
+
+    # Match matrix for second outcome/model to the comparisons of the
+    # matrix for first outcome/model
+    point_21 <- lower_21 <- upper_21 <- matrix(NA, nrow = length(drug_names),
+                                                   ncol = length(drug_names))
+    rownames(point_21) <- colnames(point_21) <- drug_names
+    rownames(lower_21) <- colnames(lower_21) <- drug_names
+    rownames(upper_21) <- colnames(upper_21) <- drug_names
+    point_21[rownames(point21), colnames(point21)] <- point21
+    lower_21[rownames(lower21), colnames(lower21)] <- lower21
+    upper_21[rownames(upper21), colnames(upper21)] <- upper21
+
+    # Second: Symmetric matrix for effect measure and its bounds after ordering
+    # rows and columns from the best to the worst intervention
+    if (!is.element(measure, c("OR", "RR", "ROM"))) {
+      point2 <- point_21[drug_order, drug_order]
+      lower2 <- lower_21[drug_order, drug_order]
+      upper2 <- upper_21[drug_order, drug_order]
+
+      # Spot the statistically significant comparisons (i.e. the 95% CrI does
+      # not include the value of no difference)
+      signif2 <- ifelse(upper2 < 0 | lower2 > 0, 1, 0)
+      signif2[is.na(signif2)] <- 0
+    } else {
+      point2 <- round(exp(point_21[drug_order, drug_order]), 2)
+      lower2 <- round(exp(lower_21[drug_order, drug_order]), 2)
+      upper2 <- round(exp(upper_21[drug_order, drug_order]), 2)
+
+      # Spot the statistically significant comparisons (i.e. the 95% CrI does not
+      # include the value of no difference)
+      signif2 <- ifelse(upper2 < 1 | lower2 > 1, 1, 0)
+      signif2[is.na(signif2)] <- 1
+    }
+  }
+
+  if (is.null(full2)) {
+    point_f <- point
+    lower_f <- lower
+    upper_f <- upper
+  } else {
+    ## First outcome/model in upper, second outcome/model in lower diagonal
+    point_f <- point2
+    lower_f <- lower2
+    upper_f <- upper2
+    point_f[upper.tri(point_f, diag = FALSE)] <- point[upper.tri(point,
+                                                                 diag = FALSE)]
+    lower_f[upper.tri(lower_f, diag = FALSE)] <- lower[upper.tri(lower,
+                                                                 diag = FALSE)]
+    upper_f[upper.tri(upper_f, diag = FALSE)] <- upper[upper.tri(upper,
+                                                                 diag = FALSE)]
+    # Bring both into a matrix (Second: lower triangle; First: upper triangle)
+    signif2[upper.tri(signif2, diag = FALSE)] <- signif[upper.tri(signif,
+                                                                  diag = FALSE)]
+    signif_status <- melt(signif2, na.rm = FALSE)[3]
   }
 
   # Merge point estimate with 95% credible interval in a new symmetric matric
   final <- matrix(
-    paste0(sprintf("%.2f", point),  "\n", "(", sprintf("%.2f", lower), ",", " ",
-           sprintf("%.2f", upper), ")"),
+    paste0(sprintf("%.2f", point_f),  "\n", "(",
+           sprintf("%.2f", lower_f), ",", " ",
+           sprintf("%.2f", upper_f), ")"),
     nrow = length(drug_names),
     ncol = length(drug_names))
   colnames(final) <- rownames(final) <- order_drug
@@ -306,13 +495,14 @@ league_heatmap <- function(full, cov_value = NULL, drug_names, show = NULL) {
   final_col <- melt(mat)
   mat_new$value_sucra <- final_col$value
 
-  caption <- if (!is.null(full$beta_all) & length(unique(full$covariate)) > 2) {
+  caption0 <- if (!is.null(full1$beta_all) &
+                 length(unique(full1$covariate)) > 2) {
     paste("Posterior mean", effect_measure_name(measure),
           "(95% credible interval) for", cov_value[[2]], cov_value[[1]])
-  } else if (!is.null(full$beta_all) & length(unique(full$covariate)) < 3) {
+  } else if (!is.null(full1$beta_all) & length(unique(full1$covariate)) < 3) {
     paste("Posterior mean", effect_measure_name(measure),
           "(95% credible interval) for", cov_value[[2]])
-  } else if (is.null(full$beta_all)) {
+  } else if (is.null(full1$beta_all)) {
     paste("Posterior mean", effect_measure_name(measure),
           "(95% credible interval)")
   }
@@ -322,34 +512,34 @@ league_heatmap <- function(full, cov_value = NULL, drug_names, show = NULL) {
               aes(factor(Var2, levels = order_drug[seq_len(len_drug)]),
                   factor(Var1, levels = order_drug[rev(seq_len(len_drug))]),
                   fill = value2)) +
-         geom_tile(aes(fill = value_sucra)) +
-         geom_fit_text(aes(factor(Var2, levels = order_drug[seq_len(len_drug)]),
-                           factor(Var1, levels =
-                                    order_drug[rev(seq_len(len_drug))]),
-                           label = value),
-                       reflow = TRUE) +
-         geom_fit_text(aes(factor(Var2, levels = order_drug[seq_len(len_drug)]),
-                           factor(Var1, levels =
-                                    order_drug[rev(seq_len(len_drug))]),
-                           label = value,
-                           fontface = ifelse(signif_status == "significant",
-                                             "bold", "plain")),
-                       reflow = TRUE) +
-         scale_fill_gradientn(colours = c("blue", "white", "#D55E00"),
-                              values = rescale(
-                                c(min(mat_new$value2, na.rm = TRUE),
-                                  ifelse(!is.element(measure,
-                                                     c("OR", "RR", "ROM")),
-                                         0, 1),
-                                  max(mat_new$value2, na.rm = TRUE))),
-                              limits = c(min(mat_new$value2, na.rm = TRUE),
-                                         max(mat_new$value2, na.rm = TRUE))) +
-         scale_x_discrete(position = "top") +
-         labs(x = "", y = "", caption = caption) +
-         theme_bw() +
-         theme(legend.position = "none",
-               axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0),
-               axis.text.y = element_text(size = 12),
-               plot.caption = element_text(hjust = 0.01))
+    geom_tile(aes(fill = value_sucra)) +
+    geom_fit_text(aes(factor(Var2, levels = order_drug[seq_len(len_drug)]),
+                      factor(Var1, levels =
+                               order_drug[rev(seq_len(len_drug))]),
+                      label = value),
+                  reflow = TRUE) +
+    geom_fit_text(aes(factor(Var2, levels = order_drug[seq_len(len_drug)]),
+                      factor(Var1, levels =
+                               order_drug[rev(seq_len(len_drug))]),
+                      label = value,
+                      fontface = ifelse(signif_status == 1, "bold", "plain")),
+                  reflow = TRUE) +
+    scale_fill_gradientn(colours = c("blue", "white", "#D55E00"),
+                         values = rescale(
+                           c(min(mat_new$value2, na.rm = TRUE),
+                             ifelse(!is.element(measure,
+                                                c("OR", "RR", "ROM")),
+                                    0, 1),
+                             max(mat_new$value2, na.rm = TRUE))),
+                         limits = c(min(mat_new$value2, na.rm = TRUE),
+                                    max(mat_new$value2, na.rm = TRUE))) +
+    scale_x_discrete(position = "top") +
+    labs(x = "", y = "", caption = caption0) +
+    theme_bw() +
+    theme(legend.position = "none",
+          axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0),
+          axis.text.y = element_text(size = 12),
+          plot.subtitle = element_text(size = 11, face = "bold"),
+          plot.caption = element_text(hjust = 0.01))
   return(p)
 }

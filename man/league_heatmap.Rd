@@ -4,24 +4,42 @@
 \alias{league_heatmap}
 \title{League heatmap for estimation}
 \usage{
-league_heatmap(full, cov_value = NULL, drug_names, show = NULL)
+league_heatmap(
+  full1,
+  full2 = NULL,
+  cov_value = NULL,
+  drug_names1,
+  drug_names2 = NULL,
+  show = NULL
+)
 }
 \arguments{
-\item{full}{An object of S3 class \code{\link{run_model}} for network
-meta-analysis or \code{\link{run_metareg}} for network meta-regression.
+\item{full1}{An object of S3 class \code{\link{run_model}} for network
+meta-analysis, or \code{\link{run_metareg}} for network meta-regression.
+See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.}
+
+\item{full2}{An object of S3 class \code{\link{run_model}} for network
+meta-analysis, \code{\link{run_metareg}} for network meta-regression, or
+\code{\link{run_series_meta}} for a series of pairwise meta-analyses.
 See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.}
 
 \item{cov_value}{A list of two elements in the following order: a number
 for the covariate value of interest and a character for the name of the
 covariate. See also 'Details'.}
 
-\item{drug_names}{A vector of labels with the name of the interventions in
+\item{drug_names1}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
-\code{\link{run_model}}. If \code{drug_names} is not defined,
-the order of the interventions as they appear in \code{data} is used,
-instead.}
+\code{\link{run_model}} for \code{full1}.}
 
-\item{show}{blah blah}
+\item{drug_names2}{A vector of labels with the name of the interventions in
+the order they appear in the argument \code{data} of
+\code{\link{run_model}} for \code{full2}.}
+
+\item{show}{A vector of at least three character strings that refer to the
+names of the interventions \emph{exactly} as defined in \code{drug_names1}.
+Then, the league table will be created for these interventions only.
+If \code{show} is not defined, the league table will present all
+interventions as defined in \code{drug_names1}.}
 }
 \value{
 A heatmap of the league table showing the posterior mean and 95\%
@@ -32,10 +50,17 @@ A heatmap of the league table showing the posterior mean and 95\%
 Provides a heatmap of the estimated effect measure for all possible
   comparisons of interventions in the network. \code{league_heatmap} can be
   used for a random-effects or fixed-effect network meta-analysis and network
-   meta-regression. It is applied for one outcome only.
+  meta-regression. It is applied for one and two outcomes.
 }
 \details{
-The rows and columns of the heatmap display the names of
+The function displays the effect measure defined in
+  \code{\link{run_model}}. For binary outcome, it can display the odds ratio,
+  relative risk, and risk difference. See 'Details' in
+  \code{\link{run_model}} for the relative risk, and risk difference.
+  For continuous outcome, it can display the mean difference, standardised
+  mean difference, and ratio of means.
+
+  The rows and columns of the heatmap display the names of
   interventions  sorted by decreasing order from the best to the worst
   based on their SUCRA value (Salanti et al., 2011). The off-diagonals
   contain the posterior mean and 95\% credible interval of the effect measure
@@ -86,8 +111,8 @@ interv_names <- c("placebo", "pramipexole", "serotonin-norepinephrine
                   "tricyclic antidepressant", "pergolide")
 
 # Create the league heatmap
-league_heatmap(full = res,
-               drug_names = interv_names)
+league_heatmap(full1 = res,
+               drug_names1 = interv_names)
 
 }
 \references{
