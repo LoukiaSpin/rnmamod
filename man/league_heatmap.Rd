@@ -10,6 +10,8 @@ league_heatmap(
   cov_value = NULL,
   drug_names1,
   drug_names2 = NULL,
+  name1 = NULL,
+  name2 = NULL,
   show = NULL
 )
 }
@@ -35,6 +37,12 @@ the order they appear in the argument \code{data} of
 the order they appear in the argument \code{data} of
 \code{\link{run_model}} for \code{full2}.}
 
+\item{name1}{The text for the title of the results that refer to
+the outcome or model under \code{full1}.}
+
+\item{name2}{The text for the title of the results that refer to
+the outcome or model under \code{full2}.}
+
 \item{show}{A vector of at least three character strings that refer to the
 names of the interventions \emph{exactly} as defined in \code{drug_names1}.
 Then, the league table will be created for these interventions only.
@@ -53,8 +61,8 @@ Provides a heatmap of the estimated effect measure for all possible
   meta-regression. It is applied for one and two outcomes.
 }
 \details{
-\code{heatmap_league} offers the following options to display the
-  estimated effect measure for all (or some) pairwise comparisons:
+\code{heatmap_league} offers the following options to display
+  \bold{one} estimated effect measure for all (or some) pairwise comparisons:
   \itemize{
    \item one outcome, with results in the lower triangle referring to
    comparisons in the opposite direction after converting negative values
@@ -93,15 +101,16 @@ Provides a heatmap of the estimated effect measure for all possible
 
   The rows and columns of the heatmap display the names of
   interventions  sorted by decreasing order from the best to the worst
-  based on their SUCRA value (Salanti et al., 2011). The off-diagonals
-  contain the posterior mean and 95\% credible interval of the effect measure
-  (according to the argument \code{measure} defined in
-  \code{\link{run_model}}) of the corresponding comparisons.
+  based on their SUCRA value (Salanti et al., 2011) for the outcome or model
+  under the argument \code{full1}. The off-diagonals contain the posterior
+  mean and 95\% credible interval of the effect measure (according to the
+  argument \code{measure} defined in \code{\link{run_model}}) of the
+  corresponding comparisons.
 
   The main diagonal contains the posterior mean of SUCRA of the corresponding
-  interventions when the argument \code{full} refers to the
-  \code{\link{run_model}} function. When the argument \code{full} refers to
-  the \code{\link{run_metareg}} function, the p-score
+  interventions when the arguments \code{full1} refers to the
+  \code{\link{run_model}} function. When the arguments \code{full1}
+  refers to the \code{\link{run_metareg}} function, the p-score
   (Ruecker and Schwarzer, 2015) is calculated for each intervention while
   taking into account the covariate value in the argument \code{cov_value}.
   P-score is the 'frequentist analogue to SUCRA'

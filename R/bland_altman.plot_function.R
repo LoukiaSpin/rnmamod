@@ -91,8 +91,8 @@ bland_altman_plot <- function(model1, model2, colour) {
     scale_y_continuous(labels = scale_fun) +
     scale_x_continuous(labels = scale_fun) +
     theme_classic() +
-    labs(x = paste("Average posterior mean deviance contribution"),
-    y = paste("Difference in posterior mean deviance contribution")) +
+    labs(x = "Average posterior mean deviance contribution",
+    y = "Difference in posterior mean deviance contribution") +
     theme(axis.text = element_text(size = 12),
           axis.text.x = element_text(size = 12),
           axis.text.y = element_text(size = 12),

@@ -21,7 +21,12 @@
 #'   \code{\link{run_model}} for \code{full1}.
 #' @param drug_names2 A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data} of
-#'   \code{\link{run_model}} for \code{full2}.
+#'   \code{\link{run_model}} for \code{full2}. This argument should include the
+#'   same or less interventions from \code{drug_names1}.
+#' @param name1 The text for the title of the results that refer to
+#'   the outcome or model under \code{full1}.
+#' @param name2 The text for the title of the results that refer to
+#'   the outcome or model under \code{full2}.
 #' @param show A vector of at least three character strings that refer to the
 #'   names of the interventions \emph{exactly} as defined in \code{drug_names1}.
 #'   Then, the league table will be created for these interventions only.
@@ -32,8 +37,8 @@
 #'   credible interval for all possible comparisons in the off-diagonals, and
 #'   the posterior mean of the SUCRA values in the diagonal.
 #'
-#' @details \code{heatmap_league} offers the following options to display the
-#'   estimated effect measure for all (or some) pairwise comparisons:
+#' @details \code{heatmap_league} offers the following options to display
+#'   \bold{one} estimated effect measure for all (or some) pairwise comparisons:
 #'   \itemize{
 #'    \item one outcome, with results in the lower triangle referring to
 #'    comparisons in the opposite direction after converting negative values
@@ -72,15 +77,16 @@
 #'
 #'   The rows and columns of the heatmap display the names of
 #'   interventions  sorted by decreasing order from the best to the worst
-#'   based on their SUCRA value (Salanti et al., 2011). The off-diagonals
-#'   contain the posterior mean and 95\% credible interval of the effect measure
-#'   (according to the argument \code{measure} defined in
-#'   \code{\link{run_model}}) of the corresponding comparisons.
+#'   based on their SUCRA value (Salanti et al., 2011) for the outcome or model
+#'   under the argument \code{full1}. The off-diagonals contain the posterior
+#'   mean and 95\% credible interval of the effect measure (according to the
+#'   argument \code{measure} defined in \code{\link{run_model}}) of the
+#'   corresponding comparisons.
 #'
 #'   The main diagonal contains the posterior mean of SUCRA of the corresponding
-#'   interventions when the argument \code{full} refers to the
-#'   \code{\link{run_model}} function. When the argument \code{full} refers to
-#'   the \code{\link{run_metareg}} function, the p-score
+#'   interventions when the arguments \code{full1} refers to the
+#'   \code{\link{run_model}} function. When the arguments \code{full1}
+#'   refers to the \code{\link{run_metareg}} function, the p-score
 #'   (Ruecker and Schwarzer, 2015) is calculated for each intervention while
 #'   taking into account the covariate value in the argument \code{cov_value}.
 #'   P-score is the 'frequentist analogue to SUCRA'
@@ -131,6 +137,8 @@ league_heatmap <- function(full1,
                            cov_value = NULL,
                            drug_names1,
                            drug_names2 = NULL,
+                           name1 = NULL,
+                           name2 = NULL,
                            show = NULL) {
 
   measure <- if (is.null(full2) || (!is.null(full2) &
@@ -141,12 +149,6 @@ league_heatmap <- function(full1,
   }
 
   drug_names1 <- if (missing(drug_names1)) {
-    #aa <- "The argument 'drug_names' has not been defined."
-    #bb <- "The intervention ID, as specified in 'data' is used as"
-    #cc <- "intervention names"
-    #message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
-    #                   "\033[0m", "\n")))
-    #as.character(seq_len(length(full$SUCRA[, 1])))
     stop("The argument 'drug_names1' has not been defined.", call. = FALSE)
   } else {
     drug_names1
@@ -158,12 +160,6 @@ league_heatmap <- function(full1,
   }
 
   drug_names2 <- if (!is.null(full2) & is.null(drug_names2)) {
-    #aa <- "The argument 'drug_names' has not been defined."
-    #bb <- "The intervention ID, as specified in 'data' is used as"
-    #cc <- "intervention names"
-    #message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
-    #                   "\033[0m", "\n")))
-    #as.character(seq_len(length(full$SUCRA[, 1])))
     stop("The argument 'drug_names2' has not been defined.", call. = FALSE)
   } else if (!is.null(full2) & !is.null(drug_names2)) {
     drug_names2
@@ -175,7 +171,18 @@ league_heatmap <- function(full1,
   } else if (!is.null(full2) & length(drug_names1) < length(drug_names2)) {
     stop("'drug_names1' must have greater length than 'drug_names2'",
          call. = FALSE)
-    drug_names2
+  }
+
+  name1 <- if (!is.null(full2) & is.null(name1)) {
+    stop("The argument 'name1' has not been defined.", call. = FALSE)
+  } else if (!is.null(full2) & !is.null(name1)) {
+    name1
+  }
+
+  name2 <- if (!is.null(full2) & is.null(name2)) {
+    stop("The argument 'name2' has not been defined.", call. = FALSE)
+  } else if (!is.null(full2) & !is.null(name2)) {
+    name2
   }
 
   show0 <- if (length(unique(!is.element(show, drug_names0))) > 1) {
@@ -486,6 +493,8 @@ league_heatmap <- function(full1,
     signif_status <- melt(signif2, na.rm = FALSE)[3]
   }
 
+
+
   # Merge point estimate with 95% credible interval in a new symmetric matric
   final <- matrix(
     paste0(sprintf("%.2f", point_f),  "\n", "(",
@@ -501,13 +510,16 @@ league_heatmap <- function(full1,
   # Preparing the dataset for the ggplot2
   mat_new1 <- melt(final, na.rm = FALSE)
 
+  # When is.null(show) replace the corresponding cells with "".
+  mat_new1[, 3] <- ifelse(mat_new1[, 3] == "NA\n(NA, NA)", " ", mat_new1[, 3])
+
   # Merge both datasets to be used for ggplot2
-  mat <- point
+  mat <- point_f
   mat_new <- cbind(mat_new1, melt(mat, na.rm = FALSE)[, 3])
   colnames(mat_new) <- c("Var1", "Var2", "value", "value2")
 
   # The final dataset for ggplot2
-  diag(mat) <- NA
+  diag(mat) <- 0
   final_col <- melt(mat)
   mat_new$value_sucra <- final_col$value
 
@@ -522,6 +534,12 @@ league_heatmap <- function(full1,
     paste("Posterior mean", effect_measure_name(measure),
           "(95% credible interval)")
   }
+
+  ## To create the orders of the lower diagonal
+  xmin1 <- rep(seq(0.5, len_drug - 0.5, 1), each = len_drug)
+  xmax1 <- xmin1 + 1
+  ymin1 <- rep(seq(len_drug - 0.5, 0.5, -1), each = len_drug)
+  ymax1 <- ymin1 + 1
 
   # The league table as a heatmap
   p <- ggplot(mat_new,
@@ -541,6 +559,8 @@ league_heatmap <- function(full1,
                       fontface = ifelse(signif_status == 1, "bold", "plain")),
                   reflow = TRUE) +
     scale_fill_gradientn(colours = c("blue", "white", "#D55E00"),
+                         na.value = "grey70",
+                         guide = "none",
                          values = rescale(
                            c(min(mat_new$value2, na.rm = TRUE),
                              ifelse(!is.element(measure,
@@ -549,13 +569,18 @@ league_heatmap <- function(full1,
                              max(mat_new$value2, na.rm = TRUE))),
                          limits = c(min(mat_new$value2, na.rm = TRUE),
                                     max(mat_new$value2, na.rm = TRUE))) +
+    geom_rect(aes(xmin = xmin1, xmax = xmax1, ymin = ymin1, ymax = ymax1),
+              fill = "transparent", color = "black", size = 0.55) +
     scale_x_discrete(position = "top") +
-    labs(x = "", y = "", caption = caption0) +
+    labs(x = name1, y = name2, caption = caption0) +
     theme_bw() +
     theme(legend.position = "none",
-          axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0),
+          axis.title.x = element_text(size = 12, face = "bold",
+                                      colour = "blue", hjust = 0),
+          axis.title.y = element_text(size = 12, face = "bold",
+                                      colour = "#D55E00", hjust = 1),
+          axis.text.x = element_text(size = 12, hjust = 0.5), #angle = 50,
           axis.text.y = element_text(size = 12),
-          plot.subtitle = element_text(size = 11, face = "bold"),
           plot.caption = element_text(hjust = 0.01))
   return(p)
 }
