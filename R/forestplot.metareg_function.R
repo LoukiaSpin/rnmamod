@@ -281,7 +281,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                    ifelse(length(unique(reg$covariate)) < 3, " ",
                           cov_value[[1]]))
 
-  measure2 <- effect_measure_name(measure)
+  measure2 <- effect_measure_name(measure, lower = FALSE)
   caption <- if (full$D == 0 & is.element(measure, c("OR", "ROM"))) {
     paste(measure2, "< 1, favours the first arm.",
           measure2, "> 1, favours", compar)

@@ -167,7 +167,7 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
   model_assess_nma <- full$model_assessment
 
   # Effect measure
-  measure2 <- effect_measure_name(measure)
+  measure2 <- effect_measure_name(measure, lower = FALSE)
 
   # Analysis model
   model <- full$model

@@ -298,12 +298,6 @@ run_sensitivity <- function(full,
                   seq_len(length(mean_misspar[, 1])),
                   function(i) t(get_results[[i]] %>%
                                   dplyr::select(starts_with("EM[")))))
-  #EM <- do.call(rbind,
-  #              lapply(
-  #                seq_len(length(mean_misspar[, 1])),
-  #                function(i) jagsfit[[i]]$BUGSoutput$summary[
-  #                  1:(item$nt * (item$nt - 1) * 0.5),
-  #                  c("mean", "sd", "2.5%", "97.5%", "Rhat", "n.eff")]))
 
   if (is.element(measure, c("RR", "RD"))) {
     EM_LOR <- do.call(rbind,
@@ -319,12 +313,6 @@ run_sensitivity <- function(full,
                     seq_len(length(mean_misspar[, 1])),
                     function(i) t(get_results[[i]] %>%
                                     dplyr::select(starts_with("tau")))))
-    #tau <- do.call(rbind,
-    #               lapply(
-    #                 seq_len(length(mean_misspar[, 1])),
-    #                 function(i) jagsfit[[i]]$BUGSoutput$summary[
-    #                   "tau", c("50%", "sd", "2.5%", "97.5%", "Rhat", "n.eff"
-    #                            )]))
   }
 
   # Return results

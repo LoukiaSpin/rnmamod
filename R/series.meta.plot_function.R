@@ -127,7 +127,9 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
   }
 
   # Posterior results on the effect estimates under separate MAs
-  em_meta0 <- meta$EM
+  # Keep only comparisons with at least two trials
+  em_meta0 <- meta$EM[meta$single == 0, ]
+  rownames(em_meta0) <- seq_len(length(em_meta0[, 1]))
 
   # Posterior results on between-trial standard deviation under NMA
   tau_full <- full$tau
@@ -136,10 +138,13 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
   tau_meta <- meta$tau
 
   # Possible and observed comparisons
-  possible_comp <- possible_observed_comparisons(drug_names,
-                                                 obs_comp =
-                                                   paste0(meta$EM[, "t2"], "vs",
-                                                          meta$EM[, "t1"]))
+  possible_comp <-
+    possible_observed_comparisons(drug_names,
+                                  obs_comp =
+                                    paste0(
+                                      meta$EM[meta$single == 0, "t2"], "vs",
+                                      meta$EM[meta$single == 0, "t1"])
+                                  )
 
   # Observed comparisons
   obs_comp <- possible_comp$obs_comp[, 3]
@@ -165,7 +170,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
   }
   em_meta_clean <- format(round(em_meta, 2), nsmall = 2)
 
-  # Between-trial standard deviation of separate MAs
+  # Between-trial standard deviation of separate MAs  5, 2:3, 7
   if (model == "RE") {
     tau_meta_clean <- format(round(tau_meta[, c(7, 4:5, 9)], 2), nsmall = 2)
   } else {
@@ -252,7 +257,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
 
   # Forest plots of comparisons on effect estimate
   add <- ifelse(is.element(measure, c("OR", "ROM")), 1, 4)
-  measure2 <- effect_measure_name(measure)
+  measure2 <- effect_measure_name(measure, lower = FALSE)
 
   caption <- if (full$D == 0 & is.element(measure, c("OR", "ROM"))) {
     paste(measure2, "< 1, favours the first arm.",

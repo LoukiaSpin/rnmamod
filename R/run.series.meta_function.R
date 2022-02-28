@@ -203,23 +203,31 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
     table(paste0(pairwise_data$arm1, "vs", pairwise_data$arm2)))
   colnames(comp) <- c("comparison", "frequency")
 
-  # Keep comparisons withat least two trials
-  keep_comp0 <- subset(comp, frequency > 1)
-  keep_comp <- matrix(as.numeric(numextract(keep_comp0[, 1])),
-                      nrow = dim(keep_comp0)[1],
-                      ncol = 2,
-                      byrow = TRUE)
-  n_comp <- dim(keep_comp)[1]
+  # Indicate all observed comparisons
+  obs_comp <- matrix(as.numeric(numextract(comp[, 1])),
+                     nrow = dim(comp)[1],
+                     ncol = 2,
+                     byrow = TRUE)
+  n_obs_comp <- dim(obs_comp)[1]
+
+  # Indicate comparisons with one trial
+  #keep_comp0 <- subset(comp, frequency > 1)
+  #keep_comp <- matrix(as.numeric(numextract(keep_comp0[, 1])),
+  #                    nrow = dim(keep_comp0)[1],
+  #                    ncol = 2,
+  #                    byrow = TRUE)
+  #n_comp <- dim(keep_comp)[1]
+  single <- ifelse (comp[, 2] < 2, 1, 0) # 1:yes, 0:no
 
   # Run each random-effects pairwise meta-analysis
   meta <- list()
-  for (i in 1:n_comp) {
-    message(paste(i, "out of", n_comp, "observed comparisons"))
+  for (i in 1:n_obs_comp) {
+    message(paste(i, "out of", n_obs_comp, "observed comparisons"))
     # 'D' and 'base_risk' do not matter in pairwise meta-analysis
     meta[[i]] <-
       run_model(data =
-                  pairwise_data[pairwise_data$arm1 == keep_comp[i, 1] &
-                                  pairwise_data$arm2 == keep_comp[i, 2], ],
+                  pairwise_data[pairwise_data$arm1 == obs_comp[i, 1] &
+                                  pairwise_data$arm2 == obs_comp[i, 2], ],
                 measure,
                 model,
                 assumption,
@@ -235,19 +243,21 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
                 n_thin)
   }
 
-  EM <- data.frame(keep_comp,
-                   do.call(rbind, lapply(1:n_comp, function(i) meta[[i]]$EM)))
+  EM <- data.frame(obs_comp,
+                   do.call(rbind,
+                           lapply(1:n_obs_comp, function(i) meta[[i]]$EM)))
   colnames(EM) <- c("t1", "t2", "mean", "sd", "2.5%", "25%", "50%", "75%",
                     "97.5%", "Rhat", "n.eff")
   rownames(EM) <- NULL
 
   if (model == "RE") {
-    tau <- data.frame(keep_comp,
-                      do.call(rbind,
-                              lapply(1:n_comp, function(i) meta[[i]]$tau)))
-    colnames(tau) <- c("t1", "t2", "median", "sd", "2.5%", "25%", "50%", "75%",
-                       "97.5%", "Rhat", "n.eff")
-    rownames(tau) <- NULL
+    tau0 <- data.frame(obs_comp,
+                       do.call(rbind,
+                               lapply(1:n_obs_comp, function(i) meta[[i]]$tau)))
+    colnames(tau0) <- c("t1", "t2", "mean", "sd", "2.5%", "25%", "50%", "75%",
+                        "97.5%", "Rhat", "n.eff")
+    rownames(tau0) <- NULL
+    tau <- subset(tau0, single == 0)
   } else {
     tau <- NA
   }
@@ -256,16 +266,20 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
   return_results <- if (model == "RE") {
     list(EM = EM,
          tau = tau,
+         single = single,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin)
+         n_thin = n_thin,
+         measure = measure)
   } else {
     list(EM = EM,
+         single = single,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin)
+         n_thin = n_thin,
+         measure = measure)
   }
 
   return(return_results)

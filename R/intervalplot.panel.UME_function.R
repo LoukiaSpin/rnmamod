@@ -112,7 +112,7 @@ intervalplot_panel_ume <- function(full, ume, drug_names) {
                           "frail")
 
   # Obtain forestplot
-  measure2 <- effect_measure_name(measure)
+  measure2 <- effect_measure_name(measure, lower = FALSE)
   add <- ifelse(is.element(measure, c("OR", "ROM")), 1, 4)
   caption <- if (full$D == 0 & is.element(measure,
                                           c("OR", "ROM"))) {

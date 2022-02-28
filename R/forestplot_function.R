@@ -197,7 +197,7 @@ forestplot <- function(full, compar,  drug_names) {
 
   # Forest plots on credible/prediction intervals of comparisons with the
   # reference
-  measure2 <- effect_measure_name(full$measure)
+  measure2 <- effect_measure_name(full$measure, lower = TRUE)
   caption <- if (full$D == 0 & is.element(measure, c("OR", "RR", "ROM"))) {
     paste("If", measure2, "< 1, favours the first arm; if",
           measure2, "> 1, favours", compar)

@@ -272,23 +272,26 @@ mcmc_diagnostics <- function(net, par = NULL) {
   }
 
   # A data-frame on convergence for all monitored parameters using the Rhat
-  convergence <- data.frame(round(r_hat_max, 2),
+  monitored_parameters <- c("Effect estimates (EM)",
+                            "Predictions (EM_pred)",
+                            "Within-trial estimates (delta)",
+                            "Between-trial standard deviation (tau)",
+                            "Direct effects (node-splitting; direct)",
+                            "Indirect effect(s) (node-splitting; indirect)",
+                            "Inconsistency factor(s) (node-splitting; diff)",
+                            "Informative missingness parameter(s) (phi)",
+                            "Regression coefficient(s) (beta)")
+  convergence <- data.frame(monitored_parameters,
+                            round(r_hat_max, 2),
                             round(mcmc_error_max * 100, 1),
                             conv)
-  rownames(convergence) <- c("Effect estimates (EM)",
-                             "Predictions (EM_pred)",
-                             "Within-trial estimates (delta)",
-                             "Between-trial standard deviation (tau)",
-                             "Direct effects (node-splitting; direct)",
-                             "Indirect effect(s) (node-splitting; indirect)",
-                             "Inconsistency factor(s) (node-splitting; diff)",
-                             "Informative missingness parameter(s) (phi)",
-                             "Regression coefficient(s) (beta)")
-  colnames(convergence) <- c("max R-hat",
+  rownames(convergence) <- NULL
+  colnames(convergence) <- c("parameters",
+                             "max R-hat",
                              "max MCMC error (%)",
-                             "convergence status")
+                             "convergence")
 
   return(knitr::kable(convergence,
-                      align = "ccl",
+                      align = "lccl",
                       caption = "Markov Chain Monte Carlo diagnostic measures"))
 }

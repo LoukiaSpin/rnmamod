@@ -120,7 +120,7 @@ heatmap_robustness <- function(robust, drug_names) {
                        "m",
                        txt = paste("The value", threshold,
                                    "was assigned on 'threshold' for",
-                                   effect_measure_name(measure)),
+                                   effect_measure_name(measure, lower = TRUE)),
                        "\033[0m", "\n")))
   }
 

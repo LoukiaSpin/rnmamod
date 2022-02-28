@@ -4,22 +4,51 @@
 \alias{league_heatmap_pred}
 \title{League heatmap for prediction}
 \usage{
-league_heatmap_pred(full, cov_value = NULL, drug_names)
+league_heatmap_pred(
+  full1,
+  full2 = NULL,
+  cov_value = NULL,
+  drug_names1,
+  drug_names2 = NULL,
+  name1 = NULL,
+  name2 = NULL,
+  show = NULL
+)
 }
 \arguments{
-\item{full}{An object of S3 class \code{\link{run_model}} for network
-meta-analysis or \code{\link{run_metareg}} for network meta-regression.
+\item{full1}{An object of S3 class \code{\link{run_model}} for network
+meta-analysis, or \code{\link{run_metareg}} for network meta-regression.
+See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.}
+
+\item{full2}{An object of S3 class \code{\link{run_model}} for network
+meta-analysis, \code{\link{run_metareg}} for network meta-regression, or
+\code{\link{run_series_meta}} for a series of pairwise meta-analyses.
 See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.}
 
 \item{cov_value}{A list of two elements in the following order: a number
 for the covariate value of interest and a character for the name of the
 covariate. See also 'Details'.}
 
-\item{drug_names}{A vector of labels with the name of the interventions in
+\item{drug_names1}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
-\code{\link{run_model}}. If \code{drug_names} is not defined,
-the order of the interventions as they appear in \code{data} is used,
-instead.}
+\code{\link{run_model}} for \code{full1}.}
+
+\item{drug_names2}{A vector of labels with the name of the interventions in
+the order they appear in the argument \code{data} of
+\code{\link{run_model}} for \code{full2}. The elements must be a subset of
+\code{drug_names1}.}
+
+\item{name1}{The text for the title of the results that refer to
+the outcome or model under \code{full1}.}
+
+\item{name2}{The text for the title of the results that refer to
+the outcome or model under \code{full2}.}
+
+\item{show}{A vector of at least three character strings that refer to the
+names of the interventions \emph{exactly} as defined in \code{drug_names1}.
+Then, the league table will be created for these interventions only.
+If \code{show} is not defined, the league table will present all
+interventions as defined in \code{drug_names1}.}
 }
 \value{
 A league heatmap of the posterior mean and 95\% predictive interval
@@ -28,39 +57,74 @@ A league heatmap of the posterior mean and 95\% predictive interval
   and the posterior mean of the SUCRA values in the diagonal.
 }
 \description{
-Creates a heatmap with the predicted effect measure for all possible
-  comparisons of interventions in the network. \code{league_heatmap_pred} can
-  be used \emph{only} for a random-effects network meta-analysis and network
-  meta-regression. \code{league_heatmap_pred} is applied for one outcome
-  only.
+For one outcome, it creates a heatmap with the predicted effect measure for
+  all possible comparisons of interventions in the network.
+  For two outcomes, the heatmap illustrates these two outcomes for the same
+  effect measure in the upper and lower off-diagonals for all possible
+  comparisons of interventions in the network.
+  \code{league_heatmap_pred} can be used \emph{only} for a random-effects
+  network meta-analysis and network meta-regression.
 }
 \details{
-The rows and columns of the heatmap display the names of
+\code{heatmap_league} offers the following options to display
+  \bold{one} estimated effect measure for all (or some) pairwise comparisons:
+  \itemize{
+   \item one outcome, with results in the lower triangle referring to
+   comparisons in the opposite direction after converting negative values
+   into positive values (in absolute or logarithmic scale), and vice versa.
+   Darker shades of red and green correspond to larger treatment effects in
+   the upper and lower triangle, respectively, for a beneficial outcome, and
+   vice versa for a harmful outcome. Comparisons between interventions should
+   be read from left to right. Therefore, each cell refers to the
+   corresponding row-defining intervention against the column-defining
+   intervention. Results that indicate strong evidence in favour of the
+   row-defining intervention (i.e. the respective 95\% credible interval does
+   not include the null value) are indicated in bold. A message is printed on
+   the R console on how to read the heatmap;
+   \item two outcomes for the same model, namely, network meta-analysis (via
+   \code{\link{run_model}}) or network meta-regression (via
+   \code{\link{run_metareg}}).
+   When one of the outcomes includes more interventions, the argument
+   \code{full1} should be considered for that outcome.
+   Comparisons between interventions should be read as follows: for the upper
+   diagonal, each cell refers to the corresponding row-defining intervention
+   against the column-defining intervention, and for the lower diagonal, each
+   cell refers to the corresponding column-defining intervention against the
+   row-defining intervention. Results that indicate strong evidence (i.e. the
+   respective 95\% credible interval does not include the null value) are
+   indicated in bold. A message is printed on the R console on how to read
+   the heatmap;
+   \item two models for the same outcome, namely, network meta-analysis
+   versus network meta-regression. The instructions to read the heatmap are
+   in line with the previous point. A message is printed on the R console on
+   how to read the heatmap.
+  }
+
+  The function displays the effect measure as inherited in the argument
+  \code{full1}. For binary outcome, it can display the odds ratio,
+  relative risk, and risk difference. See 'Details' in
+  \code{\link{run_model}} for the relative risk, and risk difference.
+  For continuous outcome, it can display the mean difference, standardised
+  mean difference, and ratio of means. Odds ratios, relative risks and ratio
+  of means are reported in the original scale after exponentiation of the
+  logarithmic scale.
+
+  The rows and columns of the heatmap display the names of
   interventions which are sorted by decreasing order from the best to the
-  worst based on their SUCRA value (Salanti et al., 2011). The main diagonal
-  contains the SUCRA values of the corresponding interventions when the
-  argument \code{full} refers to the \code{\link{run_model}} function.
-  When the argument \code{full} refers to the \code{\link{run_metareg}}
+  worst based on their SUCRA value (Salanti et al., 2011) for the outcome or
+  model under the argument \code{full1}. The off-diagonals contain the
+  posterior mean and 95\% predictive interval of the effect measure
+  (according to the argument \code{measure} as inherited in the argument
+  \code{full1}) of the corresponding comparisons.
+
+  The main diagonal contains the SUCRA values of the corresponding
+  interventions when the argument \code{full1} refers to the
+  \code{\link{run_model}} function.
+  When the argument \code{full1} refers to the \code{\link{run_metareg}}
   function, the p-score (Ruecker and Schwarzer, 2015) is calculated for each
   intervention while taking into account the covariate value in
   the argument \code{cov_value}. P-score is the 'frequentist analogue to
   SUCRA' (Ruecker and Schwarzer, 2015).
-
-  Results in the lower triangle refer to comparisons in the opposite
-  direction after converting negative values into positive values
-  (in absolute or logarithmic scale), and vice versa.
-  Darker shades of red and green correspond to larger treatment effects in
-  the upper and lower triangle, respectively, for a beneficial outcome, and
-  vice versa for a harmful outcome.
-  Odds ratio and ratio of means are reported in the original scale after
-  exponentiation of the logarithmic scale.
-
-  Comparisons between interventions should be read from left to right.
-  Therefore, each cell refers to the corresponding row-defining intervention
-  against the column-defining intervention. Results that indicate strong
-  evidence in favour of the row-defining intervention (i.e. the respective
-  95\% predictive interval does not include the null value) are indicated in
-  bold.
 
   In the case of network meta-regression, when the covariate is binary,
   specify in the second element of \code{cov_value} the name of the level for
@@ -84,8 +148,8 @@ interv_names <- c("placebo", "pramipexole", "serotonin-norepinephrine
                   "tricyclic antidepressant", "pergolide")
 
 # Create the league heatmap
-league_heatmap_pred(full = res,
-                    drug_names = interv_names)
+league_heatmap_pred(full1 = res,
+                    drug_names1 = interv_names)
 
 }
 \references{

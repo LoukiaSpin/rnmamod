@@ -23,7 +23,8 @@ See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.}
 \item{full2}{An object of S3 class \code{\link{run_model}} for network
 meta-analysis, \code{\link{run_metareg}} for network meta-regression, or
 \code{\link{run_series_meta}} for a series of pairwise meta-analyses.
-See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.}
+See 'Value' in \code{\link{run_model}}, \code{\link{run_metareg}}, and
+\code{\link{run_series_meta}}.}
 
 \item{cov_value}{A list of two elements in the following order: a number
 for the covariate value of interest and a character for the name of the
@@ -35,7 +36,8 @@ the order they appear in the argument \code{data} of
 
 \item{drug_names2}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
-\code{\link{run_model}} for \code{full2}.}
+\code{\link{run_model}} for \code{full2}. The elements must be a subset of
+\code{drug_names1}.}
 
 \item{name1}{The text for the title of the results that refer to
 the outcome or model under \code{full1}.}
@@ -51,14 +53,20 @@ interventions as defined in \code{drug_names1}.}
 }
 \value{
 A heatmap of the league table showing the posterior mean and 95\%
-  credible interval for all possible comparisons in the off-diagonals, and
+  credible interval of the comparisons in the off-diagonals, and
   the posterior mean of the SUCRA values in the diagonal.
 }
 \description{
-Provides a heatmap of the estimated effect measure for all possible
-  comparisons of interventions in the network. \code{league_heatmap} can be
-  used for a random-effects or fixed-effect network meta-analysis and network
-  meta-regression. It is applied for one and two outcomes.
+For one outcome, it creates a heatmap of the estimated effect measure for
+  all possible comparisons of interventions in the network.
+  For two outcomes, the heatmap illustrates these two outcomes for the same
+  effect measure in the upper and lower off-diagonals for all
+  possible comparisons of interventions in the network.
+  The function can also be used to illustrate the results of two different
+  models on the same outcome and effect measure.
+  \code{league_heatmap} can be used for a random-effects or fixed-effect
+  network meta-analysis, network meta-regression, and series of pairwise
+  meta-analyses.
 }
 \details{
 \code{heatmap_league} offers the following options to display
@@ -67,31 +75,42 @@ Provides a heatmap of the estimated effect measure for all possible
    \item one outcome, with results in the lower triangle referring to
    comparisons in the opposite direction after converting negative values
    into positive values (in absolute or logarithmic scale), and vice versa.
-   Darker shades of red and blue correspond to larger treatment effects in
-   the upper and lower triangle, respectively, for a beneficial outcome, and
-   vice versa for a harmful outcome;
+   Comparisons between interventions should be read from left to right.
+   Therefore, each cell refers to the corresponding row-defining intervention
+   against the column-defining intervention.
+   Results that indicate strong evidence in favour of the
+   row-defining intervention (i.e. the respective 95\% credible interval does
+   not include the null value) are indicated in bold. A message is printed on
+   the R console on how to read the heatmap;
    \item two outcomes for the same model, namely, network meta-analysis (via
    \code{\link{run_model}}) or network meta-regression (via
    \code{\link{run_metareg}}).
    When one of the outcomes includes more interventions, the argument
    \code{full1} should be considered for that outcome.
-   The effect size direction and cell colour align with the description for
-   one outcome;
+   Comparisons between interventions should be read as follows: for the upper
+   diagonal, each cell refers to the corresponding row-defining intervention
+   against the column-defining intervention, and for the lower diagonal, each
+   cell refers to the corresponding column-defining intervention against the
+   row-defining intervention. Results that indicate strong evidence (i.e. the
+   respective 95\% credible interval does not include the null value) are
+   indicated in bold. A message is printed on the R console on how to read
+   the heatmap;
    \item two models for the same outcome, namely, network meta-analysis
    versus network meta-regression, or network meta-analysis versus series of
-   pairwise meta-analyses. The effect size direction and cell colour align
-   with the description for one outcome.
+   pairwise meta-analyses.
+   The instructions to read the heatmap are in line
+   with the previous point. A message is printed on the R console on how to
+   read the heatmap.
   }
 
-  Comparisons between interventions should be read from left to right.
-  Therefore, each cell refers to the corresponding row-defining intervention
-  against the column-defining intervention.
-  Results that indicate strong evidence in favour of the row-defining
-  intervention (i.e. the respective 95\% credible interval does not include
-  the null value) are indicated in bold.
+  For a beneficial outcome, red favours the first intervention of the
+  comparison, and blue favour the second intervention. For a harmful
+  outcome, blue favours the first intervention of the comparison, and red
+  favour the second intervention. The larger the treatment effect, the darker
+  the colour shade.
 
-  The function displays the effect measure defined in
-  \code{\link{run_model}}. For binary outcome, it can display the odds ratio,
+  The function displays the effect measure as inherited in the argument
+  \code{full1}. For binary outcome, it can display the odds ratio,
   relative risk, and risk difference. See 'Details' in
   \code{\link{run_model}} for the relative risk, and risk difference.
   For continuous outcome, it can display the mean difference, standardised
@@ -104,7 +123,7 @@ Provides a heatmap of the estimated effect measure for all possible
   based on their SUCRA value (Salanti et al., 2011) for the outcome or model
   under the argument \code{full1}. The off-diagonals contain the posterior
   mean and 95\% credible interval of the effect measure (according to the
-  argument \code{measure} defined in \code{\link{run_model}}) of the
+  argument \code{measure} as inherited in the argument \code{full1}) of the
   corresponding comparisons.
 
   The main diagonal contains the posterior mean of SUCRA of the corresponding
@@ -152,7 +171,8 @@ tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
 \doi{10.1016/j.jclinepi.2010.03.016}
 }
 \seealso{
-\code{\link{run_metareg}}, \code{\link{run_model}}
+\code{\link{run_metareg}}, \code{\link{run_model}},
+  \code{\link{run_series_meta}}
 }
 \author{
 {Loukia M. Spineli}, {Chrysostomos Kalyvas},

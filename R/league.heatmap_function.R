@@ -1,10 +1,16 @@
 #' League heatmap for estimation
 #'
 #' @description
-#'   Provides a heatmap of the estimated effect measure for all possible
-#'   comparisons of interventions in the network. \code{league_heatmap} can be
-#'   used for a random-effects or fixed-effect network meta-analysis and network
-#'   meta-regression. It is applied for one and two outcomes.
+#'   For one outcome, it creates a heatmap of the estimated effect measure for
+#'   all possible comparisons of interventions in the network.
+#'   For two outcomes, the heatmap illustrates these two outcomes for the same
+#'   effect measure in the upper and lower off-diagonals for all
+#'   possible comparisons of interventions in the network.
+#'   The function can also be used to illustrate the results of two different
+#'   models on the same outcome and effect measure.
+#'   \code{league_heatmap} can be used for a random-effects or fixed-effect
+#'   network meta-analysis, network meta-regression, and series of pairwise
+#'   meta-analyses.
 #'
 #' @param full1 An object of S3 class \code{\link{run_model}} for network
 #'   meta-analysis, or \code{\link{run_metareg}} for network meta-regression.
@@ -12,7 +18,8 @@
 #' @param full2 An object of S3 class \code{\link{run_model}} for network
 #'   meta-analysis, \code{\link{run_metareg}} for network meta-regression, or
 #'   \code{\link{run_series_meta}} for a series of pairwise meta-analyses.
-#'   See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.
+#'   See 'Value' in \code{\link{run_model}}, \code{\link{run_metareg}}, and
+#'   \code{\link{run_series_meta}}.
 #' @param cov_value A list of two elements in the following order: a number
 #'   for the covariate value of interest and a character for the name of the
 #'   covariate. See also 'Details'.
@@ -21,8 +28,8 @@
 #'   \code{\link{run_model}} for \code{full1}.
 #' @param drug_names2 A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data} of
-#'   \code{\link{run_model}} for \code{full2}. This argument should include the
-#'   same or less interventions from \code{drug_names1}.
+#'   \code{\link{run_model}} for \code{full2}. The elements must be a subset of
+#'   \code{drug_names1}.
 #' @param name1 The text for the title of the results that refer to
 #'   the outcome or model under \code{full1}.
 #' @param name2 The text for the title of the results that refer to
@@ -34,7 +41,7 @@
 #'   interventions as defined in \code{drug_names1}.
 #'
 #' @return A heatmap of the league table showing the posterior mean and 95\%
-#'   credible interval for all possible comparisons in the off-diagonals, and
+#'   credible interval of the comparisons in the off-diagonals, and
 #'   the posterior mean of the SUCRA values in the diagonal.
 #'
 #' @details \code{heatmap_league} offers the following options to display
@@ -43,31 +50,42 @@
 #'    \item one outcome, with results in the lower triangle referring to
 #'    comparisons in the opposite direction after converting negative values
 #'    into positive values (in absolute or logarithmic scale), and vice versa.
-#'    Darker shades of red and blue correspond to larger treatment effects in
-#'    the upper and lower triangle, respectively, for a beneficial outcome, and
-#'    vice versa for a harmful outcome;
+#'    Comparisons between interventions should be read from left to right.
+#'    Therefore, each cell refers to the corresponding row-defining intervention
+#'    against the column-defining intervention.
+#'    Results that indicate strong evidence in favour of the
+#'    row-defining intervention (i.e. the respective 95\% credible interval does
+#'    not include the null value) are indicated in bold. A message is printed on
+#'    the R console on how to read the heatmap;
 #'    \item two outcomes for the same model, namely, network meta-analysis (via
 #'    \code{\link{run_model}}) or network meta-regression (via
 #'    \code{\link{run_metareg}}).
 #'    When one of the outcomes includes more interventions, the argument
 #'    \code{full1} should be considered for that outcome.
-#'    The effect size direction and cell colour align with the description for
-#'    one outcome;
+#'    Comparisons between interventions should be read as follows: for the upper
+#'    diagonal, each cell refers to the corresponding row-defining intervention
+#'    against the column-defining intervention, and for the lower diagonal, each
+#'    cell refers to the corresponding column-defining intervention against the
+#'    row-defining intervention. Results that indicate strong evidence (i.e. the
+#'    respective 95\% credible interval does not include the null value) are
+#'    indicated in bold. A message is printed on the R console on how to read
+#'    the heatmap;
 #'    \item two models for the same outcome, namely, network meta-analysis
 #'    versus network meta-regression, or network meta-analysis versus series of
-#'    pairwise meta-analyses. The effect size direction and cell colour align
-#'    with the description for one outcome.
+#'    pairwise meta-analyses.
+#'    The instructions to read the heatmap are in line
+#'    with the previous point. A message is printed on the R console on how to
+#'    read the heatmap.
 #'   }
 #'
-#'   Comparisons between interventions should be read from left to right.
-#'   Therefore, each cell refers to the corresponding row-defining intervention
-#'   against the column-defining intervention.
-#'   Results that indicate strong evidence in favour of the row-defining
-#'   intervention (i.e. the respective 95\% credible interval does not include
-#'   the null value) are indicated in bold.
+#'   For a beneficial outcome, red favours the first intervention of the
+#'   comparison, and blue favour the second intervention. For a harmful
+#'   outcome, blue favours the first intervention of the comparison, and red
+#'   favour the second intervention. The larger the treatment effect, the darker
+#'   the colour shade.
 #'
-#'   The function displays the effect measure defined in
-#'   \code{\link{run_model}}. For binary outcome, it can display the odds ratio,
+#'   The function displays the effect measure as inherited in the argument
+#'   \code{full1}. For binary outcome, it can display the odds ratio,
 #'   relative risk, and risk difference. See 'Details' in
 #'   \code{\link{run_model}} for the relative risk, and risk difference.
 #'   For continuous outcome, it can display the mean difference, standardised
@@ -80,7 +98,7 @@
 #'   based on their SUCRA value (Salanti et al., 2011) for the outcome or model
 #'   under the argument \code{full1}. The off-diagonals contain the posterior
 #'   mean and 95\% credible interval of the effect measure (according to the
-#'   argument \code{measure} defined in \code{\link{run_model}}) of the
+#'   argument \code{measure} as inherited in the argument \code{full1}) of the
 #'   corresponding comparisons.
 #'
 #'   The main diagonal contains the posterior mean of SUCRA of the corresponding
@@ -103,7 +121,8 @@
 #' @author {Loukia M. Spineli}, {Chrysostomos Kalyvas},
 #'   {Katerina Papadimitropoulou}
 #'
-#' @seealso \code{\link{run_metareg}}, \code{\link{run_model}}
+#' @seealso \code{\link{run_metareg}}, \code{\link{run_model}},
+#'   \code{\link{run_series_meta}}
 #'
 #' @references
 #' Ruecker G, Schwarzer G. Ranking treatments in frequentist network
@@ -141,6 +160,15 @@ league_heatmap <- function(full1,
                            name2 = NULL,
                            show = NULL) {
 
+  if (is.null(full2)) {
+    message("Tips to read the table: row versus column")
+  } else {
+    aa <- "Tips to read the table: upper triangle, row versus column;"
+    bb <- "lower triangle, column versus row"
+    message(paste(aa, bb))
+  }
+
+  # Both objects must refer to the same effect measure
   measure <- if (is.null(full2) || (!is.null(full2) &
                                 full1$measure == full2$measure)) {
     full1$measure
@@ -148,6 +176,7 @@ league_heatmap <- function(full1,
     stop("'full1' and 'full2' must have the same effect measure", call. = FALSE)
   }
 
+  # Forcing to define 'drug_names1' & 'drug_names2' so that 'show' can be used
   drug_names1 <- if (missing(drug_names1)) {
     stop("The argument 'drug_names1' has not been defined.", call. = FALSE)
   } else {
@@ -163,6 +192,11 @@ league_heatmap <- function(full1,
     stop("The argument 'drug_names2' has not been defined.", call. = FALSE)
   } else if (!is.null(full2) & !is.null(drug_names2)) {
     drug_names2
+  }
+
+  if (length(unique(is.element(drug_names2, drug_names1))) > 1) {
+    stop("The argument 'drug_names2' must be a subset of 'drug_names1'.",
+         call. = FALSE)
   }
 
   drug_names0 <- if (is.null(full2) || (!is.null(full2) &
@@ -213,7 +247,7 @@ league_heatmap <- function(full1,
   }
 
   select <- cbind(combn(drug_names0, 2)[2, ], combn(drug_names0, 2)[1, ])
-  ## First outcome or model
+  ## Prepare the first outcome or model
   if (is.null(full1$beta_all)) {
     par <- if (is.null(show0)) {
       full1$EM
@@ -233,8 +267,8 @@ league_heatmap <- function(full1,
     cov_value <- if (missing(cov_value)) {
       stop("The argument 'cov_value' has not been defined", call. = FALSE)
     } else if (length(cov_value) != 2) {
-      aa <- "The argument 'cov_value' must be a list with elements a number and"
-      stop(paste(aa, "a character"), call. = FALSE)
+      aa <- "The argument 'cov_value' must be a list with elements a number"
+      stop(paste(aa, "and a character"), call. = FALSE)
     } else if (length(cov_value) == 2) {
       cov_value
     }
@@ -268,7 +302,8 @@ league_heatmap <- function(full1,
                      is.element(select[, 1], show) &
                        is.element(select[, 2], show)))
     }
-    z_test <- par_mean / par_sd
+    #z_test <- par_mean / par_sd
+    z_test <- par[, 1] / par[, 2]
     z_test_mat <- matrix(NA,
                          nrow = length(drug_names),
                          ncol = length(drug_names))
@@ -284,7 +319,7 @@ league_heatmap <- function(full1,
     sucra <- if (is.null(show0)) {
       sucra0
     } else {
-      na.omit(subset(data.frame( sucra0, drug_names0),
+      na.omit(subset(data.frame(sucra0, drug_names),
                      is.element(drug_names0, show)))[, 1]
     }
   }
@@ -337,53 +372,62 @@ league_heatmap <- function(full1,
     signif_status <- melt(signif, na.rm = FALSE)[3]
   }
 
-  # Second outcome or model
+
+  if (!is.null(full2) & length(full2$EM[1, ]) == 11) {
+    names <- full2$EM[, 1:2]
+    for (i in 1:length(names[, 1])) {
+      names[i, 1] <- drug_names1[full2$EM[i, 2]]
+      names[i, 2] <- drug_names1[full2$EM[i, 1]]
+    }
+  }
+
+  # Prepare the second outcome or model
   if (!is.null(full2) & is.null(full2$beta_all)) {
-    par2 <- if (is.null(show0)) {
-      full2$EM
-    } else {
+    par2 <- if (is.null(show0) & length(full2$EM[1, ]) < 11) {
+     full2$EM
+    } else if (!is.null(show0) & length(full2$EM[1, ]) < 11) {
       na.omit(subset(data.frame(full2$EM, select),
                      is.element(select[, 1], show) &
                        is.element(select[, 2], show)))
-    }
-    sucra2 <- if (is.null(show0)) {
-      full2$SUCRA[, 1]
-    } else {
-      na.omit(subset(data.frame(full2$SUCRA[, 1], drug_names0),
-                     is.element(drug_names0, show)))[, 1]
+    } else if (is.null(show0) & length(full2$EM[1, ]) == 11) {
+      data.frame(full2$EM[, c(-1, -2)], names)
+    } else if (!is.null(show0) & length(full2$EM[1, ]) == 11) {
+      na.omit(subset(data.frame(full2$EM[, c(-1, -2)], names),
+                     is.element(names[, 1], show) &
+                       is.element(names[, 2], show)))
     }
   } else if (!is.null(full2) & !is.null(full2$beta_all)) {
     cov_value <- if (missing(cov_value)) {
       stop("The argument 'cov_value' has not been defined", call. = FALSE)
     } else if (length(cov_value) != 2) {
-      aa <- "The argument 'cov_value' must be a list with elements a number and"
-      stop(paste(aa, "a character"), call. = FALSE)
+      aa <- "The argument 'cov_value' must be a list with elements a number"
+      stop(paste(aa, "and a character"), call. = FALSE)
     } else if (length(cov_value) == 2) {
       cov_value
     }
 
     # Covariate value shall be the same with that for the first outcome or model
-    if (length(unique(full1$covariate)) < 3 &
-        !is.element(cov_value[[1]], full1$covariate)) {
+    if (length(unique(full2$covariate)) < 3 &
+        !is.element(cov_value[[1]], full2$covariate)) {
       aa <- "The first element of the argument 'cov_value' is out of the value"
       stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
-    } else if (length(unique(full1$covariate)) > 2 &
-               (cov_value[[1]] < min(full1$covariate) |
-                cov_value[[1]] > max(full1$covariate))) {
+    } else if (length(unique(full2$covariate)) > 2 &
+               (cov_value[[1]] < min(full2$covariate) |
+                cov_value[[1]] > max(full2$covariate))) {
       aa <- "The first element of the argument 'cov_value' is out of the value"
       stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
     }
 
-    covar <- if (length(unique(full1$covariate)) < 3) {
+    covar <- if (length(unique(full2$covariate)) < 3) {
       cov_value[[1]]
     } else {
-      cov_value[[1]] - mean(full1$covariate)
+      cov_value[[1]] - mean(full2$covariate)
     }
 
     par_mean2 <- full2$EM[, 1] + full2$beta_all[, 1] * covar
     par_sd2 <- sqrt(((full2$EM[, 2])^2) + ((full2$beta_all[, 2] * covar)^2))
-    par_lower2 <- par_mean - 1.96 * par_sd
-    par_upper2 <- par_mean + 1.96 * par_sd
+    par_lower2 <- par_mean2 - 1.96 * par_sd2
+    par_upper2 <- par_mean2 + 1.96 * par_sd2
     par20 <- data.frame(par_mean2, par_sd2, par_lower2, full2$EM[, 4:6],
                         par_upper2)
     par2 <- if (is.null(show0)) {
@@ -393,7 +437,8 @@ league_heatmap <- function(full1,
                      is.element(select[, 1], show) &
                        is.element(select[, 2], show)))
     }
-    z_test2 <- par_mean2 / par_sd2
+    #z_test2 <- par_mean2 / par_sd2
+    z_test2 <- par2[, 1] / par2[, 2]
     z_test_mat2 <- matrix(NA,
                          nrow = length(drug_names),
                          ncol = length(drug_names))
@@ -404,39 +449,31 @@ league_heatmap <- function(full1,
     } else {
       1 - pnorm(z_test_mat2)
     }
-    # The p-scores per intervention
-    sucra20 <- apply(prob_diff2, 1, sum, na.rm = TRUE) / (length(drug_names0) - 1)
-    sucra2 <- if (is.null(show0)) {
-      sucra20
-    } else {
-      na.omit(subset(data.frame(sucra20, drug_names0),
-                     is.element(drug_names0, show)))[, 1]
-    }
   }
 
-  if (!is.null(full2)) {
+  if (!is.null(full2) & length(full2$EM[1, ]) < 11) {
     # Second: Matrix of effect measure for all possible comparisons
     # Lower triangle
     point20 <- matrix(NA,
-                      nrow = length(drug_names2),
-                      ncol = length(drug_names2))
+                      nrow = length(drug_names),
+                      ncol = length(drug_names))
     lower20 <- upper20 <- point20
-    point20[lower.tri(point20, diag = FALSE)] <- round(par2[, 1], 2)
+    point20[lower.tri(point20, diag = FALSE)] <- round(-1 * par2[, 1], 2)
     # Incorporate upper triangle
     point21 <- reflect_triangle(point20, from = "lower")
 
     # Matrix of lower and upper bound of effect measure (all possible comparisons)
     # Lower triangle
-    lower20[lower.tri(lower20, diag = FALSE)] <- round(par2[, 3], 2)
-    upper20[lower.tri(upper20, diag = FALSE)] <- round(par2[, 7], 2)
+    lower20[lower.tri(lower20, diag = FALSE)] <- round(-1 * par2[, 7], 2)
+    upper20[lower.tri(upper20, diag = FALSE)] <- round(-1 * par2[, 3], 2)
     # Incorporate upper triangle
     lower21 <- reflect_triangle(upper20, from = "lower")
-    lower21[lower.tri(lower21, diag = FALSE)] <- round(par2[, 3], 2)
+    lower21[lower.tri(lower21, diag = FALSE)] <- round(-1 * par2[, 7], 2)
     upper21 <- reflect_triangle(lower20, from = "lower")
-    upper21[lower.tri(upper21, diag = FALSE)] <- round(par2[, 7], 2)
-    rownames(point21) <- colnames(point21) <- drug_names2
-    rownames(lower21) <- colnames(lower21) <- drug_names2
-    rownames(upper21) <- colnames(upper21) <- drug_names2
+    upper21[lower.tri(upper21, diag = FALSE)] <- round(-1 * par2[, 3], 2)
+    rownames(point21) <- colnames(point21) <- drug_names
+    rownames(lower21) <- colnames(lower21) <- drug_names
+    rownames(upper21) <- colnames(upper21) <- drug_names
 
     # Match matrix for second outcome/model to the comparisons of the
     # matrix for first outcome/model
@@ -448,6 +485,54 @@ league_heatmap <- function(full1,
     point_21[rownames(point21), colnames(point21)] <- point21
     lower_21[rownames(lower21), colnames(lower21)] <- lower21
     upper_21[rownames(upper21), colnames(upper21)] <- upper21
+
+    # Second: Symmetric matrix for effect measure and its bounds after ordering
+    # rows and columns from the best to the worst intervention
+    if (!is.element(measure, c("OR", "RR", "ROM"))) {
+      point2 <- point_21[drug_order, drug_order]
+      lower2 <- lower_21[drug_order, drug_order]
+      upper2 <- upper_21[drug_order, drug_order]
+
+      # Spot the statistically significant comparisons (i.e. the 95% CrI does
+      # not include the value of no difference)
+      signif2 <- ifelse(upper2 < 0 | lower2 > 0, 1, 0)
+      signif2[is.na(signif2)] <- 0
+    } else {
+      point2 <- round(exp(point_21[drug_order, drug_order]), 2)
+      lower2 <- round(exp(lower_21[drug_order, drug_order]), 2)
+      upper2 <- round(exp(upper_21[drug_order, drug_order]), 2)
+
+      # Spot the statistically significant comparisons (i.e. the 95% CrI does not
+      # include the value of no difference)
+      signif2 <- ifelse(upper2 < 1 | lower2 > 1, 1, 0)
+      signif2[is.na(signif2)] <- 1
+    }
+  } else if (!is.null(full2) & length(full2$EM[1, ]) == 11) {
+    # Observed comparisons (run_series_meta)
+    comp <- par2[, c("t1", "t2")]
+
+    # Second: Matrix of effect measure for all possible comparisons
+    point20 <- matrix(NA,
+                       nrow = length(drug_names),
+                       ncol = length(drug_names))
+    lower20 <- upper20 <- point20
+    rownames(point20) <- colnames(point20) <- drug_names
+    rownames(lower20) <- colnames(lower20) <- drug_names
+    rownames(upper20) <- colnames(upper20) <- drug_names
+    for (i in 1:length(comp[, 1])) {
+      point20[comp[i, 1], comp[i, 2]] <- round(-1 * par2[i, 1], 2)
+      # Lower triangle
+      lower20[comp[i, 1], comp[i, 2]] <- round(-1 * par2[i, 7], 2)
+      upper20[comp[i, 1], comp[i, 2]] <- round(-1 * par2[i, 3], 2)
+    }
+
+    # Incorporate upper triangle
+    point_21 <- reflect_triangle(point20, from = "lower")
+
+    # Matrix of lower and upper bound of effect measure (all possible comparisons)
+    # Incorporate upper triangle
+    lower_21 <- reflect_triangle(upper20, from = "lower")
+    upper_21 <- reflect_triangle(lower20, from = "lower")
 
     # Second: Symmetric matrix for effect measure and its bounds after ordering
     # rows and columns from the best to the worst intervention
@@ -493,8 +578,6 @@ league_heatmap <- function(full1,
     signif_status <- melt(signif2, na.rm = FALSE)[3]
   }
 
-
-
   # Merge point estimate with 95% credible interval in a new symmetric matric
   final <- matrix(
     paste0(sprintf("%.2f", point_f),  "\n", "(",
@@ -515,23 +598,19 @@ league_heatmap <- function(full1,
 
   # Merge both datasets to be used for ggplot2
   mat <- point_f
+  diag(mat) <- ifelse(!is.element(measure, c("OR", "RR", "ROM")), 0, 1)
   mat_new <- cbind(mat_new1, melt(mat, na.rm = FALSE)[, 3])
   colnames(mat_new) <- c("Var1", "Var2", "value", "value2")
 
-  # The final dataset for ggplot2
-  diag(mat) <- 0
-  final_col <- melt(mat)
-  mat_new$value_sucra <- final_col$value
-
   caption0 <- if (!is.null(full1$beta_all) &
                  length(unique(full1$covariate)) > 2) {
-    paste("Posterior mean", effect_measure_name(measure),
+    paste("Posterior mean of", effect_measure_name(measure, lower = TRUE),
           "(95% credible interval) for", cov_value[[2]], cov_value[[1]])
   } else if (!is.null(full1$beta_all) & length(unique(full1$covariate)) < 3) {
-    paste("Posterior mean", effect_measure_name(measure),
+    paste("Posterior mean of", effect_measure_name(measure, lower = TRUE),
           "(95% credible interval) for", cov_value[[2]])
   } else if (is.null(full1$beta_all)) {
-    paste("Posterior mean", effect_measure_name(measure),
+    paste("Posterior mean of", effect_measure_name(measure, lower = TRUE),
           "(95% credible interval)")
   }
 
@@ -541,12 +620,25 @@ league_heatmap <- function(full1,
   ymin1 <- rep(seq(len_drug - 0.5, 0.5, -1), each = len_drug)
   ymax1 <- ymin1 + 1
 
+  # Argument in scale_fill_gradientn
+  values <- rescale(c(min(mat_new$value2, na.rm = TRUE),
+                      ifelse(!is.element(measure,
+                                         c("OR", "RR", "ROM")),
+                             0.0001, 1.0001),
+                      max(mat_new$value2, na.rm = TRUE)))
+
+  if (is.null(full2) || (!is.null(full2) & values[3] > values[2])) {
+    colours <- c("blue", "white", "#D55E00")
+  } else if (!is.null(full2) & values[3] < values[2]) {
+    colours <- c("#D55E00", "white", "white")
+  }
+
   # The league table as a heatmap
   p <- ggplot(mat_new,
               aes(factor(Var2, levels = order_drug[seq_len(len_drug)]),
                   factor(Var1, levels = order_drug[rev(seq_len(len_drug))]),
                   fill = value2)) +
-    geom_tile(aes(fill = value_sucra)) +
+    geom_tile() +
     geom_fit_text(aes(factor(Var2, levels = order_drug[seq_len(len_drug)]),
                       factor(Var1, levels =
                                order_drug[rev(seq_len(len_drug))]),
@@ -558,15 +650,10 @@ league_heatmap <- function(full1,
                       label = value,
                       fontface = ifelse(signif_status == 1, "bold", "plain")),
                   reflow = TRUE) +
-    scale_fill_gradientn(colours = c("blue", "white", "#D55E00"),
+    scale_fill_gradientn(colours = colours,
                          na.value = "grey70",
                          guide = "none",
-                         values = rescale(
-                           c(min(mat_new$value2, na.rm = TRUE),
-                             ifelse(!is.element(measure,
-                                                c("OR", "RR", "ROM")),
-                                    0, 1),
-                             max(mat_new$value2, na.rm = TRUE))),
+                         values = values,
                          limits = c(min(mat_new$value2, na.rm = TRUE),
                                     max(mat_new$value2, na.rm = TRUE))) +
     geom_rect(aes(xmin = xmin1, xmax = xmax1, ymin = ymin1, ymax = ymax1),

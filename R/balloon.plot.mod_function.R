@@ -244,7 +244,7 @@ balloon_plot <- function(sens, compar, drug_names) {
            y = paste(imp, "scenario in", control),
            color = "") +
       guides(shape = "none", size = "none") +
-      ggtitle(paste("Summary", effect_measure_name(measure))) +
+      ggtitle(paste("Summary", effect_measure_name(measure, lower = TRUE))) +
       theme_bw() +
       theme(axis.text.x = element_text(size = 12,
                                        angle = 360,
@@ -307,7 +307,7 @@ balloon_plot <- function(sens, compar, drug_names) {
            y = paste(imp, "scenario in", control),
            color = "") +
       guides(shape = "none", size = "none") +
-      ggtitle(paste("Summary", effect_measure_name(measure))) +
+      ggtitle(paste("Summary", effect_measure_name(measure, lower = TRUE))) +
       theme_bw() +
       theme(axis.text.x = element_text(size = 12,
                                        angle = 360,
