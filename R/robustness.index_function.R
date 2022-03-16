@@ -116,8 +116,8 @@ robustness_index <- function(sens, threshold) {
     primary_scenar <- median(seq_len(n_scenar))
 
     if (any(is.na(sens))) {
-      stop("Missing participant outcome data have *not* been collected.
-           This function cannot be used.", call. = FALSE)
+      aa <- "Missing participant outcome data have *not* been collected."
+      stop(paste(aa, "This function cannot be used."), call. = FALSE)
     }
   }
 
@@ -133,29 +133,34 @@ robustness_index <- function(sens, threshold) {
 
   if (missing(threshold) & is.element(measure, "OR")) {
     threshold <- 0.28
-    message(cat(paste0("\033[0;",
-                       col = 32,
-                       "m",
-                       txt =
-                       "The value 0.28 was assigned on 'threshold' by default",
-                       "\033[0m", "\n")))
+    #message(cat(paste0("\033[0;",
+    #                   col = 32,
+    #                   "m",
+    #                   txt =
+    #                   "The value 0.28 was assigned on 'threshold' by default",
+    #                   "\033[0m", "\n")))
+    message("The value 0.28 was assigned on 'threshold' by default")
   } else if (missing(threshold) & is.element(measure, c("MD", "SMD", "ROM"))) {
     threshold <- 0.17
-    message(cat(paste0("\033[0;",
-                       col = 32,
-                       "m",
-                       txt =
-                       "The value 0.17 was assigned on 'threshold' by default",
-                       "\033[0m", "\n")))
+    #message(cat(paste0("\033[0;",
+    #                   col = 32,
+    #                   "m",
+    #                   txt =
+    #                   "The value 0.17 was assigned on 'threshold' by default",
+    #                   "\033[0m", "\n")))
+    message("The value 0.17 was assigned on 'threshold' by default")
   } else {
     threshold <- threshold
-    message(cat(paste0("\033[0;",
-                       col = 32,
-                       "m",
-                       txt = paste("The value", threshold,
-                       "was assigned on 'threshold' for",
-                                   effect_measure_name(measure, lower = TRUE)),
-                       "\033[0m", "\n")))
+    #message(cat(paste0("\033[0;",
+    #                   col = 32,
+    #                   "m",
+    #                   txt = paste("The value", threshold,
+    #                   "was assigned on 'threshold' for",
+    #                               effect_measure_name(measure, lower = TRUE)),
+    #                   "\033[0m", "\n")))
+    aa <- "was assigned on 'threshold' for"
+    effect_measure <- effect_measure_name(measure, lower = TRUE)
+    message(paste("The value", threshold, aa, effect_measure))
   }
 
   # Function for the Kullback-Leibler Divergence (two normal distributions)

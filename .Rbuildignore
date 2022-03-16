@@ -1,4 +1,4 @@
-README.md
+^README.md
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
@@ -9,3 +9,4 @@ README.md
 ^cran-comments\.md$
 ^LICENSE\.md$
 ^CRAN-RELEASE$
+^vignettes\.Rmd$
