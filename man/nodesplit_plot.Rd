@@ -68,8 +68,13 @@ directory of the user. The default is \code{FALSE} (do not export).}
   interval of \emph{tau} after each split node. The lines that correspond to
   the split nodes are sorted in ascending order of the deviance information
   criterion (DIC) which appears at the top of each line.
-  The 95\% credible interval of \emph{tau} under the consistency model
-  appears as a rectangle in the interval plot. When a fixed-effect model has
+  The estimated median and 95\% credible intervals of \emph{tau} under the
+  consistency model appear in the interval plot as a solid and two dotted
+  parallel blue lines, respectively. The different levels of heterogeneity
+  appear as green, yellow, orange, and red rectangulars to indicate a low,
+  reasonable, fairly high, and fairly extreme heterogeneity, respectively,
+  following the classification of Spiegelhalter et al (2004).
+  When a fixed-effect model has
   been performed, \code{nodesplit_plot} does not return the
   \code{intervalplot_tau}.
 
@@ -131,6 +136,9 @@ treatment comparison meta-analysis.
 Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of
 model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616.
 \doi{10.1111/1467-9868.00353}
+
+Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian approaches to clinical trials
+and health-care evaluation. John Wiley and Sons, Chichester, 2004.
 }
 \seealso{
 \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}},

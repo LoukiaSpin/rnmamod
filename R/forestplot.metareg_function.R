@@ -62,21 +62,20 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   if (length(unique(reg$covariate)) < 3 &
       !is.element(cov_value[[1]], reg$covariate)) {
     aa <- "The first element of the argument 'cov_value' is out of the value"
-    bb <- "range of the analysed covariate"
+    bb <- "range of the analysed covariate."
     stop(paste(aa, bb), call. = FALSE)
   } else if (length(unique(reg$covariate)) > 2 &
              (cov_value[[1]] < min(reg$covariate) |
               cov_value[[1]] > max(reg$covariate))) {
     aa <- "The first element of the argument 'cov_value' is out of the value"
-    bb <- "range of the analysed covariate"
+    bb <- "range of the analysed covariate."
     stop(paste(aa, bb), call. = FALSE)
   }
 
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
-    bb <- "The intervention ID, as specified in 'data' is used as"
-    cc <- "intervention names"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, bb, cc, "\033[0m", "\n")))
+    bb <- "The intervention ID, as specified in 'data' is used, instead."
+    message(paste(aa, bb))
     nt <- length(full$SUCRA[, 1])
     as.character(1:nt)
   } else {
@@ -85,7 +84,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   len_drug <- length(drug_names)
 
   if (length(drug_names) < 3) {
-    stop("This function is *not* relevant for a pairwise meta-analysis",
+    stop("This function is *not* relevant for a pairwise meta-analysis.",
          call. = FALSE)
   }
 
@@ -94,19 +93,19 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   drug_names_sorted <- drug_names[order(full$SUCRA[, 1], decreasing = TRUE)]
 
   compar <- if (missing(compar)) {
-    stop("The argument 'compar' has not been defined", call. = FALSE)
+    stop("The argument 'compar' has not been defined.", call. = FALSE)
   } else if (!is.element(compar, drug_names)) {
-    stop("The value of the argument 'compar' is not found in the 'drug_names'",
+    stop("The value of the argument 'compar' is not found in the 'drug_names'.",
          call. = FALSE)
   } else if (is.element(compar, drug_names)) {
     compar
   }
 
   cov_value <- if (!is.null(reg$beta_all) & missing(cov_value)) {
-    stop("The argument 'cov_value' has not been defined", call. = FALSE)
+    stop("The argument 'cov_value' has not been defined.", call. = FALSE)
   } else if (!is.null(reg$beta_all) & length(cov_value) < 2) {
     aa <- "The argument 'cov_value' must be a list with elements a number and"
-    stop(paste(aa, "a character"), call. = FALSE)
+    stop(paste(aa, "a character."), call. = FALSE)
   } else if (!is.null(reg$beta_all) & length(cov_value) == 2) {
     cov_value
   }

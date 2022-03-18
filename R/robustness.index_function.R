@@ -133,34 +133,15 @@ robustness_index <- function(sens, threshold) {
 
   if (missing(threshold) & is.element(measure, "OR")) {
     threshold <- 0.28
-    #message(cat(paste0("\033[0;",
-    #                   col = 32,
-    #                   "m",
-    #                   txt =
-    #                   "The value 0.28 was assigned on 'threshold' by default",
-    #                   "\033[0m", "\n")))
-    message("The value 0.28 was assigned on 'threshold' by default")
+    message("The value 0.28 was assigned as 'threshold' by default.")
   } else if (missing(threshold) & is.element(measure, c("MD", "SMD", "ROM"))) {
     threshold <- 0.17
-    #message(cat(paste0("\033[0;",
-    #                   col = 32,
-    #                   "m",
-    #                   txt =
-    #                   "The value 0.17 was assigned on 'threshold' by default",
-    #                   "\033[0m", "\n")))
-    message("The value 0.17 was assigned on 'threshold' by default")
+    message("The value 0.17 was assigned as 'threshold' by default.")
   } else {
     threshold <- threshold
-    #message(cat(paste0("\033[0;",
-    #                   col = 32,
-    #                   "m",
-    #                   txt = paste("The value", threshold,
-    #                   "was assigned on 'threshold' for",
-    #                               effect_measure_name(measure, lower = TRUE)),
-    #                   "\033[0m", "\n")))
     aa <- "was assigned on 'threshold' for"
     effect_measure <- effect_measure_name(measure, lower = TRUE)
-    message(paste("The value", threshold, aa, effect_measure))
+    message(paste("The value", threshold, aa, paste0(effect_measure, ".")))
   }
 
   # Function for the Kullback-Leibler Divergence (two normal distributions)

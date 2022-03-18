@@ -70,6 +70,8 @@ scatterplots_dev <- function(full, ume, colour) {
   ggplot(data = prepare_dev, aes(x = full, y = ume)) +
     geom_point(size = 2, colour = colour) +
     geom_abline(slope = 1, lty = 2, size = 1) +
+    geom_hline(yintercept = 1, lty = 3, size = 1, col = "grey60") +
+    geom_vline(xintercept = 1, lty = 3, size = 1, col = "grey60") +
     geom_text(aes(x = full,
                   y = ume,
                   label = trial_arm),

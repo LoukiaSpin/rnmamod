@@ -86,10 +86,8 @@ heatmap_missing_dataset <- function(data, trial_names, drug_names) {
 
   trial_names <- if (missing(trial_names)) {
     aa <- "The argument 'trial_names' has not been defined."
-    bb <- "The trial ID, as specified in the argument 'data' is used"
-    cc <- "as trial names"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
-                       "\033[0m", "\n")))
+    bb <- "The trial ID, as specified in the argument 'data' is used, instead."
+    message(paste(aa, bb))
     as.character(1:ns)
   } else {
     trial_names
@@ -98,9 +96,8 @@ heatmap_missing_dataset <- function(data, trial_names, drug_names) {
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
     bb <- "The intervention ID, as specified in argument 'data' is"
-    cc <- "used as intervention names"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
-                       "\033[0m", "\n")))
+    cc <- "used, instead."
+    message(paste(aa, bb, cc))
     as.character(1:nt)
   } else {
     drug_names

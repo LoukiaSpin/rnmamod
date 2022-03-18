@@ -133,17 +133,17 @@ metareg_plot <- function(full,
   if (length(unique(reg$covariate)) < 3 &
       !is.element(cov_value[[1]], reg$covariate)) {
     aa <- "The first element of the argument 'cov_value' is out of the value"
-    stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
+    stop(paste(aa, "range of the analysed covariate."), call. = FALSE)
   } else if (length(unique(reg$covariate)) > 2 &
              (cov_value[[1]] < min(reg$covariate) |
               cov_value[[1]] > max(reg$covariate))) {
     aa <- "The first element of the argument 'cov_value' is out of the value"
-    stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
+    stop(paste(aa, "range of the analysed covariate."), call. = FALSE)
   }
 
 
   if (length(drug_names) < 3) {
-    stop("This function is *not* relevant for a pairwise meta-analysis",
+    stop("This function is *not* relevant for a pairwise meta-analysis.",
          call. = FALSE)
   }
 
@@ -151,7 +151,7 @@ metareg_plot <- function(full,
     stop("The argument 'cov_value' has not been defined", call. = FALSE)
   } else if (length(cov_value) < 2) {
     aa <- "The argument 'cov_value' must be a list with elements a number and"
-    stop(paste(aa, "a character"), call. = FALSE)
+    stop(paste(aa, "a character."), call. = FALSE)
   } else if (length(cov_value) == 2) {
     cov_value
   }
@@ -163,9 +163,9 @@ metareg_plot <- function(full,
   }
 
   compar <- if (missing(compar)) {
-    stop("The argument 'compar' has not been defined", call. = FALSE)
+    stop("The argument 'compar' has not been defined.", call. = FALSE)
   } else if (!is.element(compar, drug_names)) {
-    stop("The value of the argument 'compar' is not found in the 'drug_names'",
+    stop("The value of the argument 'compar' is not found in the 'drug_names'.",
          call. = FALSE)
   } else if (is.element(compar, drug_names)) {
     compar
@@ -183,10 +183,8 @@ metareg_plot <- function(full,
 
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
-    bb <- "The intervention ID, as specified in 'data' is used as"
-    cc <- "intervention names"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
-                       "\033[0m", "\n")))
+    bb <- "The intervention ID, as specified in 'data' is used, instead"
+    message(paste(aa, bb))
     as.character(seq_len(length(full$SUCRA[, 1])))
   } else {
     drug_names

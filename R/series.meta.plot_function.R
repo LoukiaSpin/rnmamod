@@ -99,10 +99,8 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
 
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
-    bb <- "The intervention ID, as specified in 'data' is used as"
-    cc <- "intervention names"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
-                       "\033[0m", "\n")))
+    bb <- "The intervention ID, as specified in 'data' is used, instead."
+    message(paste(aa, bb))
     nt <- length(full$SUCRA[, 1])
     as.character(1:nt)
   } else {
@@ -110,7 +108,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
   }
 
   if (length(drug_names) < 3) {
-    stop("This function is *not* relevant for a pairwise meta-analysis",
+    stop("This function is *not* relevant for a pairwise meta-analysis.",
          call. = FALSE)
   }
 
@@ -261,16 +259,16 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
 
   caption <- if (full$D == 0 & is.element(measure, c("OR", "ROM"))) {
     paste(measure2, "< 1, favours the first arm.",
-          measure2, "> 1, favours the second arm")
+          measure2, "> 1, favours the second arm.")
   } else if (full$D == 1 & is.element(measure, c("OR", "ROM"))) {
     paste(measure2, "< 1, favours the second arm.",
-          measure2, "> 1, favours the first arm")
+          measure2, "> 1, favours the first arm.")
   } else if (full$D == 0 & !is.element(measure, c("OR", "ROM"))) {
     paste(measure2, "< 0, favours the first arm.",
-          measure2, "> 0, favours the second arm")
+          measure2, "> 0, favours the second arm.")
   } else if (full$D == 1 & !is.element(measure, c("OR", "ROM"))) {
     paste(measure2, "< 0, favours the second arm.",
-          measure2, "> 0, favours the first arm")
+          measure2, "> 0, favours the first arm.")
   }
 
   p1 <- ggplot(data = prepare,
@@ -323,7 +321,8 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
                 legend.position = "bottom", legend.justification = c(0.13, 0),
                 legend.text =  element_text(color = "black", size = 12),
                 legend.title =  element_text(color = "black", face = "bold",
-                                             size = 12))
+                                             size = 12),
+                plot.caption = element_text(hjust = 0.01))
 
   # Forest plots of comparisons-specific between-trial standard deviation
   p2 <- if (model == "RE") {

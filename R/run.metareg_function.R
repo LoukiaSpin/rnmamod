@@ -186,7 +186,7 @@ run_metareg <- function(full,
 
   # Missing and default arguments
   covariate <- if (missing(covariate)) {
-    stop("The argument 'covariate' needs to be defined", call. = FALSE)
+    stop("The argument 'covariate' needs to be defined.", call. = FALSE)
   } else {
     covariate
   }
@@ -195,7 +195,7 @@ run_metareg <- function(full,
          call. = FALSE)
   } else if (!is.element(covar_assumption,
                          c("exchangeable", "independent", "common"))) {
-    stop("Insert 'NO', 'exchangeable', 'independent', or 'common'",
+    stop("Insert 'NO', 'exchangeable', 'independent', or 'common'.",
          call. = FALSE)
   } else {
     covar_assumption

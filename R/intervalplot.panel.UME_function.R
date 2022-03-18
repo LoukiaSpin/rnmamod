@@ -117,16 +117,16 @@ intervalplot_panel_ume <- function(full, ume, drug_names) {
   caption <- if (full$D == 0 & is.element(measure,
                                           c("OR", "ROM"))) {
     paste(measure2, "< 1, favours the first arm.",
-          measure2, "> 1, favours the second arm")
+          measure2, "> 1, favours the second arm.")
   } else if (full$D == 1 & is.element(measure, c("OR", "ROM"))) {
     paste(measure2, "< 1, favours the second arm.",
-          measure2, "> 1, favours the first arm")
+          measure2, "> 1, favours the first arm.")
   } else if (full$D == 0 & !is.element(measure, c("OR", "ROM"))) {
     paste(measure2, "< 0, favours the first arm.",
-          measure2, "> 0, favours the second arm")
+          measure2, "> 0, favours the second arm.")
   } else if (full$D == 1 & !is.element(measure, c("OR", "ROM"))) {
     paste(measure2, "< 0, favours the second arm.",
-          measure2, "> 0, favours the first arm")
+          measure2, "> 0, favours the first arm.")
   }
 
   ggplot(data = data_set,

@@ -160,20 +160,12 @@ league_heatmap <- function(full1,
                            name2 = NULL,
                            show = NULL) {
 
-  if (is.null(full2)) {
-    message("Tips to read the table: row versus column")
-  } else {
-    aa <- "Tips to read the table: upper triangle, row versus column;"
-    bb <- "lower triangle, column versus row"
-    message(paste(aa, bb))
-  }
-
   # Both objects must refer to the same effect measure
   measure <- if (is.null(full2) || (!is.null(full2) &
                                 full1$measure == full2$measure)) {
     full1$measure
   } else if (!is.null(full2) & full1$measure != full2$measure) {
-    stop("'full1' and 'full2' must have the same effect measure", call. = FALSE)
+    stop("'full1' and 'full2' must have the same effect measure.", call. = FALSE)
   }
 
   # Forcing to define 'drug_names1' & 'drug_names2' so that 'show' can be used
@@ -184,7 +176,7 @@ league_heatmap <- function(full1,
   }
 
   if (length(drug_names1) < 3) {
-    stop("This function is *not* relevant for a pairwise meta-analysis",
+    stop("This function is *not* relevant for a pairwise meta-analysis.",
          call. = FALSE)
   }
 
@@ -199,11 +191,12 @@ league_heatmap <- function(full1,
          call. = FALSE)
   }
 
-  drug_names0 <- if (is.null(full2) || (!is.null(full2) &
-                     length(drug_names1) >= length(drug_names2))) {
+  drug_names0 <- if (is.null(full2) ||
+                     (!is.null(full2) &
+                      length(drug_names1) >= length(drug_names2))) {
     drug_names1
   } else if (!is.null(full2) & length(drug_names1) < length(drug_names2)) {
-    stop("'drug_names1' must have greater length than 'drug_names2'",
+    stop("'drug_names1' must have greater length than 'drug_names2'.",
          call. = FALSE)
   }
 
@@ -221,11 +214,11 @@ league_heatmap <- function(full1,
 
   show0 <- if (length(unique(!is.element(show, drug_names0))) > 1) {
     aa <- "All elements of the argument 'show' must be found in 'drug_names1'"
-    bb <- "or 'drug_names2'"
+    bb <- "or 'drug_names2'."
     stop(paste(aa, bb), call. = FALSE)
   } else if (length(unique(!is.element(show, drug_names0))) == 1 &
              length(show) < 3) {
-    stop("The argument 'show' must have length greater than 2", call. = FALSE)
+    stop("The argument 'show' must have length greater than 2.", call. = FALSE)
   } else if (length(unique(!is.element(show, drug_names0))) == 1 &
              length(show) > 2) {
     cbind(combn(show, 2)[2,], combn(show, 2)[1,])
@@ -235,6 +228,14 @@ league_heatmap <- function(full1,
     drug_names0
   } else {
     subset(drug_names0, is.element(drug_names0, show))
+  }
+
+  if (is.null(full2)) {
+    message("Tips to read the table: row versus column.")
+  } else {
+    aa <- "Tips to read the table: upper triangle, row versus column;"
+    bb <- "lower triangle, column versus row."
+    message(paste(aa, bb))
   }
 
   #Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html
@@ -265,10 +266,10 @@ league_heatmap <- function(full1,
 
   } else {
     cov_value <- if (missing(cov_value)) {
-      stop("The argument 'cov_value' has not been defined", call. = FALSE)
+      stop("The argument 'cov_value' has not been defined.", call. = FALSE)
     } else if (length(cov_value) != 2) {
       aa <- "The argument 'cov_value' must be a list with elements a number"
-      stop(paste(aa, "and a character"), call. = FALSE)
+      stop(paste(aa, "and a character."), call. = FALSE)
     } else if (length(cov_value) == 2) {
       cov_value
     }
@@ -276,12 +277,12 @@ league_heatmap <- function(full1,
     if (length(unique(full1$covariate)) < 3 &
         !is.element(cov_value[[1]], full1$covariate)) {
       aa <- "The first element of the argument 'cov_value' is out of the value"
-      stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
+      stop(paste(aa, "range of the analysed covariate."), call. = FALSE)
     } else if (length(unique(full1$covariate)) > 2 &
                (cov_value[[1]] < min(full1$covariate) |
                 cov_value[[1]] > max(full1$covariate))) {
       aa <- "The first element of the argument 'cov_value' is out of the value"
-      stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
+      stop(paste(aa, "range of the analysed covariate."), call. = FALSE)
     }
 
     covar <- if (length(unique(full1$covariate)) < 3) {
@@ -372,7 +373,6 @@ league_heatmap <- function(full1,
     signif_status <- melt(signif, na.rm = FALSE)[3]
   }
 
-
   if (!is.null(full2) & length(full2$EM[1, ]) == 11) {
     names <- full2$EM[, 1:2]
     for (i in 1:length(names[, 1])) {
@@ -451,70 +451,19 @@ league_heatmap <- function(full1,
     }
   }
 
+  # Second: Matrix of effect measure for all possible comparisons
   if (!is.null(full2) & length(full2$EM[1, ]) < 11) {
-    # Second: Matrix of effect measure for all possible comparisons
-    # Lower triangle
+    comp0 <- t(combn(drug_names2, 2))
+    colnames(comp0) <- c("t1", "t2")
+    comp <- cbind(comp0[, 2], comp0[, 1])
+  } else if (!is.null(full2) & length(full2$EM[1, ]) == 11) {
+    comp <- par2[, c("t1", "t2")]
+  }
+
+  if (!is.null(full2)) {
     point20 <- matrix(NA,
                       nrow = length(drug_names),
                       ncol = length(drug_names))
-    lower20 <- upper20 <- point20
-    point20[lower.tri(point20, diag = FALSE)] <- round(-1 * par2[, 1], 2)
-    # Incorporate upper triangle
-    point21 <- reflect_triangle(point20, from = "lower")
-
-    # Matrix of lower and upper bound of effect measure (all possible comparisons)
-    # Lower triangle
-    lower20[lower.tri(lower20, diag = FALSE)] <- round(-1 * par2[, 7], 2)
-    upper20[lower.tri(upper20, diag = FALSE)] <- round(-1 * par2[, 3], 2)
-    # Incorporate upper triangle
-    lower21 <- reflect_triangle(upper20, from = "lower")
-    lower21[lower.tri(lower21, diag = FALSE)] <- round(-1 * par2[, 7], 2)
-    upper21 <- reflect_triangle(lower20, from = "lower")
-    upper21[lower.tri(upper21, diag = FALSE)] <- round(-1 * par2[, 3], 2)
-    rownames(point21) <- colnames(point21) <- drug_names
-    rownames(lower21) <- colnames(lower21) <- drug_names
-    rownames(upper21) <- colnames(upper21) <- drug_names
-
-    # Match matrix for second outcome/model to the comparisons of the
-    # matrix for first outcome/model
-    point_21 <- lower_21 <- upper_21 <- matrix(NA, nrow = length(drug_names),
-                                                   ncol = length(drug_names))
-    rownames(point_21) <- colnames(point_21) <- drug_names
-    rownames(lower_21) <- colnames(lower_21) <- drug_names
-    rownames(upper_21) <- colnames(upper_21) <- drug_names
-    point_21[rownames(point21), colnames(point21)] <- point21
-    lower_21[rownames(lower21), colnames(lower21)] <- lower21
-    upper_21[rownames(upper21), colnames(upper21)] <- upper21
-
-    # Second: Symmetric matrix for effect measure and its bounds after ordering
-    # rows and columns from the best to the worst intervention
-    if (!is.element(measure, c("OR", "RR", "ROM"))) {
-      point2 <- point_21[drug_order, drug_order]
-      lower2 <- lower_21[drug_order, drug_order]
-      upper2 <- upper_21[drug_order, drug_order]
-
-      # Spot the statistically significant comparisons (i.e. the 95% CrI does
-      # not include the value of no difference)
-      signif2 <- ifelse(upper2 < 0 | lower2 > 0, 1, 0)
-      signif2[is.na(signif2)] <- 0
-    } else {
-      point2 <- round(exp(point_21[drug_order, drug_order]), 2)
-      lower2 <- round(exp(lower_21[drug_order, drug_order]), 2)
-      upper2 <- round(exp(upper_21[drug_order, drug_order]), 2)
-
-      # Spot the statistically significant comparisons (i.e. the 95% CrI does not
-      # include the value of no difference)
-      signif2 <- ifelse(upper2 < 1 | lower2 > 1, 1, 0)
-      signif2[is.na(signif2)] <- 1
-    }
-  } else if (!is.null(full2) & length(full2$EM[1, ]) == 11) {
-    # Observed comparisons (run_series_meta)
-    comp <- par2[, c("t1", "t2")]
-
-    # Second: Matrix of effect measure for all possible comparisons
-    point20 <- matrix(NA,
-                       nrow = length(drug_names),
-                       ncol = length(drug_names))
     lower20 <- upper20 <- point20
     rownames(point20) <- colnames(point20) <- drug_names
     rownames(lower20) <- colnames(lower20) <- drug_names
@@ -621,16 +570,21 @@ league_heatmap <- function(full1,
   ymax1 <- ymin1 + 1
 
   # Argument in scale_fill_gradientn
-  values <- rescale(c(min(mat_new$value2, na.rm = TRUE),
+  min_value <- min(mat_new$value2, na.rm = TRUE)
+  max_value <- max(mat_new$value2, na.rm = TRUE)
+  values <- rescale(c(min_value,
                       ifelse(!is.element(measure,
                                          c("OR", "RR", "ROM")),
                              0.0001, 1.0001),
-                      max(mat_new$value2, na.rm = TRUE)))
+                      max_value))
 
-  if (is.null(full2) || (!is.null(full2) & values[3] > values[2])) {
-    colours <- c("blue", "white", "#D55E00")
-  } else if (!is.null(full2) & values[3] < values[2]) {
-    colours <- c("#D55E00", "white", "white")
+  colours <- if (is.null(full2) ||
+                 !is.null(full2) & min_value < 1 & max_value > 1) {
+   c("blue", "white", "#D55E00")
+  } else if (!is.null(full2) & min_value < 1 & max_value == 1) {
+   c("blue", "white", "white")
+  } else if (!is.null(full2) & min_value == 1 & max_value > 1) {
+    c("white", "white", "#D55E00")
   }
 
   # The league table as a heatmap
@@ -663,9 +617,9 @@ league_heatmap <- function(full1,
     theme_bw() +
     theme(legend.position = "none",
           axis.title.x = element_text(size = 12, face = "bold",
-                                      colour = "blue", hjust = 0),
+                                      colour = "black"),
           axis.title.y = element_text(size = 12, face = "bold",
-                                      colour = "#D55E00", hjust = 1),
+                                      colour = "black"),
           axis.text.x = element_text(size = 12, hjust = 0.5), #angle = 50,
           axis.text.y = element_text(size = 12),
           plot.caption = element_text(hjust = 0.01))

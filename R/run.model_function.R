@@ -369,7 +369,7 @@ run_model <- function(data,
   model <- if (missing(model)) {
     "RE"
   } else if (!is.element(model, c("RE", "FE"))) {
-    stop("Insert 'RE', or 'FE'", call. = FALSE)
+    stop("Insert 'RE', or 'FE'.", call. = FALSE)
   } else {
     model
   }
@@ -379,14 +379,15 @@ run_model <- function(data,
     assumption
   }
   D <- if (missing(D)) {
-    stop("The argument 'D' needs to be defined", call. = FALSE)
+    stop("The argument 'D' needs to be defined.", call. = FALSE)
   } else {
     D
   }
   ref <- if (missing(ref)) {
     1
   } else if (ref < 1 || ref > item$nt) {
-    stop(paste("The argument 'ref' must be an integer from 1 to", item$nt),
+    stop(paste("The argument 'ref' must be an integer from 1 to",
+               paste0(item$nt, ".")),
          call. = FALSE)
   } else {
     ref
@@ -398,7 +399,7 @@ run_model <- function(data,
                      measure = measure)$table_interventions[ref, 7]/100
   } else if (is.element(measure, c("OR", "RR", "RD")) &
              (base_risk < 0 || base_risk > 1)) {
-    stop("The argument 'base_risk' must be a probability", call. = FALSE)
+    stop("The argument 'base_risk' must be a probability.", call. = FALSE)
   } else {
     base_risk
   }

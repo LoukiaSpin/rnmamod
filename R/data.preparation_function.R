@@ -72,26 +72,26 @@ data_preparation <- function(data, measure) {
   nt <- length(table(as.matrix(treat)))
 
   measure <- if (missing(measure)) {
-    stop("The argument 'measure' needs to be defined", call. = FALSE)
+    stop("The argument 'measure' needs to be defined.", call. = FALSE)
   } else if ((dim(data %>% select(starts_with("r")))[2] > 0) &
              !is.element(measure, c("MD", "SMD", "ROM", "OR", "RR", "RD"))) {
-    stop("Insert 'OR', 'RR', or 'RD'", call. = FALSE)
+    stop("Insert 'OR', 'RR', or 'RD'.", call. = FALSE)
   } else if ((dim(data %>% select(starts_with("r")))[2] == 0) &
              !is.element(measure, c("MD", "SMD", "ROM", "OR", "RR", "RD"))) {
-    stop("Insert 'MD', 'SMD' or 'ROM'", call. = FALSE)
+    stop("Insert 'MD', 'SMD' or 'ROM'.", call. = FALSE)
   } else if ((dim(data %>% select(starts_with("r")))[2] > 0) &
              is.element(measure, c("MD", "SMD", "ROM"))) {
-    stop("Insert 'OR', 'RR', or 'RD' for a  binary outcome", call. = FALSE)
+    stop("Insert 'OR', 'RR', or 'RD' for a  binary outcome.", call. = FALSE)
   } else if ((dim(data %>% select(starts_with("r")))[2] == 0) &
              is.element(measure, "OR")) {
-    stop("Insert 'MD', 'SMD' or 'ROM' for a continuous outcome", call. = FALSE)
+    stop("Insert 'MD', 'SMD' or 'ROM' for a continuous outcome.", call. = FALSE)
   } else {
     measure
   }
 
   # When no missing outcome data are collected
   mod <- if (dim(data %>% select(starts_with("m")))[2] == 0) {
-    message("Missing participant outcome data have *not* been collected")
+    message("Missing participant outcome data have *not* been collected.")
     as.data.frame(matrix(NA, nrow = nrow(treat), ncol = ncol(treat)))
   } else {
     # Number of missing participants in each arm of every trial
@@ -113,14 +113,14 @@ data_preparation <- function(data, measure) {
         (dim(sd_obs)[2] != max(na)) |
         (dim(mod)[2] != max(na)) |
         (dim(rand)[2] != max(na))) {
-      stop("All elements must have the same dimension", call. = FALSE)
+      stop("All elements must have the same dimension.", call. = FALSE)
     }
 
     if ((dim(y_obs)[1] != ns) |
         (dim(sd_obs)[1] != ns) |
         (dim(mod)[1] != ns) |
         (dim(rand)[1] != ns)) {
-      stop("All elements must have the same dimension", call. = FALSE)
+      stop("All elements must have the same dimension.", call. = FALSE)
     }
 
     # Order by 'id of t1' < 'id of t1'
@@ -166,13 +166,13 @@ data_preparation <- function(data, measure) {
     if ((dim(event)[2] != max(na)) |
         (dim(mod)[2] != max(na)) |
         (dim(rand)[2] != max(na))) {
-      stop("All elements must have the same dimension", call. = FALSE)
+      stop("All elements must have the same dimension.", call. = FALSE)
     }
 
     if ((dim(event)[1] != ns) |
         (dim(mod)[1] != ns) |
         (dim(rand)[1] != ns)) {
-      stop("All elements must have the same dimension", call. = FALSE)
+      stop("All elements must have the same dimension.", call. = FALSE)
     }
 
     # Order by 'id of t1' < 'id of t2' < 'id of t3', and so on

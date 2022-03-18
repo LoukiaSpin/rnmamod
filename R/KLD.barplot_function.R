@@ -83,23 +83,23 @@ kld_barplot <- function(robust, compar, drug_names) {
   }
 
   drug_names <- if (missing(drug_names)) {
-    stop("The argument 'drug_names' has not been defined", call. = FALSE)
+    stop("The argument 'drug_names' has not been defined.", call. = FALSE)
   } else {
     drug_names
   }
 
   compar <- if (missing(compar)) {
-    stop("The argument 'compar' needs to be defined", call. = FALSE)
+    stop("The argument 'compar' needs to be defined.", call. = FALSE)
   } else if (length(drug_names) < 3 & missing(compar)) {
     c(drug_names[2], drug_names[1])
   } else if (!is.element(compar[1], drug_names) |
              !is.element(compar[2], drug_names)) {
-    stop("The value of 'compar' is not found in the argument 'drug_names'",
+    stop("The value of 'compar' is not found in the argument 'drug_names'.",
          call. = FALSE)
   } else if (is.element(compar[1], drug_names) &
              is.element(compar[2], drug_names) &
              match(compar[1], drug_names) < match(compar[2], drug_names)) {
-    stop("Re-arrange the order of the element in the argument 'compar'",
+    stop("Re-arrange the order of the element in the argument 'compar'.",
          call. = FALSE)
   } else if (is.element(compar[1], drug_names) &
              is.element(compar[2], drug_names) &

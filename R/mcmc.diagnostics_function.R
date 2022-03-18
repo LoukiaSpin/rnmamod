@@ -73,14 +73,16 @@
 #' @export
 mcmc_diagnostics <- function(net, par = NULL) {
 
+  message("A parameter converges when R-hat < 1.10 *and* MCMC error < 0.5%.")
+
   par <- if (!is.null(net$jagsfit) & missing(par)) {
-    stop("The argument 'par' needs to be defined", call. = FALSE)
+    stop("The argument 'par' needs to be defined.", call. = FALSE)
   } else if (!is.null(net$jagsfit) & !is.null(par)) {
     par
   } else if (is.null(net$jagsfit) & !is.null(par)) {
-    aa <- "The argument 'par' is ignored as it is used only"
-    bb <- "for the functions 'run_model', 'run_ume' and 'run_metareg'"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, "\033[0m", "\n")))
+    aa <- "Note: The argument 'par' is ignored. It is used only"
+    bb <- "with 'run_model', 'run_ume' and 'run_metareg'."
+    message(paste(aa, bb))
     NULL
   }
 

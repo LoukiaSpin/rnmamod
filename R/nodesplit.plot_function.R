@@ -55,8 +55,13 @@
 #'   interval of \emph{tau} after each split node. The lines that correspond to
 #'   the split nodes are sorted in ascending order of the deviance information
 #'   criterion (DIC) which appears at the top of each line.
-#'   The 95\% credible interval of \emph{tau} under the consistency model
-#'   appears as a rectangle in the interval plot. When a fixed-effect model has
+#'   The estimated median and 95\% credible intervals of \emph{tau} under the
+#'   consistency model appear in the interval plot as a solid and two dotted
+#'   parallel blue lines, respectively. The different levels of heterogeneity
+#'   appear as green, yellow, orange, and red rectangulars to indicate a low,
+#'   reasonable, fairly high, and fairly extreme heterogeneity, respectively,
+#'   following the classification of Spiegelhalter et al (2004).
+#'   When a fixed-effect model has
 #'   been performed, \code{nodesplit_plot} does not return the
 #'   \code{intervalplot_tau}.
 #'
@@ -106,6 +111,9 @@
 #' model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616.
 #' \doi{10.1111/1467-9868.00353}
 #'
+#' Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian approaches to clinical trials
+#' and health-care evaluation. John Wiley and Sons, Chichester, 2004.
+#'
 #' @examples
 #' data("nma.baker2009")
 #'
@@ -146,16 +154,14 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
   }
   item <- data_preparation(data, measure)
   if (item$nt < 3) {
-    stop("This function is *not* relevant for a pairwise meta-analysis",
+    stop("This function is *not* relevant for a pairwise meta-analysis.",
          call. = FALSE)
   }
 
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
-    bb <- "The intervention ID, as specified in 'data' is used as"
-    cc <- "intervention names"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
-                       "\033[0m", "\n")))
+    bb <- "The intervention ID, as specified in 'data' is used, instead."
+    message(paste(aa, bb))
     nt <- length(full$SUCRA[, 1])
     as.character(1:nt)
   } else {
@@ -434,18 +440,42 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
     ggplot(data = prepare_tau,
            aes(x = as.factor(seq_len(length(comp))),
                y = median, ymin = lower, ymax = upper)) +
-      geom_rect(aes(xmin = 0,
-                    xmax = Inf,
-                    ymin = tau_values[3],
-                    ymax = tau_values[4]),
-                fill = "#D55E00",
-                alpha = 0.1) +
-      geom_linerange(size = 2,
-                     position = position_dodge(width = 0.5)) +
+      #geom_rect(aes(xmin = 0,
+      #              xmax = Inf,
+      #              ymin = tau_values[3],
+      #              ymax = tau_values[4]),
+      #          fill = "#D55E00",
+      #          alpha = 0.1) +
+      geom_rect(aes(xmin = 0, xmax = Inf, ymin = 0, ymax = 0.099,
+                    fill = "low"),
+                alpha = 0.02) +
+      geom_rect(aes(xmin = 0, xmax = Inf, ymin = 0.1, ymax = 0.5,
+                    fill = "reasonable"),
+                alpha = 0.02) +
+      geom_rect(aes(xmin = 0, xmax = Inf, ymin = 0.5, ymax = 1.0,
+                    fill = "fairly high"),
+                alpha = 0.02) +
+      geom_rect(aes(xmin = 0, xmax = Inf, ymin = 1.0, ymax = Inf,
+                    fill = "fairly extreme"),
+                alpha = 0.02) +
       geom_hline(yintercept = tau_values[1],
                  lty = 1,
                  size = 1,
-                 col = "#D55E00") +
+                 col = "#006CD1") +
+      geom_hline(yintercept = tau_values[3],
+                 lty = 3,
+                 size = 1,
+                 col = "#006CD1") +
+      geom_hline(yintercept = tau_values[4],
+                 lty = 3,
+                 size = 1,
+                 col = "#006CD1") +
+      geom_linerange(size = 2,
+                     position = position_dodge(width = 0.5)) +
+      #geom_hline(yintercept = tau_values[1],
+      #           lty = 1,
+      #           size = 1,
+      #           col = "#D55E00") +
       geom_point(size = 1.5,
                  colour = "white",
                  stroke = 0.3,
@@ -470,13 +500,21 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                  size = 3.1) +
       scale_x_discrete(breaks = as.factor(seq_len(length(comp))),
                        labels = comp[seq_len(length(comp))]) +
+      scale_fill_manual(name = "Heterogeneity",
+                        values = c("low" = "#009E73",
+                                   "reasonable" = "orange",
+                                   "fairly high" = "#D55E00",
+                                   "fairly extreme" = "red")) +
       labs(x = "Split nodes (sorted by DIC in ascending order)",
            y = "Between-trial standard deviation") +
       theme_classic() +
       theme(axis.text.x = element_text(color = "black", size = 12, angle = 45,
                                        hjust = 1),
             axis.text.y = element_text(color = "black", size = 12),
-            legend.position = "none")
+            legend.position = "bottom",
+            legend.text =  element_text(color = "black", size = 12),
+            legend.title =  element_text(color = "black", face = "bold",
+                                         size = 12))
   } else {
     NA
   }
@@ -492,7 +530,8 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
     list(table_effect_size = knitr::kable(table_em),
          table_model_assessment = knitr::kable(table_assess),
          intervalplot_inconsistency_factor = p1,
-         intervalplot_tau = p2)
+         intervalplot_tau = p2 +
+           guides(fill = guide_legend(override.aes = list(alpha = 0.4))))
   } else {
     list(table_effect_size = knitr::kable(table_em),
          table_model_assessment = knitr::kable(table_assess),

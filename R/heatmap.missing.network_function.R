@@ -87,9 +87,8 @@ heatmap_missing_network <- function(data, drug_names) {
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
     bb <- "The intervention ID, as specified in argument 'data' is"
-    cc <- "used as intervention names"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
-                       "\033[0m", "\n")))
+    cc <- "used, instead."
+    message(paste(aa, bb, cc))
     as.character(1:dat$nt)
   } else {
     drug_names

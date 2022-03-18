@@ -39,13 +39,19 @@ The y-axis of the forest plot on the effect sizes displays the
   prediction intervals are displayed as overlapping lines in different
   colours. The corresponding numerical results are displayed above each line:
   95\% credible intervals are found in parentheses, and 95\% predictive
-  intervals are found in brackets. Odds ratios and ratio of means are
-  reported in the original scale after exponentiation of the logarithmic
-  scale.
+  intervals are found in brackets. Odds ratios, relative risks, and ratio of
+  means are reported in the original scale after exponentiation of the
+  logarithmic scale.
 
   The y-axis for the forest plot on the SUCRA values displays the
   labels of the interventions in the network.
   The corresponding numerical results are displayed above each line.
+  Three coloured rectangles appear in the forest plot: a red rectangle for
+  SUCRA values up to 50\%, a yellow rectangular for SUCRA values between
+  50\% and 80\%, and a green rectangle for SUCRA values over 80\%.
+  Interventions falling at the green area are considered as the highest
+  ranked interventions, whilst interventions falling at the red area are
+  considered as the lowest ranked interventions.
 
   In both plots, the interventions are sorted in descending order of their
   SUCRA values.

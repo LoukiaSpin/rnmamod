@@ -200,19 +200,15 @@ run_sensitivity <- function(full,
   mean_scenarios <- if (missing(mean_scenarios) &
                         is.element(measure, c("MD", "RD", "SMD"))) {
     aa <- "The following vector of scenarios was considered by default:"
-    #bb <- "c(-2, -1, 0, 1, 2)"
-    #message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, "\033[0m", "\n")))
-    message(paste(aa, "c(-2, -1, 0, 1, 2)"))
+    message(paste(aa, "c(-2, -1, 0, 1, 2)."))
     c(-2, -1, 0, 1, 2)
   } else if (missing(mean_scenarios) & is.element(measure,
                                                   c("OR", "RR", "ROM"))) {
-    aa <- "The following vector of scenarios was considered by default:"
-    #bb <- "c(-log(3), -log(2), log(0.9999), log(2), log(3))"
-    #message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, "\033[0m", "\n")))
-    message(paste(aa, "c(-log(3), -log(2), log(0.9999), log(2), log(3))"))
+    aa <- "The default scenarios were considered:"
+    message(paste(aa, "c(-log(3), -log(2), log(0.9999), log(2), log(3))."))
     c(-log(3), -log(2), log(0.9999), log(2), log(3))
   } else if (length(mean_scenarios) < 5) {
-    stop("The argument 'mean_scenarios' must have a length of at least 5",
+    stop("The argument 'mean_scenarios' must have a length of at least 5.",
          call. = FALSE)
   } else {
     mean_scenarios

@@ -112,10 +112,8 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
 
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
-    bb <- "The intervention ID, as specified in 'data' is used as"
-    cc <- "intervention names"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
-                       "\033[0m", "\n")))
+    bb <- "The intervention ID, as specified in 'data' is used, instead."
+    message(paste(aa, bb))
     nt <- length(full$SUCRA[, 1])
     as.character(1:nt)
   } else {
@@ -123,7 +121,7 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
   }
 
   if (length(drug_names) < 3) {
-    stop("This function is *not* relevant for a pairwise meta-analysis",
+    stop("This function is *not* relevant for a pairwise meta-analysis.",
          call. = FALSE)
   }
 
@@ -242,8 +240,8 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
                  "UME preferred when accounting for model fit and complexity",
                  ifelse(model_assess_full[1] -
                  model_assess_ume[1] < -5,
-                 "NMA preferred when accounting for model fit and complexity",
-                        "There is little to choose between the two models")))
+                 "NMA preferred when accounting for model fit and complexity.",
+                        "There is little to choose between the two models.")))
 
   # Data-frame  on between-trial standard deviation
   if (model == "RE") {

@@ -98,7 +98,7 @@ missingness_param_prior <- function(assumption, mean_misspar) {
                                 "IND-CORR",
                                 "IND-UNCORR"))) {
     stop("Insert 'IDE-ARM', 'IDE-TRIAL', 'IDE-COMMON', 'HIE-ARM', 'HIE-TRIAL',
-         'HIE-COMMON', or 'IND-CORR', 'IND-UNCORR' ", call. = FALSE)
+         'HIE-COMMON', or 'IND-CORR', 'IND-UNCORR'.", call. = FALSE)
   } else if (is.element(assumption, c("HIE-ARM", "IDE-ARM")) &
              missing(mean_misspar)) {
     mean_misspar <- rep(0.0001, 2)
@@ -112,7 +112,8 @@ missingness_param_prior <- function(assumption, mean_misspar) {
     mean_misspar <- 0.0001
   } else if (is.element(assumption, c("HIE-ARM", "IDE-ARM")) &
              (length(mean_misspar) != 2)) {
-    stop("'mean_misspar' must be a vector of two numeric values", call. = FALSE)
+    stop("'mean_misspar' must be a vector of two numeric values.",
+         call. = FALSE)
   } else if (is.element(assumption, c("HIE-ARM", "IDE-ARM")) &
              (length(mean_misspar) == 2)) {
     mean_misspar <- as.vector(mean_misspar)
@@ -125,7 +126,7 @@ missingness_param_prior <- function(assumption, mean_misspar) {
                                       "IND-CORR",
                                       "IND-UNCORR")) &
              (length(mean_misspar) > 1)) {
-    stop("'mean_misspar' must be a scalar", call. = FALSE)
+    stop("'mean_misspar' must be a scalar.", call. = FALSE)
   } else if (is.element(assumption, c("IDE-TRIAL",
                                       "IDE-COMMON",
                                       "HIE-TRIAL",

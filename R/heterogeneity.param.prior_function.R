@@ -72,7 +72,7 @@ heterogeneity_param_prior <- function(measure, model, heter_prior) {
   # Specifying the prior distribution for the between-trial parameter
   if (model == "RE" &
       missing(heter_prior)) {
-    stop("The argument 'heter_prior' needs to be defined", call. = FALSE)
+    stop("The argument 'heter_prior' needs to be defined.", call. = FALSE)
   } else if (model == "FE" &
              missing(heter_prior)) {
     list(NA, NA, NA)
@@ -84,18 +84,18 @@ heterogeneity_param_prior <- function(measure, model, heter_prior) {
              heter_prior[[1]] != "halfnormal" &
              heter_prior[[1]] != "uniform" &
              heter_prior[[1]] != "lognormal") {
-    stop("Insert 'halfnormal', 'uniform', or 'lognormal'", call. = FALSE)
+    stop("Insert 'halfnormal', 'uniform', or 'lognormal'.", call. = FALSE)
   } else if (model == "RE" &
              measure == "SMD" &
              heter_prior[[1]] != "halfnormal" &
              heter_prior[[1]] != "uniform" &
              heter_prior[[1]] != "logt") {
-    stop("Insert 'halfnormal', 'uniform', or 'logt'", call. = FALSE)
+    stop("Insert 'halfnormal', 'uniform', or 'logt'.", call. = FALSE)
   } else if (model == "RE" &
              (measure == "MD" || measure == "ROM") &
              heter_prior[[1]] != "halfnormal" &
              heter_prior[[1]] != "uniform") {
-    stop("Insert 'halfnormal', or 'uniform'", call. = FALSE)
+    stop("Insert 'halfnormal', or 'uniform'.", call. = FALSE)
   } else if (model == "RE" &
              heter_prior[[1]] == "halfnormal") {
     as.numeric(c(0, heter_prior[[3]], 1))
@@ -115,7 +115,7 @@ heterogeneity_param_prior <- function(measure, model, heter_prior) {
   } else if (model == "RE" &
              !is.element(measure, c("OR", "RR", "RD")) &
              heter_prior[[1]] == "lognormal") {
-    stop("Not the proper prior distribution for continuous outcome",
+    stop("Not the proper prior distribution for continuous outcome.",
          call. = FALSE)
   } else if (model == "RE" &
              measure == "SMD" &
@@ -125,12 +125,12 @@ heterogeneity_param_prior <- function(measure, model, heter_prior) {
              (measure == "MD" || measure == "ROM") &
              heter_prior[[1]] == "logt") {
     aa <- "Currently, no empirically-based prior distributions for MD and ROM."
-    bb <- "Choose a half-normal or a uniform prior distribution, instead"
+    bb <- "Choose a half-normal or a uniform prior distribution, instead."
     stop(paste(aa, bb), call. = FALSE)
   } else if (model == "RE" &
              is.element(measure, c("OR", "RR", "RD")) &
              heter_prior[[1]] == "logt") {
-    stop("This is not the proper prior distribution for binary outcome",
+    stop("This is not the proper prior distribution for binary outcome.",
          call. = FALSE)
   }
 }

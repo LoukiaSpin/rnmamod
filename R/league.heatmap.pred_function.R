@@ -152,16 +152,8 @@ league_heatmap_pred <- function(full1,
                                 name2 = NULL,
                                 show = NULL) {
 
-  if (is.null(full2)) {
-    message("Tips to read the table: row versus column")
-  } else {
-    aa <- "Tips to read the table: upper triangle, row versus column;"
-    bb <- "lower triangle, column versus row"
-    message(paste(aa, bb))
-  }
-
   if (full1$model == "FE") {
-    stop("This function cannot be used for a fixed-effect model",
+    stop("This function cannot be used for a fixed-effect model.",
          call. = FALSE)
   }
 
@@ -170,7 +162,8 @@ league_heatmap_pred <- function(full1,
                                     full1$measure == full2$measure)) {
     full1$measure
   } else if (!is.null(full2) & full1$measure != full2$measure) {
-    stop("'full1' and 'full2' must have the same effect measure", call. = FALSE)
+    stop("'full1' and 'full2' must have the same effect measure.",
+         call. = FALSE)
   }
 
   # Forcing to define 'drug_names1' & 'drug_names2' so that 'show' can be used
@@ -181,7 +174,7 @@ league_heatmap_pred <- function(full1,
   }
 
   if (length(drug_names1) < 3) {
-    stop("This function is *not* relevant for a pairwise meta-analysis",
+    stop("This function is *not* relevant for a pairwise meta-analysis.",
          call. = FALSE)
   }
 
@@ -200,7 +193,7 @@ league_heatmap_pred <- function(full1,
                                         length(drug_names1) >= length(drug_names2))) {
     drug_names1
   } else if (!is.null(full2) & length(drug_names1) < length(drug_names2)) {
-    stop("'drug_names1' must have greater length than 'drug_names2'",
+    stop("'drug_names1' must have greater length than 'drug_names2'.",
          call. = FALSE)
   }
 
@@ -218,11 +211,11 @@ league_heatmap_pred <- function(full1,
 
   show0 <- if (length(unique(!is.element(show, drug_names0))) > 1) {
     aa <- "All elements of the argument 'show' must be found in 'drug_names1'"
-    bb <- "or 'drug_names2'"
+    bb <- "or 'drug_names2'."
     stop(paste(aa, bb), call. = FALSE)
   } else if (length(unique(!is.element(show, drug_names0))) == 1 &
              length(show) < 3) {
-    stop("The argument 'show' must have length greater than 2", call. = FALSE)
+    stop("The argument 'show' must have length greater than 2.", call. = FALSE)
   } else if (length(unique(!is.element(show, drug_names0))) == 1 &
              length(show) > 2) {
     cbind(combn(show, 2)[2,], combn(show, 2)[1,])
@@ -232,6 +225,14 @@ league_heatmap_pred <- function(full1,
     drug_names0
   } else {
     subset(drug_names0, is.element(drug_names0, show))
+  }
+
+  if (is.null(full2)) {
+    message("Tips to read the table: row versus column.")
+  } else {
+    aa <- "Tips to read the table: upper triangle, row versus column;"
+    bb <- "lower triangle, column versus row."
+    message(paste(aa, bb))
   }
 
   #Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html
@@ -264,7 +265,7 @@ league_heatmap_pred <- function(full1,
       stop("The argument 'cov_value' has not been defined", call. = FALSE)
     } else if (length(cov_value) != 2) {
       aa <- "The argument 'cov_value' must be a list with elements a number and"
-      stop(paste(aa, "a character"), call. = FALSE)
+      stop(paste(aa, "a character."), call. = FALSE)
     } else if (length(cov_value) == 2) {
       cov_value
     }
@@ -272,12 +273,12 @@ league_heatmap_pred <- function(full1,
     if (length(unique(full1$covariate)) < 3 &
         !is.element(cov_value[[1]], full1$covariate)) {
       aa <- "The first element of the argument 'cov_value' is out of the value"
-      stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
+      stop(paste(aa, "range of the analysed covariate."), call. = FALSE)
     } else if (length(unique(full1$covariate)) > 2 &
                (cov_value[[1]] < min(full1$covariate) |
                 cov_value[[1]] > max(full1$covariate))) {
       aa <- "The first element of the argument 'cov_value' is out of the value"
-      stop(paste(aa, "range of the analysed covariate"), call. = FALSE)
+      stop(paste(aa, "range of the analysed covariate."), call. = FALSE)
     }
 
     covar <- if (length(unique(full1$covariate)) < 3) {
@@ -567,6 +568,24 @@ league_heatmap_pred <- function(full1,
   ymin1 <- rep(seq(len_drug - 0.5, 0.5, -1), each = len_drug)
   ymax1 <- ymin1 + 1
 
+  # Argument in scale_fill_gradientn
+  min_value <- min(mat_new$value2, na.rm = TRUE)
+  max_value <- max(mat_new$value2, na.rm = TRUE)
+  values <- rescale(c(min_value,
+                      ifelse(!is.element(measure,
+                                         c("OR", "RR", "ROM")),
+                             0.0001, 1.0001),
+                      max_value))
+
+  colours <- if (is.null(full2) ||
+                 !is.null(full2) & min_value < 1 & max_value > 1) {
+    c("#009E73", "white", "#D55E00")
+  } else if (!is.null(full2) & min_value < 1 & max_value == 1) {
+    c("#009E73", "white", "white")
+  } else if (!is.null(full2) & min_value == 1 & max_value > 1) {
+    c("white", "white", "#D55E00")
+  }
+
   # The league table as a heatmap
   p <- ggplot(mat_new,
               aes(factor(Var2, levels = order_drug[seq_len(len_drug)]),
@@ -584,15 +603,10 @@ league_heatmap_pred <- function(full1,
                       label = value,
                       fontface = ifelse(signif_status == 1, "bold", "plain")),
                   reflow = TRUE) +
-    scale_fill_gradientn(colours = c("#009E73", "white", "#D55E00"),
+    scale_fill_gradientn(colours = colours,
                          na.value = "grey70",
                          guide = "none",
-                         values = rescale(
-                           c(min(mat_new$value2, na.rm = TRUE),
-                             ifelse(!is.element(measure,
-                                                c("OR", "RR", "ROM")),
-                                    0, 1),
-                             max(mat_new$value2, na.rm = TRUE))),
+                         values = values,
                          limits = c(min(mat_new$value2, na.rm = TRUE),
                                     max(mat_new$value2, na.rm = TRUE))) +
     geom_rect(aes(xmin = xmin1, xmax = xmax1, ymin = ymin1, ymax = ymax1),
@@ -602,9 +616,9 @@ league_heatmap_pred <- function(full1,
     theme_bw() +
     theme(legend.position = "none",
           axis.title.x = element_text(size = 12, face = "bold",
-                                      colour = "#009E73", hjust = 0),
+                                      colour = "black"), #hjust = 0
           axis.title.y = element_text(size = 12, face = "bold",
-                                      colour = "#D55E00", hjust = 1),
+                                      colour = "black"), #hjust = 1
           axis.text.x = element_text(size = 12, hjust = 0.5), #angle = 50,
           axis.text.y = element_text(size = 12),
           plot.caption = element_text(hjust = 0.01))

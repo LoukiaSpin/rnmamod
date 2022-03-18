@@ -418,14 +418,36 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                            EM.pred[k, c] <- abs_risk[c]*(1 - exp(EM.pred.LRR[k, c]))
                        }}\n")
   } else if (model == "FE" & measure == "RR") {
-    paste(stringcode, "for (c in 1:(nt - 1)) {
+    paste(stringcode, "for (t in 1:(ref - 1)) {
+                         EM.ref.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
+                         EM.ref[t] <- EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                       }
+                       for (t in (ref + 1):nt) {
+                         EM.ref.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
+                         EM.ref[t] <- EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                       }
+                       for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
                            EM[k, c] <- log(abs_risk[k]) - log(abs_risk[c])
+                           EM.LOR[k, c] <- d.n[k] - d.n[c]
                         }}\n")
   } else if (model == "FE" & measure == "RD") {
-    paste(stringcode, "for (c in 1:(nt - 1)) {
+    paste(stringcode, "for (t in 1:(ref - 1)) {
+                         EM.ref.RR.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
+                         EM.ref.RR[t] <- EM.ref.RR.n[t]*(1 - (1 - step(t - ref))) + EM.ref.RR.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1) - base_risk
+                         EM.ref[t] <-  EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                       }
+                       for (t in (ref + 1):nt) {
+                         EM.ref.RR.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
+                         EM.ref.RR[t] <- EM.ref.RR.n[t]*(1 - (1 - step(t - ref))) + EM.ref.RR.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1) - base_risk
+                         EM.ref[t] <-  EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                       }
+                       for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
                            EM[k, c] <- abs_risk[k] - abs_risk[c]
+                           EM.LOR[k, c] <- d.n[k] - d.n[c]
                         }}\n")
   }
 

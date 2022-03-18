@@ -119,9 +119,8 @@ netplot <- function(data, drug_names, save_xls, ...) {
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
     bb <- "The intervention ID, as specified in argument 'data' is"
-    cc <- "used as intervention names"
-    message(cat(paste0("\033[0;", col = 32, "m", aa, " ", bb, " ", cc,
-                       "\033[0m", "\n")))
+    cc <- "used, instead."
+    message(paste(aa, bb, cc))
     as.character(1:nt)
   } else {
     drug_names
@@ -220,7 +219,8 @@ netplot <- function(data, drug_names, save_xls, ...) {
 
   # Whether there are trials without information on missing participants
   if (na_missing_trials > 0 & na_missing_trials < sum(na..)) {
-    aa <- "trial-arms without information on the number of missing participants"
-    message(paste("Note: There are", na_missing_trials, aa))
+    aa <- "trial-arms without information on"
+    bb <- "the number of missing participants."
+    message(paste("Note: There are", na_missing_trials, aa, bb))
   }
 }

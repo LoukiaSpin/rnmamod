@@ -4,17 +4,36 @@
 \alias{rankosucra_plot}
 \title{Rankograms and SUCRA curves}
 \usage{
-rankosucra_plot(full, drug_names)
+rankosucra_plot(
+  full1,
+  full2 = NULL,
+  drug_names1,
+  drug_names2 = NULL,
+  name1 = NULL,
+  name2 = NULL
+)
 }
 \arguments{
-\item{full}{An object of S3 class \code{\link{run_model}}. See 'Value' in
-\code{\link{run_model}}.}
+\item{full1}{An object of S3 class \code{\link{run_model}} for network
+meta-analysis. See 'Value' in \code{\link{run_model}}.}
 
-\item{drug_names}{A vector of labels with the name of the interventions in
+\item{full2}{An object of S3 class \code{\link{run_model}} for network
+meta-analysis. See 'Value' in \code{\link{run_model}}.}
+
+\item{drug_names1}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
-\code{\link{run_model}}. If \code{drug_names} is not defined,
-the order of the interventions as they appear in \code{data} is used,
-instead.}
+\code{\link{run_model}} for \code{full1}.}
+
+\item{drug_names2}{A vector of labels with the name of the interventions in
+the order they appear in the argument \code{data} of
+\code{\link{run_model}} for \code{full2}. The elements must be a subset of
+\code{drug_names1}.}
+
+\item{name1}{The text for the title of the results that refer to
+the outcome or model under \code{full1}.}
+
+\item{name2}{The text for the title of the results that refer to
+the outcome or model under \code{full2}.}
 }
 \value{
 A panel of rankograms with integrated SUCRA curves for each
@@ -48,8 +67,8 @@ interv_names <- c("placebo", "pramipexole",
                   "tricyclic antidepressant", "pergolide")
 
 # Create the integrated rankograms and SUCRA curves
-rankosucra_plot(full = res,
-                drug_names = interv_names)
+rankosucra_plot(full1 = res,
+                drug_names1 = interv_names)
 
 }
 \references{
