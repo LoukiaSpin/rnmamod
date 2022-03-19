@@ -80,8 +80,7 @@
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
 #' primary analysis results: A case study on missing outcome data in pairwise
 #' and network meta-analysis.
-#' \emph{Res Synth Methods} 2021;\bold{12}(4):475--490.
-#' \doi{10.1002/jrsm.1478}
+#' \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. \doi{10.1002/jrsm.1478}
 #'
 #' @examples
 #' data("nma.baker2009")
@@ -139,7 +138,7 @@ robustness_index <- function(sens, threshold) {
     message("The value 0.17 was assigned as 'threshold' by default.")
   } else {
     threshold <- threshold
-    aa <- "was assigned on 'threshold' for"
+    aa <- "was assigned as 'threshold' for"
     effect_measure <- effect_measure_name(measure, lower = TRUE)
     message(paste("The value", threshold, aa, paste0(effect_measure, ".")))
   }

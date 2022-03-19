@@ -172,8 +172,7 @@ globally in a network of interventions. \emph{Med Decis Making} 2021.
 Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
 primary analysis results: A case study on missing outcome data in pairwise
 and network meta-analysis.
-\emph{Res Synth Methods} 2021a;\bold{12}(4):475--490.
-\doi{10.1002/jrsm.1478}
+\emph{Res Synth Methods} 2021a;\bold{12}(4):475--490. \doi{10.1002/jrsm.1478}
 
 Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 data in network meta-analysis: a one-stage pattern-mixture model approach.

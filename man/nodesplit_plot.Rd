@@ -133,12 +133,12 @@ Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
 treatment comparison meta-analysis.
 \emph{Stat Med} 2010;\bold{29}(7-8):932--44. \doi{10.1002/sim.3767}
 
+Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian approaches to clinical trials
+and health-care evaluation. John Wiley and Sons, Chichester, 2004.
+
 Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of
 model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616.
 \doi{10.1111/1467-9868.00353}
-
-Spiegelhalter DJ, Abrams KR, Myles JP. Bayesian approaches to clinical trials
-and health-care evaluation. John Wiley and Sons, Chichester, 2004.
 }
 \seealso{
 \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}},

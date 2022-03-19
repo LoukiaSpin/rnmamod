@@ -127,8 +127,7 @@
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
 #' primary analysis results: A case study on missing outcome data in pairwise
 #' and network meta-analysis.
-#' \emph{Res Synth Methods} 2021;\bold{12}(4):475--490.
-#' \doi{10.1002/jrsm.1478}
+#' \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. \doi{10.1002/jrsm.1478}
 #'
 #' Spineli LM. An empirical comparison of Bayesian modelling strategies for
 #' missing binary outcome data in network meta-analysis.
@@ -199,7 +198,7 @@ run_sensitivity <- function(full,
   # Scenarios for missingness mechanism in an intervention (PMID: 30223064)
   mean_scenarios <- if (missing(mean_scenarios) &
                         is.element(measure, c("MD", "RD", "SMD"))) {
-    aa <- "The following vector of scenarios was considered by default:"
+    aa <- "The default scenarios were considered:"
     message(paste(aa, "c(-2, -1, 0, 1, 2)."))
     c(-2, -1, 0, 1, 2)
   } else if (missing(mean_scenarios) & is.element(measure,

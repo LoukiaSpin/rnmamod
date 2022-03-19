@@ -219,18 +219,24 @@ The model runs in \code{JAGS} and the progress of the simulation
   provide an end-user-ready output.
 
   The \code{\link{data_preparation}} function is called to prepare the data
-  for the Bayesian analysis. \code{\link{data_preparation}} checks whether
-  the element \strong{m} exists in the \code{data}. If this element is
-  missing, \code{\link{data_preparation}} creates 1) a pseudo-data-frame for
-  \strong{m} that has the zero value for the observed trial-arms, and
-  \code{NA} for the unobserved trial-arms, and 2) the pseudo-data-frame
-  \code{I} that is identical with the pseudo-data-frame for \code{m}.
-  If the element \strong{m} exists in the \code{data} and has values only for
-  some trial-arms, the pseudo-data-frame for \strong{m} is identical to
-  \strong{m} for the corresponding trial-arms, and the pseudo-data-frame
-  \code{I} has the value one for these trial-arms. Both pseudo-data-frames
-  aim to retain the trials without information on missing participant outcome
-  data.
+  for the Bayesian analysis. \code{\link{data_preparation}} creates the
+  pseudo-data-frames \code{m_new}, and \code{I}, that have the same
+  dimensions with the element \code{N}. \code{m_new} takes the zero
+  value for the observed trial-arms with unreported missing participant
+  outcome data (i.e., \code{m} equals \code{NA} for the corresponding
+  trial-arms), the same value with \code{m} for the observed trial-arms with
+  reported missing participant outcome data, and \code{NA} for the unobserved
+  trial-arms. \code{I} is a dummy data-frame and takes the value one for the
+  observed trial-arms with reported missing participant outcome data, the
+  zero value for the observed trial-arms with unreported missing participant
+  outcome data (i.e., \code{m_new} equals zero for the corresponding
+  trial-arms), and \code{NA} for the unobserved trial-arms. Thus, \code{I}
+  indicates whether missing participant outcome data have been collected for
+  the observed trial-arms. If the user has not defined the element \strong{m}
+  in \code{data}, \code{m_new} and \code{I} take the zero value for all
+  observed trial-arms to indicate that no missing participant outcome data
+  have been collected for the analysed outcome. See 'Details' in
+  \code{\link{data_preparation}}.
 
   Furthermore, \code{\link{data_preparation}} sorts the interventions across
   the arms of each trial in an ascending order and correspondingly the
@@ -244,7 +250,7 @@ The model runs in \code{JAGS} and the progress of the simulation
   To perform a Bayesian pairwise or network meta-analysis, the
   \code{\link{prepare_model}} function is called which contains the WinBUGS
   code as written by Dias et al. (2013) for binomial and normal likelihood to
-  analyse binary and continuous data, respectively.
+  analyse binary and continuous outcome data, respectively.
   \code{\link{prepare_model}} uses the consistency model (as described in
   Lu and Ades (2006)) to estimate all possible comparisons in the network.
   It also accounts for the multi-arm trials by assigning conditional
@@ -280,6 +286,13 @@ The model runs in \code{JAGS} and the progress of the simulation
   identifier equal to \code{ref}). This is necessary to ensure transitivity
   in the assumptions for the missingness parameter across the network
   (Spineli, 2019b).
+
+  When there is at least one trial-arm with unreported missing participant
+  outcome data (i.e., \code{m} equals \code{NA} for the corresponding
+  trial-arms) or when missing participant outcome data have not been
+  collected for the analysed outcome (i.e., \code{m} is missing in
+  \code{data}), \code{run_model} considers the assumption \code{"IND-UNCORR"}
+  to \code{assumption}.
 
   Currently, there are no empirically-based prior distributions for the
   informative missingness parameters. The user may refer to Spineli (2019),

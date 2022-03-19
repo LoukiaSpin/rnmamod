@@ -181,18 +181,24 @@
 #'   provide an end-user-ready output.
 #'
 #'   The \code{\link{data_preparation}} function is called to prepare the data
-#'   for the Bayesian analysis. \code{\link{data_preparation}} checks whether
-#'   the element \strong{m} exists in the \code{data}. If this element is
-#'   missing, \code{\link{data_preparation}} creates 1) a pseudo-data-frame for
-#'   \strong{m} that has the zero value for the observed trial-arms, and
-#'   \code{NA} for the unobserved trial-arms, and 2) the pseudo-data-frame
-#'   \code{I} that is identical with the pseudo-data-frame for \code{m}.
-#'   If the element \strong{m} exists in the \code{data} and has values only for
-#'   some trial-arms, the pseudo-data-frame for \strong{m} is identical to
-#'   \strong{m} for the corresponding trial-arms, and the pseudo-data-frame
-#'   \code{I} has the value one for these trial-arms. Both pseudo-data-frames
-#'   aim to retain the trials without information on missing participant outcome
-#'   data.
+#'   for the Bayesian analysis. \code{\link{data_preparation}} creates the
+#'   pseudo-data-frames \code{m_new}, and \code{I}, that have the same
+#'   dimensions with the element \code{N}. \code{m_new} takes the zero
+#'   value for the observed trial-arms with unreported missing participant
+#'   outcome data (i.e., \code{m} equals \code{NA} for the corresponding
+#'   trial-arms), the same value with \code{m} for the observed trial-arms with
+#'   reported missing participant outcome data, and \code{NA} for the unobserved
+#'   trial-arms. \code{I} is a dummy data-frame and takes the value one for the
+#'   observed trial-arms with reported missing participant outcome data, the
+#'   zero value for the observed trial-arms with unreported missing participant
+#'   outcome data (i.e., \code{m_new} equals zero for the corresponding
+#'   trial-arms), and \code{NA} for the unobserved trial-arms. Thus, \code{I}
+#'   indicates whether missing participant outcome data have been collected for
+#'   the observed trial-arms. If the user has not defined the element \strong{m}
+#'   in \code{data}, \code{m_new} and \code{I} take the zero value for all
+#'   observed trial-arms to indicate that no missing participant outcome data
+#'   have been collected for the analysed outcome. See 'Details' in
+#'   \code{\link{data_preparation}}.
 #'
 #'   Furthermore, \code{\link{data_preparation}} sorts the interventions across
 #'   the arms of each trial in an ascending order and correspondingly the
@@ -206,7 +212,7 @@
 #'   To perform a Bayesian pairwise or network meta-analysis, the
 #'   \code{\link{prepare_model}} function is called which contains the WinBUGS
 #'   code as written by Dias et al. (2013) for binomial and normal likelihood to
-#'   analyse binary and continuous data, respectively.
+#'   analyse binary and continuous outcome data, respectively.
 #'   \code{\link{prepare_model}} uses the consistency model (as described in
 #'   Lu and Ades (2006)) to estimate all possible comparisons in the network.
 #'   It also accounts for the multi-arm trials by assigning conditional
@@ -242,6 +248,13 @@
 #'   identifier equal to \code{ref}). This is necessary to ensure transitivity
 #'   in the assumptions for the missingness parameter across the network
 #'   (Spineli, 2019b).
+#'
+#'   When there is at least one trial-arm with unreported missing participant
+#'   outcome data (i.e., \code{m} equals \code{NA} for the corresponding
+#'   trial-arms) or when missing participant outcome data have not been
+#'   collected for the analysed outcome (i.e., \code{m} is missing in
+#'   \code{data}), \code{run_model} considers the assumption \code{"IND-UNCORR"}
+#'   to \code{assumption}.
 #'
 #'   Currently, there are no empirically-based prior distributions for the
 #'   informative missingness parameters. The user may refer to Spineli (2019),
@@ -373,10 +386,32 @@ run_model <- function(data,
   } else {
     model
   }
-  assumption <- if (missing(assumption)) {
+  assumption <- if (missing(assumption) & min(na.omit(unlist(item$I))) == 1) {
+    message("The 'IDE-ARM' has been used as the default.")
     "IDE-ARM"
+  } else if (missing(assumption) & min(na.omit(unlist(item$I))) == 0) {
+    "IND-UNCORR"
+  } else if (assumption != "IND-UNCORR" & min(na.omit(unlist(item$I))) == 0) {
+    aa <- "Missing participant outcome data have been collected partially."
+    bb <- "Insert 'IND-UNCORR'."
+    stop(paste(aa, bb), call. = FALSE)
   } else {
     assumption
+  }
+  heterog_prior <- heterogeneity_param_prior(measure, model, heter_prior)
+  mean_misspar <- if (missing(assumption)) {
+    0
+  } else {
+    missingness_param_prior(assumption, mean_misspar)
+  }
+
+  var_misspar <- if (missing(var_misspar) &
+                     is.element(measure, c("OR", "RR", "RD", "MD", "SMD"))) {
+    1
+  } else if (missing(var_misspar) & measure == "ROM") {
+    0.2^2
+  } else {
+    var_misspar
   }
   D <- if (missing(D)) {
     stop("The argument 'D' needs to be defined.", call. = FALSE)
@@ -402,16 +437,6 @@ run_model <- function(data,
     stop("The argument 'base_risk' must be a probability.", call. = FALSE)
   } else {
     base_risk
-  }
-  mean_misspar <- missingness_param_prior(assumption, mean_misspar)
-  heterog_prior <- heterogeneity_param_prior(measure, model, heter_prior)
-  var_misspar <- if (missing(var_misspar) &
-                     is.element(measure, c("OR", "RR", "RD", "MD", "SMD"))) {
-    1
-  } else if (missing(var_misspar) & measure == "ROM") {
-    0.2^2
-  } else {
-    var_misspar
   }
   n_chains <- ifelse(missing(n_chains), 2, n_chains)
   n_iter <- ifelse(missing(n_iter), 10000, n_iter)
@@ -556,12 +581,25 @@ run_model <- function(data,
     starts_with("effectiveness")))
 
   # Estimated missingness parameter
-  phi <- if (length(unique(na.omit(unlist(item$m)))) > 1) {
+  #phi <- if (length(unique(na.omit(unlist(item$m)))) > 1) {
+  #  t(get_results %>% dplyr::select(starts_with("phi") |
+  #                                  starts_with("mean.phi") |
+  #                                  starts_with("mean.phi[") |
+  #                                  starts_with("phi[")))
+  #} else {
+  #  NULL
+  #}
+  phi <- if (min(na.omit(unlist(item$I))) == 1 &
+             max(na.omit(unlist(item$I))) == 1) {
     t(get_results %>% dplyr::select(starts_with("phi") |
-                                    starts_with("mean.phi") |
-                                    starts_with("mean.phi[") |
-                                    starts_with("phi[")))
-  } else {
+                                      starts_with("mean.phi") |
+                                      starts_with("mean.phi[") |
+                                      starts_with("phi[")))
+  } else if (min(na.omit(unlist(item$I))) == 0 &
+             max(na.omit(unlist(item$I))) == 1) {
+    t(get_results %>% dplyr::select(starts_with("phi[")))
+  } else if (min(na.omit(unlist(item$I))) == 0 &
+             max(na.omit(unlist(item$I))) == 0) {
     NULL
   }
 

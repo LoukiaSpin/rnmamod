@@ -45,8 +45,7 @@
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
 #' primary analysis results: A case study on missing outcome data in pairwise
 #' and network meta-analysis.
-#' \emph{Res Synth Methods} 2021;\bold{12}(4):475--490.
-#' \doi{10.1002/jrsm.1478}
+#' \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. \doi{10.1002/jrsm.1478}
 #'
 #' @examples
 #' data("nma.baker2009")

@@ -53,8 +53,7 @@
 #'
 #' Friede T, Roever C, Wandel S, Neuenschwander B. Meta-analysis of two studies
 #' in the presence of heterogeneity with applications in rare diseases.
-#' \emph{Biom J} 2017;\bold{59}(4):658--671.
-#' \doi{10.1002/bimj.201500236}
+#' \emph{Biom J} 2017;\bold{59}(4):658--671. \doi{10.1002/bimj.201500236}
 #'
 #' Rhodes KM, Turner RM, Higgins JP. Predictive distributions were developed
 #' for the extent of heterogeneity in meta-analyses of continuous outcome data.

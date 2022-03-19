@@ -361,6 +361,7 @@ league_heatmap <- function(full1,
     # include the value of no difference)
     signif <- ifelse(upper < 0 | lower > 0, 1, 0)
     signif[is.na(signif)] <- 0
+    signif_status <- melt(signif, na.rm = FALSE)[3]
   } else {
     point <- round(exp(point1[drug_order, drug_order]), 2)
     lower <- round(exp(lower1[drug_order, drug_order]), 2)

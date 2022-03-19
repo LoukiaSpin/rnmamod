@@ -2,7 +2,6 @@
 
 export(balloon_plot)
 export(bland_altman_plot)
-export(data_preparation)
 export(describe_network)
 export(forestplot)
 export(forestplot_metareg)

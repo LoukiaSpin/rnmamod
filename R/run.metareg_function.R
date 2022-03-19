@@ -323,12 +323,25 @@ run_metareg <- function(full,
     starts_with("effectiveness")))
 
   # Estimated missingness parameter
-  phi <- if (length(unique(na.omit(unlist(item$m)))) > 1) {
+  #phi <- if (length(unique(na.omit(unlist(item$m)))) > 1) {
+  #  t(get_results %>% dplyr::select(starts_with("phi") |
+  #                                   starts_with("mean.phi") |
+  #                                   starts_with("mean.phi[") |
+  #                                   starts_with("phi[")))
+  #} else {
+  #  NULL
+  #}
+  phi <- if (min(na.omit(unlist(item$I))) == 1 &
+             max(na.omit(unlist(item$I))) == 1) {
     t(get_results %>% dplyr::select(starts_with("phi") |
-                                     starts_with("mean.phi") |
-                                     starts_with("mean.phi[") |
-                                     starts_with("phi[")))
-  } else {
+                                      starts_with("mean.phi") |
+                                      starts_with("mean.phi[") |
+                                      starts_with("phi[")))
+  } else if (min(na.omit(unlist(item$I))) == 0 &
+             max(na.omit(unlist(item$I))) == 1) {
+    t(get_results %>% dplyr::select(starts_with("phi[")))
+  } else if (min(na.omit(unlist(item$I))) == 0 &
+             max(na.omit(unlist(item$I))) == 0) {
     NULL
   }
 
