@@ -1,12 +1,13 @@
 #' Rankograms and SUCRA curves
 #'
-#' @description Returns a panel of rankograms with integrated SUCRA curves for
-#'   each intervention in the network.
+#' @description It returns a panel of rankograms with integrated SUCRA curves
+#'   for each intervention in the network. The function can illustrate the
+#'   results of a single or two outcomes simultaneously.
 #'
 #' @param full1 An object of S3 class \code{\link{run_model}} for network
 #'   meta-analysis. See 'Value' in \code{\link{run_model}}.
 #' @param full2 An object of S3 class \code{\link{run_model}} for network
-#'   meta-analysis. See 'Value' in \code{\link{run_model}}.
+#'   meta-analysis of a second outcome. See 'Value' in \code{\link{run_model}}.
 #' @param drug_names1 A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data} of
 #'   \code{\link{run_model}} for \code{full1}.
@@ -15,18 +16,24 @@
 #'   \code{\link{run_model}} for \code{full2}. The elements must be a subset of
 #'   \code{drug_names1}.
 #' @param name1 The text for the title of the results that refer to
-#'   the outcome or model under \code{full1}.
+#'   the outcome under \code{full1}.
 #' @param name2 The text for the title of the results that refer to
-#'   the outcome or model under \code{full2}.
+#'   the outcome under \code{full2}.
 #'
-#' @return A panel of rankograms with integrated SUCRA curves for each
-#'   intervention in the network (Salanti et al., 2011). The x-axis of each
-#'   panel refers to the ranking, and the y-axis refers to the ranking
+#' @return A panel of rankograms (red bars) with integrated blue SUCRA curves
+#'   for each intervention in the network (Salanti et al., 2011). The x-axis of
+#'   each panel refers to the ranking, and the y-axis refers to the ranking
 #'   probability expressed in percentage.
 #'
 #' @details Interventions are sorted in the descending order of their SUCRA
 #'   value. The SUCRA value expressed in percentage appears on the top left
-#'   corner of each panel.
+#'   corner of each panel. In the case of two outcomes, the SUCRA values of the
+#'   outcome under the argument \code{full1} are considered to sort the
+#'   interventions from the best to the worst.
+#'
+#'   When a second outcome is also considered, different colours are used to
+#'   draw the corresponding SUCRA curves and the rankograms: green for the
+#'   outcome under \code{full1}, and red for the outcome under \code{full2}.
 #'
 #'   \code{rankosucra_plot} can be used only for a network of interventions.
 #'   Otherwise, the execution of the function will be stopped and an error

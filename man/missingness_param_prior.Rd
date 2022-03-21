@@ -2,7 +2,7 @@
 % Please edit documentation in R/missingness.param.prior_function.R
 \name{missingness_param_prior}
 \alias{missingness_param_prior}
-\title{Determine the mean value of the distribution of the missingness parameter}
+\title{Define the mean value of the normal distribution of the missingness parameter}
 \usage{
 missingness_param_prior(assumption, mean_misspar)
 }
@@ -24,14 +24,14 @@ mean of the normal distribution of the informative missingness parameter
 missing-at-random assumption for \code{assumption = "IDE-ARM"}.}
 }
 \value{
-A value or vector to be passed to \code{\link{run_model}}.
+A scalar or numeric vector to be passed to \code{\link{run_model}}.
 }
 \description{
-Generates the mean value of the distribution of the missingness parameter
-  in the proper format depending on the assumed structure of the missingness
-  parameter. \code{\link{run_model}} inherits \code{missingness_param_prior}
-  through the argument \code{mean_misspar} (see 'Argument' in
-  \code{\link{run_model}}).
+Generates the mean value of the normal distribution of the missingness
+  parameter in the proper format depending on the assumed structure of the
+  missingness parameter. \code{\link{run_model}} inherits
+  \code{missingness_param_prior} through the argument \code{mean_misspar}
+  (see 'Argument' in \code{\link{run_model}}).
 }
 \details{
 \code{\link{run_model}} considers the informative missingness odds

@@ -14,7 +14,7 @@ missingness parameter. See 'Value' in \code{\link{run_sensitivity}}. For a
 the following order: 1) a row-bind matrix with the estimated summary effect
 measure, \code{EM}, obtained from the \code{\link{run_model}} function for
 each re-analysis (the first \code{EM} should refer to the estimated summary
-effect measure under the primary analysis); 2) the effect measure with
+effect sizes under the primary analysis); 2) the effect measure with
 values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds
 ratio, mean difference, standardised mean difference and ratio of means,
 respectively; and 3) a character vector that indicates the name of the
@@ -40,16 +40,20 @@ re-analysis results. See 'Details' below.}
   \item{kld}{A vector or matrix on the Kullback-Leibler divergence
   (KLD) measure in the summary effect size from a subsequent re-analysis to
   the primary analysis. In the case of a pairwise meta-analysis, \code{kld}
-  is a vector with length equal to the number of total analyses. The latter
-  equals the square of the number of scenarios indicated in the argument
+  is a vector with length equal to the number of total analyses (one KLD
+  value is obtained per analysis). The number of total analyses equals the
+  square of the number of scenarios indicated in the argument
   \code{mean_scenarios} of \code{\link{run_sensitivity}}, in the case of
   missing participant outcome data; otherwise, the length of the character
   vector in argument \code{sens}.
-  One KLD value is obtained per analysis. In the case of network
-  meta-analysis, \code{robust_index} is a matrix with number of rows equal to
-  the number of total analyses and number of columns equal to the number of
-  possible pairwise comparisons; one KLD value per analysis and possible
-  comparison.}
+  In the case of network meta-analysis, \code{robust_index} is a matrix with
+  number of rows equal to the number of total analyses and number of columns
+  equal to the number of  possible pairwise comparisons; one KLD value per
+  analysis and possible comparison.}
+  \item{threshold}{The threshold used to be inherited by the
+  \code{\link{heatmap_robustness}} function.}
+  \item{scenarios}{The scenarios considered to be inherited by the
+  \code{\link{heatmap_robustness}} and \code{\link{kld_barplot}} functions.}
 }
 \description{
 Calculates the robustness index, a novel index that quantifies the overall
@@ -59,11 +63,24 @@ Calculates the robustness index, a novel index that quantifies the overall
   conducting a sensitivity analysis (Spineli et al., 2021).
 }
 \details{
-The user may consider the values 0.28 and 0.17 in the argument
-  \code{threshold} for binary and continuous outcome data (the default
-  values), respectively, or consider other plausible values.
-  Spineli et al. (2021) offers a discussion on specifying the
+Thresholds of robustness have been proposed only for the odds ratio
+  and standardised mean difference effect measures (Spineli et al., 2021).
+  when the argument \code{threshold} has not been defined,
+  \code{robustness_index} considers the default values 0.28 and 0.17 as
+  threshold for robustness for binary and continuous outcome, respectively,
+  regardless of the effect measure.
+  The user may consider the values 0.28 and 0.17 in the argument
+  \code{threshold} for the odds ratio and standardised mean difference effect
+  measures (the default values), respectively, or consider other plausible
+  values. Spineli et al. (2021) offers a discussion on specifying the
   \code{threshold} of robustness.
+
+  In the case of binary outcome, \code{robustness_index} considers the
+  results in the odds ratio scale to calculate the robustness index.
+  This is because, the odds ratio is used as the 'best-case' effect measure
+  in \code{\link{run_model}}. Then, relative risk, and risk difference are
+  functions of the odds ratio and the selected baseline risk (See 'Details'
+  in \code{\link{run_model}}).
 
   In the case of missing participant outcome data, the primary analysis is
   considered to be the middle of the numbers in the argument
@@ -101,7 +118,8 @@ and network meta-analysis.
 \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. \doi{10.1002/jrsm.1478}
 }
 \seealso{
-\code{\link{run_model}}, \code{\link{run_sensitivity}}
+\code{\link{heatmap_robustness}}, \code{\link{kld_barplot}},
+  \code{\link{run_model}}, \code{\link{run_sensitivity}}
 }
 \author{
 {Loukia M. Spineli}

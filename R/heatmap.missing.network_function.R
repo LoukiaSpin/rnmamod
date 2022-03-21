@@ -95,6 +95,11 @@ heatmap_missing_network <- function(data, drug_names) {
   }
   len_drugs <- length(drug_names)
 
+  if (length(drug_names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis.",
+         call. = FALSE)
+  }
+
   # Unique comparisons with the baseline intervention
   # A function to extract numbers from a character.
   # Source: http://stla.github.io/stlapblog/posts/numextract.html

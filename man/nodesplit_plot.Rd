@@ -2,7 +2,7 @@
 % Please edit documentation in R/nodesplit.plot_function.R
 \name{nodesplit_plot}
 \alias{nodesplit_plot}
-\title{End-user-ready results for node-splitting approach}
+\title{End-user-ready results for the node-splitting approach}
 \usage{
 nodesplit_plot(full, node, drug_names, save_xls)
 }
@@ -62,7 +62,7 @@ directory of the user. The default is \code{FALSE} (do not export).}
   the direct and indirect effect), and red otherwise. If there are more than
   30 split nodes, the function presents the interval plots on split nodes
   with conclusive inconsistency factor (green intervals) or those with
-  an opposite sign in the direct and indirect effect.
+  an opposite sign in the direct and indirect effects.
 
   \code{intervalplot_tau} is an interval plot on the median and 95\% credible
   interval of \emph{tau} after each split node. The lines that correspond to
@@ -73,10 +73,9 @@ directory of the user. The default is \code{FALSE} (do not export).}
   parallel blue lines, respectively. The different levels of heterogeneity
   appear as green, yellow, orange, and red rectangulars to indicate a low,
   reasonable, fairly high, and fairly extreme heterogeneity, respectively,
-  following the classification of Spiegelhalter et al (2004).
-  When a fixed-effect model has
-  been performed, \code{nodesplit_plot} does not return the
-  \code{intervalplot_tau}.
+  following the classification of Spiegelhalter et al. (2004).
+  When a fixed-effect model has been performed, \code{nodesplit_plot} does
+  not return the \code{intervalplot_tau}.
 
   \code{table_model_assessment} also includes the column
   \emph{DIC-based better fit} that indicates the preferred model in terms of
@@ -89,7 +88,11 @@ directory of the user. The default is \code{FALSE} (do not export).}
 
   For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
   (risk difference) in \code{\link{run_model}}, \code{nodesplit_plot}
-  currently presents the results in the odds ratio scale.
+  currently presents the results in the odds ratio scale. This is because,
+  the odds ratio is used as the 'best-case' effect measure in
+  \code{\link{run_model}}. Then, relative risk, and risk difference are
+  obtained as a function of the odds ratio and the selected baseline risk
+  (See 'Details' in \code{\link{run_model}}).
 
   The split nodes have been automatically selected via the
   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}}

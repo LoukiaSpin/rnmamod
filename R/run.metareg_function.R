@@ -37,6 +37,8 @@
 #'   fixed-effect pairwise meta-analysis:
 #'   \item{EM}{The estimated summary effect measure (according to the argument
 #'   \code{measure} defined in \code{\link{run_model}}).}
+#'   \item{beta_all}{The estimated regression coefficient for all possible
+#'   pairwise comparisons according to the argument \code{covar_assumption}.}
 #'   \item{dev_o}{The deviance contribution of each trial-arm based on the
 #'   observed outcome.}
 #'   \item{hat_par}{The fitted outcome at each trial-arm.}
@@ -80,22 +82,19 @@
 #'   \code{\link{mcmc_diagnostics}} function.}
 #'
 #'   The \code{run_metareg} function also returns the arguments \code{data},
-#'   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
-#'   \code{mean_misspar}, \code{var_misspar}, \code{D}, \code{ref}, and
-#'   \code{base_risk} that have been specified by the user in
-#'   \code{\link{run_model}} (see 'Arguments' in \code{\link{run_model}}).
+#'   \code{measure}, \code{model}, \code{assumption}, \code{covariate},
+#'   \code{covar_assumption}, \code{n_chains}, \code{n_iter}, \code{n_burnin},
+#'   and \code{n_thin} to be inherited by other relevant functions of the
+#'   package.
 #'
 #' @details \code{run_metareg} inherits the arguments \code{data},
 #'   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
-#'   \code{mean_misspar}, \code{var_misspar}, \code{ref}, and \code{base_risk}
-#'   from \code{\link{run_model}} (now contained in the argument \code{full}).
-#'   This prevents specifying a different Bayesian model from that considered in
-#'   \code{\link{run_model}}. Therefore, the user needs first to apply
-#'   \code{\link{run_model}}, and then use \code{run_metareg} (see 'Examples').
-#'
-#'   For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
-#'   (risk difference) in \code{\link{run_model}}, \code{run_metareg} currently
-#'   considers the odds ratio as effect measure.
+#'   \code{mean_misspar}, \code{var_misspar}, \code{D}, \code{ref},
+#'   \code{indic}, and \code{base_risk} from \code{\link{run_model}}
+#'   (now contained in the argument \code{full}). This prevents specifying a
+#'   different Bayesian model from that considered in \code{\link{run_model}}.
+#'   Therefore, the user needs first to apply \code{\link{run_model}}, and then
+#'   use \code{run_metareg} (see 'Examples').
 #'
 #'   The model runs in \code{JAGS} and the progress of the simulation appears on
 #'   the R console. The output of \code{run_metareg} is used as an S3 object by
@@ -166,11 +165,7 @@ run_metareg <- function(full,
 
 
   data <- full$data
-  measure <- if (is.element(full$measure, c("RR", "RD"))) {
-    "OR"
-  } else {
-    full$measure
-  }
+  measure <- full$measure
   model <- full$model
   assumption <- full$assumption
   heterog_prior <- full$heter_prior

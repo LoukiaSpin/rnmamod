@@ -51,7 +51,7 @@
 #'
 #' @details \code{run_nodesplit} inherits the arguments \code{data},
 #'   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
-#'   \code{mean_misspar}, \code{var_misspar}, and \code{ref} from
+#'   \code{mean_misspar}, \code{var_misspar}, \code{ref}, and \code{indic} from
 #'   \code{\link{run_model}} (now contained in the argument \code{full}).
 #'   This prevents specifying a different Bayesian model from that considered
 #'   in \code{\link{run_model}}. Therefore, the user needs first to apply
@@ -60,7 +60,9 @@
 #'
 #'   For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
 #'   (risk difference) in \code{\link{run_model}}, \code{run_nodesplit}
-#'   currently performs node-splitting using the odds ratio as effect measure.
+#'   currently performs node-splitting using the odds ratio as effect measure
+#'   for being the \strong{base-case} effect measure in \code{\link{run_model}}
+#'   for a binary outcome (see also 'Details' in \code{\link{run_model}}).
 #'
 #'   To perform the Bayesian node-splitting approach, the
 #'   \code{\link{prepare_nodesplit}} function is called which contains the

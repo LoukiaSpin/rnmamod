@@ -38,7 +38,7 @@ An R character vector object to be passed to
 The WinBUGS code, as written by Dias et al. (2010) to run a
   one-stage Bayesian node-splitting model, extended to incorporate the
   pattern-mixture model for binary or continuous missing participant outcome
-  data.
+  data (Spineli et al., 2021; Spineli, 2019).
 }
 \details{
 This functions creates the model in the JAGS dialect of the BUGS

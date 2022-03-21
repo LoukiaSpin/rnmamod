@@ -41,6 +41,8 @@ An R2jags output on the summaries of the posterior distribution, and
   \item{tau}{The between-trial standard deviation for pairwise comparisons
   with at least two trials, when the random-effects model has been
   specified.}
+  \item{single}{A binary vector that indicates the comparisons in \code{EM}
+  with one trial.}
 }
 \description{
 Performs a Bayesian pairwise meta-analysis for each pairwise
@@ -58,13 +60,15 @@ Performs a Bayesian pairwise meta-analysis for each pairwise
   For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
   (risk difference) in \code{\link{run_model}}, \code{run_series_meta}
   currently performs a series of pairwise meta-analysis using the odds ratio
-  as effect measure.
+  as effect measure for being the \strong{base-case} effect measure in
+  \code{\link{run_model}} for a binary outcome (see also 'Details' in
+  \code{\link{run_model}}).
 
   \code{run_series_meta} runs a series of Bayesian pairwise meta-analyses
   in \code{JAGS}. The progress of the simulation appears on the R console.
-  The number of times a pairwise meta-analysis is preformed is also printed
-  on the console (in red) and is equal to the number of  pairwise comparisons
-  observed in the network that include at least two trials (see 'Examples').
+  The number of times the function is used is also printed on the console
+  (in red) and is equal to the number of  observed pairwise comparisons
+  in the network (see 'Examples').
 
   The output of \code{run_series_meta} is not end-user-ready. The
   \code{\link{series_meta_plot}} function inherits the output of

@@ -68,18 +68,25 @@
 #'   \code{\link{run_model}}.Therefore, the user needs first to apply
 #'   \code{\link{run_model}}, and then use \code{run_ume} (see 'Examples').
 #'
+#'   The \code{run_ume} function also returns the arguments \code{data},
+#'   \code{model}, \code{measure}, \code{assumption}, \code{n_chains},
+#'   \code{n_iter}, \code{n_burnin}, and \code{n_thin} as specified by the user
+#'   to be inherited by other relevant functions of the package.
+#'
 #'   Initially, \code{run_ume} calls the \code{\link{improved_ume}} function to
 #'   identify the \emph{frail comparisons}, that is, comparisons between
 #'   non-baseline interventions in multi-arm trials not investigated in any
-#'   two-arm trial of the network (Spineli, 2021). The 'original' model of
-#'   Dias et al. (2013) omits the frail comparisons from the estimation
+#'   two-arm or multi-arm trial of the network (Spineli, 2021). The 'original'
+#'   model of Dias et al. (2013) omits the frail comparisons from the estimation
 #'   process. Consequently, the number of estimated summary effects is less
 #'   than those obtained by performing separate pairwise meta-analyses
 #'   (see \code{\link{run_series_meta}}).
 #'
 #'   For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
 #'   (risk difference) in \code{\link{run_model}}, \code{run_ume} currently
-#'   considers the odds ratio as effect measure.
+#'   considers the odds ratio as effect measure for being the \strong{base-case}
+#'   effect measure in \code{\link{run_model}} for a binary outcome
+#'   (see also 'Details' in \code{\link{run_model}}).
 #'
 #'   \code{run_ume} calls the \code{\link{prepare_ume}} function which contains
 #'   the WinBUGS code as written by Dias et al. (2013) for binomial and normal
@@ -87,10 +94,10 @@
 #'   \code{\link{prepare_ume}} has been extended to incorporate the
 #'   pattern-mixture model with informative missingness parameters for binary
 #'   and continuous outcome data (see 'Details' in \code{\link{run_model}}).
-#'   \code{\link{prepare_ume}} has been also refined to account for the
+#'   \code{\link{prepare_ume}} has also been refined to account for the
 #'   multi-arm trials by assigning conditional univariate normal distributions
-#'   on the basic parameters of these trials, that is, effect parameters between
-#'   non-baseline arms and the baseline arm (Spineli, 2021).
+#'   on the underlying trial-specific effect size of comparisons with the
+#'   baseline arm of the multi-arm trial (Spineli, 2021).
 #'
 #'   \code{run_ume} runs Bayesian unrelated mean effects model in \code{JAGS}.
 #'   The progress of the simulation appears on the R console.
@@ -480,6 +487,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          leverage_o = leverage_o,
          sign_dev_o = sign_dev_o,
          tau = tau,
+         m_tau = m_tau,
          model_assessment = model_assessment,
          obs_comp = obs_comp,
          jagsfit = jagsfit,

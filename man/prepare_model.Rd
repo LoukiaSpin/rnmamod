@@ -23,7 +23,8 @@ respectively. The default argument is \code{"RE"}.}
 intervention-by-covariate interaction, as described in
 Cooper et al., (2009). Set \code{covar_assumption} equal to one of the
 following, when meta-regression is performed: \code{"exchangeable"},
-\code{"independent"}, and \code{"common"}.}
+\code{"independent"}, and \code{"common"}. Assign \code{"NO"} to perform
+pairwise or network meta-analysis.}
 
 \item{assumption}{Character string indicating the structure of the
 informative missingness parameter. Set \code{assumption} equal to one of
@@ -44,10 +45,12 @@ An R character vector object to be passed to \code{\link{run_model}}
 \description{
 The WinBUGS code, as written by Dias et al. (2013) to run a one-stage
   Bayesian network meta-analysis, extended to incorporate the pattern-mixture
-  model for binary or continuous missing participant outcome data. The model
-  has been also extended to incorporate a trial-level covariate to apply
-  meta-regression. In the case of two interventions, the code boils down to
-  a one-stage Bayesian pairwise meta-analysis with pattern-mixture model.
+  model for binary or continuous missing participant outcome data (Spineli
+  et al., 2021; Spineli, 2019). The model has been also extended to
+  incorporate a trial-level covariate to apply meta-regression
+  (Cooper et al., 2009). In the case of two interventions, the code boils
+  down to a one-stage Bayesian pairwise meta-analysis with pattern-mixture
+  model (Turner et al., 2015; Spineli et al, 2021).
 }
 \details{
 \code{prepare_model} creates the model in the JAGS dialect

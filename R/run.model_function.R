@@ -30,14 +30,14 @@
 #'   1) a character string indicating the distribution with
 #'   (currently available) values \code{"halfnormal"}, \code{"uniform"},
 #'   \code{"lognormal"}, or \code{"logt"}; 2) two numeric values that refer to
-#'   the parameters of the selected distribution.  For \code{"lognormal"}, and
+#'   the parameters of the selected distribution. For \code{"lognormal"}, and
 #'   \code{"logt"} these numbers refer to the mean and precision, respectively.
 #'   For \code{"halfnormal"}, these numbers refer to zero and the scale
 #'   parameter (equal to 4 or 1 being the corresponding precision of the scale
 #'   parameter 0.5 or 1). For \code{"uniform"}, these numbers refer to the
 #'   minimum and maximum value of the distribution.
 #'   See 'Details' in \code{\link{heterogeneity_param_prior}}.
-#' @param mean_misspar A numeric value or a vector of two numeric values for the
+#' @param mean_misspar A scalar or numeric vector of two numeric values for the
 #'   mean of the normal distribution of the informative missingness parameter
 #'   (see 'Details'). The default argument is 0 and corresponds to the
 #'   missing-at-random assumption.
@@ -46,7 +46,7 @@
 #'   normal distribution of the informative missingness parameter.
 #'   When the \code{measure} is \code{"OR"}, \code{"MD"}, or \code{"SMD"}
 #'   the default argument is 1. When the \code{measure} is \code{"ROM"}
-#'   the default argument is 0.04
+#'   the default argument is 0.04.
 #' @param D A binary number for the direction of the outcome.
 #'   Set \code{D = 1} for beneficial outcome and \code{D = 0} for harmful
 #'   outcome.
@@ -122,6 +122,8 @@
 #'   fixed-effect pairwise meta-analysis:
 #'   \item{EM}{The estimated summary effect measure (according to the argument
 #'   \code{measure}).}
+#'   \item{EM_LOR}{The estimated summary odd ratio in the logarithmic scale when
+#'   \code{measure = "RR"} or \code{measure = "RD"}.}
 #'   \item{dev_o}{The deviance contribution of each trial-arm based on the
 #'   observed outcome.}
 #'   \item{hat_par}{The fitted outcome at each trial-arm.}
@@ -130,6 +132,9 @@
 #'   For a fixed-effect network meta-analysis, the output additionally includes:
 #'   \item{SUCRA}{The surface under the cumulative ranking curve for each
 #'   intervention.}
+#'   \item{SUCRA_LOR}{The surface under the cumulative ranking curve for each
+#'   intervention under the odds ratio effect measure when \code{measure = "RR"}
+#'   or \code{measure = "RD"}.}
 #'   \item{effectiveneness}{The ranking probability of each intervention for
 #'   every rank.}
 #'
@@ -137,6 +142,8 @@
 #'   includes the following elements:
 #'   \item{EM_pred}{The predicted summary effect measure (according to the
 #'   argument \code{measure}).}
+#'   \item{EM_pred_LOR}{The predicted summary odds ratio in the logarithmic
+#'   scale when \code{measure = "RR"} or \code{measure = "RD"}.}
 #'   \item{delta}{The estimated trial-specific effect measure (according to the
 #'   argument \code{measure}).}
 #'   \item{tau}{The between-trial standard deviation.}
@@ -150,12 +157,6 @@
 #'   the number of interventions in the trial.
 #'
 #'   Furthermore, the output includes the following elements:
-#'   \item{LRR}{The relative risk in the logarithmic scale as a function of the
-#'   absolute risks of the corresponding interventions. This appears only when
-#'   \code{measure = "OR"}, \code{measure = "RR"}, or \code{measure = "RD"}.}
-#'   \item{RD}{The risk difference as a function of the absolute risks of the
-#'   corresponding interventions. This appears only when \code{measure = "OR"},
-#'   \code{measure = "RR"}, or \code{measure = "RD"}.}
 #'   \item{abs_risk}{The absolute risks for each intervention. This appears only
 #'   when \code{measure = "OR"}, \code{measure = "RR"}, or
 #'   \code{measure = "RD"}.}
@@ -165,14 +166,17 @@
 #'   \item{model_assessment}{A data-frame on the measures of model assessment:
 #'   deviance information criterion, number of effective parameters, and total
 #'   residual deviance.}
+#'   \item{indic}{The sign of basic parameters in relation to the reference
+#'   intervention as specified in argument \code{reg}}
 #'   \item{jagsfit}{An object of S3 class \code{\link[R2jags:jags]{jags}} with
 #'   the posterior results on all monitored parameters to be used in the
 #'   \code{\link{mcmc_diagnostics}} function.}
 #'
 #'   The \code{run_model} function also returns the arguments \code{data},
 #'   \code{measure}, \code{model}, \code{assumption}, \code{heter_prior},
-#'   \code{mean_misspar}, \code{var_misspar}, \code{D}, \code{ref} and
-#'   \code{base_risk} as specified by the user to be considered in other
+#'   \code{mean_misspar}, \code{var_misspar}, \code{D}, \code{ref},
+#'   \code{base_risk}, \code{n_chains}, \code{n_iter}, \code{n_burnin},
+#'   and \code{n_thin} as specified by the user to be inherited by other
 #'   functions of the package.
 #'
 #' @details The model runs in \code{JAGS} and the progress of the simulation
@@ -188,37 +192,37 @@
 #'   outcome data (i.e., \code{m} equals \code{NA} for the corresponding
 #'   trial-arms), the same value with \code{m} for the observed trial-arms with
 #'   reported missing participant outcome data, and \code{NA} for the unobserved
-#'   trial-arms. \code{I} is a dummy data-frame and takes the value one for the
-#'   observed trial-arms with reported missing participant outcome data, the
-#'   zero value for the observed trial-arms with unreported missing participant
-#'   outcome data (i.e., \code{m_new} equals zero for the corresponding
-#'   trial-arms), and \code{NA} for the unobserved trial-arms. Thus, \code{I}
-#'   indicates whether missing participant outcome data have been collected for
-#'   the observed trial-arms. If the user has not defined the element \strong{m}
-#'   in \code{data}, \code{m_new} and \code{I} take the zero value for all
-#'   observed trial-arms to indicate that no missing participant outcome data
-#'   have been collected for the analysed outcome. See 'Details' in
+#'   trial-arms. \code{I} is a dummy pseudo-data-frame and takes the value one
+#'   for the observed trial-arms with reported missing participant outcome data,
+#'   the zero value for the observed trial-arms with unreported missing
+#'   participant outcome data (i.e., \code{m_new} equals zero for the
+#'   corresponding trial-arms), and \code{NA} for the unobserved trial-arms.
+#'   Thus, \code{I} indicates whether missing participant outcome data have been
+#'   collected for the observed trial-arms. If the user has not defined the
+#'   element \strong{m} in \code{data}, \code{m_new} and \code{I} take the zero
+#'   value for all observed trial-arms to indicate that no missing participant
+#'   outcome data have been collected for the analysed outcome. See 'Details' in
 #'   \code{\link{data_preparation}}.
 #'
 #'   Furthermore, \code{\link{data_preparation}} sorts the interventions across
 #'   the arms of each trial in an ascending order and correspondingly the
 #'   remaining elements in \code{data} (see 'Format').
-#'   \code{\link{data_preparation}} considers the
-#'   first column in \strong{t} as being the control arm for every trial. Thus,
-#'   this sorting ensures that interventions with a lower identifier are
-#'   consistently treated as the control arm in each trial. This case is
-#'   relevant in non-star-shaped networks.
+#'   \code{\link{data_preparation}} considers the first column in \strong{t} as
+#'   being the control arm for every trial. Thus, this sorting ensures that
+#'   interventions with a lower identifier are consistently treated as the
+#'   control arm in each trial. This case is relevant in non-star-shaped
+#'   networks.
 #'
 #'   To perform a Bayesian pairwise or network meta-analysis, the
 #'   \code{\link{prepare_model}} function is called which contains the WinBUGS
 #'   code as written by Dias et al. (2013) for binomial and normal likelihood to
-#'   analyse binary and continuous outcome data, respectively.
+#'   analyse aggregate binary and continuous outcome data, respectively.
 #'   \code{\link{prepare_model}} uses the consistency model (as described in
 #'   Lu and Ades (2006)) to estimate all possible comparisons in the network.
 #'   It also accounts for the multi-arm trials by assigning conditional
-#'   univariate normal distributions on the basic parameters of these trials,
-#'   namely, effect parameters between the non-baseline arms and the baseline
-#'   arm of the multi-arm trial (Dias et al., 2013).
+#'   univariate normal distributions on the underlying trial-specific effect
+#'   size of comparisons with the baseline arm of the multi-arm trial
+#'   (Dias et al., 2013).
 #'
 #'   The code of Dias et al. (2013) has been extended to incorporate the
 #'   pattern-mixture model to adjust the underlying outcome in each arm of
@@ -253,7 +257,7 @@
 #'   outcome data (i.e., \code{m} equals \code{NA} for the corresponding
 #'   trial-arms) or when missing participant outcome data have not been
 #'   collected for the analysed outcome (i.e., \code{m} is missing in
-#'   \code{data}), \code{run_model} considers the assumption \code{"IND-UNCORR"}
+#'   \code{data}), \code{run_model} assigns the assumption \code{"IND-UNCORR"}
 #'   to \code{assumption}.
 #'
 #'   Currently, there are no empirically-based prior distributions for the
@@ -265,15 +269,16 @@
 #'   To obtain unique absolute risks for each intervention, the network
 #'   meta-analysis model has been extended to incorporate the transitive risks
 #'   framework, namely, an intervention has the same absolute risk regardless of
-#'   the comparator interventions in a trial (Spineli et al., 2017).
-#'   The absolute risks are a function of the odds ratio and the selected
-#'   baseline risk for the reference intervention (\code{ref}) (Appendix in
-#'   Dias et al., 2013). We advocate using the OR as an effect measure for its
-#'   desired mathematical properties. Then, the relative risk and risk
-#'   difference can be obtained as a function of the absolute risks. Hence,
-#'   regardless of the selected \code{measure} for a binary outcome,
-#'   \code{run_model} performs pairwise or network meta-analysis based on the
-#'   odds ratio.
+#'   the comparator intervention(s) in a trial (Spineli et al., 2017).
+#'   The absolute risks are a function of the odds ratio (the \strong{base-case}
+#'   effect measure for a binary outcome) and the selected baseline risk for the
+#'   reference intervention (\code{ref}) (Appendix in Dias et al., 2013).
+#'   We advocate using the odds ratio as an effect measure for its desired
+#'   mathematical properties. Then, the relative risk and risk difference can be
+#'   obtained as a function of the absolute risks of the corresponding
+#'   interventions in the comparison of interest. Hence, regardless of the
+#'   selected \code{measure} for a binary outcome, \code{run_model} performs
+#'   pairwise or network meta-analysis based on the odds ratio.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -389,12 +394,13 @@ run_model <- function(data,
   assumption <- if (missing(assumption) & min(na.omit(unlist(item$I))) == 1) {
     message("The 'IDE-ARM' has been used as the default.")
     "IDE-ARM"
-  } else if (missing(assumption) & min(na.omit(unlist(item$I))) == 0) {
+  } else if ((missing(assumption) || assumption != "IND-UNCORR") &
+             min(na.omit(unlist(item$I))) == 0) {
     "IND-UNCORR"
-  } else if (assumption != "IND-UNCORR" & min(na.omit(unlist(item$I))) == 0) {
-    aa <- "Missing participant outcome data have been collected partially."
-    bb <- "Insert 'IND-UNCORR'."
-    stop(paste(aa, bb), call. = FALSE)
+  #} else if (assumption != "IND-UNCORR" & min(na.omit(unlist(item$I))) == 0) {
+  #  aa <- "Missing participant outcome data have been collected partially."
+  #  bb <- "Insert 'IND-UNCORR'."
+  #  stop(paste(aa, bb), call. = FALSE)
   } else {
     assumption
   }
@@ -715,11 +721,10 @@ run_model <- function(data,
                                         tau = tau,
                                         delta = delta,
                                         heter_prior = heterog_prior,
-                                        base_risk = base_risk,
                                         SUCRA = SUCRA,
                                         effectiveness = effectiveness,
-                                        abs_risk = abs_risk,
-                                        base_risk = base_risk))
+                                        base_risk = base_risk,
+                                        abs_risk = abs_risk))
   } else if (model == "RE" & is.element(measure, c("RR", "RD"))) {
     ma_results <- append(results, list(EM_pred = EM_pred,
                                        EM_LOR = EM_LOR,

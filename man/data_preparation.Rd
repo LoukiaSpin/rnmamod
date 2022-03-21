@@ -20,17 +20,23 @@ standardised mean difference and ratio of means, respectively.}
 \value{
 A list of data-frames on the following elements to be passed
   to \code{\link{run_model}}:
+  \item{pseudo_m}{A pseudo-data-frame with values -1 and \strong{m} for the
+  corresponding trial-arms with unreported and reported missing participant
+  outcome data, respectively (see 'Details').}
   \item{m}{The number of missing participant outcome data in each
   trial-arm (see 'Details').}
   \item{N}{The number of randomised participants in each trial-arm.}
   \item{t}{The intervention identifier in each trial-arm.}
-  \item{I}{A pseudo-data-frame (see 'Details').}
-  \item{r}{The number of observed events of the outcome in each
-  trial-arm, when the outcome is binary.}
+  \item{I}{A pseudo-data-frame that indicates whether missing participant
+  outcome data have been reported or not for each observed trial-arm
+  (see 'Details').}
+  \item{measure}{The effect measure for the analysed outcome.}
   \item{y0}{The observed mean value of the outcome in each trial-arm,
   when the outcome is continuous.}
   \item{se0}{The observed standard deviation of the outcome in each
   trial-arm, when the outcome is continuous.}
+  \item{r}{The number of observed events of the outcome in each
+  trial-arm, when the outcome is binary.}
 }
 \description{
 \code{data_preparation} prepares the dataset in the proper format for

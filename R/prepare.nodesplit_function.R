@@ -3,7 +3,7 @@
 #' @description The WinBUGS code, as written by Dias et al. (2010) to run a
 #'   one-stage Bayesian node-splitting model, extended to incorporate the
 #'   pattern-mixture model for binary or continuous missing participant outcome
-#'   data.
+#'   data (Spineli et al., 2021; Spineli, 2019).
 #'
 #' @param measure Character string indicating the effect measure. For a binary
 #'   outcome, the following can be considered: \code{"OR"}, \code{"RR"} or

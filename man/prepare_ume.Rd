@@ -35,10 +35,11 @@ An R character vector object to be passed to \code{\link{run_ume}}
   the argument \code{object}.
 }
 \description{
-The WinBUGS code, as written by Dias et al. (2013) to run a
+The WinBUGS code, as proposed by Dias et al. (2013) to run a
   one-stage Bayesian unrelated mean effects model, refined (Spineli, 2021),
   and extended to incorporate the pattern-mixture model for binary or
-  continuous missing participant outcome data.
+  continuous missing participant outcome data (Spineli et al., 2021; Spineli,
+  2019).
 }
 \details{
 This functions creates the model in the JAGS dialect of the BUGS

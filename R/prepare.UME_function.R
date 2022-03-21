@@ -1,9 +1,10 @@
 #' WinBUGS code for the unrelated mean effects model
 #'
-#' @description The WinBUGS code, as written by Dias et al. (2013) to run a
+#' @description The WinBUGS code, as proposed by Dias et al. (2013) to run a
 #'   one-stage Bayesian unrelated mean effects model, refined (Spineli, 2021),
 #'   and extended to incorporate the pattern-mixture model for binary or
-#'   continuous missing participant outcome data.
+#'   continuous missing participant outcome data (Spineli et al., 2021; Spineli,
+#'   2019).
 #'
 #' @param measure Character string indicating the effect measure with values
 #'   \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds ratio,

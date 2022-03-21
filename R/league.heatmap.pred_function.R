@@ -13,8 +13,7 @@
 #'   meta-analysis, or \code{\link{run_metareg}} for network meta-regression.
 #'   See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.
 #' @param full2 An object of S3 class \code{\link{run_model}} for network
-#'   meta-analysis, \code{\link{run_metareg}} for network meta-regression, or
-#'   \code{\link{run_series_meta}} for a series of pairwise meta-analyses.
+#'   meta-analysis, or \code{\link{run_metareg}} for network meta-regression.
 #'   See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.
 #' @param cov_value A list of two elements in the following order: a number
 #'   for the covariate value of interest and a character for the name of the
@@ -36,7 +35,7 @@
 #'   If \code{show} is not defined, the league table will present all
 #'   interventions as defined in \code{drug_names1}.
 #'
-#' @return A league heatmap of the posterior mean and 95\% predictive interval
+#' @return A league heatmap of the posterior mean and 95\% prediction interval
 #'   of the effect measure (according to the argument \code{measure} defined in
 #'   \code{\link{run_model}}) for all possible comparisons in the off-diagonals,
 #'   and the posterior mean of the SUCRA values in the diagonal.
@@ -53,7 +52,7 @@
 #'    be read from left to right. Therefore, each cell refers to the
 #'    corresponding row-defining intervention against the column-defining
 #'    intervention. Results that indicate strong evidence in favour of the
-#'    row-defining intervention (i.e. the respective 95\% credible interval does
+#'    row-defining intervention (i.e. the respective 95\% prediction interval does
 #'    not include the null value) are indicated in bold. A message is printed on
 #'    the R console on how to read the heatmap;
 #'    \item two outcomes for the same model, namely, network meta-analysis (via
@@ -66,7 +65,7 @@
 #'    against the column-defining intervention, and for the lower diagonal, each
 #'    cell refers to the corresponding column-defining intervention against the
 #'    row-defining intervention. Results that indicate strong evidence (i.e. the
-#'    respective 95\% credible interval does not include the null value) are
+#'    respective 95\% prediction interval does not include the null value) are
 #'    indicated in bold. A message is printed on the R console on how to read
 #'    the heatmap;
 #'    \item two models for the same outcome, namely, network meta-analysis
@@ -75,22 +74,22 @@
 #'    how to read the heatmap.
 #'   }
 #'
-#'   The function displays the effect measure as inherited in the argument
+#'   The function displays the effect measure as inherited by the argument
 #'   \code{full1}. For binary outcome, it can display the odds ratio,
 #'   relative risk, and risk difference. See 'Details' in
 #'   \code{\link{run_model}} for the relative risk, and risk difference.
 #'   For continuous outcome, it can display the mean difference, standardised
-#'   mean difference, and ratio of means. Odds ratios, relative risks and ratio
+#'   mean difference, and ratio of means. Odds ratios, relative risk and ratio
 #'   of means are reported in the original scale after exponentiation of the
 #'   logarithmic scale.
 #'
-#'   The rows and columns of the heatmap display the names of
-#'   interventions which are sorted by decreasing order from the best to the
-#'   worst based on their SUCRA value (Salanti et al., 2011) for the outcome or
-#'   model under the argument \code{full1}. The off-diagonals contain the
-#'   posterior mean and 95\% predictive interval of the effect measure
-#'   (according to the argument \code{measure} as inherited in the argument
-#'   \code{full1}) of the corresponding comparisons.
+#'   The rows and columns of the heatmap display the names of interventions
+#'   which are sorted by decreasing order from the best to the worst based on
+#'   their SUCRA value (Salanti et al., 2011) for the outcome or model under the
+#'   argument \code{full1}. The off-diagonals contain the posterior mean and
+#'   95\% prediction interval of the effect measure (according to the argument
+#'   \code{measure} as inherited in the argument \code{full1}) of the
+#'   corresponding comparisons.
 #'
 #'   The main diagonal contains the SUCRA values of the corresponding
 #'   interventions when the argument \code{full1} refers to the
@@ -152,10 +151,16 @@ league_heatmap_pred <- function(full1,
                                 name2 = NULL,
                                 show = NULL) {
 
-  if (full1$model == "FE") {
-    stop("This function cannot be used for a fixed-effect model.",
-         call. = FALSE)
-  }
+  #if (full1$model == "FE") {
+  #  stop("This function cannot be used for a fixed-effect model.",
+  #       call. = FALSE)
+  #}
+
+  #if (is.null(full1$SUCRA) || is.null(full2$SUCRA)) {
+  #  aa <- "'run_model', or 'run_metareg'"
+  #  stop(paste("'full1' and 'full2' must be an object of S3 class", aa),
+  #       call. = FALSE)
+  #}
 
   # Both objects must refer to the same effect measure
   measure <- if (is.null(full2) || (!is.null(full2) &
@@ -526,7 +531,7 @@ league_heatmap_pred <- function(full1,
     signif_status <- melt(signif2, na.rm = FALSE)[3]
   }
 
-  # Merge point estimate with 95% credible interval in a new symmetric matric
+  # Merge point estimate with 95% prediction interval in a new symmetric matrix
   final <- matrix(
     paste0(sprintf("%.2f", point_f),  "\n", "(",
            sprintf("%.2f", lower_f), ",", " ",
@@ -553,13 +558,13 @@ league_heatmap_pred <- function(full1,
   caption0 <- if (!is.null(full1$beta_all) &
                   length(unique(full1$covariate)) > 2) {
     paste("Posterior mean of", effect_measure_name(measure, lower = TRUE),
-          "(95% predictive interval) for", cov_value[[2]], cov_value[[1]])
+          "(95% prediction interval) for", cov_value[[2]], cov_value[[1]])
   } else if (!is.null(full1$beta_all) & length(unique(full1$covariate)) < 3) {
     paste("Posterior mean of", effect_measure_name(measure, lower = TRUE),
-          "(95% predictive interval) for", cov_value[[2]])
+          "(95% prediction interval) for", cov_value[[2]])
   } else if (is.null(full1$beta_all)) {
     paste("Posterior mean of", effect_measure_name(measure, lower = TRUE),
-          "(95% predictive interval)")
+          "(95% prediction interval)")
   }
 
   ## To create the orders of the lower diagonal

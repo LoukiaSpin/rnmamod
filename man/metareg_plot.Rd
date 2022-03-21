@@ -42,7 +42,7 @@ directory of the user. The default is \code{FALSE} (do not export).}
   defined in \code{\link{run_model}}) for each comparison with the selected
   intervention under network meta-analysis and network meta-regression
   based on the specified \code{cov_value}.}
-  \item{table_predictions}{The posterior mean, and 95\% predictive
+  \item{table_predictions}{The posterior mean, and 95\% prediction
   interval of the summary effect measure (according to the argument
   \code{measure} defined in \code{\link{run_model}}) for each comparison
   with the selected intervention under network meta-analysis and network
@@ -51,11 +51,14 @@ directory of the user. The default is \code{FALSE} (do not export).}
   number of effective parameters, and the posterior median and 95\% credible
   interval of between-trial standard deviation (\emph{tau}) under each model
   (Spiegelhalter et al., 2002). When a fixed-effect model has been
-  performed, \code{metareg_plot} does not return results on \emph{tau}.}
+  performed, \code{metareg_plot} does not return results on \emph{tau}. For a
+  binary outcome, the results refer to the odds ratio scale.}
   \item{table_regression_coeffients}{The posterior mean and 95\%
-  credible interval of the regression coefficient(s).}
-  \item{interval_plots}{The panel of forest plots on the estimated and
-  predicted effect sizes of comparisons with the selected intervention under
+  credible interval of the regression coefficient(s) (according to the
+  argument \code{covar_assumption} defined in \code{\link{run_metareg}}).
+  For a binary outcome, the results refer to the odds ratio scale.}
+  \item{interval_plot}{A forest plot on the estimated and predicted effect
+  sizes of comparisons with the selected comparator intervention under
   network meta-analysis and network meta-regression based on the specified
   \code{cov_value}. See 'Details' and 'Value' in
   \code{\link{forestplot_metareg}}.}
@@ -66,8 +69,8 @@ directory of the user. The default is \code{FALSE} (do not export).}
 }
 \description{
 Illustrates the effect estimates, predictions and regression
-  coefficients of comparisons with a specific comparator and also exports
-  these results to an Excel file.
+  coefficients of comparisons with a specified comparator intervention
+  and also exports these results to an Excel file.
 }
 \details{
 The deviance information criterion (DIC) of the network
@@ -80,10 +83,6 @@ The deviance information criterion (DIC) of the network
   When the covariate is binary, specify in the second element of
   \code{cov_value} the name of the level for which the output will be
   created.
-
-  For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
-  (risk difference) in \code{\link{run_model}}, \code{metareg_plot}
-  currently presents the results in the odds ratio scale.
 
   Furthermore, \code{metareg_plot} exports all tabulated results to separate
   'xlsx' files (via the \code{\link[writexl:write_xlsx]{write_xlsx}} function

@@ -28,37 +28,39 @@ the order of the interventions as they appear in \code{data} is used,
 instead.}
 }
 \value{
-A panel of two forest plots: (1) a forest plot on the estimated
-  effect size of comparisons with the selected intervention of the network,
-  and (2) a forest plot on the predicted effect size of comparisons with the
-  selected intervention of the network. Both forest plots illustrate the
-  results from network meta-analysis and network meta-regression using
-  different colours for the corresponding lines.
+For each comparison with the selected comparator intervention,
+  \code{forestplot_metareg} displays the estimated effect size with the 95\%
+  credible and prediction intervals under the network meta-analysis and
+  network meta-regression for a specified level or value of the investigated
+  covariate.
 }
 \description{
 This function illustrates a forest plot of the posterior mean
-  and 95\% credible and predictive interval of comparisons with the selected
+  and 95\% credible and prediction interval of comparisons with the selected
   intervention of the network under the network meta-analysis \emph{and}
   network meta-regression.
 }
 \details{
-In both plots, the y-axis displays all interventions in the
-  network; the selected intervention that comprises the \code{compar} is
-  indicated in the plot with a homonymous label. The numerical results are
-  displayed above each line.
-  Odds ratio and ratio of means are reported in the original scale after
-  exponentiation of the logarithmic scale.
-
-  When the covariate is binary, specify in the second element of
-  \code{cov_value} the name of the level for which the forest plot will be
-  created.
+The y-axis displays all interventions in the network; the selected
+  intervention that comprises the \code{compar} is indicated in the plot with
+  a homonymous label. For each comparison with the selected intervention,
+  the 95\% credible and prediction intervals are displayed as overlapping
+  lines in black and red colour, respectively. The corresponding numerical
+  results are displayed above each line: 95\% credible intervals are found
+  in parentheses, and 95\% predictive intervals are found in brackets.
+  Solid and dotted lines refer to network meta-analysis and network
+  meta-regression, respectively.
+  Odds ratio, relative risks, and ratio of means are reported in the original
+  scale after exponentiation of the logarithmic scale.
 
   In both plots, the interventions are sorted in the descending order of
   their SUCRA values based on the network meta-analysis.
 
-  \code{forestplot} can be used only for a network of interventions. In the
-  case of two interventions, the execution of the function will be stopped
-  and an error message will be printed on the R console.
+  \code{forestplot_metareg} is integrated in \code{\link{metareg_plot}}.
+
+  \code{forestplot_metareg} can be used only for a network of interventions.
+  In the case of two interventions, the execution of the function will be
+  stopped and an error message will be printed on the R console.
 }
 \references{
 Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
@@ -67,7 +69,8 @@ tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
 \doi{10.1016/j.jclinepi.2010.03.016}
 }
 \seealso{
-\code{\link{run_metareg}}, \code{\link{run_model}}
+\code{\link{metareg_plot}}, \code{\link{run_metareg}},
+  \code{\link{run_model}}
 }
 \author{
 {Loukia M. Spineli}

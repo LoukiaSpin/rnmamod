@@ -1,7 +1,7 @@
 #' Comparator-specific forest plot for network meta-regression
 #'
 #' @description This function illustrates a forest plot of the posterior mean
-#'   and 95\% credible and predictive interval of comparisons with the selected
+#'   and 95\% credible and prediction interval of comparisons with the selected
 #'   intervention of the network under the network meta-analysis \emph{and}
 #'   network meta-regression.
 #'
@@ -21,34 +21,37 @@
 #'   the order of the interventions as they appear in \code{data} is used,
 #'   instead.
 #'
-#' @return A panel of two forest plots: (1) a forest plot on the estimated
-#'   effect size of comparisons with the selected intervention of the network,
-#'   and (2) a forest plot on the predicted effect size of comparisons with the
-#'   selected intervention of the network. Both forest plots illustrate the
-#'   results from network meta-analysis and network meta-regression using
-#'   different colours for the corresponding lines.
+#' @return For each comparison with the selected comparator intervention,
+#'   \code{forestplot_metareg} displays the estimated effect size with the 95\%
+#'   credible and prediction intervals under the network meta-analysis and
+#'   network meta-regression for a specified level or value of the investigated
+#'   covariate.
 #'
-#' @details In both plots, the y-axis displays all interventions in the
-#'   network; the selected intervention that comprises the \code{compar} is
-#'   indicated in the plot with a homonymous label. The numerical results are
-#'   displayed above each line.
-#'   Odds ratio and ratio of means are reported in the original scale after
-#'   exponentiation of the logarithmic scale.
-#'
-#'   When the covariate is binary, specify in the second element of
-#'   \code{cov_value} the name of the level for which the forest plot will be
-#'   created.
+#' @details The y-axis displays all interventions in the network; the selected
+#'   intervention that comprises the \code{compar} is indicated in the plot with
+#'   a homonymous label. For each comparison with the selected intervention,
+#'   the 95\% credible and prediction intervals are displayed as overlapping
+#'   lines in black and red colour, respectively. The corresponding numerical
+#'   results are displayed above each line: 95\% credible intervals are found
+#'   in parentheses, and 95\% predictive intervals are found in brackets.
+#'   Solid and dotted lines refer to network meta-analysis and network
+#'   meta-regression, respectively.
+#'   Odds ratio, relative risks, and ratio of means are reported in the original
+#'   scale after exponentiation of the logarithmic scale.
 #'
 #'   In both plots, the interventions are sorted in the descending order of
 #'   their SUCRA values based on the network meta-analysis.
 #'
-#'   \code{forestplot} can be used only for a network of interventions. In the
-#'   case of two interventions, the execution of the function will be stopped
-#'   and an error message will be printed on the R console.
+#'   \code{forestplot_metareg} is integrated in \code{\link{metareg_plot}}.
+#'
+#'   \code{forestplot_metareg} can be used only for a network of interventions.
+#'   In the case of two interventions, the execution of the function will be
+#'   stopped and an error message will be printed on the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run_metareg}}, \code{\link{run_model}}
+#' @seealso \code{\link{metareg_plot}}, \code{\link{run_metareg}},
+#'   \code{\link{run_model}}
 #'
 #' @references
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
@@ -111,26 +114,10 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   }
 
   model <- full$model
-  measure <- if (is.element(full$measure, c("RR", "RD"))) {
-    "OR"
-  } else {
-    full$measure
-  }
-  em_full <- if (is.element(full$measure, c("RR", "RD"))) {
-    full$EM_LOR
-  } else {
-    full$EM
-  }
-  pred_full <- if (is.element(full$measure, c("RR", "RD"))) {
-    full$EM_pred_LOR
-  } else {
-    full$EM_pred
-  }
-  sucra_full <- if (is.element(full$measure, c("RR", "RD"))) {
-    full$SUCRA_LOR
-  } else {
-    full$SUCRA
-  }
+  measure <- full$measure
+  em_full <- full$EM
+  pred_full <- full$EM_pred
+  sucra_full <- full$SUCRA
 
   cov_val <- ifelse(length(unique(reg$covariate)) < 3,
                     cov_value[[1]],
@@ -210,9 +197,9 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
     rownames(pred_ref_nma) <- rownames(pred_ref_nmr) <- NULL
   }
 
-  # Create a data-frame with credible and predictive intervals of comparisons
+  # Create a data-frame with credible and prediction intervals of comparisons
   # with the reference intervention
-  if (!is.element(measure, c("OR", "ROM")) & model == "RE") {
+  if (!is.element(measure, c("OR", "RR", "ROM")) & model == "RE") {
     prepare_em_nma <- data.frame(as.factor(rep(rev(seq_len(len_drug)), 2)),
                                  rep(drug_names_sorted, 2),
                                  round(rbind(em_ref_nma, pred_ref_nma), 2),
@@ -228,7 +215,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                   "mean", "lower", "upper",
                                   "interval")
     colnames(prepare_em_nmr) <- colnames(prepare_em_nma)
-  } else if (is.element(measure, c("OR", "ROM")) & model == "RE") {
+  } else if (is.element(measure, c("OR", "RR", "ROM")) & model == "RE") {
     prepare_em_nma <- data.frame(as.factor(rep(rev(seq_len(len_drug)), 2)),
                                  rep(drug_names_sorted, 2),
                                  round(rbind(exp(em_ref_nma),
@@ -246,7 +233,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                   "mean", "lower", "upper",
                                   "interval")
     colnames(prepare_em_nmr) <- colnames(prepare_em_nma)
-  } else if (!is.element(measure, c("OR", "ROM")) & model == "FE") {
+  } else if (!is.element(measure, c("OR", "RR", "ROM")) & model == "FE") {
     prepare_em_nma <- data.frame(as.factor(rev(seq_len(len_drug))),
                                  drug_names_sorted,
                                  round(em_ref_nma, 2))
@@ -257,7 +244,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                   "comparison",
                                   "mean", "lower", "upper")
     colnames(prepare_em_nmr) <- colnames(prepare_em_nma)
-  } else if (is.element(measure, c("OR", "ROM")) & model == "FE") {
+  } else if (is.element(measure, c("OR", "RR", "ROM")) & model == "FE") {
     prepare_em_nma <- data.frame(as.factor(rev(seq_len(len_drug))),
                                  drug_names_sorted,
                                  round(exp(em_ref_nma), 2))
@@ -274,7 +261,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                        "Network meta-regression"),
                                      each = length(prepare_em_nma[, 1])))
 
-  # Forest plots on credible/predictive intervals of comparisons with the
+  # Forest plots on credible/prediction intervals of comparisons with the
   # selected comparator
   subtitle <- paste("Results for", cov_value[[2]],
                    ifelse(length(unique(reg$covariate)) < 3, " ",
@@ -296,25 +283,28 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   }
 
   forest_plots <- if (model == "RE") {
-    ggplot(data = prepare_em,
+    ggplot(data = prepare_em[prepare_em$interval == "Prediction", ],
            aes(x = order,
                y = mean,
                ymin = lower,
                ymax = upper,
-               group = analysis,
-               colour = analysis)) +
+               colour = interval,
+               group = analysis)) +
       geom_hline(yintercept = ifelse(!is.element(
         measure, c("OR", "ROM")), 0, 1),
         lty = 1,
         size = 1,
         col = "grey60") +
-      geom_linerange(size = 2,
+      geom_linerange(aes(linetype = analysis),
+                     size = 2,
                      position = position_dodge(width = 0.5)) +
-      geom_errorbar(data = prepare_em,
+      geom_errorbar(data = prepare_em[prepare_em$interval == "Estimation", ],
                     aes(x = order,
                         y = mean,
                         ymin = lower,
-                        ymax = upper),
+                        ymax = upper,
+                        linetype = analysis,
+                        group = analysis),
                     size = 2,
                     position = position_dodge(width = 0.5),
                     width = 0.0) +
@@ -322,14 +312,31 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                  colour = "white",
                  stroke = 0.3,
                  position = position_dodge(width = 0.5)) +
-      geom_text(aes(x = order,
+      geom_text(data = prepare_em[prepare_em$interval == "Estimation", ],
+                aes(x = order,
                     y = mean,
-                    label = paste0(mean, " ", "(", prepare_em[, 4], ",", " ",
-                                   prepare_em[, 5], ")"),
+                    group = analysis,
+                    label = paste0(sprintf("%.2f", mean), " ", "(",
+                                   sprintf("%.2f", lower),
+                                   ",",
+                                   " ",
+                                   sprintf("%.2f", upper),
+                                   ")",
+                                   " ",
+                                   "[",
+                                   prepare_em[(length(drug_names_sorted) + 1):
+                                                (length(drug_names_sorted) * 2),
+                                              4],
+                                   ",",
+                                   " ",
+                                   prepare_em[(length(drug_names_sorted) + 1):
+                                                (length(drug_names_sorted) * 2),
+                                              5],
+                                   "]"),
                     hjust = 0,
                     vjust = -0.5),
                 color = "black",
-                size = 4.0,
+                size = 3.8,
                 check_overlap = FALSE,
                 parse = FALSE,
                 position = position_dodge(width = 0.5),
@@ -337,18 +344,18 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                 na.rm = TRUE) +
       labs(x = "",
            y = measure2,
-           colour = "Analysis",
+           linetype = "Analysis",
            subtitle = subtitle,
            caption = caption) +
-      facet_wrap(~ interval, ncol = 2, scales = "fixed") +
       scale_x_discrete(breaks = as.factor(seq_len(len_drug)),
                        labels = drug_names_sorted[rev(seq_len(len_drug))]) +
-      scale_color_manual(breaks = c("Network meta-analysis",
-                                    "Network meta-regression"),
-                         values = c("black", "#D55E00")) +
+      scale_color_manual(breaks = c("Estimation",
+                                    "Prediction"),
+                         values = c("black", "#D55E00"),
+                         guide = "none") +
       geom_label(aes(x = unique(order[is.na(mean)]),
                      y = ifelse(!is.element(
-                       measure, c("OR", "ROM")), -0.2, 0.65),
+                       measure, c("OR", "ROM")), 0, 1), # -0.2, 0.65
                      hjust = 0,
                      vjust = 1,
                      label = "Comparator intervention"),
@@ -366,8 +373,6 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                         size = 12),
             legend.position = "bottom",
             legend.justification = c(0.43, 0),
-            strip.text = element_text(color = "black", face = "bold",
-                                      size = 12),
             legend.text =  element_text(color = "black", size = 12),
             legend.title = element_text(color = "black", face = "bold",
                                         size = 12),
@@ -387,26 +392,22 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
         col = "grey60") +
       geom_linerange(size = 2,
                      position = position_dodge(width = 0.5)) +
-      geom_errorbar(data = prepare_em,
-                    aes(x = order,
-                        y = mean,
-                        ymin = lower,
-                        ymax = upper),
-                    size = 2,
-                    position = position_dodge(width = 0.5),
-                    width = 0.0) +
       geom_point(size = 1.5,
                  colour = "white",
                  stroke = 0.3,
                  position = position_dodge(width = 0.5)) +
       geom_text(aes(x = order,
                     y = mean,
-                    label = paste0(mean, " ", "(", prepare_em[, 4], ",", " ",
-                                   prepare_em[, 5], ")"),
+                    label = paste0(sprintf("%.2f", mean), " ", "(",
+                                   sprintf("%.2f", lower),
+                                   ",",
+                                   " ",
+                                   sprintf("%.2f", upper),
+                                   ")"),
                     hjust = 0,
                     vjust = -0.5),
                 color = "black",
-                size = 4.0,
+                size = 3.8,
                 check_overlap = FALSE,
                 parse = FALSE,
                 position = position_dodge(width = 0.5),
@@ -424,7 +425,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                          values = c("black", "#D55E00")) +
       geom_label(aes(x = unique(order[is.na(mean)]),
                      y = ifelse(!is.element(
-                       measure, c("OR", "ROM")), -0.2, 0.65),
+                       measure, c("OR", "ROM")), 0, 1), #-0.2, 0.65
                      hjust = 0,
                      vjust = 1,
                      label = "Comparator intervention"),

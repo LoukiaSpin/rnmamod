@@ -1,11 +1,11 @@
-#' Determine the mean value of the distribution of the missingness parameter
+#' Define the mean value of the normal distribution of the missingness parameter
 #'
 #' @description
-#'   Generates the mean value of the distribution of the missingness parameter
-#'   in the proper format depending on the assumed structure of the missingness
-#'   parameter. \code{\link{run_model}} inherits \code{missingness_param_prior}
-#'   through the argument \code{mean_misspar} (see 'Argument' in
-#'   \code{\link{run_model}}).
+#'   Generates the mean value of the normal distribution of the missingness
+#'   parameter in the proper format depending on the assumed structure of the
+#'   missingness parameter. \code{\link{run_model}} inherits
+#'   \code{missingness_param_prior} through the argument \code{mean_misspar}
+#'   (see 'Argument' in \code{\link{run_model}}).
 #'
 #' @param assumption Character string indicating the structure of the
 #'   informative missingness parameter.
@@ -22,7 +22,7 @@
 #'   (see 'Details'). The default argument is 0 and corresponds to the
 #'   missing-at-random assumption for \code{assumption = "IDE-ARM"}.
 #'
-#' @return A value or vector to be passed to \code{\link{run_model}}.
+#' @return A scalar or numeric vector to be passed to \code{\link{run_model}}.
 #'
 #' @details \code{\link{run_model}} considers the informative missingness odds
 #'   ratio in the logarithmic scale for binary outcome data (Spineli, 2019a;

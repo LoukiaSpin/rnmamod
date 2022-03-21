@@ -1,8 +1,8 @@
 #' Scatterplot of SUCRA values
 #'
 #' @description Creates a scatterplot to compare the SUCRA values from the
-#'   network meta-analysis and the network meta-regression
-#'   for a specific level or value of the investigated covariate.
+#'   network meta-analysis and the network meta-regression for a specified level
+#'   or value of the investigated covariate.
 #'
 #' @param full An object of S3 class \code{\link{run_model}}.
 #'   See 'Value' in \code{\link{run_model}}.
@@ -20,7 +20,7 @@
 #'
 #' @return A scatterplot of the SUCRA values under the network meta-analysis
 #'   (y-axis) against the SUCRA values under the network meta-regression
-#'   (x-axis) for a specific level or value of the investigated covariate.
+#'   (x-axis) for a specified level or value of the investigated covariate.
 #'
 #' @details The names of the interventions appear above each point in the plot.
 #'   Three coloured rectangles appear in the scatterplot: a red rectangle for
@@ -34,13 +34,16 @@
 #'   \code{cov_value} the name of the level for which the scatterplot will be
 #'   created.
 #'
+#'   \code{scatterplot_sucra} is integrated in \code{\link{metareg_plot}}.
+#'
 #'   \code{scatterplot_sucra} can be used only for a network of interventions.
 #'   Otherwise, the execution of the function will be stopped and an error
 #'   message will be printed on the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run_metareg}}, \code{\link{run_model}}
+#' @seealso \code{\link{metareg_plot}}, \code{\link{run_metareg}},
+#'   \code{\link{run_model}}
 #'
 #' @references
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
@@ -95,11 +98,12 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
     cov_value[[1]] - mean(reg$covariate)
   }
 
-  sucra_full <- if (is.element(full$measure, c("RR", "RD"))) {
-    full$SUCRA_LOR
-  } else {
-    full$SUCRA
-  }
+  #sucra_full <- if (is.element(full$measure, c("RR", "RD"))) {
+  #  full$SUCRA_LOR
+  #} else {
+  #  full$SUCRA
+  #}
+  sucra_full <- full$SUCRA
 
   #Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html
   reflect_triangle <- function(m, from = c("lower", "upper")) {

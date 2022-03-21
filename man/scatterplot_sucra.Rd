@@ -27,12 +27,12 @@ instead.}
 \value{
 A scatterplot of the SUCRA values under the network meta-analysis
   (y-axis) against the SUCRA values under the network meta-regression
-  (x-axis) for a specific level or value of the investigated covariate.
+  (x-axis) for a specified level or value of the investigated covariate.
 }
 \description{
 Creates a scatterplot to compare the SUCRA values from the
-  network meta-analysis and the network meta-regression
-  for a specific level or value of the investigated covariate.
+  network meta-analysis and the network meta-regression for a specified level
+  or value of the investigated covariate.
 }
 \details{
 The names of the interventions appear above each point in the plot.
@@ -47,6 +47,8 @@ The names of the interventions appear above each point in the plot.
   \code{cov_value} the name of the level for which the scatterplot will be
   created.
 
+  \code{scatterplot_sucra} is integrated in \code{\link{metareg_plot}}.
+
   \code{scatterplot_sucra} can be used only for a network of interventions.
   Otherwise, the execution of the function will be stopped and an error
   message will be printed on the R console.
@@ -58,7 +60,8 @@ tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
 \doi{10.1016/j.jclinepi.2010.03.016}
 }
 \seealso{
-\code{\link{run_metareg}}, \code{\link{run_model}}
+\code{\link{metareg_plot}}, \code{\link{run_metareg}},
+  \code{\link{run_model}}
 }
 \author{
 {Loukia M. Spineli}

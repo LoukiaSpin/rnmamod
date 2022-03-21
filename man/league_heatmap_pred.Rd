@@ -21,8 +21,7 @@ meta-analysis, or \code{\link{run_metareg}} for network meta-regression.
 See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.}
 
 \item{full2}{An object of S3 class \code{\link{run_model}} for network
-meta-analysis, \code{\link{run_metareg}} for network meta-regression, or
-\code{\link{run_series_meta}} for a series of pairwise meta-analyses.
+meta-analysis, or \code{\link{run_metareg}} for network meta-regression.
 See 'Value' in \code{\link{run_model}} and \code{\link{run_metareg}}.}
 
 \item{cov_value}{A list of two elements in the following order: a number
@@ -51,7 +50,7 @@ If \code{show} is not defined, the league table will present all
 interventions as defined in \code{drug_names1}.}
 }
 \value{
-A league heatmap of the posterior mean and 95\% predictive interval
+A league heatmap of the posterior mean and 95\% prediction interval
   of the effect measure (according to the argument \code{measure} defined in
   \code{\link{run_model}}) for all possible comparisons in the off-diagonals,
   and the posterior mean of the SUCRA values in the diagonal.
@@ -78,7 +77,7 @@ For one outcome, it creates a heatmap with the predicted effect measure for
    be read from left to right. Therefore, each cell refers to the
    corresponding row-defining intervention against the column-defining
    intervention. Results that indicate strong evidence in favour of the
-   row-defining intervention (i.e. the respective 95\% credible interval does
+   row-defining intervention (i.e. the respective 95\% prediction interval does
    not include the null value) are indicated in bold. A message is printed on
    the R console on how to read the heatmap;
    \item two outcomes for the same model, namely, network meta-analysis (via
@@ -91,7 +90,7 @@ For one outcome, it creates a heatmap with the predicted effect measure for
    against the column-defining intervention, and for the lower diagonal, each
    cell refers to the corresponding column-defining intervention against the
    row-defining intervention. Results that indicate strong evidence (i.e. the
-   respective 95\% credible interval does not include the null value) are
+   respective 95\% prediction interval does not include the null value) are
    indicated in bold. A message is printed on the R console on how to read
    the heatmap;
    \item two models for the same outcome, namely, network meta-analysis
@@ -100,22 +99,22 @@ For one outcome, it creates a heatmap with the predicted effect measure for
    how to read the heatmap.
   }
 
-  The function displays the effect measure as inherited in the argument
+  The function displays the effect measure as inherited by the argument
   \code{full1}. For binary outcome, it can display the odds ratio,
   relative risk, and risk difference. See 'Details' in
   \code{\link{run_model}} for the relative risk, and risk difference.
   For continuous outcome, it can display the mean difference, standardised
-  mean difference, and ratio of means. Odds ratios, relative risks and ratio
+  mean difference, and ratio of means. Odds ratios, relative risk and ratio
   of means are reported in the original scale after exponentiation of the
   logarithmic scale.
 
-  The rows and columns of the heatmap display the names of
-  interventions which are sorted by decreasing order from the best to the
-  worst based on their SUCRA value (Salanti et al., 2011) for the outcome or
-  model under the argument \code{full1}. The off-diagonals contain the
-  posterior mean and 95\% predictive interval of the effect measure
-  (according to the argument \code{measure} as inherited in the argument
-  \code{full1}) of the corresponding comparisons.
+  The rows and columns of the heatmap display the names of interventions
+  which are sorted by decreasing order from the best to the worst based on
+  their SUCRA value (Salanti et al., 2011) for the outcome or model under the
+  argument \code{full1}. The off-diagonals contain the posterior mean and
+  95\% prediction interval of the effect measure (according to the argument
+  \code{measure} as inherited in the argument \code{full1}) of the
+  corresponding comparisons.
 
   The main diagonal contains the SUCRA values of the corresponding
   interventions when the argument \code{full1} refers to the

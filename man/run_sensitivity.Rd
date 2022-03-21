@@ -21,16 +21,16 @@ run_sensitivity(
 
 \item{assumption}{Character string indicating the structure of the
 informative missingness parameter. Set \code{assumption} equal to one of
-the following: \code{"HIE-ARM"}, or \code{"IDE-ARM"} (see 'Details').
+the following two: \code{"HIE-ARM"}, or \code{"IDE-ARM"} (see 'Details').
 The default argument is \code{"IDE-ARM"}. The abbreviations \code{"IDE"},
 and \code{"HIE"} stand for identical, and hierarchical, respectively.}
 
 \item{mean_scenarios}{A vector with numeric values for the mean of the normal
 distribution of the informative missingness parameter (see 'Details').
-The vector should have a length of 5 or larger.
+The vector should have a length equal to 5 or larger.
 The missing-at-random (MAR) assumption should be the median of the vector,
 so that the same number of informative scenarios appear before and after
-the MAR. The default arguments are c(-log(3), -log(2), log(0.9999), log(2),
+the MAR. The default scenarios are c(-log(3), -log(2), log(0.9999), log(2),
 log(3)) and c(-2, -1, 0, 1, 2) for binary and continuous outcome data,
 respectively.}
 
@@ -38,7 +38,7 @@ respectively.}
 distribution of the informative missingness parameter. When the
 \code{measure} (defined in \code{\link{run_model}}) is \code{"OR"},
 \code{"MD"}, or \code{"SMD"} the default argument is 1. When the
-\code{measure} is \code{"ROM"}, the default argument is 0.04}
+\code{measure} is \code{"ROM"}, the default argument is 0.04.}
 
 \item{n_chains}{Integer specifying the number of chains for the MCMC
 sampling; an argument of the \code{\link[R2jags:jags]{jags}} function of
@@ -68,6 +68,8 @@ A list of R2jags outputs on the summaries of the posterior
   random-effects pairwise meta-analysis:
   \item{EM}{The estimated summary effect measure (according to the
    argument \code{measure} defined in \code{\link{run_model}}).}
+  \item{EM_LOR}{The estimated summary odd ratio in the logarithmic scale when
+  \code{measure = "RR"} or \code{measure = "RD"}.}
   \item{tau}{The between-trial standard deviation. This element does
    not appear in the case of a fixed-effect pairwise meta-analysis.}
 
@@ -79,7 +81,7 @@ A list of R2jags outputs on the summaries of the posterior
 \description{
 Performs a sensitivity analysis by applying pairwise
   meta-analysis or network meta-analysis for a series of different scenarios
-  about the informative missingness parameter,
+  about the informative missingness parameter.
 }
 \details{
 The model runs in \code{JAGS} and the progress of the simulation
@@ -88,7 +90,7 @@ The model runs in \code{JAGS} and the progress of the simulation
   \bold{number of scenarios} defined as \emph{the square of the length of the
   vector specified in \code{mean_scenarios}} (see 'Examples').
   The output of \code{run_sensitivity} is used as an S3 object by other
-  functions of the package function to be processed further and provide an
+  functions of the package to be processed further and provide an
   end-user-ready output.
 
   In the case of pairwise meta-analysis, \code{EM} and \code{tau} are
@@ -117,20 +119,28 @@ The model runs in \code{JAGS} and the progress of the simulation
   using the value \code{0.999} rather than \code{1} in \code{mean_scenarios}
   for the IMOR and IMRoM parameters; otherwise, the execution of the function
   will be stopped and the error 'Invalid parent values' will be printed on
-  the R console. Currently, there are no empirically-based prior
-  distributions for the informative missingness parameters. The users may
-  refer to Spineli (2019), Mavridis et al. (2015), Turner et al. (2015), and
-  White et al. (2008)  to determine \code{mean_scenarios} for an
-  informative missingness mechanism and select a proper value for
-  \code{var_misspar}.
+  the R console.
+
+  Currently, there are no empirically-based prior distributions for the
+  informative missingness parameters. The users may refer to Spineli (2019),
+  Mavridis et al. (2015), Turner et al. (2015), and White et al. (2008) to
+  determine \code{mean_scenarios} for an informative missingness mechanism
+  and select a proper value for \code{var_misspar}.
 
   \code{run_sensitivity} inherits the arguments \code{data},
-  \code{measure}, \code{model}, \code{heter_prior}, and \code{ref} from
-  \code{\link{run_model}} (now contained in the argument \code{full}). This
-  prevents specifying a different Bayesian model from that considered in the
-  primary analysis (via \code{\link{run_model}}). Therefore, the user needs first to
-  apply \code{\link{run_model}}, and then use \code{run_sensitivity}
-  (see 'Examples').
+  \code{measure}, \code{model}, \code{heter_prior}, \code{D}, \code{indic},
+  \code{base_risk}, and \code{ref} from \code{\link{run_model}}
+  (now contained in the argument \code{full}). This prevents specifying a
+  different Bayesian model from that considered in the primary analysis
+  (via \code{\link{run_model}})--an exception in the \code{assumption}
+  argument as it is restricted to only two character strings. Therefore, the
+  user needs first to apply \code{\link{run_model}}, and then use
+  \code{run_sensitivity} (see 'Examples').
+
+  The \code{run_sensitivity} function also returns the arguments
+  \code{measure}, \code{scenarios}, \code{D}, \code{heter}, \code{n_chains},
+  \code{n_iter}, \code{n_burnin}, and \code{n_thin} as specified by the user
+  to be inherited by other relevant functions of the package.
 
   \code{run_sensitivity} can be used only when missing participant
   outcome data have been extracted for at least one trial. Otherwise, the

@@ -10,9 +10,7 @@
 #'   any name found in \code{drug_names}.
 #' @param drug_names A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data} of
-#'   \code{\link{run_model}}. If the argument \code{drug_names} is not defined,
-#'   the order of the interventions as they appear in \code{data} is used,
-#'   instead.
+#'   \code{\link{run_model}}.
 #'
 #' @return A panel of two forest plots: (1) a forest plot on the effect
 #'   estimates and predictions of comparisons with the selected intervention in
@@ -316,13 +314,21 @@ forestplot <- function(full, compar,  drug_names) {
              plot.caption = element_text(hjust = 0.01))
   } else {
     ggplot(data = prepare_em,
-           aes(x = order, y = mean, ymin = lower, ymax = upper)) +
+           aes(x = order,
+               y = mean,
+               ymin = lower,
+               ymax = upper)) +
       geom_hline(yintercept = ifelse(!is.element(
         measure, c("OR", "RR", "ROM")), 0, 1),
-        lty = 2, size = 1.3, col = "grey53") +
+        lty = 2,
+        size = 1.3,
+        col = "grey53") +
       geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
       geom_errorbar(data = prepare_em[seq_len(len_drug_names), ],
-                    aes(x = order, y = mean, ymin = lower, ymax = upper),
+                    aes(x = order,
+                        y = mean,
+                        ymin = lower,
+                        ymax = upper),
                     size = 2, position = position_dodge(width = 0.5),
                     colour = "black", width = 0.0) +
       geom_point(size = 1.5, colour = "white", stroke = 0.3,

@@ -25,6 +25,8 @@
 #'   each frail comparison.}
 #'   \item{t2_bn}{A vector with numeric values referring to the second arm of
 #'   each frail comparison.}
+#'   \item{ref_base}{A scalar referring to the reference intervention for the
+#'   subnetwork of interventions in frail comparisons.}
 #'   \item{base}{A vector with numeric values referring to the baseline
 #'   intervention of the multi-arm trials that contain the frail comparisons.}
 #'   \item{obs_comp}{A data-frame that indicates how many two-arm and

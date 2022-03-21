@@ -33,8 +33,8 @@ The heatmap illustrates the robustness index for each possible
   left to right. Comparisons highlighted with green or red colour imply
   robust or frail conclusions for the primary analysis, respectively.
   This corresponds to robustness index below or at least the selected
-  threshold of robustness. \code{heatmap_robustness} uses the threshold of
-  robustness selected in the \code{\link{robustness_index}} function.
+  threshold of robustness. \code{heatmap_robustness} inherits the threshold
+  of robustness selected in the \code{\link{robustness_index}} function.
   The robustness index of each pairwise comparison also appears in the
   corresponding cell.
   When there is at least one comparison with frail conclusions, the primary

@@ -1,8 +1,8 @@
 #' End-user-ready results for network meta-regression
 #'
 #' @description Illustrates the effect estimates, predictions and regression
-#'   coefficients of comparisons with a specific comparator and also exports
-#'   these results to an Excel file.
+#'   coefficients of comparisons with a specified comparator intervention
+#'   and also exports these results to an Excel file.
 #'
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
 #'   \code{\link{run_model}}.
@@ -33,7 +33,7 @@
 #'   defined in \code{\link{run_model}}) for each comparison with the selected
 #'   intervention under network meta-analysis and network meta-regression
 #'   based on the specified \code{cov_value}.}
-#'   \item{table_predictions}{The posterior mean, and 95\% predictive
+#'   \item{table_predictions}{The posterior mean, and 95\% prediction
 #'   interval of the summary effect measure (according to the argument
 #'   \code{measure} defined in \code{\link{run_model}}) for each comparison
 #'   with the selected intervention under network meta-analysis and network
@@ -42,11 +42,14 @@
 #'   number of effective parameters, and the posterior median and 95\% credible
 #'   interval of between-trial standard deviation (\emph{tau}) under each model
 #'   (Spiegelhalter et al., 2002). When a fixed-effect model has been
-#'   performed, \code{metareg_plot} does not return results on \emph{tau}.}
+#'   performed, \code{metareg_plot} does not return results on \emph{tau}. For a
+#'   binary outcome, the results refer to the odds ratio scale.}
 #'   \item{table_regression_coeffients}{The posterior mean and 95\%
-#'   credible interval of the regression coefficient(s).}
-#'   \item{interval_plots}{The panel of forest plots on the estimated and
-#'   predicted effect sizes of comparisons with the selected intervention under
+#'   credible interval of the regression coefficient(s) (according to the
+#'   argument \code{covar_assumption} defined in \code{\link{run_metareg}}).
+#'   For a binary outcome, the results refer to the odds ratio scale.}
+#'   \item{interval_plot}{A forest plot on the estimated and predicted effect
+#'   sizes of comparisons with the selected comparator intervention under
 #'   network meta-analysis and network meta-regression based on the specified
 #'   \code{cov_value}. See 'Details' and 'Value' in
 #'   \code{\link{forestplot_metareg}}.}
@@ -65,10 +68,6 @@
 #'   When the covariate is binary, specify in the second element of
 #'   \code{cov_value} the name of the level for which the output will be
 #'   created.
-#'
-#'   For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
-#'   (risk difference) in \code{\link{run_model}}, \code{metareg_plot}
-#'   currently presents the results in the odds ratio scale.
 #'
 #'   Furthermore, \code{metareg_plot} exports all tabulated results to separate
 #'   'xlsx' files (via the \code{\link[writexl:write_xlsx]{write_xlsx}} function
@@ -191,26 +190,10 @@ metareg_plot <- function(full,
   }
 
   model <- full$model
-  measure <- if (is.element(full$measure, c("RR", "RD"))) {
-    "OR"
-  } else {
-    full$measure
-  }
-  em_full <- if (is.element(full$measure, c("RR", "RD"))) {
-    full$EM_LOR
-  } else {
-    full$EM
-  }
-  pred_full <- if (is.element(full$measure, c("RR", "RD"))) {
-    full$EM_pred_LOR
-  } else {
-    full$EM_pred
-  }
-  sucra_full0 <- if (is.element(full$measure, c("RR", "RD"))) {
-    full$SUCRA_LOR
-  } else {
-    full$SUCRA
-  }
+  measure <- full$measure
+  em_full <- full$EM
+  pred_full <- full$EM_pred
+  sucra_full0 <- full$SUCRA
 
   # Posterior results on the SUCRA value under NMA
   sucra_full <- round(sucra_full0, 2)
@@ -534,17 +517,39 @@ metareg_plot <- function(full,
   }
 
   results <- if (model == "RE") {
-    list(table_estimates = knitr::kable(est_both_models),
-         table_predictions = knitr::kable(pred_both_models),
-         table_model_assessment = knitr::kable(table_model_assess),
-         table_regression_coeffients = knitr::kable(reg_coeff),
-         interval_plots = suppressWarnings(ggarrange(forest_plots)),
+    list(table_estimates =
+           knitr::kable(est_both_models,
+                        caption =
+                          paste("Estimation for comparisons with", compar,
+                                "for", cov_value[[1]])),
+         table_predictions =
+           knitr::kable(pred_both_models,
+                        caption =
+                          paste("Prediction for comparisons with", compar,
+                                "for", cov_value[[1]])),
+         table_model_assessment =
+           knitr::kable(table_model_assess,
+                        caption =
+                          "Model assessment and between-trial heterogeneity"),
+         table_regression_coeffients =
+           knitr::kable(reg_coeff,
+                        caption =
+                          paste("Estimation of regression coefficient(s)")),
+         interval_plot = suppressWarnings(ggarrange(forest_plots)),
          sucra_scatterplot = sucra_scatterplot)
   } else {
-    list(table_estimates = knitr::kable(est_both_models),
-         table_model_assessment = knitr::kable(table_model_assess),
-         table_regression_coeffients = knitr::kable(reg_coeff),
-         interval_plots = suppressWarnings(ggarrange(forest_plots)),
+    list(table_estimates =
+           knitr::kable(est_both_models,
+                        caption =
+                          paste("Estimation for comparisons with", compar,
+                                "for", cov_value[[1]])),
+         table_model_assessment =
+           knitr::kable(table_model_assess,
+                        caption = "Model assessment parameters"),
+         table_regression_coeffients =
+           knitr::kable(reg_coeff, caption =
+                          paste("Estimation of regression coefficient(s)")),
+         interval_plot = suppressWarnings(ggarrange(forest_plots)),
          sucra_scatterplot = sucra_scatterplot)
   }
 

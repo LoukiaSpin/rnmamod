@@ -73,23 +73,22 @@
 #'    \item two models for the same outcome, namely, network meta-analysis
 #'    versus network meta-regression, or network meta-analysis versus series of
 #'    pairwise meta-analyses.
-#'    The instructions to read the heatmap are in line
-#'    with the previous point. A message is printed on the R console on how to
-#'    read the heatmap.
+#'    The instructions to read the heatmap are in line with the previous point.
+#'    A message is printed on the R console on how to read the heatmap.
 #'   }
 #'
 #'   For a beneficial outcome, red favours the first intervention of the
-#'   comparison, and blue favour the second intervention. For a harmful
+#'   comparison, and blue favours the second intervention. For a harmful
 #'   outcome, blue favours the first intervention of the comparison, and red
-#'   favour the second intervention. The larger the treatment effect, the darker
-#'   the colour shade.
+#'   favours the second intervention. The larger the treatment effect, the
+#'   darker the colour shade.
 #'
-#'   The function displays the effect measure as inherited in the argument
+#'   The function displays the effect measure as inherited by the argument
 #'   \code{full1}. For binary outcome, it can display the odds ratio,
 #'   relative risk, and risk difference. See 'Details' in
 #'   \code{\link{run_model}} for the relative risk, and risk difference.
 #'   For continuous outcome, it can display the mean difference, standardised
-#'   mean difference, and ratio of means. Odds ratios, relative risks and ratio
+#'   mean difference, and ratio of means. Odds ratios, relative risk and ratio
 #'   of means are reported in the original scale after exponentiation of the
 #'   logarithmic scale.
 #'
@@ -159,6 +158,17 @@ league_heatmap <- function(full1,
                            name1 = NULL,
                            name2 = NULL,
                            show = NULL) {
+
+  #if (is.null(full1$SUCRA)) {
+  #  stop("'full1' must be an object of S3 class 'run_model', or 'run_metareg'",
+  #       call. = FALSE)
+  #}
+
+  #if (is.null(full2$SUCRA) || is.null(full2$single)) {
+  #  aa <- "'run_model', 'run_metareg', or 'run_series_meta'"
+  #  stop(paste("'full2' must be an object of S3 class", aa),
+  #       call. = FALSE)
+  #}
 
   # Both objects must refer to the same effect measure
   measure <- if (is.null(full2) || (!is.null(full2) &
@@ -528,7 +538,7 @@ league_heatmap <- function(full1,
     signif_status <- melt(signif2, na.rm = FALSE)[3]
   }
 
-  # Merge point estimate with 95% credible interval in a new symmetric matric
+  # Merge point estimate with 95% credible interval in a new symmetric matrix
   final <- matrix(
     paste0(sprintf("%.2f", point_f),  "\n", "(",
            sprintf("%.2f", lower_f), ",", " ",
