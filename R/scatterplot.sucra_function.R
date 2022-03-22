@@ -1,6 +1,6 @@
 #' Scatterplot of SUCRA values
 #'
-#' @description Creates a scatterplot to compare the SUCRA values from the
+#' @description Creates a scatterplot of the SUCRA values from the
 #'   network meta-analysis and the network meta-regression for a specified level
 #'   or value of the investigated covariate.
 #'
@@ -23,7 +23,7 @@
 #'   (x-axis) for a specified level or value of the investigated covariate.
 #'
 #' @details The names of the interventions appear above each point in the plot.
-#'   Three coloured rectangles appear in the scatterplot: a red rectangle for
+#'   Three coloured rectangles are drawn in the scatterplot: a red rectangle for
 #'   SUCRA values up to 50\%, a yellow rectangular for SUCRA values between
 #'   50\% and 80\%, and a green rectangle for SUCRA values over 80\%.
 #'   Interventions falling at the green area are considered as the highest
@@ -98,11 +98,6 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
     cov_value[[1]] - mean(reg$covariate)
   }
 
-  #sucra_full <- if (is.element(full$measure, c("RR", "RD"))) {
-  #  full$SUCRA_LOR
-  #} else {
-  #  full$SUCRA
-  #}
   sucra_full <- full$SUCRA
 
   #Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html

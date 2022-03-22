@@ -12,7 +12,7 @@
 #'   the specification of the columns.
 #' @param measure Character string indicating the effect measure with values
 #'   \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the mean difference,
-#'   standardised mean difference and ratio of means, respectively.
+#'   standardised mean difference, and ratio of means, respectively.
 #' @param mean_value A numeric value for the mean of the normal distribution of
 #'   the informative missingness parameter. The same value is considered for all
 #'   trial-arms of the dataset. The default argument is 0 and corresponds to the
@@ -21,7 +21,7 @@
 #' @param var_value A positive non-zero number for the variance of the normal
 #'   distribution of the informative missingness parameter. When the
 #'   \code{measure} is \code{"MD"}, or \code{"SMD"} the default argument is 1;
-#'   When the \code{measure} is \code{"ROM"} the default argument is 0.04. The
+#'   when the \code{measure} is \code{"ROM"} the default argument is 0.04. The
 #'   same value is considered for all trial-arms of the dataset.
 #' @param rho A numeric value in the interval [-1, 1] that indicates the
 #'   correlation coefficient between two informative missingness parameters in
@@ -61,12 +61,12 @@
 #'   \item{se.EM}{The standard error of the effect size adjusted for the missing
 #'   participants and obtained using the Taylor series.}
 #'
-#' @details The \code{taylor_continuous} function is found in the
+#' @details The \code{taylor_continuous} function is integrated in the
 #'   \code{\link{unrelated_effects_plot}} function. The latter uses the
 #'   the \code{\link[netmeta:pairwise]{pairwise}} function from the package
 #'   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}
-#'   to transform the dataset from the wide arm-based format into the long-arm
-#'   based format (see, 'Arguments' for \code{data} in
+#'   to transform the dataset from the wide arm-based format into the long
+#'   arm-based format (see, 'Arguments' for \code{data} in
 #'   \code{\link{unrelated_effects_plot}}).
 #'
 #' @seealso \href{https://CRAN.R-project.org/package=netmeta}{pairwise},

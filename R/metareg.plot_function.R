@@ -182,7 +182,7 @@ metareg_plot <- function(full,
 
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
-    bb <- "The intervention ID, as specified in 'data' is used, instead"
+    bb <- "The intervention ID, as specified in 'data' is used, instead."
     message(paste(aa, bb))
     as.character(seq_len(length(full$SUCRA[, 1])))
   } else {

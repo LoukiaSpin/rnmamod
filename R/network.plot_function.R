@@ -221,6 +221,6 @@ netplot <- function(data, drug_names, save_xls, ...) {
   if (na_missing_trials > 0 & na_missing_trials < sum(na..)) {
     aa <- "trial-arms without information on"
     bb <- "the number of missing participants."
-    message(paste("Note: There are", na_missing_trials, aa, bb))
+    message(paste("Note: There are", na_missing_trials, aa, paste0(bb, ".")))
   }
 }
