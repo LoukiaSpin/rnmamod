@@ -207,7 +207,7 @@ netplot <- function(data, drug_names, save_xls, ...) {
               network_description =
                 knitr::kable(results,
                              align = "ll",
-                             caption = "Description of the Network"),
+                             caption = "Description of the network"),
               table_interventions =
                 knitr::kable(dat$table_interventions,
                              align = "lccccccc",

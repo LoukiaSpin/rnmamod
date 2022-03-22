@@ -248,13 +248,17 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                        }}\n")
   } else if (covar_assumption == "common") {
     paste(stringcode, "beta ~ dnorm(0, 0.0001)
-                       for (c in (ref + 1):(nt - 1)) {
-                          for (k in (c + 1):nt) {
-                            beta.all[k, c] <- 0
-                       }}
+                       beta.n[ref] <- 0
+                       for (t in 1:(ref - 1)) {
+                         beta.n[t] <- beta*(1 - (1 - step(t - ref))) + beta*(-1)*(1 - step(t - ref))
+                       }
                        for (t in (ref + 1):nt) {
-                         beta.all[t, ref] <- beta*(1 - (1 - step(t - ref))) + beta*(-1)*(1 - step(t - ref))
-                       }\n")
+                         beta.n[t] <- beta*(1 - (1 - step(t - ref))) + beta*(-1)*(1 - step(t - ref))
+                       }
+                       for (c in 1:(nt - 1)) {
+                         for (k in (c + 1):nt) {
+                           beta.all[k, c] <- beta.n[k] - beta.n[c]
+                       }}\n")
   } else if (covar_assumption == "NO") {
     paste(stringcode, " ")
   }

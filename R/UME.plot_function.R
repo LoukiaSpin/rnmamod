@@ -297,15 +297,30 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
 
   # Return results
   results <- if (model == "RE") {
-    list(table_effect_size = knitr::kable(em_both),
-         table_model_assessment = knitr::kable(model_assessment),
-         table_tau = knitr::kable(between_trial_sd),
+    list(table_effect_size =
+           knitr::kable(em_both,
+                        align = "lcccccc",
+                        caption = "Estimation for each observed comparison"),
+         table_model_assessment =
+           knitr::kable(model_assessment,
+                        align = "lcc",
+                        caption = "Model assessment"),
+         table_tau =
+           knitr::kable(between_trial_sd,
+                        align = "lccc",
+                        caption = "Between-trail standard deviation"),
          scatterplots = scatterplots,
          levarage_plots = lev_plots,
          intervalplots = intervalplots)
   } else {
-    list(table_effect_size = knitr::kable(em_both),
-         table_model_assessment = knitr::kable(model_assessment),
+    list(table_effect_size =
+           knitr::kable(em_both,
+                        align = "lcccccc",
+                        caption = "Estimation for each observed comparison"),
+         table_model_assessment =
+           knitr::kable(model_assessment,
+                        align = "lcc",
+                        caption = "Model assessment"),
          scatterplots = scatterplots,
          levarage_plots = lev_plots,
          intervalplots = intervalplots)

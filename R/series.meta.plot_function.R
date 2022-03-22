@@ -412,6 +412,9 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
     write_xlsx(em_both, paste0("Table.NMA.vs.PMA", ".xlsx"))
   }
 
-  return(list(tabulated_results = knitr::kable(em_both),
+  return(list(tabulated_results =
+                knitr::kable(em_both,
+                             caption =
+                               "Estimation for each observed comparison"),
               forest_plots = forest_plots))
 }

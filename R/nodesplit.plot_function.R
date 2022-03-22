@@ -530,14 +530,26 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
 
   # Return results
   results <- if (model == "RE") {
-    list(table_effect_size = knitr::kable(table_em),
-         table_model_assessment = knitr::kable(table_assess),
+    list(table_effect_size =
+           knitr::kable(table_em,
+                        align = "lccccccccc",
+                        caption = "Estimates for the split nodes"),
+         table_model_assessment =
+           knitr::kable(table_assess,
+                        align = "lccclccc",
+                        caption = "Model assessment parameters"),
          intervalplot_inconsistency_factor = p1,
          intervalplot_tau = p2 +
            guides(fill = guide_legend(override.aes = list(alpha = 0.4))))
   } else {
-    list(table_effect_size = knitr::kable(table_em),
-         table_model_assessment = knitr::kable(table_assess),
+    list(table_effect_size =
+           knitr::kable(table_em,
+                        align = "lccccccccc",
+                        caption = "Estimates fot split nodes"),
+         table_model_assessment =
+           knitr::kable(table_assess,
+                        align = "lcccl",
+                        caption = "Model assessment parameters"),
          intervalplot_inconsistency_factor = p1)
   }
 

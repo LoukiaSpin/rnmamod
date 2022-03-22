@@ -519,16 +519,19 @@ metareg_plot <- function(full,
   results <- if (model == "RE") {
     list(table_estimates =
            knitr::kable(est_both_models,
+                        align = "lcccc",
                         caption =
                           paste("Estimation for comparisons with", compar,
                                 "for", cov_value[[1]])),
          table_predictions =
            knitr::kable(pred_both_models,
+                        align = "lcccc",
                         caption =
                           paste("Prediction for comparisons with", compar,
                                 "for", cov_value[[1]])),
          table_model_assessment =
            knitr::kable(table_model_assess,
+                        align = "lcccccc",
                         caption =
                           "Model assessment and between-trial heterogeneity"),
          table_regression_coeffients =
@@ -540,11 +543,13 @@ metareg_plot <- function(full,
   } else {
     list(table_estimates =
            knitr::kable(est_both_models,
+                        align = "lcccc",
                         caption =
                           paste("Estimation for comparisons with", compar,
                                 "for", cov_value[[1]])),
          table_model_assessment =
            knitr::kable(table_model_assess,
+                        align = "lccc",
                         caption = "Model assessment parameters"),
          table_regression_coeffients =
            knitr::kable(reg_coeff, caption =

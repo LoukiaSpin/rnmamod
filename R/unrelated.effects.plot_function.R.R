@@ -324,6 +324,9 @@ unrelated_effects_plot <- function(data,
    "Plot will *not* be printed for network with more than 15 trials."
   }
 
-  return(list(table_unrelated_effects = knitr::kable(table_ute),
+  return(list(table_unrelated_effects =
+                knitr::kable(table_ute,
+                             caption =
+                               "Results on unrelated trial effects model"),
               results = results))
  }
