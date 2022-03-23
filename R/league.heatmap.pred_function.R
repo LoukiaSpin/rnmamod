@@ -151,16 +151,16 @@ league_heatmap_pred <- function(full1,
                                 name2 = NULL,
                                 show = NULL) {
 
-  #if (full1$model == "FE") {
-  #  stop("This function cannot be used for a fixed-effect model.",
-  #       call. = FALSE)
-  #}
+  if (!is.element(full1$type, c("nma", "nmr")) || is.null(full1$type)) {
+    stop("'full1' must be an object of S3 class 'run_model', or 'run_metareg'.",
+         call. = FALSE)
+  }
 
-  #if (is.null(full1$SUCRA) || is.null(full2$SUCRA)) {
-  #  aa <- "'run_model', or 'run_metareg'"
-  #  stop(paste("'full1' and 'full2' must be an object of S3 class", aa),
-  #       call. = FALSE)
-  #}
+  if (!is.null(full2) & (!is.element(full2$type, c("nma", "nmr")) ||
+                         is.null(full2$type))) {
+    stop("'full2' must be an object of S3 class 'run_model', or 'run_metareg'.",
+         call. = FALSE)
+  }
 
   # Both objects must refer to the same effect measure
   measure <- if (is.null(full2) || (!is.null(full2) &
@@ -452,40 +452,35 @@ league_heatmap_pred <- function(full1,
     }
   }
 
+  # Second: Matrix of effect measure for all possible comparisons
+  if (!is.null(full2) & length(full2$EM[1, ]) < 11) {
+    comp0 <- t(combn(drug_names, 2))
+    colnames(comp0) <- c("t1", "t2")
+    comp <- cbind(comp0[, 2], comp0[, 1])
+  }
+
   if (!is.null(full2)) {
-    # Second: Matrix of effect measure for all possible comparisons
-    # Lower triangle
     point20 <- matrix(NA,
-                      nrow = length(drug_names2),
-                      ncol = length(drug_names2))
+                      nrow = length(drug_names),
+                      ncol = length(drug_names))
     lower20 <- upper20 <- point20
-    point20[lower.tri(point20, diag = FALSE)] <- round(-1 * par2[, 1], 2)
+    rownames(point20) <- colnames(point20) <- drug_names
+    rownames(lower20) <- colnames(lower20) <- drug_names
+    rownames(upper20) <- colnames(upper20) <- drug_names
+    for (i in 1:length(comp[, 1])) {
+      point20[comp[i, 1], comp[i, 2]] <- round(-1 * par2[i, 1], 2)
+      # Lower triangle
+      lower20[comp[i, 1], comp[i, 2]] <- round(-1 * par2[i, 7], 2)
+      upper20[comp[i, 1], comp[i, 2]] <- round(-1 * par2[i, 3], 2)
+    }
+
     # Incorporate upper triangle
-    point21 <- reflect_triangle(point20, from = "lower")
+    point_21 <- reflect_triangle(point20, from = "lower")
 
     # Matrix of lower and upper bound of effect measure (all possible comparisons)
-    # Lower triangle
-    lower20[lower.tri(lower20, diag = FALSE)] <- round(-1 * par2[, 7], 2)
-    upper20[lower.tri(upper20, diag = FALSE)] <- round(-1 * par2[, 3], 2)
     # Incorporate upper triangle
-    lower21 <- reflect_triangle(upper20, from = "lower")
-    lower21[lower.tri(lower21, diag = FALSE)] <- round(-1 * par2[, 7], 2)
-    upper21 <- reflect_triangle(lower20, from = "lower")
-    upper21[lower.tri(upper21, diag = FALSE)] <- round(-1 * par2[, 3], 2)
-    rownames(point21) <- colnames(point21) <- drug_names2
-    rownames(lower21) <- colnames(lower21) <- drug_names2
-    rownames(upper21) <- colnames(upper21) <- drug_names2
-
-    # Match matrix for second outcome/model to the comparisons of the
-    # matrix for first outcome/model
-    point_21 <- lower_21 <- upper_21 <- matrix(NA, nrow = length(drug_names),
-                                               ncol = length(drug_names))
-    rownames(point_21) <- colnames(point_21) <- drug_names
-    rownames(lower_21) <- colnames(lower_21) <- drug_names
-    rownames(upper_21) <- colnames(upper_21) <- drug_names
-    point_21[rownames(point21), colnames(point21)] <- point21
-    lower_21[rownames(lower21), colnames(lower21)] <- lower21
-    upper_21[rownames(upper21), colnames(upper21)] <- upper21
+    lower_21 <- reflect_triangle(upper20, from = "lower")
+    upper_21 <- reflect_triangle(lower20, from = "lower")
 
     # Second: Symmetric matrix for effect measure and its bounds after ordering
     # rows and columns from the best to the worst intervention
@@ -582,12 +577,18 @@ league_heatmap_pred <- function(full1,
                              0.0001, 1.0001),
                       max_value))
 
+  val <- if (!is.element(measure, c("OR", "RR", "ROM"))) {
+    0
+  } else {
+    1
+  }
+
   colours <- if (is.null(full2) ||
-                 !is.null(full2) & min_value < 1 & max_value > 1) {
+                 !is.null(full2) & min_value < val & max_value > val) {
     c("#009E73", "white", "#D55E00")
-  } else if (!is.null(full2) & min_value < 1 & max_value == 1) {
+  } else if (!is.null(full2) & min_value < val & max_value == val) {
     c("#009E73", "white", "white")
-  } else if (!is.null(full2) & min_value == 1 & max_value > 1) {
+  } else if (!is.null(full2) & min_value == val & max_value > val) {
     c("white", "white", "#D55E00")
   }
 

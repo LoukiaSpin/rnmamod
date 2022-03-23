@@ -10,15 +10,10 @@
 #' @param sens An object of S3 class \code{\link{run_sensitivity}} when
 #'   sensitivity analysis refers to different scenarios about the average
 #'   missingness parameter. See 'Value' in \code{\link{run_sensitivity}}. For a
-#'   \bold{general} sensitivity analysis, insert a list of three elements with
-#'   the following order: 1) a row-bind matrix with the estimated summary effect
-#'   measure, \code{EM}, obtained from the \code{\link{run_model}} function for
-#'   each re-analysis (the first \code{EM} should refer to the estimated summary
-#'   effect sizes under the primary analysis); 2) the effect measure with
-#'   values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds
-#'   ratio, mean difference, standardised mean difference and ratio of means,
-#'   respectively; and 3) a character vector that indicates the name of the
-#'   re-analyses employed.
+#'   \bold{general} sensitivity analysis, insert a list of at least two objects
+#'   of S3 class \code{\link{run_model}} indicating different re-analyses: the
+#'   first object (of class \code{\link{run_model}}) in the list should refer to
+#'   the primary analysis.
 #' @param threshold A number indicating the threshold of robustness, that is,
 #'   the minimally allowed deviation between the primary analysis and
 #'   re-analysis results. See 'Details' below.
@@ -114,12 +109,36 @@
 #' @export
 robustness_index <- function(sens, threshold) {
 
+  type <- if (is.null(sens$EM) & is.null(sens$type)) {
+    c(unique(do.call("rbind", lapply(sens, "[[", "type"))))
+  } else if (!is.null(sens$EM) & !is.null(sens$type)) {
+    sens$type
+  } else if (is.null(sens$EM) & !is.null(sens$type)) {
+    NULL
+  }
+
+  n_scenar <- if(is.null(sens$EM)) {
+    length(lapply(gg, "[[", "EM"))
+  } else if(!is.null(sens$EM) & !is.null(sens$type)) {
+    length(sens$scenarios)^2
+  } else {
+    NULL
+  }
+
+  if (!is.element(type, c("nma", "sens")) || is.null(type) || n_scenar < 2) {
+    aa <- "or a list of at least two objects of S3 class 'run_meta'"
+    bb <- "(type ?robustness_index)."
+    stop(paste("'sens' must be an object of S3 class 'run_sensitivity'",
+               aa, bb), call. = FALSE)
+  }
 
   if (is.null(sens$EM)) {
-    measure <- sens[[2]]
-    es_mat <- as.matrix(sens[[1]])
-    scenarios <- sens[[3]]
-    n_scenar <- length(scenarios)
+    #es_mat <- as.matrix(sens[[1]])
+    #measure <- sens[[2]]
+    #scenarios <- sens[[3]]
+    es_mat <- do.call("rbind", lapply(sens, "[[", "EM"))
+    measure <- c(unique(do.call("rbind", lapply(sens, "[[", "measure"))))
+    #n_scenar <- length(lapply(gg, "[[", "EM"))
     primary_scenar <- 1
   } else {
     measure <- sens$measure
@@ -129,7 +148,7 @@ robustness_index <- function(sens, threshold) {
       sens$EM
     }
     scenarios <- sens$scenarios
-    n_scenar <- length(scenarios)^2
+    #n_scenar <- length(scenarios)^2
     primary_scenar <- median(seq_len(n_scenar))
 
     if (any(is.na(sens))) {
@@ -202,10 +221,17 @@ robustness_index <- function(sens, threshold) {
   kld <- matrix(unlist(kldxy), ncol = n_scenar, byrow = TRUE)
   robust <- ifelse(robust_index < threshold, "robust", "frail")
 
-  return(list(robust_index = robust_index,
-              robust = robust,
-              kld = kld,
-              measure = measure,
-              threshold = threshold,
-              scenarios = scenarios))
+  # Collect results in a list
+  results <- list(robust_index = robust_index,
+                  robust = robust,
+                  kld = kld,
+                  measure = measure,
+                  threshold = threshold,
+                  type = "index")
+
+  if (is.null(sens$EM)) {
+    return(results)
+  } else {
+    return(append(results, list(scenarios = scenarios)))
+  }
 }

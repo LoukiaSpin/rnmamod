@@ -159,16 +159,17 @@ league_heatmap <- function(full1,
                            name2 = NULL,
                            show = NULL) {
 
-  #if (is.null(full1$SUCRA)) {
-  #  stop("'full1' must be an object of S3 class 'run_model', or 'run_metareg'",
-  #       call. = FALSE)
-  #}
+  if (!is.element(full1$type, c("nma", "nmr")) || is.null(full1$type)) {
+    stop("'full1' must be an object of S3 class 'run_model', or 'run_metareg'.",
+         call. = FALSE)
+  }
 
-  #if (is.null(full2$SUCRA) || is.null(full2$single)) {
-  #  aa <- "'run_model', 'run_metareg', or 'run_series_meta'"
-  #  stop(paste("'full2' must be an object of S3 class", aa),
-  #       call. = FALSE)
-  #}
+  if (!is.null(full2) & (!is.element(full2$type, c("nma", "nmr", "series")) ||
+                                     is.null(full2$type))) {
+    aa <- "'run_metareg', or 'run_series_meta'."
+    stop(paste("'full2' must be an object of S3 class 'run_model',", aa),
+         call. = FALSE)
+  }
 
   # Both objects must refer to the same effect measure
   measure <- if (is.null(full2) || (!is.null(full2) &
@@ -313,7 +314,6 @@ league_heatmap <- function(full1,
                      is.element(select[, 1], show) &
                        is.element(select[, 2], show)))
     }
-    #z_test <- par_mean / par_sd
     z_test <- par[, 1] / par[, 2]
     z_test_mat <- matrix(NA,
                          nrow = length(drug_names),
@@ -448,7 +448,6 @@ league_heatmap <- function(full1,
                      is.element(select[, 1], show) &
                        is.element(select[, 2], show)))
     }
-    #z_test2 <- par_mean2 / par_sd2
     z_test2 <- par2[, 1] / par2[, 2]
     z_test_mat2 <- matrix(NA,
                          nrow = length(drug_names),
@@ -464,11 +463,14 @@ league_heatmap <- function(full1,
 
   # Second: Matrix of effect measure for all possible comparisons
   if (!is.null(full2) & length(full2$EM[1, ]) < 11) {
-    comp0 <- t(combn(drug_names2, 2))
+    comp0 <- t(combn(drug_names, 2))
     colnames(comp0) <- c("t1", "t2")
     comp <- cbind(comp0[, 2], comp0[, 1])
   } else if (!is.null(full2) & length(full2$EM[1, ]) == 11) {
-    comp <- par2[, c("t1", "t2")]
+    comp0 <- par2[, c("t1", "t2")]
+    comp <- subset(comp0,
+                   is.element(comp0[, 1], drug_names) &
+                     is.element(comp0[, 2], drug_names))
   }
 
   if (!is.null(full2)) {
@@ -589,12 +591,18 @@ league_heatmap <- function(full1,
                              0.0001, 1.0001),
                       max_value))
 
+  val <- if (!is.element(measure, c("OR", "RR", "ROM"))) {
+    0
+  } else {
+    1
+  }
+
   colours <- if (is.null(full2) ||
-                 !is.null(full2) & min_value < 1 & max_value > 1) {
+                 !is.null(full2) & min_value < val & max_value > val) {
    c("blue", "white", "#D55E00")
-  } else if (!is.null(full2) & min_value < 1 & max_value == 1) {
+  } else if (!is.null(full2) & min_value < val & max_value == val) {
    c("blue", "white", "white")
-  } else if (!is.null(full2) & min_value == 1 & max_value > 1) {
+  } else if (!is.null(full2) & min_value == val & max_value > val) {
     c("white", "white", "#D55E00")
   }
 

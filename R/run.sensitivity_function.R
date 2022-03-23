@@ -180,6 +180,12 @@ run_sensitivity <- function(full,
                             n_burnin,
                             n_thin) {
 
+
+  if (full$type != "nma" || is.null(full$type)) {
+    stop("'full' must be an object of S3 class 'run_meta'.",
+         call. = FALSE)
+  }
+
   data <- full$data
   measure <- full$measure
   model <- full$model
@@ -323,7 +329,7 @@ run_sensitivity <- function(full,
   }
 
   # Return results
-  results <- if (model == "RE" & !is.element(measure, c("RR", "OR"))) {
+  results <- if (model == "RE" & !is.element(measure, c("RR", "RD"))) {
     list(EM = EM,
          tau = tau,
          measure = measure,
@@ -333,8 +339,9 @@ run_sensitivity <- function(full,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin)
-  } else if (model == "FE" & !is.element(measure, c("RR", "OR"))) {
+         n_thin = n_thin,
+         type = "sens")
+  } else if (model == "FE" & !is.element(measure, c("RR", "RD"))) {
     list(EM = EM,
          measure = measure,
          scenarios = mean_scenarios,
@@ -342,8 +349,9 @@ run_sensitivity <- function(full,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin)
-  } else if (model == "RE" & is.element(measure, c("RR", "OR"))) {
+         n_thin = n_thin,
+         type = "sens")
+  } else if (model == "RE" & is.element(measure, c("RR", "RD"))) {
     list(EM = EM,
          EM_LOR = EM_LOR,
          tau = tau,
@@ -354,8 +362,9 @@ run_sensitivity <- function(full,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin)
-  } else if (model == "FE" & is.element(measure, c("RR", "OR"))) {
+         n_thin = n_thin,
+         type = "sens")
+  } else if (model == "FE" & is.element(measure, c("RR", "RD"))) {
     list(EM = EM,
          EM_LOR = EM_LOR,
          measure = measure,
@@ -364,7 +373,8 @@ run_sensitivity <- function(full,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin)
+         n_thin = n_thin,
+         type = "sens")
   }
 
   return(results)

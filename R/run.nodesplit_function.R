@@ -157,6 +157,11 @@ run_nodesplit <- function(full,
                           n_burnin,
                           n_thin) {
 
+  if (full$type != "nma" || is.null(full$type)) {
+    stop("'full' must be an object of S3 class 'run_meta'.",
+         call. = FALSE)
+  }
+
   # Default arguments
   data <- full$data
   measure <- if (is.element(full$measure, c("RR", "RD"))) {
@@ -229,6 +234,7 @@ run_nodesplit <- function(full,
   if (dim(splitting)[1] < 1) {
     stop("There is *no* loop to evaluate", call. = FALSE)
   } else {
+
     # Define node to split: AB=(1,2)
     pair <- if (dim(splitting)[1] == 1) {
       t(apply(as.matrix(splitting, ncol = 2), 2, as.numeric))
@@ -520,7 +526,8 @@ run_nodesplit <- function(full,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin)
+         n_thin = n_thin,
+         type = "node")
   } else {
     list(direct = direct,
          indirect = EM,
@@ -529,7 +536,8 @@ run_nodesplit <- function(full,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin)
+         n_thin = n_thin,
+         type = "node")
   }
 
   return(results)

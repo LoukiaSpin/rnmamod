@@ -46,6 +46,15 @@
 #' @export
 intervalplot_panel_ume <- function(full, ume, drug_names) {
 
+  if (full$type != "nma" || is.null(full$type)) {
+    stop("'full' must be an object of S3 class 'run_model'.",
+         call. = FALSE)
+  }
+
+  if (ume$type != "ume" || is.null(ume$type)) {
+    stop("'ume' must be an object of S3 class 'run_ume'.",
+         call. = FALSE)
+  }
 
   measure <- if (is.element(full$measure, c("RR", "RD"))) {
     "OR"

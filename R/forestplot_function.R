@@ -76,7 +76,12 @@
 #'            drug_names = interv_names)
 #'
 #' @export
-forestplot <- function(full, compar,  drug_names) {
+forestplot <- function(full, compar, drug_names) {
+
+  if (full$type != "nma" || is.null(full$type)) {
+    stop("'full' must be an object of S3 class 'run_model'.",
+         call. = FALSE)
+  }
 
   drug_names <- if (missing(drug_names)) {
     stop("The argument 'drug_names' has not been defined.",

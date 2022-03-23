@@ -93,6 +93,16 @@
 #' @export
 series_meta_plot <- function(full, meta, drug_names, save_xls) {
 
+  if (full$type != "nma" || is.null(full$type)) {
+    stop("'full' must be an object of S3 class 'run_model'.",
+         call. = FALSE)
+  }
+
+  if (meta$type != "series" || is.null(meta$type)) {
+    stop("'meta' must be an object of S3 class 'run_series_meta'.",
+         call. = FALSE)
+  }
+
   save_xls <- if (missing(save_xls)) {
     FALSE
   } else {

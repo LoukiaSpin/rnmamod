@@ -139,6 +139,16 @@
 #' @export
 nodesplit_plot <- function(full, node, drug_names, save_xls) {
 
+  if (full$type != "nma" || is.null(full$type)) {
+    stop("'full' must be an object of S3 class 'run_model'.",
+         call. = FALSE)
+  }
+
+  if (node$type != "node"|| is.null(node$type)) {
+    stop("'node' must be an object of S3 class 'run_nodesplit'.",
+         call. = FALSE)
+  }
+
   if (is.null(node)) {
     stop("There is no split node.", call. = FALSE)
   }

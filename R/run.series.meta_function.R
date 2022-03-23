@@ -96,6 +96,12 @@
 #' @export
 run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
 
+
+  if (full$type != "nma" || is.null(full$type)) {
+    stop("'full' must be an object of S3 class 'run_model'.",
+         call. = FALSE)
+  }
+
   data <- full$data
   measure <- if (is.element(full$measure, c("RR", "RD"))) {
     "OR"
@@ -275,7 +281,8 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
          n_iter = n_iter,
          n_burnin = n_burnin,
          n_thin = n_thin,
-         measure = measure)
+         measure = measure,
+         type = "series")
   } else {
     list(EM = EM,
          single = single,
@@ -283,7 +290,8 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
          n_iter = n_iter,
          n_burnin = n_burnin,
          n_thin = n_thin,
-         measure = measure)
+         measure = measure,
+         type = "series")
   }
 
   return(return_results)

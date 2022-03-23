@@ -70,6 +70,11 @@
 #' @export
 heatmap_robustness <- function(robust, drug_names) {
 
+  if (robust$type != "index" || is.null(robust$type)) {
+    stop("'robust' must be an object of S3 class 'robustness_index'.",
+         call. = FALSE)
+  }
+
   if (any(is.na(robust))) {
     aa <- "Missing participant outcome data have *not* been collected."
     stop(paste(aa, "This function cannot be used."), call. = FALSE)

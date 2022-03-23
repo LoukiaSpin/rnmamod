@@ -85,6 +85,11 @@
 #' @export
 balloon_plot <- function(sens, compar, drug_names) {
 
+  if (sens$type != "sens" || is.null(sens$type)) {
+    stop("'sens' must be an object of S3 class 'run_sensitivity'.",
+         call. = FALSE)
+  }
+
   if (any(is.na(sens))) {
     stop("No missing outcome data collected; function cannot be used.",
          call. = FALSE)

@@ -74,6 +74,16 @@ rankosucra_plot <- function(full1,
                             name1 = NULL,
                             name2 = NULL) {
 
+  if (full1$type != "nma" || is.null(full1$type)) {
+    stop("'full1' must be an object of S3 class 'run_model'.",
+         call. = FALSE)
+  }
+
+  if (!is.null(full2) & (full2$type != "nma" || is.null(full2$type))) {
+    stop("'full2' must be an object of S3 class 'run_model'.",
+         call. = FALSE)
+  }
+
   # Forcing to define 'drug_names1' & 'drug_names2'
   drug_names1 <- if (missing(drug_names1)) {
     stop("The argument 'drug_names1' has not been defined.", call. = FALSE)

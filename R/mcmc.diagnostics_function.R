@@ -74,6 +74,14 @@
 #' @export
 mcmc_diagnostics <- function(net, par = NULL) {
 
+  if (!is.element(net$type,
+                  c("nma", "nmr", "series", "node", "ume", "sens")) ||
+      is.null(net$type)) {
+    aa <- "'run_model', 'run_metareg', 'run_series_meta',"
+    bb <- "'run_nodesplit', 'run_ume', or 'run_sensitivity'."
+    stop(paste("'net' must be an object of S3 class", aa, bb), call. = FALSE)
+  }
+
   message("A parameter converges when R-hat < 1.10 *and* MCMC error < 0.5%.")
 
   par <- if (!is.null(net$jagsfit) & missing(par)) {

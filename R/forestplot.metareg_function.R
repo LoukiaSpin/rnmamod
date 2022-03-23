@@ -62,6 +62,16 @@
 #' @export
 forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
 
+  if (full$type != "nma" || is.null(full$type)) {
+    stop("The argument 'full' must be an object of S3 class 'run_model'.",
+         call. = FALSE)
+  }
+
+  if (reg$type != "nmr" || is.null(reg$type)) {
+    stop("The argument 'reg' must be an object of S3 class 'run_metareg'.",
+         call. = FALSE)
+  }
+
   if (length(unique(reg$covariate)) < 3 &
       !is.element(cov_value[[1]], reg$covariate)) {
     aa <- "The first element of the argument 'cov_value' is out of the value"

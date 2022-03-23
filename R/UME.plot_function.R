@@ -112,6 +112,17 @@
 #' @export
 ume_plot <- function(full, ume, drug_names, save_xls) {
 
+
+  if (full$type != "nma" || is.null(full$type)) {
+    stop("'full' must be an object of S3 class 'run_meta'.",
+         call. = FALSE)
+  }
+
+  if (ume$type != "ume" || is.null(ume$type)) {
+    stop("'ume' must be an object of S3 class 'run_ume'.",
+         call. = FALSE)
+  }
+
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
     bb <- "The intervention ID, as specified in 'data' is used, instead."

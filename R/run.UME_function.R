@@ -160,6 +160,11 @@
 run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
 
 
+  if (full$type != "nma" || is.null(full$type)) {
+    stop("'full' must be an object of S3 class 'run_meta'.",
+         call. = FALSE)
+  }
+
   # Default arguments
   data <- full$data
   measure <- if (is.element(full$measure, c("RR", "RD"))) {
@@ -499,7 +504,8 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin)
+         n_thin = n_thin,
+         type = "ume")
   } else {
     list(EM = EM,
          dev_o = dev_o,
@@ -517,7 +523,8 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin)
+         n_thin = n_thin,
+         type = "ume")
   }
 
   # Return different list of results according to a condition
