@@ -41,7 +41,7 @@ the specification of the columns.}
 
 \item{measure}{Character string indicating the effect measure with values
 \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the mean difference,
-standardised mean difference and ratio of means, respectively.}
+standardised mean difference, and ratio of means, respectively.}
 
 \item{mean_value}{A numeric value for the mean of the normal distribution of
 the informative missingness parameter. The same value is considered for all
@@ -52,7 +52,7 @@ means, the mean value is defined in the logarithmic scale.}
 \item{var_value}{A positive non-zero number for the variance of the normal
 distribution of the informative missingness parameter. When the
 \code{measure} is \code{"MD"}, or \code{"SMD"} the default argument is 1;
-When the \code{measure} is \code{"ROM"} the default argument is 0.04. The
+when the \code{measure} is \code{"ROM"} the default argument is 0.04. The
 same value is considered for all trial-arms of the dataset.}
 
 \item{rho}{A numeric value in the interval [-1, 1] that indicates the
@@ -76,12 +76,12 @@ Applies the pattern-mixture model under a specific assumption
   (Mavridis et al., 2015).
 }
 \details{
-The \code{taylor_continuous} function is found in the
+The \code{taylor_continuous} function is integrated in the
   \code{\link{unrelated_effects_plot}} function. The latter uses the
   the \code{\link[netmeta:pairwise]{pairwise}} function from the package
   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}
-  to transform the dataset from the wide arm-based format into the long-arm
-  based format (see, 'Arguments' for \code{data} in
+  to transform the dataset from the wide arm-based format into the long
+  arm-based format (see, 'Arguments' for \code{data} in
   \code{\link{unrelated_effects_plot}}).
 }
 \references{

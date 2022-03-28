@@ -118,7 +118,7 @@ robustness_index <- function(sens, threshold) {
   }
 
   n_scenar <- if(is.null(sens$EM)) {
-    length(lapply(gg, "[[", "EM"))
+    length(lapply(sens, "[[", "EM"))
   } else if(!is.null(sens$EM) & !is.null(sens$type)) {
     length(sens$scenarios)^2
   } else {
@@ -133,12 +133,9 @@ robustness_index <- function(sens, threshold) {
   }
 
   if (is.null(sens$EM)) {
-    #es_mat <- as.matrix(sens[[1]])
-    #measure <- sens[[2]]
-    #scenarios <- sens[[3]]
     es_mat <- do.call("rbind", lapply(sens, "[[", "EM"))
     measure <- c(unique(do.call("rbind", lapply(sens, "[[", "measure"))))
-    #n_scenar <- length(lapply(gg, "[[", "EM"))
+    #n_scenar <- length(lapply(sens, "[[", "EM"))
     primary_scenar <- 1
   } else {
     measure <- sens$measure
@@ -167,7 +164,7 @@ robustness_index <- function(sens, threshold) {
   nt <- (1 + sqrt(1 + 8 * (length(es_mat[, 1]) / sqrt(n_scenar)^2))) / 2
   poss_comp <- (nt * (nt - 1)) / 2
 
-  if (missing(threshold) & is.element(measure, "OR")) {
+  if (missing(threshold) & measure == "OR") {
     threshold <- 0.28
     message("The value 0.28 was assigned as 'threshold' by default.")
   } else if (missing(threshold) & is.element(measure, c("MD", "SMD", "ROM"))) {

@@ -44,9 +44,9 @@ The R console prints the data-frame with the estimated summary effect
   credible intervals of the between-trial standard deviation from network
   meta-analysis appear in the forest plot as a solid and two dotted parallel
   blue lines, respectively. The different levels of heterogeneity appear as
-  green, yellow, orange, and red rectangulars to indicate a low, reasonable,
+  green, yellow, orange, and red rectangles to indicate a low, reasonable,
   fairly high, and fairly extreme heterogeneity, respectively, following the
-  classification of Spiegelhalter et al (2004).
+  classification of Spiegelhalter et al. (2004).
   When a fixed-effect model has been fitted, only the forest plot on the
   estimated summary effect sizes is shown.
 }
@@ -64,7 +64,9 @@ Facilitates the comparison of the consistency model
 
   For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
   (risk difference) in \code{\link{run_model}}, \code{series_meta_plot}
-  currently presents the results in the odds ratio scale.
+  currently presents the results in the odds ratio for being the
+  \strong{base-case} effect measure in \code{\link{run_model}} for a binary
+  outcome (see also 'Details' in \code{\link{run_model}}).
 
   The user can detect any inconsistencies in the estimated
   effects from the compared models and explore the gains in precision

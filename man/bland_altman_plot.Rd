@@ -26,8 +26,9 @@ Bland-Altman plot on the posterior mean deviance contribution of the
  with horizontal solid black lines.
 }
 \description{
-This function facilitates creating the Bland-Altman plot for two
- models using only three arguments.
+This function facilitates creating the Bland-Altman plot on the
+ posterior mean deviance contribution for two models using only three
+ arguments.
 }
 \details{
 \code{bland_altman_plot} is integrated in \code{\link{ume_plot}}
@@ -40,14 +41,23 @@ This function facilitates creating the Bland-Altman plot for two
   agreement. Data points positioned above or below the 95\% limits of
   agreement correspond to trials that contribute to the poor fit of the
   consistency model or unrelated mean effects model, respectively.
+
+  \code{bland_altman_plot} can be used to compare the following models
+  regarding deviance contribution:
+  \itemize{
+   \item the consistency model (via \code{\link{run_model}}) with the
+   unrelated effect means model (via \code{\link{run_ume}});
+   \item the network meta-analysis model (via \code{\link{run_model}}) with
+   the network meta-analysis model (via \code{\link{run_metareg}}).
+   }
 }
 \references{
 Bland JM, Altman DG. Measuring agreement in method comparison studies.
 \emph{Stat Methods Med Res} 1999;\bold{8}:135--60.
 }
 \seealso{
-\code{\link{data_preparation}}, \code{\link{run_model}},
-  \code{\link{run_ume}}, \code{\link{ume_plot}}
+\code{\link{data_preparation}}, \code{\link{run_metareg}},
+  \code{\link{run_model}}, \code{\link{run_ume}}, \code{\link{ume_plot}}
 }
 \author{
 {Loukia M. Spineli}

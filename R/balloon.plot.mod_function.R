@@ -169,7 +169,7 @@ balloon_plot <- function(sens, compar, drug_names) {
       upper_es[i, j] <- es_all[j + (nt * (nt - 1) / 2) * (i - 1), 4]
 
       # Dummy variable to indicate present or absent statistical significance
-      signif[i, j] <- ifelse(lower_es[i, j] < 0 & upper_es[i, j] > 0,
+      signif[i, j] <- ifelse(lower_es[i, j] > 0 || upper_es[i, j] < 0,
                              "yes", "no")
     }
   }
@@ -337,7 +337,7 @@ balloon_plot <- function(sens, compar, drug_names) {
 
   if (!is.null(sens$heter)) {
     # Posterior mean of tau
-    tau <- round(tau_all[, 1], 2)
+    tau <- round(tau_all[, 5], 2)
 
     # Posterior standard deviation of tau
     sd_tau <- round(tau_all[, 2], 2)

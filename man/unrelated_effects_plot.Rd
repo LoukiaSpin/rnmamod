@@ -27,7 +27,7 @@ respectively.}
 
 \item{char}{A data-frame of three columns and number of rows equal to the
 number of trials in \code{data}. Each column refers to a
-trial-characteristic with nominal elements.}
+trial-characteristic with \strong{nominal} elements.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data}. If \code{drug_names} is
@@ -65,47 +65,52 @@ directory of the user. The default is \code{FALSE} (do not export).}
 }
 \value{
 A panel of interval plots for each observed comparison in the
-  network, when there are up to 15 trials in the \code{data}. Otherwise, an
-  Excel file with the \code{data} in the long format, the effect measure and
-  95\% confidence interval of the within-trial comparisons, the interventions
-  compared, and the three characteristics (as defined in \code{char}).
+  network, when there are up to 15 trials in the \code{data}. Otherwise,
+  \code{unrelated_effects_plot} exports a data-frame to an 'xlsx' file at
+  the working  directory of the user. This data-frame includes the
+  \code{data} in the long format, the within-trial effect measure and
+  95\% confidence interval of the corresponding comparisons, the
+  interventions compared, and the three characteristics (as defined in
+  \code{char}).
   For datasets with more than 15 trials, the plot becomes cluttered and it is
   difficult to identify the trial-names. Hence, exporting the results in an
   Excel file is a viable alternative.
 }
 \description{
-Performs the unrelated trial effects model and illustrates the
-  results of each trial and corresponding pairwise comparison.
+Performs the unrelated trial effects model (also known as fixed
+  effects model) and illustrates the results of each trial and corresponding
+  pairwise comparison.
 }
 \details{
 The unrelated trial effects model may be an alternative to network
   meta-analysis, when the latter is not deemed appropriate (e.g., there is
   considerable statistical heterogeneity, or substantial intransitivity). In
-  the presence of missing participant outcome data (MOD), the effect size and
+  the presence of missing participant outcome data, the effect size and
   standard error are adjusted by applying the pattern-mixture model with
-  Taylor series in trial-arms with MOD (Mavridis et al., 2015;
-  White et al., 2008). The \code{unrelated_effects_plot} function calls
-  the \code{\link{taylor_imor}} and \code{\link{taylor_continuous}} functions
-  (for binary and continuous outcome, respectively) to employ pattern-mixture
-  model with Taylor series. The \code{unrelated_effects_plot} function
-  considers the informative missingness odds ratio in the logarithmic scale
-  for binary outcome data (White et al., 2008), the informative missingness
-  difference of means when \code{measure} is \code{"MD"} or \code{"SMD"}, and
-  the informative missingness ratio of means in the logarithmic scale when
-  \code{"ROM"} is the effect measure (Mavridis et al., 2015).
+  Taylor series in trial-arms with reported missing participants (Mavridis et
+  al., 2015; White et al., 2008). The \code{unrelated_effects_plot} function
+  calls the \code{\link{taylor_imor}} and \code{\link{taylor_continuous}}
+  functions (for a binary and continuous outcome, respectively) to employ
+  pattern-mixture model with Taylor series. The \code{unrelated_effects_plot}
+  function considers the informative missingness odds ratio in the
+  logarithmic scale for binary outcome data (White et al., 2008), the
+  informative missingness difference of means when \code{measure} is
+  \code{"MD"} or \code{"SMD"}, and the informative missingness ratio of means
+  in the logarithmic scale when \code{measure} is \code{"ROM"}
+  (Mavridis et al., 2015).
 
   The number of interval plots equals the number of observed comparisons in
   the network. In each interval plot, the y-axis refers to all trials of the
   network and x-axis refers to the selected effect measure. The odds ratio
   and ratio of means are calculated in the logarithmic scale but they are
-  reported in their original scale.
+  reported in their original scale after exponentiation.
 
   \code{unrelated_effects_plot} depicts all three characteristics for each
   trial using different colours, line-types and point-shapes for the
-  corresponding interval and point estimate. Ideally, each characteristic
-  should have no more than three categories; otherwise, the plot becomes
-  cluttered. For now, the \code{unrelated_effects_plot} function uses the
-  default colour palette, line-types and point-shapes.
+  corresponding 95\% confidence interval and point estimate. Ideally, each
+  characteristic should have no more than three categories; otherwise, the
+  plot becomes cluttered. For now, the \code{unrelated_effects_plot} function
+  uses the default colour palette, line-types and point-shapes.
 }
 \references{
 Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Taylor.IMOR_function.R
 \name{taylor_imor}
 \alias{taylor_imor}
-\title{Pattern-mixture model with Taylor series for binary outcome}
+\title{Pattern-mixture model with Taylor series for a binary outcome}
 \format{
 The columns of the data-frame in the argument \code{data} refer to
   the following ordered elements for a binary outcome:
@@ -12,8 +12,10 @@ The columns of the data-frame in the argument \code{data} refer to
   comparison.\cr
   \bold{r2} \tab The observed  number of events in the second arm of the
   comparison.\cr
-  \bold{m1} \tab The number of MOD in the first arm of the comparison.\cr
-  \bold{m2} \tab The number of MOD in the second arm of the comparison.\cr
+  \bold{m1} \tab The number of missing participants in the first arm of the
+  comparison.\cr
+  \bold{m2} \tab The number of missing participants in the second arm of the
+  comparison.\cr
   \bold{n1} \tab The number of participants randomised in the first arm of
   the comparison.\cr
   \bold{n2} \tab The number of participants randomised in the second arm
@@ -50,24 +52,24 @@ argument is 0 and corresponds to uncorrelated missingness parameters.}
 \value{
 A data-frame that additionally includes the following elements:
   \item{EM}{The odds ratio in the logarithmic scale (log OR) adjusted
-  for MOD and obtained using the Taylor series.}
-  \item{se.EM}{The standard error of the log OR adjusted for MOD and
-  obtained using the Taylor series.}
+  for missing participants and obtained using the Taylor series.}
+  \item{se.EM}{The standard error of the log OR adjusted for missing
+  participants and obtained using the Taylor series.}
 }
 \description{
 Applies the pattern-mixture model under a specific assumption
-  about the informative missingness parameter in trial-arms with
-  \bold{binary} missing participant outcome data (MOD) and uses the Taylor
+  about the informative missingness odds ratio in trial-arms with
+  \bold{binary} missing participant outcome data and uses the Taylor
   series to obtain the odds ratio (in the logarithmic scale) and standard
   error for each trial (White et al., 2008).
 }
 \details{
-The \code{taylor_imor} function is found in the
+The \code{taylor_imor} function is integrated in the
   \code{\link{unrelated_effects_plot}} function. The latter uses the
   the \code{\link[netmeta:pairwise]{pairwise}} function from the package
   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}
-  to transform the dataset from the wide arm-based format into the long-arm
-  based format (see, 'Arguments' for \code{data} in
+  to transform the dataset from the wide arm-based format into the long
+  arm-based format (see, 'Arguments' for \code{data} in
   \code{\link{unrelated_effects_plot}}).
 }
 \references{

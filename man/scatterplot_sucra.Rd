@@ -30,13 +30,13 @@ A scatterplot of the SUCRA values under the network meta-analysis
   (x-axis) for a specified level or value of the investigated covariate.
 }
 \description{
-Creates a scatterplot to compare the SUCRA values from the
+Creates a scatterplot of the SUCRA values from the
   network meta-analysis and the network meta-regression for a specified level
   or value of the investigated covariate.
 }
 \details{
 The names of the interventions appear above each point in the plot.
-  Three coloured rectangles appear in the scatterplot: a red rectangle for
+  Three coloured rectangles are drawn in the scatterplot: a red rectangle for
   SUCRA values up to 50\%, a yellow rectangular for SUCRA values between
   50\% and 80\%, and a green rectangle for SUCRA values over 80\%.
   Interventions falling at the green area are considered as the highest

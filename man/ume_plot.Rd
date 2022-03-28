@@ -31,7 +31,7 @@ directory of the user. The default is \code{FALSE} (do not export).}
   returns the following list of elements:
   \item{table_effect_size}{The posterior mean, posterior standard
   deviation, and 95\% credible interval of the summary effect size for each
-  pairwise comparisons observed in the network under the consistency model
+  pairwise comparison observed in the network under the consistency model
   and the unrelated mean effects model.}
   \item{table_model_assessment}{The DIC, number of effective
   parameters, and total residual deviance under the consistency model and
@@ -71,8 +71,10 @@ The deviance information criterion (DIC) of the consistency model is
 
   For a binary outcome, when \code{measure} is "RR" (relative risk) or "RD"
   (risk difference) in \code{\link{run_model}}, \code{ume_plot} currently
-  presents the results from network meta-analysis and node-splitting in the
-  odds ratio scale.
+  presents the results from network meta-analysis and unrelated mean effects
+  in the odds ratio for being the \strong{base-case} effect measure in
+  \code{\link{run_model}} for a binary outcome (see also 'Details' in
+  \code{\link{run_model}}).
 
   Furthermore, \code{ume_plot} exports \code{table_effect_size} and
   \code{table_model_assessment} to separate 'xlsx' files (via the

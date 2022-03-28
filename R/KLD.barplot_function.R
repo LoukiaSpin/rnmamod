@@ -58,7 +58,7 @@
 #'
 #' # Calculate the robustness index
 #' robust <- robustness_index(sens = res_sens,
-#'                            threshold = 0.28)
+#'                            threshold = 0.17)
 #'
 #' # The names of the interventions in the order they appear in the dataset
 #' interv_names <- c("placebo", "inositol")

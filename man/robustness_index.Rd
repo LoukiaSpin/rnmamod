@@ -10,15 +10,10 @@ robustness_index(sens, threshold)
 \item{sens}{An object of S3 class \code{\link{run_sensitivity}} when
 sensitivity analysis refers to different scenarios about the average
 missingness parameter. See 'Value' in \code{\link{run_sensitivity}}. For a
-\bold{general} sensitivity analysis, insert a list of three elements with
-the following order: 1) a row-bind matrix with the estimated summary effect
-measure, \code{EM}, obtained from the \code{\link{run_model}} function for
-each re-analysis (the first \code{EM} should refer to the estimated summary
-effect sizes under the primary analysis); 2) the effect measure with
-values \code{"OR"}, \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for the odds
-ratio, mean difference, standardised mean difference and ratio of means,
-respectively; and 3) a character vector that indicates the name of the
-re-analyses employed.}
+\bold{general} sensitivity analysis, insert a list of at least two objects
+of S3 class \code{\link{run_model}} indicating different re-analyses: the
+first object (of class \code{\link{run_model}}) in the list should refer to
+the primary analysis.}
 
 \item{threshold}{A number indicating the threshold of robustness, that is,
 the minimally allowed deviation between the primary analysis and
