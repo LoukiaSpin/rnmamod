@@ -339,8 +339,6 @@
 #' in meta-analysis--part 1: two-stage methods. \emph{Stat Med}
 #' 2008;\bold{27}(5):711--727. \doi{10.1002/sim.3008}
 #'
-#' @export
-#'
 #' @examples
 #' data("nma.baker2009")
 #'
@@ -365,6 +363,7 @@
 #'           n_thin = 1)
 #' }
 #'
+#' @export
 run_model <- function(data,
                       measure,
                       model,
