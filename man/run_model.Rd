@@ -328,7 +328,7 @@ head(nma.baker2009)
 # Perform a random-effects network meta-analysis
 # Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
 run_model(data = nma.baker2009,
-          measure = "RD",
+          measure = "OR",
           model = "RE",
           assumption = "IDE-ARM",
           heter_prior = list("halfnormal", 0, 1),

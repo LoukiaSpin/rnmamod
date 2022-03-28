@@ -339,6 +339,8 @@
 #' in meta-analysis--part 1: two-stage methods. \emph{Stat Med}
 #' 2008;\bold{27}(5):711--727. \doi{10.1002/sim.3008}
 #'
+#' @export
+#'
 #' @examples
 #' data("nma.baker2009")
 #'
@@ -349,7 +351,7 @@
 #' # Perform a random-effects network meta-analysis
 #' # Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000
 #' run_model(data = nma.baker2009,
-#'           measure = "RD",
+#'           measure = "OR",
 #'           model = "RE",
 #'           assumption = "IDE-ARM",
 #'           heter_prior = list("halfnormal", 0, 1),
@@ -363,7 +365,6 @@
 #'           n_thin = 1)
 #' }
 #'
-#' @export
 run_model <- function(data,
                       measure,
                       model,
@@ -397,10 +398,6 @@ run_model <- function(data,
   } else if ((missing(assumption) || assumption != "IND-UNCORR") &
              min(na.omit(unlist(item$I))) == 0) {
     "IND-UNCORR"
-  #} else if (assumption != "IND-UNCORR" & min(na.omit(unlist(item$I))) == 0) {
-  #  aa <- "Missing participant outcome data have been collected partially."
-  #  bb <- "Insert 'IND-UNCORR'."
-  #  stop(paste(aa, bb), call. = FALSE)
   } else {
     assumption
   }
@@ -587,14 +584,6 @@ run_model <- function(data,
     starts_with("effectiveness")))
 
   # Estimated missingness parameter
-  #phi <- if (length(unique(na.omit(unlist(item$m)))) > 1) {
-  #  t(get_results %>% dplyr::select(starts_with("phi") |
-  #                                  starts_with("mean.phi") |
-  #                                  starts_with("mean.phi[") |
-  #                                  starts_with("phi[")))
-  #} else {
-  #  NULL
-  #}
   phi <- if (min(na.omit(unlist(item$I))) == 1 &
              max(na.omit(unlist(item$I))) == 1) {
     t(get_results %>% dplyr::select(starts_with("phi") |

@@ -80,6 +80,7 @@
 #'   relevant in non-star-shaped networks.
 #'
 #' @author {Loukia M. Spineli}
+#' @export
 #'
 #' @seealso \code{\link{heatmap_missing_dataset}},
 #'   \code{\link{heatmap_missing_network}},
@@ -89,7 +90,6 @@
 #'   \code{\link{run_ume}}, \code{\link{prepare_model}},
 #'   \code{\link{prepare_nodesplit}}, \code{\link{prepare_ume}}
 #'
-#' @export
 data_preparation <- function(data, measure) {
 
   # Intervention studied in each arm of every trial
