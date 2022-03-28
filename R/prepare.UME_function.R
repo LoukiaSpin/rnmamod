@@ -276,6 +276,11 @@ prepare_ume <- function(measure, model, assumption, connected) {
                       prec.phi[t] <- pow(sd.phi[t], -2)
                       sd.phi[t] ~ dunif(0, psi.phi)
                       }
+                      for (t in 1:(ref - 1)) {
+                        mean.phi[t] ~ dnorm(meand.phi[1], precd.phi)
+                        prec.phi[t] <- pow(sd.phi[t], -2)
+                        sd.phi[t] ~ dunif(0, psi.phi)
+                      }
                       for (t in (ref + 1):nt) {
                         mean.phi[t] ~ dnorm(meand.phi[1], precd.phi)
                         prec.phi[t] <- pow(sd.phi[t], -2)

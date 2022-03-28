@@ -393,7 +393,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
   }
 
   # Run the Bayesian analysis
-  jagsfit <- jags(data = data_jag,
+  jagsfit <- suppressWarnings({jags(data = data_jag,
                   parameters.to.save = param_jags,
                   model.file = textConnection(prepare_ume(measure,
                                                           model,
@@ -404,6 +404,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                   n.burnin = n_burnin,
                   n.thin = n_thin,
                   DIC = FALSE)
+  })
 
   # Turn summary of posterior results (R2jags object) into a data-frame
   # to select model parameters (using 'dplyr')

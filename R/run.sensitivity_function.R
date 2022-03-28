@@ -205,8 +205,13 @@ run_sensitivity <- function(full,
   # Prepare the dataset for the R2jags
   item <- data_preparation(data, measure)
 
-  if (unique(na.omit(unlist(item$I))) == 0) {
+  if (min(na.omit(unlist(item$I))) == 0 & max(na.omit(unlist(item$I))) == 0) {
     aa <- "Missing participant outcome data have *not* been collected."
+    stop(paste(aa, "This function cannot be used."), call. = FALSE)
+    return(NA)
+  } else if (min(na.omit(unlist(item$I))) == 0 &
+             max(na.omit(unlist(item$I))) == 1) {
+    aa <- "Missing participant outcome data have been collected *partially*."
     stop(paste(aa, "This function cannot be used."), call. = FALSE)
     return(NA)
   }

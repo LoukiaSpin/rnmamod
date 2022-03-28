@@ -396,6 +396,7 @@ run_model <- function(data,
     "IDE-ARM"
   } else if ((missing(assumption) || assumption != "IND-UNCORR") &
              min(na.omit(unlist(item$I))) == 0) {
+    message("The 'IND-UNCORR' has been used, instead.")
     "IND-UNCORR"
   } else {
     assumption
