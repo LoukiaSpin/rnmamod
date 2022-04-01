@@ -114,7 +114,7 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
 
 
   if (full$type != "nma" || is.null(full$type)) {
-    stop("'full' must be an object of S3 class 'run_meta'.",
+    stop("'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }
 
@@ -319,9 +319,9 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
          table_tau =
            knitr::kable(between_trial_sd,
                         align = "lccc",
-                        caption = "Between-trail standard deviation"),
+                        caption = "Between-trial standard deviation"),
          scatterplots = scatterplots,
-         levarage_plots = lev_plots,
+         leverage_plots = lev_plots,
          intervalplots = intervalplots)
   } else {
     list(table_effect_size =
@@ -333,7 +333,7 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
                         align = "lcc",
                         caption = "Model assessment"),
          scatterplots = scatterplots,
-         levarage_plots = lev_plots,
+         leverage_plots = lev_plots,
          intervalplots = intervalplots)
   }
 

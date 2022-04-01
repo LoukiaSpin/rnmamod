@@ -473,6 +473,14 @@ league_heatmap <- function(full1,
                      is.element(comp0[, 2], drug_names))
   }
 
+  reflect_triangle2 <- function(m, from = c("lower", "upper")) {
+    ix <- switch(match.arg(from),
+                 lower = upper.tri,
+                 upper = lower.tri)(m, diag = FALSE)
+    m[ix] <- t(m)[ix]
+    m
+  }
+
   if (!is.null(full2)) {
     point20 <- matrix(NA,
                       nrow = length(drug_names),
@@ -482,10 +490,10 @@ league_heatmap <- function(full1,
     rownames(lower20) <- colnames(lower20) <- drug_names
     rownames(upper20) <- colnames(upper20) <- drug_names
     for (i in 1:length(comp[, 1])) {
-      point20[comp[i, 1], comp[i, 2]] <- round(-1 * par2[i, 1], 2)
+      point20[comp[i, 1], comp[i, 2]] <- round(par2[i, 1], 2)
       # Lower triangle
-      lower20[comp[i, 1], comp[i, 2]] <- round(-1 * par2[i, 7], 2)
-      upper20[comp[i, 1], comp[i, 2]] <- round(-1 * par2[i, 3], 2)
+      lower20[comp[i, 1], comp[i, 2]] <- round(par2[i, 3], 2)
+      upper20[comp[i, 1], comp[i, 2]] <- round(par2[i, 7], 2)
     }
 
     # Incorporate upper triangle
@@ -493,24 +501,33 @@ league_heatmap <- function(full1,
 
     # Matrix of lower and upper bound of effect measure (all possible comparisons)
     # Incorporate upper triangle
-    lower_21 <- reflect_triangle(upper20, from = "lower")
-    upper_21 <- reflect_triangle(lower20, from = "lower")
+    lower_210 <- reflect_triangle(upper20, from = "lower")
+    upper_210 <- reflect_triangle(lower20, from = "lower")
+    #lower_21[lower.tri(lower_21, diag = FALSE)] <- round(par2[, 3], 2)
+    lower_21 <- lower_210
+    upper_21 <- upper_210
+    lower_21[lower.tri(lower_21, diag = FALSE)] <- upper_210[lower.tri(upper_210, diag = FALSE)]
+    #upper_21[lower.tri(upper_21, diag = FALSE)] <- round(par2[, 7], 2)
+    upper_21[lower.tri(upper_21, diag = FALSE)] <- lower_210[lower.tri(lower_210, diag = FALSE)]
 
     # Second: Symmetric matrix for effect measure and its bounds after ordering
     # rows and columns from the best to the worst intervention
+    point02 <- point_21[drug_order, drug_order]
+    lower02 <- lower_21[drug_order, drug_order]
+    upper02 <- upper_21[drug_order, drug_order]
     if (!is.element(measure, c("OR", "RR", "ROM"))) {
-      point2 <- point_21[drug_order, drug_order]
-      lower2 <- lower_21[drug_order, drug_order]
-      upper2 <- upper_21[drug_order, drug_order]
+      point2 <- reflect_triangle2(point02, from = "upper")
+      lower2 <- reflect_triangle2(lower02, from = "upper")
+      upper2 <- reflect_triangle2(upper02, from = "upper")
 
       # Spot the statistically significant comparisons (i.e. the 95% CrI does
       # not include the value of no difference)
       signif2 <- ifelse(upper2 < 0 | lower2 > 0, 1, 0)
       signif2[is.na(signif2)] <- 0
     } else {
-      point2 <- round(exp(point_21[drug_order, drug_order]), 2)
-      lower2 <- round(exp(lower_21[drug_order, drug_order]), 2)
-      upper2 <- round(exp(upper_21[drug_order, drug_order]), 2)
+      point2 <- round(exp(reflect_triangle2(point02, from = "upper")), 2)
+      lower2 <- round(exp(reflect_triangle2(lower02, from = "upper")), 2)
+      upper2 <- round(exp(reflect_triangle2(upper02, from = "upper")), 2)
 
       # Spot the statistically significant comparisons (i.e. the 95% CrI does not
       # include the value of no difference)

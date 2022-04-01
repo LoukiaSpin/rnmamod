@@ -126,7 +126,7 @@ robustness_index <- function(sens, threshold) {
   }
 
   if (!is.element(type, c("nma", "sens")) || is.null(type) || n_scenar < 2) {
-    aa <- "or a list of at least two objects of S3 class 'run_meta'"
+    aa <- "or a list of at least two objects of S3 class 'run_model'"
     bb <- "(type ?robustness_index)."
     stop(paste("'sens' must be an object of S3 class 'run_sensitivity'",
                aa, bb), call. = FALSE)

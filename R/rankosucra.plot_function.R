@@ -111,7 +111,7 @@ rankosucra_plot <- function(full1,
          call. = FALSE)
   }
 
-  if (length(drug_names) < 3) {
+  if (length(drug_names1) < 3 || (!is.null(full2) &length(drug_names2) < 3)) {
     stop("This function is *not* relevant for a pairwise meta-analysis.",
          call. = FALSE)
   }

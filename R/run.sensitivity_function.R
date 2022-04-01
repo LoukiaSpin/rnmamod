@@ -182,7 +182,7 @@ run_sensitivity <- function(full,
 
 
   if (full$type != "nma" || is.null(full$type)) {
-    stop("'full' must be an object of S3 class 'run_meta'.",
+    stop("'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }
 
@@ -233,13 +233,45 @@ run_sensitivity <- function(full,
   } else {
     mean_scenarios
   }
-  var_misspar <- ifelse(missing(var_misspar) & measure != "ROM", 1,
-                        ifelse(missing(var_misspar) & measure == "ROM", 0.2^2,
-                               var_misspar))
-  n_chains <- ifelse(missing(n_chains), 2, n_chains)
-  n_iter <- ifelse(missing(n_iter), 10000, n_iter)
-  n_burnin <- ifelse(missing(n_burnin), 1000, n_burnin)
-  n_thin <- ifelse(missing(n_thin), 1, n_thin)
+  var_misspar <- if (missing(var_misspar) &
+                     is.element(measure, c("OR", "RR", "RD", "MD", "SMD"))) {
+    1
+  } else if (missing(var_misspar) & measure == "ROM") {
+    0.2^2
+  } else if (var_misspar <= 0) {
+    stop("The argument 'var_misspar' must be a positive non-zero number.",
+         call. = FALSE)
+  } else {
+    var_misspar
+  }
+  n_chains <- if (missing(n_chains)) {
+    2
+  } else if (n_chains < 1) {
+    stop("The argument 'n_chains' must be a positive integer.", call. = FALSE)
+  } else {
+    n_chains
+  }
+  n_iter <- if (missing(n_iter)) {
+    10000
+  } else if (n_iter < 1) {
+    stop("The argument 'n_iter' must be a positive integer.", call. = FALSE)
+  } else {
+    n_iter
+  }
+  n_burnin <- if (missing(n_burnin)) {
+    1000
+  } else if (n_burnin < 1) {
+    stop("The argument 'n_burnin' must be a positive integer.", call. = FALSE)
+  } else {
+    n_burnin
+  }
+  n_thin <- if (missing(n_thin)) {
+    1
+  } else if (n_thin < 1) {
+    stop("The argument 'n_thin' must be a positive integer.", call. = FALSE)
+  } else {
+    n_thin
+  }
 
   # A 2x2 matrix of 25 reference-specific scenarios (PMID: 30223064)
   mean_misspar <- as.matrix(cbind(rep(mean_scenarios,

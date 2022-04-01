@@ -108,17 +108,11 @@ data_preparation <- function(data, measure) {
   measure <- if (missing(measure)) {
     stop("The argument 'measure' needs to be defined.", call. = FALSE)
   } else if ((dim(data %>% select(starts_with("r")))[2] > 0) &
-             !is.element(measure, c("MD", "SMD", "ROM", "OR", "RR", "RD"))) {
-    stop("Insert 'OR', 'RR', or 'RD'.", call. = FALSE)
-  } else if ((dim(data %>% select(starts_with("r")))[2] == 0) &
-             !is.element(measure, c("MD", "SMD", "ROM", "OR", "RR", "RD"))) {
-    stop("Insert 'MD', 'SMD' or 'ROM'.", call. = FALSE)
-  } else if ((dim(data %>% select(starts_with("r")))[2] > 0) &
-             is.element(measure, c("MD", "SMD", "ROM"))) {
+             !is.element(measure, c("OR", "RR", "RD"))) {
     stop("Insert 'OR', 'RR', or 'RD' for a  binary outcome.", call. = FALSE)
   } else if ((dim(data %>% select(starts_with("r")))[2] == 0) &
-             is.element(measure, "OR")) {
-    stop("Insert 'MD', 'SMD' or 'ROM' for a continuous outcome.", call. = FALSE)
+             !is.element(measure, c("MD", "SMD", "ROM"))) {
+    stop("Insert 'MD', 'SMD' or 'ROM' for a  continuous outcome.", call. = FALSE)
   } else {
     measure
   }

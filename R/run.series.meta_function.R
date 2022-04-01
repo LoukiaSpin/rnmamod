@@ -133,6 +133,34 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
   }
   mean_misspar <- full$mean_misspar
   var_misspar <- full$var_misspar
+  n_chains <- if (missing(n_chains)) {
+    2
+  } else if (n_chains < 1) {
+    stop("The argument 'n_chains' must be a positive integer.", call. = FALSE)
+  } else {
+    n_chains
+  }
+  n_iter <- if (missing(n_iter)) {
+    10000
+  } else if (n_iter < 1) {
+    stop("The argument 'n_iter' must be a positive integer.", call. = FALSE)
+  } else {
+    n_iter
+  }
+  n_burnin <- if (missing(n_burnin)) {
+    1000
+  } else if (n_burnin < 1) {
+    stop("The argument 'n_burnin' must be a positive integer.", call. = FALSE)
+  } else {
+    n_burnin
+  }
+  n_thin <- if (missing(n_thin)) {
+    1
+  } else if (n_thin < 1) {
+    stop("The argument 'n_thin' must be a positive integer.", call. = FALSE)
+  } else {
+    n_thin
+  }
 
   # Prepare the dataset for the R2jags
   item <- data_preparation(data, measure)

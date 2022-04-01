@@ -16,9 +16,7 @@ and the second element to the 'control' intervention of the comparison.}
 
 \item{drug_names}{A vector of labels with the name of the interventions
 in the order they appear in the argument \code{data} of
-\code{\link{run_model}}. If the argument \code{drug_names} is not defined,
-the order of the interventions as they appear in
-\code{data} is used, instead.}
+\code{\link{run_model}}.}
 }
 \value{
 \code{balloon_plot} returns two enhanced balloon plots for one

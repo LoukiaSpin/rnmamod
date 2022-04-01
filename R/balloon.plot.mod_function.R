@@ -14,9 +14,7 @@
 #'   and the second element to the 'control' intervention of the comparison.
 #' @param drug_names A vector of labels with the name of the interventions
 #'   in the order they appear in the argument \code{data} of
-#'   \code{\link{run_model}}. If the argument \code{drug_names} is not defined,
-#'   the order of the interventions as they appear in
-#'   \code{data} is used, instead.
+#'   \code{\link{run_model}}.
 #'
 #' @return
 #'   \code{balloon_plot} returns two enhanced balloon plots for one
@@ -129,7 +127,7 @@ balloon_plot <- function(sens, compar, drug_names) {
   } else if (is.element(compar[1], drug_names) &
              is.element(compar[2], drug_names) &
              match(compar[1], drug_names) < match(compar[2], drug_names)) {
-    stop("Re-arrange the order of the element in the argument 'compar'.",
+    stop("Re-arrange the order of the elements in the argument 'compar'.",
          call. = FALSE)
   } else if (is.element(compar[1], drug_names) &
              is.element(compar[2], drug_names) &

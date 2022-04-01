@@ -199,10 +199,34 @@ run_metareg <- function(full,
   } else {
     covar_assumption
   }
-  n_chains <- ifelse(missing(n_chains), 2, n_chains)
-  n_iter <- ifelse(missing(n_iter), 10000, n_iter)
-  n_burnin <- ifelse(missing(n_burnin), 1000, n_burnin)
-  n_thin <- ifelse(missing(n_thin), 1, n_thin)
+  n_chains <- if (missing(n_chains)) {
+    2
+  } else if (n_chains < 1) {
+    stop("The argument 'n_chains' must be a positive integer.", call. = FALSE)
+  } else {
+    n_chains
+  }
+  n_iter <- if (missing(n_iter)) {
+    10000
+  } else if (n_iter < 1) {
+    stop("The argument 'n_iter' must be a positive integer.", call. = FALSE)
+  } else {
+    n_iter
+  }
+  n_burnin <- if (missing(n_burnin)) {
+    1000
+  } else if (n_burnin < 1) {
+    stop("The argument 'n_burnin' must be a positive integer.", call. = FALSE)
+  } else {
+    n_burnin
+  }
+  n_thin <- if (missing(n_thin)) {
+    1
+  } else if (n_thin < 1) {
+    stop("The argument 'n_thin' must be a positive integer.", call. = FALSE)
+  } else {
+    n_thin
+  }
 
   # Data in list format for R2jags
   data_jag <- list("m" = item$m,
