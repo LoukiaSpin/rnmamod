@@ -157,8 +157,10 @@ balloon_plot <- function(sens, compar, drug_names) {
       sd_es[i, j] <- round(es_all[j + (nt * (nt - 1) / 2) * (i - 1), 2], 2)
 
       # Standardise the effect estimate based on the outcome direction
-      es_stand[i, j] <- ifelse(D == 1, es[i, j] / sd_es[i, j],
-                               -es[i, j] / sd_es[i, j])
+      #es_stand[i, j] <- ifelse(D == 1, es[i, j] / sd_es[i, j],
+      #                         (-1) *(es[i, j] / sd_es[i, j]))
+      es_stand[i, j] <- ifelse(D == 1, es[i, j],
+                               (-1) *es[i, j])
 
       # Lower bound of the 95% credible interval of the effect estimate
       lower_es[i, j] <- es_all[j + (nt * (nt - 1) / 2) * (i - 1), 3]

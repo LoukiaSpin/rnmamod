@@ -241,8 +241,9 @@ rankosucra_plot <- function(full1,
             strip.text = element_text(size = 12),
             legend.position = "bottom",
             legend.text =  element_text(color = "black", size = 12),
-            legend.title = element_text(color = "black", face = "bold",
-                                         size = 12))
+            #legend.title = element_text(color = "black", face = "bold",
+            #                             size = 12),
+            legend.title = element_blank())
   }
 
   return(p)

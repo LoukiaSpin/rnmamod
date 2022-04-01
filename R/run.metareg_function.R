@@ -194,7 +194,7 @@ run_metareg <- function(full,
          call. = FALSE)
   } else if (!is.element(covar_assumption,
                          c("exchangeable", "independent", "common"))) {
-    stop("Insert 'NO', 'exchangeable', 'independent', or 'common'.",
+    stop("Insert 'exchangeable', 'independent', or 'common'.",
          call. = FALSE)
   } else {
     covar_assumption

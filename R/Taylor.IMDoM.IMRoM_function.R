@@ -131,8 +131,8 @@ taylor_continuous <- function(data, measure, mean_value, var_value, rho) {
   } else if (measure == "SMD") {
     alpha1 <- alpha2 <- 1
   } else if (measure == "ROM") {
-    alpha1 <- alpha1 + exp(mean_value) * (1 - a1)
-    alpha2 <- alpha2 + exp(mean_value) * (1 - a2)
+    alpha1 <- a1 + exp(mean_value) * (1 - a1)
+    alpha2 <- a2 + exp(mean_value) * (1 - a2)
   }
 
   # Variance of y.obs per arm

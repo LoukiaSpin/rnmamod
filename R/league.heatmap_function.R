@@ -314,10 +314,10 @@ league_heatmap <- function(full1,
                      is.element(select[, 1], show) &
                        is.element(select[, 2], show)))
     }
-    z_test <- par[, 1] / par[, 2]
+    z_test <- par0[, 1] / par0[, 2]
     z_test_mat <- matrix(NA,
-                         nrow = length(drug_names),
-                         ncol = length(drug_names))
+                         nrow = length(drug_names0),
+                         ncol = length(drug_names0))
     z_test_mat[lower.tri(z_test_mat, diag = FALSE)] <- z_test * (-1)
     z_test_mat <- reflect_triangle(z_test_mat, from = "lower")
     prob_diff <- if (full1$D == 0) {
@@ -330,7 +330,7 @@ league_heatmap <- function(full1,
     sucra <- if (is.null(show0)) {
       sucra0
     } else {
-      na.omit(subset(data.frame(sucra0, drug_names),
+      na.omit(subset(data.frame(sucra0, drug_names0),
                      is.element(drug_names0, show)))[, 1]
     }
   }
@@ -447,17 +447,6 @@ league_heatmap <- function(full1,
       na.omit(subset(data.frame(par20, select),
                      is.element(select[, 1], show) &
                        is.element(select[, 2], show)))
-    }
-    z_test2 <- par2[, 1] / par2[, 2]
-    z_test_mat2 <- matrix(NA,
-                         nrow = length(drug_names),
-                         ncol = length(drug_names))
-    z_test_mat2[lower.tri(z_test_mat2, diag = FALSE)] <- z_test2 * (-1)
-    z_test_mat2 <- reflect_triangle(z_test_mat2, from = "lower")
-    prob_diff2 <- if (full1$D == 0) {
-      pnorm(z_test_mat2)
-    } else {
-      1 - pnorm(z_test_mat2)
     }
   }
 
