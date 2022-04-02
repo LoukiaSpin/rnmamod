@@ -4,7 +4,7 @@
 \alias{league_table_absolute}
 \title{League table for relative and absolute effects}
 \usage{
-league_table_absolute(full, drug_names)
+league_table_absolute(full, drug_names, show = NULL)
 }
 \arguments{
 \item{full}{An object of S3 class \code{\link{run_model}}.
@@ -12,19 +12,24 @@ See 'Value' in \code{\link{run_model}}.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
-\code{\link{run_model}}. If the argument \code{drug_names} is not
-defined, the interventions are ordered as they appear in \code{data}.}
+\code{\link{run_model}}.}
+
+\item{show}{A vector of at least three character strings that refer to the
+names of the interventions \emph{exactly} as defined in \code{drug_names}.
+Then, the league table will be created for these interventions only.
+If \code{show} is not defined, the league table will present all
+interventions as defined in \code{drug_names}.}
 }
 \value{
 A league table showing the posterior estimate and 95\% credible
-  interval of the odds ratio (upper diagonals), risk difference per 1000
-  participants (lower diagonals), and absolute risks per 1000 participants
-  (diagonal).
+  interval of the odds ratio (upper off-diagonals), risk difference per 1000
+  participants (lower off-diagonals), and absolute risks per 1000
+  participants (main diagonal).
 }
 \description{
 Provides a league table of the estimated odds ratio, and risk difference
   per 1000 participants for all possible comparisons of interventions in the
-  network. The diagonal of the table presents the absolute risk for each
+  network. The main diagonal of the table presents the absolute risk for each
   intervention in the network. \code{league_table_absolute} can be used for a
   random-effects or fixed-effect network meta-analysis.
   It is applied for one binary outcome only.
@@ -37,13 +42,14 @@ The user must define the argument \code{measure = "RD"} in
   The rows and columns of the league table display the names of the
   interventions  sorted by decreasing order from the best to the worst
   based on their SUCRA value (Salanti et al., 2011) for the odds ratio. The
-  upper diagonals contain the posterior mean and 95\% credible interval of
-  the odds ratio, the lower diagonals contain the posterior mean and 95\%
-  credible interval of the risk difference (per 1000 participants), and the
-  diagonal comprises the posterior median and 95\% credible interval of the
-  absolute risks (per 1000 participants) of the  corresponding interventions.
-  The reference intervention of the network (which the baseline risk has been
-  selected for) is indicated in the diagonal with a homonymous label.
+  upper off-diagonals contain the posterior median and 95\% credible interval
+  of the odds ratio, the lower off-diagonals contain the posterior median and
+  95\% credible interval of the risk difference (per 1000 participants), and
+  the main diagonal comprises the posterior median and 95\% credible interval
+  of the absolute risks (per 1000 participants) of the  corresponding
+  interventions. The reference intervention of the network (which the
+  baseline risk has been selected for) is indicated in the main diagonal with
+  a homonymous label.
 
   Comparisons between interventions should be read from left to right.
   Results that indicate strong evidence in favor of the row-defining

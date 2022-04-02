@@ -11,14 +11,10 @@ heatmap_missing_dataset(data, trial_names, drug_names)
 data of each trial. See 'Format' in \code{\link{run_model}}.}
 
 \item{trial_names}{A vector of labels with the name of the trials in the
-order they appear in the argument \code{data}. If \code{trial_names} is not
-defined, the order of the trials as they appear in \code{data} is used,
-instead.}
+order they appear in the argument \code{data}.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
-the order they appear in the argument \code{data}. If \code{drug_names} is
-not defined, the order of the interventions as they appear in \code{data}
-is used, instead.}
+the order they appear in the argument \code{data}.}
 }
 \value{
 A heatmap presenting the proportion of missing participants in each
