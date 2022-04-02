@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -84,10 +84,12 @@ the order they appear in the argument <code>data</code>. If <code>drug_names</co
 not defined, the order of the interventions as they appear in <code>data</code>
 is used, instead.</p></dd>
 <dt>measure</dt>
-<dd><p>Character string indicating the effect measure with values
-<code>"OR"</code>, <code>"MD"</code>, <code>"SMD"</code>, or <code>"ROM"</code> for the odds ratio,
-mean difference, standardised mean difference and ratio of means,
-respectively.</p></dd>
+<dd><p>Character string indicating the effect measure. For a binary
+outcome, the following can be considered: <code>"OR"</code>, <code>"RR"</code> or
+<code>"RD"</code> for the odds ratio, relative risk, and risk difference,
+respectively. For a continuous outcome, the following can be considered:
+<code>"MD"</code>, <code>"SMD"</code>, or <code>"ROM"</code> for mean difference,
+standardised mean difference and ratio of means, respectively.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>

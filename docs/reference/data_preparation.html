@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -79,16 +79,22 @@
 <dd><p>A data-frame of the one-trial-per-row format with arm-level data.
 See 'Format' in <code><a href="run_model.html">run_model</a></code>.</p></dd>
 <dt>measure</dt>
-<dd><p>Character string indicating the effect measure with values
-<code>"OR"</code>, <code>"MD"</code>, <code>"SMD"</code>, or <code>"ROM"</code> for the odds ratio,
-mean difference, standardised mean difference and ratio of means,
-respectively.</p></dd>
+<dd><p>Character string indicating the effect measure. For a binary
+outcome, the following can be considered: <code>"OR"</code>, <code>"RR"</code> or
+<code>"RD"</code> for the odds ratio, relative risk, and risk difference,
+respectively. For a continuous outcome, the following can be considered:
+<code>"MD"</code>, <code>"SMD"</code>, or <code>"ROM"</code> for mean difference,
+standardised mean difference and ratio of means, respectively.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     <p>A list of data-frames on the following elements to be passed
   to <code><a href="run_model.html">run_model</a></code>:</p>
-<dl><dt>m</dt>
+<dl><dt>pseudo_m</dt>
+<dd><p>A pseudo-data-frame with values -1 and <strong>m</strong> for the
+  corresponding trial-arms with unreported and reported missing participant
+  outcome data, respectively (see 'Details').</p></dd>
+<dt>m</dt>
 <dd><p>The number of missing participant outcome data in each
   trial-arm (see 'Details').</p></dd>
 <dt>N</dt>
@@ -96,31 +102,58 @@ respectively.</p></dd>
 <dt>t</dt>
 <dd><p>The intervention identifier in each trial-arm.</p></dd>
 <dt>I</dt>
-<dd><p>The pseudo-data-frame <code>I</code> (see 'Details').</p></dd>
-<dt>r</dt>
-<dd><p>The number of observed events of the outcome in each
-  trial-arm, when the outcome is binary.</p></dd>
+<dd><p>A pseudo-data-frame that indicates whether missing participant
+  outcome data have been reported or not for each observed trial-arm
+  (see 'Details').</p></dd>
+<dt>measure</dt>
+<dd><p>The effect measure for the analysed outcome.</p></dd>
 <dt>y0</dt>
 <dd><p>The observed mean value of the outcome in each trial-arm,
   when the outcome is continuous.</p></dd>
 <dt>se0</dt>
 <dd><p>The observed standard deviation of the outcome in each
   trial-arm, when the outcome is continuous.</p></dd>
+<dt>r</dt>
+<dd><p>The number of observed events of the outcome in each
+  trial-arm, when the outcome is binary.</p></dd>
 </dl></div>
     <div id="details">
     <h2>Details</h2>
-    <p><code>data_preparation</code> prepares the data for the Bayesian analysis.
-  It checks whether the element <strong>m</strong> exists in the <code>data</code> argument
-  (See 'Format' in <code><a href="run_model.html">run_model</a></code>). If this element is missing,
-  <code>data_preparation</code> creates a pseudo-data-frame for <strong>m</strong> that has
-  the zero value for the observed trial-arms, and <code>NA</code> for the
-  unobserved trial-arms, and the pseudo-data-frame <code>I</code>
-  that is identical with the pseudo-data-frame for <code>m</code>. If the element
-  <strong>m</strong> exists in the <code>data</code> and has values only for some
-  trial-arms, the pseudo-data-frame for <strong>m</strong> is identical to <strong>m</strong>
-  for the corresponding trial-arms, and the pseudo-data-frame <code>I</code> has
-  the value one for these trial-arms. Both pseudo-data-frames aim to retain
-  the trials without information on missing participant outcome data.</p>
+    <p><code>data_preparation</code> prepares the data for the Bayesian analysis
+  (See 'Format' in <code><a href="run_model.html">run_model</a></code>). <code>data_preparation</code>
+  creates the pseudo-data-frames <code>m_new</code>, <code>I</code>, and <code>m_pseudo</code>
+  that have the same dimensions with the element <code>N</code>. <code>m_new</code> takes
+  the zero value for the observed trial-arms with unreported missing
+  participant outcome data (i.e., <strong>m</strong> equals <code>NA</code> for the
+  corresponding trial-arms), the same value with <strong>m</strong> for the observed
+  trial-arms with reported missing participant outcome data, and <code>NA</code>
+  for the unobserved trial-arms. <code>I</code> is a dummy data-frame and takes the
+  value one for the observed trial-arms with reported missing participant
+  outcome data, the zero value for the observed trial-arms with unreported
+  missing participant outcome data (i.e., <code>m_new</code> equals zero for the
+  corresponding trial-arms), and <code>NA</code> for the unobserved trial-arms.
+  Thus, <code>I</code> indicates whether missing participant outcome data have been
+  collected for the observed trial-arms. If the user has not defined the
+  element <strong>m</strong> in <code>data_preparation</code>, <code>m_new</code> and <code>I</code>
+  take the zero value for all observed trial-arms to indicate that no missing
+  participant outcome data have been collected for the analysed outcome.
+  <code>I</code> and <code>m_new</code> are used from the following functions of the
+  package: <code><a href="run_model.html">run_model</a></code>, <code><a href="run_metareg.html">run_metareg</a></code>,
+  <code><a href="prepare_model.html">prepare_model</a></code>, <code><a href="run_nodesplit.html">run_nodesplit</a></code>,
+  <code><a href="prepare_nodesplit.html">prepare_nodesplit</a></code>, <code><a href="run_ume.html">run_ume</a></code>,
+  <code><a href="prepare_ume.html">prepare_ume</a></code>, and  <code><a href="run_sensitivity.html">run_sensitivity</a></code>.
+  Lastly, <code>m_pseudo</code> is a variant of <code>m_new</code>: it takes the value -1
+  for the observed trial-arms with unreported missing participant outcome
+  data (i.e., <strong>m</strong> equals <code>NA</code> for the corresponding trial-arms),
+  the same value with <strong>m</strong> for the observed trial-arms with reported
+  missing participant outcome data, and <code>NA</code> for the unobserved
+  trial-arms. It is used in function <code><a href="heatmap_missing_network.html">heatmap_missing_network</a></code> to
+  calculate and illustrate the percentage of missing participant outcome data
+  across the observed comparisons and interventions of the network and the
+  function <code><a href="heatmap_missing_dataset.html">heatmap_missing_dataset</a></code> to illustrate the trial-arms
+  with unreported missing participant outcome data. All pseudo-data-frames
+  aim to retain the trials without information on missing participant outcome
+  data.</p>
 <p>Furthermore, <code>data_preparation</code> sorts the interventions across
   the arms of each trial in an ascending order and correspondingly the
   remaining elements in <code>data</code> (See 'Format' in
@@ -132,8 +165,16 @@ respectively.</p></dd>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>,
-  <code><a href="run_model.html">run_model</a></code></p></div>
+    <div class="dont-index"><p><code><a href="heatmap_missing_dataset.html">heatmap_missing_dataset</a></code>,
+  <code><a href="heatmap_missing_network.html">heatmap_missing_network</a></code>,
+  <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>,
+  <code><a href="run_metareg.html">run_metareg</a></code>, <code><a href="run_model.html">run_model</a></code>,
+  <code><a href="run_nodesplit.html">run_nodesplit</a></code>, <code><a href="run_sensitivity.html">run_sensitivity</a></code>,
+  <code><a href="run_ume.html">run_ume</a></code>, <code><a href="prepare_model.html">prepare_model</a></code>,
+  <code><a href="prepare_nodesplit.html">prepare_nodesplit</a></code>, <code><a href="prepare_ume.html">prepare_ume</a></code></p>
+<p>Matrix that indicates with -1 the trial-arms with non-reported missing
+participants. It is used by the following functions:
+'heatmap_missing_dataset' and 'heatmap_missing_network'.</p></div>
     </div>
     <div id="author">
     <h2>Author</h2>

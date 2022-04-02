@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -98,8 +98,8 @@ instead.</p></dd>
   left to right. Comparisons highlighted with green or red colour imply
   robust or frail conclusions for the primary analysis, respectively.
   This corresponds to robustness index below or at least the selected
-  threshold of robustness. <code>heatmap_robustness</code> uses the threshold of
-  robustness selected in the <code><a href="robustness_index.html">robustness_index</a></code> function.
+  threshold of robustness. <code>heatmap_robustness</code> inherits the threshold
+  of robustness selected in the <code><a href="robustness_index.html">robustness_index</a></code> function.
   The robustness index of each pairwise comparison also appears in the
   corresponding cell.
   When there is at least one comparison with frail conclusions, the primary
@@ -116,8 +116,7 @@ instead.</p></dd>
     <p>Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
 primary analysis results: A case study on missing outcome data in pairwise
 and network meta-analysis.
-<em>Res Synth Methods</em> 2021;<b>12</b>(4):475--490.
-doi: <a href="https://doi.org/10.1002/jrsm.1478" class="external-link">10.1002/jrsm.1478</a></p>
+<em>Res Synth Methods</em> 2021;<b>12</b>(4):475--490. doi: <a href="https://doi.org/10.1002/jrsm.1478" class="external-link">10.1002/jrsm.1478</a></p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -130,30 +129,25 @@ doi: <a href="https://doi.org/10.1002/jrsm.1478" class="external-link">10.1002/j
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.baker2009"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Read results from 'run_sensitivity' (using the default arguments)</span></span>
-<span class="r-in"><span class="va">res_sens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_sens_baker.rds'</span>,</span>
-<span class="r-in">                    package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Calculate the robustness index</span></span>
-<span class="r-in"><span class="va">robust</span> <span class="op">&lt;-</span> <span class="fu"><a href="robustness_index.html">robustness_index</a></span><span class="op">(</span>sens <span class="op">=</span> <span class="va">res_sens</span>,</span>
-<span class="r-in">                           threshold <span class="op">=</span> <span class="fl">0.28</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">The value 0.28 was assigned on 'threshold' for Odds ratio</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># The names of the interventions in the order they appear in the dataset</span></span>
-<span class="r-in"><span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"budesonide"</span>, <span class="st">"budesonide plus formoterol"</span>,</span>
-<span class="r-in">                  <span class="st">"fluticasone"</span>, <span class="st">"fluticasone plus salmeterol"</span>,</span>
-<span class="r-in">                  <span class="st">"formoterol"</span>, <span class="st">"salmeterol"</span>, <span class="st">"tiotropium"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Create the heatmap of robustness</span></span>
-<span class="r-in"><span class="fu">heatmap_robustness</span><span class="op">(</span>robust <span class="op">=</span> <span class="va">robust</span>,</span>
-<span class="r-in">                   drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">The value 0.28 was assigned on 'threshold' for Odds ratio</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-plt img"><img src="heatmap_robustness-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.baker2009"</span><span class="op">)</span>
+
+<span class="co"># Read results from 'run_sensitivity' (using the default arguments)</span>
+<span class="va">res_sens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_sens_baker.rds'</span>,
+                    package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Calculate the robustness index</span>
+<span class="va">robust</span> <span class="op">&lt;-</span> <span class="fu"><a href="robustness_index.html">robustness_index</a></span><span class="op">(</span>sens <span class="op">=</span> <span class="va">res_sens</span>,
+                           threshold <span class="op">=</span> <span class="fl">0.28</span><span class="op">)</span>
+
+<span class="co"># The names of the interventions in the order they appear in the dataset</span>
+<span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"budesonide"</span>, <span class="st">"budesonide plus formoterol"</span>,
+                  <span class="st">"fluticasone"</span>, <span class="st">"fluticasone plus salmeterol"</span>,
+                  <span class="st">"formoterol"</span>, <span class="st">"salmeterol"</span>, <span class="st">"tiotropium"</span><span class="op">)</span>
+
+<span class="co"># Create the heatmap of robustness</span>
+<span class="fu">heatmap_robustness</span><span class="op">(</span>robust <span class="op">=</span> <span class="va">robust</span>,
+                   drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span>
+
 </code></pre></div>
     </div>
   </div>

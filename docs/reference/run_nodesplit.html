@@ -22,7 +22,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -137,12 +137,17 @@ The default argument is 1.</p></dd>
     <h2>Details</h2>
     <p><code>run_nodesplit</code> inherits the arguments <code>data</code>,
   <code>measure</code>, <code>model</code>, <code>assumption</code>, <code>heter_prior</code>,
-  <code>mean_misspar</code>, <code>var_misspar</code>, and <code>ref</code> from
+  <code>mean_misspar</code>, <code>var_misspar</code>, <code>ref</code>, and <code>indic</code> from
   <code><a href="run_model.html">run_model</a></code> (now contained in the argument <code>full</code>).
   This prevents specifying a different Bayesian model from that considered
   in <code><a href="run_model.html">run_model</a></code>. Therefore, the user needs first to apply
   <code><a href="run_model.html">run_model</a></code>, and then use <code>run_nodesplit</code>
   (see 'Examples').</p>
+<p>For a binary outcome, when <code>measure</code> is "RR" (relative risk) or "RD"
+  (risk difference) in <code><a href="run_model.html">run_model</a></code>, <code>run_nodesplit</code>
+  currently performs node-splitting using the odds ratio as effect measure
+  for being the <strong>base-case</strong> effect measure in <code><a href="run_model.html">run_model</a></code>
+  for a binary outcome (see also 'Details' in <code><a href="run_model.html">run_model</a></code>).</p>
 <p>To perform the Bayesian node-splitting approach, the
   <code><a href="prepare_nodesplit.html">prepare_nodesplit</a></code> function is called which contains the
   WinBUGS code as written by Dias et al. (2010) for binomial and normal
@@ -204,7 +209,7 @@ doi: <a href="https://doi.org/10.1002/jrsm.1167" class="external-link">10.1002/j
     <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>,
   <code><a href="https://rdrr.io/pkg/gemtc/man/mtc.nodesplit.html" class="external-link">mtc.nodesplit.comparisons</a></code>,
   <code><a href="nodesplit_plot.html">nodesplit_plot</a></code>, <code><a href="prepare_nodesplit.html">prepare_nodesplit</a></code>,
-  <code><a href="run_model.html">run_model</a></code>,</p></div>
+  <code><a href="run_model.html">run_model</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -213,164 +218,21 @@ doi: <a href="https://doi.org/10.1002/jrsm.1167" class="external-link">10.1002/j
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.baker2009"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Read results from 'run_model' (using the default arguments)</span></span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_baker.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="co"># Run random-effects node-splitting approach</span></span>
-<span class="r-in"><span class="co"># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span></span>
-<span class="r-in"><span class="fu">run_nodesplit</span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>,</span>
-<span class="r-in">              n_chains <span class="op">=</span> <span class="fl">3</span>,</span>
-<span class="r-in">              n_iter <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span class="r-in">              n_burnin <span class="op">=</span> <span class="fl">100</span>,</span>
-<span class="r-in">              n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 1 out of 8 split nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Compiling model graph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Resolving undeclared variables</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Allocating nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 141</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 5258</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2 out of 8 split nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Compiling model graph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Resolving undeclared variables</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Allocating nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 141</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 5258</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 3 out of 8 split nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Compiling model graph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Resolving undeclared variables</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Allocating nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 141</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 5258</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 4 out of 8 split nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Compiling model graph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Resolving undeclared variables</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Allocating nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 141</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 5267</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 5 out of 8 split nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Compiling model graph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Resolving undeclared variables</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Allocating nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 141</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 5267</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 6 out of 8 split nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Compiling model graph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Resolving undeclared variables</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Allocating nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 141</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 5268</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 7 out of 8 split nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Compiling model graph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Resolving undeclared variables</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Allocating nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 141</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 5259</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 8 out of 8 split nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Compiling model graph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Resolving undeclared variables</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Allocating nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 141</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 5264</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $direct</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   treat1 treat2       mean        sd       2.5%        97.5%     Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1 -0.4260244 0.2043189 -0.8240061  0.006905684 1.013987   450</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 -0.6207286 0.2235990 -1.0348453 -0.181520765 1.254332    13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1 -0.6142802 0.2319593 -1.0296245 -0.182016282 1.576723     7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4 -0.1513790 0.2125605 -0.6223254  0.194622369 1.124793    23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 -0.5449496 0.2383361 -1.0235659 -0.061871259 1.026904    87</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 -0.4348256 0.2151137 -0.8805343  0.005947830 1.015599   360</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 -1.7122923 0.9021977 -3.5299128 -0.019909152 1.088107    33</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 -0.8720894 0.3660333 -1.5619485 -0.149797443 1.242308    12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $indirect</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   treat1 treat2        mean        sd       2.5%      97.5%     Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1  0.98660854 0.7786255 -0.4655886  2.6367982 1.069042    35</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 -0.39044838 0.6204541 -1.6515931  0.8532592 1.031054    82</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1 -1.79141830 0.7924242 -3.2766879 -0.3965316 1.264677    12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4 -0.74717765 0.3571373 -1.4090449  0.0419487 1.225468    13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 -0.21916942 0.2237198 -0.6607624  0.2167690 1.063500    38</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 -0.31521412 0.2711974 -0.8301784  0.1978488 1.171475    16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 -0.05908925 0.1909420 -0.4692070  0.2860590 1.050192    57</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 -0.01764719 0.2191612 -0.5182623  0.3474076 1.062693    43</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $diff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   treat1 treat2       mean        sd        2.5%      97.5%     Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1 -1.4126329 0.8010519 -3.10919025 0.04961144 1.077400    34</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 -0.2302802 0.5778000 -1.37900392 0.91948821 1.008686   930</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1  1.1771381 0.7179978 -0.04428144 2.49742262 1.196623    15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4  0.5957987 0.3683580 -0.27520987 1.24006205 1.092431    28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 -0.3257802 0.3175845 -0.93142804 0.29067934 1.051187    44</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 -0.1196114 0.3772940 -0.91996426 0.60513913 1.078007    34</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 -1.6532031 0.9348473 -3.46137428 0.19970768 1.103918    27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 -0.8544422 0.4528424 -1.70537985 0.15497461 1.241893    12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $tau</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   treat1 treat2        50%         sd        2.5%     97.5%     Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1 0.13295610 0.07716093 0.016907175 0.3122890 1.096902    73</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 0.14251880 0.09836835 0.008810835 0.3589458 1.270602    15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1 0.11233709 0.08244377 0.013534923 0.3004815 1.452799     9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4 0.06935735 0.08972232 0.001879428 0.3069354 1.490436     8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 0.15600574 0.07416634 0.055951774 0.3332944 1.011398   350</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 0.14518258 0.09000010 0.023210835 0.3634770 1.094541    33</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 0.11202252 0.08041243 0.008025215 0.3102506 1.197712    16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 0.14707475 0.11867082 0.010382611 0.4340239 1.049308    65</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $model_assessment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   treat1 treat2      DIC deviance       pD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      6      1 88.17248 53.49266 34.67982</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      7      1 90.83132 54.19436 36.63696</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      8      1 88.45031 52.51950 35.93081</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      5      4 88.81425 52.71329 36.10096</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      7      4 91.48515 53.15663 38.32852</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      7      5 91.39985 53.65983 37.74002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      8      6 89.34540 54.08642 35.25898</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      8      7 92.93502 54.81065 38.12437</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.baker2009"</span><span class="op">)</span>
+
+<span class="co"># Read results from 'run_model' (using the default arguments)</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_baker.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># \donttest{</span>
+<span class="co"># Run random-effects node-splitting approach</span>
+<span class="co"># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span>
+<span class="fu">run_nodesplit</span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>,
+              n_chains <span class="op">=</span> <span class="fl">3</span>,
+              n_iter <span class="op">=</span> <span class="fl">1000</span>,
+              n_burnin <span class="op">=</span> <span class="fl">100</span>,
+              n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<span class="co"># }</span>
+
 </code></pre></div>
     </div>
   </div>

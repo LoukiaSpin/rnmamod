@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@
       <h1 data-toc-skip>Description of the network</h1>
                         <h4 data-toc-skip class="author">Loukia M. Spineli</h4>
             
-            <h4 data-toc-skip class="date">Latest version: 2022-01-19</h4>
+            <h4 data-toc-skip class="date">Latest version: 2022-04-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/vignettes/network_description.Rmd" class="external-link"><code>vignettes/network_description.Rmd</code></a></small>
       <div class="hidden name"><code>network_description.Rmd</code></div>
@@ -139,6 +139,7 @@
 </h3>
 <p><code>netplot</code> also produces a table with the characteristics of the network, such as the number of interventions, number of possible comparisons, number of direct comparisons (i.e., comparisons of interventions informed by at least one trial), and so on:</p>
 <table class="table">
+<caption>Description of the network</caption>
 <thead><tr class="header">
 <th align="left">Characteristic</th>
 <th align="left">Total</th>
@@ -200,11 +201,12 @@
 </h3>
 <p>Furthermore, <code>netplot</code> returns a table that summarises the number of trials, number of randomised participants and the proportion of completers (participants who completed the trial) <strong>per intervention</strong>. In the case of a binary outcome, the table additionally illustrates the distribution of the outcome as proportion across the corresponding trials:</p>
 <table class="table">
+<caption>Interventions</caption>
 <colgroup>
-<col width="11%">
+<col width="10%">
 <col width="10%">
 <col width="13%">
-<col width="11%">
+<col width="12%">
 <col width="13%">
 <col width="12%">
 <col width="14%">
@@ -212,199 +214,200 @@
 </colgroup>
 <thead><tr class="header">
 <th align="left">Interventions</th>
-<th align="right">Total trials</th>
-<th align="right">Total randomised</th>
-<th align="right">Completers (%)</th>
-<th align="right">Total events (%)</th>
-<th align="right">Min. events (%)</th>
-<th align="right">Median events (%)</th>
-<th align="right">Max. events (%)</th>
+<th align="center">Total trials</th>
+<th align="center">Total randomised</th>
+<th align="center">Completers (%)</th>
+<th align="center">Total events (%)</th>
+<th align="center">Min. events (%)</th>
+<th align="center">Median events (%)</th>
+<th align="center">Max. events (%)</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td align="left">BDP</td>
-<td align="right">3</td>
-<td align="right">1229</td>
-<td align="right">99</td>
-<td align="right">54</td>
-<td align="right">52</td>
-<td align="right">55</td>
-<td align="right">62</td>
+<td align="center">3</td>
+<td align="center">1229</td>
+<td align="center">99</td>
+<td align="center">54</td>
+<td align="center">52</td>
+<td align="center">55</td>
+<td align="center">62</td>
 </tr>
 <tr class="even">
 <td align="left">BMV</td>
-<td align="right">1</td>
-<td align="right">234</td>
-<td align="right">99</td>
-<td align="right">75</td>
-<td align="right">75</td>
-<td align="right">75</td>
-<td align="right">75</td>
+<td align="center">1</td>
+<td align="center">234</td>
+<td align="center">99</td>
+<td align="center">75</td>
+<td align="center">75</td>
+<td align="center">75</td>
+<td align="center">75</td>
 </tr>
 <tr class="odd">
 <td align="left">CPL</td>
-<td align="right">7</td>
-<td align="right">1797</td>
-<td align="right">92</td>
-<td align="right">32</td>
-<td align="right">20</td>
-<td align="right">27</td>
-<td align="right">60</td>
+<td align="center">7</td>
+<td align="center">1797</td>
+<td align="center">92</td>
+<td align="center">32</td>
+<td align="center">20</td>
+<td align="center">27</td>
+<td align="center">60</td>
 </tr>
 <tr class="even">
 <td align="left">CPL+polytar</td>
-<td align="right">1</td>
-<td align="right">236</td>
-<td align="right">92</td>
-<td align="right">36</td>
-<td align="right">36</td>
-<td align="right">36</td>
-<td align="right">36</td>
+<td align="center">1</td>
+<td align="center">236</td>
+<td align="center">92</td>
+<td align="center">36</td>
+<td align="center">36</td>
+<td align="center">36</td>
+<td align="center">36</td>
 </tr>
 <tr class="odd">
 <td align="left">capasal</td>
-<td align="right">1</td>
-<td align="right">237</td>
-<td align="right">93</td>
-<td align="right">14</td>
-<td align="right">14</td>
-<td align="right">14</td>
-<td align="right">14</td>
+<td align="center">1</td>
+<td align="center">237</td>
+<td align="center">93</td>
+<td align="center">14</td>
+<td align="center">14</td>
+<td align="center">14</td>
+<td align="center">14</td>
 </tr>
 <tr class="even">
 <td align="left">TCF gel</td>
-<td align="right">6</td>
-<td align="right">1978</td>
-<td align="right">99</td>
-<td align="right">58</td>
-<td align="right">48</td>
-<td align="right">56</td>
-<td align="right">74</td>
+<td align="center">6</td>
+<td align="center">1978</td>
+<td align="center">99</td>
+<td align="center">58</td>
+<td align="center">48</td>
+<td align="center">56</td>
+<td align="center">74</td>
 </tr>
 <tr class="odd">
 <td align="left">placebo</td>
-<td align="right">2</td>
-<td align="right">178</td>
-<td align="right">96</td>
-<td align="right">19</td>
-<td align="right">16</td>
-<td align="right">22</td>
-<td align="right">29</td>
+<td align="center">2</td>
+<td align="center">178</td>
+<td align="center">96</td>
+<td align="center">19</td>
+<td align="center">16</td>
+<td align="center">22</td>
+<td align="center">29</td>
 </tr>
 </tbody>
 </table>
 <p>An identical table is returned for the <strong>observed comparisons</strong> in the network:</p>
 <table style="width:100%;" class="table">
+<caption>Observed comparisons</caption>
 <colgroup>
-<col width="14%">
-<col width="9%">
-<col width="12%">
+<col width="13%">
+<col width="10%">
+<col width="13%">
 <col width="11%">
-<col width="12%">
+<col width="13%">
 <col width="12%">
 <col width="13%">
 <col width="12%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Comparisons</th>
-<th align="right">Total trials</th>
-<th align="right">Total randomised</th>
-<th align="right">Completers (%)</th>
-<th align="right">Total events (%)</th>
-<th align="right">Min. events (%)</th>
-<th align="right">Median events (%)</th>
-<th align="right">Max. events (%)</th>
+<th align="center">Total trials</th>
+<th align="center">Total randomised</th>
+<th align="center">Completers (%)</th>
+<th align="center">Total events (%)</th>
+<th align="center">Min. events (%)</th>
+<th align="center">Median events (%)</th>
+<th align="center">Max. events (%)</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td align="left">capasal vs CPL</td>
-<td align="right">1</td>
-<td align="right">475</td>
-<td align="right">89</td>
-<td align="right">20</td>
-<td align="right">20</td>
-<td align="right">20</td>
-<td align="right">20</td>
+<td align="center">1</td>
+<td align="center">475</td>
+<td align="center">89</td>
+<td align="center">20</td>
+<td align="center">20</td>
+<td align="center">20</td>
+<td align="center">20</td>
 </tr>
 <tr class="even">
 <td align="left">CPL vs BDP</td>
-<td align="right">2</td>
-<td align="right">1677</td>
-<td align="right">98</td>
-<td align="right">45</td>
-<td align="right">43</td>
-<td align="right">45</td>
-<td align="right">46</td>
+<td align="center">2</td>
+<td align="center">1677</td>
+<td align="center">98</td>
+<td align="center">45</td>
+<td align="center">43</td>
+<td align="center">45</td>
+<td align="center">46</td>
 </tr>
 <tr class="odd">
 <td align="left">CPL vs BMV</td>
-<td align="right">1</td>
-<td align="right">474</td>
-<td align="right">97</td>
-<td align="right">68</td>
-<td align="right">68</td>
-<td align="right">68</td>
-<td align="right">68</td>
+<td align="center">1</td>
+<td align="center">474</td>
+<td align="center">97</td>
+<td align="center">68</td>
+<td align="center">68</td>
+<td align="center">68</td>
+<td align="center">68</td>
 </tr>
 <tr class="even">
 <td align="left">CPL+polytar vs CPL</td>
-<td align="right">1</td>
-<td align="right">461</td>
-<td align="right">92</td>
-<td align="right">37</td>
-<td align="right">37</td>
-<td align="right">37</td>
-<td align="right">37</td>
+<td align="center">1</td>
+<td align="center">461</td>
+<td align="center">92</td>
+<td align="center">37</td>
+<td align="center">37</td>
+<td align="center">37</td>
+<td align="center">37</td>
 </tr>
 <tr class="odd">
 <td align="left">placebo vs BDP</td>
-<td align="right">1</td>
-<td align="right">692</td>
-<td align="right">98</td>
-<td align="right">48</td>
-<td align="right">48</td>
-<td align="right">48</td>
-<td align="right">48</td>
+<td align="center">1</td>
+<td align="center">692</td>
+<td align="center">98</td>
+<td align="center">48</td>
+<td align="center">48</td>
+<td align="center">48</td>
+<td align="center">48</td>
 </tr>
 <tr class="even">
 <td align="left">placebo vs CPL</td>
-<td align="right">1</td>
-<td align="right">408</td>
-<td align="right">93</td>
-<td align="right">22</td>
-<td align="right">22</td>
-<td align="right">22</td>
-<td align="right">22</td>
+<td align="center">1</td>
+<td align="center">408</td>
+<td align="center">93</td>
+<td align="center">22</td>
+<td align="center">22</td>
+<td align="center">22</td>
+<td align="center">22</td>
 </tr>
 <tr class="odd">
 <td align="left">placebo vs TCF gel</td>
-<td align="right">2</td>
-<td align="right">854</td>
-<td align="right">98</td>
-<td align="right">56</td>
-<td align="right">49</td>
-<td align="right">53</td>
-<td align="right">58</td>
+<td align="center">2</td>
+<td align="center">854</td>
+<td align="center">98</td>
+<td align="center">56</td>
+<td align="center">49</td>
+<td align="center">53</td>
+<td align="center">58</td>
 </tr>
 <tr class="even">
 <td align="left">TCF gel vs BDP</td>
-<td align="right">3</td>
-<td align="right">2446</td>
-<td align="right">99</td>
-<td align="right">58</td>
-<td align="right">53</td>
-<td align="right">61</td>
-<td align="right">68</td>
+<td align="center">3</td>
+<td align="center">2446</td>
+<td align="center">99</td>
+<td align="center">58</td>
+<td align="center">53</td>
+<td align="center">61</td>
+<td align="center">68</td>
 </tr>
 <tr class="odd">
 <td align="left">TCF gel vs CPL</td>
-<td align="right">4</td>
-<td align="right">2829</td>
-<td align="right">96</td>
-<td align="right">46</td>
-<td align="right">37</td>
-<td align="right">45</td>
-<td align="right">54</td>
+<td align="center">4</td>
+<td align="center">2829</td>
+<td align="center">96</td>
+<td align="center">46</td>
+<td align="center">37</td>
+<td align="center">45</td>
+<td align="center">54</td>
 </tr>
 </tbody>
 </table>

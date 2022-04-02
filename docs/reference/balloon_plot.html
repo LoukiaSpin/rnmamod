@@ -21,7 +21,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -89,9 +89,7 @@ and the second element to the 'control' intervention of the comparison.</p></dd>
 <dt>drug_names</dt>
 <dd><p>A vector of labels with the name of the interventions
 in the order they appear in the argument <code>data</code> of
-<code><a href="run_model.html">run_model</a></code>. If the argument <code>drug_names</code> is not defined,
-the order of the interventions as they appear in
-<code>data</code> is used, instead.</p></dd>
+<code><a href="run_model.html">run_model</a></code>.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -130,7 +128,7 @@ the order of the interventions as they appear in
   (the posterior median of <em>tau</em> exceeds the median of the prior
   distribution for the heterogeneity parameter).</p>
 <p><code>balloon_plot</code> can be used only when missing participant
-  outcome data have been extracted for at least one ↨
+  outcome data have been extracted for at least one trial.
   Otherwise, the execution of the function will be stopped and an error
   message will be printed on the R console.</p>
     </div>
@@ -152,26 +150,20 @@ and network meta-analysis. <em>Res Synth Methods</em>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pma.taylor2004"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Read results from 'run_sensitivity' (using the default arguments)</span></span>
-<span class="r-in"><span class="va">res_sens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_sens_taylor.rds'</span>,</span>
-<span class="r-in">                    package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># The names of the interventions in the order they appear in the dataset</span></span>
-<span class="r-in"><span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"inositol"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Create the enhanced balloon plot for 'inositol versus placebo'</span></span>
-<span class="r-in"><span class="fu">balloon_plot</span><span class="op">(</span>sens <span class="op">=</span> <span class="va">res_sens</span>,</span>
-<span class="r-in">             compar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"inositol"</span>, <span class="st">"placebo"</span><span class="op">)</span>,</span>
-<span class="r-in">             drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $plot_effect_size</span>
-<span class="r-plt img"><img src="balloon_plot-1.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $plot_tau</span>
-<span class="r-plt img"><img src="balloon_plot-2.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pma.taylor2004"</span><span class="op">)</span>
+
+<span class="co"># Read results from 'run_sensitivity' (using the default arguments)</span>
+<span class="va">res_sens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_sens_taylor.rds'</span>,
+                    package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># The names of the interventions in the order they appear in the dataset</span>
+<span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"inositol"</span><span class="op">)</span>
+
+<span class="co"># Create the enhanced balloon plot for 'inositol versus placebo'</span>
+<span class="fu">balloon_plot</span><span class="op">(</span>sens <span class="op">=</span> <span class="va">res_sens</span>,
+             compar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"inositol"</span>, <span class="st">"placebo"</span><span class="op">)</span>,
+             drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span>
+
 </code></pre></div>
     </div>
   </div>

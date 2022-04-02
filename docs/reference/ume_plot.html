@@ -22,7 +22,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -108,7 +108,7 @@ directory of the user. The default is <code>FALSE</code> (do not export).</p></d
 <dl><dt>table_effect_size</dt>
 <dd><p>The posterior mean, posterior standard
   deviation, and 95% credible interval of the summary effect size for each
-  pairwise comparisons observed in the network under the consistency model
+  pairwise comparison observed in the network under the consistency model
   and the unrelated mean effects model.</p></dd>
 <dt>table_model_assessment</dt>
 <dd><p>The DIC, number of effective
@@ -143,6 +143,12 @@ directory of the user. The default is <code>FALSE</code> (do not export).</p></d
   effects model is preferred. If the difference in DIC is less than -5, the
   consistency is preferred; otherwise, there is little to choose between the
   compared models.</p>
+<p>For a binary outcome, when <code>measure</code> is "RR" (relative risk) or "RD"
+  (risk difference) in <code><a href="run_model.html">run_model</a></code>, <code>ume_plot</code> currently
+  presents the results from network meta-analysis and unrelated mean effects
+  in the odds ratio for being the <strong>base-case</strong> effect measure in
+  <code><a href="run_model.html">run_model</a></code> for a binary outcome (see also 'Details' in
+  <code><a href="run_model.html">run_model</a></code>).</p>
 <p>Furthermore, <code>ume_plot</code> exports <code>table_effect_size</code> and
   <code>table_model_assessment</code> to separate 'xlsx' files (via the
   <code><a href="https://docs.ropensci.org/writexl/reference/write_xlsx.html" class="external-link">write_xlsx</a></code> function) to the working
@@ -176,67 +182,24 @@ doi: <a href="https://doi.org/10.1111/1467-9868.00353" class="external-link">10.
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.liu2013"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Read results from 'run_model' (using the default arguments)</span></span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_liu.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Read results from 'run_ume' (using the default arguments)</span></span>
-<span class="r-in"><span class="va">ume</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/ume_liu.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># The names of the interventions in the order they appear in the dataset</span></span>
-<span class="r-in"><span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"pramipexole"</span>, <span class="st">"serotonin-norepinephrine</span>
-<span class="r-in">                  reuptake inhibitor"</span>, <span class="st">"serotonin reuptake inhibitor"</span>,</span>
-<span class="r-in">                  <span class="st">"tricyclic antidepressant"</span>, <span class="st">"pergolide"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Plot the results from both models</span></span>
-<span class="r-in"><span class="fu">ume_plot</span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>,</span>
-<span class="r-in">         ume <span class="op">=</span> <span class="va">ume</span>,</span>
-<span class="r-in">         drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> There is little to choose between the two models</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $table_effect_size</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |Comparison                                                                                    |Mean NMA |SD NMA |95% CrI NMA     |Mean UME |SD UME |95% CrI UME     |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |:---------------------------------------------------------------------------------------------|:--------|:------|:---------------|:--------|:------|:---------------|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |pramipexole vs placebo                                                                        |2.24     |0.65   |( 0.61,  8.69)  |1.81     |0.87   |( 0.30, 11.46)  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |serotonin-norepinephrine</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   reuptake inhibitor vs placebo                      |1.13     |0.70   |( 0.29,  4.78)  |1.20     |0.72   |( 0.29,  5.15)  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |serotonin reuptake inhibitor vs placebo                                                       |2.01     |0.51   |( 0.70,  5.27)  |2.25     |0.58   |( 0.64,  6.40)  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |tricyclic antidepressant vs placebo                                                           |4.44     |0.71   |( 1.09, 17.72)* |6.98     |0.80   |( 1.46, 34.31)* |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |serotonin reuptake inhibitor vs pramipexole                                                   |0.90     |0.69   |( 0.20,  3.33)  |0.64     |0.99   |( 0.08,  4.53)  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |pergolide vs pramipexole                                                                      |0.26     |1.13   |( 0.03,  2.32)  |0.26     |1.15   |( 0.02,  2.51)  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |serotonin reuptake inhibitor vs serotonin-norepinephrine</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   reuptake inhibitor |1.78     |0.76   |( 0.35,  7.39)  |3.21     |0.94   |( 0.45, 20.01)  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |tricyclic antidepressant vs serotonin reuptake inhibitor                                      |2.21     |0.69   |( 0.58,  8.84)  |0.44     |1.41   |( 0.02,  7.25)  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $table_model_assessment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |    | Full NMA| UME model|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |:---|--------:|---------:|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |DIC | 43.61706|  43.89305|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |pD  | 18.93651|  20.11799|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |dev | 24.68055|  23.77506|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $table_tau</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |          |    Median| Lower 95% CrI| Upper 95% CrI|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |:---------|---------:|-------------:|-------------:|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |Full NMA  | 0.5838969|     0.0365506|      1.522013|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |UME model | 0.6117732|     0.0319236|      1.668056|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $scatterplots</span>
-<span class="r-plt img"><img src="ume_plot-1.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $levarage_plots</span>
-<span class="r-plt img"><img src="ume_plot-2.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $intervalplots</span>
-<span class="r-plt img"><img src="ume_plot-3.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.liu2013"</span><span class="op">)</span>
+
+<span class="co"># Read results from 'run_model' (using the default arguments)</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_liu.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Read results from 'run_ume' (using the default arguments)</span>
+<span class="va">ume</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/ume_liu.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># The names of the interventions in the order they appear in the dataset</span>
+<span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"pramipexole"</span>, <span class="st">"serotonin-norepinephrine
+                  reuptake inhibitor"</span>, <span class="st">"serotonin reuptake inhibitor"</span>,
+                  <span class="st">"tricyclic antidepressant"</span>, <span class="st">"pergolide"</span><span class="op">)</span>
+
+<span class="co"># Plot the results from both models</span>
+<span class="fu">ume_plot</span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>,
+         ume <span class="op">=</span> <span class="va">ume</span>,
+         drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span>
+
 </code></pre></div>
     </div>
   </div>

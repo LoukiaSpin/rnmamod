@@ -19,6 +19,7 @@ reference:
   - kld_barplot
   - league_heatmap
   - league_heatmap_pred
+  - league_table_absolute
   - leverage_plot
   - metareg_plot
   - netplot

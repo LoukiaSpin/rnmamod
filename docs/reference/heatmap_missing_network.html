@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -99,7 +99,9 @@ appear in <code>data</code> is used, instead.</p></dd>
   associated with low (up to 5%), moderate (more than 5% and up to 20%),
   and high risk of bias (more than 20%). Low, moderate, and high risk of
   bias associated with missing participants is indicated using green, orange,
-  and red colour, respectively.
+  and red colour, respectively. If missing participants have not been
+  reported for an intervention or comparison, the corresponding cell is
+  indicated in grey.
   The summary statistics (median, minimum and maximum) for each intervention
   (main diagonal; white font) result from calculating the proportion of
   missing participants in each arm of every trial and then summarising across
@@ -109,7 +111,9 @@ appear in <code>data</code> is used, instead.</p></dd>
   then summarising across the corresponding trials.
 <code>heatmap_missing_network</code> can be used only for a network of
   interventions. Otherwise, the execution of the function will be stopped and
-  an error message will be printed on the R console.</p>
+  an error message will be printed on the R console. Likewise, when the
+  number of missing participants has not been extracted for any arm of the
+  trials.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -128,26 +132,18 @@ ISBN: 0-443-05686-2.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.stowe2011"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Return the first six trials of the dataset</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nma.stowe2011</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                study t1 t2    y1    y2  sd1  sd2 m1 m2  n1  n2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   DA (B): Interntl  1  2 -0.30 -1.20 4.36 4.32  7  3  83  84</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      DA (C): Spain  1  2 -2.47 -3.33 3.91 3.48  8  9  20  23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3         DA (C): UK  1  2 -0.70 -2.00 2.24 2.33  2  1  18  19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      DA (C): USA 1  1  2 -0.77 -2.08 3.32 3.21 19 34  65 123</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 DA (Pe): N America  1  2 -0.20 -1.80 4.79 4.81  0  0 187 189</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 DA (Pr): CLEOPATRA  1  2 -0.90 -2.80 5.00 2.83  1  1 101 201</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># The names of the interventions in the order they appear in the dataset</span></span>
-<span class="r-in"><span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PBO+LD"</span>, <span class="st">"DA+LD"</span>, <span class="st">"COMTI+LD"</span>, <span class="st">"MAOBI+LD"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Create the heatmap</span></span>
-<span class="r-in"><span class="fu">heatmap_missing_network</span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.stowe2011</span>,</span>
-<span class="r-in">                        drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></span>
-<span class="r-plt img"><img src="heatmap_missing_network-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.stowe2011"</span><span class="op">)</span>
+
+<span class="co"># Return the first six trials of the dataset</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nma.stowe2011</span><span class="op">)</span>
+
+<span class="co"># The names of the interventions in the order they appear in the dataset</span>
+<span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PBO+LD"</span>, <span class="st">"DA+LD"</span>, <span class="st">"COMTI+LD"</span>, <span class="st">"MAOBI+LD"</span><span class="op">)</span>
+
+<span class="co"># Create the heatmap</span>
+<span class="fu">heatmap_missing_network</span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.stowe2011</span>,
+                        drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span>
+
 </code></pre></div>
     </div>
   </div>

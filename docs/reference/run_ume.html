@@ -22,7 +22,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -157,24 +157,33 @@ The default argument is 1.</p></dd>
   This prevents specifying a different Bayesian model from that considered in
   <code><a href="run_model.html">run_model</a></code>.Therefore, the user needs first to apply
   <code><a href="run_model.html">run_model</a></code>, and then use <code>run_ume</code> (see 'Examples').</p>
+<p>The <code>run_ume</code> function also returns the arguments <code>data</code>,
+  <code>model</code>, <code>measure</code>, <code>assumption</code>, <code>n_chains</code>,
+  <code>n_iter</code>, <code>n_burnin</code>, and <code>n_thin</code> as specified by the user
+  to be inherited by other relevant functions of the package.</p>
 <p>Initially, <code>run_ume</code> calls the <code><a href="improved_ume.html">improved_ume</a></code> function to
   identify the <em>frail comparisons</em>, that is, comparisons between
   non-baseline interventions in multi-arm trials not investigated in any
-  two-arm trial of the network (Spineli, 2021). The 'original' model of
-  Dias et al. (2013) omits the frail comparisons from the estimation
+  two-arm or multi-arm trial of the network (Spineli, 2021). The 'original'
+  model of Dias et al. (2013) omits the frail comparisons from the estimation
   process. Consequently, the number of estimated summary effects is less
   than those obtained by performing separate pairwise meta-analyses
   (see <code><a href="run_series_meta.html">run_series_meta</a></code>).</p>
+<p>For a binary outcome, when <code>measure</code> is "RR" (relative risk) or "RD"
+  (risk difference) in <code><a href="run_model.html">run_model</a></code>, <code>run_ume</code> currently
+  considers the odds ratio as effect measure for being the <strong>base-case</strong>
+  effect measure in <code><a href="run_model.html">run_model</a></code> for a binary outcome
+  (see also 'Details' in <code><a href="run_model.html">run_model</a></code>).</p>
 <p><code>run_ume</code> calls the <code><a href="prepare_ume.html">prepare_ume</a></code> function which contains
   the WinBUGS code as written by Dias et al. (2013) for binomial and normal
   likelihood to analyse binary and continuous outcome data, respectively.
   <code><a href="prepare_ume.html">prepare_ume</a></code> has been extended to incorporate the
   pattern-mixture model with informative missingness parameters for binary
   and continuous outcome data (see 'Details' in <code><a href="run_model.html">run_model</a></code>).
-  <code><a href="prepare_ume.html">prepare_ume</a></code> has been also refined to account for the
+  <code><a href="prepare_ume.html">prepare_ume</a></code> has also been refined to account for the
   multi-arm trials by assigning conditional univariate normal distributions
-  on the basic parameters of these trials, that is, effect parameters between
-  non-baseline arms and the baseline arm (Spineli, 2021).</p>
+  on the underlying trial-specific effect size of comparisons with the
+  baseline arm of the multi-arm trial (Spineli, 2021).</p>
 <p><code>run_ume</code> runs Bayesian unrelated mean effects model in <code>JAGS</code>.
   The progress of the simulation appears on the R console.</p>
 <p>The output of <code>run_ume</code> is not end-user-ready. The
@@ -218,298 +227,21 @@ doi: <a href="https://doi.org/10.1186/s12874-019-0731-y" class="external-link">1
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.liu2013"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Read results from 'run_model' (using the default arguments)</span></span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_liu.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="co"># Run random-effects unrelated mean effects model</span></span>
-<span class="r-in"><span class="co"># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span></span>
-<span class="r-in"><span class="fu">run_ume</span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>,</span>
-<span class="r-in">        n_chains <span class="op">=</span> <span class="fl">3</span>,</span>
-<span class="r-in">        n_iter <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span class="r-in">        n_burnin <span class="op">=</span> <span class="fl">100</span>,</span>
-<span class="r-in">        n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Compiling model graph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Resolving undeclared variables</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Allocating nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 59</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 80</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 3045</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $EM</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               mean        sd       2.5%         25%        50%         75%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[2,1]  0.6321375 0.8010275 -0.9809379  0.19105560  0.6264754  1.08064090</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[3,1]  0.2724088 0.7065146 -1.0724651 -0.14803859  0.2426652  0.65108821</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[4,1]  0.5228006 0.5832227 -0.5753684  0.09856243  0.5209595  0.93643026</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[5,1]  1.6629437 0.6978353  0.3188211  1.24062267  1.6473270  2.06567743</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[4,2] -0.5127883 0.9422196 -2.3600513 -1.10983075 -0.5203418  0.06583558</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[6,2] -1.0937683 1.1075296 -3.5050461 -1.76504947 -0.9679799 -0.32408382</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[4,3]  1.0160908 1.0105867 -1.1925991  0.46664659  1.0765713  1.59359664</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[5,4] -0.4730454 1.1433667 -3.0031175 -1.19135078 -0.3851525  0.29252340</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             97.5%     Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[2,1] 2.3187954 1.034026   690</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[3,1] 1.8924244 1.134114    23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[4,1] 1.5733315 1.405334     9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[5,1] 3.0913650 1.046458    56</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[4,2] 1.4389322 1.047533    62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[6,2] 0.7300651 1.053913    53</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[4,3] 3.0609883 1.004614   480</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[5,4] 1.5749445 1.075537   180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $dev_o</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    mean         sd         2.5%        25%       50%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[1,1]  1.107040058 1.57831548 0.0009823375 0.11091287 0.4781435</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[2,1]  1.146164463 1.44873326 0.0014000551 0.12282831 0.5542842</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[3,1]  0.990940231 1.30021632 0.0011676260 0.11875780 0.4807395</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[4,1]  0.947903384 1.30168795 0.0008730100 0.09516033 0.4570167</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[5,1]  1.175389868 1.68317760 0.0017765276 0.11736566 0.5330659</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[6,1]  0.936970537 1.27867011 0.0008342346 0.09347642 0.4283133</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[7,1]  0.791683971 1.09792578 0.0010688247 0.08725034 0.3837317</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[8,1]  0.006650474 0.08517237 0.0000000000 0.00000000 0.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[9,1]  0.932241411 1.20697780 0.0012185890 0.12372435 0.4656664</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[10,1] 0.856281227 1.17814573 0.0011398559 0.08951778 0.4045603</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[11,1] 0.882537905 1.20941678 0.0009043930 0.09407181 0.4006361</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[1,2]  1.025363162 1.40367270 0.0009582563 0.10562298 0.4871920</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[2,2]  1.192630071 1.58340226 0.0011769844 0.12166669 0.5907427</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[3,2]  1.065254940 1.53286346 0.0009650109 0.10035176 0.4703706</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[4,2]  0.991232494 1.35862769 0.0008661519 0.10244721 0.4568083</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[5,2]  1.099404010 1.52210959 0.0010901748 0.10734268 0.4933962</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[6,2]  0.989030459 1.34148047 0.0011079140 0.09118006 0.4739896</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[7,2]  0.665863557 1.00170445 0.0008875810 0.06310560 0.2916460</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[8,2]  0.014211414 0.20911109 0.0000000000 0.00000000 0.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[9,2]  1.057559925 1.46801652 0.0015712142 0.11545529 0.4862288</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[10,2] 1.308820232 1.57868802 0.0015488284 0.15786761 0.6876635</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[11,2] 1.297508418 1.58535029 0.0020417721 0.17073699 0.7232275</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[9,3]  1.593474730 2.06684177 0.0022246959 0.20746705 0.8137173</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[10,3] 1.067013772 1.47412513 0.0008420932 0.10278773 0.4800596</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[11,3] 0.776510011 1.05977767 0.0011063497 0.08377940 0.3778492</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      75%      97.5%     Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[1,1]  1.430212e+00 5.67385315 1.004064   710</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[2,1]  1.645218e+00 5.20046046 1.014701   160</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[3,1]  1.348192e+00 4.80891717 1.022056   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[4,1]  1.224212e+00 4.68046292 1.004800   510</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[5,1]  1.572729e+00 5.74072273 1.013874   150</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[6,1]  1.297420e+00 4.35652688 1.009906   210</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[7,1]  1.047399e+00 4.09376667 1.013163   170</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[8,1]  4.263256e-14 0.02269548 1.086468  1800</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[9,1]  1.282151e+00 4.47761956 1.006370   660</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[10,1] 1.132904e+00 4.14626453 1.002172  2700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[11,1] 1.201057e+00 4.43042192 1.003467   780</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[1,2]  1.366971e+00 5.14886603 1.011193   310</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[2,2]  1.629352e+00 5.79993852 1.002073  2700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[3,2]  1.411343e+00 5.60052803 1.010000   210</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[4,2]  1.321496e+00 4.80779598 1.000829  2700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[5,2]  1.460427e+00 5.69103172 1.010252   210</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[6,2]  1.368339e+00 4.86812381 1.022581    97</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[7,2]  8.264487e-01 3.50840065 1.005409   400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[8,2]  5.329071e-14 0.03286379 1.192601  1400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[9,2]  1.408689e+00 5.34894139 1.009634   230</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[10,2] 1.898465e+00 5.53554689 1.054216    43</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[11,2] 1.871487e+00 5.61209811 1.026588    82</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[9,3]  2.125650e+00 7.61378424 1.049250    47</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[10,3] 1.439107e+00 5.30695276 1.000670  2700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[11,3] 1.065227e+00 3.75696485 1.002702  2700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $hat_par</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    mean         sd       2.5%       25%       50%       75%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[1,1]  26.085313 4.62768628 17.4281754 22.948059 25.963041 29.112709</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[2,1]   2.596467 1.48356262  0.3401807  1.487981  2.430481  3.489093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[3,1]   9.717840 1.29326167  6.7804728  8.936292  9.920199 10.742327</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[4,1]  22.987946 2.43314055 17.8361156 21.353007 23.156466 24.766696</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[5,1]   7.653870 2.17814483  3.6572915  6.074011  7.594760  9.174092</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[6,1]   3.348747 0.92394604  1.5797368  2.688044  3.388004  3.993738</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[7,1]   2.582497 1.15064477  0.7976948  1.763037  2.390118  3.252818</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[8,1]  11.996749 0.04073178 11.9886576 12.000000 12.000000 12.000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[9,1]  16.022855 2.53817758 10.9370310 14.223101 16.140722 17.746424</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[10,1]  3.636425 1.29986814  1.4223246  2.696413  3.533084  4.487354</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[11,1]  5.083310 1.40113922  2.6419448  4.064763  4.995560  6.014382</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[1,2]  38.680313 5.17280391 28.9757578 35.037928 38.490531 42.238875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[2,2]   4.460453 1.86566094  1.5519778  3.083979  4.208230  5.544646</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[3,2]   8.256487 1.32557207  5.3137930  7.451619  8.404180  9.254981</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[4,2]  15.944904 2.48098585 10.8672891 14.256431 16.065637 17.691886</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[5,2]   3.335769 1.63934747  0.7238524  2.124105  3.100368  4.421436</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[6,2]   3.578459 0.93288529  1.5870749  2.970697  3.613881  4.283235</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[7,2]   2.294017 1.10838123  0.6647912  1.463456  2.128112  2.939536</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[8,2]  14.993233 0.09314672 14.9835771 15.000000 15.000000 15.000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[9,2]  17.109169 2.73104249 11.8120977 15.261071 17.129839 18.986087</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[10,2]  3.181551 1.28142973  1.0154643  2.172607  3.102994  4.073798</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[11,2]  6.636849 1.47802951  3.8666177  5.575301  6.590338  7.686725</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[9,3]  20.811154 2.37424391 15.6742413 19.377066 20.967503 22.436234</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[10,3]  8.132316 1.42553924  5.1245740  7.150518  8.243782  9.160238</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[11,3] 11.410621 1.46746835  8.1835281 10.491235 11.549195 12.488638</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   97.5%     Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[1,1]  35.681630 1.027130    81</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[2,1]   5.930587 1.459664     9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[3,1]  11.570120 1.027842   180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[4,1]  27.249395 1.031694    76</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[5,1]  12.029169 1.066499    49</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[6,1]   5.085285 1.026443   120</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[7,1]   5.241555 1.052508    44</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[8,1]  12.000000 1.086468  1800</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[9,1]  20.844709 1.031165    76</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[10,1]  6.430548 1.116048    23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[11,1]  8.120397 1.042243    73</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[1,2]  49.266246 1.007403   290</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[2,2]   8.783652 1.110502    23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[3,2]  10.337735 1.014492  1200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[4,2]  20.578916 1.010310   200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[5,2]   6.982143 1.045445    67</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[6,2]   5.210343 1.029418   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[7,2]   4.911454 1.055555    41</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[8,2]  15.000000 1.192601  1400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[9,2]  22.463146 1.037863    59</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[10,2]  5.771094 1.125035    21</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[11,2]  9.552517 1.067082    35</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[9,3]  25.099289 1.146647    19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[10,3] 10.636220 1.010941   190</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[11,3] 13.848883 1.015002   280</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $leverage_o</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  1.067486968  0.978121960  0.946406579  0.947880933  1.149299372</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6]  0.642846478  0.715348156 -0.002325835  0.805085185  0.802830361</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11]  0.529151700  1.007916752  1.113078114  1.033938895  0.990767287</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16]  1.056227587  0.761701328  0.618456826  0.012866409  0.912755513</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [21]  0.632416372  0.719498821  0.802361949  0.766456192  0.725862981</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $sign_dev_o</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  1 -1  1  1  1  1  1 -1 -1  1 -1 -1  1 -1  1 -1 -1 -1 -1 -1 -1  1  1  1 -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $tau</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         mean       sd       2.5%      25%       50%       75%    97.5%     Rhat</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> tau 0.613242 0.374655 0.05232376 0.306551 0.5723701 0.8855623 1.437918 1.149801</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> tau    67</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $model_assessment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        DIC       pD      dev</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 43.65412 19.73644 23.91768</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $obs_comp</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2vs1" "3vs1" "4vs1" "5vs1" "4vs2" "6vs2" "4vs3" "5vs4"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $jagsfit</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Inference for Bugs model at "41", fit using jags,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3 chains, each with 1000 iterations (first 100 discarded)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  n.sims = 2700 iterations saved</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               mu.vect sd.vect   2.5%    25%    50%    75%  97.5%  Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[2,1]         0.632   0.801 -0.981  0.191  0.626  1.081  2.319 1.034   690</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[3,1]         0.272   0.707 -1.072 -0.148  0.243  0.651  1.892 1.134    23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[4,1]         0.523   0.583 -0.575  0.099  0.521  0.936  1.573 1.405     9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[5,1]         1.663   0.698  0.319  1.241  1.647  2.066  3.091 1.046    56</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[4,2]        -0.513   0.942 -2.360 -1.110 -0.520  0.066  1.439 1.048    62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[6,2]        -1.094   1.108 -3.505 -1.765 -0.968 -0.324  0.730 1.054    53</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[4,3]         1.016   1.011 -1.193  0.467  1.077  1.594  3.061 1.005   480</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> EM[5,4]        -0.473   1.143 -3.003 -1.191 -0.385  0.293  1.575 1.076   180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[1,1]      1.107   1.578  0.001  0.111  0.478  1.430  5.674 1.004   710</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[2,1]      1.146   1.449  0.001  0.123  0.554  1.645  5.200 1.015   160</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[3,1]      0.991   1.300  0.001  0.119  0.481  1.348  4.809 1.022   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[4,1]      0.948   1.302  0.001  0.095  0.457  1.224  4.680 1.005   510</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[5,1]      1.175   1.683  0.002  0.117  0.533  1.573  5.741 1.014   150</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[6,1]      0.937   1.279  0.001  0.093  0.428  1.297  4.357 1.010   210</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[7,1]      0.792   1.098  0.001  0.087  0.384  1.047  4.094 1.013   170</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[8,1]      0.007   0.085  0.000  0.000  0.000  0.000  0.023 1.086  1800</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[9,1]      0.932   1.207  0.001  0.124  0.466  1.282  4.478 1.006   660</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[10,1]     0.856   1.178  0.001  0.090  0.405  1.133  4.146 1.002  2700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[11,1]     0.883   1.209  0.001  0.094  0.401  1.201  4.430 1.003   780</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[1,2]      1.025   1.404  0.001  0.106  0.487  1.367  5.149 1.011   310</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[2,2]      1.193   1.583  0.001  0.122  0.591  1.629  5.800 1.002  2700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[3,2]      1.065   1.533  0.001  0.100  0.470  1.411  5.601 1.010   210</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[4,2]      0.991   1.359  0.001  0.102  0.457  1.321  4.808 1.001  2700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[5,2]      1.099   1.522  0.001  0.107  0.493  1.460  5.691 1.010   210</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[6,2]      0.989   1.341  0.001  0.091  0.474  1.368  4.868 1.023    97</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[7,2]      0.666   1.002  0.001  0.063  0.292  0.826  3.508 1.005   400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[8,2]      0.014   0.209  0.000  0.000  0.000  0.000  0.033 1.193  1400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[9,2]      1.058   1.468  0.002  0.115  0.486  1.409  5.349 1.010   230</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[10,2]     1.309   1.579  0.002  0.158  0.688  1.898  5.536 1.054    43</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[11,2]     1.298   1.585  0.002  0.171  0.723  1.871  5.612 1.027    82</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[9,3]      1.593   2.067  0.002  0.207  0.814  2.126  7.614 1.049    47</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[10,3]     1.067   1.474  0.001  0.103  0.480  1.439  5.307 1.001  2700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dev.o[11,3]     0.777   1.060  0.001  0.084  0.378  1.065  3.757 1.003  2700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[1,1]   26.085   4.628 17.428 22.948 25.963 29.113 35.682 1.027    81</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[2,1]    2.596   1.484  0.340  1.488  2.430  3.489  5.931 1.460     9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[3,1]    9.718   1.293  6.780  8.936  9.920 10.742 11.570 1.028   180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[4,1]   22.988   2.433 17.836 21.353 23.156 24.767 27.249 1.032    76</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[5,1]    7.654   2.178  3.657  6.074  7.595  9.174 12.029 1.066    49</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[6,1]    3.349   0.924  1.580  2.688  3.388  3.994  5.085 1.026   120</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[7,1]    2.582   1.151  0.798  1.763  2.390  3.253  5.242 1.053    44</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[8,1]   11.997   0.041 11.989 12.000 12.000 12.000 12.000 1.086  1800</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[9,1]   16.023   2.538 10.937 14.223 16.141 17.746 20.845 1.031    76</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[10,1]   3.636   1.300  1.422  2.696  3.533  4.487  6.431 1.116    23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[11,1]   5.083   1.401  2.642  4.065  4.996  6.014  8.120 1.042    73</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[1,2]   38.680   5.173 28.976 35.038 38.491 42.239 49.266 1.007   290</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[2,2]    4.460   1.866  1.552  3.084  4.208  5.545  8.784 1.111    23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[3,2]    8.256   1.326  5.314  7.452  8.404  9.255 10.338 1.014  1200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[4,2]   15.945   2.481 10.867 14.256 16.066 17.692 20.579 1.010   200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[5,2]    3.336   1.639  0.724  2.124  3.100  4.421  6.982 1.045    67</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[6,2]    3.578   0.933  1.587  2.971  3.614  4.283  5.210 1.029   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[7,2]    2.294   1.108  0.665  1.463  2.128  2.940  4.911 1.056    41</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[8,2]   14.993   0.093 14.984 15.000 15.000 15.000 15.000 1.193  1400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[9,2]   17.109   2.731 11.812 15.261 17.130 18.986 22.463 1.038    59</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[10,2]   3.182   1.281  1.015  2.173  3.103  4.074  5.771 1.125    21</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[11,2]   6.637   1.478  3.867  5.575  6.590  7.687  9.553 1.067    35</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[9,3]   20.811   2.374 15.674 19.377 20.968 22.436 25.099 1.147    19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[10,3]   8.132   1.426  5.125  7.151  8.244  9.160 10.636 1.011   190</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hat.par[11,3]  11.411   1.467  8.184 10.491 11.549 12.489 13.849 1.015   280</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> m.tau           0.773   0.526  0.054  0.334  0.710  1.109  2.024 1.044   110</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> resdev.o[1]     2.132   2.186  0.064  0.585  1.404  2.897  8.118 1.006   350</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> resdev.o[2]     2.339   2.006  0.085  0.805  1.775  3.360  7.377 1.012   180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> resdev.o[3]     2.056   2.011  0.054  0.593  1.448  2.843  7.427 1.082    31</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> resdev.o[4]     1.939   1.888  0.047  0.564  1.321  2.721  7.131 1.004   810</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> resdev.o[5]     2.275   2.215  0.060  0.690  1.598  3.079  8.265 1.037    64</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> resdev.o[6]     1.926   1.809  0.065  0.669  1.474  2.569  6.962 1.076    32</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> resdev.o[7]     1.458   1.565  0.034  0.433  0.979  1.925  5.782 1.057    46</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> resdev.o[8]     0.021   0.264  0.000  0.000  0.000  0.000  0.068 1.168  1200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> resdev.o[9]     3.583   2.805  0.284  1.499  2.846  4.967 10.673 1.050    46</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> resdev.o[10]    3.232   2.353  0.310  1.508  2.693  4.399  8.927 1.039    57</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> resdev.o[11]    2.957   2.174  0.277  1.403  2.485  3.958  8.623 1.028    93</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> tau             0.613   0.375  0.052  0.307  0.572  0.886  1.438 1.150    67</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> totresdev.o    23.918   6.757 12.642 19.027 23.366 28.034 39.241 1.036    62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> For each parameter, n.eff is a crude measure of effective sample size,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> and Rhat is the potential scale reduction factor (at convergence, Rhat=1).</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $data</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                study t1 t2 t3 r1 r2 r3 m1 m2 m3  n1  n2 n3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 356    Richard, 2012  1  3  4 15 16 23  6  8  4  39  42 34</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 357     Barone, 2010  1  2 NA 27 38 NA 19 20 NA 152 144 NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 358 Weinbtraub, 2010  1  3 NA  2  5 NA  6  6 NA  27  28 NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 359      Menza, 2009  1  4  5  4  2  9  6  7  5  17  18 17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 360      Devos, 2008  1  4  5  4  8 11  0  2  1  16  15 17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 361   Antonini, 2006  4  5 NA 10  8 NA  4  4 NA  16  15 NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 362     Barone, 2006  2  4 NA 23 16 NA  1  7 NA  33  34 NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 363  Rektorova, 2003  2  6 NA  8  3 NA  3  2 NA  22  19 NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 364  Leentjens, 2003  1  4 NA  4  3 NA  0  0 NA   6   6 NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 365    Wermuth, 1998  1  4 NA  3  2 NA  2  5 NA  19  18 NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 366      Rabey, 1996  4  5 NA 12 15 NA  8 12 NA  20  27 NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "RE"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $measure</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "OR"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $assumption</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "IDE-ARM"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $phi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $m_tau</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            mean        sd       2.5%      25%       50%      75%    97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> m.tau 0.7729702 0.5259324 0.05350127 0.333686 0.7102544 1.108712 2.024005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Rhat n.eff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> m.tau 1.044287   110</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $frail_comp</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "4vs3"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.liu2013"</span><span class="op">)</span>
+
+<span class="co"># Read results from 'run_model' (using the default arguments)</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_liu.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># \donttest{</span>
+<span class="co"># Run random-effects unrelated mean effects model</span>
+<span class="co"># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span>
+<span class="fu">run_ume</span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>,
+        n_chains <span class="op">=</span> <span class="fl">3</span>,
+        n_iter <span class="op">=</span> <span class="fl">1000</span>,
+        n_burnin <span class="op">=</span> <span class="fl">100</span>,
+        n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<span class="co"># }</span>
+
 </code></pre></div>
     </div>
   </div>

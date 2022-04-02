@@ -21,7 +21,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -101,7 +101,7 @@ the specification of the columns.</p></dd>
 <dt>measure</dt>
 <dd><p>Character string indicating the effect measure with values
 <code>"MD"</code>, <code>"SMD"</code>, or <code>"ROM"</code> for the mean difference,
-standardised mean difference and ratio of means, respectively.</p></dd>
+standardised mean difference, and ratio of means, respectively.</p></dd>
 <dt>mean_value</dt>
 <dd><p>A numeric value for the mean of the normal distribution of
 the informative missingness parameter. The same value is considered for all
@@ -112,7 +112,7 @@ means, the mean value is defined in the logarithmic scale.</p></dd>
 <dd><p>A positive non-zero number for the variance of the normal
 distribution of the informative missingness parameter. When the
 <code>measure</code> is <code>"MD"</code>, or <code>"SMD"</code> the default argument is 1;
-When the <code>measure</code> is <code>"ROM"</code> the default argument is 0.04. The
+when the <code>measure</code> is <code>"ROM"</code> the default argument is 0.04. The
 same value is considered for all trial-arms of the dataset.</p></dd>
 <dt>rho</dt>
 <dd><p>A numeric value in the interval [-1, 1] that indicates the
@@ -133,12 +133,12 @@ parameters.</p></dd>
 </dl></div>
     <div id="details">
     <h2>Details</h2>
-    <p>The <code>taylor_continuous</code> function is found in the
+    <p>The <code>taylor_continuous</code> function is integrated in the
   <code><a href="unrelated_effects_plot.html">unrelated_effects_plot</a></code> function. The latter uses the
   the <code><a href="https://rdrr.io/pkg/netmeta/man/pairwise.html" class="external-link">pairwise</a></code> function from the package
   <a href="https://CRAN.R-project.org/package=netmeta" class="external-link">netmeta</a>
-  to transform the dataset from the wide arm-based format into the long-arm
-  based format (see, 'Arguments' for <code>data</code> in
+  to transform the dataset from the wide arm-based format into the long
+  arm-based format (see, 'Arguments' for <code>data</code> in
   <code><a href="unrelated_effects_plot.html">unrelated_effects_plot</a></code>).</p>
     </div>
     <div id="references">
