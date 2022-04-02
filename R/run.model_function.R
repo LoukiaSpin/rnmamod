@@ -396,7 +396,8 @@ run_model <- function(data,
     "IDE-ARM"
   } else if ((missing(assumption) || assumption != "IND-UNCORR") &
              min(na.omit(unlist(item$I))) == 0) {
-    message("The 'IND-UNCORR' has been used, instead.")
+    aa <- "No or partially extracted missing participants:"
+    message(paste(aa, "the 'IND-UNCORR' has been used."))
     "IND-UNCORR"
   } else {
     assumption

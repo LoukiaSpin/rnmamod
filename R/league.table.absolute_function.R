@@ -3,7 +3,7 @@
 #' @description
 #'   Provides a league table of the estimated odds ratio, and risk difference
 #'   per 1000 participants for all possible comparisons of interventions in the
-#'   network. The diagonal of the table presents the absolute risk for each
+#'   network. The main diagonal of the table presents the absolute risk for each
 #'   intervention in the network. \code{league_table_absolute} can be used for a
 #'   random-effects or fixed-effect network meta-analysis.
 #'   It is applied for one binary outcome only.
@@ -12,13 +12,17 @@
 #'   See 'Value' in \code{\link{run_model}}.
 #' @param drug_names A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data} of
-#'   \code{\link{run_model}}. If the argument \code{drug_names} is not
-#'   defined, the interventions are ordered as they appear in \code{data}.
+#'   \code{\link{run_model}}.
+#' @param show A vector of at least three character strings that refer to the
+#'   names of the interventions \emph{exactly} as defined in \code{drug_names}.
+#'   Then, the league table will be created for these interventions only.
+#'   If \code{show} is not defined, the league table will present all
+#'   interventions as defined in \code{drug_names}.
 #'
 #' @return A league table showing the posterior estimate and 95\% credible
-#'   interval of the odds ratio (upper diagonals), risk difference per 1000
-#'   participants (lower diagonals), and absolute risks per 1000 participants
-#'   (diagonal).
+#'   interval of the odds ratio (upper off-diagonals), risk difference per 1000
+#'   participants (lower off-diagonals), and absolute risks per 1000
+#'   participants (main diagonal).
 #'
 #' @details The user must define the argument \code{measure = "RD"} in
 #'   \code{\link{run_model}}; otherwise, the function will be stopped and an
@@ -27,13 +31,14 @@
 #'   The rows and columns of the league table display the names of the
 #'   interventions  sorted by decreasing order from the best to the worst
 #'   based on their SUCRA value (Salanti et al., 2011) for the odds ratio. The
-#'   upper diagonals contain the posterior mean and 95\% credible interval of
-#'   the odds ratio, the lower diagonals contain the posterior mean and 95\%
-#'   credible interval of the risk difference (per 1000 participants), and the
-#'   diagonal comprises the posterior median and 95\% credible interval of the
-#'   absolute risks (per 1000 participants) of the  corresponding interventions.
-#'   The reference intervention of the network (which the baseline risk has been
-#'   selected for) is indicated in the diagonal with a homonymous label.
+#'   upper off-diagonals contain the posterior median and 95\% credible interval
+#'   of the odds ratio, the lower off-diagonals contain the posterior median and
+#'   95\% credible interval of the risk difference (per 1000 participants), and
+#'   the main diagonal comprises the posterior median and 95\% credible interval
+#'   of the absolute risks (per 1000 participants) of the  corresponding
+#'   interventions. The reference intervention of the network (which the
+#'   baseline risk has been selected for) is indicated in the main diagonal with
+#'   a homonymous label.
 #'
 #'   Comparisons between interventions should be read from left to right.
 #'   Results that indicate strong evidence in favor of the row-defining
@@ -75,7 +80,7 @@
 #' Abstracts of the Global Evidence Summit, Cape Town, South Africa.
 #' \emph{Cochrane Database of Systematic Reviews} 2017;\bold{9}(Suppl 1):1891.
 #'
-league_table_absolute <- function(full, drug_names) {
+league_table_absolute <- function(full, drug_names, show = NULL) {
 
 
   if ((full$type != "nma") || is.null(full$type)) {
@@ -87,24 +92,63 @@ league_table_absolute <- function(full, drug_names) {
     stop("The argument 'measure' in 'run_model' must be 'RD'", call. = FALSE)
   }
 
-  drug_names <- if (missing(drug_names)) {
-    aa <- "The argument 'drug_names' has not been defined."
-    bb <- "The intervention ID, as specified in 'data' is used, instead."
-    message(paste0(aa, bb))
-    as.character(seq_len(length(full$SUCRA[, 1])))
+  drug_names0 <- if (missing(drug_names)) {
+    stop("The argument 'drug_names' has not been defined.", call. = FALSE)
   } else {
     drug_names
   }
 
-  if (length(drug_names) < 3) {
-    stop("This function is *not* relevant for a pairwise meta-analysis",
-         call. = F)
+  show0 <- if (length(unique(!is.element(show, drug_names0))) > 1) {
+    stop("All elements of the argument 'show' must be found in 'drug_names'",
+         call. = FALSE)
+  } else if (length(unique(!is.element(show, drug_names0))) == 1 &
+             length(show) < 3) {
+    stop("The argument 'show' must have length greater than 2.", call. = FALSE)
+  } else if (length(unique(!is.element(show, drug_names0))) == 1 &
+             length(show) > 2) {
+    cbind(combn(show, 2)[2,], combn(show, 2)[1,])
   }
 
-  par_or <- full$EM_LOR
-  par_rd <- full$EM
-  sucra <- full$SUCRA[, 1]
-  abs_risk <- full$abs_risk
+  drug_names <- if (is.null(show0)) {
+    drug_names0
+  } else {
+    subset(drug_names0, is.element(drug_names0, show))
+  }
+
+  if (length(drug_names0) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis",
+         call. = F)
+  } else {
+    message("Tips to read the table: row versus column.")
+  }
+
+  select <- cbind(combn(drug_names0, 2)[2, ], combn(drug_names0, 2)[1, ])
+  par_or <- if (is.null(show0)) {
+    full$EM_LOR
+  } else {
+    na.omit(subset(data.frame(full$EM_LOR, select),
+                   is.element(select[, 1], show) &
+                     is.element(select[, 2], show)))
+  }
+  par_rd <- if (is.null(show0)) {
+    full$EM
+  } else {
+    na.omit(subset(data.frame(full$EM, select),
+                   is.element(select[, 1], show) &
+                     is.element(select[, 2], show)))
+  }
+  sucra <- if (is.null(show0)) {
+    full$SUCRA[, 1]
+  } else {
+    na.omit(subset(data.frame(full$SUCRA[, 1], drug_names0),
+                   is.element(drug_names0, show)))[, 1]
+  }
+  abs_risk <- if (is.null(show0)) {
+    full$abs_risk
+  } else {
+    na.omit(subset(data.frame(full$abs_risk, drug_names0),
+                   is.element(drug_names0, show)))
+  }
   nt <- length(sucra)
 
   # Source:https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html

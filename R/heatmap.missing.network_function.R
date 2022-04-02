@@ -7,9 +7,7 @@
 #' @param data A data-frame of a one-trial-per-row format containing arm-level
 #'   data of each trial. See 'Format' in \code{\link{run_model}}.
 #' @param drug_names A vector of labels with the name of the interventions in
-#'   the order they appear in the argument \code{data}. If the argument
-#'   \code{drug_names} is not defined, the order of the interventions as they
-#'   appear in \code{data} is used, instead.
+#'   the order they appear in the argument \code{data}.
 #'
 #' @return A heatmap with the proportion of missing participants in each
 #'   intervention and observed comparison in the network. Each cell annotates
@@ -85,11 +83,7 @@ heatmap_missing_network <- function(data, drug_names) {
 
   # Condition when 'drug_names' is not defined
   drug_names <- if (missing(drug_names)) {
-    aa <- "The argument 'drug_names' has not been defined."
-    bb <- "The intervention ID, as specified in argument 'data' is"
-    cc <- "used, instead."
-    message(paste(aa, bb, cc))
-    as.character(1:dat$nt)
+    stop("The argument 'drug_names' has not been defined.", call. = FALSE)
   } else {
     drug_names
   }

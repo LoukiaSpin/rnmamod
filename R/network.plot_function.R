@@ -6,9 +6,7 @@
 #' @param data A data-frame of a one-trial-per-row format containing arm-level
 #'   data of each trial. See 'Format' in \code{\link{run_model}}.
 #' @param drug_names A vector of labels with the name of the interventions in
-#'   the order they appear in the argument \code{data}. If \code{drug_names} is
-#'   not defined, the order of the interventions as they appear in \code{data}
-#'   is used, instead.
+#'   the order they appear in the argument \code{data}.
 #' @param save_xls Logical to indicate whether to export the tabulated results
 #'   to an 'xlsx' file (via the \code{\link[writexl:write_xlsx]{write_xlsx}}
 #'   function of the R-package
@@ -117,11 +115,7 @@ netplot <- function(data, drug_names, save_xls, ...) {
   }
 
   drug_names <- if (missing(drug_names)) {
-    aa <- "The argument 'drug_names' has not been defined."
-    bb <- "The intervention ID, as specified in argument 'data' is"
-    cc <- "used, instead."
-    message(paste(aa, bb, cc))
-    as.character(1:nt)
+    stop("The argument 'drug_names' has not been defined.", call. = FALSE)
   } else {
     drug_names
   }

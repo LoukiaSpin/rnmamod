@@ -17,7 +17,9 @@
  * Function __league_table_absolute__:
    - (only for binary outcome) it presents the absolute risks per 1000 
    participants in main diagonal, the odds ratio on the upper off-diagonals, and 
-   the risk difference per 1000 participants in the lower off-diagonals.
+   the risk difference per 1000 participants in the lower off-diagonals;
+   - allow the user to select the interventions to present via the argument 
+   _show_ (ideal for very large networks that make the league table cluttered).
  * Functions __league_heatmap__ and __league_heatmap_pred__:
    - allow the user to select the interventions to present via the argument 
    _show_ (ideal for very large networks that make the league table cluttered);
@@ -25,13 +27,9 @@
    (i.e. via run_model or run_metareg) or the results of two models on the same 
    outcome (applicable for: (i) run_model versus run_metareg, and (ii) run_model 
    versus run_series_meta).
- * Function __series_meta_plot__:
-   - presents the extent of heterogeneity in the forest plot of tau using 
+ * Functions __series_meta_plot__ and __nodesplit_plot__:
+   - present the extent of heterogeneity in the forest plot of tau using 
    different colours for low, reasonable, fairly high, and fairly extreme tau 
    (the classification has been suggested by Spiegelhalter et al., 2004; 
    ISBN 0471499757).
- * Function __nodesplit_plot__:
-   - in line with the function series_meta_plot, it presents the extent of
-   heterogeneity in the forest plot of tau using different colours for low, 
-   reasonable, fairly high, and fairly extreme tau (the classification has been 
-   suggested by Spiegelhalter et al., 2004; ISBN 0471499757).
+

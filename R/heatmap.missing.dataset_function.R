@@ -6,13 +6,9 @@
 #' @param data A data-frame of a one-trial-per-row format containing arm-level
 #'   data of each trial. See 'Format' in \code{\link{run_model}}.
 #' @param trial_names A vector of labels with the name of the trials in the
-#'   order they appear in the argument \code{data}. If \code{trial_names} is not
-#'   defined, the order of the trials as they appear in \code{data} is used,
-#'   instead.
+#'   order they appear in the argument \code{data}.
 #' @param drug_names A vector of labels with the name of the interventions in
-#'   the order they appear in the argument \code{data}. If \code{drug_names} is
-#'   not defined, the order of the interventions as they appear in \code{data}
-#'   is used, instead.
+#'   the order they appear in the argument \code{data}.
 #'
 #' @return A heatmap presenting the proportion of missing participants in each
 #'   trial-arm of the dataset. The columns and the rows of the heatmap
@@ -85,20 +81,13 @@ heatmap_missing_dataset <- function(data, trial_names, drug_names) {
   }
 
   trial_names <- if (missing(trial_names)) {
-    aa <- "The argument 'trial_names' has not been defined."
-    bb <- "The trial ID, as specified in the argument 'data' is used, instead."
-    message(paste(aa, bb))
-    as.character(1:ns)
+    stop("The argument 'trial_names' has not been defined.", call. = FALSE)
   } else {
     trial_names
   }
 
   drug_names <- if (missing(drug_names)) {
-    aa <- "The argument 'drug_names' has not been defined."
-    bb <- "The intervention ID, as specified in argument 'data' is"
-    cc <- "used, instead."
-    message(paste(aa, bb, cc))
-    as.character(1:nt)
+    stop("The argument 'drug_names' has not been defined.", call. = FALSE)
   } else {
     drug_names
   }
