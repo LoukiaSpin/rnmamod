@@ -80,7 +80,6 @@
 #'   relevant in non-star-shaped networks.
 #'
 #' @author {Loukia M. Spineli}
-#' @export
 #'
 #' @seealso \code{\link{heatmap_missing_dataset}},
 #'   \code{\link{heatmap_missing_network}},
@@ -90,6 +89,7 @@
 #'   \code{\link{run_ume}}, \code{\link{prepare_model}},
 #'   \code{\link{prepare_nodesplit}}, \code{\link{prepare_ume}}
 #'
+#' @export
 data_preparation <- function(data, measure) {
 
   # Intervention studied in each arm of every trial
@@ -251,9 +251,9 @@ data_preparation <- function(data, measure) {
         m[i, k]
       }
 
-      #' Matrix that indicates with -1 the trial-arms with non-reported missing
-      #' participants. It is used by the following functions:
-      #' 'heatmap_missing_dataset' and 'heatmap_missing_network'.
+      # Matrix that indicates with -1 the trial-arms with non-reported missing
+      # participants. It is used by the following functions:
+      # 'heatmap_missing_dataset' and 'heatmap_missing_network'.
       m_pseudo[i, k] <- if (!is.na(t[i, k]) & is.na(m[i, k])) {
         -1
       } else if (is.na(m[i, k]) & is.na(N[i, k])) {

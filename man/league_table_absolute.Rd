@@ -84,17 +84,6 @@ Guyatt GH, et al. Obtaining absolute effect estimates to facilitate shared
 decision making in the context of multiple-treatment comparisons.
 Abstracts of the Global Evidence Summit, Cape Town, South Africa.
 \emph{Cochrane Database of Systematic Reviews} 2017;\bold{9}(Suppl 1):1891.
-
-Matrix of lower and upper bound of effect measure (all possible comparisons)
-Lower triangle
-Symmetric matrix for effect measure and its bounds
-after ordering rows and columns from the best to the worst intervention
-ODDS RATIO
-Odds ratio in upper diagonal, risk difference in lower diagonal
-Spot the statistically significant comparisons
-ODDS RATIO
-Absolute risks presented in 1000 and rounded up to 0 decimals
-Ordered according to their SUCRA value (from the best to the worst)
 }
 \seealso{
 \code{\link{run_model}}

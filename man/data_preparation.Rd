@@ -97,10 +97,6 @@ A list of data-frames on the following elements to be passed
   \code{\link{run_nodesplit}}, \code{\link{run_sensitivity}},
   \code{\link{run_ume}}, \code{\link{prepare_model}},
   \code{\link{prepare_nodesplit}}, \code{\link{prepare_ume}}
-
-Matrix that indicates with -1 the trial-arms with non-reported missing
-participants. It is used by the following functions:
-'heatmap_missing_dataset' and 'heatmap_missing_network'.
 }
 \author{
 {Loukia M. Spineli}

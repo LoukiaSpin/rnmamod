@@ -66,8 +66,6 @@
 #'
 #' @seealso \code{\link{run_model}}
 #'
-#' @export
-#'
 #' @references
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 #' for presenting results from multiple-treatment meta-analysis: an overview and
@@ -80,6 +78,7 @@
 #' Abstracts of the Global Evidence Summit, Cape Town, South Africa.
 #' \emph{Cochrane Database of Systematic Reviews} 2017;\bold{9}(Suppl 1):1891.
 #'
+#' @export
 league_table_absolute <- function(full, drug_names, show = NULL) {
 
 
@@ -189,8 +188,8 @@ league_table_absolute <- function(full, drug_names, show = NULL) {
   # Incorporate upper triangle
   point_rd1 <- reflect_triangle(point_rd0, from = "lower")
 
-  #' Matrix of lower and upper bound of effect measure (all possible comparisons)
-  #' Lower triangle
+  # Matrix of lower and upper bound of effect measure (all possible comparisons)
+  # Lower triangle
   lower_rd0[lower.tri(lower_rd0, diag = FALSE)] <- par_rd[, 3]
   upper_rd0[lower.tri(upper_rd0, diag = FALSE)] <- par_rd[, 7]
   # Incorporate upper triangle
@@ -199,9 +198,9 @@ league_table_absolute <- function(full, drug_names, show = NULL) {
   upper_rd1 <- reflect_triangle(lower_rd0, from = "lower")
   upper_rd1[lower.tri(upper_rd1, diag = FALSE)] <- par_rd[, 7]
 
-  #' Symmetric matrix for effect measure and its bounds
-  #' after ordering rows and columns from the best to the worst intervention
-  #' ODDS RATIO
+  # Symmetric matrix for effect measure and its bounds
+  # after ordering rows and columns from the best to the worst intervention
+  # ODDS RATIO
   point_or <- round(exp(point_or1[drug_order_col, drug_order_row]), 2)
   lower_or <- round(exp(lower_or1[drug_order_col, drug_order_row]), 2)
   upper_or <- round(exp(upper_or1[drug_order_col, drug_order_row]), 2)
@@ -210,7 +209,7 @@ league_table_absolute <- function(full, drug_names, show = NULL) {
   lower_rd <- lower_rd1[drug_order_col, drug_order_row]
   upper_rd <- upper_rd1[drug_order_col, drug_order_row]
 
-  #' Odds ratio in upper diagonal, risk difference in lower diagonal
+  # Odds ratio in upper diagonal, risk difference in lower diagonal
   point <- round(point_rd*1000, 0)
   lower <- round(lower_rd*1000, 0)
   upper <- round(upper_rd*1000, 0)
@@ -221,8 +220,8 @@ league_table_absolute <- function(full, drug_names, show = NULL) {
   upper[upper.tri(upper, diag = FALSE)] <- upper_or[upper.tri(upper_or,
                                                               diag = FALSE)]
 
-  #' Spot the statistically significant comparisons
-  #' ODDS RATIO
+  # Spot the statistically significant comparisons
+  # ODDS RATIO
   sign_or <- ifelse(upper_or < 1 | lower_or > 1, 1, 0)
   sign_or[is.na(sign_or)] <- 1
   # RISK DIFFERENCE
@@ -234,8 +233,8 @@ league_table_absolute <- function(full, drug_names, show = NULL) {
                                                                  diag = FALSE)]
   signif_status <- melt(sign_rd, na.rm = FALSE)[3]
 
-  #' Absolute risks presented in 1000 and rounded up to 0 decimals
-  #' Ordered according to their SUCRA value (from the best to the worst)
+  # Absolute risks presented in 1000 and rounded up to 0 decimals
+  # Ordered according to their SUCRA value (from the best to the worst)
   point_abs_risk <- round(abs_risk[order(-sucra), 5]*1000, 0)
   lower_abs_risk <- round(abs_risk[order(-sucra), 3]*1000, 0)
   upper_abs_risk <- round(abs_risk[order(-sucra), 7]*1000, 0)
