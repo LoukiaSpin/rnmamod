@@ -644,7 +644,7 @@ league_heatmap_pred <- function(full1,
                                       colour = "black"), #hjust = 0
           axis.title.y = element_text(size = 12, face = "bold",
                                       colour = "black"), #hjust = 1
-          axis.text.x = element_text(size = 12, hjust = 0.5), #angle = 50,
+          axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0), #0.5
           axis.text.y = element_text(size = 12),
           plot.caption = element_text(hjust = 0.01))
   return(p)

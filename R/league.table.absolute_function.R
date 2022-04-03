@@ -43,7 +43,7 @@
 #'   Comparisons between interventions should be read from left to right.
 #'   Results that indicate strong evidence in favor of the row-defining
 #'   intervention (i.e. the respective 95\% credible interval does not include
-#'   the null value) are indicated in bold and dark blue.
+#'   the null value) are indicated in bold.
 #'
 #'   To obtain unique absolute risks for each intervention, the network
 #'   meta-analysis model has been extended to incorporate the transitive risks
@@ -275,7 +275,7 @@ league_table_absolute <- function(full, drug_names, show = NULL) {
                       factor(Var1, levels = order_drug[nt:1]),
                       label = value),
                   fontface = ifelse(signif_status == 1, "bold", "plain"),
-                  colour = ifelse(signif_status == 1, "blue", "black"),
+                  #colour = ifelse(signif_status == 1, "blue", "black"),
                   reflow = TRUE) +
     scale_fill_gradient(low = "white", high = "white", na.value = "grey90") +
     geom_rect(aes(xmin = xmin1, xmax = xmax1, ymin = ymin1, ymax = ymax1),
@@ -290,7 +290,7 @@ league_table_absolute <- function(full, drug_names, show = NULL) {
                                       colour = "black"),
           axis.title.y = element_text(size = 12, face = "bold",
                                       colour = "black"),
-          axis.text.x = element_text(size = 12, hjust = 0.5), #angle = 50,
+          axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0), #0.5
           axis.text.y = element_text(size = 12),
           plot.caption = element_text(hjust = 0.01))
 
