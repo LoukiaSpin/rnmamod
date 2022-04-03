@@ -395,9 +395,14 @@ run_model <- function(data,
     message("The 'IDE-ARM' has been used as the default.")
     "IDE-ARM"
   } else if ((missing(assumption) || assumption != "IND-UNCORR") &
-             min(na.omit(unlist(item$I))) == 0) {
-    aa <- "No or partially extracted missing participants:"
+             (min(na.omit(unlist(item$I))) == 0 &
+              max(na.omit(unlist(item$I))) == 1)) {
+    aa <- "Partially extracted missing participants:"
     message(paste(aa, "the 'IND-UNCORR' has been used."))
+    "IND-UNCORR"
+  } else if ((missing(assumption) || assumption != "IND-UNCORR") &
+             (min(na.omit(unlist(item$I))) == 0 &
+              max(na.omit(unlist(item$I))) == 0)) {
     "IND-UNCORR"
   } else {
     assumption
