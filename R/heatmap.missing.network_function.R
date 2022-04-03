@@ -139,7 +139,7 @@ heatmap_missing_network <- function(data, drug_names) {
   trial_mod <- apply(pair_mod[, c("m2", "m1")], 1, sum, na.rm = TRUE) /
     apply(pair_mod[, c("n2", "n1")], 1, sum)
   # Keep as 'NA' trial-arms without reported missing participants
-  cond <- apply(pair_mod[, c("m2", "m1")], 1, sum, na.rm = FALSE)
+  cond <- apply(pair_mod[, c("m2", "m1")], 1, sum, na.rm = TRUE)
   trial_mod[is.na(cond) & trial_mod == 0] <- NA
 
   # Minimum proportion of MOD per observed comparison in % (across the trials)
