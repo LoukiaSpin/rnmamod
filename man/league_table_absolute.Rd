@@ -54,7 +54,7 @@ The user must define the argument \code{measure = "RD"} in
   Comparisons between interventions should be read from left to right.
   Results that indicate strong evidence in favor of the row-defining
   intervention (i.e. the respective 95\% credible interval does not include
-  the null value) are indicated in bold and dark blue.
+  the null value) are indicated in bold.
 
   To obtain unique absolute risks for each intervention, the network
   meta-analysis model has been extended to incorporate the transitive risks
