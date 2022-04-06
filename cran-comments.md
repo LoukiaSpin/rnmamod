@@ -1,3 +1,23 @@
+# Submission, version 0.2.0 (06/04/2022)
+
+* **R version 4.0.5 (2021-03-31)**
+
+Status: OK
+
+* **R version 4.1.3 (2022-03-10)**
+
+Status: OK
+
+* **R version 4.2.0 alpha (2022-04-05 r82100 ucrt)**
+
+Status: OK
+
+### R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
+R CMD check succeeded
+
 # Resubmission (28/11/2021)
 This is a re-submission with the following corrections, as requested:
 
