@@ -54,6 +54,7 @@ This function facilitates creating the Bland-Altman plot on the
 \references{
 Bland JM, Altman DG. Measuring agreement in method comparison studies.
 \emph{Stat Methods Med Res} 1999;\bold{8}:135--60.
+doi: 10.1177/096228029900800204
 }
 \seealso{
 \code{\link{data_preparation}}, \code{\link{run_metareg}},

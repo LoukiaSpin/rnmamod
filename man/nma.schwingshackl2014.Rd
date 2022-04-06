@@ -12,8 +12,8 @@ A data frame with 14 rows of arm-based data and 16 columns (maximum
 Schwingshackl L, Missbach B, Dias S, et al. M Impact of different training
 modalities on glycaemic control and blood lipids in patients with type 2
 diabetes: a systematic review and network meta-analysis.
-\emph{Diabetologia} 2014;\bold{57}(9):1789--1797.
-\doi{10.1007/s00125-014-3303-z}
+\emph{Diabetologia} 2014;\bold{57}(9):1789--97.
+doi: 10.1007/s00125-014-3303-z
 }
 \usage{
 data(nma.schwingshackl2014)

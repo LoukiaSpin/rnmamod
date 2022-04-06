@@ -54,22 +54,22 @@ The names of the (current) prior distributions follow the JAGS syntax.
 Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
 making 2: a generalized linear modeling framework for pairwise and
 network meta-analysis of randomized controlled trials.
-\emph{Med Decis Making} 2013;\bold{33}(5):607--617.
-\doi{10.1177/0272989X12458724}
+\emph{Med Decis Making} 2013;\bold{33}(5):607--17.
+doi: 10.1177/0272989X12458724
 
 Friede T, Roever C, Wandel S, Neuenschwander B. Meta-analysis of two studies
 in the presence of heterogeneity with applications in rare diseases.
-\emph{Biom J} 2017;\bold{59}(4):658--671. \doi{10.1002/bimj.201500236}
+\emph{Biom J} 2017;\bold{59}(4):658--71. doi: 10.1002/bimj.201500236
 
 Rhodes KM, Turner RM, Higgins JP. Predictive distributions were developed
 for the extent of heterogeneity in meta-analyses of continuous outcome data.
 \emph{J Clin Epidemiol} 2015;\bold{68}(1):52--60.
-\doi{10.1016/j.jclinepi.2014.08.012}
+doi: 10.1016/j.jclinepi.2014.08.012
 
 Turner RM, Jackson D, Wei Y, Thompson SG, Higgins JP. Predictive
 distributions for between-study heterogeneity and simple methods for their
 application in Bayesian meta-analysis.
-\emph{Stat Med} 2015;\bold{34}(6):984--98. \doi{10.1002/sim.6381}
+\emph{Stat Med} 2015;\bold{34}(6):984--98. doi: 10.1002/sim.6381
 }
 \seealso{
 \code{\link{run_model}}

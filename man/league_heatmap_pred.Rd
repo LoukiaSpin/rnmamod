@@ -155,12 +155,12 @@ league_heatmap_pred(full1 = res,
 Ruecker G, Schwarzer G. Ranking treatments in frequentist network
 meta-analysis works without resampling methods.
 \emph{BMC Med Res Methodol} 2015;\bold{15}:58.
-\doi{10.1186/s12874-015-0060-8}
+doi: 10.1186/s12874-015-0060-8
 
 Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 for presenting results from multiple-treatment meta-analysis: an overview and
 tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
-\doi{10.1016/j.jclinepi.2010.03.016}
+doi: 10.1016/j.jclinepi.2010.03.016
 }
 \seealso{
 \code{\link{run_metareg}}, \code{\link{run_model}}

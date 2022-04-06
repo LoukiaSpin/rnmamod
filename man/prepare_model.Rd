@@ -64,26 +64,26 @@ Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
 heterogeneity and inconsistency in mixed treatment comparisons: Application
 to stroke prevention treatments in individuals with non-rheumatic atrial
 fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
-\doi{10.1002/sim.3594}
+doi: 10.1002/sim.3594
 
 Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
 making 2: a generalized linear modeling framework for pairwise and network
 meta-analysis of randomized controlled trials. \emph{Med Decis Making}
-2013;\bold{33}(5):607--617. \doi{10.1177/0272989X12458724}
+2013;\bold{33}(5):607--17. doi: 10.1177/0272989X12458724
 
 Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 data in network meta-analysis: a one-stage pattern-mixture model approach.
-\emph{Stat Methods Med Res} 2021;\bold{30}(4):958--975.
-\doi{10.1177/0962280220983544}
+\emph{Stat Methods Med Res} 2021;\bold{30}(4):958--75.
+doi: 10.1177/0962280220983544
 
 Spineli LM. An empirical comparison of Bayesian modelling strategies for
 missing binary outcome data in network meta-analysis.
 \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-\doi{10.1186/s12874-019-0731-y}
+doi: 10.1186/s12874-019-0731-y
 
 Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account
 for uncertainty due to missing binary outcome data in pairwise meta-analysis.
-\emph{Stat Med} 2015;\bold{34}(12):2062--2080. \doi{10.1002/sim.6475}
+\emph{Stat Med} 2015;\bold{34}(12):2062--80. doi: 10.1002/sim.6475
 }
 \seealso{
 \code{\link{run_metareg}}, \code{\link{run_model}},

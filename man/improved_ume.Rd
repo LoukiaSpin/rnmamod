@@ -58,11 +58,11 @@ Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis
 for decision making 4: inconsistency in networks of evidence based on
 randomized controlled trials.
 \emph{Med Decis Making} 2013;\bold{33}(5):641--56.
-\doi{10.1177/0272989X12455847}
+doi: 10.1177/0272989X12455847
 
 Spineli LM. A revised framework to evaluate the consistency assumption
 globally in a network of interventions. \emph{Med Decis Making} 2021.
-\doi{10.1177/0272989X211068005}
+doi: 10.1177/0272989X211068005
 }
 \seealso{
 \code{\link{data_preparation}}, \code{\link{run_model}},

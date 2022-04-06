@@ -11,7 +11,7 @@ A data frame with 29 rows of arm-based data and 11 columns (maximum
 \source{
 Stowe R, Ives N, Clarke CE, et al. Meta-analysis of the comparative efficacy
 and safety of adjuvant treatment to levodopa in later Parkinson's disease.
-\emph{Mov Disord} 2011;\bold{26}(4):587--598. \doi{10.1002/mds.23517}
+\emph{Mov Disord} 2011;\bold{26}(4):587--98. doi: 10.1002/mds.23517
 }
 \usage{
 data(nma.stowe2011)

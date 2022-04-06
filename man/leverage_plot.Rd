@@ -49,7 +49,7 @@ Plots the leverage against the square root of the
 \references{
 Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
 treatment comparison meta-analysis.
-\emph{Stat Med} 2010;\bold{29}(7-8):932--44. \doi{10.1002/sim.3767}
+\emph{Stat Med} 2010;\bold{29}(7-8):932--44. doi: 10.1002/sim.3767
 }
 \seealso{
 \code{\link{data_preparation}}, \code{\link{run_metareg}},

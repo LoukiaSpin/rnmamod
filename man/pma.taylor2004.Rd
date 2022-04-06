@@ -9,8 +9,8 @@ A data frame with 4 rows of arm-based data and 11 columns.
 }
 \source{
 Taylor MJ, Wilder H, Bhagwagar Z, Geddes J. Inositol for depressive
-disorders. \emph{Cochrane Database Syst Rev} 2004;\bold{2}:CD004049.
-\doi{10.1002/14651858.CD004049.pub2}
+disorders. \emph{Cochrane Database Syst Rev} 2004;\bold{2004}(2):CD004049.
+doi: 10.1002/14651858.CD004049.pub2
 }
 \usage{
 data(pma.taylor2004)

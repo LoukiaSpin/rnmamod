@@ -12,8 +12,8 @@ A data frame with 9 rows of arm-based data and 17 columns
 Bottomley JM, Taylor RS, Ryttov J. The effectiveness of two-compound
 formulation calcipotriol and betamethasone dipropionate gel in the
 treatment of moderately severe scalp psoriasis: a systematic review of direct
-and indirect evidence. \emph{Curr Med Res Opin} 2011;\bold{27}(1):251--268.
-\doi{10.1185/03007995.2010.541022}
+and indirect evidence. \emph{Curr Med Res Opin} 2011;\bold{27}(1):251--68.
+doi: 10.1185/03007995.2010.541022
 }
 \usage{
 data(nma.bottomley2011)

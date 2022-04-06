@@ -10,8 +10,8 @@ A data frame with 4 rows of arm-based data and 9 columns.
 \source{
 Hetrick SE, McKenzie JE, Cox GR, Simmons MB, Merry SN. Newer generation
 antidepressants for depressive disorders in children and adolescents.
-\emph{Cochrane Database Syst Rev} 2012;\bold{11}:CD004851.
-\doi{10.1002/14651858.CD004851.pub3}
+\emph{Cochrane Database Syst Rev} 2012;\bold{11}(11):CD004851.
+doi: 10.1002/14651858.CD004851.pub3
 }
 \usage{
 data(pma.hetrick2012)
