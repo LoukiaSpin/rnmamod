@@ -75,7 +75,7 @@ The \code{taylor_imor} function is integrated in the
 \references{
 White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data
 in meta-analysis--part 1: two-stage methods.
-\emph{Stat Med} 2008;\bold{27}(5):711--27. \doi{10.1002/sim.3008}
+\emph{Stat Med} 2008;\bold{27}(5):711--27. doi: 10.1002/sim.3008
 }
 \seealso{
 \code{\link[netmeta:pairwise]{pairwise}}, \code{\link{run_model}},

@@ -46,7 +46,7 @@ Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis
 for decision making 4: inconsistency in networks of evidence based on
 randomized controlled trials.
 \emph{Med Decis Making} 2013a;\bold{33}(5):641--56.
-\doi{10.1177/0272989X12455847}
+doi: 10.1177/0272989X12455847
 }
 \seealso{
 \code{\link{data_preparation}}, \code{\link{run_model}},

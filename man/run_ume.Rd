@@ -146,24 +146,25 @@ Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis
 for decision making 4: inconsistency in networks of evidence based on
 randomized controlled trials.
 \emph{Med Decis Making} 2013;\bold{33}(5):641--56.
-\doi{10.1177/0272989X12455847}
+doi: 10.1177/0272989X12455847
 
 Gelman A, Rubin DB. Inference from iterative simulation using multiple
-sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
+sequences. \emph{Stat Sci} 1992;\bold{7}(4):457--72.
+doi: 10.1214/ss/1177011136
 
 Spineli LM. A Revised Framework to Evaluate the Consistency Assumption
-Globally in a Network of Interventions.
-\emph{Med Decis Making} 2021. \doi{10.1177/0272989X211068005}
+Globally in a Network of Interventions. \emph{Med Decis Making} 2021.
+doi: 10.1177/0272989X211068005
 
 Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 data in network meta-analysis: a one-stage pattern-mixture model approach.
-\emph{Stat Methods Med Res} 2021;\bold{30}(4):958--975.
-\doi{10.1177/0962280220983544}
+\emph{Stat Methods Med Res} 2021;\bold{30}(4):958--75.
+doi: 10.1177/0962280220983544
 
 Spineli LM. An empirical comparison of Bayesian modelling strategies for
 missing binary outcome data in network meta-analysis.
 \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-\doi{10.1186/s12874-019-0731-y}
+doi: 10.1186/s12874-019-0731-y
 }
 \seealso{
 \code{\link[R2jags:jags]{jags}},

@@ -110,11 +110,11 @@ Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis
 for decision making 4: inconsistency in networks of evidence based on
 randomized controlled trials.
 \emph{Med Decis Making} 2013;\bold{33}(5):641--56.
-\doi{10.1177/0272989X12455847}
+doi: 10.1177/0272989X12455847
 
 Spiegelhalter DJ, Best NG, Carlin BP, van der Linde A. Bayesian measures of
-model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}:583--616.
-\doi{10.1111/1467-9868.00353}
+model complexity and fit. \emph{J R Stat Soc B} 2002;\bold{64}(4):583--396.
+doi: 10.1111/1467-9868.00353
 }
 \seealso{
 \code{\link{bland_altman_plot}},

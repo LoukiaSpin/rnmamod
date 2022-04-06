@@ -88,7 +88,7 @@ The \code{taylor_continuous} function is integrated in the
 Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
 uncertainty due to missing continuous outcome data in pairwise and network
 meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--41.
-\doi{10.1002/sim.6365}
+doi: 10.1002/sim.6365
 }
 \seealso{
 \href{https://CRAN.R-project.org/package=netmeta}{pairwise},

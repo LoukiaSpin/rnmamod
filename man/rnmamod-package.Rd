@@ -118,76 +118,79 @@ R-package \bold{rnmamod} is built upon the WinBUGS program code found in
 }
 \references{
 Bland JM, Altman DG. Measuring agreement in method comparison studies.
-\emph{Stat Methods Med Res} 1999;\bold{8}:135--60.
+\emph{Stat Methods Med Res} 1999;\bold{8}(2):135--60.
+doi: 10.1177/096228029900800204
 
 Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
 heterogeneity and inconsistency in mixed treatment comparisons: Application
 to stroke prevention treatments in individuals with non-rheumatic atrial
 fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
-\doi{10.1002/sim.3594}
+doi: 10.1002/sim.3594
 
 Dias S, Welton NJ, Sutton AJ, Caldwell DM, Lu G, Ades AE. Evidence synthesis
 for decision making 4: inconsistency in networks of evidence based on
 randomized controlled trials.
 \emph{Med Decis Making} 2013a;\bold{33}(5):641--56.
-\doi{10.1177/0272989X12455847}
+doi: 10.1177/0272989X12455847
 
 Dias S, Sutton AJ, Welton NJ, Ades AE. Evidence synthesis for decision making
 3: heterogeneity--subgroups, meta-regression, bias, and bias-adjustment.
 \emph{Med Decis Making} 2013b;\bold{33}(5):618--40.
-\doi{10.1177/0272989X13485157}
+doi: 10.1177/0272989X13485157
 
 Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
 making 2: a generalized linear modeling framework for pairwise and network
 meta-analysis of randomized controlled trials. \emph{Med Decis Making}
-2013c;\bold{33}(5):607--617. \doi{10.1177/0272989X12458724}
+2013c;\bold{33}(5):607--17. doi: 10.1177/0272989X12458724
 
 Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
 treatment comparison meta-analysis.
 \emph{Stat Med} 2010;\bold{29}(7-8):932--44.
-\doi{10.1002/sim.3767}
+doi: 10.1002/sim.3767
 
 Gelman, A, Rubin, DB. Inference from iterative simulation using multiple
-sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
+sequences. \emph{Stat Sci} 1992;\bold{7}(4):457--72.
+doi: 10.1214/ss/1177011136
 
 Hutton B, Salanti G, Caldwell DM, Chaimani A, Schmid CH, Cameron C, et al.
 The PRISMA extension statement for reporting of systematic reviews
 incorporating network meta-analyses of health care interventions: checklist
 and explanations. \emph{Ann Intern Med} 2015;\bold{162}(11):777--84.
+doi: 10.7326/M14-2385
 
 Ruecker G, Schwarzer G. Ranking treatments in frequentist network
 meta-analysis works without resampling methods.
 \emph{BMC Med Res Methodol} 2015;\bold{15}:58.
-\doi{10.1186/s12874-015-0060-8}
+doi: 10.1186/s12874-015-0060-8
 
 Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 for presenting results from multiple-treatment meta-analysis: an overview and
 tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
-\doi{10.1016/j.jclinepi.2010.03.016}
+doi: 10.1016/j.jclinepi.2010.03.016
 
 Spineli LM. A revised framework to evaluate the consistency assumption
 globally in a network of interventions. \emph{Med Decis Making} 2021.
-\doi{10.1177/0272989X211068005}
+doi: 10.1177/0272989X211068005
 
 Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
 primary analysis results: A case study on missing outcome data in pairwise
 and network meta-analysis.
-\emph{Res Synth Methods} 2021a;\bold{12}(4):475--490. \doi{10.1002/jrsm.1478}
+\emph{Res Synth Methods} 2021a;\bold{12}(4):475--90. doi: 10.1002/jrsm.1478
 
 Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 data in network meta-analysis: a one-stage pattern-mixture model approach.
-\emph{Stat Methods Med Res} 2021b;\bold{30}(4):958--975.
-\doi{10.1177/0962280220983544}
+\emph{Stat Methods Med Res} 2021b;\bold{30}(4):958--75.
+doi: 10.1177/0962280220983544
 
 Spineli LM. An empirical comparison of Bayesian modelling strategies for
 missing binary outcome data in network meta-analysis.
 \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-\doi{10.1186/s12874-019-0731-y}
+doi: 10.1186/s12874-019-0731-y
 
 van Valkenhoef G, Dias S, Ades AE, Welton NJ. Automated generation of
 node-splitting models for assessment of inconsistency in network
 meta-analysis. \emph{Res Synth Methods} 2016;\bold{7}(1):80--93.
-\doi{10.1002/jrsm.1167}
+doi: 10.1002/jrsm.1167
 }
 \author{
 {Loukia M. Spineli}

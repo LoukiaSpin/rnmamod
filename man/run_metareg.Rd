@@ -159,20 +159,21 @@ Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
 heterogeneity and inconsistency in mixed treatment comparisons: Application
 to stroke prevention treatments in individuals with non-rheumatic atrial
 fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
-\doi{10.1002/sim.3594}
+doi: 10.1002/sim.3594
 
 Gelman A, Rubin DB. Inference from iterative simulation using multiple
-sequences. \emph{Stat Sci} 1992;\bold{7}:457--472.
+sequences. \emph{Stat Sci} 1992;\bold{7}(4):457--72.
+doi: 10.1214/ss/1177011136
 
 Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 data in network meta-analysis: a one-stage pattern-mixture model approach.
-\emph{Stat Methods Med Res} 2021;\bold{30}(4):958--975.
-\doi{10.1177/0962280220983544}
+\emph{Stat Methods Med Res} 2021;\bold{30}(4):958--75.
+doi: 10.1177/0962280220983544
 
 Spineli LM. An empirical comparison of Bayesian modelling strategies for
 missing binary outcome data in network meta-analysis.
 \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-\doi{10.1186/s12874-019-0731-y}
+doi: 10.1186/s12874-019-0731-y
 }
 \seealso{
 \code{\link[R2jags]{jags}}, \code{\link{run_model}}
