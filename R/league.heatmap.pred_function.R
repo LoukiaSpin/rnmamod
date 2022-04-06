@@ -119,12 +119,12 @@
 #' Ruecker G, Schwarzer G. Ranking treatments in frequentist network
 #' meta-analysis works without resampling methods.
 #' \emph{BMC Med Res Methodol} 2015;\bold{15}:58.
-#' \doi{10.1186/s12874-015-0060-8}
+#' doi: 10.1186/s12874-015-0060-8
 #'
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 #' for presenting results from multiple-treatment meta-analysis: an overview and
 #' tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
-#' \doi{10.1016/j.jclinepi.2010.03.016}
+#' doi: 10.1016/j.jclinepi.2010.03.016
 #'
 #' @examples
 #' data("nma.liu2013")
@@ -389,12 +389,6 @@ league_heatmap_pred <- function(full1,
                      is.element(select[, 1], show) &
                        is.element(select[, 2], show)))
     }
-    #sucra2 <- if (is.null(show0)) {
-    #  full2$SUCRA[, 1]
-    #} else {
-    #  na.omit(subset(data.frame(full2$SUCRA[, 1], drug_names0),
-    #                 is.element(drug_names0, show)))[, 1]
-    #}
   } else if (!is.null(full2) & !is.null(full2$beta_all)) {
     cov_value <- if (missing(cov_value)) {
       stop("The argument 'cov_value' has not been defined", call. = FALSE)
@@ -437,25 +431,6 @@ league_heatmap_pred <- function(full1,
                      is.element(select[, 1], show) &
                        is.element(select[, 2], show)))
     }
-    #z_test2 <- par_mean2 / par_sd2
-    #z_test_mat2 <- matrix(NA,
-    #                      nrow = length(drug_names),
-    #                      ncol = length(drug_names))
-    #z_test_mat2[lower.tri(z_test_mat2, diag = FALSE)] <- z_test2 * (-1)
-    #z_test_mat2 <- reflect_triangle(z_test_mat2, from = "lower")
-    #prob_diff2 <- if (full1$D == 0) {
-    #  pnorm(z_test_mat2)
-    #} else {
-    #  1 - pnorm(z_test_mat2)
-    #}
-    # The p-scores per intervention
-    #sucra20 <- apply(prob_diff2, 1, sum, na.rm = TRUE) / (length(drug_names0) - 1)
-    #sucra2 <- if (is.null(show0)) {
-    #  sucra20
-    #} else {
-    #  na.omit(subset(data.frame(sucra20, drug_names0),
-    #                 is.element(drug_names0, show)))[, 1]
-    #}
   }
 
   # Second: Matrix of effect measure for all possible comparisons

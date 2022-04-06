@@ -19,8 +19,7 @@
 #' @source
 #' Baker WL, Baker EL, Coleman CI. Pharmacologic treatments for chronic
 #' obstructive pulmonary disease: a mixed-treatment comparison meta-analysis.
-#' \emph{Pharmacotherapy} 2009;\bold{29}(8):891--905.
-#' \doi{10.1592/phco.29.8.891}
+#' \emph{Pharmacotherapy} 2009;\bold{29}(8):891--905. doi: 10.1592/phco.29.8.891
 NULL
 
 #' Pharmacological interventions for moderately severe scalp psoriasis
@@ -45,8 +44,8 @@ NULL
 #' Bottomley JM, Taylor RS, Ryttov J. The effectiveness of two-compound
 #' formulation calcipotriol and betamethasone dipropionate gel in the
 #' treatment of moderately severe scalp psoriasis: a systematic review of direct
-#' and indirect evidence. \emph{Curr Med Res Opin} 2011;\bold{27}(1):251--268.
-#' \doi{10.1185/03007995.2010.541022}
+#' and indirect evidence. \emph{Curr Med Res Opin} 2011;\bold{27}(1):251--68.
+#' doi: 10.1185/03007995.2010.541022
 NULL
 
 #' Oral antithrombotics for stroke episode
@@ -71,6 +70,7 @@ NULL
 #' Dogliotti A, Paolasso E, Giugliano RP. Current and new oral antithrombotics
 #' in non-valvular atrial fibrillation: a network meta-analysis
 #' of 79808 patients. \emph{Heart} 2014;\bold{100}(5):396--405.
+#' doi: 10.1136/heartjnl-2013-304347
 NULL
 
 #' Antidepressants in Parkinson's disease
@@ -96,7 +96,7 @@ NULL
 #' Liu J, Dong J, Wang L, Yan P, Sun S. Comparative efficacy and acceptability
 #' of antidepressants in Parkinson's disease: a network meta-analysis.
 #' \emph{PLoS One} 2013;\bold{8}(10):e76651.
-#' \doi{10.1371/journal.pone.0076651}
+#' doi: 10.1371/journal.pone.0076651
 NULL
 
 #' Paroxetine versus placebo for depressive disorders
@@ -118,8 +118,8 @@ NULL
 #' @source
 #' Hetrick SE, McKenzie JE, Cox GR, Simmons MB, Merry SN. Newer generation
 #' antidepressants for depressive disorders in children and adolescents.
-#' \emph{Cochrane Database Syst Rev} 2012;\bold{11}:CD004851.
-#' \doi{10.1002/14651858.CD004851.pub3}
+#' \emph{Cochrane Database Syst Rev} 2012;\bold{11}(11):CD004851.
+#' doi: 10.1002/14651858.CD004851.pub3
 NULL
 
 #' Inositol versus glucose for depressive episode
@@ -140,8 +140,8 @@ NULL
 #' @usage data(pma.taylor2004)
 #' @source
 #' Taylor MJ, Wilder H, Bhagwagar Z, Geddes J. Inositol for depressive
-#' disorders. \emph{Cochrane Database Syst Rev} 2004;\bold{2}:CD004049.
-#' \doi{10.1002/14651858.CD004049.pub2}
+#' disorders. \emph{Cochrane Database Syst Rev} 2004;\bold{2004}(2):CD004049.
+#' doi: 10.1002/14651858.CD004049.pub2
 NULL
 
 #' Training modalities for patients with type 2 diabetes
@@ -164,8 +164,8 @@ NULL
 #' Schwingshackl L, Missbach B, Dias S, et al. M Impact of different training
 #' modalities on glycaemic control and blood lipids in patients with type 2
 #' diabetes: a systematic review and network meta-analysis.
-#' \emph{Diabetologia} 2014;\bold{57}(9):1789--1797.
-#' \doi{10.1007/s00125-014-3303-z}
+#' \emph{Diabetologia} 2014;\bold{57}(9):1789--97.
+#' doi: 10.1007/s00125-014-3303-z
 NULL
 
 #' Antiparkinsonian interventions for later Parkinson's disease
@@ -190,5 +190,5 @@ NULL
 #' @source
 #' Stowe R, Ives N, Clarke CE, et al. Meta-analysis of the comparative efficacy
 #' and safety of adjuvant treatment to levodopa in later Parkinson's disease.
-#' \emph{Mov Disord} 2011;\bold{26}(4):587--598. \doi{10.1002/mds.23517}
+#' \emph{Mov Disord} 2011;\bold{26}(4):587--98. doi: 10.1002/mds.23517
 NULL

@@ -47,6 +47,7 @@
 #' @references
 #' Bland JM, Altman DG. Measuring agreement in method comparison studies.
 #' \emph{Stat Methods Med Res} 1999;\bold{8}:135--60.
+#' doi: 10.1177/096228029900800204
 #'
 #' @export
 bland_altman_plot <- function(model1, model2, colour) {

@@ -70,7 +70,7 @@
 #' @references
 #' Lin L, Zhang J, Hodges JS, Chu H. Performing Arm-Based Network Meta-Analysis
 #' in R with the pcnetmeta Package.
-#' \emph{J Stat Softw} 2017;\bold{80}(5): 1--25. \doi{10.18637/jss.v080.i05}
+#' \emph{J Stat Softw} 2017;\bold{80}(5): 1--25. doi: 10.18637/jss.v080.i05
 #'
 #' van Valkenhoef G, Kuiper J. gemtc: Network Meta-Analysis Using
 #' Bayesian Methods. \emph{R package version 1.0-1}. 2021.

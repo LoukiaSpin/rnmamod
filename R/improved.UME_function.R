@@ -50,11 +50,11 @@
 #' for decision making 4: inconsistency in networks of evidence based on
 #' randomized controlled trials.
 #' \emph{Med Decis Making} 2013;\bold{33}(5):641--56.
-#' \doi{10.1177/0272989X12455847}
+#' doi: 10.1177/0272989X12455847
 #'
 #' Spineli LM. A revised framework to evaluate the consistency assumption
 #' globally in a network of interventions. \emph{Med Decis Making} 2021.
-#' \doi{10.1177/0272989X211068005}
+#' doi: 10.1177/0272989X211068005
 #'
 #' @export
 improved_ume <- function(t, N, ns, na) {

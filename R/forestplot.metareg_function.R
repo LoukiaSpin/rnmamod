@@ -53,7 +53,7 @@
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 #' for presenting results from multiple-treatment meta-analysis: an overview and
 #' tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
-#' \doi{10.1016/j.jclinepi.2010.03.016}
+#' doi: 10.1016/j.jclinepi.2010.03.016
 #'
 #' @export
 forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
