@@ -127,30 +127,31 @@
 #'
 #' @references
 #' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple
-#' sequences. Stat Sci. 1992;7:457--472.
+#' sequences. \emph{Stat Sci} 1992;\bold{7}(4):457--72.
+#' doi: 10.1214/ss/1177011136
 #'
 #' Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
 #' uncertainty due to missing continuous outcome data in pairwise and network
-#' meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--741.
-#' \doi{10.1002/sim.6365}
+#' meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--41.
+#' doi: 10.1002/sim.6365
 #'
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
 #' primary analysis results: A case study on missing outcome data in pairwise
 #' and network meta-analysis.
-#' \emph{Res Synth Methods} 2021;\bold{12}(4):475--490. \doi{10.1002/jrsm.1478}
+#' \emph{Res Synth Methods} 2021;\bold{12}(4):475--90. doi: 10.1002/jrsm.1478
 #'
 #' Spineli LM. An empirical comparison of Bayesian modelling strategies for
 #' missing binary outcome data in network meta-analysis.
 #' \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-#' \doi{10.1186/s12874-019-0731-y}
+#' doi: 10.1186/s12874-019-0731-y
 #'
 #' Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account for
 #' uncertainty due to missing binary outcome data in pairwise meta-analysis.
-#' \emph{Stat Med} 2015;\bold{34}(12):2062--2080. \doi{10.1002/sim.6475}
+#' \emph{Stat Med} 2015;\bold{34}(12):2062--80. doi: 10.1002/sim.6475
 #'
 #' White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data
 #' in meta-analysis--part 1: two-stage methods.
-#' \emph{Stat Med} 2008;\bold{27}(5):711--727. \doi{10.1002/sim.3008}
+#' \emph{Stat Med} 2008;\bold{27}(5):711--27. doi: 10.1002/sim.3008
 #'
 #' @examples
 #' data("pma.taylor2004")
