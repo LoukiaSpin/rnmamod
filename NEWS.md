@@ -1,8 +1,4 @@
-# rnmamod, version 0.1.0 (2021-11-21)
-
- - First CRAN submission.
-
-# rnmamod, version 0.2.0 (2022-04-08)
+# rnmamod, version 0.2.0 (2022-04-06)
 
  * Typos and links (for functions and packages) in the documentation are 
  corrected.
@@ -33,3 +29,6 @@
    (the classification has been suggested by Spiegelhalter et al., 2004; 
    ISBN 0471499757).
 
+# rnmamod, version 0.1.0 (2021-11-21)
+
+ - First CRAN submission.
