@@ -51,7 +51,7 @@
 #'   of the R-package
 #'   \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}.
 #'   The \code{\link[gemtc:mtc.data.studyrow]{mtc.data.studyrow}} function of
-#'   the R-package href{https://CRAN.R-project.org/package=gemtc}{gemtc} is
+#'   the R-package \href{https://CRAN.R-project.org/package=gemtc}{gemtc} is
 #'   additionally used to convert \code{data} from the required
 #'   one-trial-per-row format into the one-arm-per-row format.
 #'
