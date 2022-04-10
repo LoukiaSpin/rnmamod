@@ -398,8 +398,8 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           EM[k, c] <- log(abs_risk[k]) - log(abs_risk[c])
-                           EM.LOR[k, c] <- d.n[k] - d.n[c]
+                           EM.LOR[k, c] <- d.n[k] - d.n[c]                  # LOR
+                           EM[k, c] <- EM.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.LOR[k, c]))) # LRR
                            EM.pred.LOR[k, c] ~ dnorm(EM.LOR[k, c], prec)
                            EM.pred[k, c] <- EM.pred.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.pred.LOR[k, c])))
                        }}\n")
@@ -407,22 +407,23 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
     paste(stringcode, "for (t in 1:(ref - 1)) {
                          EM.ref.RR.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
                          EM.ref.RR[t] <- EM.ref.RR.n[t]*(1 - (1 - step(t - ref))) + EM.ref.RR.n[t]*(-1)*(1 - step(t - ref))
-                         EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1) - base_risk
+                         EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1)*base_risk
                          EM.ref[t] <-  EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
                        }
                        for (t in (ref + 1):nt) {
                          EM.ref.RR.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
                          EM.ref.RR[t] <- EM.ref.RR.n[t]*(1 - (1 - step(t - ref))) + EM.ref.RR.n[t]*(-1)*(1 - step(t - ref))
-                         EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1) - base_risk
+                         EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1)*base_risk
                          EM.ref[t] <-  EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           EM[k, c] <- abs_risk[k] - abs_risk[c]
-                           EM.LOR[k, c] <- d.n[k] - d.n[c]
+                           EM.LOR[k, c] <- d.n[k] - d.n[c]         # LOR
+                           EM.LRR[k, c] <- EM.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.LOR[k, c])))
+                           EM[k, c] <- abs_risk[c]*(exp(EM.LRR[k, c]) - 1) # RD
                            EM.pred.LOR[k, c] ~ dnorm(EM.LOR[k, c], prec)
                            EM.pred.LRR[k, c] <- EM.pred.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.pred.LOR[k, c])))
-                           EM.pred[k, c] <- abs_risk[c]*(1 - exp(EM.pred.LRR[k, c]))
+                           EM.pred[k, c] <- abs_risk[c]*(exp(EM.pred.LRR[k, c]) - 1)
                        }}\n")
   } else if (model == "FE" & measure == "RR") {
     paste(stringcode, "for (t in 1:(ref - 1)) {
@@ -435,26 +436,27 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           EM[k, c] <- log(abs_risk[k]) - log(abs_risk[c])
                            EM.LOR[k, c] <- d.n[k] - d.n[c]
+                           EM[k, c] <- EM.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.LOR[k, c]))) # LRR
                         }}\n")
   } else if (model == "FE" & measure == "RD") {
     paste(stringcode, "for (t in 1:(ref - 1)) {
                          EM.ref.RR.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
                          EM.ref.RR[t] <- EM.ref.RR.n[t]*(1 - (1 - step(t - ref))) + EM.ref.RR.n[t]*(-1)*(1 - step(t - ref))
-                         EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1) - base_risk
+                         EM.ref.n[t] <- (exp(EM.ref.RR.n[t] - 1))*base_risk
                          EM.ref[t] <-  EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
                        }
                        for (t in (ref + 1):nt) {
                          EM.ref.RR.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
                          EM.ref.RR[t] <- EM.ref.RR.n[t]*(1 - (1 - step(t - ref))) + EM.ref.RR.n[t]*(-1)*(1 - step(t - ref))
-                         EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1) - base_risk
+                         EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1)*base_risk
                          EM.ref[t] <-  EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           EM[k, c] <- abs_risk[k] - abs_risk[c]
                            EM.LOR[k, c] <- d.n[k] - d.n[c]
+                           EM.LRR[k, c] <- EM.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.LOR[k, c])))
+                           EM[k, c] <- abs_risk[c]*(exp(EM.LRR[k, c]) - 1)
                         }}\n")
   }
 

@@ -114,10 +114,10 @@ forestplot <- function(full, compar, drug_names) {
   measure <- full$measure
   model <- full$model
   sucra <- full$SUCRA
-  em_ref00 <- cbind(rbind(data.frame(mean = full$EM[, 1],
+  em_ref00 <- cbind(rbind(data.frame(mean = full$EM[, 5], #1
                                      lower = full$EM[, 3],
                                      upper = full$EM[, 7]),
-                          data.frame(mean = full$EM[, 1] * (-1),
+                          data.frame(mean = full$EM[, 5] * (-1), #1
                                      lower = full$EM[, 7] * (-1),
                                      upper = full$EM[, 3] * (-1))),
                     poss_pair_comp)
@@ -133,10 +133,10 @@ forestplot <- function(full, compar, drug_names) {
   # Posterior results on the predicted estimates of comparisons with the
   # selected comparator as reference
   if (model == "RE") {
-    pred_ref00 <- cbind(rbind(data.frame(mean = full$EM_pred[, 1],
+    pred_ref00 <- cbind(rbind(data.frame(mean = full$EM_pred[, 5], #1
                                          lower = full$EM_pred[, 3],
                                          upper = full$EM_pred[, 7]),
-                              data.frame(mean = full$EM_pred[, 1] * (-1),
+                              data.frame(mean = full$EM_pred[, 5] * (-1), #1
                                          lower = full$EM_pred[, 7] * (-1),
                                          upper = full$EM_pred[, 3] * (-1))),
                         poss_pair_comp)
@@ -364,12 +364,12 @@ forestplot <- function(full, compar, drug_names) {
                  size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(
         measure, c("OR", "RR", "ROM")), "identity", "log10")) +
-      geom_rect(aes(xmin = 0, xmax = Inf, ymin = 0, ymax = 0.5,
-                    fill = "lowest"),
-                alpha = 0.02) +
-      geom_rect(aes(xmin = 0, xmax = Inf, ymin = 0.5, ymax = 0.8,
-                    fill = "intermediate"),
-                alpha = 0.02) +
+      #geom_rect(aes(xmin = 0, xmax = Inf, ymin = 0, ymax = 0.5,
+      #              fill = "lowest"),
+      #          alpha = 0.02) +
+      #geom_rect(aes(xmin = 0, xmax = Inf, ymin = 0.5, ymax = 0.8,
+      #              fill = "intermediate"),
+      #          alpha = 0.02) +
       scale_fill_manual(name = " ",
                         values = c("lowest" = "white",
                                    "intermediate" = "white",
