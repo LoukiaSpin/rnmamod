@@ -88,7 +88,7 @@ prepare_ume <- function(measure, model, assumption, connected) {
                        b[i] <- sum(N[i, 1:na[i]] - 1)/(2*sigma[i]*sigma[i])
                        var.pooled[i] ~ dgamma(a[i], b[i])
                        sd.pooled[i] <- sqrt(var.pooled[i])\n")
-  } else if (is.measure(measure, c("MD", "ROM"))) {
+  } else if (is.element(measure, c("MD", "ROM"))) {
     paste(stringcode, "theta[i, 1] <- u[i]\n")
   } else if (measure == "OR") {
     paste(stringcode, "logit(p[i, 1]) <- u[i]\n")
@@ -102,7 +102,7 @@ prepare_ume <- function(measure, model, assumption, connected) {
                        c[i, k] <- N[i, k] - m[i, k]
                        sd.obs[i, k] <- se.o[i, k]*sqrt(c[i, k])
                        nom[i, k] <- pow(sd.obs[i, k], 2)*(c[i, k] - 1)\n")
-  } else if (is.measure(measure, c("MD", "ROM"))) {
+  } else if (is.element(measure, c("MD", "ROM"))) {
     paste(stringcode, "prec.o[i, k] <- pow(se.o[i, k], -2)
                        y.o[i, k] ~ dnorm(theta.o[i, k], prec.o[i, k])\n")
   } else if (measure == "OR") {
@@ -110,7 +110,7 @@ prepare_ume <- function(measure, model, assumption, connected) {
                        obs[i, k] <- N[i, k] - m[i, k]\n")
   }
 
-  stringcode <- if (is.measure(measure, c("MD", "SMD"))) {
+  stringcode <- if (is.element(measure, c("MD", "SMD"))) {
     paste(stringcode, "theta.o[i, k] <- theta[i, k] - phi.m[i, k]*q[i, k]\n")
   } else if (measure == "ROM") {
     paste(stringcode, "theta.o[i, k] <- theta[i, k]/(1 - q[i, k]*(1 - exp(phi.m[i, k])))\n")
@@ -123,7 +123,7 @@ prepare_ume <- function(measure, model, assumption, connected) {
                                    m[i, k] ~ dbin(q0[i, k], N[i, k])
                                    q0[i, k] ~ dunif(0, 1)\n")
 
-  stringcode <- if (is.measure(measure, c("MD", "SMD", "ROM"))) {
+  stringcode <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
     paste(stringcode, "hat.par[i, k] <- theta.o[i, k]
                        dev.o[i, k] <- (y.o[i, k] - theta.o[i, k])*(y.o[i, k] - theta.o[i, k])*prec.o[i, k]
                        }\n")
@@ -170,7 +170,7 @@ prepare_ume <- function(measure, model, assumption, connected) {
     paste(stringcode, "u.m[i] ~ dnorm(0, .0001)\n")
   }
 
-  stringcode <- if (is.measure(measure, c("MD", "SMD", "ROM"))) {
+  stringcode <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
     paste(stringcode, "theta.m[i, 1] <- u.m[i]\n")
   } else if (measure == "OR") {
     paste(stringcode, "logit(p.m[i, 1]) <- u.m[i]\n")
@@ -178,13 +178,13 @@ prepare_ume <- function(measure, model, assumption, connected) {
 
   stringcode <- paste(stringcode, "for (k in 1:na[i]) {\n")
 
-  stringcode <- if (is.measure(measure, c("MD", "SMD", "ROM"))) {
+  stringcode <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
     paste(stringcode, "y.m[i, k] ~ dnorm(theta.o.m[i, k], prec.o[i, k])\n")
   } else if (measure == "OR") {
     paste(stringcode, "r.m[i, k] ~ dbin(p_o.m[i, k], obs[i, k])\n")
   }
 
-  stringcode <- if (is.measure(measure, c("MD", "SMD"))) {
+  stringcode <- if (is.element(measure, c("MD", "SMD"))) {
     paste(stringcode, "theta.o.m[i, k] <- theta.m[i, k] - phi.m[i, k]*q[i, k]
                        }\n")
   } else if (measure == "ROM") {
