@@ -52,14 +52,18 @@ Evaluates whether convergence has been achieved for the
 \details{
 For each monitored parameter, \code{mcmc_diagnostics} considers the
   maximum R-hat and MCMC error and compares them with the thresholds 1.1
-  and 5\%, respectively. Convergence is achieved for the monitored parameter,
+  and 5\% of the posterior standard deviation (the rule of thumb),
+  respectively.
+  Convergence is achieved for the monitored parameter,
   when the maximum R-hat and MCMC error are below the corresponding
   thresholds; otherwise, the MCMC algorithm has not converged for that
   parameter. If the monitored parameter is a vector with the posterior
   results, there is only one R-hat and one MCMC error. If the monitored
   parameter is a matrix of the posterior results, there are as many R-hats
   and MCMC errors as the number of rows for that parameter. In that case, the
-  maximum R-hat and MCMC error are considered.
+  maximum R-hat and MCMC error are considered, and the (MCMC) rule of thumb
+  corresponds to the maximum of the 5\% of the posterior standard deviation
+  of the investigated parameter.
 }
 \examples{
 data("nma.baker2009")

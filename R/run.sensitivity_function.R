@@ -219,12 +219,12 @@ run_sensitivity <- function(full,
 
   # Scenarios for missingness mechanism in an intervention (PMID: 30223064)
   mean_scenarios <- if (missing(mean_scenarios) &
-                        is.element(measure, c("MD", "RD", "SMD"))) {
+                        is.element(measure, c("MD", "SMD"))) {
     aa <- "The default scenarios were considered:"
     message(paste(aa, "c(-2, -1, 0, 1, 2)."))
     c(-2, -1, 0, 1, 2)
   } else if (missing(mean_scenarios) & is.element(measure,
-                                                  c("OR", "RR", "ROM"))) {
+                                                  c("OR", "RR", "RD", "ROM"))) {
     aa <- "The default scenarios were considered:"
     message(paste(aa, "c(-log(3), -log(2), log(0.9999), log(2), log(3))."))
     c(-log(3), -log(2), log(0.9999), log(2), log(3))

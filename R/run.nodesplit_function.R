@@ -478,7 +478,7 @@ run_nodesplit <- function(full,
     hat_par[[i]] <- t(get_results[[i]] %>% dplyr::select(
       starts_with("hat.par[")))
 
-    # Calculate the deviance at posterior mean of fitted values
+    # Calculate the deviance contribution at posterior mean of fitted values
     # Turn 'N' and 'm' into a vector (first column, followed by second, etc)
     m_new[[i]] <- suppressMessages({
       as.vector(na.omit(melt(m_node[[i]])[, 3]))
@@ -496,7 +496,7 @@ run_nodesplit <- function(full,
       se0_new[[i]] <- suppressMessages({
         as.vector(na.omit(melt(se_node[[i]])[, 3]))
         })
-      # Deviance at the posterior mean of the fitted mean outcome
+      # Deviance contribution at the posterior mean of the fitted mean outcome
       dev_post_o[[i]] <- (y0_new[[i]] -
                             as.vector(hat_par[[i]][, 1])) *
         (y0_new[[i]] - as.vector(hat_par[[i]][, 1])) * (1 / (se0_new[[i]]^2))
@@ -509,7 +509,7 @@ run_nodesplit <- function(full,
       r0[[i]] <- ifelse(r_new[[i]] == 0, r_new[[i]] + 0.01,
                         ifelse(r_new[[i]] == obs[[i]], r_new[[i]] - 0.01,
                                r_new[[i]]))
-      # Deviance at the posterior mean of the fitted mean outcome
+      # Deviance contribution at the posterior mean of the fitted mean outcome
       dev_post_o[[i]] <- 2 *
         (r0[[i]] * (log(r0[[i]]) -
                       log(as.vector(hat_par[[i]][, 1]))) +
@@ -533,13 +533,13 @@ run_nodesplit <- function(full,
   # DIC, pD, and total residual deviance
   model_assessment <- data.frame(pair[, 2],
                                  pair[, 1],
-                                 DIC,
                                  unlist(dev),
+                                 DIC,
                                  pD)
   colnames(model_assessment) <- c("treat1",
                                   "treat2",
-                                  "DIC",
                                   "deviance",
+                                  "DIC",
                                   "pD")
 
   results <- if (model == "RE") {

@@ -39,8 +39,8 @@ Creates the enhanced balloon plot for the summary effect size and
 For the \code{plot_effect_size} of the selected pairwise comparison,
   the different colours and sizes of the bubbles reflect the
   posterior standard deviation and the posterior mean, respectively.
-  A colour key appears below the plot.
-  The size of the bubble is proportional to the corresponding posterior mean.
+  A colour key appears below the plot. The size of the bubble is proportional
+  to the corresponding posterior mean.
   Crossed bubbles indicate scenarios with conclusive evidence (the
   95\% credible interval excludes the null value), and filled bubbles
   indicate scenarios with inconclusive evidence (the 95\% credible interval

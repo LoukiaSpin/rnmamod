@@ -662,7 +662,7 @@ run_model <- function(data,
       as.vector(na.omit(melt(item$se0)[, 2]))
       })
 
-    # Deviance at the posterior mean of the fitted mean outcome
+    # Deviance contribution at the posterior mean of the fitted mean outcome
     dev_post_o <- (y0_new -
                      as.vector(hat_par[, 1])) *
       (y0_new - as.vector(hat_par[, 1])) * (1 / se0_new^2)
@@ -679,7 +679,7 @@ run_model <- function(data,
     r0 <- ifelse(r_new == 0, r_new + 0.01,
                  ifelse(r_new == obs, r_new - 0.01, r_new))
 
-    # Deviance at the posterior mean of the fitted response
+    # Deviance contribution at the posterior mean of the fitted response
     dev_post_o <- 2 * (r0 * (log(r0) -
                                log(as.vector(hat_par[, 1]))) +
                          (obs - r0) * (log(obs - r0) -
@@ -688,6 +688,9 @@ run_model <- function(data,
     # Sign of the difference between observed and fitted response
     sign_dev_o <- sign(r0 - as.vector(hat_par[, 1]))
   }
+
+  # Number of unconstrained data-points
+  n_data <- sum(item$na)
 
   # Obtain the leverage for observed outcomes
   leverage_o <- as.vector(dev_o[, 1]) - dev_post_o
@@ -699,8 +702,8 @@ run_model <- function(data,
   DIC <- pD + dev
 
   # A data-frame on the measures of model assessment:
-  # DIC, pD, and total residual deviance
-  model_assessment <- data.frame(DIC, pD, dev)
+  # DIC, pD, total residual deviance, and number of unconstrained data-points
+  model_assessment <- data.frame(DIC, pD, dev, n_data)
 
   # Return a list of results
   results <- list(EM = EM,

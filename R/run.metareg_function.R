@@ -347,14 +347,6 @@ run_metareg <- function(full,
     starts_with("effectiveness")))
 
   # Estimated missingness parameter
-  #phi <- if (length(unique(na.omit(unlist(item$m)))) > 1) {
-  #  t(get_results %>% dplyr::select(starts_with("phi") |
-  #                                   starts_with("mean.phi") |
-  #                                   starts_with("mean.phi[") |
-  #                                   starts_with("phi[")))
-  #} else {
-  #  NULL
-  #}
   phi <- if (min(na.omit(unlist(item$I))) == 1 &
              max(na.omit(unlist(item$I))) == 1) {
     t(get_results %>% dplyr::select(starts_with("phi") |
@@ -397,7 +389,7 @@ run_metareg <- function(full,
       as.vector(na.omit(melt(item$se0)[, 2]))
       })
 
-    # Deviance at the posterior mean of the fitted mean outcome
+    # Deviance contribution at the posterior mean of the fitted mean outcome
     dev_post_o <- (y0_new -
                      as.vector(hat_par[, 1])) *
       (y0_new - as.vector(hat_par[, 1])) * (1 / se0_new^2)
@@ -414,7 +406,7 @@ run_metareg <- function(full,
     r0 <- ifelse(r_new == 0, r_new + 0.01,
                  ifelse(r_new == obs, r_new - 0.01, r_new))
 
-    # Deviance at the posterior mean of the fitted response
+    # Deviance contribution at the posterior mean of the fitted response
     dev_post_o <- 2 * (r0 * (log(r0) -
                                log(as.vector(hat_par[, 1]))) +
                          (obs - r0) * (log(obs - r0) -
@@ -424,7 +416,7 @@ run_metareg <- function(full,
     sign_dev_o <- sign(r0 - as.vector(hat_par[, 1]))
   }
 
-  # Obtain the leverage for observed and missing outcomes
+  # Obtain the leverage for observed outcomes
   leverage_o <- as.vector(dev_o[, 1]) - dev_post_o
 
   # Number of effective parameters

@@ -41,14 +41,18 @@
 #'
 #' @details For each monitored parameter, \code{mcmc_diagnostics} considers the
 #'   maximum R-hat and MCMC error and compares them with the thresholds 1.1
-#'   and 5\%, respectively. Convergence is achieved for the monitored parameter,
+#'   and 5\% of the posterior standard deviation (the rule of thumb),
+#'   respectively.
+#'   Convergence is achieved for the monitored parameter,
 #'   when the maximum R-hat and MCMC error are below the corresponding
 #'   thresholds; otherwise, the MCMC algorithm has not converged for that
 #'   parameter. If the monitored parameter is a vector with the posterior
 #'   results, there is only one R-hat and one MCMC error. If the monitored
 #'   parameter is a matrix of the posterior results, there are as many R-hats
 #'   and MCMC errors as the number of rows for that parameter. In that case, the
-#'   maximum R-hat and MCMC error are considered.
+#'   maximum R-hat and MCMC error are considered, and the (MCMC) rule of thumb
+#'   corresponds to the maximum of the 5\% of the posterior standard deviation
+#'   of the investigated parameter.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -82,8 +86,8 @@ mcmc_diagnostics <- function(net, par = NULL) {
     bb <- "'run_nodesplit', 'run_ume', or 'run_sensitivity'."
     stop(paste("'net' must be an object of S3 class", aa, bb), call. = FALSE)
   }
-
-  message("A parameter converges when R-hat < 1.10 *and* MCMC error < 0.5%.")
+  cc <- "< 5% of the posterior standard deviation."
+  message(paste("A parameter converges when R-hat < 1.10 *and* MCMC error", cc))
 
   par <- if (!is.null(net$jagsfit) & missing(par)) {
     stop("The argument 'par' needs to be defined.", call. = FALSE)
@@ -107,14 +111,16 @@ mcmc_diagnostics <- function(net, par = NULL) {
     EM0 <- t(get_results %>% select(starts_with("EM[")))
     EM <- max(EM0[, 8])
     EM_mcmc_error <- max(EM0[, 2]/sqrt(save_res))
+    EM_mcmc_rule <- max(0.05 * EM0[, 2])
 
     # Predictive effects of all unique pairwise comparisons
     if (net$model == "RE" & !is.null(net$EM_pred)) {
       EM_pred0 <- t(get_results %>% select(starts_with("EM.pred[")))
       EM_pred <- max(EM_pred0[, 8])
       EM_pred_mcmc_error <- max(EM_pred0[, 2]/sqrt(save_res))
+      EM_pred_mcmc_rule <- max(0.05 * EM_pred0[, 2])
     } else if (net$model == "FE" || is.null(net$EM_pred)) {
-      EM_pred <- EM_pred_mcmc_error <- NA
+      EM_pred <- EM_pred_mcmc_error <- EM_pred_mcmc_rule <- NA
     }
 
     # Within-trial effects size
@@ -123,8 +129,9 @@ mcmc_diagnostics <- function(net, par = NULL) {
                                            !ends_with(",1]")))
       delta <- max(delta0[, 8])
       delta_mcmc_error <- max(delta0[, 2]/sqrt(save_res))
+      delta_mcmc_rule <- max(0.05 * delta0[, 2])
     } else if (net$model == "FE" || is.null(net$delta)) {
-      delta <- delta_mcmc_error <- NA
+      delta <- delta_mcmc_error <- delta_mcmc_rule <- NA
     }
 
     # Between-trial standard deviation
@@ -132,18 +139,19 @@ mcmc_diagnostics <- function(net, par = NULL) {
       tau0 <- t(get_results %>% select(starts_with("tau")))
       tau <- tau0[8]
       tau_mcmc_error <- tau0[2]/sqrt(save_res)
+      tau_mcmc_rule <- max(0.05 * tau0[2])
     } else {
-      tau <- tau_mcmc_error <- NA
+      tau <- tau_mcmc_error <- tau_mcmc_rule <- NA
     }
 
     # Direct estimate from split nodes
-    direct <- direct_mcmc_error <- NA
+    direct <- direct_mcmc_error <- direct_mcmc_rule <- NA
 
     # Indirect estimate from split nodes
-    indirect <- indirect_mcmc_error <- NA
+    indirect <- indirect_mcmc_error <- indirect_mcmc_rule <- NA
 
     # Inconsistency factor estimate from split nodes
-    diff <- diff_mcmc_error <- NA
+    diff <- diff_mcmc_error <- diff_mcmc_rule <- NA
 
     item <- data_preparation(net$data, net$measure)
 
@@ -154,14 +162,16 @@ mcmc_diagnostics <- function(net, par = NULL) {
                                             starts_with("mean.phi")))
       phi <- phi0[8]
       phi_mcmc_error <- phi0[2]/sqrt(save_res)
+      phi_mcmc_rule <- max(0.05 * phi0[2])
     } else if (!is.null(net$phi) & !is.element(net$assumption,
                                                c("IDE-COMMON", "HIE-COMMON"))) {
       phi0 <- t(get_results %>% select(starts_with("mean.phi[") |
                                          starts_with("phi[")))
       phi <- max(phi0[, 8])
       phi_mcmc_error <- max(phi0[, 2]/sqrt(save_res))
+      phi_mcmc_rule <- max(0.05 * phi0[, 2])
     } else if (is.null(net$phi)) {
-      phi <- phi_mcmc_error <- NA
+      phi <- phi_mcmc_error <- phi_mcmc_rule <- NA
     }
 
     # Regression coefficient
@@ -169,80 +179,89 @@ mcmc_diagnostics <- function(net, par = NULL) {
       beta0 <- t(get_results %>% select(starts_with("beta.all[")))
       beta <- max(beta0[, 8])
       beta_mcmc_error <- max(beta0[, 2]/sqrt(save_res))
+      beta_mcmc_rule <- max(0.05 * beta0[, 2])
     } else if (is.null(net$beta)) {
-      beta <- beta_mcmc_error <- NA
+      beta <- beta_mcmc_error <- beta_mcmc_rule <- NA
     }
 
   } else {
     if (!is.null(net$EM) & length(net$EM[1, ]) == 11) {
       # From 'run_model' function
-      EM_pred <- EM_pred_mcmc_error <- NA
-      delta <- delta_mcmc_error <- NA
-      phi <- phi_mcmc_error <- NA
+      EM_pred <- EM_pred_mcmc_error <- EM_pred_mcmc_rule <- NA
+      delta <- delta_mcmc_error <- delta_mcmc_rule <- NA
+      phi <- phi_mcmc_error <- phi_mcmc_rule <- NA
 
       # From 'run_metareg' function
-      beta <- beta_mcmc_error <- NA
+      beta <- beta_mcmc_error <- beta_mcmc_rule <- NA
 
       # From 'run_series_meta' function
       EM <- max(net$EM[, 10])
       EM_mcmc_error <- max(net$EM[, 4]/sqrt(save_res))
+      EM_mcmc_rule <- max(0.05 * net$EM[, 4])
       if (!is.null(net$tau)) {
         tau <- max(net$tau[, 10])
         tau_mcmc_error <- max(net$tau[, 4]/sqrt(save_res))
+        tau_mcmc_rule <- max(0.05 * net$tau[, 4])
       } else {
-        tau <- tau_mcmc_error <- NA
+        tau <- tau_mcmc_error <- tau_mcmc_rule <- NA
       }
 
       # From 'run_nodesplit' function
-      direct <- direct_mcmc_error <- NA
-      indirect <- indirect_mcmc_error <- NA
-      diff <- diff_mcmc_error <- NA
+      direct <- direct_mcmc_error <- direct_mcmc_rule <- NA
+      indirect <- indirect_mcmc_error <- indirect_mcmc_rule <- NA
+      diff <- diff_mcmc_error <- diff_mcmc_rule <- NA
     } else if (is.null(net$EM)) {
       # From 'run_model' function
-      EM <- EM_mcmc_error <- NA
-      EM_pred <- EM_pred_mcmc_error <- NA
-      delta <- delta_mcmc_error <- NA
-      phi <- phi_mcmc_error <- NA
+      EM <- EM_mcmc_error <- EM_mcmc_rule <- NA
+      EM_pred <- EM_pred_mcmc_error <- EM_pred_mcmc_rule <- NA
+      delta <- delta_mcmc_error <- delta_mcmc_rule <- NA
+      phi <- phi_mcmc_error <- phi_mcmc_rule <- NA
 
       # From 'run_metareg' function
-      beta <- beta_mcmc_error <- NA
+      beta <- beta_mcmc_error <- beta_mcmc_rule <- NA
 
       # From 'run_nodesplit' function
       if (!is.null(net$tau)) {
         tau <- max(net$tau[, 7])
         tau_mcmc_error <- max(net$tau[, 4]/sqrt(save_res))
+        tau_mcmc_rule <- max(0.05 * net$tau[, 4])
       } else {
-        tau <- tau_mcmc_error <- NA
+        tau <- tau_mcmc_error <- tau_mcmc_rule <- NA
       }
       direct <- max(net$direct[, 7])
       direct_mcmc_error <- max(net$direct[, 4]/sqrt(save_res))
+      direct_mcmc_rule <- max(0.05 * net$direct[, 4])
       indirect <- max(net$indirect[, 7])
       indirect_mcmc_error <- max(net$indirect[, 4]/sqrt(save_res))
+      indirect_mcmc_rule <- max(0.05 * net$indirect[, 4])
       diff <- max(net$diff[, 7])
       diff_mcmc_error <- max(net$diff[, 4]/sqrt(save_res))
+      diff_mcmc_rule <- max(0.05 * net$diff[, 4])
     } else if (!is.null(net$EM) & length(net$EM[1, ]) == 9) {
       # From 'run_sensitivity' function
       EM <- max(net$EM[, 8])
       EM_mcmc_error <- max(net$EM[, 2]/sqrt(save_res))
+      EM_mcmc_rule <- max(0.05 * net$EM[, 2])
       if (!is.null(net$tau)) {
         tau <- max(net$tau[, 8])
         tau_mcmc_error <- max(net$tau[, 2]/sqrt(save_res))
+        tau_mcmc_rule <- max(0.05 * net$tau[, 2])
       } else {
-        tau <- tau_mcmc_error <- NA
+        tau <- tau_mcmc_error <- tau_mcmc_rule <- NA
       }
 
       # From 'run_model' function
-      delta <- delta_mcmc_error <- NA
-      EM_pred <- EM_pred_mcmc_error <- NA
-      phi <- phi_mcmc_error <- NA
+      delta <- delta_mcmc_error <- delta_mcmc_rule <- NA
+      EM_pred <- EM_pred_mcmc_error <- EM_pred_mcmc_rule <- NA
+      phi <- phi_mcmc_error <- phi_mcmc_rule <- NA
 
       # From 'run_metareg' function
-      beta <- beta_mcmc_error <- NA
+      beta <- beta_mcmc_error <- beta_mcmc_rule <- NA
 
       # From 'run_nodesplit' function
-      direct <- direct_mcmc_error <- NA
-      indirect <- indirect_mcmc_error <- NA
-      diff <- diff_mcmc_error <- NA
+      direct <- direct_mcmc_error <- direct_mcmc_rule <- NA
+      indirect <- indirect_mcmc_error <- indirect_mcmc_rule <- NA
+      diff <- diff_mcmc_error <- diff_mcmc_rule <- NA
     }
   }
 
@@ -274,12 +293,22 @@ mcmc_diagnostics <- function(net, par = NULL) {
                       phi_mcmc_error,
                       beta_mcmc_error)
 
+  mcmc_rule_max <- c(EM_mcmc_rule,
+                     EM_pred_mcmc_rule,
+                     delta_mcmc_rule,
+                     tau_mcmc_rule,
+                     direct_mcmc_rule,
+                     indirect_mcmc_rule,
+                     diff_mcmc_rule,
+                     phi_mcmc_rule,
+                     beta_mcmc_rule)
+
   # Indicate whether each model parameter achieved or failed to converge
   conv <- rep(NA, length(r_hat_max))
   for (i in seq_len(length(r_hat_max))) {
     conv[i] <- ifelse(is.na(r_hat_max[i]), "Not applicable",
                       ifelse(!is.na(r_hat_max[i]) & r_hat_max[i] < 1.1 &
-                               mcmc_error_max[i] < 0.005,
+                               mcmc_error_max[i] < mcmc_rule_max[i],
                              "achieved", "failed"))
   }
 
@@ -295,12 +324,14 @@ mcmc_diagnostics <- function(net, par = NULL) {
                             "Regression coefficient(s) (beta)")
   convergence <- data.frame(monitored_parameters,
                             round(r_hat_max, 2),
-                            round(mcmc_error_max * 100, 1),
+                            round(mcmc_error_max, 3),
+                            round(mcmc_rule_max, 3),
                             conv)
   rownames(convergence) <- NULL
   colnames(convergence) <- c("parameters",
                              "max R-hat",
-                             "max MCMC error (%)",
+                             "max MCMC error",
+                             "MCMC rule",
                              "convergence")
 
   return(knitr::kable(convergence,

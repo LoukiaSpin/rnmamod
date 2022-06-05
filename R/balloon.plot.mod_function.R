@@ -30,8 +30,8 @@
 #'   For the \code{plot_effect_size} of the selected pairwise comparison,
 #'   the different colours and sizes of the bubbles reflect the
 #'   posterior standard deviation and the posterior mean, respectively.
-#'   A colour key appears below the plot.
-#'   The size of the bubble is proportional to the corresponding posterior mean.
+#'   A colour key appears below the plot. The size of the bubble is proportional
+#'   to the corresponding posterior mean.
 #'   Crossed bubbles indicate scenarios with conclusive evidence (the
 #'   95\% credible interval excludes the null value), and filled bubbles
 #'   indicate scenarios with inconclusive evidence (the 95\% credible interval
@@ -151,7 +151,7 @@ balloon_plot <- function(sens, compar, drug_names) {
   for (i in 1:(length(scenarios)^2)) {
     for (j in 1:(nt * (nt - 1)) / 2) {
       # Posterior mean of an effect measure
-      es[i, j] <- round(es_all[j + (nt * (nt - 1) / 2) * (i - 1), 1], 2)
+      es[i, j] <- round(es_all[j + (nt * (nt - 1) / 2) * (i - 1), 5], 2)
 
       # Posterior standard deviation of an effect measure
       sd_es[i, j] <- round(es_all[j + (nt * (nt - 1) / 2) * (i - 1), 2], 2)
@@ -166,7 +166,7 @@ balloon_plot <- function(sens, compar, drug_names) {
       lower_es[i, j] <- es_all[j + (nt * (nt - 1) / 2) * (i - 1), 3]
 
       # Upper bound of the 95% credible interval of the effect estimate
-      upper_es[i, j] <- es_all[j + (nt * (nt - 1) / 2) * (i - 1), 4]
+      upper_es[i, j] <- es_all[j + (nt * (nt - 1) / 2) * (i - 1), 7]
 
       # Dummy variable to indicate present or absent statistical significance
       signif[i, j] <- ifelse(lower_es[i, j] > 0 || upper_es[i, j] < 0,
@@ -336,7 +336,7 @@ balloon_plot <- function(sens, compar, drug_names) {
   }
 
   if (!is.null(sens$heter)) {
-    # Posterior mean of tau
+    # Posterior median of tau
     tau <- round(tau_all[, 5], 2)
 
     # Posterior standard deviation of tau
