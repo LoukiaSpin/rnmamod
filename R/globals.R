@@ -11,7 +11,7 @@
 #' @importFrom ggpubr ggarrange
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom knitr kable
-#' @importFrom mcmcplots mcmcplot
+#' @importFrom mcmcplots mcmcplot as.mcmc.rjags
 #' @importFrom netmeta pairwise netconnection
 #' @importFrom pcnetmeta nma.networkplot
 #' @importFrom reshape2 melt

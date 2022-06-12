@@ -120,11 +120,19 @@ outcome.}
 should match the intervention identifier under element \strong{t} in
 \code{data} (See 'Format').}
 
-\item{base_risk}{A number in the interval (0, 1) that indicates the baseline
-risk for the selected reference intervention. If \code{base_risk} has not
-been defined, the function uses the median event risk for the reference
-intervention as calculated from the corresponding trials in \code{data}.
-This argument is only relevant for binary outcomes.}
+\item{base_risk}{A scalar or a vector of length three with elements in the
+interval (0, 1). The former refers to a fixed baseline risk for the
+selected reference intervention. In the latter, the elements of the vector
+should be sorted in ascending order as they refer to the lower bound, mean,
+and upper bound of the 95\% confidence interval for the baseline
+risk for the selected reference intervention. With these elements, we can
+calculate the mean and variance of the approximately normal distribution of
+the logit of an event for the selected reference intervention
+(Dias et al., 2018).
+If \code{base_risk} has not been defined, the function uses the median
+event risk for the reference intervention as calculated from the
+corresponding trials in \code{data}. This argument is only relevant for a
+binary outcome.}
 
 \item{n_chains}{Positive integer specifying the number of chains for the
 MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
@@ -349,6 +357,9 @@ between-study heterogeneity and inconsistency in mixed treatment
 comparisons: Application to stroke prevention treatments in individuals
 with non-rheumatic atrial fibrillation.
 \emph{Stat Med} 2009;\bold{28}(14):1861--81. doi: 10.1002/sim.3594
+
+Dias S, Ades AE, Welton NJ, Jansen JP, Sutton AJ. The Core Model. In: Network
+Meta-Analysis for Decision Making. Chichester (UK): Wiley; 2018, pp 19--58.
 
 Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
 making 2: a generalized linear modeling framework for pairwise and network

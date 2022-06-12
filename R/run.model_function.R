@@ -53,11 +53,19 @@
 #' @param ref An integer specifying the reference intervention. The number
 #'   should match the intervention identifier under element \strong{t} in
 #'   \code{data} (See 'Format').
-#' @param base_risk A number in the interval (0, 1) that indicates the baseline
-#'   risk for the selected reference intervention. If \code{base_risk} has not
-#'   been defined, the function uses the median event risk for the reference
-#'   intervention as calculated from the corresponding trials in \code{data}.
-#'   This argument is only relevant for binary outcomes.
+#' @param base_risk A scalar or a vector of length three with elements in the
+#'   interval (0, 1). The former refers to a fixed baseline risk for the
+#'   selected reference intervention. In the latter, the elements of the vector
+#'   should be sorted in ascending order as they refer to the lower bound, mean,
+#'   and upper bound of the 95\% confidence interval for the baseline
+#'   risk for the selected reference intervention. With these elements, we can
+#'   calculate the mean and variance of the approximately normal distribution of
+#'   the logit of an event for the selected reference intervention
+#'   (Dias et al., 2018).
+#'   If \code{base_risk} has not been defined, the function uses the median
+#'   event risk for the reference intervention as calculated from the
+#'   corresponding trials in \code{data}. This argument is only relevant for a
+#'   binary outcome.
 #' @param n_chains Positive integer specifying the number of chains for the
 #'   MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
 #'   of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
@@ -293,6 +301,9 @@
 #' with non-rheumatic atrial fibrillation.
 #' \emph{Stat Med} 2009;\bold{28}(14):1861--81. doi: 10.1002/sim.3594
 #'
+#' Dias S, Ades AE, Welton NJ, Jansen JP, Sutton AJ. The Core Model. In: Network
+#' Meta-Analysis for Decision Making. Chichester (UK): Wiley; 2018, pp 19--58.
+#'
 #' Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
 #' making 2: a generalized linear modeling framework for pairwise and network
 #' meta-analysis of randomized controlled trials. \emph{Med Decis Making}
@@ -442,16 +453,28 @@ run_model <- function(data,
   } else {
     ref
   }
-  base_risk <- if (is.element(measure, c("OR", "RR", "RD")) &
+  base_risk0 <- if (is.element(measure, c("OR", "RR", "RD")) &
                    missing(base_risk)) {
     describe_network(data = data,
                      drug_names = 1:item$nt,
                      measure = measure)$table_interventions[ref, 7]/100
-  } else if (is.element(measure, c("OR", "RR", "RD")) &
-             (base_risk <= 0 || base_risk >= 1)) {
-    stop("The argument 'base_risk' must be defined in (0, 1).", call. = FALSE)
+  } else if (!is.element(length(base_risk), c(1, 3))) {
+    stop("The argument 'base_risk' must be scalar or vector of three elements",
+         call. = FALSE)
   } else {
     base_risk
+  }
+  base_risk1 <- if (min(base_risk0) <= 0 || max(base_risk0) >= 1) {
+    stop("The argument 'base_risk' must be defined in (0, 1).", call. = FALSE)
+  } else if (length(base_risk0) == 3 & is.unsorted(base_risk0)) {
+    aa <- "must be sort in ascending order."
+    stop(paste("The elements in argument 'base_risk'" , aa), call. = FALSE)
+  } else if (length(base_risk0) == 1) {
+    rep(base_risk0, 2)
+  } else if (length(base_risk0) == 3) {
+    # Second element is precision in the logit scale
+    c(base_risk0[2], 3.92/(log(base_risk0[3])/(1 - log(base_risk0[3])) -
+                              log(base_risk0[1])/(1 - log(base_risk0[1])))^2)
   }
   n_chains <- if (missing(n_chains)) {
     2
@@ -511,7 +534,7 @@ run_model <- function(data,
   data_jag <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
     append(data_jag, list("y.o" = item$y0, "se.o" = item$se0))
   } else if (is.element(measure, c("OR", "RR", "RD"))) {
-    append(data_jag, list("r" = item$r, "base_risk" = base_risk))
+    append(data_jag, list("r" = item$r, "ref_base" = base_risk1))
   }
 
   data_jag <- if (is.element(assumption, "IND-CORR")) {
@@ -745,14 +768,14 @@ run_model <- function(data,
                                        delta = delta,
                                        heter_prior = heterog_prior,
                                        abs_risk = abs_risk,
-                                       base_risk = base_risk))
+                                       base_risk = base_risk1))
     nma_results <- append(results, list(EM_pred = EM_pred,
                                         tau = tau,
                                         delta = delta,
                                         heter_prior = heterog_prior,
                                         SUCRA = SUCRA,
                                         effectiveness = effectiveness,
-                                        base_risk = base_risk,
+                                        base_risk = base_risk1,
                                         abs_risk = abs_risk))
   } else if (model == "RE" & is.element(measure, c("RR", "RD"))) {
     ma_results <- append(results, list(EM_pred = EM_pred,
@@ -762,7 +785,7 @@ run_model <- function(data,
                                        delta = delta,
                                        heter_prior = heterog_prior,
                                        abs_risk = abs_risk,
-                                       base_risk = base_risk))
+                                       base_risk = base_risk1))
     nma_results <- append(results, list(EM_pred = EM_pred,
                                         EM_LOR = EM_LOR,
                                         EM_pred_LOR = EM_pred_LOR,
@@ -773,7 +796,7 @@ run_model <- function(data,
                                         SUCRA_LOR = SUCRA_LOR,
                                         effectiveness = effectiveness,
                                         abs_risk = abs_risk,
-                                        base_risk = base_risk))
+                                        base_risk = base_risk1))
   } else if (model == "FE" & !is.element(measure, c("OR", "RR", "RD"))) {
     ma_results <- results
     nma_results <- append(results, list(SUCRA = SUCRA,
@@ -783,7 +806,7 @@ run_model <- function(data,
     nma_results <- append(results, list(SUCRA = SUCRA,
                                         effectiveness = effectiveness,
                                         abs_risk = abs_risk,
-                                        base_risk = base_risk))
+                                        base_risk = base_risk1))
   } else if (model == "FE" & is.element(measure, c("RR", "RD"))) {
     ma_results <- append(results, list(EM_LOR = EM_LOR,
                                        abs_risk = abs_risk))
@@ -792,7 +815,7 @@ run_model <- function(data,
                                         SUCRA_LOR = SUCRA_LOR,
                                         effectiveness = effectiveness,
                                         abs_risk = abs_risk,
-                                        base_risk = base_risk))
+                                        base_risk = base_risk1))
   }
 
   ifelse(item$nt > 2, return(nma_results), return(ma_results))

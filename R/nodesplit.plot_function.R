@@ -184,6 +184,7 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
   # Keep tau and model assessment measures from NMA model
   tau_values <- full$tau[c(5, 2, 3, 7)]
   model_assess_nma <- full$model_assessment
+  data_points <- model_assess_nma[4]
 
   # Effect measure
   measure2 <- effect_measure_name(measure, lower = FALSE)
@@ -397,9 +398,9 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
 
   # Find whether at least one split node improve the fit of the model
   model_selection <- data.frame(comp,
-                                model_assess_sort[, 3] -
+                                model_assess_sort[, 4] -
                                   rep(model_assess_nma$DIC,
-                                      length(model_assess_sort[, 3])))
+                                      length(model_assess_sort[, 4])))
   colnames(model_selection) <- c("Comparison", "dic_diff")
   better_fit <- c(ifelse(model_selection$dic_diff > 5, "Consistency model",
                          ifelse(model_selection$dic_diff < -5,
@@ -416,11 +417,11 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                                 round(tau[, 3:4], 2),
                                 cri_tau)
     colnames(table_assess0) <- c("Approach",
-                                 "DIC", "Mean deviance", "pD",
+                                 "Residual deviance", "DIC", "pD",
                                  "DIC-based better fit",
                                  "Median tau", "SD tau",
                                  "95% CrI tau")
-    add <- data.frame("NMA", round(model_assess_nma[c(1, 3, 2)], 2), "-",
+    add <- data.frame("NMA", round(model_assess_nma[c(3, 1, 2)], 2), "-",
                       round(tau_values[1], 2), round(tau_values[2], 2),
                       paste0("(", round(tau_values[3], 2), ",", " ",
                              round(tau_values[4], 2), ")"))
@@ -431,9 +432,9 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                                 round(model_assess_sort[, -c(1:2)], 2),
                                 better_fit)
     colnames(table_assess0) <- c("Approach",
-                                 "DIC", "Mean deviance", "pD",
+                                 "Residual deviance", "DIC", "pD",
                                  "DIC-based better fit")
-    add <- data.frame("NMA", round(model_assess_nma[c(1, 3, 2)], 2), "-")
+    add <- data.frame("NMA", round(model_assess_nma[c(3, 1, 2)], 2), "-")
     colnames(add) <- colnames(table_assess0)
     table_assess <- rbind(add, table_assess0)
   }
@@ -547,7 +548,9 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
          table_model_assessment =
            knitr::kable(table_assess,
                         align = "lccclccc",
-                        caption = "Model assessment parameters"),
+                        caption = paste0("Model assessment parameters (",
+                                         data_points, " ",
+                                         "unconstrained data points)")),
          intervalplot_inconsistency_factor = p1,
          intervalplot_tau = p2 +
            guides(fill = guide_legend(override.aes = list(alpha = 0.4))))
@@ -559,7 +562,9 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
          table_model_assessment =
            knitr::kable(table_assess,
                         align = "lcccl",
-                        caption = "Model assessment parameters"),
+                        caption =paste0("Model assessment parameters (",
+                                        data_points, " ",
+                                        "unconstrained data points)")),
          intervalplot_inconsistency_factor = p1)
   }
 

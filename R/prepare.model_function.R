@@ -202,7 +202,12 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                                    }\n")
 
   stringcode <- if (is.element(measure, c("OR", "RR", "RD"))) {
-    paste(stringcode, "abs_risk[ref] <- base_risk
+    paste(stringcode, "mean_logit_base_event <- logit(ref_base[1])
+                       prec_logit_base_event <- ref_base[2]*(1 - equals(ref_base[1], ref_base[2])) + equals(ref_base[1], ref_base[2])
+                       logit(base_risk0) <- logit_base_risk
+                       logit_base_risk ~ dnorm(mean_logit_base_event, prec_logit_base_event)
+                       base_risk <- base_risk0*(1 - equals(ref_base[1], ref_base[2])) + ref_base[1]*equals(ref_base[1], ref_base[2])
+                       abs_risk[ref] <- base_risk
                        for (t in 1:(ref - 1)) {
                          abs_risk[t] <- exp((d.n[t] + log(base_risk)) - log(1 + base_risk*(exp(d.n[t]) - 1)))
                        }

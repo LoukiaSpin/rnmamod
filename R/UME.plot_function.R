@@ -193,6 +193,7 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
 
   # Measures of model assessment: DIC, pD, total residual deviance under NAM
   model_assess_full <- full$model_assessment
+  data_points <- model_assess_full[4]
 
   # Measures of model assessment: DIC, pD, total residual deviance under UME
   model_assess_ume <- ume$model_assessment
@@ -247,7 +248,7 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
   rownames(em_both) <- NULL
 
   # A data-frame with the measures on model assessment
-  model_assessment <- data.frame(t(model_assess_full), t(model_assess_ume))
+  model_assessment <- data.frame(t(model_assess_full[-4]), t(model_assess_ume))
   colnames(model_assessment) <- c("Full NMA", "UME model")
   message(ifelse(model_assess_full[1] - model_assess_ume[1] > 5,
                  "UME preferred when accounting for model fit and complexity",
@@ -315,7 +316,9 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
          table_model_assessment =
            knitr::kable(model_assessment,
                         align = "lcc",
-                        caption = "Model assessment"),
+                        caption = paste0("Model assessment parameters (",
+                                         data_points, " ",
+                                         "unconstrained data points)")),
          table_tau =
            knitr::kable(between_trial_sd,
                         align = "lccc",
@@ -331,7 +334,9 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
          table_model_assessment =
            knitr::kable(model_assessment,
                         align = "lcc",
-                        caption = "Model assessment"),
+                        caption = paste0("Model assessment parameters (",
+                                         data_points, " ",
+                                         "unconstrained data points)")),
          scatterplots = scatterplots,
          leverage_plots = lev_plots,
          intervalplots = intervalplots)

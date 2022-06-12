@@ -180,7 +180,6 @@ metareg_plot <- function(full,
     compar
   }
 
-
   covariate <- if (length(unique(reg$covariate)) < 3) {
     unique(reg$covariate)
   } else {
@@ -422,10 +421,10 @@ metareg_plot <- function(full,
 
   # Posterior mean of model assessment measures under NMA
   model_assess_nma <- round(full$model_assessment, 2)
+  n_data <- model_assess_nma$n_data
 
   # Posterior mean of model assessment measures under meta-regression
   model_assess_nmr <- round(reg$model_assessment, 2)
-
 
   # The 95% CrIs of the between-trial standard deviation under both models
   if (model == "RE") {
@@ -437,8 +436,8 @@ metareg_plot <- function(full,
   if (model == "RE") {
     table_model_assess <- data.frame(c("Network meta-analysis",
                                        "Meta-regression"),
-                                     rbind(model_assess_nma[c(1, 3, 2)],
-                                           model_assess_nmr[c(1, 3, 2)]),
+                                     rbind(model_assess_nma,
+                                           cbind(model_assess_nmr, n_data)),
                                      rbind(cbind(tau_nma[, 5],
                                                  tau_nma[, 2],
                                                  cri_tau_nma),
@@ -446,15 +445,17 @@ metareg_plot <- function(full,
                                                  tau_nmr[, 2],
                                                  cri_tau_nmr)))
     colnames(table_model_assess) <- c("Analysis",
-                                      "DIC", "Mean deviance", "pD",
+                                      "DIC", "pD", "Mean deviance",
+                                      "data points",
                                       "Median tau", "SD tau", "95% CrI tau")
   } else {
     table_model_assess <- data.frame(c("Network meta-analysis",
                                        "Meta-regression"),
-                                     rbind(model_assess_nma[c(1, 3, 2)],
-                                           model_assess_nmr[c(1, 3, 2)]))
+                                     rbind(model_assess_nma,
+                                           cbind(model_assess_nmr, n_data)))
     colnames(table_model_assess) <- c("Analysis",
-                                      "DIC", "Mean deviance", "pD")
+                                      "DIC", "Mean deviance", "pD",
+                                      "data points")
   }
   message(ifelse(model_assess_nma[1] - model_assess_nmr[1] > 5,
                  "NMR preferred when accounting for model fit and complexity",
@@ -462,7 +463,6 @@ metareg_plot <- function(full,
                    model_assess_nma[1] - model_assess_nmr[1] < -5,
                    "NMA preferred when accounting for model fit and complexity",
                         "There is little to choose between the two models")))
-
 
   # Tabulate results on comparisons with the reference (both models)
   if (model == "RE") {

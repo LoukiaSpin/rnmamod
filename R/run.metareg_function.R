@@ -244,7 +244,7 @@ run_metareg <- function(full,
   data_jag <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
     append(data_jag, list("y.o" = item$y0, "se.o" = item$se0))
   } else if (!is.element(measure, c("MD", "SMD", "ROM"))) {
-    append(data_jag, list("r" = item$r, "base_risk" = base_risk))
+    append(data_jag, list("r" = item$r, "ref_base" = base_risk))
   }
 
   data_jag <- if (length(unique(covariate)) > 2) {
