@@ -5,8 +5,10 @@
 #'   per 1000 participants for all possible comparisons of interventions in the
 #'   network. The main diagonal of the table presents the absolute risk for each
 #'   intervention in the network. \code{league_table_absolute} can be used for a
-#'   random-effects or fixed-effect network meta-analysis.
-#'   It is applied for one binary outcome only.
+#'   random-effects or fixed-effect network meta-analysis. This function should
+#'   when the user has access to the raw trial-level data (one-trial-per-row
+#'   format with arm-level data). \code{league_table_absolute} is applied for
+#'   one binary outcome only.
 #'
 #' @param full An object of S3 class \code{\link{run_model}}.
 #'   See 'Value' in \code{\link{run_model}}.

@@ -403,10 +403,10 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           EM.LOR[k, c] <- d.n[k] - d.n[c]                  # LOR
+                           EM.LOR[k, c] <- d.n[k] - d.n[c] # LOR
                            EM[k, c] <- EM.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.LOR[k, c]))) # LRR
-                           EM.pred.LOR[k, c] ~ dnorm(EM.LOR[k, c], prec)
-                           EM.pred[k, c] <- EM.pred.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.pred.LOR[k, c])))
+                           EM.pred.LOR[k, c] ~ dnorm(EM.LOR[k, c], prec) # LOR
+                           EM.pred[k, c] <- EM.pred.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.pred.LOR[k, c]))) # LRR
                        }}\n")
   } else if (model == "RE" & measure == "RD") {
     paste(stringcode, "for (t in 1:(ref - 1)) {
@@ -423,12 +423,12 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           EM.LOR[k, c] <- d.n[k] - d.n[c]         # LOR
-                           EM.LRR[k, c] <- EM.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.LOR[k, c])))
+                           EM.LOR[k, c] <- d.n[k] - d.n[c] # LOR
+                           EM.LRR[k, c] <- EM.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.LOR[k, c]))) # LRR
                            EM[k, c] <- abs_risk[c]*(exp(EM.LRR[k, c]) - 1) # RD
-                           EM.pred.LOR[k, c] ~ dnorm(EM.LOR[k, c], prec)
-                           EM.pred.LRR[k, c] <- EM.pred.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.pred.LOR[k, c])))
-                           EM.pred[k, c] <- abs_risk[c]*(exp(EM.pred.LRR[k, c]) - 1)
+                           EM.pred.LOR[k, c] ~ dnorm(EM.LOR[k, c], prec) # LOR
+                           EM.pred.LRR[k, c] <- EM.pred.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.pred.LOR[k, c]))) # LRR
+                           EM.pred[k, c] <- abs_risk[c]*(exp(EM.pred.LRR[k, c]) - 1) # RD
                        }}\n")
   } else if (model == "FE" & measure == "RR") {
     paste(stringcode, "for (t in 1:(ref - 1)) {

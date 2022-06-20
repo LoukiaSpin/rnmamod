@@ -100,7 +100,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
     NULL
   }
 
-  save_res <- ((net$n_iter - net$n_burnin) * net$n_chains) / net$n_thin
+  #save_res <- ((net$n_iter - net$n_burnin) * net$n_chains) / net$n_thin
 
   if (!is.null(net$jagsfit)) {
     jagsfit <- net$jagsfit
@@ -110,14 +110,14 @@ mcmc_diagnostics <- function(net, par = NULL) {
     # Effect size of all unique pairwise comparisons
     EM0 <- t(get_results %>% select(starts_with("EM[")))
     EM <- max(EM0[, 8])
-    EM_mcmc_error <- max(EM0[, 2]/sqrt(save_res))
+    EM_mcmc_error <- max(EM0[, 2]/sqrt(EM0[, 9]))
     EM_mcmc_rule <- max(0.05 * EM0[, 2])
 
     # Predictive effects of all unique pairwise comparisons
     if (net$model == "RE" & !is.null(net$EM_pred)) {
       EM_pred0 <- t(get_results %>% select(starts_with("EM.pred[")))
       EM_pred <- max(EM_pred0[, 8])
-      EM_pred_mcmc_error <- max(EM_pred0[, 2]/sqrt(save_res))
+      EM_pred_mcmc_error <- max(EM_pred0[, 2]/sqrt(EM_pred0[, 9]))
       EM_pred_mcmc_rule <- max(0.05 * EM_pred0[, 2])
     } else if (net$model == "FE" || is.null(net$EM_pred)) {
       EM_pred <- EM_pred_mcmc_error <- EM_pred_mcmc_rule <- NA
@@ -128,7 +128,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
       delta0 <- t(get_results %>% select(starts_with("delta") &
                                            !ends_with(",1]")))
       delta <- max(delta0[, 8])
-      delta_mcmc_error <- max(delta0[, 2]/sqrt(save_res))
+      delta_mcmc_error <- max(delta0[, 2]/sqrt(delta0[, 9]))
       delta_mcmc_rule <- max(0.05 * delta0[, 2])
     } else if (net$model == "FE" || is.null(net$delta)) {
       delta <- delta_mcmc_error <- delta_mcmc_rule <- NA
@@ -138,7 +138,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
     if (net$model == "RE") {
       tau0 <- t(get_results %>% select(starts_with("tau")))
       tau <- tau0[8]
-      tau_mcmc_error <- tau0[2]/sqrt(save_res)
+      tau_mcmc_error <- tau0[2]/sqrt(tau0[9])
       tau_mcmc_rule <- max(0.05 * tau0[2])
     } else {
       tau <- tau_mcmc_error <- tau_mcmc_rule <- NA
@@ -161,14 +161,14 @@ mcmc_diagnostics <- function(net, par = NULL) {
       phi0 <- t(get_results %>% select(starts_with("phi") |
                                             starts_with("mean.phi")))
       phi <- phi0[8]
-      phi_mcmc_error <- phi0[2]/sqrt(save_res)
+      phi_mcmc_error <- phi0[2]/sqrt(phi0[9])
       phi_mcmc_rule <- max(0.05 * phi0[2])
     } else if (!is.null(net$phi) & !is.element(net$assumption,
                                                c("IDE-COMMON", "HIE-COMMON"))) {
       phi0 <- t(get_results %>% select(starts_with("mean.phi[") |
                                          starts_with("phi[")))
       phi <- max(phi0[, 8])
-      phi_mcmc_error <- max(phi0[, 2]/sqrt(save_res))
+      phi_mcmc_error <- max(phi0[, 2]/sqrt(phi0[, 9]))
       phi_mcmc_rule <- max(0.05 * phi0[, 2])
     } else if (is.null(net$phi)) {
       phi <- phi_mcmc_error <- phi_mcmc_rule <- NA
@@ -178,7 +178,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
     if (!is.null(net$beta_all)) {
       beta0 <- t(get_results %>% select(starts_with("beta.all[")))
       beta <- max(beta0[, 8])
-      beta_mcmc_error <- max(beta0[, 2]/sqrt(save_res))
+      beta_mcmc_error <- max(beta0[, 2]/sqrt(beta0[, 9]))
       beta_mcmc_rule <- max(0.05 * beta0[, 2])
     } else if (is.null(net$beta)) {
       beta <- beta_mcmc_error <- beta_mcmc_rule <- NA
@@ -196,11 +196,11 @@ mcmc_diagnostics <- function(net, par = NULL) {
 
       # From 'run_series_meta' function
       EM <- max(net$EM[, 10])
-      EM_mcmc_error <- max(net$EM[, 4]/sqrt(save_res))
+      EM_mcmc_error <- max(net$EM[, 4]/sqrt(net$EM[, 11]))
       EM_mcmc_rule <- max(0.05 * net$EM[, 4])
       if (!is.null(net$tau)) {
         tau <- max(net$tau[, 10])
-        tau_mcmc_error <- max(net$tau[, 4]/sqrt(save_res))
+        tau_mcmc_error <- max(net$tau[, 4]/sqrt(net$tau[, 11]))
         tau_mcmc_rule <- max(0.05 * net$tau[, 4])
       } else {
         tau <- tau_mcmc_error <- tau_mcmc_rule <- NA
@@ -223,28 +223,28 @@ mcmc_diagnostics <- function(net, par = NULL) {
       # From 'run_nodesplit' function
       if (!is.null(net$tau)) {
         tau <- max(net$tau[, 7])
-        tau_mcmc_error <- max(net$tau[, 4]/sqrt(save_res))
+        tau_mcmc_error <- max(net$tau[, 4]/sqrt(net$tau[, 8]))
         tau_mcmc_rule <- max(0.05 * net$tau[, 4])
       } else {
         tau <- tau_mcmc_error <- tau_mcmc_rule <- NA
       }
       direct <- max(net$direct[, 7])
-      direct_mcmc_error <- max(net$direct[, 4]/sqrt(save_res))
+      direct_mcmc_error <- max(net$direct[, 4]/sqrt(net$direct[, 8]))
       direct_mcmc_rule <- max(0.05 * net$direct[, 4])
       indirect <- max(net$indirect[, 7])
-      indirect_mcmc_error <- max(net$indirect[, 4]/sqrt(save_res))
+      indirect_mcmc_error <- max(net$indirect[, 4]/sqrt(net$indirect[, 8]))
       indirect_mcmc_rule <- max(0.05 * net$indirect[, 4])
       diff <- max(net$diff[, 7])
-      diff_mcmc_error <- max(net$diff[, 4]/sqrt(save_res))
+      diff_mcmc_error <- max(net$diff[, 4]/sqrt(net$diff[, 8]))
       diff_mcmc_rule <- max(0.05 * net$diff[, 4])
     } else if (!is.null(net$EM) & length(net$EM[1, ]) == 9) {
       # From 'run_sensitivity' function
       EM <- max(net$EM[, 8])
-      EM_mcmc_error <- max(net$EM[, 2]/sqrt(save_res))
+      EM_mcmc_error <- max(net$EM[, 2]/sqrt(net$EM[, 9]))
       EM_mcmc_rule <- max(0.05 * net$EM[, 2])
       if (!is.null(net$tau)) {
         tau <- max(net$tau[, 8])
-        tau_mcmc_error <- max(net$tau[, 2]/sqrt(save_res))
+        tau_mcmc_error <- max(net$tau[, 2]/sqrt(net$tau[, 9]))
         tau_mcmc_rule <- max(0.05 * net$tau[, 2])
       } else {
         tau <- tau_mcmc_error <- tau_mcmc_rule <- NA
