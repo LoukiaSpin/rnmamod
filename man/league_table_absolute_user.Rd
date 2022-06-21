@@ -24,10 +24,10 @@ of the interventions in the hierarchy from the best to the worst with
 possible choices a non-zero positive integer for the rank, the SUCRA value
 (Salanti et al., 2011) or p-score value (Ruecker and Schwarzer, 2015).
 The first row of the data-frame refers to the selected reference
-intervention and should include the null value three times at the
-investigated effect measure, and value of the ranking measure. When the
-effect measure is odds ratio or relative risk, the data-frame should
-include results in the logarithmic scale.}
+intervention and should include (1) the null value three times at the
+investigated effect measure, and (2) the value of the ranking measure.
+When the effect measure is odds ratio or relative risk, the data-frame
+should include results in the logarithmic scale.}
 
 \item{measure}{Character string indicating the effect measure of \code{data}.
 For a binary outcome, the following can be considered: \code{"OR"},
@@ -38,9 +38,8 @@ difference, respectively.}
 risk for the selected reference intervention.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
-the order they appear in the argument \code{data} of
-\code{\link{run_model}}. The first intervention should be the selected
-reference intervention.}
+the order they appear in the argument \code{data}.
+The first intervention should be the selected reference intervention.}
 
 \item{show}{A vector of at least three character strings that refer to the
 names of the interventions \emph{exactly} as defined in \code{drug_names}.
@@ -139,7 +138,7 @@ Abstracts of the Global Evidence Summit, Cape Town, South Africa.
 \emph{Cochrane Database of Systematic Reviews} 2017;\bold{9}(Suppl 1):1891.
 }
 \seealso{
-code{\link{league_table_absolute}}, \code{\link{run_model}},
+code{\link{league_table_absolute}},
   \code{\link[writexl:write_xlsx]{write_xlsx}}
 }
 \author{

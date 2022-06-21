@@ -513,9 +513,9 @@ league_table_absolute_user <- function(data,
                       "AR", "lower", "upper",
                       "RD", "lower", "upper")
   tab <- if (all.equal(hiera, as.integer(hiera)) == FALSE) {
-    subset(tab0, is.element(Interventions, drug_names))[order(-hiera), ]
+    subset(tab0, is.element(tab0$Interventions, drug_names))[order(-hiera), ]
   } else {
-    subset(tab0, is.element(Interventions, drug_names))[order(hiera), ]
+    subset(tab0, is.element(tab0$Interventions, drug_names))[order(hiera), ]
   }
   rownames(tab) <- NULL
 
