@@ -23,10 +23,10 @@
 #'   possible choices a non-zero positive integer for the rank, the SUCRA value
 #'   (Salanti et al., 2011) or p-score value (Ruecker and Schwarzer, 2015).
 #'   The first row of the data-frame refers to the selected reference
-#'   intervention and should include the null value three times at the
-#'   investigated effect measure, and value of the ranking measure. When the
-#'   effect measure is odds ratio or relative risk, the data-frame should
-#'   include results in the logarithmic scale.
+#'   intervention and should include (1) the null value three times at the
+#'   investigated effect measure, and (2) the value of the ranking measure.
+#'   When the effect measure is odds ratio or relative risk, the data-frame
+#'   should include results in the logarithmic scale.
 #' @param measure Character string indicating the effect measure of \code{data}.
 #'   For a binary outcome, the following can be considered: \code{"OR"},
 #'   \code{"RR"} or \code{"RD"} for the odds ratio, relative risk, and risk
@@ -34,9 +34,8 @@
 #' @param base_risk A number in the interval (0, 1) that indicates the baseline
 #'   risk for the selected reference intervention.
 #' @param drug_names A vector of labels with the name of the interventions in
-#'   the order they appear in the argument \code{data} of
-#'   \code{\link{run_model}}. The first intervention should be the selected
-#'   reference intervention.
+#'   the order they appear in the argument \code{data}.
+#'   The first intervention should be the selected reference intervention.
 #' @param show A vector of at least three character strings that refer to the
 #'   names of the interventions \emph{exactly} as defined in \code{drug_names}.
 #'   Then, the league table will be created for these interventions only.
@@ -103,7 +102,7 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso code{\link{league_table_absolute}}, \code{\link{run_model}},
+#' @seealso code{\link{league_table_absolute}},
 #'   \code{\link[writexl:write_xlsx]{write_xlsx}}
 #'
 #' @references
