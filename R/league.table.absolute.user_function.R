@@ -10,7 +10,7 @@
 #'   of the basic parameters in the reported effect measure. This function
 #'   should be used when the user has access to the results of a published
 #'   systematic review rather than the raw trial-level data. In the latter case,
-#'   the user consider the function \code{\link{league_table_absolute}}.
+#'   the user should consider the function \code{\link{league_table_absolute}}.
 #'   \code{league_table_absolute_user} is applied for one binary outcome only.
 #'
 #' @param data A data-frame with the summary effects of comparisons with the
@@ -42,6 +42,11 @@
 #'   Then, the league table will be created for these interventions only.
 #'   If \code{show} is not defined, the league table will present all
 #'   interventions as defined in \code{drug_names}.
+#' @param save_xls Logical to indicate whether to export the tabulated results
+#'   to an 'xlsx' file (via the \code{\link[writexl:write_xlsx]{write_xlsx}}
+#'   function of the R-package
+#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}) to the working
+#'   directory of the user. The default is \code{FALSE} (do not export).
 #'
 #' @return A league table showing the estimate and 95\% confidence interval of
 #'   the odds ratio (upper off-diagonals), risk difference per 1000
@@ -80,6 +85,12 @@
 #'   intervention (i.e. the respective 95\% confidence interval does not include
 #'   the null value) are indicated in bold.
 #'
+#'   Furthermore, \code{league_table_absolute_user} exports
+#'   \code{table_relative_absolute_effect}, a table with the relative and
+#'   absolute effects of the basic parameters, as an 'xlsx' file (via the
+#'   \code{\link[writexl:write_xlsx]{write_xlsx}} function) to the working
+#'   directory of the user.
+#'
 #'   To obtain unique absolute risks for each intervention, we have considered
 #'   the transitive risks framework, namely, an intervention has the same
 #'   absolute risk regardless of the comparator intervention(s) in a trial
@@ -92,7 +103,8 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{run_model}}
+#' @seealso code{\link{league_table_absolute}}, \code{\link{run_model}},
+#'   \code{\link[writexl:write_xlsx]{write_xlsx}}
 #'
 #' @references
 #' Ruecker G, Schwarzer G. Ranking treatments in frequentist network
@@ -116,8 +128,8 @@ league_table_absolute_user <- function(data,
                                        measure,
                                        base_risk,
                                        drug_names,
-                                       show = NULL) {
-
+                                       show = NULL,
+                                       save_xls) {
 
   data <- if (missing(data)) {
     stop("The argument 'data' needs to be defined", call. = FALSE)
@@ -162,6 +174,12 @@ league_table_absolute_user <- function(data,
     cbind(combn(show, 2)[2,], combn(show, 2)[1,])
   }
 
+  save_xls <- if (missing(save_xls)) {
+    FALSE
+  } else {
+    save_xls
+  }
+
   drug_names <- if (is.null(show0)) {
     drug_names0
   } else {
@@ -184,6 +202,7 @@ league_table_absolute_user <- function(data,
     round((data[, -4] + base_risk), 3)
   }
 
+  # Use basic parameters to calculate the functional parameters
   comb0 <- t(combn(1:length(drug_names), 2))
   comb <- cbind(comb0[, 2], comb0[, 1])
   data_new <- data[, -4]
@@ -388,31 +407,72 @@ league_table_absolute_user <- function(data,
   ymax1 <- ymin1
 
   # The league table as a heatmap
-  ggplot(mat_new,
-         aes(factor(Var2, levels = order_drug[1:nt]),
-             factor(Var1, levels = order_drug[nt:1]))) +
-    geom_tile(aes(fill = value2)) +
-    geom_fit_text(aes(factor(Var2, levels = order_drug[1:nt]),
-                      factor(Var1, levels = order_drug[nt:1]),
-                      label = value),
-                  fontface = ifelse(signif_status == 1, "bold", "plain"),
-                  #colour = ifelse(signif_status == 1, "blue", "black"),
-                  reflow = TRUE) +
-    scale_fill_gradient(low = "white", high = "white", na.value = "grey90") +
-    geom_rect(aes(xmin = xmin1, xmax = xmax1, ymin = ymin1, ymax = ymax1),
-              color = "black", size = 1) +
-    geom_rect(aes(xmin = ymin1, xmax = ymax1, ymin = xmin1, ymax = xmax1),
-              color = "black", size = 1) +
-    scale_x_discrete(position = "top") +
-    labs(x = "", y = "") +
-    theme_classic() +
-    theme(legend.position = "none",
-          axis.title.x = element_text(size = 12, face = "bold",
-                                      colour = "black"),
-          axis.title.y = element_text(size = 12, face = "bold",
-                                      colour = "black"),
-          axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0), #0.5
-          axis.text.y = element_text(size = 12),
-          plot.caption = element_text(hjust = 0.01))
+  fig <- ggplot(mat_new,
+                aes(factor(Var2, levels = order_drug[1:nt]),
+                    factor(Var1, levels = order_drug[nt:1]))) +
+           geom_tile(aes(fill = value2)) +
+           geom_fit_text(aes(factor(Var2, levels = order_drug[1:nt]),
+                             factor(Var1, levels = order_drug[nt:1]),
+                             label = value),
+                         fontface = ifelse(signif_status == 1, "bold", "plain"),
+                         reflow = TRUE) +
+           scale_fill_gradient(low = "white",
+                               high = "white",
+                               na.value = "grey90") +
+           geom_rect(aes(xmin = xmin1,
+                         xmax = xmax1,
+                         ymin = ymin1,
+                         ymax = ymax1),
+                     color = "black", size = 1) +
+           geom_rect(aes(xmin = ymin1,
+                         xmax = ymax1,
+                         ymin = xmin1,
+                         ymax = xmax1),
+                     color = "black", size = 1) +
+           scale_x_discrete(position = "top") +
+           labs(x = "", y = "") +
+           theme_classic() +
+           theme(legend.position = "none",
+                 axis.title.x = element_text(size = 12,
+                                             face = "bold",
+                                             colour = "black"),
+                 axis.title.y = element_text(size = 12,
+                                             face = "bold",
+                                             colour = "black"),
+                 axis.text.x = element_text(size = 12,
+                                            angle = 50,
+                                            hjust = 0.0), #0.5
+                 axis.text.y = element_text(size = 12),
+                 plot.caption = element_text(hjust = 0.01)
+                 )
 
+  # Tabulate relative and absolute effects for the basic parameters
+  tab0 <- data.frame(drug_names0,
+                     exp(rbind(rep(0, 3), full_lor[1:(nt - 1), ])),
+                     absol_risk * 1000,
+                     rbind(rep(0, 3), full_rd[1:(nt - 1), ] * 1000))
+  colnames(tab0) <- c("Interventions",
+                      "OR", "lower", "upper",
+                      "AR", "lower", "upper",
+                      "RD", "lower", "upper")
+  tab <- if (all.equal(hiera, as.integer(hiera)) == FALSE) {
+    tab0[order(-hiera), ]
+  } else {
+    tab0[order(hiera), ]
+  }
+  rownames(tab) <- NULL
+
+  # Write the table as .xlsx
+  if (save_xls == TRUE) {
+    write_xlsx(tab, paste0("Table relative $ absolute", ".xlsx"))
+  }
+
+  # Collect results
+  results <- list(table_relative_absolute_effects =
+                    knitr::kable(tab,
+                                 align = "lcccccc",
+                                 caption = "Relative and absolute effects"),
+                  league_table = fig)
+
+  return(results)
 }

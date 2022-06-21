@@ -4,7 +4,14 @@
 \alias{league_table_absolute_user}
 \title{League table for relative and absolute effects (user defined)}
 \usage{
-league_table_absolute_user(data, measure, base_risk, drug_names, show = NULL)
+league_table_absolute_user(
+  data,
+  measure,
+  base_risk,
+  drug_names,
+  show = NULL,
+  save_xls
+)
 }
 \arguments{
 \item{data}{A data-frame with the summary effects of comparisons with the
@@ -32,13 +39,20 @@ risk for the selected reference intervention.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
-\code{\link{run_model}}.}
+\code{\link{run_model}}. The first intervention should be the selected
+reference intervention.}
 
 \item{show}{A vector of at least three character strings that refer to the
 names of the interventions \emph{exactly} as defined in \code{drug_names}.
 Then, the league table will be created for these interventions only.
 If \code{show} is not defined, the league table will present all
 interventions as defined in \code{drug_names}.}
+
+\item{save_xls}{Logical to indicate whether to export the tabulated results
+to an 'xlsx' file (via the \code{\link[writexl:write_xlsx]{write_xlsx}}
+function of the R-package
+\href{https://CRAN.R-project.org/package=writexl}{writexl}) to the working
+directory of the user. The default is \code{FALSE} (do not export).}
 }
 \value{
 A league table showing the estimate and 95\% confidence interval of
@@ -53,12 +67,11 @@ In line with \code{\link{league_table_absolute}}, provides a league table
   The main diagonal of the table presents the absolute risk for each
   intervention in the network. \code{league_table_absolute_user} requires
   users to input the summary effect and 95\% credible or confidence interval
-  of the basic parameters in the reported effect measure. This function is
-  useful should be used to obtain unique absolute risks when the user has
-  access to the results of a published systematic review rather than the raw
-  trial-level data. In the latter case, the user consider the function
-  \code{\link{league_table_absolute}}. \code{league_table_absolute_user}, is
-  applied for one binary outcome only.
+  of the basic parameters in the reported effect measure. This function
+  should be used when the user has access to the results of a published
+  systematic review rather than the raw trial-level data. In the latter case,
+  the user consider the function \code{\link{league_table_absolute}}.
+  \code{league_table_absolute_user} is applied for one binary outcome only.
 }
 \details{
 When the published results are reported in the relative risk scale
@@ -92,10 +105,16 @@ When the published results are reported in the relative risk scale
   intervention (i.e. the respective 95\% confidence interval does not include
   the null value) are indicated in bold.
 
-  To obtain unique absolute risks for each intervention, the network
-  meta-analysis model has been extended to incorporate the transitive risks
-  framework, namely, an intervention has the same absolute risk regardless of
-  the comparator intervention(s) in a trial (Spineli et al., 2017).
+  Furthermore, \code{league_table_absolute_user} exports
+  \code{table_relative_absolute_effect}, a table with the relative and
+  absolute effects of the basic parameters, as an 'xlsx' file (via the
+  \code{\link[writexl:write_xlsx]{write_xlsx}} function) to the working
+  directory of the user.
+
+  To obtain unique absolute risks for each intervention, we have considered
+  the transitive risks framework, namely, an intervention has the same
+  absolute risk regardless of the comparator intervention(s) in a trial
+  (Spineli et al., 2017).
 
   \code{league_table_absolute_user} can be used only for a network of
   interventions. In the case of two interventions, the execution of the
@@ -120,7 +139,8 @@ Abstracts of the Global Evidence Summit, Cape Town, South Africa.
 \emph{Cochrane Database of Systematic Reviews} 2017;\bold{9}(Suppl 1):1891.
 }
 \seealso{
-\code{\link{run_model}}
+code{\link{league_table_absolute}}, \code{\link{run_model}},
+  \code{\link[writexl:write_xlsx]{write_xlsx}}
 }
 \author{
 {Loukia M. Spineli}
