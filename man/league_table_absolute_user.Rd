@@ -70,7 +70,7 @@ In line with \code{\link{league_table_absolute}}, provides a league table
   of the basic parameters in the reported effect measure. This function
   should be used when the user has access to the results of a published
   systematic review rather than the raw trial-level data. In the latter case,
-  the user consider the function \code{\link{league_table_absolute}}.
+  the user should consider the function \code{\link{league_table_absolute}}.
   \code{league_table_absolute_user} is applied for one binary outcome only.
 }
 \details{

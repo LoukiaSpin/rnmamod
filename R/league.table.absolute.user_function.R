@@ -203,32 +203,34 @@ league_table_absolute_user <- function(data,
   }
 
   # Use basic parameters to calculate the functional parameters
+  # via the consistency equation (point estimate and standard error)
   comb0 <- t(combn(1:length(drug_names), 2))
   comb <- cbind(comb0[, 2], comb0[, 1])
-  data_new <- data[, -4]
-  full_point <- full_lower <- full_upper <- rep(NA, dim(comb)[1])
+  data_new <- cbind(data[, 1], (data[, 3] - data[, 2])/3.92)
+  full_point <- full_se <- full_lower <- full_upper <- rep(NA, dim(comb)[1])
   for(i in 1:dim(comb)[1]) {
     full_point[i] <- data_new[comb[i, 1], 1] - data_new[comb[i, 2], 1]
-    full_lower[i] <- data_new[comb[i, 1], 2] - data_new[comb[i, 2], 2]
-    full_upper[i] <- data_new[comb[i, 1], 3] - data_new[comb[i, 2], 3]
+    full_se[i] <- sqrt((data_new[comb[i, 1], 2]^2) + (data_new[comb[i, 2], 2]^2))
+    full_lower[i] <- full_point[i] - 1.96 * full_se[i]
+    full_upper[i] <- full_point[i] + 1.96 * full_se[i]
   }
   full <- cbind(full_point, full_lower, full_upper)
 
   if (measure == "OR") {
-    # Risk differences
+    # Risk differences (as a function of the absolute risks)
     full_rd_point <- absol_risk[comb[, 1], 1] - absol_risk[comb[, 2], 1]
     full_rd_lower <- absol_risk[comb[, 1], 2] - absol_risk[comb[, 2], 2]
     full_rd_upper <- absol_risk[comb[, 1], 3] - absol_risk[comb[, 2], 3]
     full_rd <- cbind(full_rd_point, full_rd_lower, full_rd_upper)
-    # Odds ratios (log scale)
+    # Odds ratios (log scale; from published results)
     full_lor <- full
   } else if (measure == "RR") {
-    # Risk differences
+    # Risk differences (as a function of the absolute risks)
     full_rd_point <- absol_risk[comb[, 1], 1] - absol_risk[comb[, 2], 1]
     full_rd_lower <- absol_risk[comb[, 1], 2] - absol_risk[comb[, 2], 2]
     full_rd_upper <- absol_risk[comb[, 1], 3] - absol_risk[comb[, 2], 3]
     full_rd <- cbind(full_rd_point, full_rd_lower, full_rd_upper)
-    # Odds ratios (log scale)
+    # Odds ratios (log scale; as a function of the absolute risks)
     full_lor_point <- log(absol_risk[comb[, 1], 1]) -
       log(1 - absol_risk[comb[, 1], 1]) - log(absol_risk[comb[, 2], 1]) +
       log(1 - absol_risk[comb[, 2], 1])
@@ -240,9 +242,9 @@ league_table_absolute_user <- function(data,
       log(1 - absol_risk[comb[, 2], 3])
     full_lor <- cbind(full_lor_point, full_lor_lower, full_lor_upper)
   } else if (measure == "RD") {
-    # Risk differences
+    # Risk differences (from published results)
     full_rd <- full
-    # Odds ratios (log scale)
+    # Odds ratios (log scale; as a function of the absolute risks)
     full_lor_point <- log(absol_risk[comb[, 1], 1]) -
       log(1 - absol_risk[comb[, 1], 1]) - log(absol_risk[comb[, 2], 1]) +
       log(1 - absol_risk[comb[, 2], 1])
@@ -448,7 +450,7 @@ league_table_absolute_user <- function(data,
 
   # Tabulate relative and absolute effects for the basic parameters
   tab0 <- data.frame(drug_names0,
-                     exp(rbind(rep(0, 3), full_lor[1:(nt - 1), ])),
+                     round(exp(rbind(rep(0, 3), full_lor[1:(nt - 1), ])), 2),
                      absol_risk * 1000,
                      rbind(rep(0, 3), full_rd[1:(nt - 1), ] * 1000))
   colnames(tab0) <- c("Interventions",
