@@ -204,7 +204,7 @@ league_table_absolute_user <- function(data,
 
   # Use basic parameters to calculate the functional parameters
   # via the consistency equation (point estimate and standard error)
-  comb0 <- t(combn(1:length(drug_names), 2))
+  comb0 <- t(combn(1:length(drug_names0), 2))
   comb <- cbind(comb0[, 2], comb0[, 1])
   data_new <- cbind(data[, 1], (data[, 3] - data[, 2])/3.92)
   full_point <- full_se <- full_lower <- full_upper <- rep(NA, dim(comb)[1])
@@ -272,6 +272,13 @@ league_table_absolute_user <- function(data,
     na.omit(subset(data.frame(full_rd, select),
                    is.element(select[, 1], show) &
                      is.element(select[, 2], show)))
+  }
+
+  par_absol <- if (is.null(show0)) {
+    absol_risk
+  } else {
+    na.omit(subset(data.frame(absol_risk, drug_names0),
+                   is.element(drug_names0, show)))
   }
 
   hiera <- if (is.null(show0)) {
@@ -372,13 +379,13 @@ league_table_absolute_user <- function(data,
   # Absolute risks presented in 1000 and rounded up to 0 decimals
   # Ordered according to their order value (from the best to the worst)
   if (all.equal(hiera, as.integer(hiera)) == FALSE) {
-    point_abs_risk <- round(absol_risk[order(-hiera), 1]*1000, 0)
-    lower_abs_risk <- round(absol_risk[order(-hiera), 2]*1000, 0)
-    upper_abs_risk <- round(absol_risk[order(-hiera), 3]*1000, 0)
+    point_abs_risk <- round(par_absol[order(-hiera), 1]*1000, 0)
+    lower_abs_risk <- round(par_absol[order(-hiera), 2]*1000, 0)
+    upper_abs_risk <- round(par_absol[order(-hiera), 3]*1000, 0)
   } else {
-    point_abs_risk <- round(absol_risk[order(hiera), 1]*1000, 0)
-    lower_abs_risk <- round(absol_risk[order(hiera), 2]*1000, 0)
-    upper_abs_risk <- round(absol_risk[order(hiera), 3]*1000, 0)
+    point_abs_risk <- round(par_absol[order(hiera), 1]*1000, 0)
+    lower_abs_risk <- round(par_absol[order(hiera), 2]*1000, 0)
+    upper_abs_risk <- round(par_absol[order(hiera), 3]*1000, 0)
   }
 
   # Merge point estimate with 95% credible interval in a new symmetric matric
@@ -449,18 +456,19 @@ league_table_absolute_user <- function(data,
                  )
 
   # Tabulate relative and absolute effects for the basic parameters
+  n_t <- length(drug_names0)
   tab0 <- data.frame(drug_names0,
-                     round(exp(rbind(rep(0, 3), full_lor[1:(nt - 1), ])), 2),
+                     round(exp(rbind(rep(0, 3), full_lor[1:(n_t - 1), ])), 2),
                      absol_risk * 1000,
-                     rbind(rep(0, 3), full_rd[1:(nt - 1), ] * 1000))
+                     rbind(rep(0, 3), full_rd[1:(n_t - 1), ] * 1000))
   colnames(tab0) <- c("Interventions",
                       "OR", "lower", "upper",
                       "AR", "lower", "upper",
                       "RD", "lower", "upper")
   tab <- if (all.equal(hiera, as.integer(hiera)) == FALSE) {
-    tab0[order(-hiera), ]
+    subset(tab0, is.element(Interventions, drug_names))[order(-hiera), ]
   } else {
-    tab0[order(hiera), ]
+    subset(tab0, is.element(Interventions, drug_names))[order(hiera), ]
   }
   rownames(tab) <- NULL
 
