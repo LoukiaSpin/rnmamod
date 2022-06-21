@@ -250,7 +250,7 @@ league_table_absolute <- function(full, drug_names, show = NULL) {
 
   # Include SUCRA values in the diagonal of the new matrix
   diag(final) <- ifelse(lower_abs_risk == upper_abs_risk,
-                        paste0(point_abs_risk, "\n", "(reference)"),
+                        paste0(point_abs_risk, "\n", " "), #(reference)
                         paste0(point_abs_risk,  "\n", "(",
                                lower_abs_risk, ",", " ", upper_abs_risk, ")"))
 
@@ -269,31 +269,74 @@ league_table_absolute <- function(full, drug_names, show = NULL) {
   ymax1 <- ymin1
 
   # The league table as a heatmap
-  ggplot(mat_new,
-         aes(factor(Var2, levels = order_drug[1:nt]),
-             factor(Var1, levels = order_drug[nt:1]))) +
-    geom_tile(aes(fill = value2)) +
-    geom_fit_text(aes(factor(Var2, levels = order_drug[1:nt]),
-                      factor(Var1, levels = order_drug[nt:1]),
-                      label = value),
-                  fontface = ifelse(signif_status == 1, "bold", "plain"),
-                  #colour = ifelse(signif_status == 1, "blue", "black"),
-                  reflow = TRUE) +
-    scale_fill_gradient(low = "white", high = "white", na.value = "grey90") +
-    geom_rect(aes(xmin = xmin1, xmax = xmax1, ymin = ymin1, ymax = ymax1),
-              color = "black", size = 1) +
-    geom_rect(aes(xmin = ymin1, xmax = ymax1, ymin = xmin1, ymax = xmax1),
-              color = "black", size = 1) +
-    scale_x_discrete(position = "top") +
-    labs(x = "", y = "") +
-    theme_classic() +
-    theme(legend.position = "none",
-          axis.title.x = element_text(size = 12, face = "bold",
-                                      colour = "black"),
-          axis.title.y = element_text(size = 12, face = "bold",
-                                      colour = "black"),
-          axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0), #0.5
-          axis.text.y = element_text(size = 12),
-          plot.caption = element_text(hjust = 0.01))
+  if (is.element(drug_names0[1], drug_names)) {
+    ggplot(mat_new,
+           aes(factor(Var2, levels = order_drug[1:nt]),
+               factor(Var1, levels = order_drug[nt:1]))) +
+      geom_tile(aes(fill = value2)) +
+      geom_tile(aes(x = drug_names0[1],
+                    y = drug_names0[1]),
+                colour = "black",
+                fill = "grey90",
+                size = 2) +
+      geom_fit_text(aes(factor(Var2, levels = order_drug[1:nt]),
+                        factor(Var1, levels = order_drug[nt:1]),
+                        label = value),
+                    fontface = ifelse(signif_status == 1, "bold", "plain"),
+                    #colour = ifelse(signif_status == 1, "blue", "black"),
+                    reflow = TRUE) +
+      scale_fill_gradient(low = "white", high = "white", na.value = "grey90") +
+      geom_rect(aes(xmin = xmin1, xmax = xmax1, ymin = ymin1, ymax = ymax1),
+                color = "black", size = 1) +
+      geom_rect(aes(xmin = ymin1, xmax = ymax1, ymin = xmin1, ymax = xmax1),
+                color = "black", size = 1) +
+      #geom_label(aes(x = drug_names0[1],
+      #               y = drug_names0[1],
+      #               hjust = 0.5,
+      #               vjust = 2.3,
+      #               label = "reference"),
+      #           fill = "white",
+      #           colour = "black",
+      #           fontface = "plain",
+      #           size = 3.2) +
+      scale_x_discrete(position = "top") +
+      labs(x = "", y = "") +
+      theme_classic() +
+      theme(legend.position = "none",
+            axis.title.x = element_text(size = 12, face = "bold",
+                                        colour = "black"),
+            axis.title.y = element_text(size = 12, face = "bold",
+                                        colour = "black"),
+            axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0), #0.5
+            axis.text.y = element_text(size = 12),
+            plot.caption = element_text(hjust = 0.01))
+  } else {
+    ggplot(mat_new,
+           aes(factor(Var2, levels = order_drug[1:nt]),
+               factor(Var1, levels = order_drug[nt:1]))) +
+      geom_tile(aes(fill = value2)) +
+      geom_fit_text(aes(factor(Var2, levels = order_drug[1:nt]),
+                        factor(Var1, levels = order_drug[nt:1]),
+                        label = value),
+                    fontface = ifelse(signif_status == 1, "bold", "plain"),
+                    #colour = ifelse(signif_status == 1, "blue", "black"),
+                    reflow = TRUE) +
+      scale_fill_gradient(low = "white", high = "white", na.value = "grey90") +
+      geom_rect(aes(xmin = xmin1, xmax = xmax1, ymin = ymin1, ymax = ymax1),
+                color = "black", size = 1) +
+      geom_rect(aes(xmin = ymin1, xmax = ymax1, ymin = xmin1, ymax = xmax1),
+                color = "black", size = 1) +
+      scale_x_discrete(position = "top") +
+      labs(x = "", y = "") +
+      theme_classic() +
+      theme(legend.position = "none",
+            axis.title.x = element_text(size = 12, face = "bold",
+                                        colour = "black"),
+            axis.title.y = element_text(size = 12, face = "bold",
+                                        colour = "black"),
+            axis.text.x = element_text(size = 12, angle = 50, hjust = 0.0), #0.5
+            axis.text.y = element_text(size = 12),
+            plot.caption = element_text(hjust = 0.01))
+  }
 
 }
