@@ -35,6 +35,9 @@
 #'   \code{"IND"} stand for identical, hierarchical and independent,
 #'   respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and
 #'   uncorrelated, respectively.
+#' @param base_type Character string indicating the type of baseline model.
+#'   Set \code{base_type} equal to one of the following: \code{"fixed"},
+#'   \code{"random"}, or \code{"predicted"}.
 #'
 #' @return An R character vector object to be passed to \code{\link{run_model}}
 #'   and \code{\link{run_metareg}} through the
@@ -80,7 +83,7 @@
 #' \emph{Stat Med} 2015;\bold{34}(12):2062--80. doi: 10.1002/sim.6475
 #'
 #' @export
-prepare_model <- function(measure, model, covar_assumption, assumption) {
+prepare_model <- function(measure, model, covar_assumption, assumption, base_type) {
 
   stringcode <- "model {
                     for (i in 1:ns) {\n"
@@ -194,27 +197,35 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                                    d.n[ref] <- 0
                                    for (t in 1:(ref - 1)) {
                                      d[t] ~ dnorm(0, 0.0001)
-                                     d.n[t] <- d[t]*(1 - (1 - step(t - ref))) + d[t]*(-1)*(1 - step(t - ref))
+                                     d.n[t] <- d[t]*equals(min(t, ref), ref) + d[t]*(-1)*equals(min(t, ref), t)
                                    }
                                    for (t in (ref + 1):nt) {
                                      d[t] ~ dnorm(0, 0.0001)
-                                     d.n[t] <- d[t]*(1 - (1 - step(t - ref))) + d[t]*(-1)*(1 - step(t - ref))
+                                     d.n[t] <- d[t]*equals(min(t, ref), ref) + d[t]*(-1)*equals(min(t, ref), t)
                                    }\n")
 
-  stringcode <- if (is.element(measure, c("OR", "RR", "RD"))) {
+  stringcode <- if (is.element(base_type, c("fixed", "random"))) {
     paste(stringcode, "mean_logit_base_event <- logit(ref_base[1])
                        prec_logit_base_event <- ref_base[2]*(1 - equals(ref_base[1], ref_base[2])) + equals(ref_base[1], ref_base[2])
-                       logit(base_risk0) <- logit_base_risk
                        logit_base_risk ~ dnorm(mean_logit_base_event, prec_logit_base_event)
-                       base_risk <- base_risk0*(1 - equals(ref_base[1], ref_base[2])) + ref_base[1]*equals(ref_base[1], ref_base[2])
-                       abs_risk[ref] <- base_risk
-                       for (t in 1:(ref - 1)) {
-                         abs_risk[t] <- exp((d.n[t] + log(base_risk)) - log(1 + base_risk*(exp(d.n[t]) - 1)))
-                       }
-                       for (t in (ref + 1):nt) {
-                         abs_risk[t] <- exp((d.n[t] + log(base_risk)) - log(1 + base_risk*(exp(d.n[t]) - 1)))
+                       base_risk_logit <- logit_base_risk*(1 - equals(ref_base[1], ref_base[2])) + logit(ref_base[1])*equals(ref_base[1], ref_base[2])
+                       for (t in 1:nt) {
+                         logit(abs_risk[t]) <- base_risk_logit + d.n[t]
                        }\n")
-  } else {
+  } else if (base_type == "predicted") {
+    paste(stringcode, "for (i in 1:ns.base) {
+                         logit(p.base[i]) <- u.base[i]
+                         u.base[i] ~ dnorm(m.u, prec.u)
+                         r.base[i] ~ dbin(p.base[i], n.base[i])
+                       }
+                       base_risk_logit ~ dnorm(m.u, prec.u) # predicted baseline risk (logit scale)
+                       m.u ~ dnorm(0, .0001)
+                       prec.u <- pow(tau.base, -2)
+                       tau.base ~ dunif(0, 5)
+                       for (t in 1:nt) {
+                         logit(abs_risk[t]) <- base_risk_logit + d.n[t]
+                       }\n")
+  } else if (base_type == "NO") {
     paste(stringcode, " ")
   }
 
@@ -223,11 +234,11 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                        beta.n[ref] <- 0
                        for (t in 1:(ref - 1)) {
                          beta[t] ~ dnorm(mean.B, prec.B)
-                         beta.n[t] <- beta[t]*(1 - (1 - step(t - ref))) + beta[t]*(-1)*(1 - step(t - ref))
+                         beta.n[t] <- beta[t]*equals(min(t, ref), ref) + beta[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (t in (ref + 1):nt) {
                          beta[t] ~ dnorm(mean.B, prec.B)
-                         beta.n[t] <- beta[t]*(1 - (1 - step(t - ref))) + beta[t]*(-1)*(1 - step(t - ref))
+                         beta.n[t] <- beta[t]*equals(min(t, ref), ref) + beta[t]*(-1)*equals(min(t, ref), t)
                        }
                        mean.B ~ dnorm(0, .0001)
                        prec.B <- 1/pow(beta.SD,2)
@@ -241,11 +252,11 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                        beta.n[ref] <- 0
                        for (t in 1:(ref - 1)) {
                          beta[t] ~ dnorm(0, 0.0001)
-                         beta.n[t] <- beta[t]*(1 - (1 - step(t - ref))) + beta[t]*(-1)*(1 - step(t - ref))
+                         beta.n[t] <- beta[t]*equals(min(t, ref), ref) + beta[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (t in (ref + 1):nt) {
                          beta[t] ~ dnorm(0, 0.0001)
-                         beta.n[t] <- beta[t]*(1 - (1 - step(t - ref))) + beta[t]*(-1)*(1 - step(t - ref))
+                         beta.n[t] <- beta[t]*equals(min(t, ref), ref) + beta[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
@@ -255,10 +266,10 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
     paste(stringcode, "beta ~ dnorm(0, 0.0001)
                        beta.n[ref] <- 0
                        for (t in 1:(ref - 1)) {
-                         beta.n[t] <- beta*(1 - (1 - step(t - ref))) + beta*(-1)*(1 - step(t - ref))
+                         beta.n[t] <- beta*equals(min(t, ref), ref) + beta*(-1)*equals(min(t, ref), t)
                        }
                        for (t in (ref + 1):nt) {
-                         beta.n[t] <- beta*(1 - (1 - step(t - ref))) + beta*(-1)*(1 - step(t - ref))
+                         beta.n[t] <- beta*equals(min(t, ref), ref) + beta*(-1)*equals(min(t, ref), t)
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
@@ -358,7 +369,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
     paste(stringcode, "sorted <- rank(d.n[])\n")
   } else if (is.element(measure, c("RR", "RD"))) {
     paste(stringcode, "EM.ref[ref] <- 0
-                       sorted <- rank(EM.ref[])
+                       sorted <- rank(EM.ref[])   # RR or RD
                        sorted.LOR <- rank(d.n[])
                        for (t in 1:nt) {
                          order.LOR[t] <- (nt + 1 - sorted.LOR[t])*equals(D, 1) + sorted.LOR[t]*(1 - equals(D, 1))
@@ -395,11 +406,11 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
   } else if (model == "RE" & measure == "RR") {
     paste(stringcode, "for (t in 1:(ref - 1)) {
                          EM.ref.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
-                         EM.ref[t] <- EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref[t] <- EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (t in (ref + 1):nt) {
                          EM.ref.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
-                         EM.ref[t] <- EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref[t] <- EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
@@ -411,15 +422,15 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
   } else if (model == "RE" & measure == "RD") {
     paste(stringcode, "for (t in 1:(ref - 1)) {
                          EM.ref.RR.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
-                         EM.ref.RR[t] <- EM.ref.RR.n[t]*(1 - (1 - step(t - ref))) + EM.ref.RR.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref.RR[t] <- EM.ref.RR.n[t]*equals(min(t, ref), ref) + EM.ref.RR.n[t]*(-1)*equals(min(t, ref), t)
                          EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1)*base_risk
-                         EM.ref[t] <-  EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref[t] <- EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (t in (ref + 1):nt) {
                          EM.ref.RR.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
-                         EM.ref.RR[t] <- EM.ref.RR.n[t]*(1 - (1 - step(t - ref))) + EM.ref.RR.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref.RR[t] <- EM.ref.RR.n[t]*equals(min(t, ref), ref) + EM.ref.RR.n[t]*(-1)*equals(min(t, ref), t)
                          EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1)*base_risk
-                         EM.ref[t] <-  EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref[t] <-  EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
@@ -433,12 +444,11 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
   } else if (model == "FE" & measure == "RR") {
     paste(stringcode, "for (t in 1:(ref - 1)) {
                          EM.ref.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
-                         EM.ref[t] <- EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref[t] <- EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (t in (ref + 1):nt) {
                          EM.ref.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
-                         EM.ref[t] <- EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
-                       }
+                         EM.ref[t] <- EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
                            EM.LOR[k, c] <- d.n[k] - d.n[c]
@@ -446,16 +456,16 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                         }}\n")
   } else if (model == "FE" & measure == "RD") {
     paste(stringcode, "for (t in 1:(ref - 1)) {
-                         EM.ref.RR.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
-                         EM.ref.RR[t] <- EM.ref.RR.n[t]*(1 - (1 - step(t - ref))) + EM.ref.RR.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref.RR.n <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
+                         EM.ref.RR[t] <- EM.ref.RR.n[t]*equals(min(t, ref), ref) + EM.ref.RR.n[t]*(-1)*equals(min(t, ref), t)
                          EM.ref.n[t] <- (exp(EM.ref.RR.n[t] - 1))*base_risk
-                         EM.ref[t] <-  EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref[t] <-  EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (t in (ref + 1):nt) {
                          EM.ref.RR.n[t] <- d[t] - log(1 - (1 - exp(d[t]))*base_risk)
-                         EM.ref.RR[t] <- EM.ref.RR.n[t]*(1 - (1 - step(t - ref))) + EM.ref.RR.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref.RR[t] <- EM.ref.RR.n[t]*equals(min(t, ref), ref) + EM.ref.RR.n[t]*(-1)*(equals(min(t, ref), t)
                          EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1)*base_risk
-                         EM.ref[t] <-  EM.ref.n[t]*(1 - (1 - step(t - ref))) + EM.ref.n[t]*(-1)*(1 - step(t - ref))
+                         EM.ref[t] <-  EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {

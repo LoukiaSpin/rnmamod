@@ -195,6 +195,7 @@ run_sensitivity <- function(full,
   ref <- full$ref
   indic <- full$indic
   base_risk <- full$base_risk
+  base_type <- full$base_type
   assumption <- if (missing(assumption)) {
     "IDE-ARM"
   } else if(!is.element(assumption, c("IDE-ARM", "HIE-ARM"))) {
@@ -331,7 +332,8 @@ run_sensitivity <- function(full,
                            textConnection(prepare_model(measure,
                                                         model,
                                                         covar_assumption = "NO",
-                                                        assumption)),
+                                                        assumption,
+                                                        base_type)),
                          n.chains = n_chains,
                          n.iter = n_iter,
                          n.burnin = n_burnin,

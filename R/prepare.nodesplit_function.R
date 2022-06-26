@@ -170,11 +170,11 @@ prepare_nodesplit <- function(measure, model, assumption) {
                                    d.n[ref] <- 0
                                    for (t in 1:(ref - 1)) {
                                      d[t] ~ dnorm(0, 0.0001)
-                                     d.n[t] <- d[t]*(1 - (1 - step(t - ref))) + d[t]*(-1)*(1 - step(t - ref))
+                                     d.n[t] <- d[t]*equals(min(t, ref), ref) + d[t]*(-1)*equals(min(t, ref), t)
                                    }
                                    for (t in (ref + 1):nt) {
                                      d[t] ~ dnorm(0, 0.0001)
-                                     d.n[t] <- d[t]*(1 - (1 - step(t - ref))) + d[t]*(-1)*(1 - step(t - ref))
+                                     d.n[t] <- d[t]*equals(min(t, ref), ref) + d[t]*(-1)*equals(min(t, ref), t)
                                    }\n")
 
   stringcode <- if (assumption == "HIE-ARM") {

@@ -5,7 +5,7 @@
 \title{WinBUGS code for Bayesian pairwise or network meta-analysis and
 meta-regression}
 \usage{
-prepare_model(measure, model, covar_assumption, assumption)
+prepare_model(measure, model, covar_assumption, assumption, base_type)
 }
 \arguments{
 \item{measure}{Character string indicating the effect measure. For a binary
@@ -35,6 +35,10 @@ the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"},
 \code{"IND"} stand for identical, hierarchical and independent,
 respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and
 uncorrelated, respectively.}
+
+\item{base_type}{Character string indicating the type of baseline model.
+Set \code{base_type} equal to one of the following: \code{"fixed"},
+\code{"random"}, or \code{"predicted"}.}
 }
 \value{
 An R character vector object to be passed to \code{\link{run_model}}
