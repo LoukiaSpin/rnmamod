@@ -180,7 +180,6 @@ run_metareg <- function(full,
   ref <- full$ref
   indic <- full$indic
   base_risk <- full$base_risk
-  base_type <- full$base_type
 
   # Prepare the dataset for the R2jags
   item <- data_preparation(data, measure)
@@ -244,15 +243,9 @@ run_metareg <- function(full,
 
   data_jag <- if (!is.element(measure, c("OR", "RR", "RD"))) {
     append(data_jag, list("y.o" = item$y0, "se.o" = item$se0))
-  } else if (is.element(measure, c("OR", "RR", "RD")) &
-             is.element(base_type, c("fixed", "random"))) {
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
     append(data_jag, list("r" = item$r,
                           "ref_base" = base_risk))
-  } else if (is.element(measure, c("OR", "RR", "RD")) &
-             !is.element(base_type, c("fixed", "random"))) {
-    append(data_jag, list("r.base" = base_risk[, 1],
-                          "n.base" = base_risk[, 2],
-                          "ns.base" = length(base_risk[, 1])))
   }
 
   data_jag <- if (length(unique(covariate)) > 2) {
@@ -317,8 +310,7 @@ run_metareg <- function(full,
                   model.file = textConnection(prepare_model(measure,
                                                             model,
                                                             covar_assumption,
-                                                            assumption,
-                                                            base_type)),
+                                                            assumption)),
                   n.chains = n_chains,
                   n.iter = n_iter,
                   n.burnin = n_burnin,

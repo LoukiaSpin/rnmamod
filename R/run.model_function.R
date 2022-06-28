@@ -386,7 +386,7 @@ run_model <- function(data,
                       var_misspar,
                       D,
                       ref,
-                      base_risk = NULL,
+                      base_risk,
                       n_chains,
                       n_iter,
                       n_burnin,
@@ -421,7 +421,15 @@ run_model <- function(data,
     assumption
   }
   heterog_prior <- heterogeneity_param_prior(measure, model, heter_prior)
-  mean_misspar <- if (missing(assumption)) {
+  mean_misspar <- if (missing(assumption)  & min(na.omit(unlist(item$I))) == 1) {
+    0
+  } else if ((missing(assumption) || assumption != "IND-UNCORR") &
+             (min(na.omit(unlist(item$I))) == 0 &
+              max(na.omit(unlist(item$I))) == 1)) {
+    0
+  } else if ((missing(assumption) || assumption != "IND-UNCORR") &
+             (min(na.omit(unlist(item$I))) == 0 &
+              max(na.omit(unlist(item$I))) == 0)) {
     0
   } else {
     missingness_param_prior(assumption, mean_misspar)
@@ -453,55 +461,20 @@ run_model <- function(data,
   } else {
     ref
   }
-  base_risk0 <- if (is.element(measure, c("OR", "RR", "RD")) &
-                   missing(base_risk)) {
-    describe_network(data = data,
-                     drug_names = 1:item$nt,
-                     measure = measure)$table_interventions[ref, 7]/100
-  } else if (is.element(measure, c("OR", "RR", "RD")) &
-             is.vector(base_risk) & !is.element(length(base_risk), c(1, 3))) {
-    stop("The argument 'base_risk' must be scalar or vector of three elements.",
-         call. = FALSE)
-  } else if (is.element(measure, c("OR", "RR", "RD")) &
-             !is.vector(base_risk) & length(base_risk) != 2) {
-    stop("The argument 'base_risk' must have two columns.",
-         call. = FALSE)
-  } else if (is.element(measure, c("OR", "RR", "RD")) &
-             is.element(length(base_risk), c(1, 2, 3))) {
-    base_risk
+  ref_base <- if (is.element(measure, c("OR", "RR", "RD")) &
+                  missing(base_risk)) {
+    rep(describe_network(data = data,
+                         drug_names = 1:item$nt,
+                         measure = measure)$table_interventions[ref, 7]/100,
+        2)
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
+    baseline_model(base_risk,
+                   n_chains,
+                   n_iter,
+                   n_burnin,
+                   n_thin)
   } else if (!is.element(measure, c("OR", "RR", "RD"))) {
-    0
-  }
-  base_risk1 <- if (is.element(measure, c("OR", "RR", "RD")) &
-                    is.element(length(base_risk), c(1, 3)) &
-                    (min(base_risk0) <= 0 || max(base_risk0) >= 1)) {
-    stop("The argument 'base_risk' must be defined in (0, 1).", call. = FALSE)
-  } else if (is.element(measure, c("OR", "RR", "RD")) &
-             length(base_risk0) == 3 & is.unsorted(base_risk0)) {
-    aa <- "must be sort in ascending order."
-    stop(paste("The elements in argument 'base_risk'" , aa), call. = FALSE)
-  } else if (is.element(measure, c("OR", "RR", "RD")) &
-             length(base_risk0) == 1) {
-    rep(base_risk0, 2)
-  } else if (is.element(measure, c("OR", "RR", "RD")) &
-             length(base_risk0) == 3) {
-    # Second element is precision in the logit scale
-    c(base_risk0[2], 3.92/(log(base_risk0[3])/(1 - log(base_risk0[3])) -
-                              log(base_risk0[1])/(1 - log(base_risk0[1])))^2)
-  } else if (is.element(measure, c("OR", "RR", "RD")) &
-             length(base_risk0) == 2) {
-    base_risk0
-  } else if (!is.element(measure, c("OR", "RR", "RD"))) {
-    NULL
-  }
-  base_type <- if (!is.null(base_risk1) & length(base_risk0) == 1) {
-    "fixed"
-  } else if (!is.null(base_risk1) & length(base_risk0) == 3) {
-    "random"
-  } else if (!is.null(base_risk1) & !is.element(length(base_risk0), c(1, 3))) {
-    "predicted"
-  } else if (is.null(base_risk1)) {
-    "NO"
+    NA
   }
   n_chains <- if (missing(n_chains)) {
     2
@@ -561,15 +534,9 @@ run_model <- function(data,
   data_jag <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
     append(data_jag, list("y.o" = item$y0,
                           "se.o" = item$se0))
-  } else if (is.element(measure, c("OR", "RR", "RD")) &
-             is.element(base_type, c("fixed", "random"))) {
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
     append(data_jag, list("r" = item$r,
-                          "ref_base" = base_risk1))
-  } else if (is.element(measure, c("OR", "RR", "RD")) &
-             is.element(base_type, "predicted")) {
-    append(data_jag, list("r.base" = base_risk1[, 1],
-                          "n.base" = base_risk1[, 2],
-                          "ns.base" = length(base_risk1[, 1])))
+                          "ref_base" = ref_base))
   }
 
   data_jag <- if (is.element(assumption, "IND-CORR")) {
@@ -632,8 +599,7 @@ run_model <- function(data,
                     prepare_model(measure,
                                   model,
                                   covar_assumption = "NO",
-                                  assumption,
-                                  base_type)
+                                  assumption)
                     ),
                   n.chains = n_chains,
                   n.iter = n_iter,
@@ -786,8 +752,7 @@ run_model <- function(data,
                   n_iter = n_iter,
                   n_burnin = n_burnin,
                   n_thin = n_thin,
-                  type = "nma",
-                  base_type = base_type)
+                  type = "nma")
   if (model == "RE" & !is.element(measure, c("OR", "RR", "RD"))) {
     ma_results <- append(results, list(EM_pred = EM_pred,
                                        tau = tau,
@@ -805,7 +770,7 @@ run_model <- function(data,
                                        delta = delta,
                                        heter_prior = heterog_prior,
                                        abs_risk = abs_risk,
-                                       base_risk = base_risk1))
+                                       base_risk = ref_base))
     nma_results <- append(results, list(EM_pred = EM_pred,
                                         tau = tau,
                                         delta = delta,
@@ -813,7 +778,7 @@ run_model <- function(data,
                                         SUCRA = SUCRA,
                                         effectiveness = effectiveness,
                                         abs_risk = abs_risk,
-                                        base_risk = base_risk1))
+                                        base_risk = ref_base))
   } else if (model == "RE" & is.element(measure, c("RR", "RD"))) {
     ma_results <- append(results, list(EM_pred = EM_pred,
                                        EM_LOR = EM_LOR,
@@ -822,7 +787,7 @@ run_model <- function(data,
                                        delta = delta,
                                        heter_prior = heterog_prior,
                                        abs_risk = abs_risk,
-                                       base_risk = base_risk1))
+                                       base_risk = ref_base))
     nma_results <- append(results, list(EM_pred = EM_pred,
                                         EM_LOR = EM_LOR,
                                         EM_pred_LOR = EM_pred_LOR,
@@ -833,28 +798,28 @@ run_model <- function(data,
                                         SUCRA_LOR = SUCRA_LOR,
                                         effectiveness = effectiveness,
                                         abs_risk = abs_risk,
-                                        base_risk = base_risk1))
+                                        base_risk = ref_base))
   } else if (model == "FE" & !is.element(measure, c("OR", "RR", "RD"))) {
     ma_results <- results
     nma_results <- append(results, list(SUCRA = SUCRA,
                                         effectiveness = effectiveness))
   } else if (model == "FE" & measure == "OR") {
     ma_results <- append(results, list(abs_risk = abs_risk,
-                                       base_risk = base_risk1))
+                                       base_risk = ref_base))
     nma_results <- append(results, list(SUCRA = SUCRA,
                                         effectiveness = effectiveness,
                                         abs_risk = abs_risk,
-                                        base_risk = base_risk1))
+                                        base_risk = ref_base))
   } else if (model == "FE" & is.element(measure, c("RR", "RD"))) {
     ma_results <- append(results, list(EM_LOR = EM_LOR,
                                        abs_risk = abs_risk,
-                                       base_risk = base_risk1))
+                                       base_risk = ref_base))
     nma_results <- append(results, list(EM_LOR = EM_LOR,
                                         SUCRA = SUCRA,
                                         SUCRA_LOR = SUCRA_LOR,
                                         effectiveness = effectiveness,
                                         abs_risk = abs_risk,
-                                        base_risk = base_risk1))
+                                        base_risk = ref_base))
   }
 
   ifelse(item$nt > 2, return(nma_results), return(ma_results))

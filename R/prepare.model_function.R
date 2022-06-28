@@ -35,9 +35,6 @@
 #'   \code{"IND"} stand for identical, hierarchical and independent,
 #'   respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and
 #'   uncorrelated, respectively.
-#' @param base_type Character string indicating the type of baseline model.
-#'   Set \code{base_type} equal to one of the following: \code{"fixed"},
-#'   \code{"random"}, or \code{"predicted"}.
 #'
 #' @return An R character vector object to be passed to \code{\link{run_model}}
 #'   and \code{\link{run_metareg}} through the
@@ -83,7 +80,7 @@
 #' \emph{Stat Med} 2015;\bold{34}(12):2062--80. doi: 10.1002/sim.6475
 #'
 #' @export
-prepare_model <- function(measure, model, covar_assumption, assumption, base_type) {
+prepare_model <- function(measure, model, covar_assumption, assumption) {
 
   stringcode <- "model {
                     for (i in 1:ns) {\n"
@@ -204,28 +201,15 @@ prepare_model <- function(measure, model, covar_assumption, assumption, base_typ
                                      d.n[t] <- d[t]*equals(min(t, ref), ref) + d[t]*(-1)*equals(min(t, ref), t)
                                    }\n")
 
-  stringcode <- if (is.element(base_type, c("fixed", "random"))) {
-    paste(stringcode, "mean_logit_base_event <- logit(ref_base[1])
+  stringcode <- if (is.element(measure, c("OR", "RR", "RD"))) {
+    paste(stringcode, "mean_logit_base_event <- ref_base[1]
                        prec_logit_base_event <- ref_base[2]*(1 - equals(ref_base[1], ref_base[2])) + equals(ref_base[1], ref_base[2])
                        logit_base_risk ~ dnorm(mean_logit_base_event, prec_logit_base_event)
-                       base_risk_logit <- logit_base_risk*(1 - equals(ref_base[1], ref_base[2])) + logit(ref_base[1])*equals(ref_base[1], ref_base[2])
+                       base_risk_logit <- logit_base_risk*(1 - equals(ref_base[1], ref_base[2])) + ref_base[1]*equals(ref_base[1], ref_base[2])
                        for (t in 1:nt) {
-                         logit(abs_risk[t]) <- base_risk_logit + d.n[t]
+                         logit(abs_risk[t]) <- base_risk_logit + d[t]
                        }\n")
-  } else if (base_type == "predicted") {
-    paste(stringcode, "for (i in 1:ns.base) {
-                         logit(p.base[i]) <- u.base[i]
-                         u.base[i] ~ dnorm(m.u, prec.u)
-                         r.base[i] ~ dbin(p.base[i], n.base[i])
-                       }
-                       base_risk_logit ~ dnorm(m.u, prec.u) # predicted baseline risk (logit scale)
-                       m.u ~ dnorm(0, .0001)
-                       prec.u <- pow(tau.base, -2)
-                       tau.base ~ dunif(0, 5)
-                       for (t in 1:nt) {
-                         logit(abs_risk[t]) <- base_risk_logit + d.n[t]
-                       }\n")
-  } else if (base_type == "NO") {
+  } else {
     paste(stringcode, " ")
   }
 

@@ -55,7 +55,7 @@ run_model(
   var_misspar,
   D,
   ref,
-  base_risk = NULL,
+  base_risk,
   n_chains,
   n_iter,
   n_burnin,
