@@ -192,67 +192,104 @@ league_table_absolute_user <- function(data,
     message("Tips to read the table: row versus column.")
   }
 
-  absol_risk <- if (measure == "OR") {
-    round((exp(data[, -4]) * base_risk) /
-            (1 + base_risk * (exp(data[, -4]) - 1)), 3)
-  } else if (measure == "RR") {
-    round(exp(data[, -4]) * base_risk, 3)
-  } else {
-    round((data[, -4] + base_risk), 3)
+  # Function to obtain the absolute risks
+  absol_risk_fun <- function (estimate, baseline, effect_measure) {
+
+    if (measure == "OR") {
+      round((exp(estimate) * baseline) /
+              (1 + baseline * (exp(estimate) - 1)), 3)
+    } else if (measure == "RR") {
+      round(exp(estimate) * baseline, 3)
+    } else {
+      round((estimate + baseline), 3)
+    }
   }
+
+  # Obtain the absolute risks specific to the effect measure
+  absol_risk <- absol_risk_fun(estimate = data[, -4],
+                               baseline = base_risk,
+                               effect_measure = measure)
 
   # Use basic parameters to calculate the functional parameters
   # via the consistency equation (point estimate and standard error)
   comb0 <- t(combn(1:length(drug_names0), 2))
-  comb <- cbind(comb0[, 2], comb0[, 1])
-  data_new <- cbind(data[, 1], (data[, 3] - data[, 2])/3.92)
+  comb <- cbind(comb0[, 2], comb0[, 1])  # Intervention versus control
+  data_new <- cbind(data[, 1], (data[, 3] - data[, 2])/3.92) # Add the Std Error
   full_point <- full_se <- full_lower <- full_upper <- rep(NA, dim(comb)[1])
   for(i in 1:dim(comb)[1]) {
     full_point[i] <- data_new[comb[i, 1], 1] - data_new[comb[i, 2], 1]
-    full_se[i] <- sqrt((data_new[comb[i, 1], 2]^2) + (data_new[comb[i, 2], 2]^2))
+    full_se[i] <- sqrt((data_new[comb[i, 1], 2]^2) +
+                         (data_new[comb[i, 2], 2]^2))
     full_lower[i] <- full_point[i] - 1.96 * full_se[i]
     full_upper[i] <- full_point[i] + 1.96 * full_se[i]
   }
   full <- cbind(full_point, full_lower, full_upper)
 
+  # Obtain OR and RD based on the effect measure and absolute risks
   if (measure == "OR") {
     # Risk differences (as a function of the absolute risks)
-    full_rd_point <- absol_risk[comb[, 1], 1] - absol_risk[comb[, 2], 1]
-    full_rd_lower <- absol_risk[comb[, 1], 2] - absol_risk[comb[, 2], 2]
-    full_rd_upper <- absol_risk[comb[, 1], 3] - absol_risk[comb[, 2], 3]
+    full_rd_point <- ((exp(full[, 1]) * absol_risk[comb[, 2], 1]) /
+                        (1 - absol_risk[comb[, 2], 1] +
+                           (exp(full[, 1]) * absol_risk[comb[, 2], 1]))) -
+      absol_risk[comb[, 2], 1]
+    full_rd_lower <- ((exp(full[, 2]) * absol_risk[comb[, 2], 2]) /
+                        (1 - absol_risk[comb[, 2], 2] +
+                           (exp(full[, 2]) * absol_risk[comb[, 2], 2]))) -
+      absol_risk[comb[, 2], 2]
+    full_rd_upper <- ((exp(full[, 3]) * absol_risk[comb[, 2], 3]) /
+                        (1 - absol_risk[comb[, 2], 3] +
+                           (exp(full[, 3]) * absol_risk[comb[, 2], 3]))) -
+      absol_risk[comb[, 2], 3]
     full_rd <- cbind(full_rd_point, full_rd_lower, full_rd_upper)
     # Odds ratios (log scale; from published results)
     full_lor <- full
   } else if (measure == "RR") {
-    # Risk differences (as a function of the absolute risks)
-    full_rd_point <- absol_risk[comb[, 1], 1] - absol_risk[comb[, 2], 1]
-    full_rd_lower <- absol_risk[comb[, 1], 2] - absol_risk[comb[, 2], 2]
-    full_rd_upper <- absol_risk[comb[, 1], 3] - absol_risk[comb[, 2], 3]
+    # Risk differences (as a function of odds ratios (full) and absolute risks)
+    full_rd_point <- absol_risk_fun(full[, 1],
+                                    absol_risk[comb[, 2], 1],
+                                    measure) - absol_risk[comb[, 2], 1]
+    full_rd_lower <- absol_risk_fun(full[, 2],
+                                    absol_risk[comb[, 2], 2],
+                                    measure) - absol_risk[comb[, 2], 2]
+    full_rd_upper <- absol_risk_fun(full[, 3],
+                                    absol_risk[comb[, 2], 3],
+                                    measure) - absol_risk[comb[, 2], 3]
     full_rd <- cbind(full_rd_point, full_rd_lower, full_rd_upper)
-    # Odds ratios (log scale; as a function of the absolute risks)
-    full_lor_point <- log(absol_risk[comb[, 1], 1]) -
-      log(1 - absol_risk[comb[, 1], 1]) - log(absol_risk[comb[, 2], 1]) +
-      log(1 - absol_risk[comb[, 2], 1])
-    full_lor_lower <- log(absol_risk[comb[, 1], 2]) -
-      log(1 - absol_risk[comb[, 1], 2]) - log(absol_risk[comb[, 2], 2]) +
-      log(1 - absol_risk[comb[, 2], 2])
-    full_lor_upper <- log(absol_risk[comb[, 1], 3]) -
-      log(1 - absol_risk[comb[, 1], 3]) - log(absol_risk[comb[, 2], 3]) +
-      log(1 - absol_risk[comb[, 2], 3])
+    # Odds ratios (log scale; as a function of relative risks (full) and
+    # the absolute risks)
+    full_lor_point <- log((exp(full[, 1]) * absol_risk[comb[, 2], 1]) /
+                            (1 + absol_risk[comb[, 2], 1] *
+                               (exp(full[, 1]) - 1)))
+    full_lor_lower <- log((exp(full[, 2]) * absol_risk[comb[, 2], 2]) /
+                            (1 + absol_risk[comb[, 2], 2] *
+                               (exp(full[, 2]) - 1)))
+    full_lor_upper <- log((exp(full[, 3]) * absol_risk[comb[, 2], 3]) /
+                            (1 + absol_risk[comb[, 2], 3] *
+                               (exp(full[, 3]) - 1)))
     full_lor <- cbind(full_lor_point, full_lor_lower, full_lor_upper)
   } else if (measure == "RD") {
     # Risk differences (from published results)
     full_rd <- full
-    # Odds ratios (log scale; as a function of the absolute risks)
-    full_lor_point <- log(absol_risk[comb[, 1], 1]) -
-      log(1 - absol_risk[comb[, 1], 1]) - log(absol_risk[comb[, 2], 1]) +
-      log(1 - absol_risk[comb[, 2], 1])
-    full_lor_lower <- log(absol_risk[comb[, 1], 2]) -
-      log(1 - absol_risk[comb[, 1], 2]) - log(absol_risk[comb[, 2], 2]) +
-      log(1 - absol_risk[comb[, 2], 2])
-    full_lor_upper <- log(absol_risk[comb[, 1], 3]) -
-      log(1 - absol_risk[comb[, 1], 3]) - log(absol_risk[comb[, 2], 3]) +
-      log(1 - absol_risk[comb[, 2], 3])
+    # Relative risks (log scale; as a function of risk differences (full) and
+    # the absolute risks)
+    full_lrr_point <- (full[, 1] + absol_risk[comb[, 2], 1]) /
+      absol_risk[comb[, 2], 1]
+    full_lrr_lower <- (full[, 2] + absol_risk[comb[, 2], 2]) /
+      absol_risk[comb[, 2], 2]
+    full_lrr_upper <- (full[, 3] + absol_risk[comb[, 2], 3]) /
+      absol_risk[comb[, 2], 3]
+    full_lrr <- cbind(full_lrr_point, full_lrr_lower, full_lrr_upper)
+    # Odds ratios (log scale; as a function of relative risks (full_lrr_X) and
+    # the absolute risks)
+    full_lor_point <- log((exp(full_lrr[, 1]) * absol_risk[comb[, 2], 1]) /
+                            (1 + absol_risk[comb[, 2], 1] *
+                               (exp(full_lrr[, 1]) - 1)))
+    full_lor_lower <- log((exp(full_lrr[, 2]) * absol_risk[comb[, 2], 2]) /
+                            (1 + absol_risk[comb[, 2], 2] *
+                               (exp(full_lrr[, 2]) - 1)))
+    full_lor_upper <- log((exp(full_lrr[, 3]) * absol_risk[comb[, 2], 3]) /
+                            (1 + absol_risk[comb[, 2], 3] *
+                               (exp(full_lrr[, 3]) - 1)))
     full_lor <- cbind(full_lor_point, full_lor_lower, full_lor_upper)
   }
 
