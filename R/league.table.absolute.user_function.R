@@ -77,7 +77,7 @@
 #'   risks and their 95\% confidence interval (per 1000 participants) of the
 #'   corresponding non-reference interventions. The reference intervention of
 #'   the network (which the baseline risk has been selected for) is indicated in
-#'   the main diagonal with a homonymous label.
+#'   the main diagonal with a black, thick frame.
 #'
 #'   Comparisons between interventions should be read from left to right.
 #'   Results that indicate strong evidence in favor of the row-defining

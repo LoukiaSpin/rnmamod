@@ -40,7 +40,7 @@
 #'   of the absolute risks (per 1000 participants) of the  corresponding
 #'   interventions. The reference intervention of the network (which the
 #'   baseline risk has been selected for) is indicated in the main diagonal with
-#'   a homonymous label.
+#'   a black, thick frame.
 #'
 #'   Comparisons between interventions should be read from left to right.
 #'   Results that indicate strong evidence in favor of the row-defining
