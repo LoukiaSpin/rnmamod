@@ -544,7 +544,7 @@ league_table_absolute_user <- function(data,
   tab0 <- data.frame(drug_names0,
                      round(exp(rbind(rep(0, 3), full_lor[1:(n_t - 1), ])), 2),
                      absol_risk * 1000,
-                     rbind(rep(0, 3), full_rd[1:(n_t - 1), ] * 1000))
+                     rbind(rep(0, 3), round(full_rd[1:(n_t - 1), ] * 1000, 0)))
   colnames(tab0) <- c("Interventions",
                       "OR", "lower", "upper",
                       "AR", "lower", "upper",
