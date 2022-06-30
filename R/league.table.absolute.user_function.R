@@ -25,8 +25,6 @@
 #'   The first row of the data-frame refers to the selected reference
 #'   intervention and should include (1) the null value three times at the
 #'   investigated effect measure, and (2) the value of the ranking measure.
-#'   When the effect measure is odds ratio or relative risk, the data-frame
-#'   should include results in the logarithmic scale.
 #' @param measure Character string indicating the effect measure of \code{data}.
 #'   For a binary outcome, the following can be considered: \code{"OR"},
 #'   \code{"RR"} or \code{"RD"} for the odds ratio, relative risk, and risk
@@ -54,7 +52,7 @@
 #'
 #' @details
 #'   When the published results are reported in the relative risk scale
-#'   (i.e., \code{measure = "RR"}),the function calculates odds ratios and risk
+#'   (i.e., \code{measure = "RR"}), the function calculates odds ratios and risk
 #'   differences (point estimate and 95\% confidence interval) for all possible
 #'   pairwise comparisons in the network based on the obtained absolute risks
 #'   and the selected baseline risk. Likewise, when the published results are in
@@ -63,9 +61,6 @@
 #'   differences or odds ratios (point estimate and 95\% confidence interval),
 #'   respectively, for all possible pairwise comparisons in the network based on
 #'   the obtained absolute risks and the selected baseline risk.
-#'   Note that the argument \code{data} must be in the logarithmic scale when
-#'   \code{measure = "OR"} or \code{measure = "RR"} in order to obtain the
-#'   proper results.
 #'
 #'   The rows and columns of the league table display the names of the
 #'   interventions  sorted by decreasing order from the best to the worst
@@ -196,8 +191,9 @@ league_table_absolute_user <- function(data,
   absol_risk_fun <- function (estimate, baseline, effect_measure) {
 
     if (measure == "OR") {
-      round((exp(estimate) * baseline) /
-              (1 + baseline * (exp(estimate) - 1)), 3)
+      #round((exp(estimate) * baseline) /
+      #        (1 + baseline * (exp(estimate) - 1)), 3)
+      round((estimate * baseline) / (1 + baseline * (estimate - 1)), 3)
     } else if (measure == "RR") {
       round(exp(estimate) * baseline, 3)
     } else {
@@ -214,32 +210,41 @@ league_table_absolute_user <- function(data,
   # via the consistency equation (point estimate and standard error)
   comb0 <- t(combn(1:length(drug_names0), 2))
   comb <- cbind(comb0[, 2], comb0[, 1])  # Intervention versus control
-  data_new <- cbind(data[, 1], (data[, 3] - data[, 2])/3.92) # Add the Std Error
+  #data_new <- cbind(data[, 1], (data[, 3] - data[, 2])/3.92) # Add the Std Error
   full_point <- full_se <- full_lower <- full_upper <- rep(NA, dim(comb)[1])
   for(i in 1:dim(comb)[1]) {
-    full_point[i] <- data_new[comb[i, 1], 1] - data_new[comb[i, 2], 1]
-    full_se[i] <- sqrt((data_new[comb[i, 1], 2]^2) +
-                         (data_new[comb[i, 2], 2]^2))
-    full_lower[i] <- full_point[i] - 1.96 * full_se[i]
-    full_upper[i] <- full_point[i] + 1.96 * full_se[i]
+    if (is.element(measure, c("OR", "RR"))) {
+      # Add the Std Error
+      data_new <- cbind(data[, 1], (log(data[, 3]) - log(data[, 2]))/3.92)
+      full_point[i] <- data_new[comb[i, 1], 1]/data_new[comb[i, 2], 1]
+      full_se[i] <- sqrt((data_new[comb[i, 1], 2]^2) +
+                           (data_new[comb[i, 2], 2]^2))
+      full_lower[i] <- full_point[i] * exp(-1.96 * full_se[i])
+      full_upper[i] <- full_point[i] * exp(1.96 * full_se[i])
+    } else {
+      # Add the Std Error
+      data_new <- cbind(data[, 1], (data[, 3] - data[, 2])/3.92)
+      full_point[i] <- data_new[comb[i, 1], 1] - data_new[comb[i, 2], 1]
+      full_se[i] <- sqrt((data_new[comb[i, 1], 2]^2) +
+                           (data_new[comb[i, 2], 2]^2))
+      full_lower[i] <- full_point[i] - 1.96 * full_se[i]
+      full_upper[i] <- full_point[i] + 1.96 * full_se[i]
+    }
   }
   full <- cbind(full_point, full_lower, full_upper)
+  full[1:(length(drug_names0) - 1), ] <- data[2:length(drug_names0), -4]
 
   # Obtain OR and RD based on the effect measure and absolute risks
   if (measure == "OR") {
-    # Risk differences (as a function of the absolute risks)
-    full_rd_point <- ((exp(full[, 1]) * absol_risk[comb[, 2], 1]) /
-                        (1 - absol_risk[comb[, 2], 1] +
-                           (exp(full[, 1]) * absol_risk[comb[, 2], 1]))) -
-      absol_risk[comb[, 2], 1]
-    full_rd_lower <- ((exp(full[, 2]) * absol_risk[comb[, 2], 2]) /
-                        (1 - absol_risk[comb[, 2], 2] +
-                           (exp(full[, 2]) * absol_risk[comb[, 2], 2]))) -
-      absol_risk[comb[, 2], 2]
-    full_rd_upper <- ((exp(full[, 3]) * absol_risk[comb[, 2], 3]) /
-                        (1 - absol_risk[comb[, 2], 3] +
-                           (exp(full[, 3]) * absol_risk[comb[, 2], 3]))) -
-      absol_risk[comb[, 2], 3]
+    full_rd_point <- absol_risk_fun(full[, 1],
+                                    absol_risk[comb[, 2], 1],
+                                    measure) - absol_risk[comb[, 2], 1]
+    full_rd_lower <- absol_risk_fun(full[, 2],
+                                    absol_risk[comb[, 2], 2],
+                                    measure) - absol_risk[comb[, 2], 2]
+    full_rd_upper <- absol_risk_fun(full[, 3],
+                                    absol_risk[comb[, 2], 3],
+                                    measure) - absol_risk[comb[, 2], 3]
     full_rd <- cbind(full_rd_point, full_rd_lower, full_rd_upper)
     # Odds ratios (log scale; from published results)
     full_lor <- full
