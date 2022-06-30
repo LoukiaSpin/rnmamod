@@ -206,6 +206,7 @@ prepare_model <- function(measure, model, covar_assumption, assumption) {
                        prec_logit_base_event <- ref_base[2]*(1 - equals(ref_base[1], ref_base[2])) + equals(ref_base[1], ref_base[2])
                        logit_base_risk ~ dnorm(mean_logit_base_event, prec_logit_base_event)
                        base_risk_logit <- logit_base_risk*(1 - equals(ref_base[1], ref_base[2])) + ref_base[1]*equals(ref_base[1], ref_base[2])
+                       base_risk <- exp(base_risk_logit)/(1 + exp(base_risk_logit))
                        for (t in 1:nt) {
                          logit(abs_risk[t]) <- base_risk_logit + d[t]
                        }\n")
