@@ -246,7 +246,7 @@ league_table_absolute_user <- function(data,
                                     measure) - absol_risk[comb[, 2], 3]
     full_rd <- cbind(full_rd_point, full_rd_lower, full_rd_upper)
     # Odds ratios (log scale; from published results)
-    full_lor <- full
+    full_lor <- log(full)
   } else if (measure == "RR") {
     # Risk differences (as a function of odds ratios (full) and absolute risks)
     full_rd_point <- absol_risk_fun(full[, 1],
