@@ -24,7 +24,8 @@
 #'   (Salanti et al., 2011) or p-score value (Ruecker and Schwarzer, 2015).
 #'   The first row of the data-frame refers to the selected reference
 #'   intervention and should include (1) the null value three times at the
-#'   investigated effect measure, and (2) the value of the ranking measure.
+#'   investigated effect measure (i.e. 1 for odds ratio and relative risk, and 0
+#'   for risk difference), and (2) the value of the ranking measure.
 #' @param measure Character string indicating the effect measure of \code{data}.
 #'   For a binary outcome, the following can be considered: \code{"OR"},
 #'   \code{"RR"} or \code{"RD"} for the odds ratio, relative risk, and risk
@@ -67,15 +68,15 @@
 #'   based on the ranking measure in the fourth column of the argument
 #'   \code{data}. The upper off-diagonals contain the estimate and 95\%
 #'   confidence interval of the odds ratio, the lower off-diagonals contain the
-#'   estimated 95\% confidence interval of the risk difference (per 1000
-#'   participants), and the main diagonal comprises the calculated absolute
-#'   risks and their 95\% confidence interval (per 1000 participants) of the
-#'   corresponding non-reference interventions. The reference intervention of
-#'   the network (which the baseline risk has been selected for) is indicated in
-#'   the main diagonal with a black, thick frame.
+#'   estimate and 95\% confidence interval of the risk difference (per 1000
+#'   participants), and the main diagonal comprises the absolute risks and their
+#'   95\% confidence interval (per 1000 participants) of the corresponding
+#'   non-reference interventions. The reference intervention of the network
+#'   (which the baseline risk has been selected for) is indicated in the main
+#'   diagonal with a black, thick frame.
 #'
 #'   Comparisons between interventions should be read from left to right.
-#'   Results that indicate strong evidence in favor of the row-defining
+#'   Results that indicate strong evidence in favour of the row-defining
 #'   intervention (i.e. the respective 95\% confidence interval does not include
 #'   the null value) are indicated in bold.
 #'
@@ -191,11 +192,9 @@ league_table_absolute_user <- function(data,
   absol_risk_fun <- function (estimate, baseline, effect_measure) {
 
     if (measure == "OR") {
-      #round((exp(estimate) * baseline) /
-      #        (1 + baseline * (exp(estimate) - 1)), 3)
       round((estimate * baseline) / (1 + baseline * (estimate - 1)), 3)
     } else if (measure == "RR") {
-      round(exp(estimate) * baseline, 3)
+      round(estimate * baseline, 3)
     } else {
       round((estimate + baseline), 3)
     }
