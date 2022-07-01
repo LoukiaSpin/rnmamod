@@ -542,7 +542,6 @@ league_table_absolute_user <- function(data,
             plot.caption = element_text(hjust = 0.01))
   }
 
-
   # Tabulate relative and absolute effects for the basic parameters
   n_t <- length(drug_names0)
   tab0 <- data.frame(drug_names0,
