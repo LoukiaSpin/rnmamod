@@ -25,9 +25,8 @@ possible choices a non-zero positive integer for the rank, the SUCRA value
 (Salanti et al., 2011) or p-score value (Ruecker and Schwarzer, 2015).
 The first row of the data-frame refers to the selected reference
 intervention and should include (1) the null value three times at the
-investigated effect measure, and (2) the value of the ranking measure.
-When the effect measure is odds ratio or relative risk, the data-frame
-should include results in the logarithmic scale.}
+investigated effect measure (i.e. 1 for odds ratio and relative risk, and 0
+for risk difference), and (2) the value of the ranking measure.}
 
 \item{measure}{Character string indicating the effect measure of \code{data}.
 For a binary outcome, the following can be considered: \code{"OR"},
@@ -74,7 +73,7 @@ In line with \code{\link{league_table_absolute}}, provides a league table
 }
 \details{
 When the published results are reported in the relative risk scale
-  (i.e., \code{measure = "RR"}),the function calculates odds ratios and risk
+  (i.e., \code{measure = "RR"}), the function calculates odds ratios and risk
   differences (point estimate and 95\% confidence interval) for all possible
   pairwise comparisons in the network based on the obtained absolute risks
   and the selected baseline risk. Likewise, when the published results are in
@@ -83,24 +82,21 @@ When the published results are reported in the relative risk scale
   differences or odds ratios (point estimate and 95\% confidence interval),
   respectively, for all possible pairwise comparisons in the network based on
   the obtained absolute risks and the selected baseline risk.
-  Note that the argument \code{data} must be in the logarithmic scale when
-  \code{measure = "OR"} or \code{measure = "RR"} in order to obtain the
-  proper results.
 
   The rows and columns of the league table display the names of the
   interventions  sorted by decreasing order from the best to the worst
   based on the ranking measure in the fourth column of the argument
   \code{data}. The upper off-diagonals contain the estimate and 95\%
   confidence interval of the odds ratio, the lower off-diagonals contain the
-  estimated 95\% confidence interval of the risk difference (per 1000
-  participants), and the main diagonal comprises the calculated absolute
-  risks and their 95\% confidence interval (per 1000 participants) of the
-  corresponding non-reference interventions. The reference intervention of
-  the network (which the baseline risk has been selected for) is indicated in
-  the main diagonal with a homonymous label.
+  estimate and 95\% confidence interval of the risk difference (per 1000
+  participants), and the main diagonal comprises the absolute risks and their
+  95\% confidence interval (per 1000 participants) of the corresponding
+  non-reference interventions. The reference intervention of the network
+  (which the baseline risk has been selected for) is indicated in the main
+  diagonal with a black, thick frame.
 
   Comparisons between interventions should be read from left to right.
-  Results that indicate strong evidence in favor of the row-defining
+  Results that indicate strong evidence in favour of the row-defining
   intervention (i.e. the respective 95\% confidence interval does not include
   the null value) are indicated in bold.
 

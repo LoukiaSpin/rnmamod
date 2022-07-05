@@ -7,9 +7,11 @@
 baseline_model(base_risk, n_chains, n_iter, n_burnin, n_thin)
 }
 \arguments{
-\item{base_risk}{Character string indicating the type of baseline model.
-Set \code{base_type} equal to one of the following: \code{"fixed"},
-\code{"random"}, or \code{"predicted"}.}
+\item{base_risk}{A scalar, a vector of length three with elements sorted in
+ascending order, or a matrix with two columns and number of rows equal to
+the number of relevant trials. In either choice the elements should be in
+the interval (0, 1). See 'Details' in \code{\link{run_model}}.
+This argument is only relevant for a binary outcome.}
 
 \item{n_chains}{Positive integer specifying the number of chains for the
 MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
@@ -33,51 +35,53 @@ of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1.}
 }
 \value{
-An R character vector object to be passed to \code{\link{run_model}}
-  and \code{\link{run_metareg}} through the
-  \code{\link[base:textConnection]{textConnection}} function as the argument
-  \code{object}.
+When \code{base_risk} is scalar or vector, the function returns a
+  vector of two numeric elements to be passed to \code{\link{run_model}} and
+  \code{\link{run_metareg}}. When \code{base_risk} is matrix, the function
+  returns the following elements:
+  \item{ref_base}{A vector with the posterior mean and precision of the
+  predictive distribution of the logit of an event for the selected reference
+  intervention.}
+  \item{trial_base_logit}{The estimated trial-specific logit of an event (the
+  random effects).}
+  \item{mean_base_logit}{The summary mean of the random effects"}.
+  \item{tau_base_logit}{The between-trial standard deviation of the normal
+  distribution of the random effects.}
 }
 \description{
-XXXX
+To process the elements in the argument \code{base_risk} of the
+  \code{\link{run_model}} function. It also runs the hierarchical baseline
+  model, separately from the relative effects model as described in
+  Dias et al. (2018) and Dias et al. (2013b). The output is to be passed to
+  \code{\link{run_model}} and \code{\link{run_metareg}} to obtain the
+  (unadjusted and adjusted, respectively) absolute risks for each
+  intervention in the dataset.
 }
 \details{
-\code{prepare_model} creates the model in the JAGS dialect
-  of the BUGS language. The output of this function constitutes the argument
-  \code{model.file} of the \code{\link[R2jags:jags]{jags}} function (in the
-  R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}) via the
-  \code{\link[base:textConnection]{textConnection}} function.
+If \code{base_risk} is a matrix, \code{baseline_model} creates the
+  hierarchical baseline model in the JAGS dialect of the BUGS language.
+  The output of this function (see 'Value') constitutes the
+  posterior mean and precision of the predictive distribution of the logit of
+  an event for the selected reference intervention and it is plugged in the
+  WinBUGS code for the relative effects model (Dias et al., 2013a) via the
+  \code{\link{prepare_model}} function.
 }
 \references{
-Cooper NJ, Sutton AJ, Morris D, Ades AE, Welton NJ. Addressing between-study
-heterogeneity and inconsistency in mixed treatment comparisons: Application
-to stroke prevention treatments in individuals with non-rheumatic atrial
-fibrillation. \emph{Stat Med} 2009;\bold{28}(14):1861--81.
-doi: 10.1002/sim.3594
+Dias S, Ades AE, Welton NJ, Jansen JP, Sutton AJ. Network Meta-Analysis for
+Decision Making. Chichester (UK): Wiley; 2018.
 
 Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
 making 2: a generalized linear modeling framework for pairwise and network
 meta-analysis of randomized controlled trials. \emph{Med Decis Making}
-2013;\bold{33}(5):607--17. doi: 10.1177/0272989X12458724
+2013a;\bold{33}(5):607--17. doi: 10.1177/0272989X12458724
 
-Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
-data in network meta-analysis: a one-stage pattern-mixture model approach.
-\emph{Stat Methods Med Res} 2021;\bold{30}(4):958--75.
-doi: 10.1177/0962280220983544
-
-Spineli LM. An empirical comparison of Bayesian modelling strategies for
-missing binary outcome data in network meta-analysis.
-\emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
-doi: 10.1186/s12874-019-0731-y
-
-Turner NL, Dias S, Ades AE, Welton NJ. A Bayesian framework to account
-for uncertainty due to missing binary outcome data in pairwise meta-analysis.
-\emph{Stat Med} 2015;\bold{34}(12):2062--80. doi: 10.1002/sim.6475
+Dias S, Welton NJ, Sutton AJ, Ades AE. Evidence synthesis for decision
+making 5: the baseline natural history model. \emph{Med Decis Making}
+2013b;\bold{33}(5):657--70. doi: 10.1177/0272989X13485155
 }
 \seealso{
-\code{\link{run_metareg}}, \code{\link{run_model}},
-   \code{\link[R2jags:jags]{jags}},
-   \code{\link[base:textConnection]{textConnection}}
+\code{\link{prepare_model}}, \code{\link[R2jags:jags]{jags}},
+  \code{\link{run_metareg}}, \code{\link{run_model}}
 }
 \author{
 {Loukia M. Spineli}

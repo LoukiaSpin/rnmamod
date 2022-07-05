@@ -245,6 +245,22 @@ run_sensitivity <- function(full,
   } else {
     var_misspar
   }
+  ref_base <- if (is.element(measure, c("OR", "RR", "RD")) &
+                  missing(base_risk)) {
+    base_risk <-
+      describe_network(data = data,
+                       drug_names = 1:item$nt,
+                       measure = measure)$table_interventions[ref, 7]/100
+    rep(log(base_risk / (1 - base_risk)), 2)
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
+    baseline_model(base_risk,
+                   n_chains,
+                   n_iter,
+                   n_burnin,
+                   n_thin)
+  } else if (!is.element(measure, c("OR", "RR", "RD"))) {
+    NA
+  }
   n_chains <- if (missing(n_chains)) {
     2
   } else if (n_chains < 1) {
@@ -312,10 +328,11 @@ run_sensitivity <- function(full,
 
     if (is.element(measure, c("MD", "SMD", "ROM"))) {
       data_jag[[i]] <- append(data_jag[[i]],
-                              list("y.o" = item$y0, "se.o" = item$se0))
+                              list("y.o" = item$y0,
+                                   "se.o" = item$se0))
     } else if (is.element(measure, c("OR", "RR", "RD"))) {
       data_jag[[i]] <- append(data_jag[[i]], list("r" = item$r,
-                                                  "base_risk" = base_risk))
+                                                  "ref_base" = ref_base))
     }
 
     data_jag[[i]] <- if (model == "RE") {

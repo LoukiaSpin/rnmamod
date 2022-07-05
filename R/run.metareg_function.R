@@ -71,6 +71,9 @@
 #'   interventions in the trial.
 #'
 #'   Furthermore, the output includes the following elements:
+#'   \item{abs_risk}{The adjusted absolute risks for each intervention. This
+#'   appears only when \code{measure = "OR"}, \code{measure = "RR"}, or
+#'   \code{measure = "RD"}.}
 #'   \item{leverage_o}{The leverage for the observed outcome at each trial-arm.}
 #'   \item{sign_dev_o}{The sign of the difference between observed and fitted
 #'   outcome at each trial-arm.}
@@ -200,6 +203,22 @@ run_metareg <- function(full,
   } else {
     covar_assumption
   }
+  ref_base <- if (is.element(measure, c("OR", "RR", "RD")) &
+                  missing(base_risk)) {
+    base_risk <-
+      describe_network(data = data,
+                       drug_names = 1:item$nt,
+                       measure = measure)$table_interventions[ref, 7]/100
+    rep(log(base_risk / (1 - base_risk)), 2)
+  } else if (is.element(measure, c("OR", "RR", "RD"))) {
+    baseline_model(base_risk,
+                   n_chains,
+                   n_iter,
+                   n_burnin,
+                   n_thin)
+  } else if (!is.element(measure, c("OR", "RR", "RD"))) {
+    NA
+  }
   n_chains <- if (missing(n_chains)) {
     2
   } else if (n_chains < 1) {
@@ -242,10 +261,11 @@ run_metareg <- function(full,
                    "D" = D)
 
   data_jag <- if (!is.element(measure, c("OR", "RR", "RD"))) {
-    append(data_jag, list("y.o" = item$y0, "se.o" = item$se0))
+    append(data_jag, list("y.o" = item$y0,
+                          "se.o" = item$se0))
   } else if (is.element(measure, c("OR", "RR", "RD"))) {
     append(data_jag, list("r" = item$r,
-                          "ref_base" = base_risk))
+                          "ref_base" = ref_base))
   }
 
   data_jag <- if (length(unique(covariate)) > 2) {
@@ -304,6 +324,12 @@ run_metareg <- function(full,
                            c("EM.pred", "tau", "delta"))]
   }
 
+  param_jags <- if (is.element(measure, c("OR", "RR", "RD"))) {
+    append(param_jags, "abs_risk")
+  } else {
+    param_jags
+  }
+
   # Run the Bayesian analysis
   jagsfit <- jags(data = data_jag,
                   parameters.to.save = param_jags,
@@ -324,6 +350,9 @@ run_metareg <- function(full,
 
   # Predictive effects of all unique pairwise comparisons
   EM_pred <- t(get_results %>% dplyr::select(starts_with("EM.pred[")))
+
+  # Unique absolute risks for all interventions (only binary data)
+  abs_risk <- t(get_results %>% dplyr::select(starts_with("abs_risk[")))
 
   # Between-trial standard deviation
   tau <- t(get_results %>% dplyr::select(starts_with("tau")))
@@ -454,7 +483,8 @@ run_metareg <- function(full,
                        n_iter = n_iter,
                        n_burnin = n_burnin,
                        n_thin = n_thin,
-                       type = "nmr")
+                       type = "nmr",
+                       abs_risk = abs_risk)
     nma_results <- append(ma_results, list(SUCRA = SUCRA,
                                            effectiveness = effectiveness,
                                            D = full$D))
@@ -478,7 +508,8 @@ run_metareg <- function(full,
                        n_iter = n_iter,
                        n_burnin = n_burnin,
                        n_thin = n_thin,
-                       type = "nmr")
+                       type = "nmr",
+                       abs_risk = abs_risk)
     nma_results <- append(ma_results, list(SUCRA = SUCRA,
                                            effectiveness = effectiveness,
                                            D = full$D))

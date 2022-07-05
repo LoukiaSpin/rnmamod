@@ -120,19 +120,13 @@ outcome.}
 should match the intervention identifier under element \strong{t} in
 \code{data} (See 'Format').}
 
-\item{base_risk}{A scalar or a vector of length three with elements in the
-interval (0, 1). The former refers to a fixed baseline risk for the
-selected reference intervention. In the latter, the elements of the vector
-should be sorted in ascending order as they refer to the lower bound, mean,
-and upper bound of the 95\% confidence interval for the baseline
-risk for the selected reference intervention. With these elements, we can
-calculate the mean and variance of the approximately normal distribution of
-the logit of an event for the selected reference intervention
-(Dias et al., 2018).
-If \code{base_risk} has not been defined, the function uses the median
-event risk for the reference intervention as calculated from the
-corresponding trials in \code{data}. This argument is only relevant for a
-binary outcome.}
+\item{base_risk}{A scalar, a vector of length three with elements sorted in
+ascending order, or a matrix with two columns and number of rows equal to
+the number of relevant trials. In either choice the elements should be in
+the interval (0, 1). See 'Details'. If \code{base_risk} has not been
+defined, the function uses the median event risk for the reference
+intervention from the corresponding trials in \code{data}. This argument is
+only relevant for a binary outcome.}
 
 \item{n_chains}{Positive integer specifying the number of chains for the
 MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
@@ -197,9 +191,6 @@ A list of R2jags output on the summaries of the posterior
   the number of interventions in the trial.
 
   Furthermore, the output includes the following elements:
-  \item{abs_risk}{The absolute risks for each intervention. This appears only
-  when \code{measure = "OR"}, \code{measure = "RR"}, or
-  \code{measure = "RD"}.}
   \item{leverage_o}{The leverage for the observed outcome at each trial-arm.}
   \item{sign_dev_o}{The sign of the difference between observed and fitted
   outcome at each trial-arm.}
@@ -261,16 +252,16 @@ The model runs in \code{JAGS} and the progress of the simulation
 
   To perform a Bayesian pairwise or network meta-analysis, the
   \code{\link{prepare_model}} function is called which contains the WinBUGS
-  code as written by Dias et al. (2013) for binomial and normal likelihood to
+  code as written by Dias et al. (2013a) for binomial and normal likelihood to
   analyse aggregate binary and continuous outcome data, respectively.
   \code{\link{prepare_model}} uses the consistency model (as described in
   Lu and Ades (2006)) to estimate all possible comparisons in the network.
   It also accounts for the multi-arm trials by assigning conditional
   univariate normal distributions on the underlying trial-specific effect
   size of comparisons with the baseline arm of the multi-arm trial
-  (Dias et al., 2013).
+  (Dias et al., 2013a).
 
-  The code of Dias et al. (2013) has been extended to incorporate the
+  The code of Dias et al. (2013a) has been extended to incorporate the
   pattern-mixture model to adjust the underlying outcome in each arm of
   every trial for missing participant outcome data (Spineli et al., 2021;
   Spineli, 2019a; Turner et al., 2015). The assumptions about the
@@ -312,13 +303,34 @@ The model runs in \code{JAGS} and the progress of the simulation
   determine \code{mean_misspar} and select a proper value for
   \code{var_misspar}.
 
+  The scalar \code{base_risk} refers to a fixed baseline risk for the
+  selected reference intervention (as specified with \code{ref}).
+  When \code{base_risk} is a three-element vector, it refers to a random
+  baseline risk and the elements should be sorted in ascending order as they
+  refer to the lower bound, mean value, and upper bound of the 95\%
+  confidence interval for the baseline risk for the selected reference
+  intervention. The \code{\link{baseline_model}} function is called to
+  calculate the mean and variance of the approximately normal distribution of
+  the logit of an event for \code{ref} using these three elements
+  (Dias et al., 2018). When \code{base_risk} is a matrix, it refers to the
+  predicted baseline risk with first column being the number of events, and
+  second column being the sample size of the corresponding trials on the
+  selected reference intervention. Then the \code{\link{baseline_model}}
+  function is called that contains the WinBUGS code as written by Dias et al.
+  (2013b) for the hierarchical baseline model. The posterior mean and
+  precision of the predictive distribution of the logit of an event
+  for the selected reference intervention are plugged in the WinBUGS code for
+  the relative effects model (via the \code{\link{prepare_model}} function).
+  The matrix \code{base_risk} should not comprise the trials in \code{data}
+  that include the \code{ref}, unless justified (Dias et al., 2018).
+
   To obtain unique absolute risks for each intervention, the network
   meta-analysis model has been extended to incorporate the transitive risks
   framework, namely, an intervention has the same absolute risk regardless of
   the comparator intervention(s) in a trial (Spineli et al., 2017).
   The absolute risks are a function of the odds ratio (the \strong{base-case}
   effect measure for a binary outcome) and the selected baseline risk for the
-  reference intervention (\code{ref}) (Appendix in Dias et al., 2013).
+  reference intervention (\code{ref}) (Appendix in Dias et al., 2013a).
   We advocate using the odds ratio as an effect measure for its desired
   mathematical properties. Then, the relative risk and risk difference can be
   obtained as a function of the absolute risks of the corresponding
@@ -358,13 +370,17 @@ comparisons: Application to stroke prevention treatments in individuals
 with non-rheumatic atrial fibrillation.
 \emph{Stat Med} 2009;\bold{28}(14):1861--81. doi: 10.1002/sim.3594
 
-Dias S, Ades AE, Welton NJ, Jansen JP, Sutton AJ. The Core Model. In: Network
-Meta-Analysis for Decision Making. Chichester (UK): Wiley; 2018, pp 19--58.
+Dias S, Ades AE, Welton NJ, Jansen JP, Sutton AJ. Network Meta-Analysis for
+Decision Making. Chichester (UK): Wiley; 2018.
 
 Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
 making 2: a generalized linear modeling framework for pairwise and network
 meta-analysis of randomized controlled trials. \emph{Med Decis Making}
-2013;\bold{33}(5):607--17. doi: 10.1177/0272989X12458724
+2013a;\bold{33}(5):607--17. doi: 10.1177/0272989X12458724
+
+Dias S, Welton NJ, Sutton AJ, Ades AE. Evidence synthesis for decision
+making 5: the baseline natural history model. \emph{Med Decis Making}
+2013b;\bold{33}(5):657--70. doi: 10.1177/0272989X13485155
 
 Gelman A, Rubin DB. Inference from iterative simulation using multiple
 sequences. \emph{Stat Sci} 1992;\bold{7}(4):457--72.
@@ -410,7 +426,7 @@ in meta-analysis--part 1: two-stage methods. \emph{Stat Med}
 2008;\bold{27}(5):711--27. doi: 10.1002/sim.3008
 }
 \seealso{
-\code{\link{data_preparation}},
+\code{\link{baseline_model}}, \code{\link{data_preparation}},
   \code{\link{heterogeneity_param_prior}}, \code{\link[R2jags:jags]{jags}},
   \code{\link{missingness_param_prior}}, \code{\link{prepare_model}}
 }

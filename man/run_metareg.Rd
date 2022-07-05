@@ -88,6 +88,9 @@ A list of R2jags outputs on the summaries of the posterior
   interventions in the trial.
 
   Furthermore, the output includes the following elements:
+  \item{abs_risk}{The adjusted absolute risks for each intervention. This
+  appears only when \code{measure = "OR"}, \code{measure = "RR"}, or
+  \code{measure = "RD"}.}
   \item{leverage_o}{The leverage for the observed outcome at each trial-arm.}
   \item{sign_dev_o}{The sign of the difference between observed and fitted
   outcome at each trial-arm.}
