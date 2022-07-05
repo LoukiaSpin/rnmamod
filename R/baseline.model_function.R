@@ -191,17 +191,68 @@ baseline_model <- function(base_risk,
   ref_base <- if (is.element(base_type, c("fixed", "random"))) {
     base_risk1
   } else if (is.element(base_type, "predicted")) {
-    c(pred_base_logit[1], 1/(pred_base_logit[2])^2)
+    c(pred_base_logit[1], 1 / (pred_base_logit[2])^2)
   }
 
-  results <- if (is.element(base_type, c("fixed", "random"))) {
-    ref_base
-  } else if (is.element(base_type, "predicted")) {
-    list(ref_base = ref_base,
-         trial_base_logit = trial_base_logit,
-         mean_base_logit = mean_base_logit,
-         tau_base_logit = tau_base_logit)
+  #Draw forest-plot of observed & estimated probabilities for "predicted"
+  fig <- if (is.element(base_type, "predicted")) {
+    # Back-transform to probability (trial-specific estimate)
+    estim_prob <- exp(trial_base_logit[, c(1, 3, 7)]) /
+      (1 + exp(trial_base_logit[, c(1, 3, 7)]))
+    # Back-transform to probability (summary estimate)
+    summary_prob <- exp(mean_base_logit[c(1, 3, 7)]) /
+      (1 + exp(mean_base_logit[c(1, 3, 7)]))
+
+
+    # Create dataset for the forest-plot
+    dataplot <- data.frame(rbind(matrix(rep(base_risk1[, 1] / base_risk1[, 2], 3),
+                                        ncol = 3),
+                                 estim_prob),
+                           rep(c("Observed", "Estimated"),
+                               each = data_jag_base$ns.base),
+                           rep(as.factor(seq_len(data_jag_base$ns.base)), 2))
+    colnames(dataplot) <- c("point", "lower", "upper", "type", "order")
+
+    # Crate forest-plot
+    ggplot(data = dataplot,
+           aes(x = order,
+               y = point,
+               ymin = lower,
+               ymax = upper)) +
+      geom_hline(yintercept = summary_prob,
+                 col = "blue",
+                 size = 1,
+                 lty = 2) +
+      geom_rect(aes(xmin = -Inf,
+                    xmax = Inf,
+                    ymin = summary_prob[2],
+                    ymax = summary_prob[3]),
+                alpha = 0.01,
+                fill = "blue") +
+      geom_linerange(size = 1.5,
+                     position = position_dodge(width = 0.5)) +
+      geom_point(aes(colour = type),
+                 stroke = 0.3,
+                 size = 2.5) +
+      scale_colour_manual(values = c("Estimated" = "#D55E00",
+                                     "Observed" = "#009E73")) +
+      labs(x = "",
+           y = "Probability of an event in reference intervention",
+           colour = "",
+           fill = "") +
+      scale_y_continuous(labels = percent) +
+      coord_flip() +
+      theme_classic() +
+      theme(axis.text.x = element_text(color = "black", size = 12),
+            axis.text.y = element_text(color = "black", size = 12),
+            axis.title.x = element_text(color = "black", face = "bold",
+                                        size = 12),
+            legend.position = "bottom",
+            legend.text = element_text(color = "black", size = 12),
+            legend.title = element_text(color = "black", face = "bold",
+                                        size = 12))
   }
 
-  return(ref_base)
+  return(list(ref_base = ref_base,
+              figure = fig))
 }

@@ -257,7 +257,7 @@ run_sensitivity <- function(full,
                    n_chains,
                    n_iter,
                    n_burnin,
-                   n_thin)
+                   n_thin)$ref_base
   } else if (!is.element(measure, c("OR", "RR", "RD"))) {
     NA
   }
