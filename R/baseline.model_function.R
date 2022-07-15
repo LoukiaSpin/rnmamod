@@ -143,7 +143,7 @@ baseline_model <- function(base_risk,
   }
 
   if (base_type == "predicted") {
-    message("*The baseline model also runs (using the predictive distribution)")
+    message("**Baseline model (predictions)**")
     # Data for the baseline model
     data_jag_base <- list("r.base" = base_risk1[, 1],
                           "n.base" = base_risk1[, 2],
@@ -189,6 +189,10 @@ baseline_model <- function(base_risk,
                            dplyr::select(starts_with("tau.base")))
     trial_base_logit <- t(get_results_base %>%
                             dplyr::select(starts_with("u.base[")))
+  } else if (base_type == "fixed") {
+    message("**Fixed baseline risk assigned**")
+  } else if (base_type == "random") {
+    message("**Random baseline risk assigned**")
   }
 
   ref_base <- if (is.element(base_type, c("fixed", "random"))) {
@@ -285,6 +289,12 @@ baseline_model <- function(base_risk,
                                         size = 12))
   }
 
-  return(list(ref_base = ref_base,
-              figure = fig))
+  results <- list(ref_base = ref_base,
+                  figure = fig)
+  if (!is.element(base_type, c("fixed", "random"))) {
+    results <- append(results, list(mean_base_logit = mean_base_logit,
+                                    tau_base_logit = tau_base_logit))
+  }
+
+  return(results)
 }
