@@ -148,62 +148,125 @@ unrelated_effects_plot <- function(data,
     save_xls
   }
 
-  # Turn into contrast-level data ('netmeta')
-  if (is.element(measure, c("MD", "SMD", "ROM"))) {
-    pairwise_observed <-
-      pairwise(as.list(item$t),
-               mean = as.list(item$y0),
-               sd = as.list(item$sd0),
-               n = as.list(item$N),
-               data = cbind(item$t, item$y0, item$sd0, item$N),
-               studlab = 1:item$ns)[, c(3:5, 7, 10, 8, 11, 6, 9)]
-    colnames(pairwise_observed) <- c("study",
-                                      "arm1",
-                                      "arm2",
-                                      "y1",
-                                      "y2",
-                                      "sd1",
-                                      "sd2",
-                                      "n1",
-                                      "n2")
+  # Function to turn wide- to long-format for an element
+  log_format <- function (input) {
+    if (length(input[1, ]) > 2) {
+      long_form0 <- apply(input, 1, function(x) {combn(na.omit(x), 2)})
+      long_form <- t(do.call(cbind, long_form0))
+    } else {
+      long_form <- input
+    }
+    return(long_form)
+  }
 
-    pairwise_mod <- pairwise(as.list(item$t),
-                              mean = as.list(item$y0),
-                              sd = as.list(item$sd0),
-                              n = as.list(item$m),
-                              data = cbind(item$t, item$y0, item$sd0, item$m),
-                              studlab = 1:item$ns)[, c(6, 9)]
-    colnames(pairwise_mod) <- c("m1", "m2")
-
-    pairwise_data <- data.frame(pairwise_observed[, c(1, 4:7)],
-                                pairwise_mod,
-                                pairwise_observed[, c(8:9, 2:3)])
+  # Turn into contrast-level data
+  poss_comp <- if (max(item$na) > 2) {
+    sapply(item$na, function(x) {combn(x, 2)})
   } else {
-    pairwise_observed <-
-      pairwise(as.list(item$t),
-               event = as.list(item$r),
-               n = as.list(item$N),
-               data = cbind(item$t, item$r, item$N),
-               studlab = 1:item$ns)[, c(3, 6, 8, 7, 9, 4:5)]
-    colnames(pairwise_observed) <- c("study",
-                                      "r1",
-                                      "r2",
-                                      "n1",
-                                      "n2",
-                                      "arm1",
-                                      "arm2")
+    lapply(item$na, function(x) {combn(x, 2)})
+  }
+  len_poss_comp <- unlist(lapply(poss_comp, function(x) {dim(x)[2]}))
+  study <- rep(1:item$ns, len_poss_comp)
+  if (is.element(measure, c("MD", "SMD", "ROM"))) {
+    t_long_form <- log_format(item$t)
+    y_long_form <- log_format(item$y0)
+    sd_long_form <- log_format(item$sd0)
+    m_long_form <- log_format(item$m)
+    n_long_form <- log_format(item$N)
+    pairwise_data0 <- data.frame(study,
+                                 t_long_form,
+                                 y_long_form,
+                                 sd_long_form,
+                                 m_long_form,
+                                 n_long_form)
+    colnames(pairwise_data0) <- c("study",
+                                  "t1",
+                                  "t2",
+                                  "y1",
+                                  "y2",
+                                  "sd1",
+                                  "sd2",
+                                  "m1",
+                                  "m2",
+                                  "n1",
+                                  "n2")
+    #pairwise_observed <-
+    #  pairwise(as.list(item$t),
+    #           mean = as.list(item$y0),
+    #           sd = as.list(item$sd0),
+    #           n = as.list(item$N),
+    #           data = cbind(item$t, item$y0, item$sd0, item$N),
+    #           studlab = 1:item$ns)[, c(3:5, 7, 10, 8, 11, 6, 9)]
+    #colnames(pairwise_observed) <- c("study",
+    #                                  "arm1",
+    #                                  "arm2",
+    #                                  "y1",
+    #                                  "y2",
+    #                                  "sd1",
+    #                                  "sd2",
+    #                                  "n1",
+    #                                  "n2")
 
-    pairwise_mod <- pairwise(as.list(item$t),
-                              event = as.list(item$m),
-                              n = as.list(item$N),
-                              data = cbind(item$t, item$m, item$N),
-                              studlab = 1:item$ns)[, c(6, 8)]
-    colnames(pairwise_mod) <- c("m1", "m2")
+    #pairwise_mod <- pairwise(as.list(item$t),
+    #                          mean = as.list(item$y0),
+    #                          sd = as.list(item$sd0),
+    #                          n = as.list(item$m),
+    #                          data = cbind(item$t, item$y0, item$sd0, item$m),
+    #                          studlab = 1:item$ns)[, c(6, 9)]
+    #colnames(pairwise_mod) <- c("m1", "m2")
 
     # The dataset to perform the unrelated trial effects model
-    pairwise_data <- data.frame(pairwise_observed[, 1:3],
-                                pairwise_mod,
-                                pairwise_observed[, 4:7])
+    pairwise_data <- data.frame(pairwise_data0[, c(1, 4:11)],
+                                pairwise_data0[, 2:3])
+    #pairwise_data <- data.frame(pairwise_observed[, c(1, 4:7)],
+    #                            pairwise_mod,
+    #                            pairwise_observed[, c(8:9, 2:3)])
+  } else {
+    t_long_form <- log_format(item$t)
+    r_long_form <- log_format(item$r)
+    m_long_form <- log_format(item$m)
+    n_long_form <- log_format(item$N)
+    pairwise_data0 <- data.frame(study,
+                                 t_long_form,
+                                 r_long_form,
+                                 m_long_form,
+                                 n_long_form)
+    colnames(pairwise_data0) <- c("study",
+                                  "t1",
+                                  "t2",
+                                  "r1",
+                                  "r2",
+                                  "m1",
+                                  "m2",
+                                  "n1",
+                                  "n2")
+    #pairwise_observed <-
+    #  pairwise(as.list(item$t),
+    #           event = as.list(item$r),
+    #           n = as.list(item$N),
+    #           data = cbind(item$t, item$r, item$N),
+    #           studlab = 1:item$ns)[, c(3, 6, 8, 7, 9, 4:5)]
+    #colnames(pairwise_observed) <- c("study",
+    #                                  "r1",
+    #                                  "r2",
+    #                                  "n1",
+    #                                  "n2",
+    #                                  "arm1",
+    #                                  "arm2")
+
+    #pairwise_mod <- pairwise(as.list(item$t),
+    #                          event = as.list(item$m),
+    #                          n = as.list(item$N),
+    #                          data = cbind(item$t, item$m, item$N),
+    #                          studlab = 1:item$ns)[, c(6, 8)]
+    #colnames(pairwise_mod) <- c("m1", "m2")
+
+    # The dataset to perform the unrelated trial effects model
+    pairwise_data <- data.frame(pairwise_data0[, c(1, 4:9)],
+                                pairwise_data0[, 2:3])
+    #pairwise_data <- data.frame(pairwise_observed[, 1:3],
+    #                            pairwise_mod,
+    #                            pairwise_observed[, 4:7])
   }
 
  if (is.element(measure, c("MD", "SMD", "ROM"))) {

@@ -98,17 +98,33 @@ describe_network <- function(data, drug_names, measure) {
                                     by = list(unlist(dat$t)),
                                     max)[, 2], 2) * 100
 
-  # Turn into long format using the 'pairwise' function (netmeta): MOD
-  pair_mod <- pairwise(as.list(dat$t),
-                        event = as.list(dat$m),
-                        n = as.list(dat$N),
-                        data = cbind(dat$t, dat$m, dat$N),
-                        studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
-  colnames(pair_mod) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
+  # Function to turn wide- to long-format for an element
+  log_format <- function (input) {
+    if (length(input[1, ]) > 2) {
+      long_form0 <- apply(input, 1, function(x) {combn(na.omit(x), 2)})
+      long_form <- t(do.call(cbind, long_form0))
+    } else {
+      long_form <- input
+    }
+    return(long_form)
+  }
+
+  # Turn into long format for MOD
+  t_long_form <- log_format(dat$t)
+  m_long_form <- log_format(dat$m)
+  n_long_form <- log_format(dat$N)
+  pair_mod <- data.frame(t_long_form, m_long_form, n_long_form)
+  colnames(pair_mod) <- c("t1", "t2", "m1", "m2", "n1", "n2")
+  #pair_mod <- pairwise(as.list(dat$t),
+  #                      event = as.list(dat$m),
+  #                      n = as.list(dat$N),
+  #                      data = cbind(dat$t, dat$m, dat$N),
+  #                      studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
+  #colnames(pair_mod) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
 
   # Name the interventions in each arm
-  pair_mod[, 2] <- drug_names[pair_mod$t1]
-  pair_mod[, 3] <- drug_names[pair_mod$t2]
+  pair_mod[, 1] <- drug_names[pair_mod$t1]
+  pair_mod[, 2] <- drug_names[pair_mod$t2]
 
   # The comparison between the second and first arms of each trial
   comp <- paste(pair_mod[, "t2"], "vs", pair_mod[, "t1"])
@@ -237,13 +253,16 @@ describe_network <- function(data, drug_names, measure) {
                                        by = list(unlist(dat$t)), max)[, 2],
                              2) * 100
 
-    # Turn into long format using the 'pairwise' function (netmeta)
-    pair_bin <- pairwise(as.list(dat$t),
-                          event = as.list(dat$r),
-                          n = as.list(dat$N),
-                          data = cbind(dat$t, dat$r, dat$N),
-                          studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
-    colnames(pair_bin) <- c("study", "t1", "t2", "r1", "r2", "n1", "n2")
+    # Turn into long format for events
+    #pair_bin <- pairwise(as.list(dat$t),
+    #                      event = as.list(dat$r),
+    #                      n = as.list(dat$N),
+    #                      data = cbind(dat$t, dat$r, dat$N),
+    #                      studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
+    #colnames(pair_bin) <- c("study", "t1", "t2", "r1", "r2", "n1", "n2")
+    r_long_form <- log_format(dat$r)
+    pair_bin <- data.frame(t_long_form, r_long_form, n_long_form)
+    colnames(pair_bin) <- c("t1", "t2", "r1", "r2", "n1", "n2")
 
     # Proportion of observed events per trial-comparison
     trial_risk <- apply(pair_bin[, c("r1", "r2")], 1, sum) /

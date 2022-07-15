@@ -32,18 +32,21 @@
 #'   of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 #'   The default argument is 1.
 #'
-#' @return When \code{base_risk} is scalar or vector, the function returns a
-#'   vector of two numeric elements to be passed to \code{\link{run_model}} and
-#'   \code{\link{run_metareg}}. When \code{base_risk} is matrix, the function
-#'   returns the following elements:
-#'   \item{ref_base}{A vector with the posterior mean and precision of the
-#'   predictive distribution of the logit of an event for the selected reference
-#'   intervention.}
-#'   \item{trial_base_logit}{The estimated trial-specific logit of an event (the
-#'   random effects).}
-#'   \item{mean_base_logit}{The summary mean of the random effects"}.
-#'   \item{tau_base_logit}{The between-trial standard deviation of the normal
-#'   distribution of the random effects.}
+#' @return When \code{base_risk} is scalar (fixed baseline), the function
+#'   returns the user-defined baseline for the selected reference intervention.
+#'   When \code{base_risk} is a vector (random baseline), the function returns
+#'   a vector with the calculated logit of an event for the selected reference
+#'   intervention and its precision. Finally, when \code{base_risk} is a matrix
+#'   (predicted baseline), the function returns a vector with the posterior mean
+#'   and precision of the predictive distribution of the logit of an event for
+#'   the selected reference intervention. This vector is be passed to
+#'   \code{\link{run_model}} and \code{\link{run_metareg}}.
+#'
+#'   When \code{base_risk} is a matrix, the function also returns a forest plot
+#'   with the estimated trial-specific logit of an event and 95\% credible
+#'   intervals (the random effects) alongside the corresponding observed logit
+#'   of an event. A grey rectangular illustrates the summary mean and 95\%
+#'   credible interval of the random effects.
 #'
 #' @details If \code{base_risk} is a matrix, \code{baseline_model} creates the
 #'   hierarchical baseline model in the JAGS dialect of the BUGS language.
@@ -200,8 +203,8 @@ baseline_model <- function(base_risk,
     estim_prob <- exp(trial_base_logit[, c(1, 3, 7)]) /
       (1 + exp(trial_base_logit[, c(1, 3, 7)]))
     # Back-transform to probability (summary estimate)
-    summary_prob <- exp(mean_base_logit[c(1, 3, 7)]) /
-      (1 + exp(mean_base_logit[c(1, 3, 7)]))
+    summary_prob <- round(exp(mean_base_logit[c(1, 3, 7)]) /
+      (1 + exp(mean_base_logit[c(1, 3, 7)])) * 100, 0)
 
 
     # Create dataset for the forest-plot
@@ -212,6 +215,7 @@ baseline_model <- function(base_risk,
                                each = data_jag_base$ns.base),
                            rep(as.factor(seq_len(data_jag_base$ns.base)), 2))
     colnames(dataplot) <- c("point", "lower", "upper", "type", "order")
+    dataplot[, 1:3] <- round(dataplot[, 1:3] * 100, 0)
 
     # Crate forest-plot
     ggplot(data = dataplot,
@@ -220,7 +224,7 @@ baseline_model <- function(base_risk,
                ymin = lower,
                ymax = upper)) +
       geom_hline(yintercept = summary_prob,
-                 col = "blue",
+                 col = "grey",
                  size = 1,
                  lty = 2) +
       geom_rect(aes(xmin = -Inf,
@@ -228,19 +232,47 @@ baseline_model <- function(base_risk,
                     ymin = summary_prob[2],
                     ymax = summary_prob[3]),
                 alpha = 0.01,
-                fill = "blue") +
+                fill = "grey") +
       geom_linerange(size = 1.5,
                      position = position_dodge(width = 0.5)) +
       geom_point(aes(colour = type),
                  stroke = 0.3,
                  size = 2.5) +
+      geom_text(aes(x = order,
+                    y = point,
+                    label = point),
+                color = "blue",
+                hjust = 0,
+                vjust = -0.5,
+                size = 4.0,
+                check_overlap = FALSE,
+                position = position_dodge(width = 0.5)) +
+      geom_text(data = subset(dataplot, type == "Estimated"),
+                aes(x = order,
+                    y = lower,
+                    label = lower),
+                color = "blue",
+                hjust = 0,
+                vjust = -0.5,
+                size = 4.0,
+                check_overlap = FALSE,
+                position = position_dodge(width = 0.5)) +
+      geom_text(data = subset(dataplot, type == "Estimated"),
+                aes(x = order,
+                    y = upper,
+                    label = upper),
+                color = "blue",
+                hjust = 0,
+                vjust = -0.5,
+                size = 4.0,
+                check_overlap = FALSE,
+                position = position_dodge(width = 0.5)) +
       scale_colour_manual(values = c("Estimated" = "#D55E00",
                                      "Observed" = "#009E73")) +
       labs(x = "",
-           y = "Probability of an event in reference intervention",
+           y = "Probability of an event in reference intervention (%)",
            colour = "",
            fill = "") +
-      scale_y_continuous(labels = percent) +
       coord_flip() +
       theme_classic() +
       theme(axis.text.x = element_text(color = "black", size = 12),

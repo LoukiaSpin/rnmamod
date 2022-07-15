@@ -12,7 +12,7 @@
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom knitr kable
 #' @importFrom mcmcplots mcmcplot as.mcmc.rjags
-#' @importFrom netmeta pairwise netconnection
+#' @importFrom netmeta netconnection
 #' @importFrom pcnetmeta nma.networkplot
 #' @importFrom reshape2 melt
 #' @importFrom R2jags jags

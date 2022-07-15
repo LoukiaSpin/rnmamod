@@ -35,18 +35,21 @@ of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1.}
 }
 \value{
-When \code{base_risk} is scalar or vector, the function returns a
-  vector of two numeric elements to be passed to \code{\link{run_model}} and
-  \code{\link{run_metareg}}. When \code{base_risk} is matrix, the function
-  returns the following elements:
-  \item{ref_base}{A vector with the posterior mean and precision of the
-  predictive distribution of the logit of an event for the selected reference
-  intervention.}
-  \item{trial_base_logit}{The estimated trial-specific logit of an event (the
-  random effects).}
-  \item{mean_base_logit}{The summary mean of the random effects"}.
-  \item{tau_base_logit}{The between-trial standard deviation of the normal
-  distribution of the random effects.}
+When \code{base_risk} is scalar (fixed baseline), the function
+  returns the user-defined baseline for the selected reference intervention.
+  When \code{base_risk} is a vector (random baseline), the function returns
+  a vector with the calculated logit of an event for the selected reference
+  intervention and its precision. Finally, when \code{base_risk} is a matrix
+  (predicted baseline), the function returns a vector with the posterior mean
+  and precision of the predictive distribution of the logit of an event for
+  the selected reference intervention. This vector is be passed to
+  \code{\link{run_model}} and \code{\link{run_metareg}}.
+
+  When \code{base_risk} is a matrix, the function also returns a forest plot
+  with the estimated trial-specific logit of an event and 95\% credible
+  intervals (the random effects) alongside the corresponding observed logit
+  of an event. A grey rectangular illustrates the summary mean and 95\%
+  credible interval of the random effects.
 }
 \description{
 To process the elements in the argument \code{base_risk} of the

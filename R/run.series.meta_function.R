@@ -170,62 +170,109 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
          call. = FALSE)
   }
 
+  # Function to turn wide- to long-format for an element
+  log_format <- function (input) {
+    if (length(input[1, ]) > 2) {
+      long_form0 <- apply(input, 1, function(x) {combn(na.omit(x), 2)})
+      long_form <- t(do.call(cbind, long_form0))
+    } else {
+      long_form <- input
+    }
+
+    return(long_form)
+  }
+
   # For a continuous outcome
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
-    # Turn into contrast-level data ('netmeta')
-    pairwise_observed <-
-      pairwise(as.list(item$t),
-               mean = as.list(item$y0),
-               sd = as.list(item$sd0),
-               n = as.list(item$N),
-               data = cbind(item$t, item$y0, item$sd0, item$N),
-               studlab = 1:item$ns)[, c(3:5, 7, 10, 8, 11, 6, 9)]
-    colnames(pairwise_observed) <- c("study",
-                                      "arm1",
-                                      "arm2",
-                                      "y1",
-                                      "y2",
-                                      "sd1",
-                                      "sd2",
-                                      "n1",
-                                      "n2")
+    # Turn into contrast-level data
+    t_long_form <- log_format(item$t)
+    y_long_form <- log_format(item$y0)
+    sd_long_form <- log_format(item$sd0)
+    m_long_form <- log_format(item$m)
+    n_long_form <- log_format(item$N)
+    pairwise_data <- data.frame(t_long_form,
+                                r_long_form,
+                                m_long_form,
+                                n_long_form)
+    colnames(pairwise_data) <- c("arm1",
+                                 "arm2",
+                                 "y1",
+                                 "y2",
+                                 "sd1",
+                                 "sd2",
+                                 "m1",
+                                 "m2",
+                                 "n1",
+                                 "n2")
+    #pairwise_observed <-
+    #  pairwise(as.list(item$t),
+    #           mean = as.list(item$y0),
+    #           sd = as.list(item$sd0),
+    #           n = as.list(item$N),
+    #           data = cbind(item$t, item$y0, item$sd0, item$N),
+    #           studlab = 1:item$ns)[, c(3:5, 7, 10, 8, 11, 6, 9)]
+    #colnames(pairwise_observed) <- c("study",
+    #                                  "arm1",
+    #                                  "arm2",
+    #                                  "y1",
+    #                                  "y2",
+    #                                  "sd1",
+    #                                  "sd2",
+    #                                  "n1",
+    #                                  "n2")
 
     # Maintain MOD and merge with 'pairwise_observed'
-    pairwise_mod <- pairwise(as.list(item$t),
-                              mean = as.list(item$y0),
-                              sd = as.list(item$sd0),
-                              n = as.list(item$m),
-                              data = cbind(item$t, item$y0, item$sd0, item$m),
-                              studlab = 1:item$ns)[, c(6, 9)]
-    colnames(pairwise_mod) <- c("m1", "m2")
+    #pairwise_mod <- pairwise(as.list(item$t),
+    #                          mean = as.list(item$y0),
+    #                          sd = as.list(item$sd0),
+    #                          n = as.list(item$m),
+    #                          data = cbind(item$t, item$y0, item$sd0, item$m),
+    #                          studlab = 1:item$ns)[, c(6, 9)]
+    #colnames(pairwise_mod) <- c("m1", "m2")
 
   } else {
-    # Turn into contrast-level data ('netmeta')
-    pairwise_observed <-
-      pairwise(as.list(item$t),
-               event = as.list(item$r),
-               n = as.list(item$N),
-               data = cbind(item$t, item$r, item$N),
-               studlab = 1:item$ns)[, c(3:6, 8, 7, 9)]
-    colnames(pairwise_observed) <- c("study",
-                                      "arm1",
-                                      "arm2",
-                                      "r1",
-                                      "r2",
-                                      "n1",
-                                      "n2")
+    # Turn into contrast-level data
+    t_long_form <- log_format(item$t)
+    r_long_form <- log_format(item$r)
+    m_long_form <- log_format(item$m)
+    n_long_form <- log_format(item$N)
+    pairwise_data <- data.frame(t_long_form,
+                                r_long_form,
+                                m_long_form,
+                                n_long_form)
+    colnames(pairwise_data) <- c("arm1",
+                                 "arm2",
+                                 "r1",
+                                 "r2",
+                                 "m1",
+                                 "m2",
+                                 "n1",
+                                 "n2")
+    #pairwise_observed <-
+    #  pairwise(as.list(item$t),
+    #           event = as.list(item$r),
+    #           n = as.list(item$N),
+    #           data = cbind(item$t, item$r, item$N),
+    #           studlab = 1:item$ns)[, c(3:6, 8, 7, 9)]
+    #colnames(pairwise_observed) <- c("study",
+    #                                  "arm1",
+    #                                  "arm2",
+    #                                  "r1",
+    #                                  "r2",
+    #                                  "n1",
+    #                                  "n2")
 
     # Maintain MOD and merge with 'pairwise_observed'
-    pairwise_mod <- pairwise(as.list(item$t),
-                             event = as.list(item$m),
-                             n = as.list(item$N),
-                             data = cbind(item$t, item$m, item$N),
-                             studlab = 1:item$ns)[, c(6, 8)]
-    colnames(pairwise_mod) <- c("m1", "m2")
+    #pairwise_mod <- pairwise(as.list(item$t),
+    #                         event = as.list(item$m),
+    #                         n = as.list(item$N),
+    #                         data = cbind(item$t, item$m, item$N),
+    #                         studlab = 1:item$ns)[, c(6, 8)]
+    #colnames(pairwise_mod) <- c("m1", "m2")
   }
 
   # The dataset for the analysis
-  pairwise_data <- data.frame(pairwise_observed, pairwise_mod)
+  #pairwise_data <- data.frame(pairwise_observed, pairwise_mod)
   # Control arm
   pairwise_data$t1 <- rep(1, dim(pairwise_data)[1])
   # Experimental arm
@@ -233,9 +280,9 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
 
   # A function to extract numbers from a character.
   # Source: http://stla.github.io/stlapblog/posts/numextract.html
-  numextract <- function(string) {
-    unlist(regmatches(string, gregexpr("[[:digit:]]+\\.*[[:digit:]]*", string)))
-  }
+  #numextract <- function(string) {
+  #  unlist(regmatches(string, gregexpr("[[:digit:]]+\\.*[[:digit:]]*", string)))
+  #}
 
   # Observed comparisons in the network
   comp <- as.data.frame(
@@ -243,10 +290,11 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
   colnames(comp) <- c("comparison", "frequency")
 
   # Indicate all observed comparisons
-  obs_comp <- matrix(as.numeric(numextract(comp[, 1])),
-                     nrow = dim(comp)[1],
-                     ncol = 2,
-                     byrow = TRUE)
+  #obs_comp <- matrix(as.numeric(numextract(comp[, 1])),
+  #                   nrow = dim(comp)[1],
+  #                   ncol = 2,
+  #                   byrow = TRUE)
+  obs_comp <- unique(pairwise_data[, 1:2])
   n_obs_comp <- dim(obs_comp)[1]
 
   # Indicate comparisons with one trial

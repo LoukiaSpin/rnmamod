@@ -59,13 +59,32 @@
 #' @export
 improved_ume <- function(t, N, ns, na) {
 
-  # Turn into contrast-level data ('netmeta')
-  wide_format0 <- pairwise(as.list(t),
-                           event = as.list(N),
-                           n = as.list(N),
-                           data = cbind(t, N, N),
-                           studlab = 1:ns)[, c(3:6, 8, 7, 9)]
-  colnames(wide_format0)  <- c("study", "t1", "t2", "n1", "n2", "n1", "n2")
+  # Function to turn wide- to long-format for an element
+  log_format <- function (input) {
+    if (length(input[1, ]) > 2) {
+      long_form0 <- apply(input, 1, function(x) {combn(na.omit(x), 2)})
+      long_form <- t(do.call(cbind, long_form0))
+    } else {
+      long_form <- input
+    }
+
+    return(long_form)
+  }
+
+  # Turn into contrast-level data
+  poss_comp <- lapply(na, function(x) {combn(x, 2)})
+  len_poss_comp <- unlist(lapply(poss_comp, function(x) {dim(x)[2]}))
+  study <- rep(1:ns, len_poss_comp)
+  t_long_form <- log_format(t)
+  n_long_form <- log_format(N)
+  wide_format0 <- data.frame(study, t_long_form, n_long_form, n_long_form)
+  colnames(wide_format0) <- c("study", "t1", "t2", "n1", "n2", "n1", "n2")
+  #wide_format0 <- pairwise(as.list(t),
+  #                         event = as.list(N),
+  #                         n = as.list(N),
+  #                         data = cbind(t, N, N),
+  #                         studlab = 1:ns)[, c(3:6, 8, 7, 9)]
+  #colnames(wide_format0) <- c("study", "t1", "t2", "n1", "n2", "n1", "n2")
 
   # Ensure that t1 < t2 and correspondingly for the other elements
   treat <- treat0 <- wide_format0[, 2:3]

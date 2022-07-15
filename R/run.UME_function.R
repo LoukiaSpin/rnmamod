@@ -269,18 +269,44 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
       unique(c(t1_indic_multi, t2_indic_multi))[-impr_ume$ref_base]
     t_indic_multi2 <- unique(c(t1_indic_multi, t2_indic_multi))
 
+    # Function to turn wide- to long-format for an element
+    log_format <- function (input) {
+      if (var(dim(input)) == 0) {  # Only X-arm trials (x > 2)
+        long_form0 <- list()
+        for (i in 1:length(input[, 1])) {
+          long_form0[[i]] <- combn(na.omit(input[i,]), 2)
+        }
+      } else if (var(dim(input)) != 0) { # Multi-arm trials with different size
+        long_form0 <- apply(input, 1, function(x) {combn(na.omit(x), 2)})
+      }
+      long_form <- t(do.call(cbind, long_form0))
+      return(long_form)
+    }
+
     # Is the subset of multi-arm trials a connected network?
-    multi_network <- pairwise(as.list(t[(ns - ns_multi + 1):ns, ]),
-                              event = as.list(N[(ns - ns_multi + 1):ns, ]),
-                              n = as.list(N[(ns - ns_multi + 1):ns, ]),
-                              data = cbind(t[(ns - ns_multi + 1):ns, ],
-                                          N[(ns - ns_multi + 1):ns, ],
-                                          N[(ns - ns_multi + 1):ns, ],
-                                          N[(ns - ns_multi + 1):ns, ]),
-                              studlab = 1:ns_multi)
+    poss_comp <- if (var(na[(ns - ns_multi + 1):ns]) == 0) {
+      lapply(na[(ns - ns_multi + 1):ns], function(x) {combn(x, 2)})
+    } else if (var(na[(ns - ns_multi + 1):ns]) != 0) {
+      sapply(na[(ns - ns_multi + 1):ns], function(x) {combn(x, 2)})
+    }
+    len_poss_comp <- unlist(lapply(poss_comp, function(x) {dim(x)[2]}))
+    study <- rep(1:ns_multi, len_poss_comp)
+    t_long_form <- log_format(t[(ns - ns_multi + 1):ns, ])
+    multi_network <- data.frame(study, t_long_form)
+    colnames(multi_network) <- c("studlab", "treat1", "treat2")
+    #multi_network <- pairwise(as.list(t[(ns - ns_multi + 1):ns, ]),
+    #                          event = as.list(N[(ns - ns_multi + 1):ns, ]),
+    #                          n = as.list(N[(ns - ns_multi + 1):ns, ]),
+    #                          data = cbind(t[(ns - ns_multi + 1):ns, ],
+    #                                      N[(ns - ns_multi + 1):ns, ],
+    #                                      N[(ns - ns_multi + 1):ns, ],
+    #                                      N[(ns - ns_multi + 1):ns, ]),
+    #                          studlab = 1:ns_multi)
 
     connected <-
-      netconnection(treat1, treat2, studlab, data = multi_network)$n.subnets
+      netconnection(treat1 = unlist(multi_network[, 2]),
+                    treat2 = unlist(multi_network[, 3]),
+                    studlab = unlist(multi_network[, 1]))$n.subnets
 
     ## For the case of a disconnected network of multi-arm trials
     if (connected > 1) {

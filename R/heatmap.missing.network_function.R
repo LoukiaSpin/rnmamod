@@ -123,14 +123,38 @@ heatmap_missing_network <- function(data, drug_names) {
                           2) * 100
   max_mod_interv[is.na(max_mod_interv)] <- -1
 
-  # Turn into long format using the 'pairwise' function (netmeta)
-  pair_mod <- pairwise(as.list(dat$t),
-                        event = as.list(dat$m_pseudo),
-                        n = as.list(dat$N),
-                        data = cbind(dat$t, dat$m_pseudo, dat$N),
-                        studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
+  # Function to turn wide- to long-format for an element
+  log_format <- function (input) {
+    if (length(input[1, ]) > 2) {
+      long_form0 <- apply(input, 1, function(x) {combn(na.omit(x), 2)})
+      long_form <- t(do.call(cbind, long_form0))
+    } else {
+      long_form <- input
+    }
+    return(long_form)
+  }
+
+  # Turn into long format
+  poss_comp <- if (max(dat$na) > 2) {
+    sapply(dat$na, function(x) {combn(x, 2)})
+  } else {
+    lapply(dat$na, function(x) {combn(x, 2)})
+  }
+  len_poss_comp <- unlist(lapply(poss_comp, function(x) {dim(x)[2]}))
+  study <- rep(1:dat$ns, len_poss_comp)
+  t_long_form <- log_format(dat$t)
+  m_long_form <- log_format(dat$m_pseudo)
+  n_long_form <- log_format(dat$N)
+  pair_mod <- data.frame(study, t_long_form, m_long_form, n_long_form)
   colnames(pair_mod) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
   pair_mod[pair_mod < 0] <- NA
+  #pair_mod <- pairwise(as.list(dat$t),
+  #                      event = as.list(dat$m_pseudo),
+  #                      n = as.list(dat$N),
+  #                      data = cbind(dat$t, dat$m_pseudo, dat$N),
+  #                      studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
+  #colnames(pair_mod) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
+
 
   # The comparison between the second and first arms of each trial
   comp <- paste(pair_mod[, "t2"], "vs", pair_mod[, "t1"])
