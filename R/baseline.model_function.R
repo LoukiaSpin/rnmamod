@@ -37,10 +37,15 @@
 #'   When \code{base_risk} is a vector (random baseline), the function returns
 #'   a vector with the calculated logit of an event for the selected reference
 #'   intervention and its precision. Finally, when \code{base_risk} is a matrix
-#'   (predicted baseline), the function returns a vector with the posterior mean
-#'   and precision of the predictive distribution of the logit of an event for
-#'   the selected reference intervention. This vector is be passed to
-#'   \code{\link{run_model}} and \code{\link{run_metareg}}.
+#'   (predicted baseline), the function returns the following elements:
+#'   \item{ref_base}{A vector with the posterior mean and precision of the
+#'   predicted logit of an event for the selected reference intervention.
+#'   This vector is be passed to \code{\link{run_model}} and
+#'   \code{\link{run_metareg}}.}
+#'   \item{mean_base_logit}{The posterior distribution of the summary mean of
+#'   the random effects in the logit scale.}
+#'   \item{tau_base_logit}{The posterior distribution of the between-trial
+#'   standard deviation in the logit scale.}
 #'
 #'   When \code{base_risk} is a matrix, the function also returns a forest plot
 #'   with the estimated trial-specific logit of an event and 95\% credible
@@ -51,10 +56,12 @@
 #' @details If \code{base_risk} is a matrix, \code{baseline_model} creates the
 #'   hierarchical baseline model in the JAGS dialect of the BUGS language.
 #'   The output of this function (see 'Value') constitutes the
-#'   posterior mean and precision of the predictive distribution of the logit of
-#'   an event for the selected reference intervention and it is plugged in the
-#'   WinBUGS code for the relative effects model (Dias et al., 2013a) via the
-#'   \code{\link{prepare_model}} function.
+#'   posterior mean and precision of the predicted logit of an event for the
+#'   selected reference intervention and it is plugged in the WinBUGS code for
+#'   the relative effects model (Dias et al., 2013a) via the
+#'   \code{\link{prepare_model}} function. Following (Dias et al., 2013a), a
+#'   uniform prior distribution is assigned on the between-trial standard
+#'   deviation with upper and lower limit equal to 0 and 5, respectively.
 #'
 #' @author {Loukia M. Spineli}
 #'
