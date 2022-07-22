@@ -228,6 +228,16 @@ baseline_model <- function(base_risk,
     colnames(dataplot) <- c("point", "lower", "upper", "type", "order")
     dataplot[, 1:3] <- round(dataplot[, 1:3] * 100, 0)
 
+    # Rule to define x-axis label tick marks
+    min_x <- ifelse(min(dataplot$lower) < 50, 0, min(dataplot$lower))
+
+    # Present summary mean and between-trial StD
+    caption <- paste0("Summary mean (%):", " ", summary_prob[1], " ",
+                      "(", summary_prob[2], ",", " ", summary_prob[3],
+                      ") \nBetween-trial SD:", " ", round(tau_base_logit[5], 2),
+                      " ", "(", round(tau_base_logit[3], 2), ",", " ",
+                      round(tau_base_logit[7], 2), ")")
+
     # Crate forest-plot
     ggplot(data = dataplot,
            aes(x = order,
@@ -280,10 +290,15 @@ baseline_model <- function(base_risk,
                 position = position_dodge(width = 0.5)) +
       scale_colour_manual(values = c("Estimated" = "#D55E00",
                                      "Observed" = "#009E73")) +
-      labs(x = "",
+      scale_y_continuous(breaks = round(seq(min_x, max(dataplot$upper),
+                                            length.out = 11), 0),
+                         limits = c(min_x, max(dataplot$upper)),
+                         expand = c(0.01, 0.01)) +
+      labs(x = "Trials in the baseline model",
            y = "Probability of an event in reference intervention (%)",
            colour = "",
-           fill = "") +
+           fill = "",
+           caption = caption) +
       coord_flip() +
       theme_classic() +
       theme(axis.text.x = element_text(color = "black", size = 12),
@@ -293,15 +308,17 @@ baseline_model <- function(base_risk,
             legend.position = "bottom",
             legend.text = element_text(color = "black", size = 12),
             legend.title = element_text(color = "black", face = "bold",
-                                        size = 12))
+                                        size = 12),
+            plot.caption = element_text(hjust = 0, face = "bold", size = 11,
+                                        color = "grey47", lineheight = 1.1))
   }
 
   results <- list(ref_base = ref_base,
                   figure = fig)
-  if (!is.element(base_type, c("fixed", "random"))) {
-    results <- append(results, list(mean_base_logit = mean_base_logit,
-                                    tau_base_logit = tau_base_logit))
-  }
+  #if (!is.element(base_type, c("fixed", "random"))) {
+  #  results <- append(results, list(mean_base_logit = mean_base_logit,
+  #                                  tau_base_logit = tau_base_logit))
+  #}
 
   return(results)
 }
