@@ -13,54 +13,55 @@ trans_quality(
 )
 }
 \arguments{
-\item{plan_protocol}{Character string that indicates how the systematic 
-review planned in the protocol to assess the transitivity assumption. The 
-following values can be considered: \code{"Both"}, \code{"No"}, 
-\code{"No protocol"}, \code{"Only direct methods"}, and 
+\item{plan_protocol}{Character string that indicates how the systematic
+review planned in the protocol to assess the transitivity assumption. The
+following values can be considered: \code{"Both"}, \code{"No"},
+\code{"No protocol"}, \code{"Only direct methods"}, and
 \code{"Only indirect methods"}.}
 
-\item{plan_methods}{Character string that indicates whether the systematic 
-review described in the methods section a strategy to assess the 
-transitivity assumption. The following values can be considered: 
+\item{plan_methods}{Character string that indicates whether the systematic
+review described in the methods section a strategy to assess the
+transitivity assumption. The following values can be considered:
 \code{"Yes"}, and \code{"No"}.}
 
-\item{report_results}{Character string that indicates whether the systematic 
-review reported in the results section the transitivity evaluation and 
-which strategy was employed. The following values can be considered: 
-\code{"Both"}, \code{"No"}, \code{"Only direct methods"}, and 
+\item{report_results}{Character string that indicates whether the systematic
+review reported in the results section the transitivity evaluation and
+which strategy was employed. The following values can be considered:
+\code{"Both"}, \code{"No"}, \code{"Only direct methods"}, and
 \code{"Only indirect methods"}.}
 
-\item{discuss_trans}{Character string that indicates whether the systematic 
-review discussed the transitivity assumption and which model parameters 
-where considered. The following values can be considered: \code{"Both"}, 
+\item{discuss_trans}{Character string that indicates whether the systematic
+review discussed the transitivity assumption and which model parameters
+where considered. The following values can be considered: \code{"Both"},
 \code{"No"}, \code{"Only treatment effects"}, and \code{"Other parameter"}.}
 
-\item{proper_table}{Character string that indicates whether the systematic 
-review reported a proper table of characteristics. The following values can 
+\item{proper_table}{Character string that indicates whether the systematic
+review reported a proper table of characteristics. The following values can
 be considered: \code{"No"}, \code{"No table"}, and \code{"Yes"}.}
 }
 \value{
-A character with value \code{"Low"}, \code{"Unclear}, or 
+A character with value \code{"Low"}, \code{"Unclear"}, or
   \code{"High"} to indicate low, unclear, or high-quality of transitivity
   evaluation.
 }
 \description{
-Classifies a systematic review with multiple interventions as 
+Classifies a systematic review with multiple interventions as
   having low, unclear or high quality regarding the transitivity evaluation.
 }
 \details{
-A systematic review with \strong{Unclear} quality of transitivity
-  evaluation does not provide a protocol, nor describe the evaluation 
-  strategy in the methods section, does not report the evaluation results, 
-  nor discusses the transitivity evaluation and does not provide a proper 
-  table of characteristics. On the contrary, a systematic review with 
-  \strong{High} quality of transitivity evaluation provides an evaluation 
-  plan in the protocol (including at least one direct method), describes the 
-  evaluation strategy in the methods section (including at least one direct 
-  method), reports the evaluation results in the results section,  discusses 
+A systematic review with \code{"Low"} quality of transitivity
+  evaluation does not provide a protocol, nor describe the evaluation
+  strategy in the methods section, does not report the evaluation results,
+  nor discusses the transitivity evaluation and does not provide a proper
+  table of characteristics. On the contrary, a systematic review with
+  \code{"High"} quality of transitivity evaluation provides an evaluation
+  plan in the protocol (including at least one direct method), describes the
+  evaluation strategy in the methods section (including at least one direct
+  method), reports the evaluation results in the results section,  discusses
   the transitivity evaluation while considering at least one model parameter,
-  and provides a proper table of characteristics. Otherwise, the systematic 
-  review is judged to have an unclear quality of transitivity evaluation.
+  and provides a proper table of characteristics. Otherwise, the systematic
+  review is judged to have an \code{"Unclear"} quality of transitivity
+  evaluation.
 }
 \author{
 {Loukia M. Spineli}
