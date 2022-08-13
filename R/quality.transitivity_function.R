@@ -45,6 +45,11 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
+#' @references
+#' Spineli LM, Kalyvas C, Seide SE, Papadimitropoulou K. Evaluating the quality
+#' of reporting the transitivity assumption in complex networks of
+#' interventions. 2022 \emph{submitted}
+#'
 #' @export
 trans_quality <- function(plan_protocol,
                           plan_methods,
@@ -52,6 +57,51 @@ trans_quality <- function(plan_protocol,
                           discuss_trans,
                           proper_table) {
 
+  # Missing and default arguments
+  prot_val <- c("Both", "No", "No protocol", "Only direct", "Only indirect")
+  prot_val_text1 <-
+    "Insert 'Both', 'No', 'No protocol', 'Only direct', or 'Only indirect'"
+  prot_val_text2 <- "for plan_protocol."
+  plan_protocol <- if (missing(plan_protocol) ||
+                       !is.element(plan_protocol, prot_val)) {
+    stop(paste(prot_val_text1, prot_val_text2), call. = FALSE)
+  } else {
+    plan_protocol
+  }
+  plan_methods <- if (missing(plan_methods) ||
+                      !is.element(plan_methods, c("No", "Yes"))) {
+    stop( "Insert 'No', or 'Yes' for plan_methods.", call. = FALSE)
+  } else {
+    plan_methods
+  }
+  res_val <- c("Both", "No", "Only direct", "Only indirect")
+  res_val_text1 <-
+    "Insert 'Both', 'No', 'Only direct', or 'Only indirect'"
+  res_val_text2 <- "for report_results."
+  report_results <- if (missing(report_results) ||
+                        !is.element(report_results, res_val)) {
+    stop(paste(res_val_text1, res_val_text2), call. = FALSE)
+  } else {
+    report_results
+  }
+  disc_val <- c("Both", "No", "Only treatment effect", "Other parameter")
+  disc_val_text1 <-
+    "Insert 'Both', 'No', 'Only treatment effect', or 'Other parameter'"
+  disc_val_text2 <- "for discuss_trans."
+  discuss_trans <- if (missing(discuss_trans) ||
+                       !is.element(discuss_trans, disc_val)) {
+    stop(paste(disc_val_text1, disc_val_text2), call. = FALSE)
+  } else {
+    discuss_trans
+  }
+  proper_table <- if (missing(proper_table) ||
+                      !is.element(proper_table, c("No", "No table", "Yes"))) {
+    stop( "Insert 'No', 'No table', or 'Yes' for proper_table.", call. = FALSE)
+  } else {
+    proper_table
+  }
+
+  # The function
   quality <-
     if (is.element(plan_protocol, c("Both", "Only direct methods")) &
         plan_methods == "Yes" &
