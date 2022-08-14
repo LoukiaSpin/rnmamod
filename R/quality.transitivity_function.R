@@ -58,9 +58,11 @@ trans_quality <- function(plan_protocol,
                           proper_table) {
 
   # Missing and default arguments
-  prot_val <- c("Both", "No", "No protocol", "Only direct", "Only indirect")
-  prot_val_text1 <-
-    "Insert 'Both', 'No', 'No protocol', 'Only direct', or 'Only indirect'"
+  prot_val <- c("Both", "No", "No protocol",
+                "Only direct methods", "Only indirect methods")
+  a <- "Insert 'Both', 'No', 'No protocol', 'Only direct methods',"
+  b <- "or 'Only indirect methods'"
+  prot_val_text1 <- paste(a, b)
   prot_val_text2 <- "for plan_protocol."
   plan_protocol <- if (missing(plan_protocol) ||
                        !is.element(plan_protocol, prot_val)) {
@@ -74,7 +76,7 @@ trans_quality <- function(plan_protocol,
   } else {
     plan_methods
   }
-  res_val <- c("Both", "No", "Only direct", "Only indirect")
+  res_val <- c("Both", "No", "Only direct methods", "Only indirect methods")
   res_val_text1 <-
     "Insert 'Both', 'No', 'Only direct', or 'Only indirect'"
   res_val_text2 <- "for report_results."
@@ -84,9 +86,9 @@ trans_quality <- function(plan_protocol,
   } else {
     report_results
   }
-  disc_val <- c("Both", "No", "Only treatment effect", "Other parameter")
+  disc_val <- c("Both", "No", "Only treatment effects", "Other parameter")
   disc_val_text1 <-
-    "Insert 'Both', 'No', 'Only treatment effect', or 'Other parameter'"
+    "Insert 'Both', 'No', 'Only treatment effects', or 'Other parameter'"
   disc_val_text2 <- "for discuss_trans."
   discuss_trans <- if (missing(discuss_trans) ||
                        !is.element(discuss_trans, disc_val)) {
