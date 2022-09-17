@@ -124,12 +124,13 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
          call. = FALSE)
   }
 
-  # Posterior results on the effect estimates under NMA
   measure <- if (is.element(full$measure, c("RR", "RD"))) {
     "OR"
   } else {
     full$measure
   }
+
+  # Posterior results on the effect estimates under NMA
   em_full0 <- if (is.element(full$measure, c("RR", "RD"))) {
     full$EM_LOR
   } else {
@@ -138,8 +139,8 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
 
   # Posterior results on the effect estimates under separate MAs
   # Keep only comparisons with at least two trials
-  em_meta0 <- meta$EM[meta$single == 0, ]
-  rownames(em_meta0) <- seq_len(length(em_meta0[, 1]))
+  em_meta00 <- meta$EM[meta$single == 0, ]
+  rownames(em_meta00) <- seq_len(length(em_meta00[, 1]))
 
   # Posterior results on between-trial standard deviation under NMA
   tau_full <- full$tau
@@ -161,7 +162,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
 
   model <- full$model
 
-  # Keep only the comparisons with at least two trials
+  # Keep the same comparisons with those in PMA (they have at least two trials)
   em_full <- em_full0[is.element(possible_comp$poss_comp[, 4], obs_comp),
                       c(1:3, 7)]
   em_full[, c(1, 3:4)] <- if (is.element(measure, c("OR", "ROM"))) {
@@ -170,6 +171,10 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
     em_full[, c(1, 3:4)]
   }
   em_full_clean <- format(round(em_full, 2), nsmall = 2)
+
+  # Sort comparisons in the order they appear in NMA results
+  em_meta01 <- em_meta00[order(em_meta00$t2),] # First, sort by t2
+  em_meta0 <- em_meta01[order(em_meta01$t1),]  # Then, sort by t1
 
   # Effect estimate of separate MAs
   em_meta <- round(em_meta0[, c(3:5, 9)], 2)
