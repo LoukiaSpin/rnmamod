@@ -302,13 +302,15 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                   legend.text = element_text(color = "black", size = 12),
                   strip.text = element_text(size = 11))
   } else {
-    # Keep nodes with strong evidence inconsistency or with
-    # inconsistent sign in the direct and indirect estimate
-    selection <- subset(prepare, stat_sign == "strong evidence" |
-               (mean[evidence == "direct"] < 0 &
-                  mean[evidence == "indirect"] > 0) |
-               (mean[evidence == "direct"] > 0 &
-                  mean[evidence == "indirect"] < 0))
+    # Keep nodes with strong evidence inconsistency (selection1) or with
+    # inconsistent sign in the direct and indirect estimate (selection2)
+    selection1 <- subset(prepare, stat_sign == "strong evidence")
+    selection2 <- subset(prepare, (mean[evidence == "direct"] < 0 &
+                             mean[evidence == "indirect"] > 0) |
+                          (mean[evidence == "direct"] > 0 &
+                             mean[evidence == "indirect"] < 0))
+    selection  <- rbind(subset(prepare, is.element(node, selection1[, 1])),
+                        selection2)
     p1 <- ggplot(data = selection,
                  aes(x = factor(evidence,
                                 levels = c("IF", "indirect", "direct")),
