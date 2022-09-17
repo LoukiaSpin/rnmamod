@@ -146,7 +146,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
   tau_full <- full$tau
 
   # Posterior results on between-trial standard deviation under separate MAs
-  tau_meta <- meta$tau
+  tau_meta0 <- meta$tau
 
   # Possible and observed comparisons
   possible_comp <-
@@ -173,8 +173,12 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
   em_full_clean <- format(round(em_full, 2), nsmall = 2)
 
   # Sort comparisons in the order they appear in NMA results
+  # Effect estimates
   em_meta01 <- em_meta00[order(em_meta00$t2),] # First, sort by t2
   em_meta0 <- em_meta01[order(em_meta01$t1),]  # Then, sort by t1
+  # Between-trial standard deviation tau_meta00
+  tau_meta1 <- tau_meta0[order(tau_meta0$t2),] # First, sort by t2
+  tau_meta <- tau_meta1[order(tau_meta1$t1),]  # Then, sort by t1
 
   # Effect estimate of separate MAs
   em_meta <- round(em_meta0[, c(3:5, 9)], 2)
