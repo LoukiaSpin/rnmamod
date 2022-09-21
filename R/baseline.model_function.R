@@ -290,7 +290,8 @@ baseline_model <- function(base_risk,
                 position = position_dodge(width = 0.5)) +
       scale_colour_manual(values = c("Estimated" = "#D55E00",
                                      "Observed" = "#009E73")) +
-      scale_y_continuous(breaks = round(seq(min_x, max(dataplot$upper),
+      scale_y_continuous(breaks = round(seq(min_x, max(dataplot$upper,
+                                                       summary_prob[3]),
                                             length.out = 11), 0),
                          limits = c(min_x, max(dataplot$upper,
                                                summary_prob[3])),
