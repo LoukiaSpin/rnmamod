@@ -295,7 +295,7 @@ baseline_model <- function(base_risk,
                                             length.out = 11), 0),
                          limits = c(min_x, max(dataplot$upper,
                                                summary_prob[3])),
-                         expand = c(0.01, 0.01)) +
+                         expand = c(0.01, 0.02)) +
       labs(x = "Trials in the baseline model",
            y = "Probability of an event in reference intervention (%)",
            colour = "",
