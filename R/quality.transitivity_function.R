@@ -20,7 +20,8 @@
 #' @param discuss_trans Character string that indicates whether the systematic
 #'   review discussed the transitivity assumption and which model parameters
 #'   where considered. The following values can be considered: \code{"Both"},
-#'   \code{"No"}, \code{"Only treatment effects"}, and \code{"Other parameter"}.
+#'   \code{"No"}, \code{"Only treatment effects"}, \code{"Other parameter"},
+#'   and \code{"NMA not conducted"}.
 #' @param proper_table Character string that indicates whether the systematic
 #'   review reported a proper table of characteristics. The following values can
 #'   be considered: \code{"No"}, \code{"No table"}, and \code{"Yes"}.
@@ -37,18 +38,18 @@
 #'   \code{"High"} quality of transitivity evaluation provides an evaluation
 #'   plan in the protocol (including at least one direct method), describes the
 #'   evaluation strategy in the methods section (including at least one direct
-#'   method), reports the evaluation results in the results section,  discusses
+#'   method), reports the evaluation results in the results section, discusses
 #'   the transitivity evaluation while considering at least one model parameter,
-#'   and provides a proper table of characteristics. Otherwise, the systematic
-#'   review is judged to have an \code{"Unclear"} quality of transitivity
-#'   evaluation.
+#'   if NMA has been conducted (i.e. \code{nma_abstain = FALSE}), and provides
+#'   a proper table of characteristics. Otherwise, the systematic review is
+#'   judged to have an \code{"Unclear"} quality of transitivity evaluation.
 #'
 #' @author {Loukia M. Spineli}
 #'
 #' @references
-#' Spineli LM, Kalyvas C, Seide SE, Papadimitropoulou K. Evaluating the quality
-#' of reporting the transitivity assumption in complex networks of
-#' interventions. 2022 \emph{submitted}
+#' Spineli LM, Kalyvas C, Seide SE, Papadimitropoulou K. Low awareness of the
+#' transitivity assumption in complex networks of interventions: empirical
+#' evidence from 356 reviews. 2022 \emph{submitted}
 #'
 #' @export
 trans_quality <- function(plan_protocol,
@@ -86,10 +87,11 @@ trans_quality <- function(plan_protocol,
   } else {
     report_results
   }
-  disc_val <- c("Both", "No", "Only treatment effects", "Other parameter")
+  disc_val <- c("Both", "No", "Only treatment effects", "Other parameter",
+                "NMA not conducted")
   disc_val_text1 <-
-    "Insert 'Both', 'No', 'Only treatment effects', or 'Other parameter'"
-  disc_val_text2 <- "for discuss_trans."
+    "Insert 'Both', 'No', 'Only treatment effects', 'Other parameter'"
+  disc_val_text2 <- "or 'NMA not conducted' for discuss_trans."
   discuss_trans <- if (missing(discuss_trans) ||
                        !is.element(discuss_trans, disc_val)) {
     stop(paste(disc_val_text1, disc_val_text2), call. = FALSE)
