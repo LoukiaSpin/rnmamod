@@ -29,11 +29,10 @@ Description: A comprehensive suite of functions to perform and visualise
     allows the user to export the results to an Excel file at the working 
     directory.
 License: GPL (>= 3) 
-URL: https://github.com/LoukiaSpin/rnmamod
+URL: https://CRAN.R-project.org/package=rnmamod
 Depends: 
     R (>= 4.0.0)
 Imports: 
-    coda,
     dplyr,
     fdrtool,
     gemtc,

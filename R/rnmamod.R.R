@@ -36,7 +36,9 @@
 #'    (\code{\link{run_ume}}) based on Dias et al. (2013a) and Spineli (2021);
 #'    \item comprehensive sensitivity analysis for the impact of aggregate
 #'    binary and continuous missing participant outcome data
-#'    (\code{\link{run_sensitivity}}) based on Spineli et al. (2021a).
+#'    (\code{\link{run_sensitivity}}) based on Spineli et al. (2021a);
+#'    \item hierarchical baseline model for the selected reference intervention
+#'    (\code{\link{baseline_model}}) based in Dias et al. (2013d).
 #'   }
 #'
 #'   \bold{rnmamod} also includes a rich suite of visualisation tools to aid in
@@ -58,6 +60,15 @@
 #'    \code{\link{league_heatmap_pred}}, respectively) after performing network
 #'    meta-analysis or network meta-regression (Salanti et al., 2011; Ruecker
 #'    and Schwarzer, 2015);
+#'    \item league table for relative and absolute effects for all pairwise
+#'    comparisons and interventions when conducting network meta-analysis anew
+#'    via the package (\code{\link{league_table_absolute}}) or using the results
+#'    of a published systematic review with network meta-analysis
+#'    (\code{\link{league_table_absolute_user}});
+#'    \item forest plot with the trial-specific and summary absolute risks when
+#'    employing the hierarchical baseline model for the selected reference
+#'    intervention (\code{\link{baseline_model}}) as described in
+#'    Dias et al. (2013d);
 #'    \item rankograms with integrated SUCRA values for each intervention in
 #'    the network (\code{\link{rankosucra_plot}}) after performing network
 #'    meta-analysis (Salanti et al., 2011);
@@ -102,6 +113,11 @@
 #'    (\code{\link{kld_barplot}}) (Spineli et al., 2021a).
 #'   }
 #'
+#'   \bold{rnmamod} assists the researcher in gauging the quality of a
+#'   systematic review (ongoing or published) as low, unclear, or high
+#'   regarding the quality of transitivity evaluation
+#'   (\code{\link{trans_quality}}).
+#'
 #'   Missing participant outcome data are addressed in all models of the package
 #'   after extending the code to incorporate the pattern-mixture model
 #'   (Spineli et al., 2021b; Spineli, 2019).
@@ -143,6 +159,10 @@
 #' making 2: a generalized linear modeling framework for pairwise and network
 #' meta-analysis of randomized controlled trials. \emph{Med Decis Making}
 #' 2013c;\bold{33}(5):607--17. doi: 10.1177/0272989X12458724
+#'
+#' Dias S, Welton NJ, Sutton AJ, Ades AE. Evidence synthesis for decision
+#' making 5: the baseline natural history model. \emph{Med Decis Making}
+#' 2013d;\bold{33}(5):657--70. doi: 10.1177/0272989X13485155
 #'
 #' Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
 #' treatment comparison meta-analysis.

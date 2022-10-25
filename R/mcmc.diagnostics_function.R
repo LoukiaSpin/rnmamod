@@ -267,10 +267,10 @@ mcmc_diagnostics <- function(net, par = NULL) {
 
   if (!is.null(net$jagsfit)) {
     # Turn 'R2jags' object into 'mcmc' object
-    jagsfit_mcmc <- as.mcmc.rjags(jagsfit)
+    jagsfit_mcmc <- mcmcplots::as.mcmc.rjags(jagsfit)
 
     # An HTML file with a panel of diagnostic plots per monitored parameter
-    mcmc_plot <- mcmcplot(jagsfit_mcmc, parms = par)
+    mcmc_plot <- mcmcplots::mcmcplot(jagsfit_mcmc, parms = par)
   }
 
   r_hat_max <- c(EM,
