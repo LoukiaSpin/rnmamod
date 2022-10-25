@@ -18,6 +18,11 @@
 #' @importFrom writexl write_xlsx
 #' @importFrom utils combn
 
+.onAttach <- function (libname, pkgname) {
+  welcome <- paste0("Loading 'rnmamod'",
+                    packageDescription("rnmamod")$Version, ". Welcome! ^_^")
+  packageStartupMessage(welcome)
+}
 
 utils::globalVariables(c("active",
                          "analysis",
