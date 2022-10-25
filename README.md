@@ -1,4 +1,3 @@
-
 # rnmamod: Bayesian network meta-analysis R package   <img src="man/figures/hexsticker_rnmamod.png" align="right" width="200" />     
 
 Official Git repository of `rnmamod` R package
@@ -25,7 +24,7 @@ The [website](https://loukiaspin.github.io/rnmamod/) of `rnmamod` currently incl
 The `rnmamod` package performs one-stage fixed-effect or random-effects Bayesian network meta-analysis (NMA) while adjusting for *missing participant outcome data* (MOD) using the pattern-mixture model. In the case of two interventions, the package performs one-stage Bayesian pairwise meta-analysis. Standard aggregate data NMA is a special case of NMA with MOD, where either all studies or no studies have MOD available, respectively. 
 
 The package handles data inputs in *arm-based format*:
-- binary data (effect size: odds ratio)  
+- binary data (effect size: odds ratio, risk ratio, and risk difference)  
 - continuous data (effect size: raw and standardised mean differences, ratio of means).
 
 <!--- The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. --->
