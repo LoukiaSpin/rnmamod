@@ -7,6 +7,16 @@
    - when a predicted baseline model is conducted, it returns a forest plot with
    the trial-specific and summary probability of an event for the selected
    reference intervention.
+ * Function __league_table_absolute_user__:
+   - (only for binary outcome) yields the same graph with league_table_absolute,
+   but the input is the summary effect and corresponding (credible or 
+   confidence) interval for comparisons with a reference intervention. These
+   results stem from a network meta-analysis conducted using another R-package 
+   or statistical software.
+ * Function __trans_quality__:
+   - classifies a systematic review with multiple interventions as having low, 
+   unclear or high quality regarding the transitivity evaluation based on five
+   quality criteria.
 
 # rnmamod, version 0.2.0 (2022-04-06)
 

@@ -7,7 +7,8 @@
 #'   review planned in the protocol to assess the transitivity assumption. The
 #'   following values can be considered: \code{"Both"}, \code{"No"},
 #'   \code{"No protocol"}, \code{"Only direct methods"}, and
-#'   \code{"Only indirect methods"}.
+#'   \code{"Only indirect methods"}. \code{"Both"} implies that at least one
+#'   direct and one indirect method has been used.
 #' @param plan_methods Character string that indicates whether the systematic
 #'   review described in the methods section a strategy to assess the
 #'   transitivity assumption. The following values can be considered:
@@ -16,12 +17,14 @@
 #'   review reported in the results section the transitivity evaluation and
 #'   which strategy was employed. The following values can be considered:
 #'   \code{"Both"}, \code{"No"}, \code{"Only direct methods"}, and
-#'   \code{"Only indirect methods"}.
+#'   \code{"Only indirect methods"}. \code{"Both"} implies that at least one
+#'   direct and one indirect method has been used.
 #' @param discuss_trans Character string that indicates whether the systematic
 #'   review discussed the transitivity assumption and which model parameters
 #'   where considered. The following values can be considered: \code{"Both"},
 #'   \code{"No"}, \code{"Only treatment effects"}, \code{"Other parameter"},
-#'   and \code{"NMA not conducted"}.
+#'   and \code{"NMA not conducted"}. \code{"Both"} implies that the treatment
+#'   effect and other model parameters were considered.
 #' @param proper_table Character string that indicates whether the systematic
 #'   review reported a proper table of characteristics. The following values can
 #'   be considered: \code{"No"}, \code{"No table"}, and \code{"Yes"}.
@@ -39,17 +42,17 @@
 #'   plan in the protocol (including at least one direct method), describes the
 #'   evaluation strategy in the methods section (including at least one direct
 #'   method), reports the evaluation results in the results section, discusses
-#'   the transitivity evaluation while considering at least one model parameter,
-#'   if NMA has been conducted (i.e. \code{nma_abstain = FALSE}), and provides
-#'   a proper table of characteristics. Otherwise, the systematic review is
-#'   judged to have an \code{"Unclear"} quality of transitivity evaluation.
+#'   the transitivity evaluation while considering at least one model parameter
+#'   (if NMA has been conducted), and provides a proper table of
+#'   characteristics. Otherwise, the systematic review is judged to have an
+#'   \code{"Unclear"} quality of transitivity evaluation.
 #'
 #' @author {Loukia M. Spineli}
 #'
 #' @references
 #' Spineli LM, Kalyvas C, Seide SE, Papadimitropoulou K. Low awareness of the
 #' transitivity assumption in complex networks of interventions: empirical
-#' evidence from 356 reviews. 2022 \emph{submitted}
+#' evidence from 356 network meta-analyses. 2022 \emph{submitted}
 #'
 #' @export
 trans_quality <- function(plan_protocol,
@@ -117,7 +120,7 @@ trans_quality <- function(plan_protocol,
                plan_methods == "No" &
                report_results == "No" &
                discuss_trans == "No" &
-               proper_table == "No table") {
+               is.element(proper_table, c("No table", "No"))) {
       "Low"
     } else {
       "Unclear"

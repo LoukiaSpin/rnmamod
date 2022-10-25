@@ -122,10 +122,11 @@ should match the intervention identifier under element \strong{t} in
 
 \item{base_risk}{A scalar, a vector of length three with elements sorted in
 ascending order, or a matrix with two columns and number of rows equal to
-the number of relevant trials (see 'Details'). If \code{base_risk} has not
-been defined, the function uses the median event risk for the reference
-intervention from the corresponding trials in \code{data}. This argument is
-only relevant for a binary outcome.}
+the number of relevant trials. In the case of a scalar or vector, the
+elements should be in the interval (0, 1) (see 'Details'). If
+\code{base_risk} has not been defined, the function uses the median event
+risk for the reference intervention from the corresponding trials in
+\code{data}. This argument is only relevant for a binary outcome.}
 
 \item{n_chains}{Positive integer specifying the number of chains for the
 MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
