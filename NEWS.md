@@ -1,3 +1,13 @@
+# rnmamod, version 0.3.0 (2022-10-31)
+
+ * Function __baseline_model__:
+   - processes the elements in the argument _base_risk for a fixed, random or 
+   predicted baseline model and passes the output to run_model or run_metareg to 
+   obtain the absolute risks for all interventions.
+   - when a predicted baseline model is conducted, it returns a forest plot with
+   the trial-specific and summary probability of an event for the selected
+   reference intervention.
+
 # rnmamod, version 0.2.0 (2022-04-06)
 
  * Typos and links (for functions and packages) in the documentation are 

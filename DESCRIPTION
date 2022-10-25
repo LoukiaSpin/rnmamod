@@ -2,6 +2,7 @@ Type: Package
 Package: rnmamod
 Title: Bayesian Network Meta-Analysis with Missing Participants 
 Version: 0.2.0
+Date: 2022-04-06
 Authors@R: c(
     person("Loukia", "Spineli", email = "Spineli.Loukia@mh-hannover.de", 
     role = c("aut", "cre")),

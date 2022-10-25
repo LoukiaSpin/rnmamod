@@ -11,8 +11,11 @@
 #'
 #' @param base_risk A scalar, a vector of length three with elements sorted in
 #'   ascending order, or a matrix with two columns and number of rows equal to
-#'   the number of relevant trials. In either choice the elements should be in
-#'   the interval (0, 1). See 'Details' in \code{\link{run_model}}.
+#'   the number of relevant trials. In the case of a scalar or vector, the
+#'   elements should be in the interval (0, 1). For the matrix, the first column
+#'   refers to the number of events and the second column to the sample size of
+#'   the trials comprising the dataset for the baseline model. See 'Details' in
+#'   \code{\link{run_model}}.
 #'   This argument is only relevant for a binary outcome.
 #' @param n_chains Positive integer specifying the number of chains for the
 #'   MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
@@ -48,10 +51,11 @@
 #'   standard deviation in the logit scale.}
 #'
 #'   When \code{base_risk} is a matrix, the function also returns a forest plot
-#'   with the estimated trial-specific logit of an event and 95\% credible
-#'   intervals (the random effects) alongside the corresponding observed logit
-#'   of an event. A grey rectangular illustrates the summary mean and 95\%
-#'   credible interval of the random effects.
+#'   with the estimated trial-specific probability of an event and 95\% credible
+#'   intervals (the random effects) alongside the corresponding observed
+#'   probability of an event for the selected reference intervention. A grey
+#'   rectangular illustrates the summary mean and 95\% credible interval of the
+#'   random effects.
 #'
 #' @details If \code{base_risk} is a matrix, \code{baseline_model} creates the
 #'   hierarchical baseline model in the JAGS dialect of the BUGS language.
@@ -187,7 +191,7 @@ baseline_model <- function(base_risk,
     # Turn R2jags object into a data-frame
     get_results_base <- as.data.frame(t(jagsfit_base$BUGSoutput$summary))
 
-    # Effect size of all unique pairwise comparisons
+    # Obtain posterior distribution from parameters of interest
     pred_base_logit <- t(get_results_base %>%
                            dplyr::select(starts_with("base.risk.logit")))
     mean_base_logit <- t(get_results_base %>%
