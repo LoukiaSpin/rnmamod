@@ -120,7 +120,7 @@ trans_quality <- function(plan_protocol,
                plan_methods == "No" &
                report_results == "No" &
                discuss_trans == "No" &
-               is.element(proper_table, c("No table", "No"))) {
+               proper_table == "No") {
       "Low"
     } else {
       "Unclear"

@@ -323,9 +323,9 @@ mcmc_diagnostics <- function(net, par = NULL) {
                             "Informative missingness parameter(s) (phi)",
                             "Regression coefficient(s) (beta)")
   convergence <- data.frame(monitored_parameters,
-                            round(r_hat_max, 2),
-                            round(mcmc_error_max, 3),
-                            round(mcmc_rule_max, 3),
+                            round(r_hat_max, 4),
+                            round(mcmc_error_max, 4),
+                            round(mcmc_rule_max, 4),
                             conv)
   rownames(convergence) <- NULL
   colnames(convergence) <- c("parameters",
