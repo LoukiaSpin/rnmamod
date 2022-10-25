@@ -9,8 +9,11 @@ baseline_model(base_risk, n_chains, n_iter, n_burnin, n_thin)
 \arguments{
 \item{base_risk}{A scalar, a vector of length three with elements sorted in
 ascending order, or a matrix with two columns and number of rows equal to
-the number of relevant trials. In either choice the elements should be in
-the interval (0, 1). See 'Details' in \code{\link{run_model}}.
+the number of relevant trials. In the case of a scalar or vector, the
+elements should be in the interval (0, 1). For the matrix, the first column
+refers to the number of events and the second column to the sample size of
+the trials comprising the dataset for the baseline model. See 'Details' in
+\code{\link{run_model}}.
 This argument is only relevant for a binary outcome.}
 
 \item{n_chains}{Positive integer specifying the number of chains for the
@@ -51,10 +54,11 @@ When \code{base_risk} is scalar (fixed baseline), the function
   standard deviation in the logit scale.}
 
   When \code{base_risk} is a matrix, the function also returns a forest plot
-  with the estimated trial-specific logit of an event and 95\% credible
-  intervals (the random effects) alongside the corresponding observed logit
-  of an event. A grey rectangular illustrates the summary mean and 95\%
-  credible interval of the random effects.
+  with the estimated trial-specific probability of an event and 95\% credible
+  intervals (the random effects) alongside the corresponding observed
+  probability of an event for the selected reference intervention. A grey
+  rectangular illustrates the summary mean and 95\% credible interval of the
+  random effects.
 }
 \description{
 To process the elements in the argument \code{base_risk} of the

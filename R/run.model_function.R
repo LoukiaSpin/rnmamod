@@ -55,9 +55,8 @@
 #'   \code{data} (See 'Format').
 #' @param base_risk A scalar, a vector of length three with elements sorted in
 #'   ascending order, or a matrix with two columns and number of rows equal to
-#'   the number of relevant trials. In either choice the elements should be in
-#'   the interval (0, 1). See 'Details'. If \code{base_risk} has not been
-#'   defined, the function uses the median event risk for the reference
+#'   the number of relevant trials (see 'Details'). If \code{base_risk} has not
+#'   been defined, the function uses the median event risk for the reference
 #'   intervention from the corresponding trials in \code{data}. This argument is
 #'   only relevant for a binary outcome.
 #' @param n_chains Positive integer specifying the number of chains for the
