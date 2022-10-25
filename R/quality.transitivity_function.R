@@ -36,13 +36,13 @@
 #' @details A systematic review with \code{"Low"} quality of transitivity
 #'   evaluation does not provide a protocol, nor describe the evaluation
 #'   strategy in the methods section, does not report the evaluation results,
-#'   nor discusses the transitivity evaluation and does not provide a proper
-#'   table of characteristics. On the contrary, a systematic review with
-#'   \code{"High"} quality of transitivity evaluation provides an evaluation
-#'   plan in the protocol (including at least one direct method), describes the
-#'   evaluation strategy in the methods section (including at least one direct
-#'   method), reports the evaluation results in the results section, discusses
-#'   the transitivity evaluation while considering at least one model parameter
+#'   nor discusses the transitivity evaluation and does not provide a table of
+#'   characteristics. On the contrary, a systematic review with \code{"High"}
+#'   quality of transitivity evaluation provides an evaluation plan in the
+#'   protocol (including at least one direct method), describes the evaluation
+#'   strategy in the methods section (including at least one direct method),
+#'   reports the evaluation results in the results section, discusses the
+#'   transitivity evaluation while considering at least one model parameter
 #'   (if NMA has been conducted), and provides a proper table of
 #'   characteristics. Otherwise, the systematic review is judged to have an
 #'   \code{"Unclear"} quality of transitivity evaluation.
@@ -120,7 +120,7 @@ trans_quality <- function(plan_protocol,
                plan_methods == "No" &
                report_results == "No" &
                discuss_trans == "No" &
-               proper_table == "No") {
+               proper_table == "No table") {
       "Low"
     } else {
       "Unclear"
