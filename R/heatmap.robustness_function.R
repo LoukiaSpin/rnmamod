@@ -3,8 +3,10 @@
 #' @description Facilitates the detection of comparisons that are associated
 #'   with a lack of robustness in the context of a sensitivity analysis.
 #'
-#' @param robust An object of S3 class \code{\link{robustness_index}}.
-#'   See 'Value' in \code{\link{robustness_index}}.
+#' @param robust An object of S3 class \code{\link{robustness_index}} and
+#'   \code{\link{robustness_index_user}}.
+#'   See 'Value' in \code{\link{robustness_index}} and
+#'   \code{\link{robustness_index_user}}.
 #' @param drug_names A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data} of
 #'   \code{\link{run_model}}. If \code{drug_names} is not defined,
@@ -13,9 +15,9 @@
 #'
 #' @return \code{heatmap_robustness} first prints on the R console a message on
 #'   the threshold of robustness determined by the user in
-#'   \code{\link{robustness_index}}. Then, it returns a lower triangular
-#'   heatmap matrix with the robustness index value of all possible pairwise
-#'   comparisons.
+#'   \code{\link{robustness_index}} and \code{\link{robustness_index_user}}.
+#'   Then, it returns a lower triangular heatmap matrix with the robustness
+#'   index value of all possible pairwise comparisons.
 #'
 #' @details The heatmap illustrates the robustness index for each possible
 #'   pairwise comparison in the network. The pairwise comparisons are read from
@@ -23,7 +25,8 @@
 #'   robust or frail conclusions for the primary analysis, respectively.
 #'   This corresponds to robustness index below or at least the selected
 #'   threshold of robustness. \code{heatmap_robustness} inherits the threshold
-#'   of robustness selected in the \code{\link{robustness_index}} function.
+#'   of robustness selected in the \code{\link{robustness_index}} or
+#'   \code{\link{robustness_index_user}} function.
 #'   The robustness index of each pairwise comparison also appears in the
 #'   corresponding cell.
 #'   When there is at least one comparison with frail conclusions, the primary
@@ -39,7 +42,8 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{robustness_index}}, \code{\link{run_model}}
+#' @seealso \code{\link{robustness_index}}, \code{\link{robustness_index_user}},
+#'   \code{\link{run_model}}
 #'
 #' @references
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Quantifying the robustness of
@@ -70,9 +74,9 @@
 #' @export
 heatmap_robustness <- function(robust, drug_names) {
 
-  if (robust$type != "index" || is.null(robust$type)) {
-    stop("'robust' must be an object of S3 class 'robustness_index'.",
-         call. = FALSE)
+  if (!is.element(robust$type, c("index", "user")) || is.null(robust$type)) {
+    a <- "'robustness_index' or 'robustness_index_user'."
+    stop(paste("'robust' must be an object of S3 class", a), call. = FALSE)
   }
 
   if (any(is.na(robust))) {

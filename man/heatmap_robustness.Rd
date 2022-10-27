@@ -7,8 +7,10 @@
 heatmap_robustness(robust, drug_names)
 }
 \arguments{
-\item{robust}{An object of S3 class \code{\link{robustness_index}}.
-See 'Value' in \code{\link{robustness_index}}.}
+\item{robust}{An object of S3 class \code{\link{robustness_index}} and
+\code{\link{robustness_index_user}}.
+See 'Value' in \code{\link{robustness_index}} and
+\code{\link{robustness_index_user}}.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
@@ -19,9 +21,9 @@ instead.}
 \value{
 \code{heatmap_robustness} first prints on the R console a message on
   the threshold of robustness determined by the user in
-  \code{\link{robustness_index}}. Then, it returns a lower triangular
-  heatmap matrix with the robustness index value of all possible pairwise
-  comparisons.
+  \code{\link{robustness_index}} and \code{\link{robustness_index_user}}.
+  Then, it returns a lower triangular heatmap matrix with the robustness
+  index value of all possible pairwise comparisons.
 }
 \description{
 Facilitates the detection of comparisons that are associated
@@ -34,7 +36,8 @@ The heatmap illustrates the robustness index for each possible
   robust or frail conclusions for the primary analysis, respectively.
   This corresponds to robustness index below or at least the selected
   threshold of robustness. \code{heatmap_robustness} inherits the threshold
-  of robustness selected in the \code{\link{robustness_index}} function.
+  of robustness selected in the \code{\link{robustness_index}} or
+  \code{\link{robustness_index_user}} function.
   The robustness index of each pairwise comparison also appears in the
   corresponding cell.
   When there is at least one comparison with frail conclusions, the primary
@@ -76,7 +79,8 @@ and network meta-analysis.
 \emph{Res Synth Methods} 2021;\bold{12}(4):475--90. doi: 10.1002/jrsm.1478
 }
 \seealso{
-\code{\link{robustness_index}}, \code{\link{run_model}}
+\code{\link{robustness_index}}, \code{\link{robustness_index_user}},
+  \code{\link{run_model}}
 }
 \author{
 {Loukia M. Spineli}

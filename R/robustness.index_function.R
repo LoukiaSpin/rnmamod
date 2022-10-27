@@ -46,7 +46,7 @@
 #'   \item{threshold}{The threshold used to be inherited by the
 #'   \code{\link{heatmap_robustness}} function.}
 #'   \item{scenarios}{The scenarios considered to be inherited by the
-#'   \code{\link{heatmap_robustness}} and \code{\link{kld_barplot}} functions.}
+#'   \code{\link{kld_barplot}} function.}
 #'
 #' @details Thresholds of robustness have been proposed only for the odds ratio
 #'   and standardised mean difference effect measures (Spineli et al., 2021).

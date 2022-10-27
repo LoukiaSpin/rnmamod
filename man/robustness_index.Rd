@@ -48,7 +48,7 @@ re-analysis results. See 'Details' below.}
   \item{threshold}{The threshold used to be inherited by the
   \code{\link{heatmap_robustness}} function.}
   \item{scenarios}{The scenarios considered to be inherited by the
-  \code{\link{heatmap_robustness}} and \code{\link{kld_barplot}} functions.}
+  \code{\link{kld_barplot}} function.}
 }
 \description{
 Calculates the robustness index, a novel index that quantifies the overall

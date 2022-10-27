@@ -16,11 +16,13 @@
 #' @importFrom R2jags jags
 #' @importFrom scales rescale percent
 #' @importFrom writexl write_xlsx
-#' @importFrom utils combn
+#' @importFrom utils combn packageDescription
 
 .onAttach <- function (libname, pkgname) {
-  welcome <- paste0("Loading 'rnmamod'",
-                    packageDescription("rnmamod")$Version, ". Welcome! ^_^")
+  welcome <- paste0("Loading 'rnmamod', version",
+                    " ", packageDescription("rnmamod")$Version,
+                    ". Welcome to Network Meta-analysis with",
+                    " " , "Missing Participants! ^_^")
   packageStartupMessage(welcome)
 }
 
