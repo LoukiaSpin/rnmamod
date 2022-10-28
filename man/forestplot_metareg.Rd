@@ -28,41 +28,69 @@ the order of the interventions as they appear in \code{data} is used,
 instead.}
 }
 \value{
-A panel of two forest plots: (1) a forest plot on the estimated
-  effect size of comparisons with the selected intervention of the network,
-  and (2) a forest plot on the predicted effect size of comparisons with the
-  selected intervention of the network. Both forest plots illustrate the
-  results from network meta-analysis and network meta-regression using
-  different colours for the corresponding lines.
+A panel of two forest plots: (1) a forest plot on the effect
+  estimates and predictions of comparisons with the selected intervention in
+  the network under the network meta-analysis and network meta-regression for
+  a specified level or value of the investigated covariate, and (2) a forest
+  plot on the posterior mean and 95\% credible interval of SUCRA values of
+  the interventions (Salanti et al., 2011).
 }
 \description{
-This function illustrates a forest plot of the posterior mean
-  and 95\% credible and prediction interval of comparisons with the selected
-  intervention of the network under the network meta-analysis \emph{and}
-  network meta-regression.
+Provides a forest plot with the posterior mean and 95\% credible
+  and prediction intervals for comparisons with the selected intervention
+  (comparator) in the network under the network meta-analysis \emph{and}
+  network meta-regression for a specified level or value of the investigated
+  covariate, and a forest plot with the corresponding SUCRA values.
 }
 \details{
-In both plots, the y-axis displays all interventions in the
-  network; the selected intervention that comprises the \code{compar} is
-  indicated in the plot with a homonymous label. The numerical results are
-  displayed above each line.
-  Odds ratio, relative risks, and ratio of means are reported in the original
-  scale after exponentiation of the logarithmic scale.
+The y-axis of the forest plot on \bold{effect sizes} displays the
+  labels of the interventions in the network; the selected intervention that
+  comprises the \code{compar} argument is annotated in the plot with the
+  label 'Comparator intervention'.
+  For each comparison with the selected intervention, the 95\% credible and
+  prediction intervals are displayed as overlapping lines. Black lines refer
+  to estimation under both analyses. Green and red lines refer to prediction
+  under network meta-analysis and network meta-regression, respectively. The
+  corresponding numerical results are displayed above each line:
+  95\% credible intervals are found in parentheses, and 95\% predictive
+  intervals are found in brackets. Odds ratios, relative risks, and ratio of
+  means are reported in the original scale after exponentiation of the
+  logarithmic scale.
+
+  The y-axis for the forest plot on \bold{SUCRA} values displays the
+  labels of the interventions in the network.
+  The corresponding numerical results are displayed above each line.
+  Three coloured rectangles appear in the forest plot: a red rectangle for
+  SUCRA values up to 50\%, a yellow rectangular for SUCRA values between
+  50\% and 80\%, and a green rectangle for SUCRA values over 80\%.
+  Interventions falling at the green area are considered as the highest
+  ranked interventions, whilst interventions falling at the red area are
+  considered as the lowest ranked interventions.
 
   In both plots, the interventions are sorted in the descending order of
   their SUCRA values based on the network meta-analysis.
 
+  To obtain the posterior distribution of SUCRAs under the network
+  meta-regression for a specified level or value of the investigated
+  covariate, a two-step procedured is followed. First, the posterior mean and
+  standard deviation of the basic parameters and corresponding beta
+  coefficients are considered to calculate the mean and standard deviation of
+  the basic parameters at the selected level or value of the investigated
+  covariate: d + beta * cov_value. Then, these calculated values are fed into
+  the BUGS code to get the posterior distribution of SUCRA. The progress of
+  the simulation appears on the R console.
+
   \code{forestplot_metareg} is integrated in \code{\link{metareg_plot}}.
 
-  \code{forestplot} can be used only for a network of interventions. In the
-  case of two interventions, the execution of the function will be stopped
-  and an error message will be printed on the R console.
+  \code{forestplot_metareg} can be used only for a network of interventions.
+  In the case of two interventions, the execution of the function will be
+  stopped and an error message will be printed on the R console.
 }
 \references{
 Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 for presenting results from multiple-treatment meta-analysis: an overview and
 tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
-doi: 10.1016/j.jclinepi.2010.03.016
+\doi{10.1016/j.jclinepi.2010.03.016}
 }
 \seealso{
 \code{\link{metareg_plot}}, \code{\link{run_metareg}},

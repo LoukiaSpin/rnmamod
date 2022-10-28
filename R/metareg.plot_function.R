@@ -51,8 +51,8 @@
 #'   \item{interval_plot}{A forest plot on the estimated and predicted effect
 #'   sizes of comparisons with the selected comparator intervention under
 #'   network meta-analysis and network meta-regression based on the specified
-#'   \code{cov_value}. See 'Details' and 'Value' in
-#'   \code{\link{forestplot_metareg}}.}
+#'   \code{cov_value} alongside a forest plot with the corresponding SUCRA
+#'   values. See 'Details' and 'Value' in \code{\link{forestplot_metareg}}.}
 #'   \item{sucra_scatterplot}{A scatterplot of the SUCRA values from the
 #'   network meta-analysis against the SUCRA values from the network
 #'   meta-regression based on the specified \code{cov_value}. See 'Details'
@@ -98,6 +98,7 @@
 #' @examples
 #' data("nma.baker2009")
 #'
+#' \donttest{
 #' # Read results from 'run_model' (using the default arguments)
 #' res <- readRDS(system.file('extdata/res_baker.rds', package = 'rnmamod'))
 #'
@@ -120,6 +121,7 @@
 #'              compar = "salmeterol",
 #'              cov_value = list(2000, "publication year"),
 #'              drug_names = interv_names)
+#' }
 #'
 #' @export
 metareg_plot <- function(full,
@@ -548,7 +550,7 @@ metareg_plot <- function(full,
            knitr::kable(reg_coeff,
                         caption =
                           paste("Estimation of regression coefficient(s)")),
-         interval_plot = suppressWarnings(ggarrange(forest_plots)),
+         interval_plot = suppressWarnings(forest_plots),
          sucra_scatterplot = sucra_scatterplot)
   } else {
     list(table_estimates =

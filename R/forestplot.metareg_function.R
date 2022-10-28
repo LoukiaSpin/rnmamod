@@ -1,9 +1,11 @@
 #' Comparator-specific forest plot for network meta-regression
 #'
-#' @description This function illustrates a forest plot of the posterior mean
-#'   and 95\% credible and prediction interval of comparisons with the selected
-#'   intervention of the network under the network meta-analysis \emph{and}
-#'   network meta-regression.
+#' @description
+#'   Provides a forest plot with the posterior mean and 95\% credible
+#'   and prediction intervals for comparisons with the selected intervention
+#'   (comparator) in the network under the network meta-analysis \emph{and}
+#'   network meta-regression for a specified level or value of the investigated
+#'   covariate, and a forest plot with the corresponding SUCRA values.
 #'
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
 #'   \code{\link{run_model}}.
@@ -21,28 +23,55 @@
 #'   the order of the interventions as they appear in \code{data} is used,
 #'   instead.
 #'
-#' @return A panel of two forest plots: (1) a forest plot on the estimated
-#'   effect size of comparisons with the selected intervention of the network,
-#'   and (2) a forest plot on the predicted effect size of comparisons with the
-#'   selected intervention of the network. Both forest plots illustrate the
-#'   results from network meta-analysis and network meta-regression using
-#'   different colours for the corresponding lines.
+#' @return A panel of two forest plots: (1) a forest plot on the effect
+#'   estimates and predictions of comparisons with the selected intervention in
+#'   the network under the network meta-analysis and network meta-regression for
+#'   a specified level or value of the investigated covariate, and (2) a forest
+#'   plot on the posterior mean and 95\% credible interval of SUCRA values of
+#'   the interventions (Salanti et al., 2011).
 #'
-#' @details In both plots, the y-axis displays all interventions in the
-#'   network; the selected intervention that comprises the \code{compar} is
-#'   indicated in the plot with a homonymous label. The numerical results are
-#'   displayed above each line.
-#'   Odds ratio, relative risks, and ratio of means are reported in the original
-#'   scale after exponentiation of the logarithmic scale.
+#' @details The y-axis of the forest plot on \bold{effect sizes} displays the
+#'   labels of the interventions in the network; the selected intervention that
+#'   comprises the \code{compar} argument is annotated in the plot with the
+#'   label 'Comparator intervention'.
+#'   For each comparison with the selected intervention, the 95\% credible and
+#'   prediction intervals are displayed as overlapping lines. Black lines refer
+#'   to estimation under both analyses. Green and red lines refer to prediction
+#'   under network meta-analysis and network meta-regression, respectively. The
+#'   corresponding numerical results are displayed above each line:
+#'   95\% credible intervals are found in parentheses, and 95\% predictive
+#'   intervals are found in brackets. Odds ratios, relative risks, and ratio of
+#'   means are reported in the original scale after exponentiation of the
+#'   logarithmic scale.
+#'
+#'   The y-axis for the forest plot on \bold{SUCRA} values displays the
+#'   labels of the interventions in the network.
+#'   The corresponding numerical results are displayed above each line.
+#'   Three coloured rectangles appear in the forest plot: a red rectangle for
+#'   SUCRA values up to 50\%, a yellow rectangular for SUCRA values between
+#'   50\% and 80\%, and a green rectangle for SUCRA values over 80\%.
+#'   Interventions falling at the green area are considered as the highest
+#'   ranked interventions, whilst interventions falling at the red area are
+#'   considered as the lowest ranked interventions.
 #'
 #'   In both plots, the interventions are sorted in the descending order of
 #'   their SUCRA values based on the network meta-analysis.
 #'
+#'   To obtain the posterior distribution of SUCRAs under the network
+#'   meta-regression for a specified level or value of the investigated
+#'   covariate, a two-step procedured is followed. First, the posterior mean and
+#'   standard deviation of the basic parameters and corresponding beta
+#'   coefficients are considered to calculate the mean and standard deviation of
+#'   the basic parameters at the selected level or value of the investigated
+#'   covariate: d + beta * cov_value. Then, these calculated values are fed into
+#'   the BUGS code to get the posterior distribution of SUCRA. The progress of
+#'   the simulation appears on the R console.
+#'
 #'   \code{forestplot_metareg} is integrated in \code{\link{metareg_plot}}.
 #'
-#'   \code{forestplot} can be used only for a network of interventions. In the
-#'   case of two interventions, the execution of the function will be stopped
-#'   and an error message will be printed on the R console.
+#'   \code{forestplot_metareg} can be used only for a network of interventions.
+#'   In the case of two interventions, the execution of the function will be
+#'   stopped and an error message will be printed on the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -53,7 +82,7 @@
 #' Salanti G, Ades AE, Ioannidis JP. Graphical methods and numerical summaries
 #' for presenting results from multiple-treatment meta-analysis: an overview and
 #' tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
-#' doi: 10.1016/j.jclinepi.2010.03.016
+#' \doi{10.1016/j.jclinepi.2010.03.016}
 #'
 #' @export
 forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
@@ -145,7 +174,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                          upper = em_full[, 3] * (-1))),
                         poss_pair_comp)
   em_subset_nma <- subset(em_ref00_nma, em_ref00_nma[5] == compar)
-  em_ref0_nma <- rbind(em_subset_nma[, 1:3], c(rep(NA, 3)))
+  em_ref0_nma <- rbind(em_subset_nma[, c(1:3)], c(rep(NA, 3)))
   sucra_new <- data.frame(sucra_full[, 1],
                           drug_names)[order(match(data.frame(sucra_full[, 1],
                                                              drug_names)[, 2],
@@ -162,11 +191,12 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                ((reg$beta_all[, 2] * cov_val)^2))))
 
   em_ref00_nmr <- cbind(mean = par_mean,
+                        sd = par_sd,
                         lower = par_mean - 1.96 * par_sd,
                         upper = par_mean + 1.96 * par_sd,
                         poss_pair_comp)
-  em_subset_nmr <- subset(em_ref00_nmr, em_ref00_nmr[5] == compar)
-  em_ref0_nmr <- rbind(em_subset_nmr[, 1:3], c(rep(NA, 3)))
+  em_subset_nmr <- subset(em_ref00_nmr, em_ref00_nmr[6] == compar)
+  em_ref0_nmr <- rbind(em_subset_nmr[, c(1, 3, 4)], c(rep(NA, 3)))
   em_ref_nmr <- em_ref0_nmr[order(sucra_new, decreasing = TRUE), ]
   rownames(em_ref_nma) <- rownames(em_ref_nmr) <- NULL
 
@@ -283,31 +313,33 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   } else if (full$D == 0 & !is.element(measure, c("OR", "RR", "ROM"))) {
     paste(measure2, "< 0, favours the first arm.",
           measure2, "> 0, favours", compar)
-  } else if (full$D == 1 & !is.element(measure, c("OR", "RR", "ROM"))) {
+  } else if (full$D == 1 & !is.element(measure, c("OR","RR",  "ROM"))) {
     paste(measure2, "< 0, favours", compar,
           ".", measure2, "> 0, favours the first arm")
   }
 
-  forest_plots <- if (model == "RE") {
-    ggplot(data = prepare_em,
+
+  p1 <- if (model == "RE") {
+    ggplot(data = prepare_em[prepare_em$interval == "Prediction", ],
            aes(x = order,
                y = mean,
                ymin = lower,
                ymax = upper,
-               group = analysis,
-               colour = analysis)) +
+               group = analysis)) +
       geom_hline(yintercept = ifelse(!is.element(
         measure, c("OR", "RR", "ROM")), 0, 1),
         lty = 1,
         size = 1,
         col = "grey60") +
-      geom_linerange(size = 2,
+      geom_linerange(aes(color = analysis),
+                     size = 2,
                      position = position_dodge(width = 0.5)) +
-      geom_errorbar(data = prepare_em,
+      geom_errorbar(data = prepare_em[prepare_em$interval == "Estimation", ],
                     aes(x = order,
                         y = mean,
                         ymin = lower,
-                        ymax = upper),
+                        ymax = upper,
+                        group = analysis),
                     size = 2,
                     position = position_dodge(width = 0.5),
                     width = 0.0) +
@@ -315,14 +347,36 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                  colour = "white",
                  stroke = 0.3,
                  position = position_dodge(width = 0.5)) +
-      geom_text(aes(x = order,
+      geom_text(data = prepare_em[prepare_em$interval == "Estimation", ],
+                aes(x = order,
                     y = mean,
-                    label = paste0(mean, " ", "(", prepare_em[, 4], ",", " ",
-                                   prepare_em[, 5], ")"),
+                    group = analysis,
+                    colour = analysis,
+                    label = paste0(sprintf("%.2f", mean), " ", "(",
+                                   sprintf("%.2f", lower),
+                                   ",",
+                                   " ",
+                                   sprintf("%.2f", upper),
+                                   ")",
+                                   " ",
+                                   "[",
+                                   prepare_em[
+                                     (length(drug_names_sorted) + 1):
+                                       (length(drug_names_sorted) * 2)
+                                     & prepare_em$interval == "Prediction",
+                                              4],
+                                   ",",
+                                   " ",
+                                   prepare_em[
+                                     (length(drug_names_sorted) + 1):
+                                       (length(drug_names_sorted) * 2)
+                                     & prepare_em$interval == "Prediction",
+                                              5],
+                                   "]"),
                     hjust = 0,
                     vjust = -0.5),
-                color = "black",
-                size = 4.0,
+                #colour = "black",
+                size = 3.8,
                 check_overlap = FALSE,
                 parse = FALSE,
                 position = position_dodge(width = 0.5),
@@ -333,15 +387,15 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
            colour = "Analysis",
            subtitle = subtitle,
            caption = caption) +
-      facet_wrap(~ interval, ncol = 2, scales = "fixed") +
       scale_x_discrete(breaks = as.factor(seq_len(len_drug)),
                        labels = drug_names_sorted[rev(seq_len(len_drug))]) +
-      scale_color_manual(breaks = c("Network meta-analysis",
-                                    "Network meta-regression"),
-                         values = c("black", "#D55E00")) +
+      scale_colour_manual(name = "Analysis",
+                          breaks = c("Network meta-analysis",
+                                     "Network meta-regression"),
+                         values = c("#009E73", "#D55E00")) +
       geom_label(aes(x = unique(order[is.na(mean)]),
                      y = ifelse(!is.element(
-                       measure, c("OR", "RR", "ROM")), -0.2, 0.65),
+                       measure, c("OR", "RR", "ROM")), 0, 1), # -0.2, 0.65
                      hjust = 0,
                      vjust = 1,
                      label = "Comparator intervention"),
@@ -351,6 +405,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                  size = 4) +
       scale_y_continuous(trans = ifelse(!is.element(
         measure, c("OR", "RR", "ROM")), "identity", "log10")) +
+      guides(colour = guide_legend(nrow = 1)) +
       coord_flip() +
       theme_classic() +
       theme(axis.text.x = element_text(color = "black", size = 12),
@@ -359,8 +414,6 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                         size = 12),
             legend.position = "bottom",
             legend.justification = c(0.43, 0),
-            strip.text = element_text(color = "black", face = "bold",
-                                      size = 12),
             legend.text =  element_text(color = "black", size = 12),
             legend.title = element_text(color = "black", face = "bold",
                                         size = 12),
@@ -380,27 +433,23 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
         col = "grey60") +
       geom_linerange(size = 2,
                      position = position_dodge(width = 0.5)) +
-      geom_errorbar(data = prepare_em,
-                    aes(x = order,
-                        y = mean,
-                        ymin = lower,
-                        ymax = upper),
-                    size = 2,
-                    position = position_dodge(width = 0.5),
-                    width = 0.0) +
       geom_point(size = 1.5,
                  colour = "white",
                  stroke = 0.3,
                  position = position_dodge(width = 0.5)) +
       geom_text(aes(x = order,
                     y = mean,
-                    label = paste0(mean, " ", "(", prepare_em[, 4], ",", " ",
-                                   prepare_em[, 5], ")"),
+                    label = paste0(sprintf("%.2f", mean), " ", "(",
+                                   sprintf("%.2f", lower),
+                                   ",",
+                                   " ",
+                                   sprintf("%.2f", upper),
+                                   ")"),
                     hjust = 0,
                     vjust = -0.5),
                 color = "black",
-                size = 4.0,
-                check_overlap = FALSE,
+                size = 3.8,
+                check_overlap = TRUE,
                 parse = FALSE,
                 position = position_dodge(width = 0.5),
                 inherit.aes = TRUE,
@@ -414,10 +463,10 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                        labels = drug_names_sorted[rev(seq_len(len_drug))]) +
       scale_color_manual(breaks = c("Network meta-analysis",
                                     "Network meta-regression"),
-                         values = c("black", "#D55E00")) +
+                         values = c("#009E73", "#D55E00")) +
       geom_label(aes(x = unique(order[is.na(mean)]),
                      y = ifelse(!is.element(
-                       measure, c("OR", "RR", "ROM")), -0.2, 0.65),
+                       measure, c("OR", "RR", "ROM")), 0, 1), #-0.2, 0.65
                      hjust = 0,
                      vjust = 1,
                      label = "Comparator intervention"),
@@ -442,6 +491,154 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                         size = 12),
             plot.caption = element_text(hjust = 0.01))
   }
+
+  ## Get SUCRA for the selected covariate value
+  # Include the 'compar' in the dataset
+  indexing <- match(c(compar, em_subset_nmr[, 5]), drug_names)
+  em_subset_nmr_new <- matrix(NA, nrow = len_drug, ncol = 2)
+  em_subset_nmr_new[indexing, 1] <- c(NA, em_subset_nmr[, 1])
+  em_subset_nmr_new[indexing, 2] <- c(NA, em_subset_nmr[, 2])
+
+  # Data for BUGS
+  data_jag <- list("d_cov_mean" = em_subset_nmr_new[, 1],
+                   "d_cov_prec" = 1/(em_subset_nmr_new[, 2]^2),
+                   "nt" = len_drug,
+                   "D" = full$D,
+                   "ref" = match(compar, drug_names))
+
+  # Parameters to monitor
+  param_jags <- c("d.new", "SUCRA")
+
+  # Run the BUGS code for SUCRA
+  jagsfit <- jags(data = data_jag,
+                  parameters.to.save = param_jags,
+                  DIC = FALSE,
+                  model.file = textConnection('
+                    model {
+                       d.new[ref] ~ dnorm(0, 0.001)
+                       for (t in 1:(ref - 1)) {
+                         d.new[t] ~ dnorm(d_cov_mean[t], d_cov_prec[t])
+                       }
+                       for (t in (ref + 1):nt) {
+                         d.new[t] ~ dnorm(d_cov_mean[t], d_cov_prec[t])
+                       }
+                       sorted <- rank(d.new[])
+                       for (t in 1:nt) {
+                         order[t] <- (nt + 1 - sorted[t])*equals(D, 1) + sorted[t]*(1 - equals(D, 1))
+                         most.effective[t] <- equals(order[t], 1)
+                         for (l in 1:nt) {
+                           effectiveness[t, l] <- equals(order[t], l)
+                           cumeffectiveness[t, l] <- sum(effectiveness[t, 1:l])
+                         }
+                        SUCRA[t] <- sum(cumeffectiveness[t, 1:(nt - 1)])/(nt - 1)
+                       }
+                    }
+                                              '),
+                  n.chains = full$n_chains,
+                  n.iter = full$n_iter,
+                  n.burnin = full$n_burnin,
+                  n.thin = full$n_thin)
+
+  # Turn R2jags object into a data-frame
+  get_results <- as.data.frame(t(jagsfit$BUGSoutput$summary))
+
+  # Obtain posterior distribution from parameters of interest
+  sucra_res <- t(get_results %>%
+                   dplyr::select(starts_with("SUCRA[")))[, c(1, 3, 7)]
+
+  # Order by SUCRA of NMA model
+  sucra_nmr <- sucra_res[order(sucra_full[, 1], decreasing = TRUE), ]
+
+  # SUCRA of NMA model ordered
+  sucra_nma <- sucra_full[order(sucra_full[, 1], decreasing = TRUE), c(1, 3, 7)]
+  colnames(sucra_nmr) <- colnames(sucra_nma) <- c("mean", "lower", "upper")
+
+  # Prepare dataset for SUCRA forest plot
+  prepare_sucra <- data.frame(as.factor(rev(seq_len(len_drug))),
+                              rep(drug_names_sorted, 2),
+                              rbind(sucra_nma, sucra_nmr),
+                              rep(c("Network meta-analysis",
+                                    "Network meta-regression"),
+                                  each = len_drug))
+  colnames(prepare_sucra) <- c("order",
+                               "intervention",
+                               "mean", "lower", "upper",
+                               "analysis")
+
+  # Forest plots of SUCRA per intervention and analysis
+  p2 <- ggplot(data = prepare_sucra,
+               aes(x = order,
+                   y = mean,
+                   ymin = lower,
+                   ymax = upper,
+                   group = analysis)) +
+    geom_rect(aes(xmin = 0, xmax = Inf, ymin = 0, ymax = 0.5,
+                  fill = "lowest"),
+              alpha = 0.01) +
+    geom_rect(aes(xmin = 0, xmax = Inf, ymin = 0.5, ymax = 0.8,
+                  fill = "intermediate"),
+              alpha = 0.01) +
+    geom_rect(aes(xmin = 0, xmax = Inf, ymin = 0.8, ymax = 1.0,
+                  fill = "highest"),
+              alpha = 0.01) +
+    geom_linerange(aes(colour = analysis),
+                   size = 2,
+                   position = position_dodge(width = 0.5)) +
+    geom_point(size = 1.5,
+               colour = "white",
+               stroke = 0.3,
+               position = position_dodge(width = 0.5)) +
+    geom_text(aes(x = order, # as.factor(order)
+                  y = mean,
+                  label = paste0(round(mean * 100, 0),
+                                 " ",
+                                 "(",
+                                 round(lower * 100, 0),
+                                 ",",
+                                 " ",
+                                 round(upper * 100, 0), ")"),
+                  hjust = 0,
+                  vjust = -0.5),
+              color = "black",
+              size = 3.8,
+              check_overlap = FALSE,
+              parse = FALSE,
+              position = position_dodge(width = 0.5),
+              inherit.aes = TRUE) +
+    scale_color_manual(breaks = c("Network meta-analysis",
+                                  "Network meta-regression"),
+                       values = c("#009E73", "#D55E00"),
+                       guide = "none") +
+    scale_fill_manual(name = "Ranked",
+                      values = c("lowest" = "#D55E00",
+                                 "intermediate" = "orange",
+                                 "highest" = "#009E73")) +
+    labs(x = "",
+         y = "Surface under the cumulative ranking curve value",
+         caption = " ") +
+    scale_x_discrete(breaks = as.factor(seq_len(len_drug)),
+                     labels = prepare_sucra$intervention[rev(
+                       seq_len(len_drug))]) +
+    scale_y_continuous(labels = percent) +
+    coord_flip() +
+    theme_classic() +
+    theme(axis.text.x = element_text(color = "black", size = 12),
+          axis.text.y = element_text(color = "black", size = 12),
+          axis.title.x = element_text(color = "black", face = "bold",
+                                      size = 12),
+          legend.position = "bottom",
+          legend.box="vertical",
+          legend.text =  element_text(color = "black", size = 12),
+          legend.title =  element_text(color = "black", face = "bold",
+                                       size = 12))
+
+  # Bring together both forest-plots
+  forest_plots <- suppressWarnings(
+    ggarrange(p1, p2 + guides(fill = guide_legend(override.aes =
+                                                    list(alpha = 0.4))),
+              nrow = 1, ncol = 2, labels = c("A)", "B)"),
+              common.legend = FALSE, legend = "bottom")
+  )
 
  return(forest_plots)
 }

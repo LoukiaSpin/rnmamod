@@ -60,8 +60,8 @@ directory of the user. The default is \code{FALSE} (do not export).}
   \item{interval_plot}{A forest plot on the estimated and predicted effect
   sizes of comparisons with the selected comparator intervention under
   network meta-analysis and network meta-regression based on the specified
-  \code{cov_value}. See 'Details' and 'Value' in
-  \code{\link{forestplot_metareg}}.}
+  \code{cov_value} alongside a forest plot with the corresponding SUCRA
+  values. See 'Details' and 'Value' in \code{\link{forestplot_metareg}}.}
   \item{sucra_scatterplot}{A scatterplot of the SUCRA values from the
   network meta-analysis against the SUCRA values from the network
   meta-regression based on the specified \code{cov_value}. See 'Details'
@@ -97,6 +97,7 @@ The deviance information criterion (DIC) of the network
 \examples{
 data("nma.baker2009")
 
+\donttest{
 # Read results from 'run_model' (using the default arguments)
 res <- readRDS(system.file('extdata/res_baker.rds', package = 'rnmamod'))
 
@@ -119,6 +120,7 @@ metareg_plot(full = res,
              compar = "salmeterol",
              cov_value = list(2000, "publication year"),
              drug_names = interv_names)
+}
 
 }
 \references{

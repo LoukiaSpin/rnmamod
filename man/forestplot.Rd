@@ -26,10 +26,11 @@ A panel of two forest plots: (1) a forest plot on the effect
 \description{
 Provides a forest plot with the posterior mean and 95\% credible
   and prediction intervals for comparisons with the selected intervention
-  (comparator) in the network.
+  (comparator) in the network, and a forest plot with the corresponding
+  SUCRA values.
 }
 \details{
-The y-axis of the forest plot on the effect sizes displays the
+The y-axis of the forest plot on \bold{effect sizes} displays the
   labels of the interventions in the network; the selected intervention that
   comprises the \code{compar} argument is annotated in the plot with the
   label 'Comparator intervention'.
@@ -41,7 +42,7 @@ The y-axis of the forest plot on the effect sizes displays the
   means are reported in the original scale after exponentiation of the
   logarithmic scale.
 
-  The y-axis for the forest plot on the SUCRA values displays the
+  The y-axis for the forest plot on \bold{SUCRA} values displays the
   labels of the interventions in the network.
   The corresponding numerical results are displayed above each line.
   Three coloured rectangles appear in the forest plot: a red rectangle for
