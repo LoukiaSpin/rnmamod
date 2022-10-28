@@ -310,24 +310,26 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
   meta <- list()
   for (i in 1:n_obs_comp) {
     message(paste(i, "out of", n_obs_comp, "observed comparisons"))
+
     # 'D' and 'base_risk' do not matter in pairwise meta-analysis
     meta[[i]] <-
-      run_model(data =
-                  pairwise_data[pairwise_data$arm1 == obs_comp[i, 1] &
-                                  pairwise_data$arm2 == obs_comp[i, 2], ],
-                measure,
-                model,
-                assumption,
-                heter_prior = heterog_prior,
-                mean_misspar,
-                var_misspar,
-                D = 1,
-                ref = 1,
-                base_risk = 0.5,
-                n_chains,
-                n_iter,
-                n_burnin,
-                n_thin)
+      suppressMessages({
+        run_model(data = pairwise_data[pairwise_data$arm1 == obs_comp[i, 1] &
+                                         pairwise_data$arm2 == obs_comp[i, 2],],
+                  measure,
+                  model,
+                  assumption,
+                  heter_prior = heterog_prior,
+                  mean_misspar,
+                  var_misspar,
+                  D = 1,
+                  ref = 1,
+                  base_risk = 0.5,
+                  n_chains,
+                  n_iter,
+                  n_burnin,
+                  n_thin)
+        })
   }
 
   EM <- data.frame(obs_comp,
