@@ -494,17 +494,18 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
 
   ## Get SUCRA for the selected covariate value
   # Include the 'compar' in the dataset
-  indexing <- match(c(compar, em_subset_nmr[, 5]), drug_names)
+  basic_par <- subset(em_ref00_nmr, em_ref00_nmr[6] == drug_names[full$ref])
+  indexing <- match(c(drug_names[full$ref], basic_par[, 5]), drug_names)
   em_subset_nmr_new <- matrix(NA, nrow = len_drug, ncol = 2)
-  em_subset_nmr_new[indexing, 1] <- c(NA, em_subset_nmr[, 1])
-  em_subset_nmr_new[indexing, 2] <- c(NA, em_subset_nmr[, 2])
+  em_subset_nmr_new[indexing, 1] <- c(NA, basic_par[, 1])
+  em_subset_nmr_new[indexing, 2] <- c(NA, basic_par[, 2])
 
   # Data for BUGS
   data_jag <- list("d_cov_mean" = em_subset_nmr_new[, 1],
                    "d_cov_prec" = 1/(em_subset_nmr_new[, 2]^2),
                    "nt" = len_drug,
                    "D" = full$D,
-                   "ref" = match(compar, drug_names))
+                   "ref" = full$ref)
 
   # Parameters to monitor
   param_jags <- c("d.new", "SUCRA")
@@ -515,7 +516,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                   DIC = FALSE,
                   model.file = textConnection('
                     model {
-                       d.new[ref] ~ dnorm(0, 0.001)
+                       d.new[ref] <- 0
                        for (t in 1:(ref - 1)) {
                          d.new[t] ~ dnorm(d_cov_mean[t], d_cov_prec[t])
                        }
