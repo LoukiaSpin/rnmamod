@@ -1,5 +1,17 @@
 # Submission, version 0.3.0 (01/11/2022)
+* **R version 4.2.2 (2022-10-31 ucrt)**
 
+Status: OK
+
+* **R version 4.1.3 (2022-03-10)**
+
+Status: 1 NOTE
+Possibly mis-spelled words in DESCRIPTION:
+  Kullback (28:32)
+  Leibler (28:41)
+  heatmaps (25:23, 26:28)
+  rankograms (26:67)
+* The spelling is correct in all indicated words!
 
 # Submission, version 0.2.0 (06/04/2022)
 
