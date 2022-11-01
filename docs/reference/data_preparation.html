@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -28,7 +28,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -43,13 +43,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -59,7 +53,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Prepare the dataset in the proper format for R2jags</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/data.preparation_function.R" class="external-link"><code>R/data.preparation_function.R</code></a></small>
+    
     <div class="hidden name"><code>data_preparation.Rd</code></div>
     </div>
 
@@ -70,7 +64,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">data_preparation</span><span class="op">(</span><span class="va">data</span>, <span class="va">measure</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">data_preparation</span><span class="op">(</span><span class="va">data</span>, <span class="va">measure</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -78,6 +72,8 @@
     <dl><dt>data</dt>
 <dd><p>A data-frame of the one-trial-per-row format with arm-level data.
 See 'Format' in <code><a href="run_model.html">run_model</a></code>.</p></dd>
+
+
 <dt>measure</dt>
 <dd><p>Character string indicating the effect measure. For a binary
 outcome, the following can be considered: <code>"OR"</code>, <code>"RR"</code> or
@@ -85,37 +81,49 @@ outcome, the following can be considered: <code>"OR"</code>, <code>"RR"</code> o
 respectively. For a continuous outcome, the following can be considered:
 <code>"MD"</code>, <code>"SMD"</code>, or <code>"ROM"</code> for mean difference,
 standardised mean difference and ratio of means, respectively.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of data-frames on the following elements to be passed
+    
+
+<p>A list of data-frames on the following elements to be passed
   to <code><a href="run_model.html">run_model</a></code>:</p>
 <dl><dt>pseudo_m</dt>
 <dd><p>A pseudo-data-frame with values -1 and <strong>m</strong> for the
   corresponding trial-arms with unreported and reported missing participant
   outcome data, respectively (see 'Details').</p></dd>
-<dt>m</dt>
+
+  <dt>m</dt>
 <dd><p>The number of missing participant outcome data in each
   trial-arm (see 'Details').</p></dd>
-<dt>N</dt>
+
+  <dt>N</dt>
 <dd><p>The number of randomised participants in each trial-arm.</p></dd>
-<dt>t</dt>
+
+  <dt>t</dt>
 <dd><p>The intervention identifier in each trial-arm.</p></dd>
-<dt>I</dt>
+
+  <dt>I</dt>
 <dd><p>A pseudo-data-frame that indicates whether missing participant
   outcome data have been reported or not for each observed trial-arm
   (see 'Details').</p></dd>
-<dt>measure</dt>
+
+  <dt>measure</dt>
 <dd><p>The effect measure for the analysed outcome.</p></dd>
-<dt>y0</dt>
+
+  <dt>y0</dt>
 <dd><p>The observed mean value of the outcome in each trial-arm,
   when the outcome is continuous.</p></dd>
-<dt>se0</dt>
+
+  <dt>se0</dt>
 <dd><p>The observed standard deviation of the outcome in each
   trial-arm, when the outcome is continuous.</p></dd>
-<dt>r</dt>
+
+  <dt>r</dt>
 <dd><p>The number of observed events of the outcome in each
   trial-arm, when the outcome is binary.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -190,7 +198,7 @@ standardised mean difference and ratio of means, respectively.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

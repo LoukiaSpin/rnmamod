@@ -9,6 +9,7 @@ reference:
 - title: End-user-ready visualisation
 - contents:
   - balloon_plot
+  - baseline_model
   - bland_altman_plot
   - forestplot
   - forestplot_metareg
@@ -20,6 +21,7 @@ reference:
   - league_heatmap
   - league_heatmap_pred
   - league_table_absolute
+  - league_table_absolute_user
   - leverage_plot
   - metareg_plot
   - netplot
@@ -44,8 +46,10 @@ reference:
   - missingness_param_prior
   - rnmamod
   - robustness_index
+  - robustness_index_user
   - taylor_continuous
   - taylor_imor
+  - trans_quality
 
 
 

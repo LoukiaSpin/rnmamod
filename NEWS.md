@@ -1,18 +1,31 @@
-# rnmamod, version 0.3.0 (2022-10-31)
+# rnmamod, version 0.3.0 (2022-11-01)
 
  * Function __baseline_model__:
-   - processes the elements in the argument _base_risk for a fixed, random or 
+   - processes the elements in the argument _base_risk_ for a fixed, random or 
    predicted baseline model and passes the output to run_model or run_metareg to 
    obtain the absolute risks for all interventions.
    - when a predicted baseline model is conducted, it returns a forest plot with
    the trial-specific and summary probability of an event for the selected
    reference intervention.
+ * Function __forestplot_metareg__:
+   - upgraded plot that presents two forest plots side-by-side: (i) one on 
+   estimation and prediction from network meta-analysis and network 
+   meta-regression for a selected comparator intervention (allows comparison of 
+   these two analyses), and (ii) one on SUCRA values from both analyses. 
+   Both forest plots present results from network meta-regression for a selected 
+   value of the investigated covariate.
  * Function __league_table_absolute_user__:
    - (only for binary outcome) yields the same graph with league_table_absolute,
-   but the input is the summary effect and corresponding (credible or 
-   confidence) interval for comparisons with a reference intervention. These
-   results stem from a network meta-analysis conducted using another R-package 
-   or statistical software.
+   but the input is not _rnmamod_ object: the user defines the input and it
+   includes the summary effect and corresponding (credible or confidence) 
+   interval for comparisons with a reference intervention. These results stem 
+   from a network meta-analysis conducted using another R-package or statistical 
+   software.
+ * Function __robustness_index_user__:
+   - calculates the robustness index for a sensitivity analysis performed using 
+   the R-package _netmeta_ or _metafor_. The user defines the input and the 
+   function returns the robustness index. This function returns the same output 
+   with the __robustness_index__ function.
  * Function __trans_quality__:
    - classifies a systematic review with multiple interventions as having low, 
    unclear or high quality regarding the transitivity evaluation based on five

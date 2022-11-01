@@ -21,7 +21,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -30,7 +30,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -45,13 +45,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -61,7 +55,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Enhanced balloon plot</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/balloon.plot.mod_function.R" class="external-link"><code>R/balloon.plot.mod_function.R</code></a></small>
+    
     <div class="hidden name"><code>balloon_plot.Rd</code></div>
     </div>
 
@@ -74,7 +68,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">balloon_plot</span><span class="op">(</span><span class="va">sens</span>, <span class="va">compar</span>, <span class="va">drug_names</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">balloon_plot</span><span class="op">(</span><span class="va">sens</span>, <span class="va">compar</span>, <span class="va">drug_names</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -82,35 +76,44 @@
     <dl><dt>sens</dt>
 <dd><p>An object of S3 class <code><a href="run_sensitivity.html">run_sensitivity</a></code>.
 See 'Value' in <code><a href="run_sensitivity.html">run_sensitivity</a></code>.</p></dd>
+
+
 <dt>compar</dt>
 <dd><p>A character vector with two elements indicating the pairwise
 comparison of interest. The first element refers to the 'experimental'
 and the second element to the 'control' intervention of the comparison.</p></dd>
+
+
 <dt>drug_names</dt>
 <dd><p>A vector of labels with the name of the interventions
 in the order they appear in the argument <code>data</code> of
 <code><a href="run_model.html">run_model</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>balloon_plot</code> returns two enhanced balloon plots for one
+    
+
+<p><code>balloon_plot</code> returns two enhanced balloon plots for one
   comparison (see 'Details'):</p>
 <dl><dt>plot_effect_size</dt>
 <dd><p>The enhanced balloon plot for the
   summary effect size (according to the argument <code>measure</code> inherited
   by <code><a href="run_sensitivity.html">run_sensitivity</a></code>) for one pairwise comparison.</p></dd>
-<dt>plot_tau</dt>
+
+  <dt>plot_tau</dt>
 <dd><p>The enhanced balloon plot for <em>tau</em>. When the
   fixed-effect model has been performed in <code><a href="run_sensitivity.html">run_sensitivity</a></code>,
   the function will not return the <code>plot_tau</code>.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
     <p>For the <code>plot_effect_size</code> of the selected pairwise comparison,
   the different colours and sizes of the bubbles reflect the
   posterior standard deviation and the posterior mean, respectively.
-  A colour key appears below the plot.
-  The size of the bubble is proportional to the corresponding posterior mean.
+  A colour key appears below the plot. The size of the bubble is proportional
+  to the corresponding posterior mean.
   Crossed bubbles indicate scenarios with conclusive evidence (the
   95% credible interval excludes the null value), and filled bubbles
   indicate scenarios with inconclusive evidence (the 95% credible interval
@@ -150,21 +153,20 @@ and network meta-analysis. <em>Res Synth Methods</em>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pma.taylor2004"</span><span class="op">)</span>
-
-<span class="co"># Read results from 'run_sensitivity' (using the default arguments)</span>
-<span class="va">res_sens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_sens_taylor.rds'</span>,
-                    package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># The names of the interventions in the order they appear in the dataset</span>
-<span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"inositol"</span><span class="op">)</span>
-
-<span class="co"># Create the enhanced balloon plot for 'inositol versus placebo'</span>
-<span class="fu">balloon_plot</span><span class="op">(</span>sens <span class="op">=</span> <span class="va">res_sens</span>,
-             compar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"inositol"</span>, <span class="st">"placebo"</span><span class="op">)</span>,
-             drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span>
-
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pma.taylor2004"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Read results from 'run_sensitivity' (using the default arguments)</span></span>
+<span><span class="va">res_sens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_sens_taylor.rds'</span>,</span>
+<span>                    package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># The names of the interventions in the order they appear in the dataset</span></span>
+<span><span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"inositol"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create the enhanced balloon plot for 'inositol versus placebo'</span></span>
+<span><span class="fu">balloon_plot</span><span class="op">(</span>sens <span class="op">=</span> <span class="va">res_sens</span>,</span>
+<span>             compar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"inositol"</span>, <span class="st">"placebo"</span><span class="op">)</span>,</span>
+<span>             drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></span>
+<span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -178,7 +180,7 @@ and network meta-analysis. <em>Res Synth Methods</em>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

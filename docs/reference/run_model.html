@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -28,7 +28,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -43,13 +43,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -59,7 +53,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Perform Bayesian pairwise or network meta-analysis</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/run.model_function.R" class="external-link"><code>R/run.model_function.R</code></a></small>
+    
     <div class="hidden name"><code>run_model.Rd</code></div>
     </div>
 
@@ -70,22 +64,22 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">run_model</span><span class="op">(</span>
-  <span class="va">data</span>,
-  <span class="va">measure</span>,
-  <span class="va">model</span>,
-  <span class="va">assumption</span>,
-  <span class="va">heter_prior</span>,
-  <span class="va">mean_misspar</span>,
-  <span class="va">var_misspar</span>,
-  <span class="va">D</span>,
-  <span class="va">ref</span>,
-  base_risk <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">n_chains</span>,
-  <span class="va">n_iter</span>,
-  <span class="va">n_burnin</span>,
-  <span class="va">n_thin</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">run_model</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">measure</span>,</span>
+<span>  <span class="va">model</span>,</span>
+<span>  <span class="va">assumption</span>,</span>
+<span>  <span class="va">heter_prior</span>,</span>
+<span>  <span class="va">mean_misspar</span>,</span>
+<span>  <span class="va">var_misspar</span>,</span>
+<span>  <span class="va">D</span>,</span>
+<span>  <span class="va">ref</span>,</span>
+<span>  <span class="va">base_risk</span>,</span>
+<span>  <span class="va">n_chains</span>,</span>
+<span>  <span class="va">n_iter</span>,</span>
+<span>  <span class="va">n_burnin</span>,</span>
+<span>  <span class="va">n_thin</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="format">
@@ -112,6 +106,8 @@
     <dl><dt>data</dt>
 <dd><p>A data-frame of the one-trial-per-row format with arm-level data.
 See 'Format' for the specification of the columns.</p></dd>
+
+
 <dt>measure</dt>
 <dd><p>Character string indicating the effect measure. For a binary
 outcome, the following can be considered: <code>"OR"</code>, <code>"RR"</code> or
@@ -119,10 +115,14 @@ outcome, the following can be considered: <code>"OR"</code>, <code>"RR"</code> o
 respectively. For a continuous outcome, the following can be considered:
 <code>"MD"</code>, <code>"SMD"</code>, or <code>"ROM"</code> for mean difference,
 standardised mean difference and ratio of means, respectively.</p></dd>
+
+
 <dt>model</dt>
 <dd><p>Character string indicating the analysis model with values
 <code>"RE"</code>, or <code>"FE"</code> for the random-effects and fixed-effect model,
 respectively. The default argument is <code>"RE"</code>.</p></dd>
+
+
 <dt>assumption</dt>
 <dd><p>Character string indicating the structure of the
 informative missingness parameter.
@@ -134,6 +134,8 @@ The default argument is <code>"IDE-ARM"</code>. The abbreviations <code>"IDE"</c
 <code>"HIE"</code>, and <code>"IND"</code> stand for identical, hierarchical and
 independent, respectively. <code>"CORR"</code> and <code>"UNCORR"</code> stand for
 correlated and uncorrelated, respectively.</p></dd>
+
+
 <dt>heter_prior</dt>
 <dd><p>A list of three elements with the following order:
 1) a character string indicating the distribution with
@@ -146,128 +148,176 @@ parameter (equal to 4 or 1 being the corresponding precision of the scale
 parameter 0.5 or 1). For <code>"uniform"</code>, these numbers refer to the
 minimum and maximum value of the distribution.
 See 'Details' in <code><a href="heterogeneity_param_prior.html">heterogeneity_param_prior</a></code>.</p></dd>
+
+
 <dt>mean_misspar</dt>
 <dd><p>A scalar or numeric vector of two numeric values for the
 mean of the normal distribution of the informative missingness parameter
 (see 'Details'). The default argument is 0 and corresponds to the
 missing-at-random assumption.
 See also 'Details' in <code><a href="missingness_param_prior.html">missingness_param_prior</a></code>.</p></dd>
+
+
 <dt>var_misspar</dt>
 <dd><p>A positive non-zero number for the variance of the
 normal distribution of the informative missingness parameter.
 When the <code>measure</code> is <code>"OR"</code>, <code>"MD"</code>, or <code>"SMD"</code>
 the default argument is 1. When the <code>measure</code> is <code>"ROM"</code>
 the default argument is 0.04.</p></dd>
+
+
 <dt>D</dt>
 <dd><p>A binary number for the direction of the outcome.
 Set <code>D = 1</code> for beneficial outcome and <code>D = 0</code> for harmful
 outcome.</p></dd>
+
+
 <dt>ref</dt>
 <dd><p>An integer specifying the reference intervention. The number
 should match the intervention identifier under element <strong>t</strong> in
 <code>data</code> (See 'Format').</p></dd>
+
+
 <dt>base_risk</dt>
-<dd><p>A number in the interval (0, 1) that indicates the baseline
-risk for the selected reference intervention. If <code>base_risk</code> has not
-been defined, the function uses the median event risk for the reference
-intervention as calculated from the corresponding trials in <code>data</code>.
-This argument is only relevant for binary outcomes.</p></dd>
+<dd><p>A scalar, a vector of length three with elements sorted in
+ascending order, or a matrix with two columns and number of rows equal to
+the number of relevant trials. In the case of a scalar or vector, the
+elements should be in the interval (0, 1) (see 'Details'). If
+<code>base_risk</code> has not been defined, the function uses the median event
+risk for the reference intervention from the corresponding trials in
+<code>data</code>. This argument is only relevant for a binary outcome.</p></dd>
+
+
 <dt>n_chains</dt>
 <dd><p>Positive integer specifying the number of chains for the
 MCMC sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function
 of the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 2.</p></dd>
+
+
 <dt>n_iter</dt>
 <dd><p>Positive integer specifying the number of Markov chains for the
 MCMC sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function
 of the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 10000.</p></dd>
+
+
 <dt>n_burnin</dt>
 <dd><p>Positive integer specifying the number of iterations to
 discard at the beginning of the MCMC sampling; an argument of the
 <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of the R-package
 <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 1000.</p></dd>
+
+
 <dt>n_thin</dt>
 <dd><p>Positive integer specifying the thinning rate for the
 MCMC sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function
 of the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 1.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of R2jags output on the summaries of the posterior
+    
+
+<p>A list of R2jags output on the summaries of the posterior
   distribution, and the Gelman-Rubin convergence diagnostic
   (Gelman et al., 1992) of the following monitored parameters for a
   fixed-effect pairwise meta-analysis:</p>
 <dl><dt>EM</dt>
 <dd><p>The estimated summary effect measure (according to the argument
   <code>measure</code>).</p></dd>
-<dt>EM_LOR</dt>
+
+  <dt>EM_LOR</dt>
 <dd><p>The estimated summary odd ratio in the logarithmic scale when
   <code>measure = "RR"</code> or <code>measure = "RD"</code>.</p></dd>
-<dt>dev_o</dt>
+
+  <dt>dev_o</dt>
 <dd><p>The deviance contribution of each trial-arm based on the
   observed outcome.</p></dd>
-<dt>hat_par</dt>
+
+  <dt>hat_par</dt>
 <dd><p>The fitted outcome at each trial-arm.</p></dd>
-<dt>phi</dt>
+
+  <dt>phi</dt>
 <dd><p>The informative missingness parameter.</p></dd>
+
+
 </dl><p>For a fixed-effect network meta-analysis, the output additionally includes:</p>
 <dl><dt>SUCRA</dt>
 <dd><p>The surface under the cumulative ranking curve for each
   intervention.</p></dd>
-<dt>SUCRA_LOR</dt>
+
+  <dt>SUCRA_LOR</dt>
 <dd><p>The surface under the cumulative ranking curve for each
   intervention under the odds ratio effect measure when <code>measure = "RR"</code>
   or <code>measure = "RD"</code>.</p></dd>
-<dt>effectiveneness</dt>
+
+  <dt>effectiveneness</dt>
 <dd><p>The ranking probability of each intervention for
   every rank.</p></dd>
+
+
 </dl><p>For a random-effects pairwise meta-analysis, the output additionally
   includes the following elements:</p>
 <dl><dt>EM_pred</dt>
 <dd><p>The predicted summary effect measure (according to the
   argument <code>measure</code>).</p></dd>
-<dt>EM_pred_LOR</dt>
+
+  <dt>EM_pred_LOR</dt>
 <dd><p>The predicted summary odds ratio in the logarithmic
   scale when <code>measure = "RR"</code> or <code>measure = "RD"</code>.</p></dd>
-<dt>delta</dt>
+
+  <dt>delta</dt>
 <dd><p>The estimated trial-specific effect measure (according to the
   argument <code>measure</code>).</p></dd>
-<dt>tau</dt>
+
+  <dt>tau</dt>
 <dd><p>The between-trial standard deviation.</p></dd>
+
+
 </dl><p>In network meta-analysis, <code>EM</code> and <code>EM_pred</code> refer to all
-  possible pairwise comparisons of interventions in the network. Furthermore,
-<code>tau</code> is typically assumed to be common for all observed comparisons
-  in the network. For a multi-arm trial, we estimate a total of <em>T-1</em><code>delta</code> for comparisons with the baseline intervention of the trial
+  possible pairwise comparisons of interventions in the network. Furthermore,</p>
+<p></p>
+<p><code>tau</code> is typically assumed to be common for all observed comparisons
+  in the network. For a multi-arm trial, we estimate a total of <em>T-1</em></p>
+<p></p>
+<p><code>delta</code> for comparisons with the baseline intervention of the trial
   (found in the first column of the element <b>t</b>), with <em>T</em> being
-  the number of interventions in the trial.
-  Furthermore, the output includes the following elements:</p>
-<dl><dt>abs_risk</dt>
-<dd><p>The absolute risks for each intervention. This appears only
-  when <code>measure = "OR"</code>, <code>measure = "RR"</code>, or
-  <code>measure = "RD"</code>.</p></dd>
-<dt>leverage_o</dt>
+  the number of interventions in the trial.</p>
+
+
+<p>Furthermore, the output includes the following elements:</p>
+<dl><dt>leverage_o</dt>
 <dd><p>The leverage for the observed outcome at each trial-arm.</p></dd>
-<dt>sign_dev_o</dt>
+
+  <dt>sign_dev_o</dt>
 <dd><p>The sign of the difference between observed and fitted
   outcome at each trial-arm.</p></dd>
-<dt>model_assessment</dt>
+
+  <dt>model_assessment</dt>
 <dd><p>A data-frame on the measures of model assessment:
   deviance information criterion, number of effective parameters, and total
   residual deviance.</p></dd>
-<dt>indic</dt>
+
+  <dt>indic</dt>
 <dd><p>The sign of basic parameters in relation to the reference
   intervention as specified in argument <code>reg</code></p></dd>
-<dt>jagsfit</dt>
+
+  <dt>jagsfit</dt>
 <dd><p>An object of S3 class <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> with
   the posterior results on all monitored parameters to be used in the
   <code><a href="mcmc_diagnostics.html">mcmc_diagnostics</a></code> function.</p></dd>
-</dl><p>The <code>run_model</code> function also returns the arguments <code>data</code>,
-<code>measure</code>, <code>model</code>, <code>assumption</code>, <code>heter_prior</code>,
-<code>mean_misspar</code>, <code>var_misspar</code>, <code>D</code>, <code>ref</code>,
-<code>base_risk</code>, <code>n_chains</code>, <code>n_iter</code>, <code>n_burnin</code>,
+
+
+</dl><p>The <code>run_model</code> function also returns the arguments <code>data</code>,</p>
+<p></p>
+<p><code>measure</code>, <code>model</code>, <code>assumption</code>, <code>heter_prior</code>,</p>
+<p></p>
+<p><code>mean_misspar</code>, <code>var_misspar</code>, <code>D</code>, <code>ref</code>,</p>
+<p></p>
+<p><code>base_risk</code>, <code>n_chains</code>, <code>n_iter</code>, <code>n_burnin</code>,
   and <code>n_thin</code> as specified by the user to be inherited by other
   functions of the package.</p>
     </div>
@@ -306,15 +356,15 @@ The default argument is 1.</p></dd>
   networks.</p>
 <p>To perform a Bayesian pairwise or network meta-analysis, the
   <code><a href="prepare_model.html">prepare_model</a></code> function is called which contains the WinBUGS
-  code as written by Dias et al. (2013) for binomial and normal likelihood to
+  code as written by Dias et al. (2013a) for binomial and normal likelihood to
   analyse aggregate binary and continuous outcome data, respectively.
   <code><a href="prepare_model.html">prepare_model</a></code> uses the consistency model (as described in
   Lu and Ades (2006)) to estimate all possible comparisons in the network.
   It also accounts for the multi-arm trials by assigning conditional
   univariate normal distributions on the underlying trial-specific effect
   size of comparisons with the baseline arm of the multi-arm trial
-  (Dias et al., 2013).</p>
-<p>The code of Dias et al. (2013) has been extended to incorporate the
+  (Dias et al., 2013a).</p>
+<p>The code of Dias et al. (2013a) has been extended to incorporate the
   pattern-mixture model to adjust the underlying outcome in each arm of
   every trial for missing participant outcome data (Spineli et al., 2021;
   Spineli, 2019a; Turner et al., 2015). The assumptions about the
@@ -352,13 +402,33 @@ The default argument is 1.</p></dd>
   Turner et al. (2015), Mavridis et al. (2015), and White et al. (2008) to
   determine <code>mean_misspar</code> and select a proper value for
   <code>var_misspar</code>.</p>
+<p>The scalar <code>base_risk</code> refers to a fixed baseline risk for the
+  selected reference intervention (as specified with <code>ref</code>).
+  When <code>base_risk</code> is a three-element vector, it refers to a random
+  baseline risk and the elements should be sorted in ascending order as they
+  refer to the lower bound, mean value, and upper bound of the 95%
+  confidence interval for the baseline risk for the selected reference
+  intervention. The <code><a href="baseline_model.html">baseline_model</a></code> function is called to
+  calculate the mean and variance of the approximately normal distribution of
+  the logit of an event for <code>ref</code> using these three elements
+  (Dias et al., 2018). When <code>base_risk</code> is a matrix, it refers to the
+  predicted baseline risk with first column being the number of events, and
+  second column being the sample size of the corresponding trials on the
+  selected reference intervention. Then the <code><a href="baseline_model.html">baseline_model</a></code>
+  function is called that contains the WinBUGS code as written by Dias et al.
+  (2013b) for the hierarchical baseline model. The posterior mean and
+  precision of the predictive distribution of the logit of an event
+  for the selected reference intervention are plugged in the WinBUGS code for
+  the relative effects model (via the <code><a href="prepare_model.html">prepare_model</a></code> function).
+  The matrix <code>base_risk</code> should not comprise the trials in <code>data</code>
+  that include the <code>ref</code>, unless justified (Dias et al., 2018).</p>
 <p>To obtain unique absolute risks for each intervention, the network
   meta-analysis model has been extended to incorporate the transitive risks
   framework, namely, an intervention has the same absolute risk regardless of
   the comparator intervention(s) in a trial (Spineli et al., 2017).
   The absolute risks are a function of the odds ratio (the <strong>base-case</strong>
   effect measure for a binary outcome) and the selected baseline risk for the
-  reference intervention (<code>ref</code>) (Appendix in Dias et al., 2013).
+  reference intervention (<code>ref</code>) (Appendix in Dias et al., 2013a).
   We advocate using the odds ratio as an effect measure for its desired
   mathematical properties. Then, the relative risk and risk difference can be
   obtained as a function of the absolute risks of the corresponding
@@ -373,10 +443,15 @@ between-study heterogeneity and inconsistency in mixed treatment
 comparisons: Application to stroke prevention treatments in individuals
 with non-rheumatic atrial fibrillation.
 <em>Stat Med</em> 2009;<b>28</b>(14):1861--81. doi: 10.1002/sim.3594</p>
+<p>Dias S, Ades AE, Welton NJ, Jansen JP, Sutton AJ. Network Meta-Analysis for
+Decision Making. Chichester (UK): Wiley; 2018.</p>
 <p>Dias S, Sutton AJ, Ades AE, Welton NJ. Evidence synthesis for decision
 making 2: a generalized linear modeling framework for pairwise and network
 meta-analysis of randomized controlled trials. <em>Med Decis Making</em>
-2013;<b>33</b>(5):607--17. doi: 10.1177/0272989X12458724</p>
+2013a;<b>33</b>(5):607--17. doi: 10.1177/0272989X12458724</p>
+<p>Dias S, Welton NJ, Sutton AJ, Ades AE. Evidence synthesis for decision
+making 5: the baseline natural history model. <em>Med Decis Making</em>
+2013b;<b>33</b>(5):657--70. doi: 10.1177/0272989X13485155</p>
 <p>Gelman A, Rubin DB. Inference from iterative simulation using multiple
 sequences. <em>Stat Sci</em> 1992;<b>7</b>(4):457--72.
 doi: 10.1214/ss/1177011136</p>
@@ -414,7 +489,7 @@ in meta-analysis--part 1: two-stage methods. <em>Stat Med</em>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="data_preparation.html">data_preparation</a></code>,
+    <div class="dont-index"><p><code><a href="baseline_model.html">baseline_model</a></code>, <code><a href="data_preparation.html">data_preparation</a></code>,
   <code><a href="heterogeneity_param_prior.html">heterogeneity_param_prior</a></code>, <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>,
   <code><a href="missingness_param_prior.html">missingness_param_prior</a></code>, <code><a href="prepare_model.html">prepare_model</a></code></p></div>
     </div>
@@ -425,30 +500,29 @@ in meta-analysis--part 1: two-stage methods. <em>Stat Med</em>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.baker2009"</span><span class="op">)</span>
-
-<span class="co"># Show the first six trials of the dataset</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nma.baker2009</span><span class="op">)</span>
-
-<span class="co"># \donttest{</span>
-<span class="co"># Perform a random-effects network meta-analysis</span>
-<span class="co"># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span>
-<span class="fu">run_model</span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.baker2009</span>,
-          measure <span class="op">=</span> <span class="st">"OR"</span>,
-          model <span class="op">=</span> <span class="st">"RE"</span>,
-          assumption <span class="op">=</span> <span class="st">"IDE-ARM"</span>,
-          heter_prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"halfnormal"</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,
-          mean_misspar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,
-          var_misspar <span class="op">=</span> <span class="fl">1</span>,
-          D <span class="op">=</span> <span class="fl">0</span>,
-          ref <span class="op">=</span> <span class="fl">1</span>,
-          n_chains <span class="op">=</span> <span class="fl">3</span>,
-          n_iter <span class="op">=</span> <span class="fl">1000</span>,
-          n_burnin <span class="op">=</span> <span class="fl">100</span>,
-          n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="co"># }</span>
-
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.baker2009"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Show the first six trials of the dataset</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nma.baker2009</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># \donttest{</span></span>
+<span><span class="co"># Perform a random-effects network meta-analysis</span></span>
+<span><span class="co"># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span></span>
+<span><span class="fu">run_model</span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.baker2009</span>,</span>
+<span>          measure <span class="op">=</span> <span class="st">"OR"</span>,</span>
+<span>          model <span class="op">=</span> <span class="st">"RE"</span>,</span>
+<span>          assumption <span class="op">=</span> <span class="st">"IDE-ARM"</span>,</span>
+<span>          heter_prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"halfnormal"</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>          mean_misspar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>          var_misspar <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>          D <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>          ref <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>          n_chains <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>          n_iter <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>          n_burnin <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>          n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co"># }</span></span>
+<span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -462,7 +536,7 @@ in meta-analysis--part 1: two-stage methods. <em>Stat Med</em>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

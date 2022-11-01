@@ -7,13 +7,19 @@
 robustness_index_user(sens, pkg, attribute, threshold)
 }
 \arguments{
-\item{sens}{A list of R objects of class "netmeta", "netmetabin" (see
-\href{https://CRAN.R-project.org/package=netmeta}{netmeta}) or "rma",
-"rma.glmm", "rma.mh", "rma.mv", "rma.peto", "rma.uni" (see
-\href{https://CRAN.R-project.org/package=metafor}{metafor}). The number of
-elements equals the number of analyses using the same dataset and the
-same R-package. The first element should refer to the primary analysis.
-Hence, the list should include at least two elements (see 'Details').}
+\item{sens}{A list of R objects of class
+\code{\link[netmeta:netmeta]{netmeta}},
+\code{\link[netmeta:netmetabin]{netmetabin}} (see
+\href{https://CRAN.R-project.org/package=netmeta}{netmeta}) or
+\code{\link[metafor:rma]{rma}}, \code{\link[metafor:rma.glmm]{rma.glmm}},
+\code{\link[metafor:rma.mh]{rma.mh}}, \code{\link[metafor:rma.mv]{rma.mv}},
+\code{\link[metafor:rma.peto]{rma.peto}}, and
+\code{\link[metafor:rma.uni]{rma.uni}}
+(see \href{https://CRAN.R-project.org/package=metafor}{metafor}).
+The number of elements equals the number of analyses using the same dataset
+and the same R-package. The first element should refer to the primary
+analysis. Hence, the list should include at least two elements
+(see 'Details').}
 
 \item{pkg}{Character string indicating the R-package with values
 \code{"netmeta"}, or \code{"metafor"}.}
@@ -25,8 +31,8 @@ at least two characters with values \code{"TE.common"} or
 or \code{\link[netmeta:netmetabin]{netmetabin}}.}
 
 \item{threshold}{A number indicating the threshold of robustness, that is,
-the minimally allowed deviation between the primary analysis and
-re-analysis results. See 'Details' below.}
+the minimally allowed deviation between the primary analysis (the first
+element in \code{sens}) and re-analysis results. See 'Details' below.}
 }
 \value{
 \code{robustness_index_user} prints on the R console a message in
@@ -51,9 +57,9 @@ re-analysis results. See 'Details' below.}
   number of rows equal to the number of total analyses and number of columns
   equal to the number of  possible pairwise comparisons; one KLD
   value per analysis and possible comparison.}
-  \item{threshold}{The threshold used to be inherited by the
-  \code{\link{heatmap_robustness}} function.}
   \item{attribute}{The attributes considered.}
+  \item{threshold}{The threshold used to be inherited by the
+  \code{\link{heatmap_robustness}} function. See 'Details'.}
 }
 \description{
 Calculates the robustness index for a sensitivity analysis
@@ -64,23 +70,24 @@ Calculates the robustness index for a sensitivity analysis
 }
 \details{
 Thresholds of robustness have been proposed only for the odds ratio
-  and standardised mean difference effect measures (Spineli et al., 2021).
-  when the argument \code{threshold} has not been defined,
-  \code{robustness_index} considers the default values 0.28 and 0.17 as
-  threshold for robustness for binary and continuous outcome, respectively,
-  regardless of the effect measure.
+  and standardised mean difference (Spineli et al., 2021).
   The user may consider the values 0.28 and 0.17 in the argument
   \code{threshold} for the odds ratio and standardised mean difference effect
   measures (the default values), respectively, or consider other plausible
-  values. Spineli et al. (2021) offers a discussion on specifying the
-  \code{threshold} of robustness.
+  values. When the argument \code{threshold} has not been defined,
+  \code{robustness_index} considers the default values 0.28 and 0.17 as
+  threshold for robustness for binary and continuous outcome, respectively,
+  regardless of the effect measure (the default thresholds may not be proper
+  choices for other effect measures; hence, use these threshold with great
+  caution in this case). Spineli et al. (2021) offers a discussion on
+  specifying the \code{threshold} of robustness.
 
   When other effect measure is used (other than odds ratio or standardised
   mean difference) or the elements in \code{sens} refer to different effect
   measures, the execution of the function will be stopped and an error
   message will be printed in the R console.
 
-  In \code{robust}, the value \code{"robust"} appears when
+  In \code{robust}, the value \code{"robust"} appears when the calculated
   \code{robust_index} is less than \code{threshold}; otherwise, the value
   \code{"frail"} appears.
 }
@@ -116,9 +123,14 @@ and network meta-analysis.
 \emph{Res Synth Methods} 2021;\bold{12}(4):475--90. doi: 10.1002/jrsm.1478
 }
 \seealso{
-\code{\link[netmeta:netmeta]{netmeta}},
+\code{\link[metafor:rma]{rma}},
+  \code{\link[metafor:rma.glmm]{rma.glmm}},
+  \code{\link[metafor:rma.mh]{rma.mh}}, \code{\link[metafor:rma.mv]{rma.mv}},
+  \code{\link[metafor:rma.peto]{rma.peto}},
+  \code{\link[metafor:rma.uni]{rma.uni}},
+  \code{\link[netmeta:netmeta]{netmeta}},
   \code{\link[netmeta:netmetabin]{netmetabin}},
-   \code{\link{heatmap_robustness}}
+  \code{\link{heatmap_robustness}}
 }
 \author{
 {Loukia M. Spineli}

@@ -21,7 +21,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -30,7 +30,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -45,13 +45,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -61,7 +55,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Robustness index</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/robustness.index_function.R" class="external-link"><code>R/robustness.index_function.R</code></a></small>
+    
     <div class="hidden name"><code>robustness_index.Rd</code></div>
     </div>
 
@@ -74,7 +68,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">robustness_index</span><span class="op">(</span><span class="va">sens</span>, <span class="va">threshold</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">robustness_index</span><span class="op">(</span><span class="va">sens</span>, <span class="va">threshold</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -87,14 +81,19 @@ missingness parameter. See 'Value' in <code><a href="run_sensitivity.html">run_s
 of S3 class <code><a href="run_model.html">run_model</a></code> indicating different re-analyses: the
 first object (of class <code><a href="run_model.html">run_model</a></code>) in the list should refer to
 the primary analysis.</p></dd>
+
+
 <dt>threshold</dt>
 <dd><p>A number indicating the threshold of robustness, that is,
 the minimally allowed deviation between the primary analysis and
 re-analysis results. See 'Details' below.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>robustness_index</code> prints on the R console a message in green
+    
+
+<p><code>robustness_index</code> prints on the R console a message in green
   text on the threshold of robustness determined by the user.
   Then, the function returns the following list of elements:</p>
 <dl><dt>robust_index</dt>
@@ -104,11 +103,13 @@ re-analysis results. See 'Details' below.</p></dd>
   In the case of network meta-analysis, <code>robust_index</code> is a vector with
   length equal to the number of possible pairwise comparisons;
   one robustness index per possible comparison.</p></dd>
-<dt>robust</dt>
+
+  <dt>robust</dt>
 <dd><p>A character or character vector (of same length with
   <code>robust_index</code>) on whether the primary analysis results are
   <em>robust</em> or <em>frail</em> to the different re-analyses.</p></dd>
-<dt>kld</dt>
+
+  <dt>kld</dt>
 <dd><p>A vector or matrix on the Kullback-Leibler divergence
   (KLD) measure in the summary effect size from a subsequent re-analysis to
   the primary analysis. In the case of a pairwise meta-analysis, <code>kld</code>
@@ -122,26 +123,30 @@ re-analysis results. See 'Details' below.</p></dd>
   number of rows equal to the number of total analyses and number of columns
   equal to the number of  possible pairwise comparisons; one KLD value per
   analysis and possible comparison.</p></dd>
-<dt>threshold</dt>
+
+  <dt>threshold</dt>
 <dd><p>The threshold used to be inherited by the
   <code><a href="heatmap_robustness.html">heatmap_robustness</a></code> function.</p></dd>
-<dt>scenarios</dt>
+
+  <dt>scenarios</dt>
 <dd><p>The scenarios considered to be inherited by the
-  <code><a href="heatmap_robustness.html">heatmap_robustness</a></code> and <code><a href="kld_barplot.html">kld_barplot</a></code> functions.</p></dd>
+  <code><a href="kld_barplot.html">kld_barplot</a></code> function.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
     <p>Thresholds of robustness have been proposed only for the odds ratio
-  and standardised mean difference effect measures (Spineli et al., 2021).
-  when the argument <code>threshold</code> has not been defined,
-  <code>robustness_index</code> considers the default values 0.28 and 0.17 as
-  threshold for robustness for binary and continuous outcome, respectively,
-  regardless of the effect measure.
+  and standardised mean difference (Spineli et al., 2021).
   The user may consider the values 0.28 and 0.17 in the argument
   <code>threshold</code> for the odds ratio and standardised mean difference effect
   measures (the default values), respectively, or consider other plausible
-  values. Spineli et al. (2021) offers a discussion on specifying the
-  <code>threshold</code> of robustness.</p>
+  values. When the argument <code>threshold</code> has not been defined,
+  <code>robustness_index</code> considers the default values 0.28 and 0.17 as
+  threshold for robustness for binary and continuous outcome, respectively,
+  regardless of the effect measure (the default thresholds may not be proper
+  choices for other effect measures; hence, use these threshold with great
+  caution in this case). Spineli et al. (2021) offers a discussion on
+  specifying the <code>threshold</code> of robustness.</p>
 <p>In the case of binary outcome, <code>robustness_index</code> considers the
   results in the odds ratio scale to calculate the robustness index.
   This is because, the odds ratio is used as the 'best-case' effect measure
@@ -181,17 +186,16 @@ and network meta-analysis.
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.baker2009"</span><span class="op">)</span>
-
-<span class="co"># Read results from 'run_sensitivity' (using the default arguments)</span>
-<span class="va">res_sens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_sens_baker.rds'</span>,
-                    package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># Calculate the robustness index</span>
-<span class="fu">robustness_index</span><span class="op">(</span>sens <span class="op">=</span> <span class="va">res_sens</span>,
-                 threshold <span class="op">=</span> <span class="fl">0.28</span><span class="op">)</span>
-
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.baker2009"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Read results from 'run_sensitivity' (using the default arguments)</span></span>
+<span><span class="va">res_sens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_sens_baker.rds'</span>,</span>
+<span>                    package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate the robustness index</span></span>
+<span><span class="fu">robustness_index</span><span class="op">(</span>sens <span class="op">=</span> <span class="va">res_sens</span>,</span>
+<span>                 threshold <span class="op">=</span> <span class="fl">0.28</span><span class="op">)</span></span>
+<span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -205,7 +209,7 @@ and network meta-analysis.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

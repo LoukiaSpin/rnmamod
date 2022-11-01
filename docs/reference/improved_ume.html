@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -32,7 +32,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -47,13 +47,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -63,7 +57,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Detect the frail comparisons in multi-arm trials</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/improved.UME_function.R" class="external-link"><code>R/improved.UME_function.R</code></a></small>
+    
     <div class="hidden name"><code>improved_ume.Rd</code></div>
     </div>
 
@@ -78,7 +72,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">improved_ume</span><span class="op">(</span><span class="va">t</span>, <span class="va">N</span>, <span class="va">ns</span>, <span class="va">na</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">improved_ume</span><span class="op">(</span><span class="va">t</span>, <span class="va">N</span>, <span class="va">ns</span>, <span class="va">na</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -87,38 +81,53 @@
 <dd><p>A data-frame of the one-trial-per-row format containing the
 intervention identifier in each arm of every trial (see 'Details' below,
 and 'Format' in <code><a href="run_model.html">run_model</a></code>).</p></dd>
+
+
 <dt>N</dt>
 <dd><p>A data-frame of the one-trial-per-row format containing the number
 of participants randomised to the assigned intervention in each arm of
 every trial (see 'Details' below, and 'Format' in <code><a href="run_model.html">run_model</a></code>).</p></dd>
+
+
 <dt>ns</dt>
 <dd><p>A scale parameter on the number trials.</p></dd>
+
+
 <dt>na</dt>
 <dd><p>A vector of length equal to <code>ns</code> with the number of arms in
 each trial.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The output of <code>improved_ume</code> is a list of elements that are
+    
+
+<p>The output of <code>improved_ume</code> is a list of elements that are
   inherited by <code><a href="run_ume.html">run_ume</a></code>:</p>
 <dl><dt>nbase_multi</dt>
 <dd><p>A scalar parameter on the number of frail comparisons.</p></dd>
-<dt>t1_bn</dt>
+
+  <dt>t1_bn</dt>
 <dd><p>A vector with numeric values referring to the first arm of
   each frail comparison.</p></dd>
-<dt>t2_bn</dt>
+
+  <dt>t2_bn</dt>
 <dd><p>A vector with numeric values referring to the second arm of
   each frail comparison.</p></dd>
-<dt>ref_base</dt>
+
+  <dt>ref_base</dt>
 <dd><p>A scalar referring to the reference intervention for the
   subnetwork of interventions in frail comparisons.</p></dd>
-<dt>base</dt>
+
+  <dt>base</dt>
 <dd><p>A vector with numeric values referring to the baseline
   intervention of the multi-arm trials that contain the frail comparisons.</p></dd>
-<dt>obs_comp</dt>
+
+  <dt>obs_comp</dt>
 <dd><p>A data-frame that indicates how many two-arm and
   multi-arm trials have included each pairwise comparison observed in the
   network.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -162,7 +171,7 @@ doi: 10.1177/0272989X211068005</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -41,13 +41,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -57,15 +51,30 @@
   <div class="col-md-9 contents">
     <div class="page-header">
       <h1 data-toc-skip>Changelog <small></small></h1>
-      <small>Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.1.0" id="rnmamod-version-010-2021-11-21">rnmamod, version 0.1.0 (2021-11-21)<small>2021-11-29</small><a class="anchor" aria-label="anchor" href="#rnmamod-version-010-2021-11-21"></a></h2>
-<ul><li>First CRAN submission.</li>
+<h2 class="page-header" data-toc-text="0.3.0" id="rnmamod-version-030-2022-11-01">rnmamod, version 0.3.0 (2022-11-01)<a class="anchor" aria-label="anchor" href="#rnmamod-version-030-2022-11-01"></a></h2>
+<ul><li>Function <strong>baseline_model</strong>:
+<ul><li>processes the elements in the argument <em>base_risk</em> for a fixed, random or predicted baseline model and passes the output to run_model or run_metareg to obtain the absolute risks for all interventions.</li>
+<li>when a predicted baseline model is conducted, it returns a forest plot with the trial-specific and summary probability of an event for the selected reference intervention.</li>
+</ul></li>
+<li>Function <strong>forestplot_metareg</strong>:
+<ul><li>upgraded plot that presents two forest plots side-by-side: (i) one on estimation and prediction from network meta-analysis and network meta-regression for a selected comparator intervention (allows comparison of these two analyses), and (ii) one on SUCRA values from both analyses. Both forest plots present results from network meta-regression for a selected value of the investigated covariate.</li>
+</ul></li>
+<li>Function <strong>league_table_absolute_user</strong>:
+<ul><li>(only for binary outcome) yields the same graph with league_table_absolute, but the input is not <em>rnmamod</em> object: the user defines the input and it includes the summary effect and corresponding (credible or confidence) interval for comparisons with a reference intervention. These results stem from a network meta-analysis conducted using another R-package or statistical software.</li>
+</ul></li>
+<li>Function <strong>robustness_index_user</strong>:
+<ul><li>calculates the robustness index for a sensitivity analysis performed using the R-package <em>netmeta</em> or <em>metafor</em>. The user defines the input and the function returns the robustness index. This function returns the same output with the <strong>robustness_index</strong> function.</li>
+</ul></li>
+<li>Function <strong>trans_quality</strong>:
+<ul><li>classifies a systematic review with multiple interventions as having low, unclear or high quality regarding the transitivity evaluation based on five quality criteria.</li>
+</ul></li>
 </ul></div>
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.2.0" id="rnmamod-version-020-2022-04-08">rnmamod, version 0.2.0 (2022-04-08)<a class="anchor" aria-label="anchor" href="#rnmamod-version-020-2022-04-08"></a></h2>
+<h2 class="page-header" data-toc-text="0.2.0" id="rnmamod-version-020-2022-04-06">rnmamod, version 0.2.0 (2022-04-06)<small>2022-04-06</small><a class="anchor" aria-label="anchor" href="#rnmamod-version-020-2022-04-06"></a></h2>
 <ul><li>Typos and links (for functions and packages) in the documentation are corrected.</li>
 <li>Function <strong>run_model</strong>:
 <ul><li>allows the user to define the reference intervention of the network via the argument <em>ref</em>;</li>
@@ -84,6 +93,10 @@
 <ul><li>present the extent of heterogeneity in the forest plot of tau using different colours for low, reasonable, fairly high, and fairly extreme tau (the classification has been suggested by Spiegelhalter et al., 2004; ISBN 0471499757).</li>
 </ul></li>
 </ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.1.0" id="rnmamod-version-010-2021-11-21">rnmamod, version 0.1.0 (2021-11-21)<small>2021-11-29</small><a class="anchor" aria-label="anchor" href="#rnmamod-version-010-2021-11-21"></a></h2>
+<ul><li>First CRAN submission.</li>
+</ul></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -98,7 +111,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

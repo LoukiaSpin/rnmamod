@@ -1,8 +1,8 @@
 #' End-user-ready results for network meta-regression
 #'
 #' @description Illustrates the effect estimates, predictions and regression
-#'   coefficients of comparisons with a specified comparator intervention
-#'   and also exports these results to an Excel file.
+#'   coefficients of comparisons with a specified comparator intervention for a
+#'   selected covariate value and also exports these results to an Excel file.
 #'
 #' @param full An object of S3 class \code{\link{run_model}}. See 'Value' in
 #'   \code{\link{run_model}}.

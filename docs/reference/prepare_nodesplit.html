@@ -20,7 +20,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -29,7 +29,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -44,13 +44,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -60,7 +54,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>WinBUGS code for the node-splitting approach</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/prepare.nodesplit_function.R" class="external-link"><code>R/prepare.nodesplit_function.R</code></a></small>
+    
     <div class="hidden name"><code>prepare_nodesplit.Rd</code></div>
     </div>
 
@@ -72,7 +66,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">prepare_nodesplit</span><span class="op">(</span><span class="va">measure</span>, <span class="va">model</span>, <span class="va">assumption</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">prepare_nodesplit</span><span class="op">(</span><span class="va">measure</span>, <span class="va">model</span>, <span class="va">assumption</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -84,10 +78,14 @@ outcome, the following can be considered: <code>"OR"</code>, <code>"RR"</code> o
 respectively. For a continuous outcome, the following can be considered:
 <code>"MD"</code>, <code>"SMD"</code>, or <code>"ROM"</code> for mean difference,
 standardised mean difference and ratio of means, respectively.</p></dd>
+
+
 <dt>model</dt>
 <dd><p>Character string indicating the analysis model with values
 <code>"RE"</code>, or <code>"FE"</code> for the random-effects and fixed-effect model,
 respectively. The default argument is <code>"RE"</code>.</p></dd>
+
+
 <dt>assumption</dt>
 <dd><p>Character string indicating the structure of the
 informative missingness parameter. Set <code>assumption</code> equal to one of
@@ -98,13 +96,19 @@ the following: <code>"HIE-COMMON"</code>, <code>"HIE-TRIAL"</code>, <code>"HIE-A
 <code>"IND"</code> stand for identical, hierarchical and independent,
 respectively. <code>"CORR"</code> and <code>"UNCORR"</code> stand for correlated and
 uncorrelated, respectively.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An R character vector object to be passed to
-<code><a href="run_nodesplit.html">run_nodesplit</a></code> through the
-<code><a href="https://rdrr.io/r/base/textconnections.html" class="external-link">textConnection</a></code> function as the argument
-<code>object</code>.</p>
+    
+
+<p>An R character vector object to be passed to</p>
+<p></p>
+<p><code><a href="run_nodesplit.html">run_nodesplit</a></code> through the</p>
+<p></p>
+<p><code><a href="https://rdrr.io/r/base/textconnections.html" class="external-link">textConnection</a></code> function as the argument</p>
+<p></p>
+<p><code>object</code>.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -163,7 +167,7 @@ doi: 10.1186/s12874-019-0731-y</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

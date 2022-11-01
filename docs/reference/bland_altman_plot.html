@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -28,7 +28,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -43,13 +43,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -59,7 +53,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>The Bland-Altman plot</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/bland_altman.plot_function.R" class="external-link"><code>R/bland_altman.plot_function.R</code></a></small>
+    
     <div class="hidden name"><code>bland_altman_plot.Rd</code></div>
     </div>
 
@@ -70,7 +64,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">bland_altman_plot</span><span class="op">(</span><span class="va">model1</span>, <span class="va">model2</span>, <span class="va">colour</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bland_altman_plot</span><span class="op">(</span><span class="va">model1</span>, <span class="va">model2</span>, <span class="va">colour</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -78,15 +72,22 @@
     <dl><dt>model1</dt>
 <dd><p>A vector with the numeric values of the target model (for
 instance, the consistency model).</p></dd>
+
+
 <dt>model2</dt>
 <dd><p>A vector with the numeric values of the reference model (for
 instance, the unrelated mean effects model).</p></dd>
+
+
 <dt>colour</dt>
 <dd><p>A string to define the colour of the data points in the plot.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Bland-Altman plot on the posterior mean deviance contribution of the
+    
+
+<p>Bland-Altman plot on the posterior mean deviance contribution of the
  individual data points under model 1 and model 2.
  Each data point corresponds to a trial-arm indicated by a pair of numbers.
  The first number refers to the position of the trial in the dataset,
@@ -140,7 +141,7 @@ doi: 10.1177/096228029900800204</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

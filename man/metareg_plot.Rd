@@ -69,8 +69,8 @@ directory of the user. The default is \code{FALSE} (do not export).}
 }
 \description{
 Illustrates the effect estimates, predictions and regression
-  coefficients of comparisons with a specified comparator intervention
-  and also exports these results to an Excel file.
+  coefficients of comparisons with a specified comparator intervention for a
+  selected covariate value and also exports these results to an Excel file.
 }
 \details{
 The deviance information criterion (DIC) of the network

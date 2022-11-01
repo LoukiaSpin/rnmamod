@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -43,7 +43,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -61,14 +61,7 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -82,11 +75,13 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Description of the network</h1>
-                        <h4 data-toc-skip class="author">Loukia M. Spineli</h4>
+                        <h4 data-toc-skip class="author">Loukia M.
+Spineli</h4>
             
-            <h4 data-toc-skip class="date">Latest version: 2022-04-06</h4>
+            <h4 data-toc-skip class="date">Latest version:
+2022-11-01</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/vignettes/network_description.Rmd" class="external-link"><code>vignettes/network_description.Rmd</code></a></small>
+      
       <div class="hidden name"><code>network_description.Rmd</code></div>
 
     </div>
@@ -96,7 +91,12 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This vignette aims to illustrate the toolkits of the <strong>rnmamod</strong> package for the creation of the network plot and summarisation of the corresponding outcome data. If missing participant outcome data (MOD) have been extracted for all trials of the dataset, the <strong>rnmamod</strong> package facilitates visualising the proportion of MOD across the network and within the dataset.</p>
+<p>This vignette aims to illustrate the toolkits of the
+<strong>rnmamod</strong> package for the creation of the network plot
+and summarisation of the corresponding outcome data. If missing
+participant outcome data (MOD) have been extracted for all trials of the
+dataset, the <strong>rnmamod</strong> package facilitates visualising
+the proportion of MOD across the network and within the dataset.</p>
 </div>
 <div class="section level2">
 <h2 id="example-on-a-binary-outcome">Example on a binary outcome<a class="anchor" aria-label="anchor" href="#example-on-a-binary-outcome"></a>
@@ -104,7 +104,11 @@
 <div class="section level3">
 <h3 id="dataset-preparation">Dataset preparation<a class="anchor" aria-label="anchor" href="#dataset-preparation"></a>
 </h3>
-<p>We will use the systematic review of <a href="https://pubmed.ncbi.nlm.nih.gov/21142838/" class="external-link">Bottomley et al., (2011)</a> that comprises 9 trials comparing six pharmacologic interventions with each other and placebo for moderately severe scalp psoriasis. The analysed binary outcome is the investigator global assessment response at 4 weeks (<code><a href="../reference/nma.bottomley2011.html">?nma.bottomley2011</a></code>).</p>
+<p>We will use the systematic review of <a href="https://pubmed.ncbi.nlm.nih.gov/21142838/" class="external-link">Bottomley et al.,
+(2011)</a> that comprises 9 trials comparing six pharmacologic
+interventions with each other and placebo for moderately severe scalp
+psoriasis. The analysed binary outcome is the investigator global
+assessment response at 4 weeks (<code><a href="../reference/nma.bottomley2011.html">?nma.bottomley2011</a></code>).</p>
 <pre><code>                      study t1 t2 t3 t4  r1  r2  r3 r4 m1 m2 m3 m4  n1  n2  n3  n4
 1             Buckley, 2008  1  6 NA NA  67  79  NA NA  2  1 NA NA 110 108  NA  NA
 2              Tyring, 2008  6  7 NA NA  74  12  NA NA  2  0 NA NA 135  42  NA  NA
@@ -115,29 +119,61 @@
 7 Klaber and McKinnon, 2000  3  5 NA NA  55  31  NA NA 35 16 NA NA 238 237  NA  NA
 8      van de Kerkhof, 2009  1  3  6 NA 287  74 311 NA  7  8  4 NA 563 286 568  NA
 9               Jemec, 2008  1  3  6  7 304  64 362 20  6 20  8  7 556 272 541 136</code></pre>
-<p>The dataset has the one-trial-per-row format containing arm-level data for each trial. This format is widely used for BUGS models. For a binary outcome, the dataset must have a minimum of three items:</p>
+<p>The dataset has the one-trial-per-row format containing arm-level
+data for each trial. This format is widely used for BUGS models. For a
+binary outcome, the dataset must have a minimum of three items:</p>
 <ul>
-<li>item <code>t</code> that refers to the intervention identifier for the corresponding (intervention) arm;</li>
-<li>item <code>r</code> that refers to the number of observed events in the corresponding arm.</li>
-<li>item <code>n</code> that refers to the number of randomised participants in the corresponding arm.</li>
+<li>item <code>t</code> that refers to the intervention identifier for
+the corresponding (intervention) arm;</li>
+<li>item <code>r</code> that refers to the number of observed events in
+the corresponding arm.</li>
+<li>item <code>n</code> that refers to the number of randomised
+participants in the corresponding arm.</li>
 </ul>
-<p>If there is at least one trial that reports the number of missing participants per arm, we also include the item <code>m</code> in the dataset. If a trial reports the <em>total</em> number of missing participants rather than the number of missing participants per arm, we indicate with <code>NA</code> in the item <code>m</code> the arms of the corresponding trial.</p>
-<p>In the example, the maximum number of interventions observed in a trial is four. Therefore, each element comprises four columns (e.g., <code>t1</code>, <code>t2</code>, <code>t3</code>, <code>t4</code>) to indicate the maximum number of arms in the dataset. Furthermore, all trials of the dataset reported the number of missing participants per arm; therefore, the element <code>m</code> appears in the dataset.</p>
+<p>If there is at least one trial that reports the number of missing
+participants per arm, we also include the item <code>m</code> in the
+dataset. If a trial reports the <em>total</em> number of missing
+participants rather than the number of missing participants per arm, we
+indicate with <code>NA</code> in the item <code>m</code> the arms of the
+corresponding trial.</p>
+<p>In the example, the maximum number of interventions observed in a
+trial is four. Therefore, each element comprises four columns (e.g.,
+<code>t1</code>, <code>t2</code>, <code>t3</code>, <code>t4</code>) to
+indicate the maximum number of arms in the dataset. Furthermore, all
+trials of the dataset reported the number of missing participants per
+arm; therefore, the element <code>m</code> appears in the dataset.</p>
 </div>
 <div class="section level3">
 <h3 id="the-network-plot">The network plot<a class="anchor" aria-label="anchor" href="#the-network-plot"></a>
 </h3>
-<p>The function <code>netplot</code> (see ?netplot for help) creates the network plot using only two arguments: the <code>data</code> for the dataset (in one-trial-per-row format) and <code>drug_names</code> for the names of each intervention in the dataset. To obtain the network plot, <code>netplot</code> calls the <code>nma.networkplot</code> function from the <strong>pcnetmeta</strong> package.</p>
+<p>The function <code>netplot</code> (see ?netplot for help) creates the
+network plot using only two arguments: the <code>data</code> for the
+dataset (in one-trial-per-row format) and <code>drug_names</code> for
+the names of each intervention in the dataset. To obtain the network
+plot, <code>netplot</code> calls the <code>nma.networkplot</code>
+function from the <strong>pcnetmeta</strong> package.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/netplot.html">netplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.bottomley2011</span>, drug_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BDP"</span>, <span class="st">"BMV"</span>, <span class="st">"CPL"</span>, <span class="st">"CPL+polytar"</span>, <span class="st">"capasal"</span>, <span class="st">"TCF gel"</span>, <span class="st">"placebo"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/netplot.html">netplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.bottomley2011</span>, drug_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BDP"</span>, <span class="st">"BMV"</span>, <span class="st">"CPL"</span>, <span class="st">"CPL+polytar"</span>, <span class="st">"capasal"</span>, <span class="st">"TCF gel"</span>, <span class="st">"placebo"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="network_description_files/figure-html/unnamed-chunk-3-1.png" width="480" style="display: block; margin: auto;"></p>
-<p>The intervention names in <code>drug_names</code> must be sorted in the ascending order of their identifier. Hence, <code>1</code> in the element <code>t</code> refers to <code>BDP</code>, (betamethasone dipropionate) <code>2</code> to <code>BMV</code> (betamethasone valerate), <code>3</code> to <code>CPL</code> (calcipotriol) and so on. See Details in <code>?nma.bottomley20119</code> for the names of the interventions.</p>
-<p>Each node refers to an intervention and each edge refers to a pairwise comparison. The size of a node and the thickness of an edge are weighted by the number of trials that investigated the corresponding intervention and pairwise comparison, respectively.</p>
+<p>The intervention names in <code>drug_names</code> must be sorted in
+the ascending order of their identifier. Hence, <code>1</code> in the
+element <code>t</code> refers to <code>BDP</code>, (betamethasone
+dipropionate) <code>2</code> to <code>BMV</code> (betamethasone
+valerate), <code>3</code> to <code>CPL</code> (calcipotriol) and so on.
+See Details in <code>?nma.bottomley20119</code> for the names of the
+interventions.</p>
+<p>Each node refers to an intervention and each edge refers to a
+pairwise comparison. The size of a node and the thickness of an edge are
+weighted by the number of trials that investigated the corresponding
+intervention and pairwise comparison, respectively.</p>
 </div>
 <div class="section level3">
 <h3 id="network-characteristics">Network characteristics<a class="anchor" aria-label="anchor" href="#network-characteristics"></a>
 </h3>
-<p><code>netplot</code> also produces a table with the characteristics of the network, such as the number of interventions, number of possible comparisons, number of direct comparisons (i.e., comparisons of interventions informed by at least one trial), and so on:</p>
+<p><code>netplot</code> also produces a table with the characteristics
+of the network, such as the number of interventions, number of possible
+comparisons, number of direct comparisons (i.e., comparisons of
+interventions informed by at least one trial), and so on:</p>
 <table class="table">
 <caption>Description of the network</caption>
 <thead><tr class="header">
@@ -199,7 +235,12 @@
 <div class="section level3">
 <h3 id="distribution-of-the-outcome">Distribution of the outcome<a class="anchor" aria-label="anchor" href="#distribution-of-the-outcome"></a>
 </h3>
-<p>Furthermore, <code>netplot</code> returns a table that summarises the number of trials, number of randomised participants and the proportion of completers (participants who completed the trial) <strong>per intervention</strong>. In the case of a binary outcome, the table additionally illustrates the distribution of the outcome as proportion across the corresponding trials:</p>
+<p>Furthermore, <code>netplot</code> returns a table that summarises the
+number of trials, number of randomised participants and the proportion
+of completers (participants who completed the trial) <strong>per
+intervention</strong>. In the case of a binary outcome, the table
+additionally illustrates the distribution of the outcome as proportion
+across the corresponding trials:</p>
 <table class="table">
 <caption>Interventions</caption>
 <colgroup>
@@ -295,7 +336,8 @@
 </tr>
 </tbody>
 </table>
-<p>An identical table is returned for the <strong>observed comparisons</strong> in the network:</p>
+<p>An identical table is returned for the <strong>observed
+comparisons</strong> in the network:</p>
 <table style="width:100%;" class="table">
 <caption>Observed comparisons</caption>
 <colgroup>
@@ -411,32 +453,55 @@
 </tr>
 </tbody>
 </table>
-<p>The users can export all tables in xlsx file at the working directory of their project by adding the argument <code>save_xls = TRUE</code> in the <code>netplot</code> function.</p>
+<p>The users can export all tables in xlsx file at the working directory
+of their project by adding the argument <code>save_xls = TRUE</code> in
+the <code>netplot</code> function.</p>
 </div>
 <div class="section level3">
 <h3 id="distribution-of-missing-participants-across-the-network">Distribution of missing participants across the network<a class="anchor" aria-label="anchor" href="#distribution-of-missing-participants-across-the-network"></a>
 </h3>
-<p>When missing participants have been reported for <em>each arm of every</em> trial, we use the <code>heatmap_missing_network</code> function to illustrate the distribution of the proportion of missing participants <strong>per intervention</strong> (main diagonal) and <strong>observed comparison</strong> (lower off-diagonal) in the network (see Details in <code><a href="../reference/heatmap_missing_network.html">?heatmap_missing_network</a></code>).</p>
+<p>When missing participants have been reported for <em>each arm of
+every</em> trial, we use the <code>heatmap_missing_network</code>
+function to illustrate the distribution of the proportion of missing
+participants <strong>per intervention</strong> (main diagonal) and
+<strong>observed comparison</strong> (lower off-diagonal) in the network
+(see Details in <code><a href="../reference/heatmap_missing_network.html">?heatmap_missing_network</a></code>).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/heatmap_missing_network.html">heatmap_missing_network</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.bottomley2011</span>, drug_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BDP"</span>, <span class="st">"BMV"</span>, <span class="st">"CPL"</span>, <span class="st">"CPL+polytar"</span>, <span class="st">"capasal"</span>, <span class="st">"TCF gel"</span>, <span class="st">"placebo"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_missing_network.html">heatmap_missing_network</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.bottomley2011</span>, drug_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BDP"</span>, <span class="st">"BMV"</span>, <span class="st">"CPL"</span>, <span class="st">"CPL+polytar"</span>, <span class="st">"capasal"</span>, <span class="st">"TCF gel"</span>, <span class="st">"placebo"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="network_description_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>The <span style="color:#009E73"><strong>green</strong></span> colour implies a median proportion of missing participant up to 5%, and hence, a <span style="color:#009E73"><strong>low risk</strong></span> associated with the missing participants. The <span style="color:#D55E00"><strong>red</strong></span> colour implies a median proportion of missing participant over 20%, and hence, a <span style="color:#D55E00"><strong>high risk</strong></span> associated with the missing participants; otherwise, <span style="color:orange"><strong>orange</strong></span> indicates a <span style="color:orange"><strong>moderate risk</strong></span>.</p>
-<p>In the example, most of the interventions and observed comparisons were associated with a <em>low</em> risk due the participant losses.</p>
+<p>The <span style="color:#009E73"><strong>green</strong></span> colour
+implies a median proportion of missing participant up to 5%, and hence,
+a <span style="color:#009E73"><strong>low risk</strong></span>
+associated with the missing participants. The <span style="color:#D55E00"><strong>red</strong></span> colour implies a
+median proportion of missing participant over 20%, and hence, a <span style="color:#D55E00"><strong>high risk</strong></span> associated with
+the missing participants; otherwise, <span style="color:orange"><strong>orange</strong></span> indicates a <span style="color:orange"><strong>moderate risk</strong></span>.</p>
+<p>In the example, most of the interventions and observed comparisons
+were associated with a <em>low</em> risk due the participant losses.</p>
 </div>
 <div class="section level3">
 <h3 id="distribution-of-missing-participants-across-the-trials">Distribution of missing participants across the trials<a class="anchor" aria-label="anchor" href="#distribution-of-missing-participants-across-the-trials"></a>
 </h3>
-<p>Use the <code>heatmap_missing_dataset</code> function To illustrate the proportion of missing participants in each arm of every trial in the dataset :</p>
+<p>Use the <code>heatmap_missing_dataset</code> function To illustrate
+the proportion of missing participants in each arm of every trial in the
+dataset :</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/heatmap_missing_dataset.html">heatmap_missing_dataset</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.bottomley2011</span>, trial_names <span class="op">=</span> <span class="va">nma.bottomley2011</span><span class="op">$</span><span class="va">study</span>, drug_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BDP"</span>, <span class="st">"BMV"</span>, <span class="st">"CPL"</span>, <span class="st">"CPL+polytar"</span>, <span class="st">"capasal"</span>, <span class="st">"TCF gel"</span>, <span class="st">"placebo"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_missing_dataset.html">heatmap_missing_dataset</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.bottomley2011</span>, trial_names <span class="op">=</span> <span class="va">nma.bottomley2011</span><span class="op">$</span><span class="va">study</span>, drug_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BDP"</span>, <span class="st">"BMV"</span>, <span class="st">"CPL"</span>, <span class="st">"CPL+polytar"</span>, <span class="st">"capasal"</span>, <span class="st">"TCF gel"</span>, <span class="st">"placebo"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="network_description_files/figure-html/unnamed-chunk-10-1.png" width="720" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<p>Bottomley JM, Taylor RS, Ryttov J. The effectiveness of two-compound formulation calcipotriol and betamethasone dipropionate gel in the treatment of moderately severe scalp psoriasis: a systematic review of direct and indirect evidence. <em>Curr Med Res Opin</em> 2011;<strong>27</strong>(1):251–268. <a href="https://pubmed.ncbi.nlm.nih.gov/21142838/" class="external-link">doi: 10.1185/03007995.2010.541022</a></p>
-<p>Lifeng Lin, Jing Zhang, James S. Hodges, Haitao Chu. Performing Arm-Based Network Meta-Analysis in R with the pcnetmeta Package. <em>J Stat Softw</em> 2017; <strong>80</strong>(5):1–25. <a href="https://www.jstatsoft.org/article/view/v080i05" class="external-link">doi: 10.18637/jss.v080.i05</a></p>
+<p>Bottomley JM, Taylor RS, Ryttov J. The effectiveness of two-compound
+formulation calcipotriol and betamethasone dipropionate gel in the
+treatment of moderately severe scalp psoriasis: a systematic review of
+direct and indirect evidence. <em>Curr Med Res Opin</em>
+2011;<strong>27</strong>(1):251–268. <a href="https://pubmed.ncbi.nlm.nih.gov/21142838/" class="external-link">doi:
+10.1185/03007995.2010.541022</a></p>
+<p>Lifeng Lin, Jing Zhang, James S. Hodges, Haitao Chu. Performing
+Arm-Based Network Meta-Analysis in R with the pcnetmeta Package. <em>J
+Stat Softw</em> 2017; <strong>80</strong>(5):1–25. <a href="https://www.jstatsoft.org/article/view/v080i05" class="external-link">doi:
+10.18637/jss.v080.i05</a></p>
 </div>
   </div>
 
@@ -457,7 +522,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

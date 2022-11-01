@@ -20,7 +20,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -29,7 +29,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -44,13 +44,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -60,7 +54,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Barplot for the Kullback-Leibler divergence measure</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/KLD.barplot_function.R" class="external-link"><code>R/KLD.barplot_function.R</code></a></small>
+    
     <div class="hidden name"><code>kld_barplot.Rd</code></div>
     </div>
 
@@ -72,7 +66,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">kld_barplot</span><span class="op">(</span><span class="va">robust</span>, <span class="va">compar</span>, <span class="va">drug_names</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">kld_barplot</span><span class="op">(</span><span class="va">robust</span>, <span class="va">compar</span>, <span class="va">drug_names</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -80,21 +74,28 @@
     <dl><dt>robust</dt>
 <dd><p>An object of S3 class <code><a href="robustness_index.html">robustness_index</a></code>.
 See 'Value' in <code><a href="robustness_index.html">robustness_index</a></code>.</p></dd>
+
+
 <dt>compar</dt>
 <dd><p>A character vector with two elements that indicates the
 pairwise comparison of interest. The first element refers to the
 'experimental' intervention and the second element refers to the
 'control' intervention of the comparison.</p></dd>
+
+
 <dt>drug_names</dt>
 <dd><p>A vector of labels with the name of the interventions in
 the order they appear in the argument <code>data</code> of
 <code><a href="run_model.html">run_model</a></code>. If <code>drug_names</code> is not defined,
 the order of the interventions as they appear in <code>data</code> is used,
 instead.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>kld_barplot</code> returns a panel of barplots on the
+    
+
+<p><code>kld_barplot</code> returns a panel of barplots on the
   Kullback-Leibler divergence measure for each re-analysis.</p>
     </div>
     <div id="details">
@@ -134,25 +135,24 @@ and network meta-analysis.
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pma.taylor2004"</span><span class="op">)</span>
-
-<span class="co"># Read results from 'run_sensitivity' (using the default arguments)</span>
-<span class="va">res_sens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_sens_taylor.rds'</span>,
-                    package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># Calculate the robustness index</span>
-<span class="va">robust</span> <span class="op">&lt;-</span> <span class="fu"><a href="robustness_index.html">robustness_index</a></span><span class="op">(</span>sens <span class="op">=</span> <span class="va">res_sens</span>,
-                           threshold <span class="op">=</span> <span class="fl">0.17</span><span class="op">)</span>
-
-<span class="co"># The names of the interventions in the order they appear in the dataset</span>
-<span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"inositol"</span><span class="op">)</span>
-
-<span class="co"># Create the barplot for the comparison 'inositol versus placebo'</span>
-<span class="fu">kld_barplot</span><span class="op">(</span>robust <span class="op">=</span> <span class="va">robust</span>,
-            compar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"inositol"</span>, <span class="st">"placebo"</span><span class="op">)</span>,
-            drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span>
-
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pma.taylor2004"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Read results from 'run_sensitivity' (using the default arguments)</span></span>
+<span><span class="va">res_sens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_sens_taylor.rds'</span>,</span>
+<span>                    package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate the robustness index</span></span>
+<span><span class="va">robust</span> <span class="op">&lt;-</span> <span class="fu"><a href="robustness_index.html">robustness_index</a></span><span class="op">(</span>sens <span class="op">=</span> <span class="va">res_sens</span>,</span>
+<span>                           threshold <span class="op">=</span> <span class="fl">0.17</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># The names of the interventions in the order they appear in the dataset</span></span>
+<span><span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"inositol"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create the barplot for the comparison 'inositol versus placebo'</span></span>
+<span><span class="fu">kld_barplot</span><span class="op">(</span>robust <span class="op">=</span> <span class="va">robust</span>,</span>
+<span>            compar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"inositol"</span>, <span class="st">"placebo"</span><span class="op">)</span>,</span>
+<span>            drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></span>
+<span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -166,7 +166,7 @@ and network meta-analysis.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -7,13 +7,19 @@
 #'   \href{https://CRAN.R-project.org/package=metafor}{metafor}.
 #'   The user defines the input and the function returns the robustness index.
 #'
-#' @param sens A list of R objects of class "netmeta", "netmetabin" (see
-#'   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}) or "rma",
-#'   "rma.glmm", "rma.mh", "rma.mv", "rma.peto", "rma.uni" (see
-#'   \href{https://CRAN.R-project.org/package=metafor}{metafor}). The number of
-#'   elements equals the number of analyses using the same dataset and the
-#'   same R-package. The first element should refer to the primary analysis.
-#'   Hence, the list should include at least two elements (see 'Details').
+#' @param sens A list of R objects of class
+#'   \code{\link[netmeta:netmeta]{netmeta}},
+#'   \code{\link[netmeta:netmetabin]{netmetabin}} (see
+#'   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}) or
+#'   \code{\link[metafor:rma]{rma}}, \code{\link[metafor:rma.glmm]{rma.glmm}},
+#'   \code{\link[metafor:rma.mh]{rma.mh}}, \code{\link[metafor:rma.mv]{rma.mv}},
+#'   \code{\link[metafor:rma.peto]{rma.peto}}, and
+#'   \code{\link[metafor:rma.uni]{rma.uni}}
+#'   (see \href{https://CRAN.R-project.org/package=metafor}{metafor}).
+#'   The number of elements equals the number of analyses using the same dataset
+#'   and the same R-package. The first element should refer to the primary
+#'   analysis. Hence, the list should include at least two elements
+#'   (see 'Details').
 #' @param pkg Character string indicating the R-package with values
 #'   \code{"netmeta"}, or \code{"metafor"}.
 #' @param attribute This is relevant only for (see
@@ -22,8 +28,8 @@
 #'   \code{"TE.random"}. See 'Values' in \code{\link[netmeta:netmeta]{netmeta}}
 #'   or \code{\link[netmeta:netmetabin]{netmetabin}}.
 #' @param threshold A number indicating the threshold of robustness, that is,
-#'   the minimally allowed deviation between the primary analysis and
-#'   re-analysis results. See 'Details' below.
+#'   the minimally allowed deviation between the primary analysis (the first
+#'   element in \code{sens}) and re-analysis results. See 'Details' below.
 #'
 #' @return \code{robustness_index_user} prints on the R console a message in
 #'   green text on the threshold of robustness determined by the user.
@@ -47,36 +53,42 @@
 #'   number of rows equal to the number of total analyses and number of columns
 #'   equal to the number of  possible pairwise comparisons; one KLD
 #'   value per analysis and possible comparison.}
-#'   \item{threshold}{The threshold used to be inherited by the
-#'   \code{\link{heatmap_robustness}} function.}
 #'   \item{attribute}{The attributes considered.}
+#'   \item{threshold}{The threshold used to be inherited by the
+#'   \code{\link{heatmap_robustness}} function. See 'Details'.}
 #'
 #' @details Thresholds of robustness have been proposed only for the odds ratio
-#'   and standardised mean difference effect measures (Spineli et al., 2021).
-#'   when the argument \code{threshold} has not been defined,
-#'   \code{robustness_index} considers the default values 0.28 and 0.17 as
-#'   threshold for robustness for binary and continuous outcome, respectively,
-#'   regardless of the effect measure.
+#'   and standardised mean difference (Spineli et al., 2021).
 #'   The user may consider the values 0.28 and 0.17 in the argument
 #'   \code{threshold} for the odds ratio and standardised mean difference effect
 #'   measures (the default values), respectively, or consider other plausible
-#'   values. Spineli et al. (2021) offers a discussion on specifying the
-#'   \code{threshold} of robustness.
+#'   values. When the argument \code{threshold} has not been defined,
+#'   \code{robustness_index} considers the default values 0.28 and 0.17 as
+#'   threshold for robustness for binary and continuous outcome, respectively,
+#'   regardless of the effect measure (the default thresholds may not be proper
+#'   choices for other effect measures; hence, use these threshold with great
+#'   caution in this case). Spineli et al. (2021) offers a discussion on
+#'   specifying the \code{threshold} of robustness.
 #'
 #'   When other effect measure is used (other than odds ratio or standardised
 #'   mean difference) or the elements in \code{sens} refer to different effect
 #'   measures, the execution of the function will be stopped and an error
 #'   message will be printed in the R console.
 #'
-#'   In \code{robust}, the value \code{"robust"} appears when
+#'   In \code{robust}, the value \code{"robust"} appears when the calculated
 #'   \code{robust_index} is less than \code{threshold}; otherwise, the value
 #'   \code{"frail"} appears.
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link[netmeta:netmeta]{netmeta}},
+#' @seealso \code{\link[metafor:rma]{rma}},
+#'   \code{\link[metafor:rma.glmm]{rma.glmm}},
+#'   \code{\link[metafor:rma.mh]{rma.mh}}, \code{\link[metafor:rma.mv]{rma.mv}},
+#'   \code{\link[metafor:rma.peto]{rma.peto}},
+#'   \code{\link[metafor:rma.uni]{rma.uni}},
+#'   \code{\link[netmeta:netmeta]{netmeta}},
 #'   \code{\link[netmeta:netmetabin]{netmetabin}},
-#'    \code{\link{heatmap_robustness}}
+#'   \code{\link{heatmap_robustness}}
 #'
 #' @references
 #' Kullback S, Leibler RA. On information and sufficiency.
@@ -118,15 +130,16 @@ robustness_index_user <- function(sens, pkg, attribute, threshold) {
   }
 
   # Check the class of the elements
-  metafor_classes <- c("rma", "rma.glmm", "rma.mh", "rma.peto")
-  netmeta_classes <- c("netmetabin", "netmeta")
+  metafor_classes <-
+    c("rma", "rma.glmm", "rma.mh", "rma.mv", "rma.peto", "rma.uni")
+  netmeta_classes <- c("netmeta", "netmetabin")
   get_class <- unique(unlist(lapply(sens, class)))
   class_check <- if (pkg == "netmeta" &
-                     all(!is.element(get_class, netmeta_classes))) {
+                     any(!is.element(get_class, netmeta_classes))) {
     a <- "'netmeta', or 'netmetabin'."
     stop(paste("The elements must be objects of class", a), call. = FALSE)
-  } else if (pkg == "metafor" & all(!is.element(get_class, metafor_classes))) {
-    a <- "'rma', 'rma.glmm', 'rma.mh', or 'rma.peto'."
+  } else if (pkg == "metafor" & any(!is.element(get_class, metafor_classes))) {
+    a <- "'rma', 'rma.glmm', 'rma.mh', 'rma.mv', 'rma.peto', or 'rma.uni'."
     stop(paste("The elements must be objects of class", a), call. = FALSE)
   }
 
@@ -145,7 +158,7 @@ robustness_index_user <- function(sens, pkg, attribute, threshold) {
     a <- "the number of elements in 'sens'."
     stop(paste("The length of 'attribute' does not equal", a), call. = FALSE)
   } else if (pkg == "netmeta" &
-             all(!is.element(attribute, c("TE.common", "TE.random")))) {
+             any(!is.element(attribute, c("TE.common", "TE.random")))) {
     stop("Possible values are 'TE.common' and 'TE.random'", call. = FALSE)
   } else {
     attribute
@@ -166,7 +179,7 @@ robustness_index_user <- function(sens, pkg, attribute, threshold) {
 
   # Check whether the same summary effect is used in 'sens'
   measure <- if (length(unique(measure_check)) > 1 ||
-                 all(!is.element(unique(measure_check), c("OR", "SMD")))) {
+                 any(!is.element(unique(measure_check), c("OR", "SMD")))) {
     stop("Use odds ratio or standardised mean difference as effect measure.",
          call. = FALSE)
   } else {

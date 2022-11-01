@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -28,7 +28,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -43,13 +43,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -59,7 +53,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Perform sensitivity analysis for missing participant outcome data</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/run.sensitivity_function.R" class="external-link"><code>R/run.sensitivity_function.R</code></a></small>
+    
     <div class="hidden name"><code>run_sensitivity.Rd</code></div>
     </div>
 
@@ -70,16 +64,16 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">run_sensitivity</span><span class="op">(</span>
-  <span class="va">full</span>,
-  <span class="va">assumption</span>,
-  <span class="va">mean_scenarios</span>,
-  <span class="va">var_misspar</span>,
-  <span class="va">n_chains</span>,
-  <span class="va">n_iter</span>,
-  <span class="va">n_burnin</span>,
-  <span class="va">n_thin</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">run_sensitivity</span><span class="op">(</span></span>
+<span>  <span class="va">full</span>,</span>
+<span>  <span class="va">assumption</span>,</span>
+<span>  <span class="va">mean_scenarios</span>,</span>
+<span>  <span class="va">var_misspar</span>,</span>
+<span>  <span class="va">n_chains</span>,</span>
+<span>  <span class="va">n_iter</span>,</span>
+<span>  <span class="va">n_burnin</span>,</span>
+<span>  <span class="va">n_thin</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -87,12 +81,16 @@
     <dl><dt>full</dt>
 <dd><p>An object of S3 class <code><a href="run_model.html">run_model</a></code>. See 'Value' in
 <code><a href="run_model.html">run_model</a></code>.</p></dd>
+
+
 <dt>assumption</dt>
 <dd><p>Character string indicating the structure of the
 informative missingness parameter. Set <code>assumption</code> equal to one of
 the following two: <code>"HIE-ARM"</code>, or <code>"IDE-ARM"</code> (see 'Details').
 The default argument is <code>"IDE-ARM"</code>. The abbreviations <code>"IDE"</code>,
 and <code>"HIE"</code> stand for identical, and hierarchical, respectively.</p></dd>
+
+
 <dt>mean_scenarios</dt>
 <dd><p>A vector with numeric values for the mean of the normal
 distribution of the informative missingness parameter (see 'Details').
@@ -102,52 +100,70 @@ so that the same number of informative scenarios appear before and after
 the MAR. The default scenarios are c(-log(3), -log(2), log(0.9999), log(2),
 log(3)) and c(-2, -1, 0, 1, 2) for binary and continuous outcome data,
 respectively.</p></dd>
+
+
 <dt>var_misspar</dt>
 <dd><p>A positive non-zero number for the variance of the normal
 distribution of the informative missingness parameter. When the
 <code>measure</code> (defined in <code><a href="run_model.html">run_model</a></code>) is <code>"OR"</code>,
 <code>"MD"</code>, or <code>"SMD"</code> the default argument is 1. When the
 <code>measure</code> is <code>"ROM"</code>, the default argument is 0.04.</p></dd>
+
+
 <dt>n_chains</dt>
 <dd><p>Integer specifying the number of chains for the MCMC
 sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of
 the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 2.</p></dd>
+
+
 <dt>n_iter</dt>
 <dd><p>Integer specifying the number of Markov chains for the MCMC
 sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of
 the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 10000.</p></dd>
+
+
 <dt>n_burnin</dt>
 <dd><p>Integer specifying the number of iterations to discard at the
 beginning of the MCMC sampling; an argument of the
 <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of the R-package
 <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 1000.</p></dd>
+
+
 <dt>n_thin</dt>
 <dd><p>Integer specifying the thinning rate for the MCMC sampling; an
 argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of the R-package
 <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 1.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of R2jags outputs on the summaries of the posterior
+    
+
+<p>A list of R2jags outputs on the summaries of the posterior
   distribution, and the Gelman-Rubin convergence diagnostic
   (Gelman et al., 1992) of the following monitored parameters for a
   random-effects pairwise meta-analysis:</p>
 <dl><dt>EM</dt>
 <dd><p>The estimated summary effect measure (according to the
    argument <code>measure</code> defined in <code><a href="run_model.html">run_model</a></code>).</p></dd>
-<dt>EM_LOR</dt>
+
+  <dt>EM_LOR</dt>
 <dd><p>The estimated summary odd ratio in the logarithmic scale when
   <code>measure = "RR"</code> or <code>measure = "RD"</code>.</p></dd>
-<dt>tau</dt>
+
+  <dt>tau</dt>
 <dd><p>The between-trial standard deviation. This element does
    not appear in the case of a fixed-effect pairwise meta-analysis.</p></dd>
+
+
 </dl><p>In a random-effects network meta-analysis, <code>EM</code> refer to all possible
-  pairwise comparisons of interventions in the network. Furthermore,
-<code>tau</code> is typically assumed to be common for all observed comparisons
+  pairwise comparisons of interventions in the network. Furthermore,</p>
+<p></p>
+<p><code>tau</code> is typically assumed to be common for all observed comparisons
   in the network.</p>
     </div>
     <div id="details">
@@ -243,24 +259,23 @@ in meta-analysis--part 1: two-stage methods.
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pma.taylor2004"</span><span class="op">)</span>
-
-<span class="co"># Read results from 'run_model' (using the default arguments)</span>
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_taylor.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># \donttest{</span>
-<span class="co"># Perform the sensitivity analysis (default arguments)</span>
-<span class="co"># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span>
-<span class="fu">run_sensitivity</span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>,
-                assumption <span class="op">=</span> <span class="st">"IDE-ARM"</span>,
-                var_misspar <span class="op">=</span> <span class="fl">1</span>,
-                n_chains <span class="op">=</span> <span class="fl">3</span>,
-                n_iter <span class="op">=</span> <span class="fl">1000</span>,
-                n_burnin <span class="op">=</span> <span class="fl">100</span>,
-                n_thin <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
-<span class="co"># }</span>
-
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pma.taylor2004"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Read results from 'run_model' (using the default arguments)</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_taylor.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># \donttest{</span></span>
+<span><span class="co"># Perform the sensitivity analysis (default arguments)</span></span>
+<span><span class="co"># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span></span>
+<span><span class="fu">run_sensitivity</span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>,</span>
+<span>                assumption <span class="op">=</span> <span class="st">"IDE-ARM"</span>,</span>
+<span>                var_misspar <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                n_chains <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>                n_iter <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>                n_burnin <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>                n_thin <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="co"># }</span></span>
+<span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -274,7 +289,7 @@ in meta-analysis--part 1: two-stage methods.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

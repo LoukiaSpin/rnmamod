@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -28,7 +28,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -43,13 +43,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -59,7 +53,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Heatmap of proportion of missing participants in the network</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/heatmap.missing.network_function.R" class="external-link"><code>R/heatmap.missing.network_function.R</code></a></small>
+    
     <div class="hidden name"><code>heatmap_missing_network.Rd</code></div>
     </div>
 
@@ -70,7 +64,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">heatmap_missing_network</span><span class="op">(</span><span class="va">data</span>, <span class="va">drug_names</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">heatmap_missing_network</span><span class="op">(</span><span class="va">data</span>, <span class="va">drug_names</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -78,36 +72,46 @@
     <dl><dt>data</dt>
 <dd><p>A data-frame of a one-trial-per-row format containing arm-level
 data of each trial. See 'Format' in <code><a href="run_model.html">run_model</a></code>.</p></dd>
+
+
 <dt>drug_names</dt>
 <dd><p>A vector of labels with the name of the interventions in
 the order they appear in the argument <code>data</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A heatmap with the proportion of missing participants in each
+    
+
+<p>A heatmap with the proportion of missing participants in each
   intervention and observed comparison in the network. Each cell annotates
   the median, minimum and maximum (the latter two in parenthesis) proportion
   of missing participants across the corresponding trials.
   The proportion of missing participants in each intervention and observed
   comparison are depicted in the main diagonal and lower off-diagonal with
   white and black colour, respectively. The pairwise comparisons are read
-  from left to right.
-  The 'five-and-twenty' rule of Sackett and colleagues (1997) is used to
+  from left to right.</p>
+
+
+<p>The 'five-and-twenty' rule of Sackett and colleagues (1997) is used to
   characterise the <b>median</b> proportion of missing participants as being
   associated with low (up to 5%), moderate (more than 5% and up to 20%),
   and high risk of bias (more than 20%). Low, moderate, and high risk of
   bias associated with missing participants is indicated using green, orange,
   and red colour, respectively. If missing participants have not been
   reported for an intervention or comparison, the corresponding cell is
-  indicated in grey.
-  The summary statistics (median, minimum and maximum) for each intervention
+  indicated in grey.</p>
+
+
+<p>The summary statistics (median, minimum and maximum) for each intervention
   (main diagonal; white font) result from calculating the proportion of
   missing participants in each arm of every trial and then summarising across
   the corresponding trial-arms. Similarly, the summary statistics for each
   observed comparison (lower off-diagonal; black font) result from
   calculating the proportion of total missing participants in each trial and
-  then summarising across the corresponding trials.
-<code>heatmap_missing_network</code> can be used only for a network of
+  then summarising across the corresponding trials.</p>
+<p></p>
+<p><code>heatmap_missing_network</code> can be used only for a network of
   interventions. Otherwise, the execution of the function will be stopped and
   an error message will be printed on the R console. Likewise, when the
   number of missing participants has not been extracted for any arm of the
@@ -130,19 +134,18 @@ ISBN: 0-443-05686-2.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.stowe2011"</span><span class="op">)</span>
-
-<span class="co"># Return the first six trials of the dataset</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nma.stowe2011</span><span class="op">)</span>
-
-<span class="co"># The names of the interventions in the order they appear in the dataset</span>
-<span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PBO+LD"</span>, <span class="st">"DA+LD"</span>, <span class="st">"COMTI+LD"</span>, <span class="st">"MAOBI+LD"</span><span class="op">)</span>
-
-<span class="co"># Create the heatmap</span>
-<span class="fu">heatmap_missing_network</span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.stowe2011</span>,
-                        drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span>
-
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.stowe2011"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Return the first six trials of the dataset</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nma.stowe2011</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># The names of the interventions in the order they appear in the dataset</span></span>
+<span><span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PBO+LD"</span>, <span class="st">"DA+LD"</span>, <span class="st">"COMTI+LD"</span>, <span class="st">"MAOBI+LD"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create the heatmap</span></span>
+<span><span class="fu">heatmap_missing_network</span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.stowe2011</span>,</span>
+<span>                        drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></span>
+<span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -156,7 +159,7 @@ ISBN: 0-443-05686-2.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

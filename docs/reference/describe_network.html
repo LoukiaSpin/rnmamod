@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -28,7 +28,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -43,13 +43,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -59,7 +53,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>A function to describe the evidence base</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/describe.network_function.R" class="external-link"><code>R/describe.network_function.R</code></a></small>
+    
     <div class="hidden name"><code>describe_network.Rd</code></div>
     </div>
 
@@ -70,7 +64,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">describe_network</span><span class="op">(</span><span class="va">data</span>, <span class="va">drug_names</span>, <span class="va">measure</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">describe_network</span><span class="op">(</span><span class="va">data</span>, <span class="va">drug_names</span>, <span class="va">measure</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -78,9 +72,13 @@
     <dl><dt>data</dt>
 <dd><p>A data-frame of a one-trial-per-row format containing arm-level
 data of each trial. See 'Format' in <code><a href="run_model.html">run_model</a></code>.</p></dd>
+
+
 <dt>drug_names</dt>
 <dd><p>A vector of labels with the name of the interventions in
 the order they appear in the argument <code>data</code>.</p></dd>
+
+
 <dt>measure</dt>
 <dd><p>Character string indicating the effect measure. For a binary
 outcome, the following can be considered: <code>"OR"</code>, <code>"RR"</code> or
@@ -88,35 +86,49 @@ outcome, the following can be considered: <code>"OR"</code>, <code>"RR"</code> o
 respectively. For a continuous outcome, the following can be considered:
 <code>"MD"</code>, <code>"SMD"</code>, or <code>"ROM"</code> for mean difference,
 standardised mean difference and ratio of means, respectively.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of scalar results and two data-frames to be passed to
-<code><a href="netplot.html">netplot</a></code>. The scalar results include:</p>
+    
+
+<p>A list of scalar results and two data-frames to be passed to</p>
+<p></p>
+<p><code><a href="netplot.html">netplot</a></code>. The scalar results include:</p>
 <dl><dt>direct_comp</dt>
 <dd><p>The number of observed comparisons in the network.</p></dd>
-<dt>two_arm_ns</dt>
+
+  <dt>two_arm_ns</dt>
 <dd><p>The number of two-arm trials in the network.</p></dd>
-<dt>multi_arm_ns</dt>
+
+  <dt>multi_arm_ns</dt>
 <dd><p>The number of multi-arm trials in the network.</p></dd>
-<dt>total_rand_network</dt>
+
+  <dt>total_rand_network</dt>
 <dd><p>The total number of randomised participants
   in the network.</p></dd>
-<dt>prop_obs_network</dt>
+
+  <dt>prop_obs_network</dt>
 <dd><p>The proportion of participants who completed
   the trial.</p></dd>
-<dt>prop_event_network</dt>
+
+  <dt>prop_event_network</dt>
 <dd><p>The proportion of observed events in the
   network. When the outcome is continuous, this element is omitted.</p></dd>
-<dt>trial_zero_event</dt>
+
+  <dt>trial_zero_event</dt>
 <dd><p>The number of trials with at least one arm
   with zero events. When the outcome is continuous, this element is
   omitted.</p></dd>
-<dt>trial_all_zero_event</dt>
+
+  <dt>trial_all_zero_event</dt>
 <dd><p>The number of trials with zero events in
   all arms. When the outcome is continuous, this element is omitted.</p></dd>
-</dl><p>The two data-frames include <code>table_interventions</code> and
-<code>table_comparisons</code>. See 'Value' in <code><a href="netplot.html">netplot</a></code> for these
+
+
+</dl><p>The two data-frames include <code>table_interventions</code> and</p>
+<p></p>
+<p><code>table_comparisons</code>. See 'Value' in <code><a href="netplot.html">netplot</a></code> for these
   data-frames.</p>
     </div>
     <div id="details">
@@ -146,7 +158,7 @@ facilitate the calculations.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

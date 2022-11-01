@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -27,7 +27,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -42,13 +42,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -58,7 +52,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Heatmap of robustness</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/heatmap.robustness_function.R" class="external-link"><code>R/heatmap.robustness_function.R</code></a></small>
+    
     <div class="hidden name"><code>heatmap_robustness.Rd</code></div>
     </div>
 
@@ -68,28 +62,36 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">heatmap_robustness</span><span class="op">(</span><span class="va">robust</span>, <span class="va">drug_names</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">heatmap_robustness</span><span class="op">(</span><span class="va">robust</span>, <span class="va">drug_names</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>robust</dt>
-<dd><p>An object of S3 class <code><a href="robustness_index.html">robustness_index</a></code>.
-See 'Value' in <code><a href="robustness_index.html">robustness_index</a></code>.</p></dd>
+<dd><p>An object of S3 class <code><a href="robustness_index.html">robustness_index</a></code> and
+<code><a href="robustness_index_user.html">robustness_index_user</a></code>.
+See 'Value' in <code><a href="robustness_index.html">robustness_index</a></code> and
+<code><a href="robustness_index_user.html">robustness_index_user</a></code>.</p></dd>
+
+
 <dt>drug_names</dt>
 <dd><p>A vector of labels with the name of the interventions in
 the order they appear in the argument <code>data</code> of
 <code><a href="run_model.html">run_model</a></code>. If <code>drug_names</code> is not defined,
 the order of the interventions as they appear in <code>data</code> is used,
 instead.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>heatmap_robustness</code> first prints on the R console a message on
-  the threshold of robustness determined by the user in
-<code><a href="robustness_index.html">robustness_index</a></code>. Then, it returns a lower triangular
-  heatmap matrix with the robustness index value of all possible pairwise
-  comparisons.</p>
+    
+
+<p><code>heatmap_robustness</code> first prints on the R console a message on
+  the threshold of robustness determined by the user in</p>
+<p></p>
+<p><code><a href="robustness_index.html">robustness_index</a></code> and <code><a href="robustness_index_user.html">robustness_index_user</a></code>.
+  Then, it returns a lower triangular heatmap matrix with the robustness
+  index value of all possible pairwise comparisons.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -99,7 +101,8 @@ instead.</p></dd>
   robust or frail conclusions for the primary analysis, respectively.
   This corresponds to robustness index below or at least the selected
   threshold of robustness. <code>heatmap_robustness</code> inherits the threshold
-  of robustness selected in the <code><a href="robustness_index.html">robustness_index</a></code> function.
+  of robustness selected in the <code><a href="robustness_index.html">robustness_index</a></code> or
+  <code><a href="robustness_index_user.html">robustness_index_user</a></code> function.
   The robustness index of each pairwise comparison also appears in the
   corresponding cell.
   When there is at least one comparison with frail conclusions, the primary
@@ -120,7 +123,8 @@ and network meta-analysis.
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="robustness_index.html">robustness_index</a></code>, <code><a href="run_model.html">run_model</a></code></p></div>
+    <div class="dont-index"><p><code><a href="robustness_index.html">robustness_index</a></code>, <code><a href="robustness_index_user.html">robustness_index_user</a></code>,
+  <code><a href="run_model.html">run_model</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -129,26 +133,25 @@ and network meta-analysis.
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.baker2009"</span><span class="op">)</span>
-
-<span class="co"># Read results from 'run_sensitivity' (using the default arguments)</span>
-<span class="va">res_sens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_sens_baker.rds'</span>,
-                    package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># Calculate the robustness index</span>
-<span class="va">robust</span> <span class="op">&lt;-</span> <span class="fu"><a href="robustness_index.html">robustness_index</a></span><span class="op">(</span>sens <span class="op">=</span> <span class="va">res_sens</span>,
-                           threshold <span class="op">=</span> <span class="fl">0.28</span><span class="op">)</span>
-
-<span class="co"># The names of the interventions in the order they appear in the dataset</span>
-<span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"budesonide"</span>, <span class="st">"budesonide plus formoterol"</span>,
-                  <span class="st">"fluticasone"</span>, <span class="st">"fluticasone plus salmeterol"</span>,
-                  <span class="st">"formoterol"</span>, <span class="st">"salmeterol"</span>, <span class="st">"tiotropium"</span><span class="op">)</span>
-
-<span class="co"># Create the heatmap of robustness</span>
-<span class="fu">heatmap_robustness</span><span class="op">(</span>robust <span class="op">=</span> <span class="va">robust</span>,
-                   drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span>
-
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.baker2009"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Read results from 'run_sensitivity' (using the default arguments)</span></span>
+<span><span class="va">res_sens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_sens_baker.rds'</span>,</span>
+<span>                    package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate the robustness index</span></span>
+<span><span class="va">robust</span> <span class="op">&lt;-</span> <span class="fu"><a href="robustness_index.html">robustness_index</a></span><span class="op">(</span>sens <span class="op">=</span> <span class="va">res_sens</span>,</span>
+<span>                           threshold <span class="op">=</span> <span class="fl">0.28</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># The names of the interventions in the order they appear in the dataset</span></span>
+<span><span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"budesonide"</span>, <span class="st">"budesonide plus formoterol"</span>,</span>
+<span>                  <span class="st">"fluticasone"</span>, <span class="st">"fluticasone plus salmeterol"</span>,</span>
+<span>                  <span class="st">"formoterol"</span>, <span class="st">"salmeterol"</span>, <span class="st">"tiotropium"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create the heatmap of robustness</span></span>
+<span><span class="fu">heatmap_robustness</span><span class="op">(</span>robust <span class="op">=</span> <span class="va">robust</span>,</span>
+<span>                   drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></span>
+<span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -162,7 +165,7 @@ and network meta-analysis.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -22,7 +22,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -31,7 +31,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -46,13 +46,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -62,7 +56,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Perform the unrelated mean effects model</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/run.UME_function.R" class="external-link"><code>R/run.UME_function.R</code></a></small>
+    
     <div class="hidden name"><code>run_ume.Rd</code></div>
     </div>
 
@@ -76,7 +70,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">run_ume</span><span class="op">(</span><span class="va">full</span>, <span class="va">n_iter</span>, <span class="va">n_burnin</span>, <span class="va">n_chains</span>, <span class="va">n_thin</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">run_ume</span><span class="op">(</span><span class="va">full</span>, <span class="va">n_iter</span>, <span class="va">n_burnin</span>, <span class="va">n_chains</span>, <span class="va">n_thin</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -84,69 +78,92 @@
     <dl><dt>full</dt>
 <dd><p>An object of S3 class <code><a href="run_model.html">run_model</a></code>. See 'Value' in
 <code><a href="run_model.html">run_model</a></code>.</p></dd>
+
+
 <dt>n_iter</dt>
 <dd><p>Positive integer specifying the number of Markov chains for the
 MCMC sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function
 of the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 10000.</p></dd>
+
+
 <dt>n_burnin</dt>
 <dd><p>Positive integer specifying the number of iterations to
 discard at the beginning of the MCMC sampling; an argument of the
 <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of the R-package
 <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 1000.</p></dd>
+
+
 <dt>n_chains</dt>
 <dd><p>Positive integer specifying the number of chains for the MCMC
 sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of
 the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 2.</p></dd>
+
+
 <dt>n_thin</dt>
 <dd><p>Positive integer specifying the thinning rate for the MCMC
 sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of
 the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 1.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An R2jags output on the summaries of the posterior distribution, and
+    
+
+<p>An R2jags output on the summaries of the posterior distribution, and
   the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the
   following monitored parameters:</p>
 <dl><dt>EM</dt>
 <dd><p>The summary effect estimate (according to the argument
   <code>measure</code> defined in <code><a href="run_model.html">run_model</a></code>) for each pairwise
   comparison observed in the network.</p></dd>
-<dt>dev_o</dt>
+
+  <dt>dev_o</dt>
 <dd><p>The deviance contribution of each trial-arm based on the
   observed outcome.</p></dd>
-<dt>hat_par</dt>
+
+  <dt>hat_par</dt>
 <dd><p>The fitted outcome at each trial-arm.</p></dd>
-<dt>tau</dt>
+
+  <dt>tau</dt>
 <dd><p>The between-trial standard deviation (assumed common across the
   observed pairwise comparisons) for the whole network, when a random-effects
   model has been specified.</p></dd>
-<dt>m_tau</dt>
+
+  <dt>m_tau</dt>
 <dd><p>The between-trial standard deviation (assumed common
   across the observed pairwise comparisons) for the subset of multi-arm
   trials, when a random-effects model has been specified.</p></dd>
+
+
 </dl><p>The output also includes the following elements:</p>
 <dl><dt>leverage_o</dt>
 <dd><p>The leverage for the observed outcome at each trial-arm.</p></dd>
-<dt>sign_dev_o</dt>
+
+  <dt>sign_dev_o</dt>
 <dd><p>The sign of the difference between observed and fitted
   outcome at each trial-arm.</p></dd>
-<dt>model_assessment</dt>
+
+  <dt>model_assessment</dt>
 <dd><p>A data-frame on the measures of model assessment:
   deviance information criterion, number of effective parameters, and total
   residual deviance.</p></dd>
-<dt>jagsfit</dt>
+
+  <dt>jagsfit</dt>
 <dd><p>An object of S3 class <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> with
   the posterior results on all monitored parameters to be used in the
   <code><a href="mcmc_diagnostics.html">mcmc_diagnostics</a></code> function.</p></dd>
+
+
 </dl><p>Furthermore, <code>run_ume</code> returns a character vector with the pairwise
   comparisons observed in the network, <code>obs_comp</code>, and a character
   vector with comparisons between the non-baseline interventions observed in
-  multi-arm trials only, <code>frail_comp</code>. Both vectors are used in
-<code><a href="ume_plot.html">ume_plot</a></code> function.</p>
+  multi-arm trials only, <code>frail_comp</code>. Both vectors are used in</p>
+<p></p>
+<p><code><a href="ume_plot.html">ume_plot</a></code> function.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -228,22 +245,21 @@ doi: 10.1186/s12874-019-0731-y</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.liu2013"</span><span class="op">)</span>
-
-<span class="co"># Read results from 'run_model' (using the default arguments)</span>
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_liu.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># \donttest{</span>
-<span class="co"># Run random-effects unrelated mean effects model</span>
-<span class="co"># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span>
-<span class="fu">run_ume</span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>,
-        n_chains <span class="op">=</span> <span class="fl">3</span>,
-        n_iter <span class="op">=</span> <span class="fl">1000</span>,
-        n_burnin <span class="op">=</span> <span class="fl">100</span>,
-        n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="co"># }</span>
-
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.liu2013"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Read results from 'run_model' (using the default arguments)</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_liu.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># \donttest{</span></span>
+<span><span class="co"># Run random-effects unrelated mean effects model</span></span>
+<span><span class="co"># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span></span>
+<span><span class="fu">run_ume</span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>,</span>
+<span>        n_chains <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>        n_iter <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>        n_burnin <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>        n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co"># }</span></span>
+<span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -257,7 +273,7 @@ doi: 10.1186/s12874-019-0731-y</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

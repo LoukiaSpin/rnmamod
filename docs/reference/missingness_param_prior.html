@@ -21,7 +21,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -30,7 +30,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -45,13 +45,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -61,7 +55,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Define the mean value of the normal distribution of the missingness parameter</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/missingness.param.prior_function.R" class="external-link"><code>R/missingness.param.prior_function.R</code></a></small>
+    
     <div class="hidden name"><code>missingness_param_prior.Rd</code></div>
     </div>
 
@@ -74,7 +68,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">missingness_param_prior</span><span class="op">(</span><span class="va">assumption</span>, <span class="va">mean_misspar</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">missingness_param_prior</span><span class="op">(</span><span class="va">assumption</span>, <span class="va">mean_misspar</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -90,15 +84,20 @@ The default argument is <code>"IDE-ARM"</code>. The abbreviations <code>"IDE"</c
 <code>"HIE"</code>, and <code>"IND"</code> stand for identical, hierarchical and
 independent, respectively. <code>"CORR"</code> and <code>"UNCORR"</code> stand for
 correlated and uncorrelated, respectively.</p></dd>
+
+
 <dt>mean_misspar</dt>
 <dd><p>A numeric value or a vector of two numeric values for the
 mean of the normal distribution of the informative missingness parameter
 (see 'Details'). The default argument is 0 and corresponds to the
 missing-at-random assumption for <code>assumption = "IDE-ARM"</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A scalar or numeric vector to be passed to <code><a href="run_model.html">run_model</a></code>.</p>
+    
+
+<p>A scalar or numeric vector to be passed to <code><a href="run_model.html">run_model</a></code>.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -175,7 +174,7 @@ in meta-analysis--part 1: two-stage methods. <em>Stat Med</em>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

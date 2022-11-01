@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -28,7 +28,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -43,13 +43,7 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -59,7 +53,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Perform Bayesian pairwise or network meta-regression</h1>
-    <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/HEAD/R/run.metareg_function.R" class="external-link"><code>R/run.metareg_function.R</code></a></small>
+    
     <div class="hidden name"><code>run_metareg.Rd</code></div>
     </div>
 
@@ -70,15 +64,15 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">run_metareg</span><span class="op">(</span>
-  <span class="va">full</span>,
-  <span class="va">covariate</span>,
-  <span class="va">covar_assumption</span>,
-  <span class="va">n_chains</span>,
-  <span class="va">n_iter</span>,
-  <span class="va">n_burnin</span>,
-  <span class="va">n_thin</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">run_metareg</span><span class="op">(</span></span>
+<span>  <span class="va">full</span>,</span>
+<span>  <span class="va">covariate</span>,</span>
+<span>  <span class="va">covar_assumption</span>,</span>
+<span>  <span class="va">n_chains</span>,</span>
+<span>  <span class="va">n_iter</span>,</span>
+<span>  <span class="va">n_burnin</span>,</span>
+<span>  <span class="va">n_thin</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -86,100 +80,143 @@
     <dl><dt>full</dt>
 <dd><p>An object of S3 class <code><a href="run_model.html">run_model</a></code>.
 See 'Value' in <code><a href="run_model.html">run_model</a></code>.</p></dd>
+
+
 <dt>covariate</dt>
 <dd><p>A numeric vector or matrix for a trial-specific covariate
 that is a potential effect modifier. See 'Details'.</p></dd>
+
+
 <dt>covar_assumption</dt>
 <dd><p>Character string indicating the structure of the
 intervention-by-covariate interaction, as described in
 Cooper et al. (2009). Set <code>covar_assumption</code> equal to
 <code>"exchangeable"</code>, <code>"independent"</code>, or <code>"common"</code>.</p></dd>
+
+
 <dt>n_chains</dt>
 <dd><p>Positive integer specifying the number of chains for the
 MCMC sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function
 of the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 2.</p></dd>
+
+
 <dt>n_iter</dt>
 <dd><p>Positive integer specifying the number of Markov chains for the
 MCMC sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function
 of the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 10000.</p></dd>
+
+
 <dt>n_burnin</dt>
 <dd><p>Positive integer specifying the number of iterations to
 discard at the beginning of the MCMC sampling; an argument of the
 <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of the R-package
 <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 1000.</p></dd>
+
+
 <dt>n_thin</dt>
 <dd><p>Positive integer specifying the thinning rate for the
 MCMC sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function
 of the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 1.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of R2jags outputs on the summaries of the posterior
+    
+
+<p>A list of R2jags outputs on the summaries of the posterior
   distribution, and the Gelman-Rubin convergence diagnostic
   (Gelman et al., 1992) for the following monitored parameters for a
   fixed-effect pairwise meta-analysis:</p>
 <dl><dt>EM</dt>
 <dd><p>The estimated summary effect measure (according to the argument
   <code>measure</code> defined in <code><a href="run_model.html">run_model</a></code>).</p></dd>
-<dt>beta_all</dt>
+
+  <dt>beta_all</dt>
 <dd><p>The estimated regression coefficient for all possible
   pairwise comparisons according to the argument <code>covar_assumption</code>.</p></dd>
-<dt>dev_o</dt>
+
+  <dt>dev_o</dt>
 <dd><p>The deviance contribution of each trial-arm based on the
   observed outcome.</p></dd>
-<dt>hat_par</dt>
+
+  <dt>hat_par</dt>
 <dd><p>The fitted outcome at each trial-arm.</p></dd>
-<dt>phi</dt>
+
+  <dt>phi</dt>
 <dd><p>The informative missingness parameter.</p></dd>
+
+
 </dl><p>For a fixed-effect network meta-analysis, the output additionally
   includes:</p>
 <dl><dt>SUCRA</dt>
 <dd><p>The surface under the cumulative ranking (SUCRA) curve for
   each intervention.</p></dd>
-<dt>effectiveneness</dt>
+
+  <dt>effectiveneness</dt>
 <dd><p>The ranking probability of each intervention for
   every rank.</p></dd>
+
+
 </dl><p>For a random-effects pairwise meta-analysis, the output additionally
   includes the following elements:</p>
 <dl><dt>EM_pred</dt>
 <dd><p>The predicted summary effect measure (according to the
   argument <code>measure</code> defined in <code><a href="run_model.html">run_model</a></code>).</p></dd>
-<dt>delta</dt>
+
+  <dt>delta</dt>
 <dd><p>The estimated trial-specific effect measure (according to the
   argument <code>measure</code> defined in <code><a href="run_model.html">run_model</a></code>).
   For a multi-arm trial, we estimate <em>T-1</em> effects, where <em>T</em>
   is the number of interventions in the trial.</p></dd>
-<dt>tau</dt>
+
+  <dt>tau</dt>
 <dd><p>The between-trial standard deviation.</p></dd>
+
+
 </dl><p>In network meta-analysis, <code>EM</code> and <code>EM_pred</code> refer to all
-  possible pairwise comparisons of interventions in the network. Furthermore,
-<code>tau</code> is typically assumed to be common for all observed comparisons
+  possible pairwise comparisons of interventions in the network. Furthermore,</p>
+<p></p>
+<p><code>tau</code> is typically assumed to be common for all observed comparisons
   in the network.
   For a multi-arm trial, we estimate a total <em>T-1</em> of <code>delta</code> for
   comparisons with the baseline intervention of the trial (found in the first
   column of the element <b>t</b>), with <em>T</em> being the number of
-  interventions in the trial.
-  Furthermore, the output includes the following elements:</p>
-<dl><dt>leverage_o</dt>
+  interventions in the trial.</p>
+
+
+<p>Furthermore, the output includes the following elements:</p>
+<dl><dt>abs_risk</dt>
+<dd><p>The adjusted absolute risks for each intervention. This
+  appears only when <code>measure = "OR"</code>, <code>measure = "RR"</code>, or
+  <code>measure = "RD"</code>.</p></dd>
+
+  <dt>leverage_o</dt>
 <dd><p>The leverage for the observed outcome at each trial-arm.</p></dd>
-<dt>sign_dev_o</dt>
+
+  <dt>sign_dev_o</dt>
 <dd><p>The sign of the difference between observed and fitted
   outcome at each trial-arm.</p></dd>
-<dt>model_assessment</dt>
+
+  <dt>model_assessment</dt>
 <dd><p>A data-frame on the measures of model assessment:
   deviance information criterion, number of effective parameters, and total
   residual deviance.</p></dd>
-<dt>jagsfit</dt>
+
+  <dt>jagsfit</dt>
 <dd><p>An object of S3 class <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> with
   the posterior results on all monitored parameters to be used in the
   <code><a href="mcmc_diagnostics.html">mcmc_diagnostics</a></code> function.</p></dd>
-</dl><p>The <code>run_metareg</code> function also returns the arguments <code>data</code>,
-<code>measure</code>, <code>model</code>, <code>assumption</code>, <code>covariate</code>,
-<code>covar_assumption</code>, <code>n_chains</code>, <code>n_iter</code>, <code>n_burnin</code>,
+
+
+</dl><p>The <code>run_metareg</code> function also returns the arguments <code>data</code>,</p>
+<p></p>
+<p><code>measure</code>, <code>model</code>, <code>assumption</code>, <code>covariate</code>,</p>
+<p></p>
+<p><code>covar_assumption</code>, <code>n_chains</code>, <code>n_iter</code>, <code>n_burnin</code>,
   and <code>n_thin</code> to be inherited by other relevant functions of the
   package.</p>
     </div>
@@ -234,28 +271,27 @@ doi: 10.1186/s12874-019-0731-y</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.baker2009"</span><span class="op">)</span>
-
-<span class="co"># Read results from 'run_model' (using the default arguments)</span>
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_baker.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># Publication year</span>
-<span class="va">pub_year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1996</span>, <span class="fl">1998</span>, <span class="fl">1999</span>, <span class="fl">2000</span>, <span class="fl">2000</span>, <span class="fl">2001</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">2002</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fl">2003</span>, <span class="fl">2003</span>,
-              <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">2005</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fl">2006</span>, <span class="fl">2006</span>, <span class="fl">2007</span>, <span class="fl">2007</span><span class="op">)</span>
-
-<span class="co"># \donttest{</span>
-<span class="co"># Perform a random-effects network meta-regression (exchangeable structure)</span>
-<span class="co"># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span>
-<span class="fu">run_metareg</span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>,
-            covariate <span class="op">=</span> <span class="va">pub_year</span>,
-            covar_assumption <span class="op">=</span> <span class="st">"exchangeable"</span>,
-            n_chains <span class="op">=</span> <span class="fl">3</span>,
-            n_iter <span class="op">=</span> <span class="fl">1000</span>,
-            n_burnin <span class="op">=</span> <span class="fl">100</span>,
-            n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="co"># }</span>
-
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"nma.baker2009"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Read results from 'run_model' (using the default arguments)</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/res_baker.rds'</span>, package <span class="op">=</span> <span class="st">'rnmamod'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Publication year</span></span>
+<span><span class="va">pub_year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1996</span>, <span class="fl">1998</span>, <span class="fl">1999</span>, <span class="fl">2000</span>, <span class="fl">2000</span>, <span class="fl">2001</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">2002</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fl">2003</span>, <span class="fl">2003</span>,</span>
+<span>              <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">2005</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fl">2006</span>, <span class="fl">2006</span>, <span class="fl">2007</span>, <span class="fl">2007</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># \donttest{</span></span>
+<span><span class="co"># Perform a random-effects network meta-regression (exchangeable structure)</span></span>
+<span><span class="co"># Note: Ideally, set 'n_iter' to 10000 and 'n_burnin' to 1000</span></span>
+<span><span class="fu">run_metareg</span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>,</span>
+<span>            covariate <span class="op">=</span> <span class="va">pub_year</span>,</span>
+<span>            covar_assumption <span class="op">=</span> <span class="st">"exchangeable"</span>,</span>
+<span>            n_chains <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>            n_iter <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>            n_burnin <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>            n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co"># }</span></span>
+<span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -269,7 +305,7 @@ doi: 10.1186/s12874-019-0731-y</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

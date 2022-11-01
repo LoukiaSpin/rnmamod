@@ -50,7 +50,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rnmamod</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -60,7 +60,7 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -78,14 +78,7 @@
   <a href="news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -118,7 +111,7 @@
 <h2 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
 </h2>
 <p>The <code>rnmamod</code> package performs one-stage fixed-effect or random-effects Bayesian network meta-analysis (NMA) while adjusting for <em>missing participant outcome data</em> (MOD) using the pattern-mixture model. In the case of two interventions, the package performs one-stage Bayesian pairwise meta-analysis. Standard aggregate data NMA is a special case of NMA with MOD, where either all studies or no studies have MOD available, respectively.</p>
-<p>The package handles data inputs in <em>arm-based format</em>: - binary data (effect size: odds ratio)<br>
+<p>The package handles data inputs in <em>arm-based format</em>: - binary data (effect size: odds ratio, risk ratio, and risk difference)<br>
 - continuous data (effect size: raw and standardised mean differences, ratio of means).</p>
 <!--- The pattern-mixture model allows the incorporation of the informative missingness odds ratio for binary outcomes, whilst the informative missingness difference of means and the informative missingness ratio of means for continuous outcomes. --->
 <p>The <code>rnmamod</code> package comprises a suite of all necessary models for estimation and prediction of the intervention effect, and evaluation of the consistency assumption locally and globally. Also includes a rich suite of visualisation tools to aid in interpretation of the results and preparation of NMA manuscript submission. Missing participant outcome data are addressed in all models of the package.</p>
@@ -140,23 +133,23 @@
 <!--- We will use the dataset of --->
 <p><a href="https://pubmed.ncbi.nlm.nih.gov/19637942/" class="external-link">Baker et al. (2009)</a> comprising 21 trials comparing seven pharmacologic interventions with each other and placebo in chronic obstructive pulmonary disease (COPD) patients. The exacerbation of COPD (harmful outcome) is the analysed binary outcome.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nma.baker2009</span><span class="op">)</span>
-<span class="co">#&gt;                 study t1 t2 t3 t4 r1 r2 r3 r4 m1 m2 m3 m4  n1  n2 n3 n4</span>
-<span class="co">#&gt; Llewellyn-Jones, 1996  1  4 NA NA  3  0 NA NA  1  0 NA NA   8   8 NA NA</span>
-<span class="co">#&gt;        Paggiaro, 1998  1  4 NA NA 51 45 NA NA 27 19 NA NA 139 142 NA NA</span>
-<span class="co">#&gt;          Mahler, 1999  1  7 NA NA 47 28 NA NA 23  9 NA NA 143 135 NA NA</span>
-<span class="co">#&gt;        Casaburi, 2000  1  8 NA NA 41 45 NA NA 18 12 NA NA 191 279 NA NA</span>
-<span class="co">#&gt;       van Noord, 2000  1  7 NA NA 18 11 NA NA  8  7 NA NA  50  47 NA NA</span>
-<span class="co">#&gt;         Rennard, 2001  1  7 NA NA 41 38 NA NA 29 22 NA NA 135 132 NA NA</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nma.baker2009</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                 study t1 t2 t3 t4 r1 r2 r3 r4 m1 m2 m3 m4  n1  n2 n3 n4</span></span>
+<span><span class="co">#&gt; Llewellyn-Jones, 1996  1  4 NA NA  3  0 NA NA  1  0 NA NA   8   8 NA NA</span></span>
+<span><span class="co">#&gt;        Paggiaro, 1998  1  4 NA NA 51 45 NA NA 27 19 NA NA 139 142 NA NA</span></span>
+<span><span class="co">#&gt;          Mahler, 1999  1  7 NA NA 47 28 NA NA 23  9 NA NA 143 135 NA NA</span></span>
+<span><span class="co">#&gt;        Casaburi, 2000  1  8 NA NA 41 45 NA NA 18 12 NA NA 191 279 NA NA</span></span>
+<span><span class="co">#&gt;       van Noord, 2000  1  7 NA NA 18 11 NA NA  8  7 NA NA  50  47 NA NA</span></span>
+<span><span class="co">#&gt;         Rennard, 2001  1  7 NA NA 41 38 NA NA 29 22 NA NA 135 132 NA NA</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="network-plot">Network plot<a class="anchor" aria-label="anchor" href="#network-plot"></a>
 </h3>
 <p>Create the network plot using the <em>nma.networkplot</em> function of the <a href="https://CRAN.R-project.org/package=netmeta" class="external-link">pcnetmeta</a> R package:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># The names of the interventions in the order they appear in the dataset</span>
-<span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"budesonide"</span>, <span class="st">"budesonide plus formoterol"</span>, <span class="st">"fluticasone"</span>, <span class="st">"fluticasone plus salmeterol"</span>, <span class="st">"formoterol"</span>, <span class="st">"salmeterol"</span>, <span class="st">"tiotropium"</span><span class="op">)</span>
-
-<span class="fu"><a href="reference/netplot.html">netplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.baker2009</span>, drug_names <span class="op">=</span> <span class="va">interv_names</span>, text.cex <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># The names of the interventions in the order they appear in the dataset</span></span>
+<span><span class="va">interv_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"placebo"</span>, <span class="st">"budesonide"</span>, <span class="st">"budesonide plus formoterol"</span>, <span class="st">"fluticasone"</span>, <span class="st">"fluticasone plus salmeterol"</span>, <span class="st">"formoterol"</span>, <span class="st">"salmeterol"</span>, <span class="st">"tiotropium"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/netplot.html">netplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.baker2009</span>, drug_names <span class="op">=</span> <span class="va">interv_names</span>, text.cex <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></code></pre></div>
 <div style="text-align: center">
 <p><img src="reference/figures/Network_Baker.png" width="800" height="551" align="center"></p>
 </div>
@@ -166,25 +159,25 @@
 </h3>
 <p>The following code performs a Bayesian random-effects network meta-analysis under the <em>missing at random assumption</em> while using an intervention-specific informative missingness odds ratio (<code>assumption = "IDE-ARM"</code>) in the logarithmic scale:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/run_model.html">run_model</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.baker2009</span>,
-                 measure <span class="op">=</span> <span class="st">"OR"</span>,
-                 model <span class="op">=</span> <span class="st">"RE"</span>,
-                 assumption <span class="op">=</span> <span class="st">"IDE-ARM"</span>,
-                 heter_prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"halfnormal"</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,
-                 mean_misspar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, 
-                 var_misspar <span class="op">=</span> <span class="fl">1</span>,
-                 D <span class="op">=</span> <span class="fl">0</span>,
-                 n_chains <span class="op">=</span> <span class="fl">3</span>,
-                 n_iter <span class="op">=</span> <span class="fl">10000</span>,
-                 n_burnin <span class="op">=</span> <span class="fl">1000</span>,
-                 n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/run_model.html">run_model</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.baker2009</span>,</span>
+<span>                 measure <span class="op">=</span> <span class="st">"OR"</span>,</span>
+<span>                 model <span class="op">=</span> <span class="st">"RE"</span>,</span>
+<span>                 assumption <span class="op">=</span> <span class="st">"IDE-ARM"</span>,</span>
+<span>                 heter_prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"halfnormal"</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                 mean_misspar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, </span>
+<span>                 var_misspar <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                 D <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>                 n_chains <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>                 n_iter <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>                 n_burnin <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>                 n_thin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="league-table">League table<a class="anchor" aria-label="anchor" href="#league-table"></a>
 </h3>
 <p>Illustrate all possible pairwise comparisons of the interventions using a league heatmap. Interventions are sorted in decreasing order by their posterior mean SUCRA (surface under the cumulative ranking) value in the main diagonal:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/league_heatmap.html">league_heatmap</a></span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>, drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/league_heatmap.html">league_heatmap</a></span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>, drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></span></code></pre></div>
 <div style="text-align: center">
 <p><img src="reference/figures/League_Baker.png" width="850" height="600" align="center"><!--- <img src="man/figures/League_Baker.png" width="70%" height="70%" align="center"> ---><br><!--- <img src="man/figures/League_Baker.png" width="70%" height="90%" align="center"> ---></p>
 </div>
@@ -195,7 +188,7 @@
 </h3>
 <p>The following code presents the hierarchy of the interventions in the network using integrated rankograms and SUCRA curves:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/rankosucra_plot.html">rankosucra_plot</a></span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>, drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/rankosucra_plot.html">rankosucra_plot</a></span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>, drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></span></code></pre></div>
 <div style="text-align: center">
 <p><img src="reference/figures/Sucra_Baker.png" width="700" height="500" align="center"><!--- <img src="man/figures/Sucra_Baker.png" width="70%" height="70%" align="center"> ---><!--- <img src="man/figures/Sucra_Baker.png" width="70%" height="90%" align="center"> ---></p>
 </div>
@@ -217,7 +210,6 @@ The development of the <code>rnmamod</code> package is funded by the <strong>Ger
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://cloud.r-project.org/package=rnmamod" class="external-link">View on CRAN</a></li>
-<li><a href="https://github.com/LoukiaSpin/rnmamod/" class="external-link">Browse source code</a></li>
 </ul>
 </div>
 
@@ -265,7 +257,7 @@ The development of the <code>rnmamod</code> package is funded by the <strong>Ger
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
