@@ -98,7 +98,7 @@
 run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
 
 
-  if (full$type != "nma" || is.null(full$type)) {
+  if (class(full) != "run_model" || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }
@@ -204,31 +204,6 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
                                  "m2",
                                  "n1",
                                  "n2")
-    #pairwise_observed <-
-    #  pairwise(as.list(item$t),
-    #           mean = as.list(item$y0),
-    #           sd = as.list(item$sd0),
-    #           n = as.list(item$N),
-    #           data = cbind(item$t, item$y0, item$sd0, item$N),
-    #           studlab = 1:item$ns)[, c(3:5, 7, 10, 8, 11, 6, 9)]
-    #colnames(pairwise_observed) <- c("study",
-    #                                  "arm1",
-    #                                  "arm2",
-    #                                  "y1",
-    #                                  "y2",
-    #                                  "sd1",
-    #                                  "sd2",
-    #                                  "n1",
-    #                                  "n2")
-
-    # Maintain MOD and merge with 'pairwise_observed'
-    #pairwise_mod <- pairwise(as.list(item$t),
-    #                          mean = as.list(item$y0),
-    #                          sd = as.list(item$sd0),
-    #                          n = as.list(item$m),
-    #                          data = cbind(item$t, item$y0, item$sd0, item$m),
-    #                          studlab = 1:item$ns)[, c(6, 9)]
-    #colnames(pairwise_mod) <- c("m1", "m2")
 
   } else {
     # Turn into contrast-level data
@@ -248,27 +223,6 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
                                  "m2",
                                  "n1",
                                  "n2")
-    #pairwise_observed <-
-    #  pairwise(as.list(item$t),
-    #           event = as.list(item$r),
-    #           n = as.list(item$N),
-    #           data = cbind(item$t, item$r, item$N),
-    #           studlab = 1:item$ns)[, c(3:6, 8, 7, 9)]
-    #colnames(pairwise_observed) <- c("study",
-    #                                  "arm1",
-    #                                  "arm2",
-    #                                  "r1",
-    #                                  "r2",
-    #                                  "n1",
-    #                                  "n2")
-
-    # Maintain MOD and merge with 'pairwise_observed'
-    #pairwise_mod <- pairwise(as.list(item$t),
-    #                         event = as.list(item$m),
-    #                         n = as.list(item$N),
-    #                         data = cbind(item$t, item$m, item$N),
-    #                         studlab = 1:item$ns)[, c(6, 8)]
-    #colnames(pairwise_mod) <- c("m1", "m2")
   }
 
   # The dataset for the analysis
@@ -278,32 +232,16 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
   # Experimental arm
   pairwise_data$t2 <- rep(2, dim(pairwise_data)[1])
 
-  # A function to extract numbers from a character.
-  # Source: http://stla.github.io/stlapblog/posts/numextract.html
-  #numextract <- function(string) {
-  #  unlist(regmatches(string, gregexpr("[[:digit:]]+\\.*[[:digit:]]*", string)))
-  #}
-
   # Observed comparisons in the network
   comp <- as.data.frame(
     table(paste0(pairwise_data$arm1, "vs", pairwise_data$arm2)))
   colnames(comp) <- c("comparison", "frequency")
 
   # Indicate all observed comparisons
-  #obs_comp <- matrix(as.numeric(numextract(comp[, 1])),
-  #                   nrow = dim(comp)[1],
-  #                   ncol = 2,
-  #                   byrow = TRUE)
   obs_comp <- unique(pairwise_data[, 1:2])
   n_obs_comp <- dim(obs_comp)[1]
 
   # Indicate comparisons with one trial
-  #keep_comp0 <- subset(comp, frequency > 1)
-  #keep_comp <- matrix(as.numeric(numextract(keep_comp0[, 1])),
-  #                    nrow = dim(keep_comp0)[1],
-  #                    ncol = 2,
-  #                    byrow = TRUE)
-  #n_comp <- dim(keep_comp)[1]
   single <- ifelse (comp[, 2] < 2, 1, 0) # 1:yes, 0:no
 
   # Run each random-effects pairwise meta-analysis
@@ -352,7 +290,7 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
   }
 
   # Return results based on the model
-  return_results <- if (model == "RE") {
+  results <- if (model == "RE") {
     list(EM = EM,
          tau = tau,
          single = single,
@@ -360,8 +298,7 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
          n_iter = n_iter,
          n_burnin = n_burnin,
          n_thin = n_thin,
-         measure = measure,
-         type = "series")
+         measure = measure)
   } else {
     list(EM = EM,
          single = single,
@@ -369,9 +306,10 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
          n_iter = n_iter,
          n_burnin = n_burnin,
          n_thin = n_thin,
-         measure = measure,
-         type = "series")
+         measure = measure)
   }
 
-  return(return_results)
+  class(results) <- "run_series_meta"
+
+  return(results)
 }

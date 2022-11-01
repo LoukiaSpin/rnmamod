@@ -74,7 +74,8 @@
 #' @export
 heatmap_robustness <- function(robust, drug_names) {
 
-  if (!is.element(robust$type, c("index", "user")) || is.null(robust$type)) {
+  if (!is.element(class(robust), c("robustness_index", "robustness_index_user"))
+      || is.null(robust)) {
     a <- "'robustness_index' or 'robustness_index_user'."
     stop(paste("'robust' must be an object of S3 class", a), call. = FALSE)
   }

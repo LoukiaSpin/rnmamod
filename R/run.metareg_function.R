@@ -167,7 +167,7 @@ run_metareg <- function(full,
                         n_burnin,
                         n_thin) {
 
-  if (full$type != "nma" || is.null(full$type)) {
+  if (class(full) != "run_model" || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }
@@ -483,7 +483,6 @@ run_metareg <- function(full,
                        n_iter = n_iter,
                        n_burnin = n_burnin,
                        n_thin = n_thin,
-                       type = "nmr",
                        abs_risk = abs_risk)
     nma_results <- append(ma_results, list(SUCRA = SUCRA,
                                            effectiveness = effectiveness,
@@ -508,12 +507,13 @@ run_metareg <- function(full,
                        n_iter = n_iter,
                        n_burnin = n_burnin,
                        n_thin = n_thin,
-                       type = "nmr",
                        abs_risk = abs_risk)
     nma_results <- append(ma_results, list(SUCRA = SUCRA,
                                            effectiveness = effectiveness,
                                            D = full$D))
   }
+
+  class(ma_results) <- class(nma_results) <- "run_metareg"
 
   ifelse(item$nt > 2, return(nma_results), return(ma_results))
 }

@@ -110,23 +110,24 @@
 #' @export
 robustness_index <- function(sens, threshold) {
 
-  type <- if (is.null(sens$EM) & is.null(sens$type)) {
-    c(unique(do.call("rbind", lapply(sens, "[[", "type"))))
-  } else if (!is.null(sens$EM) & !is.null(sens$type)) {
-    sens$type
-  } else if (is.null(sens$EM) & !is.null(sens$type)) {
+  type <- if (is.null(sens$EM) & class(sens) != "run_sensitivity") {
+    c(unique(do.call("rbind", lapply(sens, class))))
+  } else if (!is.null(sens$EM) & class(sens) == "run_sensitivity") {
+    "run_sensitivity"
+  } else if (is.null(sens$EM) & class(sens) == "run_sensitivity") {
     NULL
   }
 
-  n_scenar <- if(is.null(sens$EM)) {
+  n_scenar <- if (is.null(sens$EM)) {
     length(lapply(sens, "[[", "EM"))
-  } else if(!is.null(sens$EM) & !is.null(sens$type)) {
+  } else if (!is.null(sens$EM) & !is.null(sens)) {
     length(sens$scenarios)^2
   } else {
     NULL
   }
 
-  if (!is.element(type, c("nma", "sens")) || is.null(type) || n_scenar < 2) {
+  if (!is.element(type, c("run_model", "run_sensitivity")) ||
+      n_scenar < 2) {
     aa <- "or a list of at least two objects of S3 class 'run_model'"
     bb <- "(type ?robustness_index)."
     stop(paste("'sens' must be an object of S3 class 'run_sensitivity'",
@@ -136,7 +137,6 @@ robustness_index <- function(sens, threshold) {
   if (is.null(sens$EM)) {
     es_mat <- do.call("rbind", lapply(sens, "[[", "EM"))
     measure <- c(unique(do.call("rbind", lapply(sens, "[[", "measure"))))
-    #n_scenar <- length(lapply(sens, "[[", "EM"))
     primary_scenar <- 1
   } else {
     measure <- sens$measure
@@ -220,16 +220,19 @@ robustness_index <- function(sens, threshold) {
   robust <- ifelse(robust_index < threshold, "robust", "frail")
 
   # Collect results in a list
-  results <- list(robust_index = robust_index,
-                  robust = robust,
-                  kld = kld,
-                  measure = measure,
-                  threshold = threshold,
-                  type = "index")
+  results0 <- list(robust_index = robust_index,
+                   robust = robust,
+                   kld = kld,
+                   measure = measure,
+                   threshold = threshold)
 
-  if (is.null(sens$EM)) {
-    return(results)
+  results <- if (!is.null(sens$EM)) {
+    append(results0, list(scenarios = scenarios))
   } else {
-    return(append(results, list(scenarios = scenarios)))
+    results0
   }
+
+  class(results) <- "robustness_index"
+
+  return(results)
 }

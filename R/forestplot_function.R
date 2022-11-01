@@ -79,7 +79,7 @@
 #' @export
 forestplot <- function(full, compar, drug_names) {
 
-  if (full$type != "nma" || is.null(full$type)) {
+  if (class(full) != "run_model" || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }

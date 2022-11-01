@@ -161,7 +161,7 @@
 run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
 
 
-  if (full$type != "nma" || is.null(full$type)) {
+  if (class(full) != "run_model" || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }
@@ -556,8 +556,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin,
-         type = "ume")
+         n_thin = n_thin)
   } else {
     list(EM = EM,
          dev_o = dev_o,
@@ -575,9 +574,10 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin,
-         type = "ume")
+         n_thin = n_thin)
   }
+
+  class(results) <- "run_ume"
 
   # Return different list of results according to a condition
   if (is.null(impr_ume$nbase_multi)) {

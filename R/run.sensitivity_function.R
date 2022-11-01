@@ -182,7 +182,7 @@ run_sensitivity <- function(full,
                             n_thin) {
 
 
-  if (full$type != "nma" || is.null(full$type)) {
+  if (class(full) != "run_model" || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }
@@ -394,8 +394,7 @@ run_sensitivity <- function(full,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin,
-         type = "sens")
+         n_thin = n_thin)
   } else if (model == "FE" & !is.element(measure, c("RR", "RD"))) {
     list(EM = EM,
          measure = measure,
@@ -404,8 +403,7 @@ run_sensitivity <- function(full,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin,
-         type = "sens")
+         n_thin = n_thin)
   } else if (model == "RE" & is.element(measure, c("RR", "RD"))) {
     list(EM = EM,
          EM_LOR = EM_LOR,
@@ -417,8 +415,7 @@ run_sensitivity <- function(full,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin,
-         type = "sens")
+         n_thin = n_thin)
   } else if (model == "FE" & is.element(measure, c("RR", "RD"))) {
     list(EM = EM,
          EM_LOR = EM_LOR,
@@ -428,9 +425,10 @@ run_sensitivity <- function(full,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin,
-         type = "sens")
+         n_thin = n_thin)
   }
+
+  class(results) <- "run_sensitivity"
 
   return(results)
 }

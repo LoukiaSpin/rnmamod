@@ -158,7 +158,7 @@ run_nodesplit <- function(full,
                           n_burnin,
                           n_thin) {
 
-  if (full$type != "nma" || is.null(full$type)) {
+  if (class(full) != "run_model" || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_meta'.",
          call. = FALSE)
   }
@@ -551,8 +551,7 @@ run_nodesplit <- function(full,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin,
-         type = "node")
+         n_thin = n_thin)
   } else {
     list(direct = direct,
          indirect = EM,
@@ -561,9 +560,10 @@ run_nodesplit <- function(full,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin,
-         type = "node")
+         n_thin = n_thin)
   }
+
+  class(results) <- "run_nodesplit"
 
   return(results)
 }

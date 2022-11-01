@@ -2,7 +2,7 @@
 % Please edit documentation in R/scatterplots.deviance_function.R
 \name{scatterplots_dev}
 \alias{scatterplots_dev}
-\title{Deviance scatterplot}
+\title{Deviance scatterplots}
 \usage{
 scatterplots_dev(full, ume, colour)
 }

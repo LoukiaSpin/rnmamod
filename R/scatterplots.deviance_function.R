@@ -1,4 +1,4 @@
-#' Deviance scatterplot
+#' Deviance scatterplots
 #'
 #' @description Illustrates the posterior mean of deviance contribution of the
 #'   individual data points under the unrelated mean effects model (via

@@ -768,8 +768,7 @@ run_model <- function(data,
                   n_chains = n_chains,
                   n_iter = n_iter,
                   n_burnin = n_burnin,
-                  n_thin = n_thin,
-                  type = "nma")
+                  n_thin = n_thin)
   if (model == "RE" & !is.element(measure, c("OR", "RR", "RD"))) {
     ma_results <- append(results, list(EM_pred = EM_pred,
                                        tau = tau,
@@ -838,6 +837,8 @@ run_model <- function(data,
                                         abs_risk = abs_risk,
                                         base_risk = base_risk))
   }
+
+  class(ma_results) <- class(nma_results) <- "run_model"
 
   ifelse(item$nt > 2, return(nma_results), return(ma_results))
 }

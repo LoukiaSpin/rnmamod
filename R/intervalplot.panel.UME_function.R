@@ -46,12 +46,12 @@
 #' @export
 intervalplot_panel_ume <- function(full, ume, drug_names) {
 
-  if (full$type != "nma" || is.null(full$type)) {
+  if (class(full) != "run_model" || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }
 
-  if (ume$type != "ume" || is.null(ume$type)) {
+  if (class(ume) != "run_ume" || is.null(ume)) {
     stop("'ume' must be an object of S3 class 'run_ume'.",
          call. = FALSE)
   }

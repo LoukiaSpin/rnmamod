@@ -79,9 +79,10 @@
 #' @export
 mcmc_diagnostics <- function(net, par = NULL) {
 
-  if (!is.element(net$type,
-                  c("nma", "nmr", "series", "node", "ume", "sens")) ||
-      is.null(net$type)) {
+  if (!is.element(class(net),
+                  c("run_model", "run_metareg", "run_series_meta",
+                    "run_nodesplit", "run_ume", "run_sensitivity")) ||
+      is.null(net)) {
     aa <- "'run_model', 'run_metareg', 'run_series_meta',"
     bb <- "'run_nodesplit', 'run_ume', or 'run_sensitivity'."
     stop(paste("'net' must be an object of S3 class", aa, bb), call. = FALSE)

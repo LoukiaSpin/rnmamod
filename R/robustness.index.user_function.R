@@ -301,8 +301,9 @@ robustness_index_user <- function(sens, pkg, attribute, threshold) {
                   kld = kld,
                   measure = measure,
                   threshold = threshold,
-                  attribute = attribute,
-                  type = "user")
+                  attribute = attribute)
+
+  class(results) <- "robustness_index_user"
 
   return(results)
 }

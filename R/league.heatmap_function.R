@@ -159,13 +159,16 @@ league_heatmap <- function(full1,
                            name2 = NULL,
                            show = NULL) {
 
-  if (!is.element(full1$type, c("nma", "nmr")) || is.null(full1$type)) {
+  if (!is.element(class(full1), c("run_model", "run_metareg")) ||
+      is.null(full1)) {
     stop("'full1' must be an object of S3 class 'run_model', or 'run_metareg'.",
          call. = FALSE)
   }
 
-  if (!is.null(full2) & (!is.element(full2$type, c("nma", "nmr", "series")) ||
-                                     is.null(full2$type))) {
+  if (!is.null(full2) &
+      (!is.element(class(full2),
+                   c("run_model", "run_metareg", "run_series_meta")) ||
+       is.null(full2))) {
     aa <- "'run_metareg', or 'run_series_meta'."
     stop(paste("'full2' must be an object of S3 class 'run_model',", aa),
          call. = FALSE)

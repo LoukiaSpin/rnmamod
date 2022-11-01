@@ -131,12 +131,12 @@ metareg_plot <- function(full,
                          drug_names,
                          save_xls) {
 
-  if (full$type != "nma" || is.null(full$type)) {
+  if (class(full) != "run_model" || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }
 
-  if (reg$type != "nmr" || is.null(reg$type)) {
+  if (class(reg) != "run_metareg" || is.null(reg)) {
     stop("'reg' must be an object of S3 class 'run_metareg'.",
          call. = FALSE)
   }

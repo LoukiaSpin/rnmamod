@@ -83,7 +83,7 @@
 #' @export
 balloon_plot <- function(sens, compar, drug_names) {
 
-  if (sens$type != "sens" || is.null(sens$type)) {
+  if (class(sens) != "run_sensitivity" || is.null(sens)) {
     stop("'sens' must be an object of S3 class 'run_sensitivity'.",
          call. = FALSE)
   }
