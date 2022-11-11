@@ -212,7 +212,7 @@ baseline_model <- function(base_risk,
     c(pred_base_logit[1], 1 / (pred_base_logit[2])^2)
   }
 
-  #Draw forest-plot of observed & estimated probabilities for "predicted"
+  #Draw forest-plot of observed & estimated probabilities for 'predicted'
   fig <- if (is.element(base_type, "predicted")) {
     # Back-transform to probability (trial-specific estimate)
     estim_prob <- exp(trial_base_logit[, c(1, 3, 7)]) /
