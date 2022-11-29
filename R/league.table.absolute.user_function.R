@@ -545,7 +545,7 @@ league_table_absolute_user <- function(data,
   # Tabulate relative and absolute effects for the basic parameters
   n_t <- length(drug_names0)
   tab0 <- data.frame(drug_names0,
-                     round(rbind(rep(0, 3), full_lor[1:(n_t - 1), ]), 2),
+                     round(rbind(rep(1, 3), exp(full_lor[1:(n_t - 1), ])), 2),
                      absol_risk * 1000,
                      rbind(rep(0, 3), round(full_rd[1:(n_t - 1), ] * 1000, 0)))
   colnames(tab0) <- c("Interventions",
