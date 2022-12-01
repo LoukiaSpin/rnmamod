@@ -402,7 +402,9 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
                         values = c("low" = "#009E73",
                                    "reasonable" = "orange",
                                    "fairly high" = "#D55E00",
-                                   "fairly extreme" = "red")) +
+                                   "fairly extreme" = "red"),
+                        limits = c("low", "reasonable", "fairly high",
+                                   "fairly extreme")) +
       labs(x = "", y = "Between-trial standard deviation", caption = " ") +
       coord_flip() +
       theme_classic() +

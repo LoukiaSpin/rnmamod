@@ -520,7 +520,9 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                         values = c("low" = "#009E73",
                                    "reasonable" = "orange",
                                    "fairly high" = "#D55E00",
-                                   "fairly extreme" = "red")) +
+                                   "fairly extreme" = "red"),
+                        limits = c("low", "reasonable", "fairly high",
+                                   "fairly extreme")) +
       labs(x = "Split nodes (sorted by DIC in ascending order)",
            y = "Between-trial standard deviation") +
       theme_classic() +
