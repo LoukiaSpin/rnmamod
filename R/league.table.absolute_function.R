@@ -84,7 +84,7 @@
 league_table_absolute <- function(full, drug_names, show = NULL) {
 
 
-  if ((class(full) != "run_model") || is.null(full)) {
+  if ((!inherits(full, "run_model")) || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }

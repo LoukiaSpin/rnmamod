@@ -161,7 +161,7 @@
 run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
 
 
-  if (class(full) != "run_model" || is.null(full)) {
+  if (!inherits(full, "run_model") || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }

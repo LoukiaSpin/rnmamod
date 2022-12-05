@@ -212,6 +212,12 @@
 #'   control arm in each trial. This case is relevant in non-star-shaped
 #'   networks.
 #'
+#'   The model is updated until convergence using the
+#'   \code{\link[R2jags:autojags]{autojags}} function of the R-package
+#'   \href{https://CRAN.R-project.org/package=R2jags}{R2jags} with 2 updates and
+#'   number of iterations and thinning equal to \code{n_iter} and \code{n_thin},
+#'   respectively.
+#'
 #'   To perform a Bayesian pairwise or network meta-analysis, the
 #'   \code{\link{prepare_model}} function is called which contains the WinBUGS
 #'   code as written by Dias et al. (2013a) for binomial and normal likelihood to
@@ -303,7 +309,8 @@
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link{baseline_model}}, \code{\link{data_preparation}},
-#'   \code{\link{heterogeneity_param_prior}}, \code{\link[R2jags:jags]{jags}},
+#'   \code{\link{heterogeneity_param_prior}},
+#'   \code{\link[R2jags:autojags]{autojags}}, \code{\link[R2jags:jags]{jags}},
 #'   \code{\link{missingness_param_prior}}, \code{\link{prepare_model}}
 #'
 #' @references
@@ -610,6 +617,7 @@ run_model <- function(data,
   }
 
   # Run the Bayesian analysis
+  message("Running the model ...")
   jagsfit0 <- jags(data = data_jag,
                    parameters.to.save = param_jags,
                    model.file = textConnection(
@@ -623,17 +631,9 @@ run_model <- function(data,
                    n.burnin = n_burnin,
                    n.thin = n_thin)
 
-  # Check Rhat except for 'effectiveness'
-  check_Rhat <- as.data.frame(t(jagsfit0$BUGSoutput$summary)) %>%
-    dplyr::select(!starts_with("effectiveness["))
-
   # Update until convergence is necessary
-  jagsfit <- if (max(t(check_Rhat)[, 8]) > 1.1) {
-    message("Updating the model until convergence")
-    R2jags::autojags(jagsfit0, n.iter = n_iter, n.update = 2)
-  } else {
-    jagsfit0
-  }
+  message("... Updating the model until convergence")
+  jagsfit <- autojags(jagsfit0, n.iter = n_iter, n.thin = n_thin, n.update = 2)
 
   # Turn R2jags object into a data-frame
   get_results <- as.data.frame(t(jagsfit$BUGSoutput$summary))

@@ -74,12 +74,12 @@ rankosucra_plot <- function(full1,
                             name1 = NULL,
                             name2 = NULL) {
 
-  if (class(full1) != "run_model" || is.null(full1)) {
+  if (!inherits(full1, "run_model") || is.null(full1)) {
     stop("'full1' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }
 
-  if (!is.null(full2) & (class(full2) != "run_model" || is.null(full2))) {
+  if (!is.null(full2) & (!inherits(full2, "run_model") || is.null(full2))) {
     stop("'full2' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }

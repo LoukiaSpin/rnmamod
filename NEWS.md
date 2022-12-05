@@ -1,3 +1,7 @@
+# rnmamod, version 0.4.0 (2023-0X-XX)
+
+ * Function __mcmc_diagnostics__:
+
 # rnmamod, version 0.3.0 (2022-11-01)
 
  * Function __baseline_model__:

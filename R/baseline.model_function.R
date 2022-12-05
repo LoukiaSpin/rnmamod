@@ -67,9 +67,17 @@
 #'   uniform prior distribution is assigned on the between-trial standard
 #'   deviation with upper and lower limit equal to 0 and 5, respectively.
 #'
+#'   When \code{base_risk} is a matrix (predicted baseline), the model is
+#'   updated until convergence using the \code{\link[R2jags:autojags]{autojags}}
+#'   function of the R-package
+#'   \href{https://CRAN.R-project.org/package=R2jags}{R2jags} with 2 updates and
+#'   number of iterations and thinning equal to \code{n_iter} and \code{n_thin},
+#'   respectively.
+#'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{prepare_model}}, \code{\link[R2jags:jags]{jags}},
+#' @seealso \code{\link{prepare_model}},
+#'   \code{\link[R2jags:autojags]{autojags}}, \code{\link[R2jags:jags]{jags}},
 #'   \code{\link{run_metareg}}, \code{\link{run_model}}
 #'
 #' @references
@@ -154,7 +162,7 @@ baseline_model <- function(base_risk,
   }
 
   if (base_type == "predicted") {
-    message("**Baseline model (predictions)**")
+    message("**Running the baseline model (predictions)**")
     # Data for the baseline model
     data_jag_base <- list("r.base" = base_risk1[, 1],
                           "n.base" = base_risk1[, 2],
@@ -167,26 +175,32 @@ baseline_model <- function(base_risk,
                          "tau.base")
 
     # Run the baseline model
-    jagsfit_base <- jags(data = data_jag_base,
-                         parameters.to.save = param_jags_base,
-                         model.file = textConnection('
-                         model {
-                            for (i in 1:ns.base) {
-                              r.base[i] ~ dbin(p.base[i], n.base[i])
-                              logit(p.base[i]) <- u.base[i]
-                              u.base[i] ~ dnorm(m.base, prec.base)
-                            }
-                            # predicted baseline risk (logit scale)
-                            base.risk.logit ~ dnorm(m.base, prec.base)
-                            m.base ~ dnorm(0, .0001)
-                            prec.base <- pow(tau.base, -2)
+    jagsfit_base0 <- jags(data = data_jag_base,
+                          parameters.to.save = param_jags_base,
+                          model.file = textConnection('
+                          model {
+                             for (i in 1:ns.base) {
+                               r.base[i] ~ dbin(p.base[i], n.base[i])
+                               logit(p.base[i]) <- u.base[i]
+                               u.base[i] ~ dnorm(m.base, prec.base)
+                             }
+                             # predicted baseline risk (logit scale)
+                             base.risk.logit ~ dnorm(m.base, prec.base)
+                             m.base ~ dnorm(0, .0001)
+                             prec.base <- pow(tau.base, -2)
                             tau.base ~ dunif(0, 5)
-                         }
-                                                     '),
-                         n.chains = n_chains,
-                         n.iter = n_iter,
-                         n.burnin = n_burnin,
-                         n.thin = n_thin)
+                          }
+                                                      '),
+                          n.chains = n_chains,
+                          n.iter = n_iter,
+                          n.burnin = n_burnin,
+                          n.thin = n_thin)
+
+    message("... Updating the baseline model until convergence")
+    jagsfit_base <- autojags(jagsfit_base0,
+                             n.iter = n_iter,
+                             n.thin = n_thin,
+                             n.update = 2)
 
     # Turn R2jags object into a data-frame
     get_results_base <- as.data.frame(t(jagsfit_base$BUGSoutput$summary))

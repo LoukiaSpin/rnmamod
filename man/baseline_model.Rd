@@ -79,6 +79,13 @@ If \code{base_risk} is a matrix, \code{baseline_model} creates the
   \code{\link{prepare_model}} function. Following (Dias et al., 2013a), a
   uniform prior distribution is assigned on the between-trial standard
   deviation with upper and lower limit equal to 0 and 5, respectively.
+
+  When \code{base_risk} is a matrix (predicted baseline), the model is
+  updated until convergence using the \code{\link[R2jags:autojags]{autojags}}
+  function of the R-package
+  \href{https://CRAN.R-project.org/package=R2jags}{R2jags} with 2 updates and
+  number of iterations and thinning equal to \code{n_iter} and \code{n_thin},
+  respectively.
 }
 \references{
 Dias S, Ades AE, Welton NJ, Jansen JP, Sutton AJ. Network Meta-Analysis for
@@ -94,7 +101,8 @@ making 5: the baseline natural history model. \emph{Med Decis Making}
 2013b;\bold{33}(5):657--70. doi: 10.1177/0272989X13485155
 }
 \seealso{
-\code{\link{prepare_model}}, \code{\link[R2jags:jags]{jags}},
+\code{\link{prepare_model}},
+  \code{\link[R2jags:autojags]{autojags}}, \code{\link[R2jags:jags]{jags}},
   \code{\link{run_metareg}}, \code{\link{run_model}}
 }
 \author{

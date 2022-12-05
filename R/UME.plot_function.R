@@ -113,12 +113,12 @@
 ume_plot <- function(full, ume, drug_names, save_xls) {
 
 
-  if (class(full) != "run_model" || is.null(full)) {
+  if (!inherits(full, "run_model") || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }
 
-  if (class(ume) != "run_ume" || is.null(ume)) {
+  if (!inherits(ume, "run_ume") || is.null(ume)) {
     stop("'ume' must be an object of S3 class 'run_ume'.",
          call. = FALSE)
   }

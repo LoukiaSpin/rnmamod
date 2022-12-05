@@ -158,7 +158,7 @@ run_nodesplit <- function(full,
                           n_burnin,
                           n_thin) {
 
-  if (class(full) != "run_model" || is.null(full)) {
+  if (!inherits(full, "run_model") || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_meta'.",
          call. = FALSE)
   }

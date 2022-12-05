@@ -13,7 +13,7 @@
 #' @importFrom netmeta netconnection
 #' @importFrom pcnetmeta nma.networkplot
 #' @importFrom reshape2 melt
-#' @importFrom R2jags jags
+#' @importFrom R2jags jags autojags
 #' @importFrom scales rescale percent
 #' @importFrom writexl write_xlsx
 #' @importFrom utils combn packageDescription

@@ -71,7 +71,7 @@
 #' @export
 kld_barplot <- function(robust, compar, drug_names) {
 
-  if (class(robust) != "robustness_index" || is.null(robust)) {
+  if (!inherits(robust, "robustness_index") || is.null(robust)) {
     stop("'robust' must be an object of S3 class 'robustness_index'.",
          call. = FALSE)
   }

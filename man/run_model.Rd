@@ -250,6 +250,12 @@ The model runs in \code{JAGS} and the progress of the simulation
   control arm in each trial. This case is relevant in non-star-shaped
   networks.
 
+  The model is updated until convergence using the
+  \code{\link[R2jags:autojags]{autojags}} function of the R-package
+  \href{https://CRAN.R-project.org/package=R2jags}{R2jags} with 2 updates and
+  number of iterations and thinning equal to \code{n_iter} and \code{n_thin},
+  respectively.
+
   To perform a Bayesian pairwise or network meta-analysis, the
   \code{\link{prepare_model}} function is called which contains the WinBUGS
   code as written by Dias et al. (2013a) for binomial and normal likelihood to
@@ -427,7 +433,8 @@ in meta-analysis--part 1: two-stage methods. \emph{Stat Med}
 }
 \seealso{
 \code{\link{baseline_model}}, \code{\link{data_preparation}},
-  \code{\link{heterogeneity_param_prior}}, \code{\link[R2jags:jags]{jags}},
+  \code{\link{heterogeneity_param_prior}},
+  \code{\link[R2jags:autojags]{autojags}}, \code{\link[R2jags:jags]{jags}},
   \code{\link{missingness_param_prior}}, \code{\link{prepare_model}}
 }
 \author{

@@ -98,7 +98,7 @@
 run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
 
 
-  if (class(full) != "run_model" || is.null(full)) {
+  if (!inherits(full, "run_model") || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }

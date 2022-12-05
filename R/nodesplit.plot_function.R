@@ -139,12 +139,12 @@
 #' @export
 nodesplit_plot <- function(full, node, drug_names, save_xls) {
 
-  if (class(full) != "run_model" || is.null(full)) {
+  if (!inherits(full, "run_model") || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }
 
-  if (class(node) != "run_nodesplit"|| is.null(node)) {
+  if (!inherits(node, "run_nodesplit") || is.null(node)) {
     stop("'node' must be an object of S3 class 'run_nodesplit'.",
          call. = FALSE)
   }

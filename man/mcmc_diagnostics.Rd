@@ -12,18 +12,16 @@ mcmc_diagnostics(net, par = NULL)
 \code{\link{run_sensitivity}}, \code{\link{run_series_meta}}, and
 \code{\link{run_ume}}. See 'Value' in the functions above.}
 
-\item{par}{A vector of three character strings that refer to three monitored
-parameters in \code{jagsfit} which is an object of S3 class
+\item{par}{A vector of at least one character string that refers to the
+monitored parameters in \code{jagsfit} which is an object of S3 class
 \code{\link{run_metareg}}, \code{\link{run_model}}, and
-\code{\link{run_ume}}. These three selected parameters will be
-considered in the diagnostic plots (see 'Value'). This argument will be
-ignored for objects of S3 class \code{\link{run_nodesplit}},
-\code{\link{run_sensitivity}}, and \code{\link{run_series_meta}}.}
+\code{\link{run_ume}}. The selected parameters will be considered in the
+diagnostic plots (see 'Value'). This argument will be ignored for objects
+of S3 class \code{\link{run_nodesplit}}, \code{\link{run_sensitivity}},
+and \code{\link{run_series_meta}}.}
 }
 \value{
-\code{mcmc_diagnostics} returns a data-frame that contains the
-  Gelman-Rubin convergence diagnostic, \strong{R-hat}, the MCMC error, and
-  the convergence status of the following monitored parameters:
+\code{mcmc_diagnostics} considers the following monitored parameters:
   \code{EM} {The estimated summary effect measure.}
   \code{EM_pred} {The predicted summary effect measure.}
   \code{delta} {The estimated trial-specific effect measure.}
@@ -36,6 +34,18 @@ ignored for objects of S3 class \code{\link{run_nodesplit}},
   \code{\link{run_nodesplit}}).}
   \code{phi} {The informative missingness parameter.}
   \code{beta} {The regression coefficient.}
+
+  For each monitored parameter mentioned above, \code{mcmc_diagnostics} also
+  returns a barplot on the ratio of MCMC error to the posterior standard
+  deviation and a barplot on the Gelman-Rubin R diagnostic. Bars that
+  correspond to a ratio less than 5\% are indicated in green (the
+  corresponding parameters have been estimated accurately); otherwise, the
+  bars are indicated in red (inaccurate estimation). Furthermore, bars that
+  correspond to an R value less than 1.10 are indicated in green (the
+  corresponding parameters have been converged); otherwise, the bars are
+  indicated in red (convergence is not achieved).
+  \code{mcmc_diagnostics} returns histograms than baplots for \code{EM} when
+  \code{\link{run_sensitivity}} is considered.
 
   \code{mcmc_diagnostics} also uses the
   \code{\link[mcmcplots:mcmcplot]{mcmcplot}} function of the R-package
@@ -51,19 +61,12 @@ Evaluates whether convergence has been achieved for the
 }
 \details{
 For each monitored parameter, \code{mcmc_diagnostics} considers the
-  maximum R-hat and MCMC error and compares them with the thresholds 1.1
-  and 5\% of the posterior standard deviation (the rule of thumb),
-  respectively.
-  Convergence is achieved for the monitored parameter,
-  when the maximum R-hat and MCMC error are below the corresponding
-  thresholds; otherwise, the MCMC algorithm has not converged for that
-  parameter. If the monitored parameter is a vector with the posterior
-  results, there is only one R-hat and one MCMC error. If the monitored
-  parameter is a matrix of the posterior results, there are as many R-hats
-  and MCMC errors as the number of rows for that parameter. In that case, the
-  maximum R-hat and MCMC error are considered, and the (MCMC) rule of thumb
-  corresponds to the maximum of the 5\% of the posterior standard deviation
-  of the investigated parameter.
+  R-hat and MCMC error and compares them with the thresholds 1.1 and 5\% of
+  the posterior standard deviation (the rule of thumb), respectively.
+  Convergence is achieved for the monitored parameter, when the R-hat is
+  below the corresponding threshold. Visual inspection of the trace plots
+  and posterior density of the monitored parameters should also be considered
+  when drawing conclusions about convergence.
 }
 \examples{
 data("nma.baker2009")

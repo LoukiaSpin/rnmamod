@@ -115,6 +115,8 @@ mcmc_diagnostics <- function(net, par = NULL) {
     mcmc_plot <- mcmcplots::mcmcplot(jagsfit_mcmc, parms = par)
   }
 
+  name <- ratio <- rhat <- NA
+
   ## Plot R diagnostic and MCMC rule per monitored parameter
   # Effect estimates (EM)
   EM_plot_ratio <- if (is.element(class(net),
@@ -142,7 +144,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.position = "bottom",
             legend.text = element_text(size = 12),
             legend.title = element_text(size = 12, face = "bold"))
-  } else if (class(net) == "run_sensitivity") {
+  } else if (inherits(net, "run_sensitivity")) {
     EM_mcmc_rule <- 1 / sqrt(net$EM[, 9])
     ggplot(data.frame(name = names(EM_mcmc_rule),
                       ratio = EM_mcmc_rule),
@@ -162,7 +164,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.position = "bottom",
             legend.text = element_text(size = 12),
             legend.title = element_text(size = 12, face = "bold"))
-  } else if (class(net) == "run_series_meta") {
+  } else if (inherits(net, "run_series_meta")) {
     EM_mcmc_rule <- 1 / sqrt(net$EM[, 11])
     ggplot(data.frame(name = paste("EM:", net$EM[, 2], "vs", net$EM[, 1]),
                       ratio = EM_mcmc_rule),
@@ -184,7 +186,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.position = "bottom",
             legend.text = element_text(size = 12),
             legend.title = element_text(size = 12, face = "bold"))
-  } else if (class(net) == "run_nodesplit") {
+  } else if (inherits(net, "run_nodesplit")) {
     NULL
   }
 
@@ -211,7 +213,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.position = "bottom",
             legend.text = element_text(size = 12),
             legend.title = element_text(size = 12, face = "bold"))
-  } else if (class(net) == "run_sensitivity") {
+  } else if (inherits(net, "run_sensitivity")) {
     ggplot(data.frame(name = names(net$EM[, 8]), rhat = net$EM[, 8]),
            aes(x = rhat,
                fill = factor(ifelse(rhat < 1.10, "Yes", "No"),
@@ -229,7 +231,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.position = "bottom",
             legend.text = element_text(size = 12),
             legend.title = element_text(size = 12, face = "bold"))
-  } else if (class(net) == "run_series_meta") {
+  } else if (inherits(net, "run_series_meta")) {
     ggplot(data.frame(name = paste("EM:", net$EM[, 2], "vs", net$EM[, 1]),
                       rhat = net$EM[, 10]),
            aes(x = name,
@@ -250,11 +252,11 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.position = "bottom",
             legend.text = element_text(size = 12),
             legend.title = element_text(size = 12, face = "bold"))
-  } else if (class(net) == "run_nodesplit") {
+  } else if (inherits(net, "run_nodesplit")) {
     NULL
   }
 
-  EM_plot <- if(class(net) == "run_nodesplit") {
+  EM_plot <- if(inherits(net, "run_nodesplit")) {
     NULL
   } else {
     suppressMessages({ggarrange(EM_plot_ratio, EM_plot_rhat, nrow = 2)})
@@ -395,7 +397,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
   }
 
   # Direct effects (node-splitting; direct)
-  direct_plot_ratio <- if(class(net) != "run_nodesplit") {
+  direct_plot_ratio <- if(!inherits(net, "run_nodesplit")) {
     NULL
   } else {
     direct_mcmc_rule <- 1 / sqrt(net$direct[, 8])
@@ -422,7 +424,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.title = element_text(size = 12, face = "bold"))
   }
 
-  direct_plot_rhat <- if(class(net) != "run_nodesplit") {
+  direct_plot_rhat <- if(!inherits(net, "run_nodesplit")) {
     NULL
   } else {
     ggplot(data.frame(name = paste("direct:",
@@ -448,14 +450,14 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.title = element_text(size = 12, face = "bold"))
   }
 
-  direct_plot <- if(class(net) != "run_nodesplit") {
+  direct_plot <- if(!inherits(net, "run_nodesplit")) {
     NULL
   } else {
     ggarrange(direct_plot_ratio, direct_plot_rhat, nrow = 2)
   }
 
   # Indirect effects (node-splitting; indirect)
-  indirect_plot_ratio <- if(class(net) != "run_nodesplit") {
+  indirect_plot_ratio <- if(!inherits(net, "run_nodesplit")) {
     NULL
   } else {
     indirect_mcmc_rule <- 1 / sqrt(net$indirect[, 8])
@@ -482,7 +484,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.title = element_text(size = 12, face = "bold"))
   }
 
-  indirect_plot_rhat <- if(class(net) != "run_nodesplit") {
+  indirect_plot_rhat <- if(!inherits(net, "run_nodesplit")) {
     NULL
   } else {
     ggplot(data.frame(name = paste("indirect:",
@@ -508,14 +510,14 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.title = element_text(size = 12, face = "bold"))
   }
 
-  indirect_plot <- if(class(net) != "run_nodesplit") {
+  indirect_plot <- if(!inherits(net, "run_nodesplit")) {
     NULL
   } else {
     ggarrange(indirect_plot_ratio, indirect_plot_rhat, nrow = 2)
   }
 
   # Inconsistency factor(s) (node-splitting; diff)
-  diff_plot_ratio <- if(class(net) != "run_nodesplit") {
+  diff_plot_ratio <- if(!inherits(net, "run_nodesplit")) {
     NULL
   } else {
     diff_mcmc_rule <- 1 / sqrt(net$diff[, 8])
@@ -541,7 +543,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.title = element_text(size = 12, face = "bold"))
   }
 
-  diff_plot_rhat <- if(class(net) != "run_nodesplit") {
+  diff_plot_rhat <- if(!inherits(net, "run_nodesplit")) {
     NULL
   } else {
     ggplot(data.frame(name = paste("diff:", net$diff[, 1], "vs", net$diff[, 2]),
@@ -566,7 +568,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.title = element_text(size = 12, face = "bold"))
   }
 
-  diff_plot <- if(class(net) != "run_nodesplit") {
+  diff_plot <- if(!inherits(net, "run_nodesplit")) {
     NULL
   } else {
     ggarrange(diff_plot_ratio, diff_plot_rhat, nrow = 2)
@@ -653,7 +655,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
   }
 
   # Regression coefficient(s) (beta)
-  beta_plot_ratio <- if (any(class(net) == "run_metareg" &
+  beta_plot_ratio <- if (any(inherits(net, "run_metareg") &
                              net$covar_assumption != "common")) {
     get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
     beta <- t(get_results %>% select(starts_with("beta.all[")))
@@ -678,11 +680,11 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.position = "bottom",
             legend.text = element_text(size = 12),
             legend.title = element_text(size = 12, face = "bold"))
-  } else if (class(net) != "run_metareg") {
+  } else if (!inherits(net, "run_metareg")) {
     NULL
   }
 
-  beta_plot_rhat <- if (any(class(net) == "run_metareg" &
+  beta_plot_rhat <- if (any(inherits(net, "run_metareg") &
                             net$covar_assumption != "common")) {
     get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
     beta <- t(get_results %>% select(starts_with("beta.all[")))
@@ -705,11 +707,11 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.position = "bottom",
             legend.text = element_text(size = 12),
             legend.title = element_text(size = 12, face = "bold"))
-  } else if (class(net) != "run_metareg") {
+  } else if (!inherits(net, "run_metareg")) {
     NULL
   }
 
-  beta_plot <- if (any(class(net) == "run_metareg" &
+  beta_plot <- if (any(inherits(net, "run_metareg")  &
                        net$covar_assumption != "common")) {
     ggarrange(beta_plot_ratio, beta_plot_rhat, nrow = 2)
   } else {
@@ -717,7 +719,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
   }
 
   tabulate_beta <-
-    if (any(class(net) == "run_metareg" & net$covar_assumption == "common")) {
+    if (any(inherits(net, "run_metareg") & net$covar_assumption == "common")) {
       get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
       beta <- t(get_results %>% select(starts_with("beta") & !starts_with("beta.all[")))
       data.frame(R.hat = beta[8], MCMC.rule = 1 / sqrt(beta[9]))
@@ -738,7 +740,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
     data.frame(R.hat = "Not applicable", MCMC.rule = "Not applicable")
   }
 
-  tau_plot_ratio <- if (any(class(net) == "run_nodesplit" &
+  tau_plot_ratio <- if (any(inherits(net, "run_nodesplit") &
                             net$model == "RE")) {
     tau_mcmc_rule <- 1 / sqrt(net$tau[, 8])
     ggplot(data.frame(name = paste("tau:", net$tau[, 1], "vs", net$tau[, 2]),
@@ -761,7 +763,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.position = "bottom",
             legend.text = element_text(size = 12),
             legend.title = element_text(size = 12, face = "bold"))
-  } else if (any(class(net) == "run_sensitivity" & net$model == "RE")) {
+  } else if (any(inherits(net, "run_sensitivity") & net$model == "RE")) {
     tau_mcmc_rule <- 1 / sqrt(net$tau[, 9])
     ggplot(data.frame(name = paste("tau", 1:length(net$tau[, 8])),
                       ratio = tau_mcmc_rule),
@@ -783,7 +785,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.position = "bottom",
             legend.text = element_text(size = 12),
             legend.title = element_text(size = 12, face = "bold"))
-  } else if (any(class(net) == "run_series_meta" & net$model == "RE")) {
+  } else if (any(inherits(net, "run_series_meta") & net$model == "RE")) {
     tau_mcmc_rule <- 1 / sqrt(net$tau[, 11])
     ggplot(data.frame(name = paste("tau:", net$tau[, 2], "vs", net$tau[, 1]),
                       ratio = tau_mcmc_rule),
@@ -809,7 +811,8 @@ mcmc_diagnostics <- function(net, par = NULL) {
     NULL
   }
 
-  tau_plot_rhat <- if (any(class(net) == "run_nodesplit" & net$model == "RE")) {
+  tau_plot_rhat <- if (any(inherits(net, "run_nodesplit") &
+                           net$model == "RE")) {
     ggplot(data.frame(name = paste("tau:", net$tau[, 1], "vs", net$tau[, 2]),
                       rhat = net$tau[, 7]),
            aes(x = name,
@@ -830,7 +833,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.position = "bottom",
             legend.text = element_text(size = 12),
             legend.title = element_text(size = 12, face = "bold"))
-  } else if (any(class(net) == "run_sensitivity" & net$model == "RE")) {
+  } else if (any(inherits(net, "run_sensitivity") & net$model == "RE")) {
     ggplot(data.frame(name = paste("tau", 1:length(net$tau[, 8])),
                       rhat = net$tau[, 8]),
            aes(x = name,
@@ -851,7 +854,7 @@ mcmc_diagnostics <- function(net, par = NULL) {
             legend.position = "bottom",
             legend.text = element_text(size = 12),
             legend.title = element_text(size = 12, face = "bold"))
-  } else if (any(class(net) == "run_series_meta" & net$model == "RE")) {
+  } else if (any(inherits(net, "run_series_meta") & net$model == "RE")) {
     ggplot(data.frame(name = paste("tau:", net$tau[, 2], "vs", net$tau[, 1]),
                       rhat = net$tau[, 10]),
            aes(x = name,

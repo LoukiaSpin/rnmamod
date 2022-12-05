@@ -110,11 +110,11 @@
 #' @export
 robustness_index <- function(sens, threshold) {
 
-  type <- if (is.null(sens$EM) & class(sens) != "run_sensitivity") {
+  type <- if (is.null(sens$EM) & !inherits(sens, "run_sensitivity")) {
     c(unique(do.call("rbind", lapply(sens, class))))
-  } else if (!is.null(sens$EM) & class(sens) == "run_sensitivity") {
+  } else if (!is.null(sens$EM) & inherits(sens, "run_sensitivity")) {
     "run_sensitivity"
-  } else if (is.null(sens$EM) & class(sens) == "run_sensitivity") {
+  } else if (is.null(sens$EM) & inherits(sens, "run_sensitivity")) {
     NULL
   }
 

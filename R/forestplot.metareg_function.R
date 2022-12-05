@@ -87,12 +87,12 @@
 #' @export
 forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
 
-  if (class(full) != "run_model" || is.null(full)) {
+  if (!inherits(full, "run_model") || is.null(full)) {
     stop("The argument 'full' must be an object of S3 class 'run_model'.",
          call. = FALSE)
   }
 
-  if (class(reg) != "run_metareg" || is.null(reg)) {
+  if (!inherits(reg, "run_metareg") || is.null(reg)) {
     stop("The argument 'reg' must be an object of S3 class 'run_metareg'.",
          call. = FALSE)
   }
