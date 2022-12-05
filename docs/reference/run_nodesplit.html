@@ -70,7 +70,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">run_nodesplit</span><span class="op">(</span><span class="va">full</span>, <span class="va">n_chains</span>, <span class="va">n_iter</span>, <span class="va">n_burnin</span>, <span class="va">n_thin</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">run_nodesplit</span><span class="op">(</span><span class="va">full</span>, <span class="va">n_chains</span>, <span class="va">n_iter</span>, <span class="va">n_burnin</span>, <span class="va">n_thin</span>, inits <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -107,6 +107,13 @@ The default argument is 1000.</p></dd>
 MCMC sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function
 of the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 1.</p></dd>
+
+
+<dt>inits</dt>
+<dd><p>A list with the initial values for the parameters; an argument
+of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of the R-package
+<a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
+The default argument is <code>NULL</code>, and JAGS generates the initial values.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -171,7 +178,12 @@ The default argument is 1.</p></dd>
   number of times <code>run_nodesplit</code> is used appears on the R console as a
   text in red and it equals the number of split nodes (see 'Examples').
   If there are no split nodes in the network, the execution of the function
-  will be stopped and an error message will be printed on the R console.</p>
+  will be stopped and an error message will be printed on the R console.
+  The model is updated until convergence using the
+  <code><a href="https://rdrr.io/pkg/R2jags/man/autojags.html" class="external-link">autojags</a></code> function of the R-package
+  <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a> with 2 updates and
+  number of iterations and thinning equal to <code>n_iter</code> and <code>n_thin</code>,
+  respectively.</p>
 <p><code>run_nodesplit</code> uses the
   <code><a href="https://rdrr.io/pkg/gemtc/man/mtc.nodesplit.html" class="external-link">mtc.nodesplit.comparisons</a></code>
   function of the R-package
@@ -218,7 +230,8 @@ doi: 10.1002/jrsm.1167</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>,
+    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/R2jags/man/autojags.html" class="external-link">autojags</a></code>,
+  <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>,
   <code><a href="https://rdrr.io/pkg/gemtc/man/mtc.nodesplit.html" class="external-link">mtc.nodesplit.comparisons</a></code>,
   <code><a href="nodesplit_plot.html">nodesplit_plot</a></code>, <code><a href="prepare_nodesplit.html">prepare_nodesplit</a></code>,
   <code><a href="run_model.html">run_model</a></code></p></div>

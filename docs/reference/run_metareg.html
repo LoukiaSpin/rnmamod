@@ -71,7 +71,8 @@
 <span>  <span class="va">n_chains</span>,</span>
 <span>  <span class="va">n_iter</span>,</span>
 <span>  <span class="va">n_burnin</span>,</span>
-<span>  <span class="va">n_thin</span></span>
+<span>  <span class="va">n_thin</span>,</span>
+<span>  inits <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -121,6 +122,13 @@ The default argument is 1000.</p></dd>
 MCMC sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function
 of the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 1.</p></dd>
+
+
+<dt>inits</dt>
+<dd><p>A list with the initial values for the parameters; an argument
+of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of the R-package
+<a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
+The default argument is <code>NULL</code>, and JAGS generates the initial values.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -233,7 +241,11 @@ The default argument is 1.</p></dd>
 <p>The model runs in <code>JAGS</code> and the progress of the simulation appears on
   the R console. The output of <code>run_metareg</code> is used as an S3 object by
   other functions of the package to be processed further and provide an
-  end-user-ready output.</p>
+  end-user-ready output. The model is updated until convergence using the
+  <code><a href="https://rdrr.io/pkg/R2jags/man/autojags.html" class="external-link">autojags</a></code> function of the R-package
+  <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a> with 2 updates and
+  number of iterations and thinning equal to <code>n_iter</code> and <code>n_thin</code>,
+  respectively.</p>
 <p>The models described in Spineli et al. (2021), and Spineli (2019) have
   been extended to incorporate one <em>study-level covariate</em> variable
   following the assumptions of Cooper et al. (2009) for the structure of the
@@ -262,7 +274,8 @@ doi: 10.1186/s12874-019-0731-y</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>, <code><a href="run_model.html">run_model</a></code></p></div>
+    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/R2jags/man/autojags.html" class="external-link">autojags</a></code>, <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>,
+  <code><a href="run_model.html">run_model</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>

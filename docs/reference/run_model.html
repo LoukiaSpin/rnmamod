@@ -78,7 +78,8 @@
 <span>  <span class="va">n_chains</span>,</span>
 <span>  <span class="va">n_iter</span>,</span>
 <span>  <span class="va">n_burnin</span>,</span>
-<span>  <span class="va">n_thin</span></span>
+<span>  <span class="va">n_thin</span>,</span>
+<span>  inits <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -215,6 +216,13 @@ The default argument is 1000.</p></dd>
 MCMC sampling; an argument of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function
 of the R-package <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is 1.</p></dd>
+
+
+<dt>inits</dt>
+<dd><p>A list with the initial values for the parameters; an argument
+of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of the R-package
+<a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
+The default argument is <code>NULL</code>, and JAGS generates the initial values.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -354,6 +362,11 @@ The default argument is 1.</p></dd>
   interventions with a lower identifier are consistently treated as the
   control arm in each trial. This case is relevant in non-star-shaped
   networks.</p>
+<p>The model is updated until convergence using the
+  <code><a href="https://rdrr.io/pkg/R2jags/man/autojags.html" class="external-link">autojags</a></code> function of the R-package
+  <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a> with 2 updates and
+  number of iterations and thinning equal to <code>n_iter</code> and <code>n_thin</code>,
+  respectively.</p>
 <p>To perform a Bayesian pairwise or network meta-analysis, the
   <code><a href="prepare_model.html">prepare_model</a></code> function is called which contains the WinBUGS
   code as written by Dias et al. (2013a) for binomial and normal likelihood to
@@ -489,8 +502,10 @@ in meta-analysis--part 1: two-stage methods. <em>Stat Med</em>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="baseline_model.html">baseline_model</a></code>, <code><a href="data_preparation.html">data_preparation</a></code>,
-  <code><a href="heterogeneity_param_prior.html">heterogeneity_param_prior</a></code>, <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>,
+    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/R2jags/man/autojags.html" class="external-link">autojags</a></code>,
+  <code><a href="baseline_model.html">baseline_model</a></code>, <code><a href="data_preparation.html">data_preparation</a></code>,
+  <code><a href="heterogeneity_param_prior.html">heterogeneity_param_prior</a></code>,
+  <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>,
   <code><a href="missingness_param_prior.html">missingness_param_prior</a></code>, <code><a href="prepare_model.html">prepare_model</a></code></p></div>
     </div>
     <div id="author">

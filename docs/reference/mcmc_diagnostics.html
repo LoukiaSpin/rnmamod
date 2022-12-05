@@ -79,22 +79,20 @@
 
 
 <dt>par</dt>
-<dd><p>A vector of three character strings that refer to three monitored
-parameters in <code>jagsfit</code> which is an object of S3 class
+<dd><p>A vector of at least one character string that refers to the
+monitored parameters in <code>jagsfit</code> which is an object of S3 class
 <code><a href="run_metareg.html">run_metareg</a></code>, <code><a href="run_model.html">run_model</a></code>, and
-<code><a href="run_ume.html">run_ume</a></code>. These three selected parameters will be
-considered in the diagnostic plots (see 'Value'). This argument will be
-ignored for objects of S3 class <code><a href="run_nodesplit.html">run_nodesplit</a></code>,
-<code><a href="run_sensitivity.html">run_sensitivity</a></code>, and <code><a href="run_series_meta.html">run_series_meta</a></code>.</p></dd>
+<code><a href="run_ume.html">run_ume</a></code>. The selected parameters will be considered in the
+diagnostic plots (see 'Value'). This argument will be ignored for objects
+of S3 class <code><a href="run_nodesplit.html">run_nodesplit</a></code>, <code><a href="run_sensitivity.html">run_sensitivity</a></code>,
+and <code><a href="run_series_meta.html">run_series_meta</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p><code>mcmc_diagnostics</code> returns a data-frame that contains the
-  Gelman-Rubin convergence diagnostic, <strong>R-hat</strong>, the MCMC error, and
-  the convergence status of the following monitored parameters:</p>
+<p><code>mcmc_diagnostics</code> considers the following monitored parameters:</p>
 <p></p>
 <p><code>EM</code></p>
 <p></p>
@@ -136,6 +134,20 @@ ignored for objects of S3 class <code><a href="run_nodesplit.html">run_nodesplit
 <p>The regression coefficient.</p>
 
 
+
+<p>For each monitored parameter mentioned above, <code>mcmc_diagnostics</code> also
+  returns a barplot on the ratio of MCMC error to the posterior standard
+  deviation and a barplot on the Gelman-Rubin R diagnostic. Bars that
+  correspond to a ratio less than 5% are indicated in green (the
+  corresponding parameters have been estimated accurately); otherwise, the
+  bars are indicated in red (inaccurate estimation). Furthermore, bars that
+  correspond to an R value less than 1.10 are indicated in green (the
+  corresponding parameters have been converged); otherwise, the bars are
+  indicated in red (convergence is not achieved).</p>
+<p></p>
+<p><code>mcmc_diagnostics</code> returns histograms than barplots for <code>EM</code> when</p>
+<p></p>
+<p><code><a href="run_sensitivity.html">run_sensitivity</a></code> is considered.</p>
 <p></p>
 <p><code>mcmc_diagnostics</code> also uses the</p>
 <p></p>
@@ -148,19 +160,12 @@ ignored for objects of S3 class <code><a href="run_nodesplit.html">run_nodesplit
     <div id="details">
     <h2>Details</h2>
     <p>For each monitored parameter, <code>mcmc_diagnostics</code> considers the
-  maximum R-hat and MCMC error and compares them with the thresholds 1.1
-  and 5% of the posterior standard deviation (the rule of thumb),
-  respectively.
-  Convergence is achieved for the monitored parameter,
-  when the maximum R-hat and MCMC error are below the corresponding
-  thresholds; otherwise, the MCMC algorithm has not converged for that
-  parameter. If the monitored parameter is a vector with the posterior
-  results, there is only one R-hat and one MCMC error. If the monitored
-  parameter is a matrix of the posterior results, there are as many R-hats
-  and MCMC errors as the number of rows for that parameter. In that case, the
-  maximum R-hat and MCMC error are considered, and the (MCMC) rule of thumb
-  corresponds to the maximum of the 5% of the posterior standard deviation
-  of the investigated parameter.</p>
+  R-hat and MCMC error and compares them with the thresholds 1.1 and 5% of
+  the posterior standard deviation (the rule of thumb), respectively.
+  Convergence is achieved for the monitored parameter, when the R-hat is
+  below the corresponding threshold. Visual inspection of the trace plots
+  and posterior density of the monitored parameters should also be considered
+  when drawing conclusions about convergence.</p>
     </div>
     <div id="references">
     <h2>References</h2>

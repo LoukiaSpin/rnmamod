@@ -55,7 +55,17 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.3.0" id="rnmamod-version-030-2022-11-01">rnmamod, version 0.3.0 (2022-11-01)<a class="anchor" aria-label="anchor" href="#rnmamod-version-030-2022-11-01"></a></h2>
+<h2 class="page-header" data-toc-text="0.4.0" id="rnmamod-version-040-2023-0x-xx">rnmamod, version 0.4.0 (2023-0X-XX)<a class="anchor" aria-label="anchor" href="#rnmamod-version-040-2023-0x-xx"></a></h2>
+<ul><li>Function <strong>mcmc_diagnostics</strong>:
+<ul><li>returns a barplot on the ratio of MCMC error to the posterior standard deviation and a barplot on the Gelman-Rubin R diagnostic. Green bars indicate ratio less than 0.05 and R less than 1.10; otherwise, the bars are red.</li>
+</ul></li>
+<li>Functions <strong>baseline_model</strong>, <strong>run_metareg</strong>, <strong>run_model</strong>, <strong>run_nodesplit</strong>, <strong>run_sensitivity</strong>, <strong>run_series_meta</strong>, and <strong>run_ume</strong>:
+<ul><li>The corresponding models are updated until convergence via the <em>autojags</em> function of the R package <em>R2jags</em>.</li>
+<li>The argument <em>inits</em> has been added to allow the user define the initial values for the parameters, following the documentation of the <em>jags</em> function in the R package <em>R2jags</em>.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.3.0" id="rnmamod-version-030-2022-11-01">rnmamod, version 0.3.0 (2022-11-01)<small>2022-11-01</small><a class="anchor" aria-label="anchor" href="#rnmamod-version-030-2022-11-01"></a></h2>
 <ul><li>Function <strong>baseline_model</strong>:
 <ul><li>processes the elements in the argument <em>base_risk</em> for a fixed, random or predicted baseline model and passes the output to run_model or run_metareg to obtain the absolute risks for all interventions.</li>
 <li>when a predicted baseline model is conducted, it returns a forest plot with the trial-specific and summary probability of an event for the selected reference intervention.</li>

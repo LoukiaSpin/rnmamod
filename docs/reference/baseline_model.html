@@ -160,6 +160,12 @@ The default argument is 1.</p></dd>
   <code><a href="prepare_model.html">prepare_model</a></code> function. Following (Dias et al., 2013a), a
   uniform prior distribution is assigned on the between-trial standard
   deviation with upper and lower limit equal to 0 and 5, respectively.</p>
+<p>When <code>base_risk</code> is a matrix (predicted baseline), the model is
+  updated until convergence using the <code><a href="https://rdrr.io/pkg/R2jags/man/autojags.html" class="external-link">autojags</a></code>
+  function of the R-package
+  <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a> with 2 updates and
+  number of iterations and thinning equal to <code>n_iter</code> and <code>n_thin</code>,
+  respectively.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -175,7 +181,8 @@ making 5: the baseline natural history model. <em>Med Decis Making</em>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="prepare_model.html">prepare_model</a></code>, <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>,
+    <div class="dont-index"><p><code><a href="prepare_model.html">prepare_model</a></code>,
+  <code><a href="https://rdrr.io/pkg/R2jags/man/autojags.html" class="external-link">autojags</a></code>, <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>,
   <code><a href="run_metareg.html">run_metareg</a></code>, <code><a href="run_model.html">run_model</a></code></p></div>
     </div>
     <div id="author">

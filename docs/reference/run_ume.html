@@ -202,7 +202,12 @@ The default argument is 1.</p></dd>
   on the underlying trial-specific effect size of comparisons with the
   baseline arm of the multi-arm trial (Spineli, 2021).</p>
 <p><code>run_ume</code> runs Bayesian unrelated mean effects model in <code>JAGS</code>.
-  The progress of the simulation appears on the R console.</p>
+  The progress of the simulation appears on the R console. The model is
+  updated until convergence using the <code><a href="https://rdrr.io/pkg/R2jags/man/autojags.html" class="external-link">autojags</a></code>
+  function of the R-package
+  <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a> with 2 updates and
+  number of iterations and thinning equal to <code>n_iter</code> and <code>n_thin</code>,
+  respectively.</p>
 <p>The output of <code>run_ume</code> is not end-user-ready. The
   <code><a href="ume_plot.html">ume_plot</a></code> function uses the output of <code>run_ume</code> as an S3
   object and processes it further to provide an end-user-ready output.</p>
@@ -234,7 +239,8 @@ doi: 10.1186/s12874-019-0731-y</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>,
+    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/R2jags/man/autojags.html" class="external-link">autojags</a></code>,
+  <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code>,
   <code><a href="prepare_ume.html">prepare_ume</a></code>, <code><a href="run_model.html">run_model</a></code>,
   <code><a href="run_series_meta.html">run_series_meta</a></code>, <code><a href="ume_plot.html">ume_plot</a></code></p></div>
     </div>
