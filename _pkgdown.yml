@@ -2,9 +2,11 @@ reference:
 - title: Models
   #desc: Build a complete site or its individual section components.
 - contents:
+  - baseline_model
   - starts_with("run_")
 - title: BUGS code
 - contents:
+  - baseline_model
   - starts_with("prepare_")
 - title: End-user-ready visualisation
 - contents:
