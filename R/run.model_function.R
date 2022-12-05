@@ -610,18 +610,30 @@ run_model <- function(data,
   }
 
   # Run the Bayesian analysis
-  jagsfit <- jags(data = data_jag,
-                  parameters.to.save = param_jags,
-                  model.file = textConnection(
-                    prepare_model(measure,
-                                  model,
-                                  covar_assumption = "NO",
-                                  assumption)
-                    ),
-                  n.chains = n_chains,
-                  n.iter = n_iter,
-                  n.burnin = n_burnin,
-                  n.thin = n_thin)
+  jagsfit0 <- jags(data = data_jag,
+                   parameters.to.save = param_jags,
+                   model.file = textConnection(
+                     prepare_model(measure,
+                                   model,
+                                   covar_assumption = "NO",
+                                   assumption)
+                     ),
+                   n.chains = n_chains,
+                   n.iter = n_iter,
+                   n.burnin = n_burnin,
+                   n.thin = n_thin)
+
+  # Check Rhat except for 'effectiveness'
+  check_Rhat <- as.data.frame(t(jagsfit0$BUGSoutput$summary)) %>%
+    dplyr::select(!starts_with("effectiveness["))
+
+  # Update until convergence is necessary
+  jagsfit <- if (max(t(check_Rhat)[, 8]) > 1.1) {
+    message("Updating the model until convergence")
+    R2jags::autojags(jagsfit0, n.iter = n_iter, n.update = 2)
+  } else {
+    jagsfit0
+  }
 
   # Turn R2jags object into a data-frame
   get_results <- as.data.frame(t(jagsfit$BUGSoutput$summary))

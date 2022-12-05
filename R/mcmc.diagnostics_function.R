@@ -17,11 +17,7 @@
 #'   of S3 class \code{\link{run_nodesplit}}, \code{\link{run_sensitivity}},
 #'   and \code{\link{run_series_meta}}.
 #'
-#' @return \code{mcmc_diagnostics} returns a data-frame that contains the
-#'   Gelman-Rubin convergence diagnostic, \strong{R-hat}, the number of
-#'   inaccurate nodes relevant to each monitored parameter (MCMC error is equal
-#'   or larger than the corresponding posterior standard deviation), and
-#'   the convergence status of the following monitored parameters:
+#' @return \code{mcmc_diagnostics} considers the following monitored parameters:
 #'   \code{EM} {The estimated summary effect measure.}
 #'   \code{EM_pred} {The predicted summary effect measure.}
 #'   \code{delta} {The estimated trial-specific effect measure.}
@@ -37,9 +33,15 @@
 #'
 #'   For each monitored parameter mentioned above, \code{mcmc_diagnostics} also
 #'   returns a barplot on the ratio of MCMC error to the posterior standard
-#'   deviation. Bars that correspond to a ratio less than 5% are indicated in
-#'   green (the corresponding parameters have been estimated accurately);
-#'   otherwise, the bars are indicated in red (inaccurate estimation).
+#'   deviation and a barplot on the Gelman-Rubin R diagnostic. Bars that
+#'   correspond to a ratio less than 5\% are indicated in green (the
+#'   corresponding parameters have been estimated accurately); otherwise, the
+#'   bars are indicated in red (inaccurate estimation). Furthermore, bars that
+#'   correspond to an R value less than 1.10 are indicated in green (the
+#'   corresponding parameters have been converged); otherwise, the bars are
+#'   indicated in red (convergence is not achieved).
+#'   \code{mcmc_diagnostics} returns histograms than baplots for \code{EM} when
+#'   \code{\link{run_sensitivity}} is considered.
 #'
 #'   \code{mcmc_diagnostics} also uses the
 #'   \code{\link[mcmcplots:mcmcplot]{mcmcplot}} function of the R-package
@@ -50,14 +52,10 @@
 #' @details For each monitored parameter, \code{mcmc_diagnostics} considers the
 #'   R-hat and MCMC error and compares them with the thresholds 1.1 and 5\% of
 #'   the posterior standard deviation (the rule of thumb), respectively.
-#'   Convergence is achieved for the monitored parameter, when the R-hat and
-#'   MCMC error are below the corresponding thresholds; otherwise, the MCMC
-#'   algorithm has not converged for that parameter. If the monitored parameter
-#'   is a vector with the posterior results, there is only one R-hat and one
-#'   MCMC error. If the monitored parameter is a matrix of the posterior
-#'   results, there are as many R-hats and MCMC errors as the number of rows for
-#'   that parameter. In that case, the maximum R-hat is considered, and the
-#'   number of nodes that do not conform to the (MCMC) rule of thumb is counted.
+#'   Convergence is achieved for the monitored parameter, when the R-hat is
+#'   below the corresponding threshold. Visual inspection of the trace plots
+#'   and posterior density of the monitored parameters should also be considered
+#'   when drawing conclusions about convergence.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -92,8 +90,10 @@ mcmc_diagnostics <- function(net, par = NULL) {
     bb <- "'run_nodesplit', 'run_ume', or 'run_sensitivity'."
     stop(paste("'net' must be an object of S3 class", aa, bb), call. = FALSE)
   }
-  cc <- "< 5% of the posterior standard deviation."
-  message(paste("A parameter converges when R-hat < 1.10 *and* MCMC error", cc))
+  a <- "Visual inspection of the trace plot and posterior density of the"
+  b <- "monitored parameters should *also* be considered when concluding"
+  c <- "about convergence."
+  message(paste("R-hat < 1.10 is an indication of convergence.", a, b, c))
 
   par <- if (!is.null(net$jagsfit) & missing(par)) {
     stop("The argument 'par' needs to be defined.", call. = FALSE)
@@ -101,239 +101,13 @@ mcmc_diagnostics <- function(net, par = NULL) {
     par
   } else if (is.null(net$jagsfit) & !is.null(par)) {
     aa <- "Note: The argument 'par' is ignored. It is used only"
-    bb <- "with 'run_model', 'run_ume' and 'run_metareg'."
+    bb <- "with 'run_metareg', 'run_model', and 'run_ume'."
     message(paste(aa, bb))
     NULL
   }
 
-  #save_res <- ((net$n_iter - net$n_burnin) * net$n_chains) / net$n_thin
-
   if (!is.null(net$jagsfit)) {
     jagsfit <- net$jagsfit
-    # Turn results into a data-frame to select model parameters (using 'dplyr')
-    get_results <- as.data.frame(t(jagsfit$BUGSoutput$summary))
-
-    # Effect size of all unique pairwise comparisons
-    EM0 <- t(get_results %>% select(starts_with("EM[")))
-    EM <- max(EM0[, 8])
-    #EM_mcmc_error <- max(EM0[, 2]/sqrt(EM0[, 9]))
-    #EM_mcmc_rule <- max(0.05 * EM0[, 2])
-    EM_mcmc_rule <- 1 / sqrt(EM0[, 9])
-    EM_n_nconv <- length(which(EM_mcmc_rule >= 0.05))
-
-    # Predictive effects of all unique pairwise comparisons
-    if (net$model == "RE" & !is.null(net$EM_pred)) {
-      EM_pred0 <- t(get_results %>% select(starts_with("EM.pred[")))
-      EM_pred <- max(EM_pred0[, 8])
-      #EM_pred_mcmc_error <- max(EM_pred0[, 2]/sqrt(EM_pred0[, 9]))
-      #EM_pred_mcmc_rule <- max(0.05 * EM_pred0[, 2])
-      EM_pred_mcmc_rule <- 1 / sqrt(EM_pred0[, 9])
-      EM_pred_n_nconv <- length(which(EM_pred_mcmc_rule >= 0.05))
-    } else if (net$model == "FE" || is.null(net$EM_pred)) {
-      #EM_pred <- EM_pred_mcmc_error <- EM_pred_mcmc_rule <- NA
-      EM_pred <- EM_pred_mcmc_rule <- EM_pred_n_nconv <- NA
-    }
-
-    # Within-trial effects size
-    if (net$model == "RE" & !is.null(net$delta)) {
-      delta0 <- t(get_results %>% select(starts_with("delta") &
-                                           !ends_with(",1]")))
-      delta <- max(delta0[, 8])
-      #delta_mcmc_error <- max(delta0[, 2]/sqrt(delta0[, 9]))
-      #delta_mcmc_rule <- max(0.05 * delta0[, 2])
-      delta_mcmc_rule <- 1 / sqrt(delta0[, 9])
-      delta_n_nconv <- length(which(delta_mcmc_rule >= 0.05))
-    } else if (net$model == "FE" || is.null(net$delta)) {
-      #delta <- delta_mcmc_error <- delta_mcmc_rule <- NA
-      delta <- delta_mcmc_rule <- delta_n_nconv <- NA
-    }
-
-    # Between-trial standard deviation
-    if (net$model == "RE") {
-      tau0 <- t(get_results %>% select(starts_with("tau")))
-      tau <- tau0[8]
-      #tau_mcmc_error <- tau0[2]/sqrt(tau0[9])
-      #tau_mcmc_rule <- max(0.05 * tau0[2])
-      tau_mcmc_rule <- 1 / sqrt(tau0[9])
-      tau_n_nconv <- length(which(tau_mcmc_rule >= 0.05))
-    } else {
-      #tau <- tau_mcmc_error <- tau_mcmc_rule <- NA
-      tau <- tau_mcmc_rule <- tau_n_nconv <- NA
-    }
-
-    # Direct estimate from split nodes
-    #direct <- direct_mcmc_error <- direct_mcmc_rule <-
-    direct <- direct_mcmc_rule <- direct_n_nconv <- NA
-
-    # Indirect estimate from split nodes
-    #indirect <- indirect_mcmc_error <- indirect_mcmc_rule <- NA
-    indirect <- indirect_mcmc_rule <- indirect_n_nconv <- NA
-
-    # Inconsistency factor estimate from split nodes
-    #diff <- diff_mcmc_error <- diff_mcmc_rule <- NA
-    diff <- diff_mcmc_rule <- diff_n_nconv <- NA
-
-    item <- data_preparation(net$data, net$measure)
-
-    # Estimated missingness parameter
-    if (!is.null(net$phi) & is.element(net$assumption,
-                                       c("IDE-COMMON", "HIE-COMMON"))) {
-      phi0 <- t(get_results %>% select(starts_with("phi") |
-                                            starts_with("mean.phi")))
-      phi <- phi0[8]
-      #phi_mcmc_error <- phi0[2]/sqrt(phi0[9])
-      #phi_mcmc_rule <- max(0.05 * phi0[2])
-      phi_mcmc_rule <- 1 / sqrt(phi0[9])
-      phi_n_nconv <- which(phi_mcmc_rule >= 0.05)
-    } else if (!is.null(net$phi) & !is.element(net$assumption,
-                                               c("IDE-COMMON", "HIE-COMMON"))) {
-      phi0 <- t(get_results %>% select(starts_with("mean.phi[") |
-                                         starts_with("phi[")))
-      phi <- max(phi0[, 8])
-      #phi_mcmc_error <- max(phi0[, 2]/sqrt(phi0[, 9]))
-      #phi_mcmc_rule <- max(0.05 * phi0[, 2])
-      phi_mcmc_rule <- 1 / sqrt(phi0[, 9])
-      phi_n_nconv <- length(which(phi_mcmc_rule >= 0.05))
-    } else if (is.null(net$phi)) {
-      #phi <- phi_mcmc_error <- phi_mcmc_rule <- NA
-      phi <- phi_mcmc_rule <- phi_n_nconv <- NA
-    }
-
-    # Regression coefficient
-    if (!is.null(net$beta_all)) {
-      beta0 <- t(get_results %>% select(starts_with("beta.all[")))
-      beta <- max(beta0[, 8])
-      #beta_mcmc_error <- max(beta0[, 2]/sqrt(beta0[, 9]))
-      #beta_mcmc_rule <- max(0.05 * beta0[, 2])
-      beta_mcmc_rule <- 1 / sqrt(beta0[, 9])
-      beta_n_nconv <- length(which(beta_mcmc_rule >= 0.05))
-    } else if (is.null(net$beta)) {
-      #beta <- beta_mcmc_error <- beta_mcmc_rule <- NA
-      beta <- beta_mcmc_rule <- beta_n_nconv <- NA
-    }
-
-  } else {
-    if (!is.null(net$EM) & length(net$EM[1, ]) == 11) {
-      # From 'run_model' function
-      #EM_pred <- EM_pred_mcmc_error <- EM_pred_mcmc_rule <- NA
-      #delta <- delta_mcmc_error <- delta_mcmc_rule <- NA
-      #phi <- phi_mcmc_error <- phi_mcmc_rule <- NA
-      EM_pred <- EM_pred_mcmc_rule <- EM_pred_n_nconv <- NA
-      delta <- delta_mcmc_rule <- delta_n_nconv <- NA
-      phi <- phi_mcmc_rule <- phi_n_nconv <- NA
-
-      # From 'run_metareg' function
-      #beta <- beta_mcmc_error <- beta_mcmc_rule <- NA
-      beta <- beta_mcmc_rule <- beta_n_nconv <- NA
-
-      # From 'run_series_meta' function
-      EM <- max(net$EM[, 10])
-      #EM_mcmc_error <- max(net$EM[, 4]/sqrt(net$EM[, 11]))
-      #EM_mcmc_rule <- max(0.05 * net$EM[, 4])
-      EM_mcmc_rule <- 1 / sqrt(net$EM[, 11])
-      EM_n_nconv <- length(which(EM_mcmc_rule >= 0.05))
-      if (!is.null(net$tau)) {
-        tau <- max(net$tau[, 10])
-        #tau_mcmc_error <- max(net$tau[, 4]/sqrt(net$tau[, 11]))
-        #tau_mcmc_rule <- max(0.05 * net$tau[, 4])
-        tau_mcmc_rule <- 1 / sqrt(net$tau[, 11])
-        tau_n_nconv <- length(which(tau_mcmc_rule >= 0.05))
-      } else {
-        #tau <- tau_mcmc_error <- tau_mcmc_rule <- NA
-        tau <- tau_mcmc_rule <- tau_n_nconv <- NA
-      }
-
-      # From 'run_nodesplit' function
-      #direct <- direct_mcmc_error <- direct_mcmc_rule <- NA
-      #indirect <- indirect_mcmc_error <- indirect_mcmc_rule <- NA
-      #diff <- diff_mcmc_error <- diff_mcmc_rule <- NA
-      direct <- direct_mcmc_rule <- direct_n_nconv <- NA
-      indirect <- indirect_mcmc_rule <- indirect_n_nconv <- NA
-      diff <- diff_mcmc_rule <- diff_n_nconv <- NA
-    } else if (is.null(net$EM)) {
-      # From 'run_model' function
-      #EM <- EM_mcmc_error <- EM_mcmc_rule <- NA
-      #EM_pred <- EM_pred_mcmc_error <- EM_pred_mcmc_rule <- NA
-      #delta <- delta_mcmc_error <- delta_mcmc_rule <- NA
-      #phi <- phi_mcmc_error <- phi_mcmc_rule <- NA
-      EM <- EM_mcmc_rule <- EM_n_nconv <- NA
-      EM_pred <- EM_pred_mcmc_rule <- EM_pred_n_nconv <- NA
-      delta <- delta_mcmc_rule <- delta_n_nconv <- NA
-      phi <- phi_mcmc_rule <- phi_n_nconv <- NA
-
-      # From 'run_metareg' function
-      #beta <- beta_mcmc_error <- beta_mcmc_rule <- NA
-      beta <- beta_mcmc_rule <- beta_n_nconv <- NA
-
-      # From 'run_nodesplit' function
-      if (!is.null(net$tau)) {
-        tau <- max(net$tau[, 7])
-        #tau_mcmc_error <- max(net$tau[, 4]/sqrt(net$tau[, 8]))
-        #tau_mcmc_rule <- max(0.05 * net$tau[, 4])
-        tau_mcmc_rule <- 1 / sqrt(net$tau[, 8])
-        tau_n_nconv <- length(which(tau_mcmc_rule >= 0.05))
-      } else {
-        #tau <- tau_mcmc_error <- tau_mcmc_rule <- NA
-        tau <- tau_mcmc_rule <- tau_n_nconv <- NA
-      }
-      direct <- max(net$direct[, 7])
-      #direct_mcmc_error <- max(net$direct[, 4]/sqrt(net$direct[, 8]))
-      #direct_mcmc_rule <- max(0.05 * net$direct[, 4])
-      direct_mcmc_rule <- 1 / sqrt(net$direct[, 8])
-      direct_n_nconv <- length(which(direct_mcmc_rule >= 0.05))
-
-      indirect <- max(net$indirect[, 7])
-      #indirect_mcmc_error <- max(net$indirect[, 4]/sqrt(net$indirect[, 8]))
-      #indirect_mcmc_rule <- max(0.05 * net$indirect[, 4])
-      indirect_mcmc_rule <- 1 / sqrt(net$indirect[, 8])
-      indirect_n_nconv <- length(which(indirect_mcmc_rule >= 0.05))
-
-      diff <- max(net$diff[, 7])
-      #diff_mcmc_error <- max(net$diff[, 4]/sqrt(net$diff[, 8]))
-      #diff_mcmc_rule <- max(0.05 * net$diff[, 4])
-      diff_mcmc_rule <- 1 / sqrt(net$diff[, 8])
-      diff_n_nconv <- length(which(diff_mcmc_rule >= 0.05))
-    } else if (!is.null(net$EM) & length(net$EM[1, ]) == 9) {
-      # From 'run_sensitivity' function
-      EM <- max(net$EM[, 8])
-      #EM_mcmc_error <- max(net$EM[, 2]/sqrt(net$EM[, 9]))
-      #EM_mcmc_rule <- max(0.05 * net$EM[, 2])
-      EM_mcmc_rule <- 1 / sqrt(net$EM[, 9])
-      EM_n_nconv <- length(which(EM_mcmc_rule >= 0.05))
-      if (!is.null(net$tau)) {
-        tau <- max(net$tau[, 8])
-        #tau_mcmc_error <- max(net$tau[, 2]/sqrt(net$tau[, 9]))
-        #tau_mcmc_rule <- max(0.05 * net$tau[, 2])
-        tau_mcmc_rule <- 1 / sqrt(net$tau[, 9])
-        tau_n_nconv <- length(which(tau_mcmc_rule >= 0.05))
-      } else {
-        #tau <- tau_mcmc_error <- tau_mcmc_rule <- NA
-        tau <- tau_mcmc_rule <- tau_n_nconv <- NA
-      }
-
-      # From 'run_model' function
-      #delta <- delta_mcmc_error <- delta_mcmc_rule <- NA
-      #EM_pred <- EM_pred_mcmc_error <- EM_pred_mcmc_rule <- NA
-      #phi <- phi_mcmc_error <- phi_mcmc_rule <- NA
-      delta <- delta_mcmc_rule <- delta_n_nconv <- NA
-      EM_pred <- EM_pred_mcmc_rule <- EM_pred_n_nconv <- NA
-      phi <- phi_mcmc_rule <- phi_n_nconv <- NA
-
-      # From 'run_metareg' function
-      #beta <- beta_mcmc_error <- beta_mcmc_rule <- NA
-      beta <- beta_mcmc_rule <- beta_n_nconv <- NA
-
-      # From 'run_nodesplit' function
-      #direct <- direct_mcmc_error <- direct_mcmc_rule <- NA
-      #indirect <- indirect_mcmc_error <- indirect_mcmc_rule <- NA
-      #diff <- diff_mcmc_error <- diff_mcmc_rule <- NA
-      direct <- direct_mcmc_rule <- direct_n_nconv <- NA
-      indirect <- indirect_mcmc_rule <- indirect_n_nconv <- NA
-      diff <- diff_mcmc_rule <- diff_n_nconv <- NA
-    }
-  }
-
-  if (!is.null(net$jagsfit)) {
     # Turn 'R2jags' object into 'mcmc' object
     jagsfit_mcmc <- mcmcplots::as.mcmc.rjags(jagsfit)
 
@@ -341,224 +115,804 @@ mcmc_diagnostics <- function(net, par = NULL) {
     mcmc_plot <- mcmcplots::mcmcplot(jagsfit_mcmc, parms = par)
   }
 
-  r_hat_max <- c(EM,
-                 EM_pred,
-                 delta,
-                 tau,
-                 direct,
-                 indirect,
-                 diff,
-                 phi,
-                 beta)
-
-  #mcmc_error_max <- c(EM_mcmc_error,
-  #                    EM_pred_mcmc_error,
-  #                    delta_mcmc_error,
-  #                    tau_mcmc_error,
-  #                    direct_mcmc_error,
-  #                    indirect_mcmc_error,
-  #                    diff_mcmc_error,
-  #                    phi_mcmc_error,
-  #                    beta_mcmc_error)
-
-  #mcmc_rule_max <- c(EM_mcmc_rule,
-  #                   EM_pred_mcmc_rule,
-  #                   delta_mcmc_rule,
-  #                   tau_mcmc_rule,
-  #                   direct_mcmc_rule,
-  #                   indirect_mcmc_rule,
-  #                   diff_mcmc_rule,
-  #                   phi_mcmc_rule,
-  #                   beta_mcmc_rule)
-
-  n_nodes_nconv <- c(EM_n_nconv,
-                     EM_n_nconv,
-                     delta_n_nconv,
-                     tau_n_nconv,
-                     direct_n_nconv,
-                     indirect_n_nconv,
-                     diff_n_nconv,
-                     phi_n_nconv,
-                     beta_n_nconv)
-
-  # Indicate whether each model parameter achieved or failed to converge
-  conv <- rep(NA, length(r_hat_max))
-  for (i in seq_len(length(r_hat_max))) {
-    #conv[i] <- ifelse(is.na(r_hat_max[i]), "Not applicable",
-    #                  ifelse(!is.na(r_hat_max[i]) & r_hat_max[i] < 1.1 &
-    #                           mcmc_error_max[i] < mcmc_rule_max[i],
-    #                         "achieved", "failed"))
-    conv[i] <- ifelse(is.na(r_hat_max[i]), "Not applicable",
-                      ifelse(!is.na(r_hat_max[i]) & r_hat_max[i] < 1.1 &
-                               n_nodes_nconv[i] == 0,
-                             "achieved", "failed"))
-  }
-
-  # A data-frame on convergence for all monitored parameters using the Rhat
-  monitored_parameters <- c("Effect estimates (EM)",
-                            "Predictions (EM_pred)",
-                            "Within-trial estimates (delta)",
-                            "Between-trial standard deviation (tau)",
-                            "Direct effects (node-splitting; direct)",
-                            "Indirect effect(s) (node-splitting; indirect)",
-                            "Inconsistency factor(s) (node-splitting; diff)",
-                            "Informative missingness parameter(s) (phi)",
-                            "Regression coefficient(s) (beta)")
-  #convergence <- data.frame(monitored_parameters,
-  #                          round(r_hat_max, 4),
-  #                          round(mcmc_error_max, 4),
-  #                          round(mcmc_rule_max, 4),
-  #                          conv)
-  convergence <- data.frame(monitored_parameters,
-                            round(r_hat_max, 4),
-                            n_nodes_nconv,
-                            conv)
-  rownames(convergence) <- NULL
-  #colnames(convergence) <- c("parameters",
-  #                           "max R-hat",
-  #                           "max MCMC error",
-  #                           "MCMC rule",
-  #                           "convergence")
-  colnames(convergence) <- c("parameters",
-                             "max R-hat",
-                             "inaccurate nodes",
-                             "convergence")
-
-  ## Plot MCMC rule per monitored parameter
+  ## Plot R diagnostic and MCMC rule per monitored parameter
   # Effect estimates (EM)
-  EM_plot <- if(all(is.na(EM_mcmc_rule))) {
-    NULL
-  } else {
+  EM_plot_ratio <- if (is.element(class(net),
+                                  c("run_model", "run_metareg", "run_ume"))) {
+    get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
+    EM <- t(get_results %>% select(starts_with("EM[")))
+    EM_mcmc_rule <- 1 / sqrt(EM[, 9])
     ggplot(data.frame(name = names(EM_mcmc_rule),
                       ratio = EM_mcmc_rule),
-           aes(x = name, y = ratio, fill = ifelse(ratio < 0.05, "yes", "no"))) +
+           aes(x = name,
+               y = ratio,
+               fill = factor(ifelse(ratio < 0.05, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
       geom_bar(stat = "identity", width = 0.5) +
       geom_hline(yintercept = 0.05, linetype = 2) +
-      scale_fill_manual(values = c("yes" = "#009E73", "no" = "#D55E00")) +
-      labs(x = "", y = "Ratio of MCSE to posterior standard deviation") +
-      guides(fill = "none") +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = "MCSE to posterior standard deviation",
+           fill = "Ratio < 0.05") +
       theme_classic() +
-      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+      theme(axis.text.x = element_blank(),
+            axis.ticks.x = element_line(colour = "transparent"),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else if (class(net) == "run_sensitivity") {
+    EM_mcmc_rule <- 1 / sqrt(net$EM[, 9])
+    ggplot(data.frame(name = names(EM_mcmc_rule),
+                      ratio = EM_mcmc_rule),
+           aes(x = EM_mcmc_rule,
+               fill = factor(ifelse(ratio < 0.05, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_histogram() +
+      geom_vline(xintercept = 0.05, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "MCSE to posterior standard deviation",
+           y = "",
+           fill = "Ratio < 0.05") +
+      coord_cartesian(xlim = c(min(EM_mcmc_rule), max(EM_mcmc_rule))) +
+      theme_classic() +
+      theme(axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else if (class(net) == "run_series_meta") {
+    EM_mcmc_rule <- 1 / sqrt(net$EM[, 11])
+    ggplot(data.frame(name = paste("EM:", net$EM[, 2], "vs", net$EM[, 1]),
+                      ratio = EM_mcmc_rule),
+           aes(x = name,
+               y = ratio,
+               fill = factor(ifelse(ratio < 0.05, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 0.05, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = "MCSE to posterior standard deviation",
+           fill = "Ratio < 0.05") +
+      theme_classic() +
+      theme(axis.text.x = element_blank(),
+            axis.ticks.x = element_line(colour = "transparent"),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else if (class(net) == "run_nodesplit") {
+    NULL
+  }
+
+  EM_plot_rhat <- if (is.element(class(net),
+                                 c("run_model", "run_metareg", "run_ume"))) {
+    get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
+    EM <- t(get_results %>% select(starts_with("EM[")))
+    ggplot(data.frame(name = names(EM[, 8]), rhat = EM[, 8]),
+           aes(x = name,
+               y = rhat,
+               fill = factor(ifelse(rhat < 1.10, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 1.10, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = bquote(Gelman-Rubin~hat(R)~diagnostic),
+           fill = "R < 1.10") +
+      scale_y_continuous(breaks = c(seq(0, max(EM[, 8]), by = 0.2), 1.10)) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else if (class(net) == "run_sensitivity") {
+    ggplot(data.frame(name = names(net$EM[, 8]), rhat = net$EM[, 8]),
+           aes(x = rhat,
+               fill = factor(ifelse(rhat < 1.10, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_histogram() +
+      geom_vline(xintercept = 1.10, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = bquote(Gelman-Rubin~hat(R)~diagnostic),
+           y = "",
+           fill = "R < 1.10") +
+      coord_cartesian(xlim = c(min(net$EM[, 8]), max(net$EM[, 8]))) +
+      theme_classic() +
+      theme(axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else if (class(net) == "run_series_meta") {
+    ggplot(data.frame(name = paste("EM:", net$EM[, 2], "vs", net$EM[, 1]),
+                      rhat = net$EM[, 10]),
+           aes(x = name,
+               y = rhat,
+               fill = factor(ifelse(rhat < 1.10, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 1.10, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = bquote(Gelman-Rubin~hat(R)~diagnostic),
+           fill = "R < 1.10") +
+      scale_y_continuous(breaks = c(seq(0, max(net$EM[, 10]), 0.2), 1.10)) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else if (class(net) == "run_nodesplit") {
+    NULL
+  }
+
+  EM_plot <- if(class(net) == "run_nodesplit") {
+    NULL
+  } else {
+    suppressMessages({ggarrange(EM_plot_ratio, EM_plot_rhat, nrow = 2)})
   }
 
   # Predictions (EM_pred)
-  EM_pred_plot <- if(all(is.na(EM_pred_mcmc_rule))) {
-    NULL
-  } else {
+  EM_pred_plot_ratio <- if (any(is.element(class(net),
+                                           c("run_model", "run_metareg")) &
+                                net$model == "RE")) {
+    get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
+    EM_pred <- t(get_results %>% select(starts_with("EM.pred[")))
+    EM_pred_mcmc_rule <- 1 / sqrt(EM_pred[, 9])
     ggplot(data.frame(name = names(EM_pred_mcmc_rule),
                       ratio = EM_pred_mcmc_rule),
-           aes(x = name, y = ratio, fill = ifelse(ratio < 0.05, "yes", "no"))) +
+           aes(x = name,
+               y = ratio,
+               fill = factor(ifelse(ratio < 0.05, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
       geom_bar(stat = "identity", width = 0.5) +
       geom_hline(yintercept = 0.05, linetype = 2) +
-      scale_fill_manual(values = c("yes" = "#009E73", "no" = "#D55E00")) +
-      labs(x = "", y = "Ratio of MCSE to posterior standard deviation") +
-      guides(fill = "none") +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = "MCSE to posterior standard deviation",
+           fill = "Ratio < 0.05") +
       theme_classic() +
-      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+      theme(axis.text.x = element_blank(),
+            axis.ticks.x = element_line(colour = "transparent"),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else {
+    NULL
+  }
+
+  EM_pred_plot_rhat <- if (any(is.element(class(net),
+                                          c("run_model", "run_metareg")) &
+                               net$model == "RE")) {
+    get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
+    EM_pred <- t(get_results %>% select(starts_with("EM.pred[")))
+    ggplot(data.frame(name = names(EM_pred[, 8]), rhat = EM_pred[, 8]),
+           aes(x = name,
+               y = rhat,
+               fill = factor(ifelse(rhat < 1.10, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 1.10, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = bquote(Gelman-Rubin~hat(R)~diagnostic),
+           fill = "R < 1.10") +
+      scale_y_continuous(breaks = c(seq(0, max(EM_pred[, 8]), 0.2), 1.10)) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else {
+    NULL
+  }
+
+  EM_pred_plot <-
+    if(all(!is.element(class(net), c("run_model", "run_metareg")) |
+           net$model == "FE")) {
+      NULL
+  } else {
+    ggarrange(EM_pred_plot_ratio, EM_pred_plot_rhat, nrow = 2)
   }
 
   # Within-trial estimates (delta)
-  delta_plot <- if(all(is.na(delta_mcmc_rule))) {
-    NULL
-  } else {
-    ggplot(data.frame(name = names(delta_mcmc_rule),
-                      ratio = delta_mcmc_rule),
-           aes(x = name, y = ratio, fill = ifelse(ratio < 0.05, "yes", "no"))) +
+  delta_plot_ratio <- if (any(is.element(class(net),
+                                         c("run_model", "run_metareg")) &
+                          net$model == "RE")) {
+    get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
+    delta <- t(get_results %>% select(starts_with("delta") & !ends_with(",1]")))
+    delta_mcmc_rule <- 1 / sqrt(delta[, 9])
+    ggplot(data.frame(name = names(delta_mcmc_rule), ratio = delta_mcmc_rule),
+           aes(x = name,
+               y = ratio,
+               fill = factor(ifelse(ratio < 0.05, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
       geom_bar(stat = "identity", width = 0.5) +
       geom_hline(yintercept = 0.05, linetype = 2) +
-      scale_fill_manual(values = c("yes" = "#009E73", "no" = "#D55E00")) +
-      labs(x = "", y = "Ratio of MCSE to posterior standard deviation") +
-      guides(fill = "none") +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = "MCSE to posterior standard deviation",
+           fill = "Ratio < 0.05") +
       theme_classic() +
-      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+      theme(axis.text.x = element_blank(),
+            axis.ticks.x = element_line(colour = "transparent"),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else {
+    NULL
+  }
+
+  delta_plot_rhat <-
+    if (any(is.element(class(net), c("run_model", "run_metareg")) &
+            net$model == "RE")) {
+      get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
+      delta <- t(get_results %>% select(starts_with("delta") &
+                                          !ends_with(",1]")))
+      ggplot(data.frame(name = names(delta[, 8]), rhat = delta[, 8]),
+             aes(x = name,
+                 y = rhat,
+                 fill = factor(ifelse(rhat < 1.10, "Yes", "No"),
+                               levels = c("Yes", "No")))) +
+        geom_bar(stat = "identity", width = 0.5) +
+        geom_hline(yintercept = 1.10, linetype = 2) +
+        scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+        labs(x = "",
+             y = bquote(Gelman-Rubin~hat(R)~diagnostic),
+             fill = "R < 1.10") +
+        scale_y_continuous(breaks = c(seq(0, max(delta[, 8]), by = 0.2), 1.1)) +
+        theme_classic() +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+              axis.text = element_text(size = 12),
+              axis.title = element_text(size = 12, face = "bold"),
+              legend.position = "bottom",
+              legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12, face = "bold"))
+  } else {
+    NULL
+  }
+
+  delta_plot <-
+    if(all(!is.element(class(net), c("run_model", "run_metareg")) |
+                   net$model == "FE")) {
+      NULL
+  } else {
+    ggarrange(delta_plot_ratio, delta_plot_rhat, nrow = 2)
   }
 
   # Direct effects (node-splitting; direct)
-  direct_plot <- if(all(is.na(direct_mcmc_rule))) {
+  direct_plot_ratio <- if(class(net) != "run_nodesplit") {
     NULL
   } else {
-    ggplot(data.frame(name = paste(net$direct[, 1], "vs", net$direct[, 2]),
+    direct_mcmc_rule <- 1 / sqrt(net$direct[, 8])
+    ggplot(data.frame(name = paste("direct:",
+                                   net$direct[, 1], "vs", net$direct[, 2]),
                       ratio = direct_mcmc_rule),
-           aes(x = name, y = ratio, fill = ifelse(ratio < 0.05, "yes", "no"))) +
+           aes(x = name,
+               y = ratio,
+               fill = factor(ifelse(ratio < 0.05, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
       geom_bar(stat = "identity", width = 0.5) +
       geom_hline(yintercept = 0.05, linetype = 2) +
-      scale_fill_manual(values = c("yes" = "#009E73", "no" = "#D55E00")) +
-      labs(x = "", y = "Ratio of MCSE to posterior standard deviation") +
-      guides(fill = "none") +
-      theme_classic()
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = "MCSE to posterior standard deviation",
+           fill = "Ratio < 0.05") +
+      theme_classic() +
+      theme(axis.text.x = element_blank(),
+            axis.ticks.x = element_line(colour = "transparent"),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  }
+
+  direct_plot_rhat <- if(class(net) != "run_nodesplit") {
+    NULL
+  } else {
+    ggplot(data.frame(name = paste("direct:",
+                                   net$direct[, 1], "vs", net$direct[, 2]),
+                      rhat = net$direct[, 7]),
+           aes(x = name,
+               y = rhat,
+               fill = factor(ifelse(rhat < 1.10, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 1.10, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = bquote(Gelman-Rubin~hat(R)~diagnostic),
+           fill = "R < 1.10") +
+      scale_y_continuous(breaks = c(seq(0, max(net$direct[, 7]), 0.2), 1.10)) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  }
+
+  direct_plot <- if(class(net) != "run_nodesplit") {
+    NULL
+  } else {
+    ggarrange(direct_plot_ratio, direct_plot_rhat, nrow = 2)
   }
 
   # Indirect effects (node-splitting; indirect)
-  indirect_plot <- if(all(is.na(indirect_mcmc_rule))) {
+  indirect_plot_ratio <- if(class(net) != "run_nodesplit") {
     NULL
   } else {
-    ggplot(data.frame(name = paste(net$indirect[, 1], "vs", net$indirect[, 2]),
+    indirect_mcmc_rule <- 1 / sqrt(net$indirect[, 8])
+    ggplot(data.frame(name = paste("indirect:",
+                                   net$indirect[, 1], "vs", net$indirect[, 2]),
                       ratio = indirect_mcmc_rule),
-           aes(x = name, y = ratio, fill = ifelse(ratio < 0.05, "yes", "no"))) +
+           aes(x = name,
+               y = ratio,
+               fill = factor(ifelse(ratio < 0.05, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
       geom_bar(stat = "identity", width = 0.5) +
       geom_hline(yintercept = 0.05, linetype = 2) +
-      scale_fill_manual(values = c("yes" = "#009E73", "no" = "#D55E00")) +
-      labs(x = "", y = "Ratio of MCSE to posterior standard deviation") +
-      guides(fill = "none") +
-      theme_classic()
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = "MCSE to posterior standard deviation",
+           fill = "Ratio < 0.05") +
+      theme_classic() +
+      theme(axis.text.x = element_blank(),
+            axis.ticks.x = element_line(colour = "transparent"),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  }
+
+  indirect_plot_rhat <- if(class(net) != "run_nodesplit") {
+    NULL
+  } else {
+    ggplot(data.frame(name = paste("indirect:",
+                                   net$indirect[, 1], "vs", net$indirect[, 2]),
+                      rhat = net$indirect[, 7]),
+           aes(x = name,
+               y = rhat,
+               fill = factor(ifelse(rhat < 1.10, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 1.10, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = bquote(Gelman-Rubin~hat(R)~diagnostic),
+           fill = "R < 1.10") +
+      scale_y_continuous(breaks = c(seq(0, max(net$indirect[, 7]), 0.2), 1.1)) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  }
+
+  indirect_plot <- if(class(net) != "run_nodesplit") {
+    NULL
+  } else {
+    ggarrange(indirect_plot_ratio, indirect_plot_rhat, nrow = 2)
   }
 
   # Inconsistency factor(s) (node-splitting; diff)
-  diff_plot <- if(all(is.na(diff_mcmc_rule))) {
+  diff_plot_ratio <- if(class(net) != "run_nodesplit") {
     NULL
   } else {
-    ggplot(data.frame(name = paste(net$diff[, 1], "vs", net$diff[, 2]),
+    diff_mcmc_rule <- 1 / sqrt(net$diff[, 8])
+    ggplot(data.frame(name = paste("diff:", net$diff[, 1], "vs", net$diff[, 2]),
                       ratio = diff_mcmc_rule),
-           aes(x = name, y = ratio, fill = ifelse(ratio < 0.05, "yes", "no"))) +
+           aes(x = name,
+               y = ratio,
+               fill = factor(ifelse(ratio < 0.05, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
       geom_bar(stat = "identity", width = 0.5) +
       geom_hline(yintercept = 0.05, linetype = 2) +
-      scale_fill_manual(values = c("yes" = "#009E73", "no" = "#D55E00")) +
-      labs(x = "", y = "Ratio of MCSE to posterior standard deviation") +
-      guides(fill = "none") +
-      theme_classic()
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = "MCSE to posterior standard deviation",
+           fill = "Ratio < 0.05") +
+      theme_classic() +
+      theme(axis.text.x = element_blank(),
+            axis.ticks.x = element_line(colour = "transparent"),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  }
+
+  diff_plot_rhat <- if(class(net) != "run_nodesplit") {
+    NULL
+  } else {
+    ggplot(data.frame(name = paste("diff:", net$diff[, 1], "vs", net$diff[, 2]),
+                      rhat = net$diff[, 7]),
+           aes(x = name,
+               y = rhat,
+               fill = factor(ifelse(rhat < 1.10, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 1.10, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = bquote(Gelman-Rubin~hat(R)~diagnostic),
+           fill = "R < 1.10") +
+      scale_y_continuous(breaks = c(seq(0, max(net$diff[, 7]), 0.2), 1.10)) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  }
+
+  diff_plot <- if(class(net) != "run_nodesplit") {
+    NULL
+  } else {
+    ggarrange(diff_plot_ratio, diff_plot_rhat, nrow = 2)
   }
 
   # Informative missingness parameter(s) (phi)
-  phi_plot <- if(all(is.na(phi_mcmc_rule))) {
-    NULL
-  } else {
-    ggplot(data.frame(name = names(phi_mcmc_rule),
-                      ratio = phi_mcmc_rule),
-           aes(x = name, y = ratio, fill = ifelse(ratio < 0.05, "yes", "no"))) +
+  phi_plot_ratio <- if(any(!is.null(net$phi) &
+                           !is.element(net$assumption,
+                                       c("IDE-COMMON", "HIE-COMMON")))) {
+    get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
+    phi <- t(get_results %>% select(starts_with("mean.phi[") |
+                                      starts_with("phi[")))
+    phi_mcmc_rule <- 1 / sqrt(phi[, 9])
+    ggplot(data.frame(name = names(phi_mcmc_rule), ratio = phi_mcmc_rule),
+           aes(x = name,
+               y = ratio,
+               fill = factor(ifelse(ratio < 0.05, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
       geom_bar(stat = "identity", width = 0.5) +
       geom_hline(yintercept = 0.05, linetype = 2) +
-      scale_fill_manual(values = c("yes" = "#009E73", "no" = "#D55E00")) +
-      labs(x = "", y = "Ratio of MCSE to posterior standard deviation") +
-      guides(fill = "none") +
-      theme_classic()
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = "MCSE to posterior standard deviation",
+           fill = "Ratio < 0.05") +
+      theme_classic() +
+      theme(axis.text.x = element_blank(),
+            axis.ticks.x = element_line(colour = "transparent"),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else {
+    NULL
+  }
+
+  phi_plot_rhat <- if(any(!is.null(net$phi) &
+                          !is.element(net$assumption,
+                                      c("IDE-COMMON", "HIE-COMMON")))) {
+    get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
+    phi <- t(get_results %>% select(starts_with("mean.phi[") |
+                                      starts_with("phi[")))
+    ggplot(data.frame(name = names(phi[, 8]), rhat = phi[, 8]),
+           aes(x = name,
+               y = rhat,
+               fill = factor(ifelse(rhat < 1.10, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 1.10, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = bquote(Gelman-Rubin~hat(R)~diagnostic),
+           fill = "R < 1.10") +
+      scale_y_continuous(breaks = c(seq(0, max(phi[, 8]), by = 0.2), 1.10)) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+
+  } else {
+    NULL
+  }
+
+  phi_plot <-
+    if(any(!is.null(net$phi) &
+           !is.element(net$assumption, c("IDE-COMMON", "HIE-COMMON")))) {
+      ggarrange(phi_plot_ratio, phi_plot_rhat, nrow = 2)
+  } else {
+    NULL
+  }
+
+  tabulate_phi <-
+    if(any(!is.null(net$phi) & is.element(net$assumption,
+                                          c("IDE-COMMON", "HIE-COMMON")))) {
+      get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
+      phi <- t(get_results %>% select(starts_with("phi") |
+                                        starts_with("mean.phi")))
+      data.frame(R.hat = phi[8], MCMC.rule = 1 / sqrt(phi[9]))
+  } else {
+    data.frame(R.hat = "Not applicable", MCMC.rule = "Not applicable")
   }
 
   # Regression coefficient(s) (beta)
-  beta_plot <- if(all(is.na(beta_mcmc_rule))) {
-    NULL
-  } else {
+  beta_plot_ratio <- if (any(class(net) == "run_metareg" &
+                             net$covar_assumption != "common")) {
+    get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
+    beta <- t(get_results %>% select(starts_with("beta.all[")))
+    beta_mcmc_rule <- 1 / sqrt(beta[, 9])
     ggplot(data.frame(name = names(beta_mcmc_rule),
                       ratio = beta_mcmc_rule),
-           aes(x = name, y = ratio, fill = ifelse(ratio < 0.05, "yes", "no"))) +
+           aes(x = name,
+               y = ratio,
+               fill = factor(ifelse(ratio < 0.05, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
       geom_bar(stat = "identity", width = 0.5) +
       geom_hline(yintercept = 0.05, linetype = 2) +
-      scale_fill_manual(values = c("yes" = "#009E73", "no" = "#D55E00")) +
-      labs(x = "", y = "Ratio of MCSE to posterior standard deviation") +
-      guides(fill = "none") +
-      theme_classic()
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = "MCSE to posterior standard deviation",
+           fill = "Ratio < 0.05") +
+      theme_classic() +
+      theme(axis.text.x = element_blank(),
+            axis.ticks.x = element_line(colour = "transparent"),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else if (class(net) != "run_metareg") {
+    NULL
   }
 
-  return(list(tabulated_results =
-                knitr::kable(convergence,
-                             align = "lccl",
-                             caption = "Markov Chain Monte Carlo diagnostics"),
-              Effect_estimates = EM_plot,
-              Predictions = EM_pred_plot,
-              Within_trial_estimates = delta_plot,
-              Direct_estimates = direct_plot,
-              Indirect_estimates = indirect_plot,
-              Inconsistency_factors = diff_plot,
-              Informative_missingness_parameters = phi_plot,
-              Regression_coefficients = beta_plot))
-}
+  beta_plot_rhat <- if (any(class(net) == "run_metareg" &
+                            net$covar_assumption != "common")) {
+    get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
+    beta <- t(get_results %>% select(starts_with("beta.all[")))
+    ggplot(data.frame(name = names(beta[, 8]), rhat = beta[, 8]),
+           aes(x = name,
+               y = rhat,
+               fill = factor(ifelse(rhat < 1.10, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 1.10, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = bquote(Gelman-Rubin~hat(R)~diagnostic),
+           fill = "R < 1.10") +
+      scale_y_continuous(breaks = c(seq(0, max(beta[, 8]), by = 0.2), 1.10)) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else if (class(net) != "run_metareg") {
+    NULL
+  }
 
+  beta_plot <- if (any(class(net) == "run_metareg" &
+                       net$covar_assumption != "common")) {
+    ggarrange(beta_plot_ratio, beta_plot_rhat, nrow = 2)
+  } else {
+    NULL
+  }
+
+  tabulate_beta <-
+    if (any(class(net) == "run_metareg" & net$covar_assumption == "common")) {
+      get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
+      beta <- t(get_results %>% select(starts_with("beta") & !starts_with("beta.all[")))
+      data.frame(R.hat = beta[8], MCMC.rule = 1 / sqrt(beta[9]))
+    } else {
+      data.frame(R.hat = "Not applicable", MCMC.rule = "Not applicable")
+    }
+
+  # Between-trial standard deviation (tau)
+  tabulate_tau <-
+    if(any(is.element(class(net), c("run_model", "run_metareg", "run_ume")) &
+           net$model == "RE")) {
+      get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
+      tau <- t(get_results %>% select(starts_with("tau")))
+      data.frame(R.hat = tau[8], MCMC.rule = 1 / sqrt(tau[9]))
+  } else if (all(!is.element(class(net),
+                             c("run_model", "run_metareg", "run_ume")) |
+                 net$model == "FE")) {
+    data.frame(R.hat = "Not applicable", MCMC.rule = "Not applicable")
+  }
+
+  tau_plot_ratio <- if (any(class(net) == "run_nodesplit" &
+                            net$model == "RE")) {
+    tau_mcmc_rule <- 1 / sqrt(net$tau[, 8])
+    ggplot(data.frame(name = paste("tau:", net$tau[, 1], "vs", net$tau[, 2]),
+                      ratio = tau_mcmc_rule),
+           aes(x = name,
+               y = ratio,
+               fill = factor(ifelse(ratio < 0.05, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 0.05, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = "MCSE to posterior standard deviation",
+           fill = "Ratio < 0.05") +
+      theme_classic() +
+      theme(axis.text.x = element_blank(),
+            axis.ticks.x = element_line(colour = "transparent"),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else if (any(class(net) == "run_sensitivity" & net$model == "RE")) {
+    tau_mcmc_rule <- 1 / sqrt(net$tau[, 9])
+    ggplot(data.frame(name = paste("tau", 1:length(net$tau[, 8])),
+                      ratio = tau_mcmc_rule),
+           aes(x = name,
+               y = ratio,
+               fill = factor(ifelse(ratio < 0.05, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 0.05, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = "MCSE to posterior standard deviation",
+           fill = "Ratio < 0.05") +
+      theme_classic() +
+      theme(axis.text.x = element_blank(),
+            axis.ticks.x = element_line(colour = "transparent"),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else if (any(class(net) == "run_series_meta" & net$model == "RE")) {
+    tau_mcmc_rule <- 1 / sqrt(net$tau[, 11])
+    ggplot(data.frame(name = paste("tau:", net$tau[, 2], "vs", net$tau[, 1]),
+                      ratio = tau_mcmc_rule),
+           aes(x = name,
+               y = ratio,
+               fill = factor(ifelse(ratio < 0.05, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 0.05, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = "MCSE to posterior standard deviation",
+           fill = "Ratio < 0.05") +
+      theme_classic() +
+      theme(axis.text.x = element_blank(),
+            axis.ticks.x = element_line(colour = "transparent"),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else {
+    NULL
+  }
+
+  tau_plot_rhat <- if (any(class(net) == "run_nodesplit" & net$model == "RE")) {
+    ggplot(data.frame(name = paste("tau:", net$tau[, 1], "vs", net$tau[, 2]),
+                      rhat = net$tau[, 7]),
+           aes(x = name,
+               y = rhat,
+               fill = factor(ifelse(rhat < 1.10, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 1.10, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = bquote(Gelman-Rubin~hat(R)~diagnostic),
+           fill = "R < 1.10") +
+      scale_y_continuous(breaks = c(seq(0, max(net$tau[, 7]), 0.2), 1.10)) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else if (any(class(net) == "run_sensitivity" & net$model == "RE")) {
+    ggplot(data.frame(name = paste("tau", 1:length(net$tau[, 8])),
+                      rhat = net$tau[, 8]),
+           aes(x = name,
+               y = rhat,
+               fill = factor(ifelse(rhat < 1.10, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 1.10, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = bquote(Gelman-Rubin~hat(R)~diagnostic),
+           fill = "R < 1.10") +
+      scale_y_continuous(breaks = c(seq(0, max(net$tau[, 8]), 0.2), 1.10)) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else if (any(class(net) == "run_series_meta" & net$model == "RE")) {
+    ggplot(data.frame(name = paste("tau:", net$tau[, 2], "vs", net$tau[, 1]),
+                      rhat = net$tau[, 10]),
+           aes(x = name,
+               y = rhat,
+               fill = factor(ifelse(rhat < 1.10, "Yes", "No"),
+                             levels = c("Yes", "No")))) +
+      geom_bar(stat = "identity", width = 0.5) +
+      geom_hline(yintercept = 1.10, linetype = 2) +
+      scale_fill_manual(values = c("Yes" = "#009E73", "No" = "#D55E00")) +
+      labs(x = "",
+           y = bquote(Gelman-Rubin~hat(R)~diagnostic),
+           fill = "R < 1.10") +
+      scale_y_continuous(breaks = c(seq(0, max(net$tau[, 10]), 0.2), 1.10)) +
+      theme_classic() +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 12, face = "bold"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12, face = "bold"))
+  } else {
+    NULL
+  }
+
+  tau_plot <-
+    if (
+      all(
+        !is.element(class(net),
+                    c("run_nodesplit", "run_sensitivity", "run_series_meta")) |
+        net$model == "FE"
+        )
+      ) {
+      NULL
+  } else {
+    ggarrange(tau_plot_ratio, tau_plot_rhat, nrow = 2)
+  }
+
+  results <- na.omit(list(Effect_estimates = EM_plot,
+                          Predictions = EM_pred_plot,
+                          Within_trial_estimates = delta_plot,
+                          Between_trial_SD = tau_plot,
+                          Direct_estimates = direct_plot,
+                          Indirect_estimates = indirect_plot,
+                          Inconsistency_factors = diff_plot,
+                          Informative_missingness_parameters = phi_plot,
+                          Regression_coefficients = beta_plot,
+                          table_tau =
+                          knitr::kable(
+                            tabulate_tau,
+                            caption =
+                            "The (common) between-trial standard deviation"),
+                          table_phi =
+                          knitr::kable(
+                            tabulate_phi,
+                            caption =
+                            "The common informative missingness parameter"),
+                          table_beta =
+                            knitr::kable(
+                              tabulate_beta,
+                              caption =
+                                "The common regression coefficient")))
+
+  return(Filter(Negate(is.null), results))
+}

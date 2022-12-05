@@ -537,7 +537,7 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
   model_assessment <- data.frame(DIC, pD, dev)
 
   ## Collect the minimum results at common
-  results <- if (model == "RE") {
+  results0 <- if (model == "RE") {
     list(EM = EM,
          dev_o = dev_o,
          hat_par = hat_par,
@@ -577,15 +577,17 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
          n_thin = n_thin)
   }
 
+  # Return different list of results according to a condition
+  results <- if (is.null(impr_ume$nbase_multi)) {
+    results0
+  } else {
+    append(results0,
+           list(m_tau = m_tau,
+                frail_comp =
+                  paste0(impr_ume$t2_bn, "vs", impr_ume$t1_bn)))
+  }
+
   class(results) <- "run_ume"
 
-  # Return different list of results according to a condition
-  if (is.null(impr_ume$nbase_multi)) {
-    return(results)
-  } else {
-    return(append(results,
-                  list(m_tau = m_tau,
-                       frail_comp =
-                         paste0(impr_ume$t2_bn, "vs", impr_ume$t1_bn))))
-  }
+  return(results)
 }

@@ -545,7 +545,7 @@ metareg_plot <- function(full,
            knitr::kable(table_model_assess,
                         align = "lcccccc",
                         caption =
-                          "Model assessment and between-trial heterogeneity"),
+                          "Model assessment and between-trial standard deviation"),
          table_regression_coeffients =
            knitr::kable(reg_coeff,
                         caption =

@@ -293,20 +293,22 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
   results <- if (model == "RE") {
     list(EM = EM,
          tau = tau,
+         measure = measure,
+         model = model,
          single = single,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin,
-         measure = measure)
+         n_thin = n_thin)
   } else {
     list(EM = EM,
+         measure = measure,
+         model = model,
          single = single,
          n_chains = n_chains,
          n_iter = n_iter,
          n_burnin = n_burnin,
-         n_thin = n_thin,
-         measure = measure)
+         n_thin = n_thin)
   }
 
   class(results) <- "run_series_meta"
