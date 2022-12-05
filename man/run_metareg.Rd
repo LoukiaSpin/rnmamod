@@ -11,7 +11,8 @@ run_metareg(
   n_chains,
   n_iter,
   n_burnin,
-  n_thin
+  n_thin,
+  inits = NULL
 )
 }
 \arguments{
@@ -46,6 +47,11 @@ The default argument is 1000.}
 MCMC sampling; an argument of the \code{\link[R2jags]{jags}} function
 of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1.}
+
+\item{inits}{A list with the initial values for the parameters; an argument
+of the \code{\link[R2jags:jags]{jags}} function of the R-package
+\href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+The default argument is \code{NULL}, and JAGS generates the initial values.}
 }
 \value{
 A list of R2jags outputs on the summaries of the posterior
@@ -125,7 +131,11 @@ Performs a one-stage pairwise or network meta-regression while addressing
   The model runs in \code{JAGS} and the progress of the simulation appears on
   the R console. The output of \code{run_metareg} is used as an S3 object by
   other functions of the package to be processed further and provide an
-  end-user-ready output.
+  end-user-ready output. The model is updated until convergence using the
+  \code{\link[R2jags:autojags]{autojags}} function of the R-package
+  \href{https://CRAN.R-project.org/package=R2jags}{R2jags} with 2 updates and
+  number of iterations and thinning equal to \code{n_iter} and \code{n_thin},
+  respectively.
 
   The models described in Spineli et al. (2021), and Spineli (2019) have
   been extended to incorporate one \emph{study-level covariate} variable
@@ -179,7 +189,8 @@ missing binary outcome data in network meta-analysis.
 doi: 10.1186/s12874-019-0731-y
 }
 \seealso{
-\code{\link[R2jags]{jags}}, \code{\link{run_model}}
+\code{\link[R2jags:autojags]{autojags}}, \code{\link[R2jags]{jags}},
+  \code{\link{run_model}}
 }
 \author{
 {Loukia M. Spineli}

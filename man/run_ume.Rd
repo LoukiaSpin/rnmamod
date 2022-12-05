@@ -114,7 +114,12 @@ Performs the unrelated mean effects model of Dias et al. (2013)
   baseline arm of the multi-arm trial (Spineli, 2021).
 
   \code{run_ume} runs Bayesian unrelated mean effects model in \code{JAGS}.
-  The progress of the simulation appears on the R console.
+  The progress of the simulation appears on the R console. The model is
+  updated until convergence using the \code{\link[R2jags:autojags]{autojags}}
+  function of the R-package
+  \href{https://CRAN.R-project.org/package=R2jags}{R2jags} with 2 updates and
+  number of iterations and thinning equal to \code{n_iter} and \code{n_thin},
+  respectively.
 
   The output of \code{run_ume} is not end-user-ready. The
   \code{\link{ume_plot}} function uses the output of \code{run_ume} as an S3
@@ -167,7 +172,8 @@ missing binary outcome data in network meta-analysis.
 doi: 10.1186/s12874-019-0731-y
 }
 \seealso{
-\code{\link[R2jags:jags]{jags}},
+\code{\link[R2jags:autojags]{autojags}},
+  \code{\link[R2jags:jags]{jags}},
   \code{\link{prepare_ume}}, \code{\link{run_model}},
   \code{\link{run_series_meta}}, \code{\link{ume_plot}}
 }

@@ -1,6 +1,17 @@
 # rnmamod, version 0.4.0 (2023-0X-XX)
 
- * Function __mcmc_diagnostics__:
+ * Function __mcmc_diagnostics__: 
+   - returns a barplot on the ratio of MCMC error to the posterior standard
+   deviation and a barplot on the Gelman-Rubin R diagnostic. Green bars
+   indicate ratio less than 0.05 and R less than 1.10; otherwise, the bars are
+   red.
+ * Functions __baseline_model__, __run_metareg__, __run_model__, 
+   __run_nodesplit__, __run_sensitivity__, __run_series_meta__, and __run_ume__: 
+   - The corresponding models are updated until convergence via the _autojags_
+   function of the R package _R2jags_.
+   - The argument _inits_ has been added to allow the user define the initial
+   values for the parameters, following the documentation of the _jags_ function
+   in the R package _R2jags_. 
 
 # rnmamod, version 0.3.0 (2022-11-01)
 

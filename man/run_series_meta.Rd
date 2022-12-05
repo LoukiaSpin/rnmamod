@@ -4,7 +4,7 @@
 \alias{run_series_meta}
 \title{Perform a series of Bayesian pairwise meta-analyses}
 \usage{
-run_series_meta(full, n_chains, n_iter, n_burnin, n_thin)
+run_series_meta(full, n_chains, n_iter, n_burnin, n_thin, inits = NULL)
 }
 \arguments{
 \item{full}{An object of S3 class \code{\link{run_model}}. See 'Value' in
@@ -30,6 +30,11 @@ The default argument is 1000.}
 sampling; an argument of the \code{\link[R2jags:jags]{jags}} function of
 the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1.}
+
+\item{inits}{A list with the initial values for the parameters; an argument
+of the \code{\link[R2jags:jags]{jags}} function of the R-package
+\href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+The default argument is \code{NULL}, and JAGS generates the initial values.}
 }
 \value{
 An R2jags output on the summaries of the posterior distribution, and

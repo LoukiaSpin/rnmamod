@@ -4,7 +4,7 @@
 \alias{run_nodesplit}
 \title{Perform the node-splitting approach}
 \usage{
-run_nodesplit(full, n_chains, n_iter, n_burnin, n_thin)
+run_nodesplit(full, n_chains, n_iter, n_burnin, n_thin, inits = NULL)
 }
 \arguments{
 \item{full}{An object of S3 class \code{\link{run_model}}.
@@ -30,6 +30,11 @@ The default argument is 1000.}
 MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
 of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1.}
+
+\item{inits}{A list with the initial values for the parameters; an argument
+of the \code{\link[R2jags:jags]{jags}} function of the R-package
+\href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+The default argument is \code{NULL}, and JAGS generates the initial values.}
 }
 \value{
 An R2jags output on the summaries of the posterior distribution,
@@ -91,6 +96,11 @@ Performs the Bayesian node-splitting approach of Dias et al. (2010)
   text in red and it equals the number of split nodes (see 'Examples').
   If there are no split nodes in the network, the execution of the function
   will be stopped and an error message will be printed on the R console.
+  The model is updated until convergence using the
+  \code{\link[R2jags:autojags]{autojags}} function of the R-package
+  \href{https://CRAN.R-project.org/package=R2jags}{R2jags} with 2 updates and
+  number of iterations and thinning equal to \code{n_iter} and \code{n_thin},
+  respectively.
 
   \code{run_nodesplit} uses the
   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}}
@@ -159,7 +169,8 @@ meta-analysis. \emph{Res Synth Methods} 2016;\bold{7}(1):80--93.
 doi: 10.1002/jrsm.1167
 }
 \seealso{
-\code{\link[R2jags:jags]{jags}},
+\code{\link[R2jags:autojags]{autojags}},
+  \code{\link[R2jags:jags]{jags}},
   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}},
   \code{\link{nodesplit_plot}}, \code{\link{prepare_nodesplit}},
   \code{\link{run_model}}

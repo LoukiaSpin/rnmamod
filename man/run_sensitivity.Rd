@@ -12,7 +12,8 @@ run_sensitivity(
   n_chains,
   n_iter,
   n_burnin,
-  n_thin
+  n_thin,
+  inits = NULL
 )
 }
 \arguments{
@@ -60,6 +61,11 @@ The default argument is 1000.}
 argument of the \code{\link[R2jags:jags]{jags}} function of the R-package
 \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1.}
+
+\item{inits}{A list with the initial values for the parameters; an argument
+of the \code{\link[R2jags:jags]{jags}} function of the R-package
+\href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+The default argument is \code{NULL}, and JAGS generates the initial values.}
 }
 \value{
 A list of R2jags outputs on the summaries of the posterior
@@ -142,6 +148,12 @@ The model runs in \code{JAGS} and the progress of the simulation
   \code{n_iter}, \code{n_burnin}, and \code{n_thin} as specified by the user
   to be inherited by other relevant functions of the package.
 
+  The model is updated until convergence using the
+  \code{\link[R2jags:autojags]{autojags}} function of the R-package
+  \href{https://CRAN.R-project.org/package=R2jags}{R2jags} with 2 updates and
+  number of iterations and thinning equal to \code{n_iter} and \code{n_thin},
+  respectively.
+
   \code{run_sensitivity} can be used only when missing participant
   outcome data have been extracted for at least one trial. Otherwise, the
   execution of the function will be stopped and an error message will be
@@ -195,7 +207,8 @@ in meta-analysis--part 1: two-stage methods.
 \emph{Stat Med} 2008;\bold{27}(5):711--27. doi: 10.1002/sim.3008
 }
 \seealso{
-\code{\link[R2jags:jags]{jags}}, \code{\link{run_model}}
+\code{\link[R2jags:autojags]{autojags}},
+  \code{\link[R2jags:jags]{jags}}, \code{\link{run_model}}
 }
 \author{
 {Loukia M. Spineli}

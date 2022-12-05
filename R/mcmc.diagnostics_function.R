@@ -40,7 +40,7 @@
 #'   correspond to an R value less than 1.10 are indicated in green (the
 #'   corresponding parameters have been converged); otherwise, the bars are
 #'   indicated in red (convergence is not achieved).
-#'   \code{mcmc_diagnostics} returns histograms than baplots for \code{EM} when
+#'   \code{mcmc_diagnostics} returns histograms than barplots for \code{EM} when
 #'   \code{\link{run_sensitivity}} is considered.
 #'
 #'   \code{mcmc_diagnostics} also uses the

@@ -77,6 +77,10 @@
 #'   MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
 #'   of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 #'   The default argument is 1.
+#' @param inits A list with the initial values for the parameters; an argument
+#'   of the \code{\link[R2jags:jags]{jags}} function of the R-package
+#'   \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is \code{NULL}, and JAGS generates the initial values.
 #'
 #' @format The columns of the data-frame in the argument \code{data} refer
 #'   to the following elements for a continuous outcome:
@@ -308,9 +312,10 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{baseline_model}}, \code{\link{data_preparation}},
+#' @seealso \code{\link[R2jags:autojags]{autojags}},
+#'   \code{\link{baseline_model}}, \code{\link{data_preparation}},
 #'   \code{\link{heterogeneity_param_prior}},
-#'   \code{\link[R2jags:autojags]{autojags}}, \code{\link[R2jags:jags]{jags}},
+#'   \code{\link[R2jags:jags]{jags}},
 #'   \code{\link{missingness_param_prior}}, \code{\link{prepare_model}}
 #'
 #' @references
@@ -413,7 +418,8 @@ run_model <- function(data,
                       n_chains,
                       n_iter,
                       n_burnin,
-                      n_thin) {
+                      n_thin,
+                      inits = NULL) {
 
 
   # Prepare the dataset for the R2jags
@@ -528,6 +534,12 @@ run_model <- function(data,
   } else {
     n_thin
   }
+  inits <- if (is.null(inits)) {
+    message("JAGS generates initial values for the parameters.")
+    NULL
+  } else {
+    inits
+  }
 
   # Sign of basic parameters in relation to 'ref'
   indic <- matrix(NA, nrow = item$ns, ncol = max(item$na))
@@ -619,6 +631,7 @@ run_model <- function(data,
   # Run the Bayesian analysis
   message("Running the model ...")
   jagsfit0 <- jags(data = data_jag,
+                   inits = inits,
                    parameters.to.save = param_jags,
                    model.file = textConnection(
                      prepare_model(measure,

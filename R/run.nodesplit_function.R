@@ -27,6 +27,10 @@
 #'   MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
 #'   of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 #'   The default argument is 1.
+#' @param inits A list with the initial values for the parameters; an argument
+#'   of the \code{\link[R2jags:jags]{jags}} function of the R-package
+#'   \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is \code{NULL}, and JAGS generates the initial values.
 #'
 #' @return An R2jags output on the summaries of the posterior distribution,
 #'   and the Gelman-Rubin convergence diagnostic of the
@@ -78,6 +82,11 @@
 #'   text in red and it equals the number of split nodes (see 'Examples').
 #'   If there are no split nodes in the network, the execution of the function
 #'   will be stopped and an error message will be printed on the R console.
+#'   The model is updated until convergence using the
+#'   \code{\link[R2jags:autojags]{autojags}} function of the R-package
+#'   \href{https://CRAN.R-project.org/package=R2jags}{R2jags} with 2 updates and
+#'   number of iterations and thinning equal to \code{n_iter} and \code{n_thin},
+#'   respectively.
 #'
 #'   \code{run_nodesplit} uses the
 #'   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}}
@@ -105,7 +114,8 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link[R2jags:jags]{jags}},
+#' @seealso \code{\link[R2jags:autojags]{autojags}},
+#'   \code{\link[R2jags:jags]{jags}},
 #'   \code{\link[gemtc:mtc.nodesplit.comparisons]{mtc.nodesplit.comparisons}},
 #'   \code{\link{nodesplit_plot}}, \code{\link{prepare_nodesplit}},
 #'   \code{\link{run_model}}
@@ -156,7 +166,8 @@ run_nodesplit <- function(full,
                           n_chains,
                           n_iter,
                           n_burnin,
-                          n_thin) {
+                          n_thin,
+                          inits = NULL) {
 
   if (!inherits(full, "run_model") || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_meta'.",
@@ -204,6 +215,12 @@ run_nodesplit <- function(full,
     stop("The argument 'n_thin' must be a positive integer.", call. = FALSE)
   } else {
     n_thin
+  }
+  inits <- if (is.null(inits)) {
+    message("JAGS generates initial values for the parameters.")
+    NULL
+  } else {
+    inits
   }
 
   # Prepare the dataset for the R2jags
@@ -275,7 +292,7 @@ run_nodesplit <- function(full,
     }
 
     # Define necessary model components
-    jagsfit <- data_jag <- checkPair <- bi <- si <- m <- list()
+    jagsfit0 <- jagsfit <- data_jag <- checkPair <- bi <- si <- m <- list()
     checkPair_node <- t_node <- N_node <- m_node <- m
     y_node <- se_node <- r_node <- I_sign <- m
 
@@ -370,16 +387,24 @@ run_nodesplit <- function(full,
 
       # Run the Bayesian analysis
       message(paste(i, "out of", length(pair[, 1]), "split nodes"))
-      jagsfit[[i]] <- jags(data = data_jag[[i]],
-                           parameters.to.save = param_jags,
-                           model.file =
-                             textConnection(prepare_nodesplit(measure,
-                                                              model,
-                                                              assumption)),
-                           n.chains = n_chains,
-                           n.iter = n_iter,
-                           n.burnin = n_burnin,
-                           n.thin = n_thin)
+      jagsfit0[[i]] <- jags(data = data_jag[[i]],
+                            inits = inits,
+                            parameters.to.save = param_jags,
+                            model.file =
+                              textConnection(prepare_nodesplit(measure,
+                                                               model,
+                                                               assumption)),
+                            n.chains = n_chains,
+                            n.iter = n_iter,
+                            n.burnin = n_burnin,
+                            n.thin = n_thin)
+
+      # Update until convergence is necessary
+      message(paste("Updating model for split node", i, "until convergence"))
+      jagsfit[[i]] <- autojags(jagsfit0[[i]],
+                               n.iter = n_iter,
+                               n.thin = n_thin,
+                               n.update = 2)
     } # Stop loop for 'pair'
   }
 

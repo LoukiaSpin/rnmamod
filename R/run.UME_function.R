@@ -100,7 +100,12 @@
 #'   baseline arm of the multi-arm trial (Spineli, 2021).
 #'
 #'   \code{run_ume} runs Bayesian unrelated mean effects model in \code{JAGS}.
-#'   The progress of the simulation appears on the R console.
+#'   The progress of the simulation appears on the R console. The model is
+#'   updated until convergence using the \code{\link[R2jags:autojags]{autojags}}
+#'   function of the R-package
+#'   \href{https://CRAN.R-project.org/package=R2jags}{R2jags} with 2 updates and
+#'   number of iterations and thinning equal to \code{n_iter} and \code{n_thin},
+#'   respectively.
 #'
 #'   The output of \code{run_ume} is not end-user-ready. The
 #'   \code{\link{ume_plot}} function uses the output of \code{run_ume} as an S3
@@ -112,7 +117,8 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link[R2jags:jags]{jags}},
+#' @seealso \code{\link[R2jags:autojags]{autojags}},
+#'   \code{\link[R2jags:jags]{jags}},
 #'   \code{\link{prepare_ume}}, \code{\link{run_model}},
 #'   \code{\link{run_series_meta}}, \code{\link{ume_plot}}
 #'
@@ -444,18 +450,23 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
   }
 
   # Run the Bayesian analysis
-  jagsfit <- suppressWarnings({jags(data = data_jag,
-                  parameters.to.save = param_jags,
-                  model.file = textConnection(prepare_ume(measure,
-                                                          model,
-                                                          assumption,
-                                                          connected)),
-                  n.chains = n_chains,
-                  n.iter = n_iter,
-                  n.burnin = n_burnin,
-                  n.thin = n_thin,
-                  DIC = FALSE)
+  message("Running the model ...")
+  jagsfit0 <- suppressWarnings({jags(data = data_jag,
+                   parameters.to.save = param_jags,
+                   model.file = textConnection(prepare_ume(measure,
+                                                           model,
+                                                           assumption,
+                                                           connected)),
+                   n.chains = n_chains,
+                   n.iter = n_iter,
+                   n.burnin = n_burnin,
+                   n.thin = n_thin,
+                   DIC = FALSE)
   })
+
+  # Update until convergence is necessary
+  message("... Updating the model until convergence")
+  jagsfit <- autojags(jagsfit0, n.iter = n_iter, n.thin = n_thin, n.update = 2)
 
   # Turn summary of posterior results (R2jags object) into a data-frame
   # to select model parameters (using 'dplyr')

@@ -59,7 +59,8 @@ run_model(
   n_chains,
   n_iter,
   n_burnin,
-  n_thin
+  n_thin,
+  inits = NULL
 )
 }
 \arguments{
@@ -148,6 +149,11 @@ The default argument is 1000.}
 MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
 of the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 The default argument is 1.}
+
+\item{inits}{A list with the initial values for the parameters; an argument
+of the \code{\link[R2jags:jags]{jags}} function of the R-package
+\href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+The default argument is \code{NULL}, and JAGS generates the initial values.}
 }
 \value{
 A list of R2jags output on the summaries of the posterior
@@ -432,9 +438,10 @@ in meta-analysis--part 1: two-stage methods. \emph{Stat Med}
 2008;\bold{27}(5):711--27. doi: 10.1002/sim.3008
 }
 \seealso{
-\code{\link{baseline_model}}, \code{\link{data_preparation}},
+\code{\link[R2jags:autojags]{autojags}},
+  \code{\link{baseline_model}}, \code{\link{data_preparation}},
   \code{\link{heterogeneity_param_prior}},
-  \code{\link[R2jags:autojags]{autojags}}, \code{\link[R2jags:jags]{jags}},
+  \code{\link[R2jags:jags]{jags}},
   \code{\link{missingness_param_prior}}, \code{\link{prepare_model}}
 }
 \author{

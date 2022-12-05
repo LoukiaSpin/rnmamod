@@ -22,6 +22,10 @@
 #'   sampling; an argument of the \code{\link[R2jags:jags]{jags}} function of
 #'   the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 #'   The default argument is 1.
+#' @param inits A list with the initial values for the parameters; an argument
+#'   of the \code{\link[R2jags:jags]{jags}} function of the R-package
+#'   \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is \code{NULL}, and JAGS generates the initial values.
 #'
 #' @return An R2jags output on the summaries of the posterior distribution, and
 #'   the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the
@@ -95,7 +99,12 @@
 #' }
 #'
 #' @export
-run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
+run_series_meta <- function(full,
+                            n_chains,
+                            n_iter,
+                            n_burnin,
+                            n_thin,
+                            inits = NULL) {
 
 
   if (!inherits(full, "run_model") || is.null(full)) {
@@ -161,6 +170,12 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
     stop("The argument 'n_thin' must be a positive integer.", call. = FALSE)
   } else {
     n_thin
+  }
+  inits <- if (is.null(inits)) {
+    message("JAGS generates initial values for the parameters.")
+    NULL
+  } else {
+    inits
   }
 
   # Prepare the dataset for the R2jags
@@ -247,7 +262,8 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
   # Run each random-effects pairwise meta-analysis
   meta <- list()
   for (i in 1:n_obs_comp) {
-    message(paste(i, "out of", n_obs_comp, "observed comparisons"))
+    a <- "(and model updating until convergence)"
+    message(paste(i, "out of", n_obs_comp, "observed comparisons", a))
 
     # 'D' and 'base_risk' do not matter in pairwise meta-analysis
     meta[[i]] <-
@@ -266,7 +282,8 @@ run_series_meta <- function(full, n_chains, n_iter, n_burnin, n_thin) {
                   n_chains,
                   n_iter,
                   n_burnin,
-                  n_thin)
+                  n_thin,
+                  inits = inits)
         })
   }
 
