@@ -62,15 +62,9 @@
 #'   participants and obtained using the Taylor series.}
 #'
 #' @details The \code{taylor_continuous} function is integrated in the
-#'   \code{\link{unrelated_effects_plot}} function. The latter uses the
-#'   the \code{\link[netmeta:pairwise]{pairwise}} function from the package
-#'   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}
-#'   to transform the dataset from the wide arm-based format into the long
-#'   arm-based format (see, 'Arguments' for \code{data} in
-#'   \code{\link{unrelated_effects_plot}}).
+#'   \code{\link{unrelated_effects_plot}} function.
 #'
-#' @seealso \href{https://CRAN.R-project.org/package=netmeta}{pairwise},
-#'   \code{\link{run_model}}, \code{\link{unrelated_effects_plot}}
+#' @seealso \code{\link{run_model}}, \code{\link{unrelated_effects_plot}}
 #'
 #' @references
 #' Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for

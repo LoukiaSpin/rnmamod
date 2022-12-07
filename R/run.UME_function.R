@@ -26,6 +26,10 @@
 #'   sampling; an argument of the \code{\link[R2jags:jags]{jags}} function of
 #'   the R-package \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 #'   The default argument is 1.
+#' @param inits A list with the initial values for the parameters; an argument
+#'   of the \code{\link[R2jags:jags]{jags}} function of the R-package
+#'   \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
+#'   The default argument is \code{NULL}, and JAGS generates the initial values.
 #'
 #' @return An R2jags output on the summaries of the posterior distribution, and
 #'   the Gelman-Rubin convergence diagnostic (Gelman et al., 1992) of the
@@ -164,7 +168,12 @@
 #' }
 #'
 #' @export
-run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
+run_ume <- function(full,
+                    n_iter,
+                    n_burnin,
+                    n_chains,
+                    n_thin,
+                    inits = NULL) {
 
 
   if (!inherits(full, "run_model") || is.null(full)) {
@@ -221,6 +230,12 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
     stop("The argument 'n_thin' must be a positive integer.", call. = FALSE)
   } else {
     n_thin
+  }
+  inits <- if (is.null(inits)) {
+    message("JAGS generates initial values for the parameters.")
+    NULL
+  } else {
+    inits
   }
 
   # Move multi-arm trials at the bottom
@@ -461,7 +476,8 @@ run_ume <- function(full, n_iter, n_burnin, n_chains, n_thin) {
                    n.iter = n_iter,
                    n.burnin = n_burnin,
                    n.thin = n_thin,
-                   DIC = FALSE)
+                   DIC = FALSE,
+                   inits = inits)
   })
 
   # Update until convergence is necessary

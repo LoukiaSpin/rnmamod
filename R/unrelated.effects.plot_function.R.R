@@ -190,37 +190,10 @@ unrelated_effects_plot <- function(data,
                                   "m2",
                                   "n1",
                                   "n2")
-    #pairwise_observed <-
-    #  pairwise(as.list(item$t),
-    #           mean = as.list(item$y0),
-    #           sd = as.list(item$sd0),
-    #           n = as.list(item$N),
-    #           data = cbind(item$t, item$y0, item$sd0, item$N),
-    #           studlab = 1:item$ns)[, c(3:5, 7, 10, 8, 11, 6, 9)]
-    #colnames(pairwise_observed) <- c("study",
-    #                                  "arm1",
-    #                                  "arm2",
-    #                                  "y1",
-    #                                  "y2",
-    #                                  "sd1",
-    #                                  "sd2",
-    #                                  "n1",
-    #                                  "n2")
-
-    #pairwise_mod <- pairwise(as.list(item$t),
-    #                          mean = as.list(item$y0),
-    #                          sd = as.list(item$sd0),
-    #                          n = as.list(item$m),
-    #                          data = cbind(item$t, item$y0, item$sd0, item$m),
-    #                          studlab = 1:item$ns)[, c(6, 9)]
-    #colnames(pairwise_mod) <- c("m1", "m2")
 
     # The dataset to perform the unrelated trial effects model
     pairwise_data <- data.frame(pairwise_data0[, c(1, 4:11)],
                                 pairwise_data0[, 2:3])
-    #pairwise_data <- data.frame(pairwise_observed[, c(1, 4:7)],
-    #                            pairwise_mod,
-    #                            pairwise_observed[, c(8:9, 2:3)])
   } else {
     t_long_form <- log_format(item$t)
     r_long_form <- log_format(item$r)
@@ -240,33 +213,10 @@ unrelated_effects_plot <- function(data,
                                   "m2",
                                   "n1",
                                   "n2")
-    #pairwise_observed <-
-    #  pairwise(as.list(item$t),
-    #           event = as.list(item$r),
-    #           n = as.list(item$N),
-    #           data = cbind(item$t, item$r, item$N),
-    #           studlab = 1:item$ns)[, c(3, 6, 8, 7, 9, 4:5)]
-    #colnames(pairwise_observed) <- c("study",
-    #                                  "r1",
-    #                                  "r2",
-    #                                  "n1",
-    #                                  "n2",
-    #                                  "arm1",
-    #                                  "arm2")
-
-    #pairwise_mod <- pairwise(as.list(item$t),
-    #                          event = as.list(item$m),
-    #                          n = as.list(item$N),
-    #                          data = cbind(item$t, item$m, item$N),
-    #                          studlab = 1:item$ns)[, c(6, 8)]
-    #colnames(pairwise_mod) <- c("m1", "m2")
 
     # The dataset to perform the unrelated trial effects model
     pairwise_data <- data.frame(pairwise_data0[, c(1, 4:9)],
                                 pairwise_data0[, 2:3])
-    #pairwise_data <- data.frame(pairwise_observed[, 1:3],
-    #                            pairwise_mod,
-    #                            pairwise_observed[, 4:7])
   }
 
  if (is.element(measure, c("MD", "SMD", "ROM"))) {

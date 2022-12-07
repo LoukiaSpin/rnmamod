@@ -115,12 +115,6 @@ describe_network <- function(data, drug_names, measure) {
   n_long_form <- log_format(dat$N)
   pair_mod <- data.frame(t_long_form, m_long_form, n_long_form)
   colnames(pair_mod) <- c("t1", "t2", "m1", "m2", "n1", "n2")
-  #pair_mod <- pairwise(as.list(dat$t),
-  #                      event = as.list(dat$m),
-  #                      n = as.list(dat$N),
-  #                      data = cbind(dat$t, dat$m, dat$N),
-  #                      studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
-  #colnames(pair_mod) <- c("study", "t1", "t2", "m1", "m2", "n1", "n2")
 
   # Name the interventions in each arm
   pair_mod[, 1] <- drug_names[pair_mod$t1]
@@ -254,12 +248,6 @@ describe_network <- function(data, drug_names, measure) {
                              2) * 100
 
     # Turn into long format for events
-    #pair_bin <- pairwise(as.list(dat$t),
-    #                      event = as.list(dat$r),
-    #                      n = as.list(dat$N),
-    #                      data = cbind(dat$t, dat$r, dat$N),
-    #                      studlab = 1:dat$ns)[, c(3:6, 8, 7, 9)]
-    #colnames(pair_bin) <- c("study", "t1", "t2", "r1", "r2", "n1", "n2")
     r_long_form <- log_format(dat$r)
     pair_bin <- data.frame(t_long_form, r_long_form, n_long_form)
     colnames(pair_bin) <- c("t1", "t2", "r1", "r2", "n1", "n2")

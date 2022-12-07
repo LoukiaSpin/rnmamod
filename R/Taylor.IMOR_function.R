@@ -51,15 +51,9 @@
 #'   participants and obtained using the Taylor series.}
 #'
 #' @details The \code{taylor_imor} function is integrated in the
-#'   \code{\link{unrelated_effects_plot}} function. The latter uses the
-#'   the \code{\link[netmeta:pairwise]{pairwise}} function from the package
-#'   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}
-#'   to transform the dataset from the wide arm-based format into the long
-#'   arm-based format (see, 'Arguments' for \code{data} in
-#'   \code{\link{unrelated_effects_plot}}).
+#'   \code{\link{unrelated_effects_plot}} function.
 #'
-#' @seealso \code{\link[netmeta:pairwise]{pairwise}}, \code{\link{run_model}},
-#'   \code{\link{unrelated_effects_plot}}
+#' @seealso \code{\link{run_model}}, \code{\link{unrelated_effects_plot}}
 #'
 #' @references
 #' White IR, Higgins JP, Wood AM. Allowing for uncertainty due to missing data

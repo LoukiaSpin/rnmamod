@@ -54,6 +54,16 @@
 #' @export
 scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
 
+  if (!inherits(full, "run_model") || is.null(full)) {
+    stop("'full' must be an object of S3 class 'run_model'.",
+         call. = FALSE)
+  }
+
+  if (!inherits(reg, "run_metareg") || is.null(reg)) {
+    stop("'reg' must be an object of S3 class 'run_metareg'.",
+         call. = FALSE)
+  }
+
   if (length(unique(reg$covariate)) < 3 &
       !is.element(cov_value[[1]], reg$covariate)) {
     stop("The first element of the argument 'cov_value' is out of the value

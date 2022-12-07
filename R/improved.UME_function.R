@@ -79,12 +79,6 @@ improved_ume <- function(t, N, ns, na) {
   n_long_form <- log_format(N)
   wide_format0 <- data.frame(study, t_long_form, n_long_form, n_long_form)
   colnames(wide_format0) <- c("study", "t1", "t2", "n1", "n2", "n1", "n2")
-  #wide_format0 <- pairwise(as.list(t),
-  #                         event = as.list(N),
-  #                         n = as.list(N),
-  #                         data = cbind(t, N, N),
-  #                         studlab = 1:ns)[, c(3:6, 8, 7, 9)]
-  #colnames(wide_format0) <- c("study", "t1", "t2", "n1", "n2", "n1", "n2")
 
   # Ensure that t1 < t2 and correspondingly for the other elements
   treat <- treat0 <- wide_format0[, 2:3]
