@@ -232,10 +232,8 @@ baseline_model <- function(base_risk,
     estim_prob <- exp(trial_base_logit[, c(1, 3, 7)]) /
       (1 + exp(trial_base_logit[, c(1, 3, 7)]))
     # Back-transform to probability (summary estimate)
-    #summary_prob <- round(exp(mean_base_logit[c(1, 3, 7)]) /
-    #  (1 + exp(mean_base_logit[c(1, 3, 7)])) * 100, 0)
-    summary_prob <- exp(mean_base_logit[c(1, 3, 7)]) /
-      (1 + exp(mean_base_logit[c(1, 3, 7)])) * 100
+    summary_prob <- round(exp(mean_base_logit[c(1, 3, 7)]) /
+      (1 + exp(mean_base_logit[c(1, 3, 7)])) * 100, 0)
 
     # Create dataset for the forest-plot
     dataplot <- data.frame(rbind(matrix(rep(base_risk1[, 1] / base_risk1[, 2], 3),
@@ -245,8 +243,7 @@ baseline_model <- function(base_risk,
                                each = data_jag_base$ns.base),
                            rep(as.factor(seq_len(data_jag_base$ns.base)), 2))
     colnames(dataplot) <- c("point", "lower", "upper", "type", "order")
-    #dataplot[, 1:3] <- round(dataplot[, 1:3] * 100, 0)
-    dataplot[, 1:3] <- dataplot[, 1:3] * 100
+    dataplot[, 1:3] <- round(dataplot[, 1:3] * 100, 0)
 
     # Rule to define x-axis label tick marks
     min_x <- ifelse(min(dataplot$lower) < 50, 0, min(dataplot$lower))
