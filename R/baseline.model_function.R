@@ -237,7 +237,7 @@ baseline_model <- function(base_risk,
     cri_pred <- paste0("(", round(pred_base_logit[, 3], 2), ",",
                        " ", round(pred_base_logit[, 7], 2), ")")
     data.frame(rbind(c(round(mean_base_logit[1:2], 2), cri_mean),
-                     c(round(tau_base_logit[1:2], 2), cri_tau),
+                     c(round(tau_base_logit[5, 2], 2), cri_tau),
                      c(round(pred_base_logit[1:2], 2), cri_pred)))
   } else {
     matrix("Not applicable", nrow = 3, ncol = 3)
