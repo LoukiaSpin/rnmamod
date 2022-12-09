@@ -274,7 +274,11 @@ baseline_model <- function(base_risk,
                       " ", "(", round(tau_base_logit[3], 2), ",", " ",
                       round(tau_base_logit[7], 2), ")")
 
-    # Crate forest-plot
+    # Difference between 'Observed' and 'Estimated' per trial
+    diff_type <- diff(dataplot$point, 19, 1)
+    diff_dummy <- rep(ifelse(diff_type == 0, 0, 1), 2)
+
+    # Create forest-plot
     ggplot(data = dataplot,
            aes(x = order,
                y = point,
@@ -282,7 +286,7 @@ baseline_model <- function(base_risk,
                ymax = upper)) +
       geom_hline(yintercept = summary_prob,
                  col = "grey",
-                 size = 1,
+                 linewidth = 1,
                  lty = 2) +
       geom_rect(aes(xmin = -Inf,
                     xmax = Inf,
@@ -290,10 +294,11 @@ baseline_model <- function(base_risk,
                     ymax = summary_prob[3]),
                 alpha = 0.01,
                 fill = "grey") +
-      geom_linerange(size = 1.5,
+      geom_linerange(linewidth = 1.5,
                      position = position_dodge(width = 0.5)) +
       geom_point(aes(colour = type),
-                 size = ifelse(dataplot$type == "Estimated", 2.5, 3.7),
+                 size = ifelse(dataplot$type == "Estimated", 2.5, 4.0),
+                 alpha = ifelse(diff_dummy == 0, 0.6, 1),
                  stroke = 0.3) +
       # Label the point estimate
       geom_text(aes(x = order,
