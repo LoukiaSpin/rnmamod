@@ -77,12 +77,7 @@ Applies the pattern-mixture model under a specific assumption
 }
 \details{
 The \code{taylor_continuous} function is integrated in the
-  \code{\link{unrelated_effects_plot}} function. The latter uses the
-  the \code{\link[netmeta:pairwise]{pairwise}} function from the package
-  \href{https://CRAN.R-project.org/package=netmeta}{netmeta}
-  to transform the dataset from the wide arm-based format into the long
-  arm-based format (see, 'Arguments' for \code{data} in
-  \code{\link{unrelated_effects_plot}}).
+  \code{\link{unrelated_effects_plot}} function.
 }
 \references{
 Mavridis D, White IR, Higgins JP, Cipriani A, Salanti G. Allowing for
@@ -91,8 +86,7 @@ meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--41.
 doi: 10.1002/sim.6365
 }
 \seealso{
-\href{https://CRAN.R-project.org/package=netmeta}{pairwise},
-  \code{\link{run_model}}, \code{\link{unrelated_effects_plot}}
+\code{\link{run_model}}, \code{\link{unrelated_effects_plot}}
 }
 \author{
 {Loukia M. Spineli}

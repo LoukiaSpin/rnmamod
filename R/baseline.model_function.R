@@ -232,9 +232,10 @@ baseline_model <- function(base_risk,
     estim_prob <- exp(trial_base_logit[, c(1, 3, 7)]) /
       (1 + exp(trial_base_logit[, c(1, 3, 7)]))
     # Back-transform to probability (summary estimate)
-    summary_prob <- round(exp(mean_base_logit[c(1, 3, 7)]) /
-      (1 + exp(mean_base_logit[c(1, 3, 7)])) * 100, 0)
-
+    #summary_prob <- round(exp(mean_base_logit[c(1, 3, 7)]) /
+    #  (1 + exp(mean_base_logit[c(1, 3, 7)])) * 100, 0)
+    summary_prob <- exp(mean_base_logit[c(1, 3, 7)]) /
+      (1 + exp(mean_base_logit[c(1, 3, 7)])) * 100
 
     # Create dataset for the forest-plot
     dataplot <- data.frame(rbind(matrix(rep(base_risk1[, 1] / base_risk1[, 2], 3),
@@ -244,7 +245,8 @@ baseline_model <- function(base_risk,
                                each = data_jag_base$ns.base),
                            rep(as.factor(seq_len(data_jag_base$ns.base)), 2))
     colnames(dataplot) <- c("point", "lower", "upper", "type", "order")
-    dataplot[, 1:3] <- round(dataplot[, 1:3] * 100, 0)
+    #dataplot[, 1:3] <- round(dataplot[, 1:3] * 100, 0)
+    dataplot[, 1:3] <- dataplot[, 1:3] * 100
 
     # Rule to define x-axis label tick marks
     min_x <- ifelse(min(dataplot$lower) < 50, 0, min(dataplot$lower))
@@ -275,8 +277,9 @@ baseline_model <- function(base_risk,
       geom_linerange(size = 1.5,
                      position = position_dodge(width = 0.5)) +
       geom_point(aes(colour = type),
-                 stroke = 0.3,
-                 size = 2.5) +
+                 size = ifelse(dataplot$type == "Estimated", 2.5, 3.7),
+                 stroke = 0.3) +
+      # Label the point estimate
       geom_text(aes(x = order,
                     y = point,
                     label = point),
@@ -286,6 +289,7 @@ baseline_model <- function(base_risk,
                 size = 4.0,
                 check_overlap = FALSE,
                 position = position_dodge(width = 0.5)) +
+      # Label the lower bound
       geom_text(data = subset(dataplot, type == "Estimated"),
                 aes(x = order,
                     y = lower,
@@ -296,6 +300,7 @@ baseline_model <- function(base_risk,
                 size = 4.0,
                 check_overlap = FALSE,
                 position = position_dodge(width = 0.5)) +
+      # Label the upper bound
       geom_text(data = subset(dataplot, type == "Estimated"),
                 aes(x = order,
                     y = upper,
@@ -321,6 +326,7 @@ baseline_model <- function(base_risk,
            caption = caption) +
       coord_flip() +
       theme_classic() +
+      guides(color = guide_legend(override.aes = list(size = 3))) +
       theme(axis.text.x = element_text(color = "black", size = 12),
             axis.text.y = element_text(color = "black", size = 12),
             axis.title.x = element_text(color = "black", face = "bold",

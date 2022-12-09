@@ -74,6 +74,11 @@ Performs a Bayesian pairwise meta-analysis for each pairwise
   The number of times the function is used is also printed on the console
   (in red) and is equal to the number of  observed pairwise comparisons
   in the network (see 'Examples').
+  The model is updated until convergence using the
+  \code{\link[R2jags:autojags]{autojags}} function of the R-package
+  \href{https://CRAN.R-project.org/package=R2jags}{R2jags} with 2 updates and
+  number of iterations and thinning equal to \code{n_iter} and \code{n_thin},
+  respectively.
 
   The output of \code{run_series_meta} is not end-user-ready. The
   \code{\link{series_meta_plot}} function inherits the output of

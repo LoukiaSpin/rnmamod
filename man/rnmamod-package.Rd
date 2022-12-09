@@ -49,9 +49,10 @@ R-package \bold{rnmamod} is built upon the WinBUGS program code found in
    \item network plot and description of the evidence base
    (\code{\link{netplot}}) following the  PRISMA statement for systematic
    reviews with network meta-analysis (Hutton et al., 2015);
-   \item tabulation of the R-hat (Gelman and Rubin, 1992) for all monitored
-   nodes and creation of an HTML file with a panel of diagnostic plots for
-   each monitored parameter (\code{\link{mcmc_diagnostics}});
+   \item illustration of the R-hat (Gelman and Rubin, 1992) and MCMC error
+   for all monitored nodes and creation of an HTML file with a panel of
+   diagnostic plots for each monitored parameter
+   (\code{\link{mcmc_diagnostics}});
    \item heatmap on the proportion of missing participants across the network
    (\code{\link{heatmap_missing_network}}) and across the intervention arms
    of each trial in the dataset (\code{\link{heatmap_missing_dataset}});
@@ -102,8 +103,9 @@ R-package \bold{rnmamod} is built upon the WinBUGS program code found in
    under pairwise and network meta-analysis, as well as visualisation of
    these results (\code{\link{series_meta_plot}});
    \item calculation and visualisation of the robustness index for all
-   possible comparisons in the network (\code{\link{robustness_index}} and
-   \code{\link{heatmap_robustness}}, respectively) (Spineli et al., 2021a);
+   possible comparisons in the network (\code{\link{robustness_index}},
+   \code{\link{robustness_index_user}} and \code{\link{heatmap_robustness}})
+   (Spineli et al., 2021a);
    \item enhanced balloon plot with the summary effects and between-trial
    standard deviation for a selected pairwise comparison under several
    scenarios about the missingness parameter (\code{\link{balloon_plot}})
