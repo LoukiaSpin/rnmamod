@@ -275,7 +275,7 @@ baseline_model <- function(base_risk,
                       round(tau_base_logit[7], 2), ")")
 
     # Difference between 'Observed' and 'Estimated' per trial
-    diff_type <- diff(dataplot$point, 19, 1)
+    diff_type <- diff(dataplot$point, dim(dataplot)[1] / 2, 1)
     diff_dummy <- rep(ifelse(diff_type == 0, 0, 1), 2)
 
     # Create forest-plot
@@ -286,7 +286,7 @@ baseline_model <- function(base_risk,
                ymax = upper)) +
       geom_hline(yintercept = summary_prob,
                  col = "grey",
-                 linewidth = 1,
+                 size = 1,
                  lty = 2) +
       geom_rect(aes(xmin = -Inf,
                     xmax = Inf,
@@ -294,7 +294,7 @@ baseline_model <- function(base_risk,
                     ymax = summary_prob[3]),
                 alpha = 0.01,
                 fill = "grey") +
-      geom_linerange(linewidth = 1.5,
+      geom_linerange(size = 1.5,
                      position = position_dodge(width = 0.5)) +
       geom_point(aes(colour = type),
                  size = ifelse(dataplot$type == "Estimated", 2.5, 4.0),
