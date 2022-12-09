@@ -39,26 +39,22 @@ The default argument is 1.}
 }
 \value{
 When \code{base_risk} is scalar (fixed baseline), the function
-  returns the user-defined baseline for the selected reference intervention.
-  When \code{base_risk} is a vector (random baseline), the function returns
-  a vector with the calculated logit of an event for the selected reference
-  intervention and its precision. Finally, when \code{base_risk} is a matrix
-  (predicted baseline), the function returns the following elements:
+  returns the user-defined baseline for the selected reference intervention
+  in the logit scale. When \code{base_risk} is a vector (random baseline),
+  the function returns a vector with the calculated logit of an event for the
+  selected reference intervention and its precision. Finally, when
+  \code{base_risk} is a matrix (predicted baseline), the function returns the
+  following elements:
   \item{ref_base}{A vector with the posterior mean and precision of the
-  predicted logit of an event for the selected reference intervention.
+  \bold{predicted} logit of an event for the selected reference intervention.
   This vector is be passed to \code{\link{run_model}} and
   \code{\link{run_metareg}}.}
-  \item{mean_base_logit}{The posterior distribution of the summary mean of
-  the random effects in the logit scale.}
-  \item{tau_base_logit}{The posterior distribution of the between-trial
-  standard deviation in the logit scale.}
-
-  When \code{base_risk} is a matrix, the function also returns a forest plot
-  with the estimated trial-specific probability of an event and 95\% credible
-  intervals (the random effects) alongside the corresponding observed
-  probability of an event for the selected reference intervention. A grey
-  rectangular illustrates the summary mean and 95\% credible interval of the
-  random effects.
+  \item{figure}{A forest plot on the trial-specific observed and estimated
+  baseline risk. See 'Details'.}
+  \item{table_baseline}{A table with the posterior and predictive
+  distribution of the summary baseline mean and the posterior distribution of
+  the between-trial standard deviation in baseline. All results are in the
+  logit scale.}
 }
 \description{
 To process the elements in the argument \code{base_risk} of the
@@ -79,6 +75,13 @@ If \code{base_risk} is a matrix, \code{baseline_model} creates the
   \code{\link{prepare_model}} function. Following (Dias et al., 2013a), a
   uniform prior distribution is assigned on the between-trial standard
   deviation with upper and lower limit equal to 0 and 5, respectively.
+
+  When \code{base_risk} is a matrix, the function also returns a forest plot
+  with the estimated trial-specific probability of an event and 95\% credible
+  intervals (the random effects) alongside the corresponding observed
+  probability of an event for the selected reference intervention. A grey
+  rectangular illustrates the summary mean and 95\% credible interval of the
+  random effects.
 
   When \code{base_risk} is a matrix (predicted baseline), the model is
   updated until convergence using the \code{\link[R2jags:autojags]{autojags}}

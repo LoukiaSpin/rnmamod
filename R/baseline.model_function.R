@@ -36,26 +36,22 @@
 #'   The default argument is 1.
 #'
 #' @return When \code{base_risk} is scalar (fixed baseline), the function
-#'   returns the user-defined baseline for the selected reference intervention.
-#'   When \code{base_risk} is a vector (random baseline), the function returns
-#'   a vector with the calculated logit of an event for the selected reference
-#'   intervention and its precision. Finally, when \code{base_risk} is a matrix
-#'   (predicted baseline), the function returns the following elements:
+#'   returns the user-defined baseline for the selected reference intervention
+#'   in the logit scale. When \code{base_risk} is a vector (random baseline),
+#'   the function returns a vector with the calculated logit of an event for the
+#'   selected reference intervention and its precision. Finally, when
+#'   \code{base_risk} is a matrix (predicted baseline), the function returns the
+#'   following elements:
 #'   \item{ref_base}{A vector with the posterior mean and precision of the
-#'   predicted logit of an event for the selected reference intervention.
+#'   \bold{predicted} logit of an event for the selected reference intervention.
 #'   This vector is be passed to \code{\link{run_model}} and
 #'   \code{\link{run_metareg}}.}
-#'   \item{mean_base_logit}{The posterior distribution of the summary mean of
-#'   the random effects in the logit scale.}
-#'   \item{tau_base_logit}{The posterior distribution of the between-trial
-#'   standard deviation in the logit scale.}
-#'
-#'   When \code{base_risk} is a matrix, the function also returns a forest plot
-#'   with the estimated trial-specific probability of an event and 95\% credible
-#'   intervals (the random effects) alongside the corresponding observed
-#'   probability of an event for the selected reference intervention. A grey
-#'   rectangular illustrates the summary mean and 95\% credible interval of the
-#'   random effects.
+#'   \item{figure}{A forest plot on the trial-specific observed and estimated
+#'   baseline risk. See 'Details'.}
+#'   \item{table_baseline}{A table with the posterior and predictive
+#'   distribution of the summary baseline mean and the posterior distribution of
+#'   the between-trial standard deviation in baseline. All results are in the
+#'   logit scale.}
 #'
 #' @details If \code{base_risk} is a matrix, \code{baseline_model} creates the
 #'   hierarchical baseline model in the JAGS dialect of the BUGS language.
@@ -66,6 +62,13 @@
 #'   \code{\link{prepare_model}} function. Following (Dias et al., 2013a), a
 #'   uniform prior distribution is assigned on the between-trial standard
 #'   deviation with upper and lower limit equal to 0 and 5, respectively.
+#'
+#'   When \code{base_risk} is a matrix, the function also returns a forest plot
+#'   with the estimated trial-specific probability of an event and 95\% credible
+#'   intervals (the random effects) alongside the corresponding observed
+#'   probability of an event for the selected reference intervention. A grey
+#'   rectangular illustrates the summary mean and 95\% credible interval of the
+#'   random effects.
 #'
 #'   When \code{base_risk} is a matrix (predicted baseline), the model is
 #'   updated until convergence using the \code{\link[R2jags:autojags]{autojags}}
@@ -222,12 +225,28 @@ baseline_model <- function(base_risk,
 
   ref_base <- if (is.element(base_type, c("fixed", "random"))) {
     base_risk1
-  } else if (is.element(base_type, "predicted")) {
+  } else if (!is.element(base_type, c("fixed", "random"))) {
     c(pred_base_logit[1], 1 / (pred_base_logit[2])^2)
   }
 
-  #Draw forest-plot of observed & estimated probabilities for 'predicted'
-  fig <- if (is.element(base_type, "predicted")) {
+  tab_base <- if (base_type == "predicted") {
+    cri_mean <- paste0("(", round(mean_base_logit[, 3], 2), ",",
+                       " ", round(mean_base_logit[, 7], 2), ")")
+    cri_tau <- paste0("(", round(tau_base_logit[, 3], 2), ",",
+                      " ", round(tau_base_logit[, 7], 2), ")")
+    cri_pred <- paste0("(", round(pred_base_logit[, 3], 2), ",",
+                       " ", round(pred_base_logit[, 7], 2), ")")
+    data.frame(rbind(c(round(mean_base_logit[1:2], 2), cri_mean),
+                     c(round(tau_base_logit[1:2], 2), cri_tau),
+                     c(round(pred_base_logit[1:2], 2), cri_pred)))
+  } else {
+    matrix("Not applicable", nrow = 3, ncol = 3)
+  }
+  rownames(tab_base) <- c("Summary mean", "Between-trial SD", "Predicted mean")
+
+
+  # Draw forest-plot of observed & estimated probabilities for 'predicted'
+  fig <- if (base_type == "predicted") {
     # Back-transform to probability (trial-specific estimate)
     estim_prob <- exp(trial_base_logit[, c(1, 3, 7)]) /
       (1 + exp(trial_base_logit[, c(1, 3, 7)]))
@@ -334,14 +353,26 @@ baseline_model <- function(base_risk,
                                         size = 12),
             plot.caption = element_text(hjust = 0, face = "bold", size = 11,
                                         color = "grey47", lineheight = 1.1))
+  } else {
+    NULL
   }
 
-  results <- list(ref_base = ref_base,
-                  figure = fig)
+  results <- na.omit(
+    list(ref_base = ref_base,
+         figure = fig,
+         table_baseline =
+           knitr::kable(
+             tab_base,
+             col.names = c("Mean/median", "Standard dev.", "95% CrI"),
+             align = "ccc",
+             caption =
+               "Posterior and predictive results of baseline model")
+         )
+    )
   #if (!is.element(base_type, c("fixed", "random"))) {
   #  results <- append(results, list(mean_base_logit = mean_base_logit,
   #                                  tau_base_logit = tau_base_logit))
   #}
 
-  return(results)
+  return(Filter(Negate(is.null), results))
 }
