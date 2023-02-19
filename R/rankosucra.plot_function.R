@@ -195,8 +195,8 @@ rankosucra_plot <- function(full1,
   # Bars for the ranking probabilities and line for the SUCRA
   p <- if (is.null(full2)) {
     ggplot(rank_data, aes(x = as.factor(order), y = value_rank)) +
-      geom_bar(stat = "identity", color = "#D55E00", fill = "#D55E00") +
-      geom_line(aes(x = order, y = value_cum), size = 1, color = "blue") +
+      geom_bar(stat = "identity", color = "#B99B6B", fill = "#B99B6B") +
+      geom_line(aes(x = order, y = value_cum), size = 1, color = "#AA5656") +
       facet_wrap(vars(factor(intervention,
                              levels = drug_names_order[
                                seq_len(length(drug_names_order))]))) +

@@ -408,7 +408,7 @@ forestplot <- function(full, compar, drug_names) {
     geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
     geom_point(size = 1.5, colour = "white", stroke = 0.3,
                position = position_dodge(width = 0.5)) +
-    geom_text(aes(x = as.factor(order), y = round(mean, 2),
+    geom_text(aes(x = as.factor(order), y = mean, # round(mean, 2),
                   label = paste0(round(mean * 100, 0),
                                  " ",
                                  "(",
