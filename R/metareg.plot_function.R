@@ -28,12 +28,12 @@
 #' @return \code{metareg_plot} prints on the R console a message on the most
 #'   parsimonious model (if any) based on the DIC (in red text). Furthermore,
 #'   the function returns the following list of elements:
-#'   \item{table_estimates}{The posterior mean, and 95\% credible interval
+#'   \item{table_estimates}{The posterior median, and 95\% credible interval
 #'   of the summary effect measure (according to the argument \code{measure}
 #'   defined in \code{\link{run_model}}) for each comparison with the selected
 #'   intervention under network meta-analysis and network meta-regression
 #'   based on the specified \code{cov_value}.}
-#'   \item{table_predictions}{The posterior mean, and 95\% prediction
+#'   \item{table_predictions}{The posterior median, and 95\% prediction
 #'   interval of the summary effect measure (according to the argument
 #'   \code{measure} defined in \code{\link{run_model}}) for each comparison
 #'   with the selected intervention under network meta-analysis and network
@@ -44,7 +44,7 @@
 #'   (Spiegelhalter et al., 2002). When a fixed-effect model has been
 #'   performed, \code{metareg_plot} does not return results on \emph{tau}. For a
 #'   binary outcome, the results refer to the odds ratio scale.}
-#'   \item{table_regression_coeffients}{The posterior mean and 95\%
+#'   \item{table_regression_coeffients}{The posterior median and 95\%
 #'   credible interval of the regression coefficient(s) (according to the
 #'   argument \code{covar_assumption} defined in \code{\link{run_metareg}}).
 #'   For a binary outcome, the results refer to the odds ratio scale.}
@@ -222,10 +222,10 @@ metareg_plot <- function(full,
   poss_pair_comp <- rbind(poss_pair_comp1, poss_pair_comp2)
 
   # Posterior results on NMA for comparisons with the selected intervention
-  em_ref00_nma <- cbind(rbind(data.frame(mean = em_full[, 5],
+  em_ref00_nma <- cbind(rbind(data.frame(median = em_full[, 5],
                                          lower = em_full[, 3],
                                          upper = em_full[, 7]),
-                              data.frame(mean = em_full[, 5] * (-1),
+                              data.frame(median = em_full[, 5] * (-1),
                                          lower = em_full[, 7] * (-1),
                                          upper = em_full[, 3] * (-1))),
                         poss_pair_comp)
@@ -236,12 +236,12 @@ metareg_plot <- function(full,
                 em_subset_nma[, 4])), 1]
   em_ref_nma <- em_ref0_nma[order(sucra_full_new, decreasing = TRUE), ]
 
-  # Posterior mean of regression coefficients for all pairwise comparisons
+  # Posterior median of regression coefficients for all pairwise comparisons
   if (is.element(reg$covar_assumption, c("exchangeable", "independent"))) {
-    beta00 <- cbind(rbind(data.frame(mean = reg$beta_all[, 5],
+    beta00 <- cbind(rbind(data.frame(median = reg$beta_all[, 5],
                                      lower = reg$beta_all[, 3],
                                      upper = reg$beta_all[, 7]),
-                          data.frame(mean = reg$beta_all[, 5] * (-1),
+                          data.frame(median = reg$beta_all[, 5] * (-1),
                                      lower = reg$beta_all[, 7] * (-1),
                                      upper = reg$beta_all[, 3] * (-1))),
                     poss_pair_comp)
@@ -254,16 +254,16 @@ metareg_plot <- function(full,
   }
 
   # Effect size of all possible pairwise comparisons (NMR)
-  par_mean <- as.vector(c(reg$EM[, 5] + reg$beta_all[, 5] * cov_val,
-                          (reg$EM[, 5] * (-1)) +
-                            (reg$beta_all[, 5] * (-1) * cov_val)))
+  par_median <- as.vector(c(reg$EM[, 5] + reg$beta_all[, 5] * cov_val,
+                            (reg$EM[, 5] * (-1)) +
+                              (reg$beta_all[, 5] * (-1) * cov_val)))
   par_sd <- as.vector(c(sqrt(((reg$EM[, 2])^2) +
                                ((reg$beta_all[, 2] * cov_val)^2)),
                         sqrt(((reg$EM[, 2])^2) +
                                ((reg$beta_all[, 2] * cov_val)^2))))
-  em_ref00_nmr <- cbind(mean = par_mean,
-                        lower = par_mean - 1.96 * par_sd,
-                        upper = par_mean + 1.96 * par_sd,
+  em_ref00_nmr <- cbind(median = par_median,
+                        lower = par_median - 1.96 * par_sd,
+                        upper = par_median + 1.96 * par_sd,
                         poss_pair_comp)
   em_subset_nmr <- subset(em_ref00_nmr, em_ref00_nmr[5] == compar)
   em_ref0_nmr <- rbind(em_subset_nmr[, 1:3], c(rep(NA, 3)))
@@ -273,25 +273,25 @@ metareg_plot <- function(full,
   # Posterior results on the predicted estimates of comparisons with the
   # selected comparator as reference
   if (model == "RE") {
-    pred_ref00_nma <- cbind(rbind(data.frame(mean = pred_full[, 5],
+    pred_ref00_nma <- cbind(rbind(data.frame(median = pred_full[, 5],
                                              lower = pred_full[, 3],
                                              upper = pred_full[, 7]),
-                                  data.frame(mean = pred_full[, 5] * (-1),
+                                  data.frame(median = pred_full[, 5] * (-1),
                                              lower = pred_full[, 7] * (-1),
                                              upper = pred_full[, 3] * (-1))),
                             poss_pair_comp)
     pred_subset_nma <- subset(pred_ref00_nma, pred_ref00_nma[5] == compar)
     pred_ref0_nma <- rbind(pred_subset_nma[, 1:3], c(rep(NA, 3)))
-    par_mean <- as.vector(c(reg$EM_pred[, 5] + reg$beta_all[, 5] * cov_val,
-                            (reg$EM_pred[, 5] * (-1)) +
-                              (reg$beta_all[, 5] * (-1) * cov_val)))
+    par_median <- as.vector(c(reg$EM_pred[, 5] + reg$beta_all[, 5] * cov_val,
+                              (reg$EM_pred[, 5] * (-1)) +
+                                (reg$beta_all[, 5] * (-1) * cov_val)))
     par_sd <- as.vector(c(sqrt(((reg$EM_pred[, 2])^2) +
                                  ((reg$beta_all[, 2] * cov_val)^2)),
                           sqrt(((reg$EM_pred[, 2])^2) +
                                  ((reg$beta_all[, 2] * cov_val)^2))))
-    pred_ref00_nmr <-  cbind(data.frame(mean = par_mean,
-                                        lower = par_mean - 1.96 * par_sd,
-                                        upper = par_mean + 1.96 * par_sd),
+    pred_ref00_nmr <-  cbind(data.frame(median = par_median,
+                                        lower = par_median - 1.96 * par_sd,
+                                        upper = par_median + 1.96 * par_sd),
                              poss_pair_comp)
     pred_subset_nmr <- subset(pred_ref00_nmr, pred_ref00_nmr[5] == compar)
     pred_ref0_nmr <- rbind(pred_subset_nmr[, 1:3], c(rep(NA, 3)))
@@ -480,7 +480,7 @@ metareg_plot <- function(full,
                                            cri_pred_nmr))
     colnames(est_both_models) <- colnames(pred_both_models) <-
       c(paste("versus", compar),
-        "Mean NMA", "95% CrI NMA", "Mean NMR", "95% CrI NMR")
+        "Median NMA", "95% CrI NMA", "Median NMR", "95% CrI NMR")
     rownames(est_both_models) <- rownames(pred_both_models) <- NULL
   } else {
     est_both_models <- na.omit(data.frame(drug_names_sorted,
@@ -489,7 +489,7 @@ metareg_plot <- function(full,
                                           round(em_ref_nmr[, 1], 2),
                                           cri_est_nmr))
     colnames(est_both_models) <- c(paste("versus", compar),
-        "Mean NMA", "95% CrI NMA", "Mean NMR", "95% CrI NMR")
+        "Median NMA", "95% CrI NMA", "Median NMR", "95% CrI NMR")
     rownames(est_both_models) <- NULL
 
   }
@@ -498,11 +498,11 @@ metareg_plot <- function(full,
   if (is.element(reg$covar_assumption, c("exchangeable", "independent"))) {
     reg_coeff <- na.omit(data.frame(drug_names_sorted, round(beta[, 1], 2),
                                     cri_beta))
-    colnames(reg_coeff) <- c(paste("versus", compar), "Mean beta",
+    colnames(reg_coeff) <- c(paste("versus", compar), "Median beta",
                              "95% CrI beta")
   } else {
     reg_coeff <- data.frame(round(beta[1], 2), cri_beta)
-    colnames(reg_coeff) <- c("Mean beta", "95% CrI beta")
+    colnames(reg_coeff) <- c("Median beta", "95% CrI beta")
   }
   rownames(reg_coeff) <- NULL
 

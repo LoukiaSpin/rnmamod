@@ -193,7 +193,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   em_ref00_nmr <- cbind(median = par_median,
                         sd = par_sd,
                         lower = par_median - 1.96 * par_sd,
-                        upper = par_mean + 1.96 * par_sd,
+                        upper = par_median + 1.96 * par_sd,
                         poss_pair_comp)
   em_subset_nmr <- subset(em_ref00_nmr, em_ref00_nmr[6] == compar)
   em_ref0_nmr <- rbind(em_subset_nmr[, c(1, 3, 4)], c(rep(NA, 3)))
@@ -212,7 +212,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                             poss_pair_comp)
     pred_subset_nma <- subset(pred_ref00_nma, pred_ref00_nma[5] == compar)
     pred_ref0_nma <- rbind(pred_subset_nma[, 1:3], c(rep(NA, 3)))
-    par_mean <- as.vector(c(reg$EM_pred[, 5] + reg$beta_all[, 5] * cov_val,
+    par_median <- as.vector(c(reg$EM_pred[, 5] + reg$beta_all[, 5] * cov_val,
                             (reg$EM_pred[, 5] * (-1)) +
                               (reg$beta_all[, 5] * (-1) * cov_val)))
     par_sd <- as.vector(c(sqrt(((reg$EM_pred[, 2])^2) +

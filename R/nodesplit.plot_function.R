@@ -25,7 +25,7 @@
 #'   directory of the user. The default is \code{FALSE} (do not export).
 #'
 #' @return \code{nodesplit_plot} returns the following list of elements:
-#'   \item{table_effect_size}{A data-frame with the posterior mean,
+#'   \item{table_effect_size}{A data-frame with the posterior median,
 #'   posterior standard deviation and 95\% credible interval of the direct and
 #'   indirect effect and the inconsistency factor of each split node.}
 #'   \item{table_model_assessment}{A data-frame with the model assessment
@@ -41,7 +41,7 @@
 #'
 #' @details \code{intervalplot_inconsistency_factor} includes as many interval
 #'   plots as the number of split nodes in the network. Each interval plot
-#'   illustrates the posterior mean and 95\% credible interval of the direct and
+#'   illustrates the posterior median and 95\% credible interval of the direct and
 #'   indirect effect of the split nodes and the corresponding inconsistency
 #'   factor.
 #'   The line that corresponds to the inconsistency factor is highlighted with
@@ -234,7 +234,7 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                               incons_factor[, c(3, 5:6)]),
                         rep(c("direct", "indirect", "IF"),
                             each = length(direct[, 1])))
-  colnames(prepare) <- c("node", "mean", "lower", "upper", "evidence")
+  colnames(prepare) <- c("node", "median", "lower", "upper", "evidence")
   prepare$stat_sign <- ifelse(prepare$lower > 0 | prepare$upper < 0,
                               "strong evidence",
                               "weak evidence")
@@ -246,7 +246,7 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
     p1 <- ggplot(data = prepare,
                  aes(x = factor(evidence,
                                 levels = c("IF", "indirect", "direct")),
-                     y = mean,
+                     y = median,
                      ymin = lower,
                      ymax = upper,
                      colour = stat_sign)) +
@@ -257,8 +257,8 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                        stroke = 0.3,
                        position = position_dodge(width = 0.5)) +
             geom_text(aes(x = as.factor(evidence),
-                          y = round(mean, 2),
-                          label = paste0(sprintf("%.2f", mean), " ", "(",
+                          y = round(median, 2),
+                          label = paste0(sprintf("%.2f", median), " ", "(",
                                          sprintf("%.2f", lower), ",", " ",
                                          sprintf("%.2f", upper), ")"),
                           hjust = 0,
@@ -305,16 +305,16 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
     # Keep nodes with strong evidence inconsistency (selection1) or with
     # inconsistent sign in the direct and indirect estimate (selection2)
     selection1 <- subset(prepare, stat_sign == "strong evidence")
-    selection2 <- subset(prepare, (mean[evidence == "direct"] < 0 &
-                             mean[evidence == "indirect"] > 0) |
-                          (mean[evidence == "direct"] > 0 &
-                             mean[evidence == "indirect"] < 0))
+    selection2 <- subset(prepare, (median[evidence == "direct"] < 0 &
+                             median[evidence == "indirect"] > 0) |
+                          (median[evidence == "direct"] > 0 &
+                             median[evidence == "indirect"] < 0))
     selection  <- rbind(subset(prepare, is.element(node, selection1[, 1])),
                         selection2)
     p1 <- ggplot(data = selection,
                  aes(x = factor(evidence,
                                 levels = c("IF", "indirect", "direct")),
-                     y = mean,
+                     y = median,
                      ymin = lower,
                      ymax = upper,
                      colour = stat_sign)) +
@@ -325,8 +325,8 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                        stroke = 0.3,
                        position = position_dodge(width = 0.5)) +
             geom_text(aes(x = as.factor(evidence),
-                          y = round(mean, 2),
-                          label = paste0(sprintf("%.2f", mean), " ", "(",
+                          y = round(median, 2),
+                          label = paste0(sprintf("%.2f", median), " ", "(",
                                          sprintf("%.2f", lower), ",", " ",
                                          sprintf("%.2f", upper), ")"),
                           hjust = 0,
@@ -387,13 +387,13 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                          round(indirect[, 3:4], 2), cri_indirect,
                          round(incons_factor[, 3:4], 2), cri_if)
   colnames(table_em) <- c("Node",
-                          "Mean direct",
+                          "Median direct",
                           "SD direct",
                           "95% CrI direct",
-                          "Mean indirect",
+                          "Median indirect",
                           "SD indirect",
                           "95% CrI indirect",
-                          "Mean IF",
+                          "Median IF",
                           "SD IF",
                           "95% CrI IF")
   rownames(table_em) <- NULL

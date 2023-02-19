@@ -25,7 +25,7 @@
 #' @return \code{ume_plot} prints on the R console a message on the most
 #'   parsimonious model (if any) based on the DIC (red text). Then, the function
 #'   returns the following list of elements:
-#'   \item{table_effect_size}{The posterior mean, posterior standard
+#'   \item{table_effect_size}{The posterior median, posterior standard
 #'   deviation, and 95\% credible interval of the summary effect size for each
 #'   pairwise comparison observed in the network under the consistency model
 #'   and the unrelated mean effects model.}
@@ -153,9 +153,9 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
 
   # Posterior results on the effect estimates under
   em_full <- if (is.element(full$measure, c("RR", "RD"))) {
-    full$EM_LOR[, c(1:3, 7)]
+    full$EM_LOR[, c(5, 2:3, 7)]
   } else {
-    full$EM[, c(1:3, 7)]
+    full$EM[, c(5, 2:3, 7)]
   }
   em_full[, c(1, 3, 4)] <- if (is.element(measure, c("OR", "ROM"))) {
     exp(em_full[, c(1, 3, 4)])
@@ -164,7 +164,7 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
   }
 
   # Posterior results on the effect estimates under UME
-  em_ume <- ume$EM[, c(1:3, 7)]
+  em_ume <- ume$EM[, c(5, 2:3, 7)]
   em_ume[, c(1, 3, 4)] <- if (is.element(measure, c("OR", "ROM"))) {
     exp(em_ume[, c(1, 3, 4)])
   } else {
@@ -241,9 +241,9 @@ ume_plot <- function(full, ume, drug_names, save_xls) {
                         em_ume_clean[, 1:2],
                         cri_ume_clean)
   colnames(em_both) <- c("Comparison",
-                         "Mean NMA", "SD NMA",
+                         "Median NMA", "SD NMA",
                          "95% CrI NMA",
-                         "Mean UME", "SD UME",
+                         "Median UME", "SD UME",
                          "95% CrI UME")
   rownames(em_both) <- NULL
 
