@@ -20,10 +20,10 @@
 #' @param name2 The text for the title of the results that refer to
 #'   the outcome under \code{full2}.
 #'
-#' @return A panel of rankograms (red bars) with integrated blue SUCRA curves
-#'   for each intervention in the network (Salanti et al., 2011). The x-axis of
-#'   each panel refers to the ranking, and the y-axis refers to the ranking
-#'   probability expressed in percentage.
+#' @return A panel of rankograms (yellowish bars) with integrated reddish SUCRA
+#'   curves for each intervention in the network (Salanti et al., 2011). The
+#'   x-axis of each panel refers to the ranking, and the y-axis refers to the
+#'   ranking probability expressed in percentage.
 #'
 #' @details Interventions are sorted in the descending order of their SUCRA
 #'   value. The SUCRA value expressed in percentage appears on the top left
