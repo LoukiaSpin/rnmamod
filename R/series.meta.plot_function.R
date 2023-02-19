@@ -31,7 +31,7 @@
 #'   file at the working  directory of the user.
 #'
 #'   \code{series_meta_plot} returns a panel of two forest plots: (1) a
-#'   forest plot on the posterior mean and 95\% credible interval of the summary
+#'   forest plot on the posterior median and 95\% credible interval of the summary
 #'   effect size for the observed comparisons from network meta-analysis and the
 #'   corresponding pairwise meta-analyses, and (2) a forest plot on the
 #'   posterior median and 95\% credible interval of the between-trial standard
@@ -235,8 +235,8 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
                           tau_meta_clean[, 1:2],
                           cri_tau_meta)
     colnames(em_both) <- c("Comparison",
-                           "Mean NMA", "SD NMA", "95% CrI NMA",
-                           "Mean MA", "SD MA", "95% CrI MA",
+                           "Median NMA", "SD NMA", "95% CrI NMA",
+                           "Median MA", "SD MA", "95% CrI MA",
                            "Median tau", "SD tau", "95% CrI tau")
   } else {
     em_both <- data.frame(possible_comp$obs_comp[, 4],
@@ -245,8 +245,8 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
                           em_meta_clean[, 1:2],
                           cri_meta_clean)
     colnames(em_both) <- c("Comparison",
-                           "Mean NMA", "SD NMA", "95% CrI NMA",
-                           "Mean MA", "SD MA", "95% CrI MA")
+                           "Median NMA", "SD NMA", "95% CrI NMA",
+                           "Median MA", "SD MA", "95% CrI MA")
   }
   rownames(em_both) <- NULL
 
@@ -260,7 +260,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
                               "Pairwise meta-analysis"),
                             each = length(obs_comp)))
   colnames(prepare) <- c("order",
-                         "comparison", "mean", "lower", "upper",
+                         "comparison", "median", "lower", "upper",
                          "analysis")
   rownames(prepare) <- NULL
 
@@ -294,7 +294,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
 
   p1 <- ggplot(data = prepare,
                aes(x = as.factor(order),
-                   y = mean,
+                   y = median,
                    ymin = lower,
                    ymax = upper,
                    colour = analysis,
@@ -311,8 +311,8 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
                      stroke = 0.3,
                      position = position_dodge(width = 0.5)) +
           geom_text(aes(x = as.factor(order),
-                        y = mean,
-                        label = paste0(sprintf("%.2f", mean), " ", "(",
+                        y = median,
+                        label = paste0(sprintf("%.2f", median), " ", "(",
                                        sprintf("%.2f", lower), ",", " ",
                                        sprintf("%.2f", upper), ")"),
                         hjust = 0,
@@ -383,7 +383,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
                  stroke = 0.3,
                  position = position_dodge(width = 0.5)) +
       geom_text(aes(x = as.factor(seq_len(length(obs_comp))),
-                    y = round(as.numeric(median), 2),
+                    y = as.numeric(median), # round(as.numeric(median), 2),
                     label = paste0(round(as.numeric(median), 2), " ", "(",
                                    round(as.numeric(lower), 2), ",", " ",
                                    round(as.numeric(upper), 2), ")")),
