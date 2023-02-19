@@ -305,7 +305,7 @@ league_heatmap <- function(full1,
       cov_value[[1]] - mean(full1$covariate)
     }
 
-    par_mean <- full1$EM[, 1] + full1$beta_all[, 1] * covar
+    par_mean <- full1$EM[, 5] + full1$beta_all[, 5] * covar
     par_sd <- sqrt(((full1$EM[, 2])^2) + ((full1$beta_all[, 2] * covar)^2))
     par_lower <- par_mean - 1.96 * par_sd
     par_upper <- par_mean + 1.96 * par_sd
