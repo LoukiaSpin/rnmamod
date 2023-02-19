@@ -164,7 +164,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
 
   # Keep the same comparisons with those in PMA (they have at least two trials)
   em_full <- em_full0[is.element(possible_comp$poss_comp[, 4], obs_comp),
-                      c(1:3, 7)]
+                      c(5, 2:3, 7)]
   em_full[, c(1, 3:4)] <- if (is.element(measure, c("OR", "ROM"))) {
     exp(em_full[, c(1, 3:4)])
   } else if (is.element(measure, c("MD", "SMD"))) {
@@ -181,7 +181,7 @@ series_meta_plot <- function(full, meta, drug_names, save_xls) {
   tau_meta <- tau_meta1[order(tau_meta1$t1),]  # Then, sort by t1
 
   # Effect estimate of separate MAs
-  em_meta <- round(em_meta0[, c(3:5, 9)], 2)
+  em_meta <- round(em_meta0[, c(7, 4:5, 9)], 2)
   em_meta[, c(1, 3:4)] <- if (is.element(measure, c("OR", "ROM"))) {
     exp(em_meta[, c(1, 3:4)])
   } else if (is.element(measure, c("MD", "SMD"))) {
