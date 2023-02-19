@@ -1,6 +1,6 @@
 #' Comparator-specific forest plot for network meta-analysis
 #'
-#' @description Provides a forest plot with the posterior mean and 95\% credible
+#' @description Provides a forest plot with the posterior median and 95\% credible
 #'   and prediction intervals for comparisons with the selected intervention
 #'   (comparator) in the network, and a forest plot with the corresponding
 #'   SUCRA values.
@@ -115,10 +115,10 @@ forestplot <- function(full, compar, drug_names) {
   measure <- full$measure
   model <- full$model
   sucra <- full$SUCRA
-  em_ref00 <- cbind(rbind(data.frame(mean = full$EM[, 5], #1
+  em_ref00 <- cbind(rbind(data.frame(median = full$EM[, 5], #1
                                      lower = full$EM[, 3],
                                      upper = full$EM[, 7]),
-                          data.frame(mean = full$EM[, 5] * (-1), #1
+                          data.frame(median = full$EM[, 5] * (-1), #1
                                      lower = full$EM[, 7] * (-1),
                                      upper = full$EM[, 3] * (-1))),
                     poss_pair_comp)
@@ -134,10 +134,10 @@ forestplot <- function(full, compar, drug_names) {
   # Posterior results on the predicted estimates of comparisons with the
   # selected comparator as reference
   if (model == "RE") {
-    pred_ref00 <- cbind(rbind(data.frame(mean = full$EM_pred[, 5], #1
+    pred_ref00 <- cbind(rbind(data.frame(median = full$EM_pred[, 5], #1
                                          lower = full$EM_pred[, 3],
                                          upper = full$EM_pred[, 7]),
-                              data.frame(mean = full$EM_pred[, 5] * (-1), #1
+                              data.frame(median = full$EM_pred[, 5] * (-1), #1
                                          lower = full$EM_pred[, 7] * (-1),
                                          upper = full$EM_pred[, 3] * (-1))),
                         poss_pair_comp)
@@ -164,7 +164,7 @@ forestplot <- function(full, compar, drug_names) {
                                  each = length(drug_names)))
     colnames(prepare_em) <- c("order",
                               "comparison",
-                              "mean", "lower", "upper",
+                              "median", "lower", "upper",
                               "interval")
   } else if (is.element(measure, c("OR", "RR", "ROM")) &
              model == "RE") {
@@ -175,7 +175,7 @@ forestplot <- function(full, compar, drug_names) {
                                  each = length(drug_names)))
     colnames(prepare_em) <- c("order",
                               "comparison",
-                              "mean", "lower", "upper",
+                              "median", "lower", "upper",
                               "interval")
   } else if (!is.element(measure, c("OR", "RR", "ROM")) &
              model == "FE") {
@@ -184,7 +184,7 @@ forestplot <- function(full, compar, drug_names) {
                              round(em_ref, 2))
     colnames(prepare_em) <- c("order",
                               "comparison",
-                              "mean", "lower", "upper")
+                              "median", "lower", "upper")
   } else if (is.element(measure, c("OR", "RR", "ROM")) &
              model == "FE") {
     prepare_em <- data.frame(as.factor(rev(seq_len(len_drug_names))),
@@ -192,7 +192,7 @@ forestplot <- function(full, compar, drug_names) {
                              round(exp(em_ref), 2))
     colnames(prepare_em) <- c("order",
                               "comparison",
-                              "mean", "lower", "upper")
+                              "median", "lower", "upper")
   }
 
   # Create a data-frame with the SUCRA values
@@ -226,7 +226,7 @@ forestplot <- function(full, compar, drug_names) {
     ggplot(data = prepare_em[(length(drug_names_sorted) + 1):
                                (length(drug_names_sorted) * 2), ],
            aes(x = order,
-               y = mean,
+               y = median,
                ymin = lower,
                ymax = upper,
                colour = interval)) +
@@ -251,7 +251,7 @@ forestplot <- function(full, compar, drug_names) {
                      position = position_dodge(width = 0.5)) +
       geom_errorbar(data = prepare_em[seq_len(len_drug_names), ],
                     aes(x = order,
-                        y = mean,
+                        y = median,
                         ymin = lower,
                         ymax = upper),
                     size = 2,
@@ -262,8 +262,8 @@ forestplot <- function(full, compar, drug_names) {
                  stroke = 0.3,
                  position = position_dodge(width = 0.5)) +
       geom_text(aes(x = order,
-                    y = mean,
-                    label = paste0(mean,
+                    y = median,
+                    label = paste0(median,
                                    " ",
                                    "(",
                                    prepare_em[seq_len(len_drug_names), 4],
@@ -297,7 +297,7 @@ forestplot <- function(full, compar, drug_names) {
         measure, c("OR", "RR", "ROM")), "identity", "log10")) +
       scale_color_manual(breaks = c("Credible interval", "Prediction interval"),
                          values = c("black", "#D55E00")) +
-      geom_label(aes(x = order[is.na(mean)],
+      geom_label(aes(x = order[is.na(median)],
                      y = ifelse(!is.element(measure, c("OR", "RR", "ROM")),
                                 0, 1), # -0.2, 0.65
                      hjust = 0,
@@ -321,7 +321,7 @@ forestplot <- function(full, compar, drug_names) {
   } else {
     ggplot(data = prepare_em,
            aes(x = order,
-               y = mean,
+               y = median,
                ymin = lower,
                ymax = upper)) +
       geom_hline(yintercept = ifelse(!is.element(
@@ -332,7 +332,7 @@ forestplot <- function(full, compar, drug_names) {
       geom_linerange(size = 2, position = position_dodge(width = 0.5)) +
       geom_errorbar(data = prepare_em[seq_len(len_drug_names), ],
                     aes(x = order,
-                        y = mean,
+                        y = median,
                         ymin = lower,
                         ymax = upper),
                     size = 2, position = position_dodge(width = 0.5),
@@ -340,8 +340,8 @@ forestplot <- function(full, compar, drug_names) {
       geom_point(size = 1.5, colour = "white", stroke = 0.3,
                  position = position_dodge(width = 0.5)) +
       geom_text(aes(x = order,
-                    y = mean,
-                    label = paste0(mean,
+                    y = median,
+                    label = paste0(median,
                                    " ",
                                    "(",
                                    prepare_em[seq_len(len_drug_names), 4],
@@ -357,7 +357,7 @@ forestplot <- function(full, compar, drug_names) {
       scale_x_discrete(breaks = as.factor(seq_len(len_drug_names)),
                        labels = drug_names_sorted[rev(
                          seq_len(len_drug_names))]) +
-      geom_label(aes(x = order[is.na(mean)],
+      geom_label(aes(x = order[is.na(median)],
                      y = ifelse(!is.element(
                        measure, c("OR", "RR", "ROM")), 0, 1), # -0.2, 0.65
                      hjust = 0, vjust = 1, label = "Comparator intervention"),

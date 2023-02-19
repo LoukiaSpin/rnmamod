@@ -222,10 +222,10 @@ metareg_plot <- function(full,
   poss_pair_comp <- rbind(poss_pair_comp1, poss_pair_comp2)
 
   # Posterior results on NMA for comparisons with the selected intervention
-  em_ref00_nma <- cbind(rbind(data.frame(mean = em_full[, 1],
+  em_ref00_nma <- cbind(rbind(data.frame(mean = em_full[, 5],
                                          lower = em_full[, 3],
                                          upper = em_full[, 7]),
-                              data.frame(mean = em_full[, 1] * (-1),
+                              data.frame(mean = em_full[, 5] * (-1),
                                          lower = em_full[, 7] * (-1),
                                          upper = em_full[, 3] * (-1))),
                         poss_pair_comp)
@@ -238,10 +238,10 @@ metareg_plot <- function(full,
 
   # Posterior mean of regression coefficients for all pairwise comparisons
   if (is.element(reg$covar_assumption, c("exchangeable", "independent"))) {
-    beta00 <- cbind(rbind(data.frame(mean = reg$beta_all[, 1],
+    beta00 <- cbind(rbind(data.frame(mean = reg$beta_all[, 5],
                                      lower = reg$beta_all[, 3],
                                      upper = reg$beta_all[, 7]),
-                          data.frame(mean = reg$beta_all[, 1] * (-1),
+                          data.frame(mean = reg$beta_all[, 5] * (-1),
                                      lower = reg$beta_all[, 7] * (-1),
                                      upper = reg$beta_all[, 3] * (-1))),
                     poss_pair_comp)
@@ -250,13 +250,13 @@ metareg_plot <- function(full,
     beta <- beta0[order(sucra_full_new, decreasing = TRUE), ]
     rownames(beta) <- NULL
   } else {
-    beta <- reg$beta[1, c(1, 3, 7)]
+    beta <- reg$beta[1, c(5, 3, 7)]
   }
 
   # Effect size of all possible pairwise comparisons (NMR)
-  par_mean <- as.vector(c(reg$EM[, 1] + reg$beta_all[, 1] * cov_val,
-                          (reg$EM[, 1] * (-1)) +
-                            (reg$beta_all[, 1] * (-1) * cov_val)))
+  par_mean <- as.vector(c(reg$EM[, 5] + reg$beta_all[, 5] * cov_val,
+                          (reg$EM[, 5] * (-1)) +
+                            (reg$beta_all[, 5] * (-1) * cov_val)))
   par_sd <- as.vector(c(sqrt(((reg$EM[, 2])^2) +
                                ((reg$beta_all[, 2] * cov_val)^2)),
                         sqrt(((reg$EM[, 2])^2) +
@@ -273,18 +273,18 @@ metareg_plot <- function(full,
   # Posterior results on the predicted estimates of comparisons with the
   # selected comparator as reference
   if (model == "RE") {
-    pred_ref00_nma <- cbind(rbind(data.frame(mean = pred_full[, 1],
+    pred_ref00_nma <- cbind(rbind(data.frame(mean = pred_full[, 5],
                                              lower = pred_full[, 3],
                                              upper = pred_full[, 7]),
-                                  data.frame(mean = pred_full[, 1] * (-1),
+                                  data.frame(mean = pred_full[, 5] * (-1),
                                              lower = pred_full[, 7] * (-1),
                                              upper = pred_full[, 3] * (-1))),
                             poss_pair_comp)
     pred_subset_nma <- subset(pred_ref00_nma, pred_ref00_nma[5] == compar)
     pred_ref0_nma <- rbind(pred_subset_nma[, 1:3], c(rep(NA, 3)))
-    par_mean <- as.vector(c(reg$EM_pred[, 1] + reg$beta_all[, 1] * cov_val,
-                            (reg$EM_pred[, 1] * (-1)) +
-                              (reg$beta_all[, 1] * (-1) * cov_val)))
+    par_mean <- as.vector(c(reg$EM_pred[, 5] + reg$beta_all[, 5] * cov_val,
+                            (reg$EM_pred[, 5] * (-1)) +
+                              (reg$beta_all[, 5] * (-1) * cov_val)))
     par_sd <- as.vector(c(sqrt(((reg$EM_pred[, 2])^2) +
                                  ((reg$beta_all[, 2] * cov_val)^2)),
                           sqrt(((reg$EM_pred[, 2])^2) +

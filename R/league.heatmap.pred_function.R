@@ -35,7 +35,7 @@
 #'   If \code{show} is not defined, the league table will present all
 #'   interventions as defined in \code{drug_names1}.
 #'
-#' @return A league heatmap of the posterior mean and 95\% prediction interval
+#' @return A league heatmap of the posterior median and 95\% prediction interval
 #'   of the effect measure (according to the argument \code{measure} defined in
 #'   \code{\link{run_model}}) for all possible comparisons in the off-diagonals,
 #'   and the posterior mean of the SUCRA values in the diagonal.
@@ -86,7 +86,7 @@
 #'   The rows and columns of the heatmap display the names of interventions
 #'   which are sorted by decreasing order from the best to the worst based on
 #'   their SUCRA value (Salanti et al., 2011) for the outcome or model under the
-#'   argument \code{full1}. The off-diagonals contain the posterior mean and
+#'   argument \code{full1}. The off-diagonals contain the posterior median and
 #'   95\% prediction interval of the effect measure (according to the argument
 #'   \code{measure} as inherited in the argument \code{full1}) of the
 #'   corresponding comparisons.
@@ -296,14 +296,14 @@ league_heatmap_pred <- function(full1,
     covar <- if (length(unique(full1$covariate)) < 3) {
       cov_value[[1]]
     } else {
-      cov_value[[1]] - mean(full1$covariate)
+      cov_value[[1]] - mean(full1$covariate) # we want the mean value
     }
 
-    par_mean <- full1$EM_pred[, 5] + full1$beta_all[, 5] * covar
+    par_median <- full1$EM_pred[, 5] + full1$beta_all[, 5] * covar
     par_sd <- sqrt(((full1$EM_pred[, 2])^2) + ((full1$beta_all[, 2] * covar)^2))
-    par_lower <- par_mean - 1.96 * par_sd
-    par_upper <- par_mean + 1.96 * par_sd
-    par0 <- data.frame(par_mean, par_sd, par_lower,
+    par_lower <- par_median - 1.96 * par_sd
+    par_upper <- par_median + 1.96 * par_sd
+    par0 <- data.frame(par_median, par_sd, par_lower,
                        full1$EM_pred[, 4:6], par_upper)
     par <- if (is.null(show0)) {
       par0
@@ -312,7 +312,7 @@ league_heatmap_pred <- function(full1,
                      is.element(select[, 1], show) &
                        is.element(select[, 2], show)))
     }
-    z_test <- par_mean / par_sd
+    z_test <- par_median / par_sd
     z_test_mat <- matrix(NA,
                          nrow = length(drug_names0),
                          ncol = length(drug_names0))
@@ -344,19 +344,19 @@ league_heatmap_pred <- function(full1,
   # Lower triangle
   point0 <- matrix(NA, nrow = length(drug_names), ncol = length(drug_names))
   lower0 <- upper0 <- point0
-  point0[lower.tri(point0, diag = FALSE)] <- round(par[, 1], 2)
+  point0[lower.tri(point0, diag = FALSE)] <- par[, 5] # round(par[, 1], 2)
   # Incorporate upper triangle
   point1 <- reflect_triangle(point0, from = "lower")
 
   # Matrix of lower and upper bound of effect measure (all possible comparisons)
   # Lower triangle
-  lower0[lower.tri(lower0, diag = FALSE)] <- round(par[, 3], 2)
-  upper0[lower.tri(upper0, diag = FALSE)] <- round(par[, 7], 2)
+  lower0[lower.tri(lower0, diag = FALSE)] <- par[, 3] # round(par[, 3], 2)
+  upper0[lower.tri(upper0, diag = FALSE)] <- par[, 7] # round(par[, 7], 2)
   # Incorporate upper triangle
   lower1 <- reflect_triangle(upper0, from = "lower")
-  lower1[lower.tri(lower1, diag = FALSE)] <- round(par[, 3], 2)
+  lower1[lower.tri(lower1, diag = FALSE)] <- par[, 3] # round(par[, 3], 2)
   upper1 <- reflect_triangle(lower0, from = "lower")
-  upper1[lower.tri(upper1, diag = FALSE)] <- round(par[, 7], 2)
+  upper1[lower.tri(upper1, diag = FALSE)] <- par[, 7] # round(par[, 7], 2)
 
   # First: Symmetric matrix for effect measure and its bounds after ordering
   # rows and columns from the best to the worst intervention
@@ -416,15 +416,15 @@ league_heatmap_pred <- function(full1,
     covar <- if (length(unique(full2$covariate)) < 3) {
       cov_value[[1]]
     } else {
-      cov_value[[1]] - mean(full2$covariate)
+      cov_value[[1]] - mean(full2$covariate) # We want the mean value
     }
 
-    par_mean2 <- full2$EM_pred[, 1] + full2$beta_all[, 1] * covar
+    par_median2 <- full2$EM_pred[, 5] + full2$beta_all[, 5] * covar
     par_sd2 <- sqrt(((full2$EM_pred[, 2])^2) +
                       ((full2$beta_all[, 2] * covar)^2))
-    par_lower2 <- par_mean2 - 1.96 * par_sd2
-    par_upper2 <- par_mean2 + 1.96 * par_sd2
-    par20 <- data.frame(par_mean2, par_sd2, par_lower2,
+    par_lower2 <- par_median2 - 1.96 * par_sd2
+    par_upper2 <- par_median2 + 1.96 * par_sd2
+    par20 <- data.frame(par_median2, par_sd2, par_lower2,
                         full2$EM_pred[, 4:6], par_upper2)
     par2 <- if (is.null(show0)) {
       par20
@@ -459,10 +459,10 @@ league_heatmap_pred <- function(full1,
     rownames(lower20) <- colnames(lower20) <- drug_names
     rownames(upper20) <- colnames(upper20) <- drug_names
     for (i in 1:length(comp[, 1])) {
-      point20[comp[i, 1], comp[i, 2]] <- round(par2[i, 1], 2)
+      point20[comp[i, 1], comp[i, 2]] <- par2[i, 5] # round(par2[i, 1], 2)
       # Lower triangle
-      lower20[comp[i, 1], comp[i, 2]] <- round(par2[i, 3], 2)
-      upper20[comp[i, 1], comp[i, 2]] <- round(par2[i, 7], 2)
+      lower20[comp[i, 1], comp[i, 2]] <- par2[i, 3] # round(par2[i, 3], 2)
+      upper20[comp[i, 1], comp[i, 2]] <- par2[i, 7] # round(par2[i, 7], 2)
     }
 
     # Incorporate upper triangle
@@ -548,13 +548,13 @@ league_heatmap_pred <- function(full1,
 
   caption0 <- if (!is.null(full1$beta_all) &
                   length(unique(full1$covariate)) > 2) {
-    paste("Posterior mean of", effect_measure_name(measure, lower = TRUE),
+    paste("Posterior median of", effect_measure_name(measure, lower = TRUE),
           "(95% prediction interval) for", cov_value[[2]], cov_value[[1]])
   } else if (!is.null(full1$beta_all) & length(unique(full1$covariate)) < 3) {
-    paste("Posterior mean of", effect_measure_name(measure, lower = TRUE),
+    paste("Posterior median of", effect_measure_name(measure, lower = TRUE),
           "(95% prediction interval) for", cov_value[[2]])
   } else if (is.null(full1$beta_all)) {
-    paste("Posterior mean of", effect_measure_name(measure, lower = TRUE),
+    paste("Posterior median of", effect_measure_name(measure, lower = TRUE),
           "(95% prediction interval)")
   }
 

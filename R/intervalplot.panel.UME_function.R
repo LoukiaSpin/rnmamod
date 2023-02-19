@@ -82,9 +82,9 @@ intervalplot_panel_ume <- function(full, ume, drug_names) {
   ume_upper <- em_ume[, 7]
 
   # Keep only the effect estimates according to the 'poss.pair.comp.clean'
-  ume_mean <- round(em_ume[, 1], 2)
+  ume_mean <- round(em_ume[, 5], 2)
   nma_mean <- round(
-    em_full[is.element(possible_comp$poss_comp[, 4], obs_comp), 1], 2)
+    em_full[is.element(possible_comp$poss_comp[, 4], obs_comp), 5], 2)
   nma_lower <- round(
     em_full[is.element(possible_comp$poss_comp[, 4], obs_comp), 3], 2)
   nma_upper <- round(

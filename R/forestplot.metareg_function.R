@@ -1,7 +1,7 @@
 #' Comparator-specific forest plot for network meta-regression
 #'
 #' @description
-#'   Provides a forest plot with the posterior mean and 95\% credible
+#'   Provides a forest plot with the posterior median and 95\% credible
 #'   and prediction intervals for comparisons with the selected intervention
 #'   (comparator) in the network under the network meta-analysis \emph{and}
 #'   network meta-regression for a specified level or value of the investigated
@@ -59,9 +59,9 @@
 #'
 #'   To obtain the posterior distribution of SUCRAs under the network
 #'   meta-regression for a specified level or value of the investigated
-#'   covariate, a two-step procedured is followed. First, the posterior mean and
+#'   covariate, a two-step procedured is followed. First, the posterior median and
 #'   standard deviation of the basic parameters and corresponding beta
-#'   coefficients are considered to calculate the mean and standard deviation of
+#'   coefficients are considered to calculate the meadin and standard deviation of
 #'   the basic parameters at the selected level or value of the investigated
 #'   covariate: d + beta * cov_value. Then, these calculated values are fed into
 #'   the BUGS code to get the posterior distribution of SUCRA. The progress of
@@ -166,10 +166,10 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   poss_pair_comp <- rbind(poss_pair_comp1, poss_pair_comp2)
 
   # Effect size of all possible pairwise comparisons (NMA)
-  em_ref00_nma <- cbind(rbind(data.frame(mean = em_full[, 1],
+  em_ref00_nma <- cbind(rbind(data.frame(median = em_full[, 5],
                                          lower = em_full[, 3],
                                          upper = em_full[, 7]),
-                              data.frame(mean = em_full[, 1] * (-1),
+                              data.frame(median = em_full[, 5] * (-1),
                                          lower = em_full[, 7] * (-1),
                                          upper = em_full[, 3] * (-1))),
                         poss_pair_comp)
@@ -182,17 +182,17 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   em_ref_nma <- em_ref0_nma[order(sucra_new, decreasing = TRUE), ]
 
   # Effect size of all possible pairwise comparisons (NMR)
-  par_mean <- as.vector(c(reg$EM[, 1] + reg$beta_all[, 1] * cov_val,
-                          (reg$EM[, 1] * (-1)) +
-                            (reg$beta_all[, 1] * (-1) * cov_val)))
+  par_median <- as.vector(c(reg$EM[, 5] + reg$beta_all[, 5] * cov_val,
+                          (reg$EM[, 5] * (-1)) +
+                            (reg$beta_all[, 5] * (-1) * cov_val)))
   par_sd <- as.vector(c(sqrt(((reg$EM[, 2])^2) +
                                ((reg$beta_all[, 2] * cov_val)^2)),
                         sqrt(((reg$EM[, 2])^2) +
                                ((reg$beta_all[, 2] * cov_val)^2))))
 
-  em_ref00_nmr <- cbind(mean = par_mean,
+  em_ref00_nmr <- cbind(median = par_median,
                         sd = par_sd,
-                        lower = par_mean - 1.96 * par_sd,
+                        lower = par_median - 1.96 * par_sd,
                         upper = par_mean + 1.96 * par_sd,
                         poss_pair_comp)
   em_subset_nmr <- subset(em_ref00_nmr, em_ref00_nmr[6] == compar)
@@ -203,26 +203,26 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   # Posterior results on the predicted estimates of comparisons with the
   # selected comparator as reference
   if (model == "RE") {
-    pred_ref00_nma <- cbind(rbind(data.frame(mean = pred_full[, 1],
+    pred_ref00_nma <- cbind(rbind(data.frame(median = pred_full[, 5],
                                              lower = pred_full[, 3],
                                              upper = pred_full[, 7]),
-                                  data.frame(mean = pred_full[, 1] * (-1),
+                                  data.frame(median = pred_full[, 5] * (-1),
                                              lower = pred_full[, 7] * (-1),
                                              upper = pred_full[, 3] * (-1))),
                             poss_pair_comp)
     pred_subset_nma <- subset(pred_ref00_nma, pred_ref00_nma[5] == compar)
     pred_ref0_nma <- rbind(pred_subset_nma[, 1:3], c(rep(NA, 3)))
-    par_mean <- as.vector(c(reg$EM_pred[, 1] + reg$beta_all[, 1] * cov_val,
-                            (reg$EM_pred[, 1] * (-1)) +
-                              (reg$beta_all[, 1] * (-1) * cov_val)))
+    par_mean <- as.vector(c(reg$EM_pred[, 5] + reg$beta_all[, 5] * cov_val,
+                            (reg$EM_pred[, 5] * (-1)) +
+                              (reg$beta_all[, 5] * (-1) * cov_val)))
     par_sd <- as.vector(c(sqrt(((reg$EM_pred[, 2])^2) +
                                  ((reg$beta_all[, 2] * cov_val)^2)),
                           sqrt(((reg$EM_pred[, 2])^2) +
                                  ((reg$beta_all[, 2] * cov_val)^2))))
 
-    pred_ref00_nmr <-  cbind(data.frame(mean = par_mean,
-                                        lower = par_mean - 1.96 * par_sd,
-                                        upper = par_mean + 1.96 * par_sd),
+    pred_ref00_nmr <-  cbind(data.frame(median = par_median,
+                                        lower = par_median - 1.96 * par_sd,
+                                        upper = par_median + 1.96 * par_sd),
                            poss_pair_comp)
     pred_subset_nmr <- subset(pred_ref00_nmr, pred_ref00_nmr[5] == compar)
     pred_ref0_nmr <- rbind(pred_subset_nmr[, 1:3], c(rep(NA, 3)))
@@ -248,7 +248,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                      each = length(drug_names)))
     colnames(prepare_em_nma) <- c("order",
                                   "comparison",
-                                  "mean", "lower", "upper",
+                                  "median", "lower", "upper",
                                   "interval")
     colnames(prepare_em_nmr) <- colnames(prepare_em_nma)
   } else if (is.element(measure, c("OR", "RR", "ROM")) & model == "RE") {
@@ -266,7 +266,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                      each = length(drug_names)))
     colnames(prepare_em_nma) <- c("order",
                                   "comparison",
-                                  "mean", "lower", "upper",
+                                  "median", "lower", "upper",
                                   "interval")
     colnames(prepare_em_nmr) <- colnames(prepare_em_nma)
   } else if (!is.element(measure, c("OR", "RR", "ROM")) & model == "FE") {
@@ -278,7 +278,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                  round(em_ref_nmr, 2))
     colnames(prepare_em_nma) <- c("order",
                                   "comparison",
-                                  "mean", "lower", "upper")
+                                  "median", "lower", "upper")
     colnames(prepare_em_nmr) <- colnames(prepare_em_nma)
   } else if (is.element(measure, c("OR", "RR", "ROM")) & model == "FE") {
     prepare_em_nma <- data.frame(as.factor(rev(seq_len(len_drug))),
@@ -289,7 +289,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                                  round(exp(em_ref_nmr), 2))
     colnames(prepare_em_nma) <- c("order",
                                   "comparison",
-                                  "mean", "lower", "upper")
+                                  "median", "lower", "upper")
     colnames(prepare_em_nmr) <- colnames(prepare_em_nma)
   }
   prepare_em <- cbind(rbind(prepare_em_nma, prepare_em_nmr),
@@ -322,7 +322,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   p1 <- if (model == "RE") {
     ggplot(data = prepare_em[prepare_em$interval == "Prediction", ],
            aes(x = order,
-               y = mean,
+               y = median,
                ymin = lower,
                ymax = upper,
                group = analysis)) +
@@ -336,7 +336,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                      position = position_dodge(width = 0.5)) +
       geom_errorbar(data = prepare_em[prepare_em$interval == "Estimation", ],
                     aes(x = order,
-                        y = mean,
+                        y = median,
                         ymin = lower,
                         ymax = upper,
                         group = analysis),
@@ -349,10 +349,10 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                  position = position_dodge(width = 0.5)) +
       geom_text(data = prepare_em[prepare_em$interval == "Estimation", ],
                 aes(x = order,
-                    y = mean,
+                    y = median,
                     group = analysis,
                     colour = analysis,
-                    label = paste0(sprintf("%.2f", mean), " ", "(",
+                    label = paste0(sprintf("%.2f", median), " ", "(",
                                    sprintf("%.2f", lower),
                                    ",",
                                    " ",
@@ -393,7 +393,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                           breaks = c("Network meta-analysis",
                                      "Network meta-regression"),
                          values = c("#009E73", "#D55E00")) +
-      geom_label(aes(x = unique(order[is.na(mean)]),
+      geom_label(aes(x = unique(order[is.na(median)]),
                      y = ifelse(!is.element(
                        measure, c("OR", "RR", "ROM")), 0, 1), # -0.2, 0.65
                      hjust = 0,
@@ -421,7 +421,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   } else {
     ggplot(data = prepare_em,
            aes(x = order,
-               y = mean,
+               y = median,
                ymin = lower,
                ymax = upper,
                group = analysis,
@@ -438,8 +438,8 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                  stroke = 0.3,
                  position = position_dodge(width = 0.5)) +
       geom_text(aes(x = order,
-                    y = mean,
-                    label = paste0(sprintf("%.2f", mean), " ", "(",
+                    y = median,
+                    label = paste0(sprintf("%.2f", median), " ", "(",
                                    sprintf("%.2f", lower),
                                    ",",
                                    " ",
@@ -464,7 +464,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
       scale_color_manual(breaks = c("Network meta-analysis",
                                     "Network meta-regression"),
                          values = c("#009E73", "#D55E00")) +
-      geom_label(aes(x = unique(order[is.na(mean)]),
+      geom_label(aes(x = unique(order[is.na(median)]),
                      y = ifelse(!is.element(
                        measure, c("OR", "RR", "ROM")), 0, 1), #-0.2, 0.65
                      hjust = 0,
