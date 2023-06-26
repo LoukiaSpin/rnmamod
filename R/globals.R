@@ -1,13 +1,15 @@
 #' @import
 #'   ggplot2
+#'   stats
 #'
 #' @importFrom dplyr select starts_with ends_with %>%
 #' @importFrom fdrtool rhalfnorm
 #' @importFrom MASS fractions
-#' @importFrom gemtc mtc.network mtc.nodesplit.comparisons
+#' @importFrom gemtc mtc.network mtc.data.studyrow mtc.nodesplit.comparisons
 #' @importFrom ggfittext geom_fit_text
 #' @importFrom ggpubr ggarrange
 #' @importFrom ggrepel geom_text_repel
+#' @importFrom grDevices rainbow
 #' @importFrom igraph E layout_in_circle make_graph plot.igraph V
 #' @importFrom knitr kable
 #' @importFrom netmeta netconnection

@@ -93,10 +93,10 @@
 data_preparation <- function(data, measure) {
 
   # Intervention studied in each arm of every trial
-  treat <- if (dim(data %>% select(starts_with("t")))[2] == 0) {
+  treat <- if (dim(data[, startsWith(colnames(data), "t")])[2] == 0) {
     stop("The information on the individual arms is missing", call. = FALSE)
   } else {
-    data %>% select(starts_with("t"))
+    data[, startsWith(colnames(data), "t")]
   }
   # Total number of included trials
   ns <- length(treat[, 1])
@@ -107,10 +107,10 @@ data_preparation <- function(data, measure) {
 
   measure <- if (missing(measure)) {
     stop("The argument 'measure' needs to be defined.", call. = FALSE)
-  } else if ((dim(data %>% select(starts_with("r")))[2] > 0) &
+  } else if ((dim(data[, startsWith(colnames(data), "r")])[2] > 0) &
              !is.element(measure, c("OR", "RR", "RD"))) {
     stop("Insert 'OR', 'RR', or 'RD' for a  binary outcome.", call. = FALSE)
-  } else if ((dim(data %>% select(starts_with("r")))[2] == 0) &
+  } else if ((dim(data[, startsWith(colnames(data), "r")])[2] == 0) &
              !is.element(measure, c("MD", "SMD", "ROM"))) {
     stop("Insert 'MD', 'SMD' or 'ROM' for a  continuous outcome.", call. = FALSE)
   } else {
@@ -118,22 +118,22 @@ data_preparation <- function(data, measure) {
   }
 
   # When no missing outcome data are collected
-  mod <- if (dim(data %>% select(starts_with("m")))[2] == 0) {
+  mod <- if (dim(data[, startsWith(colnames(data), "m")])[2] == 0) {
     message("Missing participant outcome data have *not* been collected.")
     as.data.frame(matrix(NA, nrow = nrow(treat), ncol = ncol(treat)))
   } else {
     # Number of missing participants in each arm of every trial
-    data %>% select(starts_with("m"))
+    data[, startsWith(colnames(data), "m")]
   }
 
   # For a continuous outcome
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
     # Observed mean value in each arm of every trial
-    y_obs <- data %>% select(starts_with("y"))
+    y_obs <- data[, startsWith(colnames(data), "y")]
     # Observed standard deviation in each arm of every trial
-    sd_obs <- data %>% select(starts_with("sd"))
+    sd_obs <- data[, startsWith(colnames(data), "sd")]
     # Number of randomised participants in each arm of every trial
-    rand <- data %>% select(starts_with("n"))
+    rand <- data[, startsWith(colnames(data), "n")]
     # Observed standard error in each arm of every trial
     se_obs <- sd_obs / sqrt(rand - mod)
 
@@ -187,9 +187,9 @@ data_preparation <- function(data, measure) {
   } else {
     # For a binary outcome:
     # Number of observed events in each arm of every trial
-    event <- data %>% select(starts_with("r"))
+    event <- data[, startsWith(colnames(data), "r")]
     # Number of randomised participants in each arm of every trial
-    rand <- data %>% select(starts_with("n"))
+    rand <- data[, startsWith(colnames(data), "n")]
 
     if ((dim(event)[2] != max(na)) |
         (dim(mod)[2] != max(na)) |

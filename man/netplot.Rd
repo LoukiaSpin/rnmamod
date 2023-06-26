@@ -15,7 +15,6 @@ netplot(
   node_frame_color = "black",
   node_frame_width = 1,
   node_shape = "circle",
-  node_label = drug_names,
   node_label_color = "black",
   node_label_font = 1,
   node_label_cex = 1,
@@ -167,8 +166,6 @@ more information refer to the R-package
 \item{...}{Further graphical arguments of the
 \code{\link[igraph:plot.igraph]{plot.igraph}} function of the
 R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}}
-
-\item{node_width}{XXXXXX}
 }
 \value{
 A network plot with coloured closed-loops informed by multi-arm

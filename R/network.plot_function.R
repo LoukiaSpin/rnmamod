@@ -20,7 +20,6 @@
 #'   \code{layout = layout_in_circle} to plot the nodes in a circular layout.
 #'   For more information refer to the R-package
 #'   \href{https://CRAN.R-project.org/package=igraph}{igraph},
-#' @param node_width XXXXXX
 #' @param node_color A character or vector of characters (with length equal to
 #'   the number of nodes) to indicate the colour of the nodes. The default is
 #'   \code{node_color = "tomato"}. \code{node_color} determines the vertex.color
@@ -161,7 +160,6 @@ netplot <- function(data,
                     node_frame_color = "black",
                     node_frame_width = 1,
                     node_shape = "circle",
-                    node_label = drug_names,
                     node_label_color = "black",
                     node_label_font = 1,
                     node_label_cex = 1,
@@ -259,9 +257,6 @@ netplot <- function(data,
   # Weight each edge by the corresponding number of trials
   igraph::E(g1)$weight <- comp$frequency
 
-  # Label the nodes (default: intervention names under 'drug_names')
-  #V(g1)$names <- node_label
-
   # Label the edges (default is 'NULL')
   igraph::E(g1)$names <- if (is.null(edge_label)) {
     comp$frequency
@@ -277,7 +272,6 @@ netplot <- function(data,
        vertex.frame.width = node_frame_width,
        vertex.shape = node_shape,
        vertex.size = igraph::V(g1)$weight,
-       vertex.label = node_label,
        vertex.label.color = node_label_color,
        vertex.label.font = node_label_font,
        vertex.label.cex	= node_label_cex,
