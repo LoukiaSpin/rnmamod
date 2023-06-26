@@ -77,16 +77,14 @@ element `m` appears in the dataset.
 
 The function `netplot` (see ?netplot for help) creates the network plot using 
 only two arguments: the `data` for the dataset (in one-trial-per-row format) and
-`drug_names` for the names of each intervention in the dataset. To obtain the 
-network plot, `netplot` calls the `nma.networkplot` function from the 
-**pcnetmeta** package.
+`drug_names` for the names of each intervention in the dataset. 
 
 ```{r, results = "hide", fig.show = "hide"}
-netplot(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"))
+netplot(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"), edge_label_cex = 0.6)
 ```
 
 ```{r, echo = FALSE, results = "hide", fig.width = 5, fig.height = 5, fig.align = "center"}
-netplot(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"))
+netplot(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"), edge_label_cex = 0.6)
 ```
 
 The intervention names in `drug_names` must be sorted in the ascending order of 
@@ -108,8 +106,10 @@ comparisons (i.e., comparisons of interventions informed by at least one trial),
 and so on:
 
 ```{r, echo = FALSE, fig.show = "hide"}
-net <- netplot(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"))
-net$network_description
+describe_network(data = nma.bottomley2011,
+                 drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"),
+                 measure = "OR",
+                 save_xls = FALSE)$network_description
 ```
 
 ### Distribution of the outcome
@@ -121,17 +121,23 @@ the table additionally illustrates the distribution of the outcome as proportion
 across the corresponding trials: 
 
 ```{r, echo = FALSE, fig.show = "hide"}
-net$table_interventions
+describe_network(data = nma.bottomley2011,
+                 drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"),
+                 measure = "OR",
+                 save_xls = FALSE)$table_interventions
 ```
 
 An identical table is returned for the **observed comparisons** in the network:
 
 ```{r, echo = FALSE, fig.show = "hide"}
-net$table_comparisons
+describe_network(data = nma.bottomley2011,
+                 drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"),
+                 measure = "OR",
+                 save_xls = FALSE)$table_comparisons
 ```
 
 The users can export all tables in xlsx file at the working directory 
-of their project by adding the argument `save_xls = TRUE` in the `netplot` 
+of their project by adding the argument `save_xls = TRUE` in the `describe_network` 
 function.
 
 ### Distribution of missing participants across the network

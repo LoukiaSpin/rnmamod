@@ -92,17 +92,7 @@ heatmap_missing_dataset <- function(data, trial_names, drug_names) {
     drug_names
   }
 
-  # Rename properly to use gemtc
-  #names(m) <- paste0("m..", seq_len(max(na..)), ".")
-  #names(n) <- paste0("n..", seq_len(max(na..)), ".")
-  #names(t) <- paste0("t..", seq_len(max(na..)), ".")
-
   # Turn one row per trial to one row per trial-arm
-  #transform <- mtc.data.studyrow(cbind(t, m, n, na..),
-  #                               armVars = c("treatment" = "t",
-  #                                           "response" = "m",
-  #                                           "sampleSize" = "n"),
-  #                               nArmsVar = "na")
   transform <- data.frame(study = rep(1:ns, na),
                           treatment = na.omit(c(t(t))),
                           response = na.omit(c(t(m))),
