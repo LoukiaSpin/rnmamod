@@ -2,7 +2,7 @@
 #'
 #' @description Calculates the necessary elements to describe the evidence base
 #'   for an outcome across the network, the interventions, and observed
-#'   comparisons. See also 'Value' in \code{\link{netplot}}.
+#'   comparisons.
 #'
 #' @param data A data-frame of a one-trial-per-row format containing arm-level
 #'   data of each trial. See 'Format' in \code{\link{run_model}}.
@@ -14,43 +14,69 @@
 #'   respectively. For a continuous outcome, the following can be considered:
 #'   \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for mean difference,
 #'   standardised mean difference and ratio of means, respectively.
+#' @param save_xls Logical to indicate whether to export the tabulated results
+#'   to an 'xlsx' file (via the \code{\link[writexl:write_xlsx]{write_xlsx}}
+#'   function of the R-package
+#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}) at the working
+#'   directory of the user. The default is \code{FALSE} (do not export).
 #'
-#' @return A list of scalar results and two data-frames to be passed to
-#'   \code{\link{netplot}}. The scalar results include:
-#'   \item{direct_comp}{The number of observed comparisons in the network.}
-#'   \item{two_arm_ns}{The number of two-arm trials in the network.}
-#'   \item{multi_arm_ns}{The number of multi-arm trials in the network.}
-#'   \item{total_rand_network}{The total number of randomised participants
-#'   in the network.}
-#'   \item{prop_obs_network}{The proportion of participants who completed
-#'   the trial.}
-#'   \item{prop_event_network}{The proportion of observed events in the
-#'   network. When the outcome is continuous, this element is omitted.}
-#'   \item{trial_zero_event}{The number of trials with at least one arm
-#'   with zero events. When the outcome is continuous, this element is
-#'   omitted.}
-#'   \item{trial_all_zero_event}{The number of trials with zero events in
-#'   all arms. When the outcome is continuous, this element is omitted.}
-#'
-#'   The two data-frames include \code{table_interventions} and
-#'   \code{table_comparisons}. See 'Value' in \code{\link{netplot}} for these
-#'   data-frames.
+#' @return
+#'   \code{describe_network} returns the following data-frames that describe the
+#'   evidence base:
+#'   \item{network_description}{The number of: interventions, possible
+#'   comparisons, direct and indirect comparisons, number of trials in total,
+#'   number of two-arm and multi-arm trials, number of randomised participants,
+#'   and proportion of participants completing the trial (completers).
+#'   When the outcome is binary, the number of trials with at least one zero
+#'   event, and the number of trials with all zero events are also
+#'   presented.}
+#'   \item{table_interventions}{For each intervention, the number of trials,
+#'   number of randomised participants, and proportion of completers. When the
+#'   outcome is binary, the data-frame presents also the corresponding
+#'   proportion of total observed events, the minimum, median and maximum
+#'   proportion of observed events across the corresponding trials.}
+#'   \item{table_comparisons}{Identical structure to \code{table_interventions}
+#'   but for each observed comparison in the network.}
 #'
 #' @details \code{describe_network} calls \code{\link{data_preparation}} to
-#' facilitate the calculations.
+#'   facilitate the calculations.
 #'
-#' @seealso \code{\link{data_preparation}}, \code{\link{netplot}},
-#'   \code{\link{run_model}}
+#'   Furthermore, \code{describe_network} exports the data-frames to separate
+#'   'xlsx' files (via the \code{\link[writexl:write_xlsx]{write_xlsx}} function
+#'   of the R-package
+#'   \href{https://CRAN.R-project.org/package=writexl}{writexl}) at the working
+#'   directory of the user.
+#'
+#' @seealso \code{\link{data_preparation}}, \code{\link{run_model}}
+#'   \code{\link[writexl:write_xlsx]{write_xlsx}}
 #'
 #' @author {Loukia M. Spineli}
 #'
 #' @export
-describe_network <- function(data, drug_names, measure) {
+describe_network <- function(data, drug_names, measure, save_xls) {
 
   drug_names <- if (missing(drug_names)) {
     stop("The argument 'drug_names' has not been defined.", call. = FALSE)
   } else {
     drug_names
+  }
+
+  measure <- if (missing(measure)) {
+    stop("The argument 'measure' needs to be defined.", call. = FALSE)
+  } else if ((dim(data[, startsWith(colnames(data), "r")])[2] > 0) &
+             !is.element(measure, c("OR", "RR", "RD"))) {
+    stop("Insert 'OR', 'RR', or 'RD' for a  binary outcome.", call. = FALSE)
+  } else if ((dim(data[, startsWith(colnames(data), "r")])[2] == 0) &
+             !is.element(measure, c("MD", "SMD", "ROM"))) {
+    stop("Insert 'MD', 'SMD' or 'ROM' for a  continuous outcome.", call. = FALSE)
+  } else {
+    measure
+  }
+
+  save_xls <- if (missing(save_xls)) {
+    FALSE
+  } else {
+    save_xls
   }
 
   # Use the 'data_preparation' function
@@ -322,20 +348,69 @@ describe_network <- function(data, drug_names, measure) {
                                    "Max. events (%)")
   }
 
-  results <- list(direct_comp = direct_comp,
-                  two_arm_ns = two_arm_ns,
-                  multi_arm_ns = multi_arm_ns,
-                  total_rand_network = total_rand_network,
-                  prop_obs_network = prop_obs_network,
-                  table_interventions = table_interv,
-                  table_comparisons = table_comp)
+  # Tabulate general information of the network
+  characteristics <- c("Interventions",
+                       "Possible comparisons",
+                       "Direct comparisons",
+                       "Indirect comparisons",
+                       "Trials",
+                       "Two-arm trials",
+                       "Multi-arm trials",
+                       "Randomised participants",
+                       "Proportion of completers")
+  value <- c(length(drug_names),
+             dim(combn(length(drug_names), 2))[2],
+             direct_comp,
+             dim(combn(length(drug_names), 2))[2] - direct_comp,
+             dim(data)[1],
+             two_arm_ns,
+             multi_arm_ns,
+             total_rand_network,
+             prop_obs_network)
 
+  results <- data.frame(characteristics, value)
+  colnames(results) <- c("Characteristic", "Total")
 
-  if (is.element(measure, c("OR", "RR", "RD"))) {
-    results <- append(results, list(prop_event_network = prop_event_network,
-                               trial_zero_event = trial_zero_event,
-                               trial_all_zero_event = trial_all_zero_event))
+  # Add further information based on the effect measure
+  if (measure == "OR") {
+    results[10, ] <- rbind("Proportion of observed events",
+                           prop_event_network)
+    results[11, ] <- rbind("Trials with at least one zero event",
+                           trial_zero_event)
+    results[12, ] <- rbind("Trials with all zero events",
+                           trial_all_zero_event)
+  } else {
+    results
   }
 
-  return(results)
+  # Write the tables as .xlsx
+  if (save_xls == TRUE) {
+    writexl::write_xlsx(table_interv, "table_interventions.xlsx")
+    writexl::write_xlsx(table_comp, "table_comparisons.xlsx")
+  }
+
+  # Obtain the element 'm_pseudo'
+  na_missing <- data_preparation(data = data, measure = measure)$m_pseudo
+  na_missing_trials <- length(which(unlist(na_missing) == -1))
+
+  # Return all the results
+  return(list(network_description =
+                knitr::kable(results,
+                             align = "ll",
+                             caption = "Description of the network"),
+              table_interventions =
+                knitr::kable(table_interv,
+                             align = "lccccccc",
+                             caption = "Interventions"),
+              table_comparisons =
+                knitr::kable(table_comp,
+                             align = "lccccccc",
+                             caption = "Observed comparisons")))
+
+  # Whether there are trials without information on missing participants
+  if (na_missing_trials > 0 & na_missing_trials < sum(dat$na)) {
+    aa <- "trial-arms without information on"
+    bb <- "the number of missing participants."
+    message(paste("Note: There are", na_missing_trials, aa, paste0(bb, ".")))
+  }
 }

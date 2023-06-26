@@ -29,7 +29,7 @@ directory of the user. The default is \code{FALSE} (do not export).}
 \code{ume_plot} prints on the R console a message on the most
   parsimonious model (if any) based on the DIC (red text). Then, the function
   returns the following list of elements:
-  \item{table_effect_size}{The posterior mean, posterior standard
+  \item{table_effect_size}{The posterior median, posterior standard
   deviation, and 95\% credible interval of the summary effect size for each
   pairwise comparison observed in the network under the consistency model
   and the unrelated mean effects model.}

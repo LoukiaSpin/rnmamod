@@ -36,7 +36,7 @@ A panel of two forest plots: (1) a forest plot on the effect
   the interventions (Salanti et al., 2011).
 }
 \description{
-Provides a forest plot with the posterior mean and 95\% credible
+Provides a forest plot with the posterior median and 95\% credible
   and prediction intervals for comparisons with the selected intervention
   (comparator) in the network under the network meta-analysis \emph{and}
   network meta-regression for a specified level or value of the investigated
@@ -72,9 +72,9 @@ The y-axis of the forest plot on \bold{effect sizes} displays the
 
   To obtain the posterior distribution of SUCRAs under the network
   meta-regression for a specified level or value of the investigated
-  covariate, a two-step procedured is followed. First, the posterior mean and
+  covariate, a two-step procedured is followed. First, the posterior median and
   standard deviation of the basic parameters and corresponding beta
-  coefficients are considered to calculate the mean and standard deviation of
+  coefficients are considered to calculate the meadin and standard deviation of
   the basic parameters at the selected level or value of the investigated
   covariate: d + beta * cov_value. Then, these calculated values are fed into
   the BUGS code to get the posterior distribution of SUCRA. The progress of

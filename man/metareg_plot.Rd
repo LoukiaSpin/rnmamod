@@ -37,12 +37,12 @@ directory of the user. The default is \code{FALSE} (do not export).}
 \code{metareg_plot} prints on the R console a message on the most
   parsimonious model (if any) based on the DIC (in red text). Furthermore,
   the function returns the following list of elements:
-  \item{table_estimates}{The posterior mean, and 95\% credible interval
+  \item{table_estimates}{The posterior median, and 95\% credible interval
   of the summary effect measure (according to the argument \code{measure}
   defined in \code{\link{run_model}}) for each comparison with the selected
   intervention under network meta-analysis and network meta-regression
   based on the specified \code{cov_value}.}
-  \item{table_predictions}{The posterior mean, and 95\% prediction
+  \item{table_predictions}{The posterior median, and 95\% prediction
   interval of the summary effect measure (according to the argument
   \code{measure} defined in \code{\link{run_model}}) for each comparison
   with the selected intervention under network meta-analysis and network
@@ -53,7 +53,7 @@ directory of the user. The default is \code{FALSE} (do not export).}
   (Spiegelhalter et al., 2002). When a fixed-effect model has been
   performed, \code{metareg_plot} does not return results on \emph{tau}. For a
   binary outcome, the results refer to the odds ratio scale.}
-  \item{table_regression_coeffients}{The posterior mean and 95\%
+  \item{table_regression_coeffients}{The posterior median and 95\%
   credible interval of the regression coefficient(s) (according to the
   argument \code{covar_assumption} defined in \code{\link{run_metareg}}).
   For a binary outcome, the results refer to the odds ratio scale.}

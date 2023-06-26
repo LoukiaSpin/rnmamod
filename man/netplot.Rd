@@ -2,77 +2,192 @@
 % Please edit documentation in R/network.plot_function.R
 \name{netplot}
 \alias{netplot}
-\title{Network plot and description of the evidence base}
+\title{Network plot}
 \usage{
-netplot(data, drug_names, save_xls, ...)
+netplot(
+  data,
+  drug_names,
+  show_multi = FALSE,
+  multi_frame = -16,
+  alpha_multi_color = 0.1,
+  layout = igraph::layout_in_circle,
+  node_color = "tomato",
+  node_frame_color = "black",
+  node_frame_width = 1,
+  node_shape = "circle",
+  node_label = drug_names,
+  node_label_color = "black",
+  node_label_font = 1,
+  node_label_cex = 1,
+  node_label_dist = 0,
+  edge_color = "grey50",
+  edge_arrow_size = 0.5,
+  edge_lty = 1,
+  edge_label = NULL,
+  edge_label_color = "black",
+  edge_label_font = 1,
+  edge_label_cex = 2,
+  edge_curved = 0,
+  direction = FALSE,
+  ...
+)
 }
 \arguments{
 \item{data}{A data-frame of a one-trial-per-row format containing arm-level
 data of each trial. See 'Format' in \code{\link{run_model}}.}
 
-\item{drug_names}{A vector of labels with the name of the interventions in
-the order they appear in the argument \code{data}.}
+\item{drug_names}{A vector of labels with the name of the interventions
+(nodes) in the order they appear in the argument \code{data}.}
 
-\item{save_xls}{Logical to indicate whether to export the tabulated results
-to an 'xlsx' file (via the \code{\link[writexl:write_xlsx]{write_xlsx}}
+\item{show_multi}{Logical to indicate whether to colour the closed-loops
+informed by multi-arm trials. The default is \code{show_multi = FALSE}.}
+
+\item{multi_frame}{A numeric scalar to determine the size of the border
+ around the closed-loops formed by multi-arm trials. The default is -16.
+\code{multi_frame} determines the mark.expand argument found in the
+ \code{\link[igraph:plot.igraph]{plot.igraph}} function of the
+ R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{alpha_multi_color}{A numerical scalar with range from 0 to 1 to
+determine the opacity of \code{multi_frame} coloured using the
+\code{rainbow} colour palette. The default is 0.1.}
+
+\item{layout}{The layout specification. The default is
+\code{layout = layout_in_circle} to plot the nodes in a circular layout.
+For more information refer to the R-package
+\href{https://CRAN.R-project.org/package=igraph}{igraph},}
+
+\item{node_color}{A character or vector of characters (with length equal to
+the number of nodes) to indicate the colour of the nodes. The default is
+\code{node_color = "tomato"}. \code{node_color} determines the vertex.color
+argument found in the \code{\link[igraph:plot.igraph]{plot.igraph}}
 function of the R-package
-\href{https://CRAN.R-project.org/package=writexl}{writexl}) at the working
-directory of the user. The default is \code{FALSE} (do not export).}
+\href{https://CRAN.R-project.org/package=igraph}{igraph}).}
 
-\item{...}{Additional arguments of the
-\code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}} function of the
-R-package \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}.}
+\item{node_frame_color}{A character to indicate the colour of the frame
+around the nodes. The default is \code{node_frame_color = "black"}.
+\code{node_frame_color} determines the vertex.frame.color argument found in
+the \code{\link[igraph:plot.igraph]{plot.igraph}} function of the
+R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{node_frame_width}{A numerical scalar to indicate the width of the frame
+around the nodes. The default is 1. \code{node_frame_width} determines the
+vertex.frame.width argument found in the
+\code{\link[igraph:plot.igraph]{plot.igraph}} function of the
+R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{node_shape}{A character to indicate the shape of the nodes. The default
+is \code{node_shape = "circle"}. \code{node_shape} determines the
+vertex.shape argument found in the
+\code{\link[igraph:plot.igraph]{plot.igraph}} function of the
+R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{node_label_color}{A character to indicate the color of the node labels.
+The default is \code{node_label_color = "black"}. \code{node_label_color}
+determines the vertex.label.color argument found in the
+\code{\link[igraph:plot.igraph]{plot.igraph}} function of the
+R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{node_label_font}{A numerical scalar to indicate the font of the node
+labels. The default is 1. \code{node_label_font} determines the
+vertex.label.font argument found in the
+\code{\link[igraph:plot.igraph]{plot.igraph}} function of the
+R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{node_label_cex}{A numerical scalar to indicate the font size of the
+node labels. The default is 1. \code{node_label_cex} determines the
+vertex.label.cex argument found in the
+\code{\link[igraph:plot.igraph]{plot.igraph}} function of the
+R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{node_label_dist}{A numerical scale between 0 and 1 to indicate the
+position of the node labels relative to the node center. The default is 0,
+where the label is centered. \code{node_label_dist} determines the
+vertex.label.dist argument found in the
+\code{\link[igraph:plot.igraph]{plot.igraph}} function of the
+R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{edge_color}{A character or vector of characters (with length equal to
+the number of edges) to indicate the colour of the edges. The default is
+\code{edge_color = "grey50"}. \code{edge_color} determines the edge.color
+argument found in the \code{\link[igraph:plot.igraph]{plot.igraph}}
+function of the R-package
+\href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{edge_arrow_size}{A numerical scalar between 0 and 1 to indicate the
+arrow size. The default is 0.5. \code{edge_arrow_size} determines the
+edge.arrow.size argument found in the
+\code{\link[igraph:plot.igraph]{plot.igraph}} function of the R-package
+\href{https://CRAN.R-project.org/package=igraph}{igraph}). This argument
+work only when \code{direction = FALSE}.}
+
+\item{edge_lty}{A numerical scalar, discrete with values from 0 to 6 to
+indicate the line type of the edges. The default is 1 (solid).
+\code{edge_lty} determines the edge.lty argument found in the
+\code{\link[igraph:plot.igraph]{plot.igraph}} function of the R-package
+\href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{edge_label}{A vector of number of characters with length equal to the
+number of edges to present the edge label. The default is
+\code{edge_label = NULL} and refers to the number of studies investigating
+the corresponding comparisons. \code{edge_label} determines the edge.label
+argument found in the \code{\link[igraph:plot.igraph]{plot.igraph}}
+function of the R-package
+\href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{edge_label_color}{A character to indicate the color of the edge labels.
+The default is \code{edge_label_color = "black"}. \code{edge_label_color}
+determines the edge.label.color argument found in the
+\code{\link[igraph:plot.igraph]{plot.igraph}} function of the
+R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{edge_label_font}{A numerical scalar to indicate the font of the edge
+labels. The default is 1. \code{edge_label_font} determines the
+edge.label.font argument found in the
+\code{\link[igraph:plot.igraph]{plot.igraph}} function of the
+R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{edge_label_cex}{A numerical scalar to indicate the font size of the
+edge labels. The default is 2. \code{edge_label_cex} determines the
+edge.label.cex argument found in the
+\code{\link[igraph:plot.igraph]{plot.igraph}} function of the
+R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{edge_curved}{A numerical scalar with range from 0 to 1 that indicates
+the edge curvature. The default is 0 (no curvature). \code{edge_curved}
+determines the edge.curved argument found in the
+\code{\link[igraph:plot.igraph]{plot.igraph}} function of the
+R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{direction}{Logical to draw (TRUE) or not (FALSE) arrow for each edge
+according to each direction. The default is \code{direction = FALSE}. For
+more information refer to the R-package
+\href{https://CRAN.R-project.org/package=igraph}{igraph}).}
+
+\item{...}{Further graphical arguments of the
+\code{\link[igraph:plot.igraph]{plot.igraph}} function of the
+R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}}
+
+\item{node_width}{XXXXXX}
 }
 \value{
 A network plot with coloured closed-loops informed by multi-arm
   trials. Each node indicates an intervention and each edge an observed
-  pairwise comparison. The edge thickness is proportional to the number of
-  trials investigating the corresponding comparison, unless
-  specified otherwise (see
-  \code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}} function of the
-  R-package \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}).
-  The size of the node is weighted by the total number of
-  trials investigating the corresponding intervention, unless specified
-  otherwise (see \code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}}
-  function of the R-package
-  \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}).
-
-  \code{netplot} also returns the following data-frames that describe the
-  evidence base:
-  \item{network_description}{The number of: interventions, possible
-  comparisons, direct and indirect comparisons, number of trials in total,
-  number of two-arm and multi-arm trials, number of randomised participants,
-  and proportion of participants completing the trial (completers).
-  When the outcome is binary, the number of trials with at least one zero
-  event, and the number of trials with all zero events are also
-  presented.}
-  \item{table_interventions}{For each intervention, the number of trials,
-  number of randomised participants, and proportion of completers. When the
-  outcome is binary, the data-frame presents also the corresponding
-  proportion of total observed events, the minimum, median and maximum
-  proportion of observed events across the corresponding trials.}
-  \item{table_comparisons}{Identical structure to \code{table_interventions}
-  but for each observed comparison in the network.}
+  pairwise comparison.
 }
 \description{
-Illustrates the network plot for one outcome and summarises the
-  characteristics of the evidence base.
+Illustrates the network plot for one outcome.
 }
 \details{
-\code{netplot} draws the network plot using the
-  \code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}} function
-  of the R-package
-  \href{https://CRAN.R-project.org/package=pcnetmeta}{pcnetmeta}.
-  The \code{\link[gemtc:mtc.data.studyrow]{mtc.data.studyrow}} function of
-  the R-package \href{https://CRAN.R-project.org/package=gemtc}{gemtc} is
-  additionally used to convert \code{data} from the required
-  one-trial-per-row format into the one-arm-per-row format.
+The edge thickness is proportional to the number of
+  trials investigating the corresponding comparison. The node size is
+  weighted by the total sample size of the corresponding intervention.
 
-  Furthermore, \code{netplot} exports the data-frames to separate
-  'xlsx' files (via the \code{\link[writexl:write_xlsx]{write_xlsx}} function
-  of the R-package
-  \href{https://CRAN.R-project.org/package=writexl}{writexl}) at the working
-  directory of the user.
+  The user can control many of the arguments found in the
+  \code{\link[igraph:plot.igraph]{plot.igraph}} function of the
+  R-package \href{https://CRAN.R-project.org/package=igraph}{igraph}), such
+  as the colour of the nodes and edges, the node and edge label size, and so
+  on.
 }
 \examples{
 data("nma.bottomley2011")
@@ -88,24 +203,12 @@ interv_names <- c("betamethasone dipropionate", "betamethasone valerate",
 # Create the network plot
 netplot(data = nma.bottomley2011,
         drug_names = interv_names,
-        save_xls = FALSE)
+        edge_label_cex = 1)
 
-}
-\references{
-Lin L, Zhang J, Hodges JS, Chu H. Performing Arm-Based Network Meta-Analysis
-in R with the pcnetmeta Package.
-\emph{J Stat Softw} 2017;\bold{80}(5): 1--25. doi: 10.18637/jss.v080.i05
-
-van Valkenhoef G, Kuiper J. gemtc: Network Meta-Analysis Using
-Bayesian Methods. \emph{R package version 1.0-1}. 2021.
-\url{https://CRAN.R-project.org/package=gemtc}
 }
 \seealso{
-\code{\link{data_preparation}},
-  \code{\link[gemtc:mtc.data.studyrow]{mtc.data.studyrow}},
-  \code{\link[pcnetmeta:nma.networkplot]{nma.networkplot}},
+\code{\link[igraph:plot.igraph]{plot.igraph}},
   \code{\link{run_model}}
-  \code{\link[writexl:write_xlsx]{write_xlsx}}
 }
 \author{
 {Loukia M. Spineli}

@@ -24,7 +24,7 @@ A panel of two forest plots: (1) a forest plot on the effect
   interval of SUCRA values of the interventions (Salanti et al., 2011).
 }
 \description{
-Provides a forest plot with the posterior mean and 95\% credible
+Provides a forest plot with the posterior median and 95\% credible
   and prediction intervals for comparisons with the selected intervention
   (comparator) in the network, and a forest plot with the corresponding
   SUCRA values.

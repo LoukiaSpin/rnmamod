@@ -36,7 +36,7 @@ The R console prints the data-frame with the estimated summary effect
   file at the working  directory of the user.
 
   \code{series_meta_plot} returns a panel of two forest plots: (1) a
-  forest plot on the posterior mean and 95\% credible interval of the summary
+  forest plot on the posterior median and 95\% credible interval of the summary
   effect size for the observed comparisons from network meta-analysis and the
   corresponding pairwise meta-analyses, and (2) a forest plot on the
   posterior median and 95\% credible interval of the between-trial standard

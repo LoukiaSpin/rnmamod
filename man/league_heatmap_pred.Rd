@@ -50,7 +50,7 @@ If \code{show} is not defined, the league table will present all
 interventions as defined in \code{drug_names1}.}
 }
 \value{
-A league heatmap of the posterior mean and 95\% prediction interval
+A league heatmap of the posterior median and 95\% prediction interval
   of the effect measure (according to the argument \code{measure} defined in
   \code{\link{run_model}}) for all possible comparisons in the off-diagonals,
   and the posterior mean of the SUCRA values in the diagonal.
@@ -111,7 +111,7 @@ For one outcome, it creates a heatmap with the predicted effect measure for
   The rows and columns of the heatmap display the names of interventions
   which are sorted by decreasing order from the best to the worst based on
   their SUCRA value (Salanti et al., 2011) for the outcome or model under the
-  argument \code{full1}. The off-diagonals contain the posterior mean and
+  argument \code{full1}. The off-diagonals contain the posterior median and
   95\% prediction interval of the effect measure (according to the argument
   \code{measure} as inherited in the argument \code{full1}) of the
   corresponding comparisons.

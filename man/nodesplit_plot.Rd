@@ -27,7 +27,7 @@ directory of the user. The default is \code{FALSE} (do not export).}
 }
 \value{
 \code{nodesplit_plot} returns the following list of elements:
-  \item{table_effect_size}{A data-frame with the posterior mean,
+  \item{table_effect_size}{A data-frame with the posterior median,
   posterior standard deviation and 95\% credible interval of the direct and
   indirect effect and the inconsistency factor of each split node.}
   \item{table_model_assessment}{A data-frame with the model assessment
@@ -54,7 +54,7 @@ directory of the user. The default is \code{FALSE} (do not export).}
 \details{
 \code{intervalplot_inconsistency_factor} includes as many interval
   plots as the number of split nodes in the network. Each interval plot
-  illustrates the posterior mean and 95\% credible interval of the direct and
+  illustrates the posterior median and 95\% credible interval of the direct and
   indirect effect of the split nodes and the corresponding inconsistency
   factor.
   The line that corresponds to the inconsistency factor is highlighted with

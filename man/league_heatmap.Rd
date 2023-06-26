@@ -52,7 +52,7 @@ If \code{show} is not defined, the league table will present all
 interventions as defined in \code{drug_names1}.}
 }
 \value{
-A heatmap of the league table showing the posterior mean and 95\%
+A heatmap of the league table showing the posterior median and 95\%
   credible interval of the comparisons in the off-diagonals, and
   the posterior mean of the SUCRA values in the diagonal.
 }
@@ -121,7 +121,7 @@ For one outcome, it creates a heatmap of the estimated effect measure for
   interventions  sorted by decreasing order from the best to the worst
   based on their SUCRA value (Salanti et al., 2011) for the outcome or model
   under the argument \code{full1}. The off-diagonals contain the posterior
-  mean and 95\% credible interval of the effect measure (according to the
+  median and 95\% credible interval of the effect measure (according to the
   argument \code{measure} as inherited in the argument \code{full1}) of the
   corresponding comparisons.
 

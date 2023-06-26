@@ -4,7 +4,7 @@
 \alias{describe_network}
 \title{A function to describe the evidence base}
 \usage{
-describe_network(data, drug_names, measure)
+describe_network(data, drug_names, measure, save_xls)
 }
 \arguments{
 \item{data}{A data-frame of a one-trial-per-row format containing arm-level
@@ -19,41 +19,49 @@ outcome, the following can be considered: \code{"OR"}, \code{"RR"} or
 respectively. For a continuous outcome, the following can be considered:
 \code{"MD"}, \code{"SMD"}, or \code{"ROM"} for mean difference,
 standardised mean difference and ratio of means, respectively.}
+
+\item{save_xls}{Logical to indicate whether to export the tabulated results
+to an 'xlsx' file (via the \code{\link[writexl:write_xlsx]{write_xlsx}}
+function of the R-package
+\href{https://CRAN.R-project.org/package=writexl}{writexl}) at the working
+directory of the user. The default is \code{FALSE} (do not export).}
 }
 \value{
-A list of scalar results and two data-frames to be passed to
-  \code{\link{netplot}}. The scalar results include:
-  \item{direct_comp}{The number of observed comparisons in the network.}
-  \item{two_arm_ns}{The number of two-arm trials in the network.}
-  \item{multi_arm_ns}{The number of multi-arm trials in the network.}
-  \item{total_rand_network}{The total number of randomised participants
-  in the network.}
-  \item{prop_obs_network}{The proportion of participants who completed
-  the trial.}
-  \item{prop_event_network}{The proportion of observed events in the
-  network. When the outcome is continuous, this element is omitted.}
-  \item{trial_zero_event}{The number of trials with at least one arm
-  with zero events. When the outcome is continuous, this element is
-  omitted.}
-  \item{trial_all_zero_event}{The number of trials with zero events in
-  all arms. When the outcome is continuous, this element is omitted.}
-
-  The two data-frames include \code{table_interventions} and
-  \code{table_comparisons}. See 'Value' in \code{\link{netplot}} for these
-  data-frames.
+\code{describe_network} returns the following data-frames that describe the
+  evidence base:
+  \item{network_description}{The number of: interventions, possible
+  comparisons, direct and indirect comparisons, number of trials in total,
+  number of two-arm and multi-arm trials, number of randomised participants,
+  and proportion of participants completing the trial (completers).
+  When the outcome is binary, the number of trials with at least one zero
+  event, and the number of trials with all zero events are also
+  presented.}
+  \item{table_interventions}{For each intervention, the number of trials,
+  number of randomised participants, and proportion of completers. When the
+  outcome is binary, the data-frame presents also the corresponding
+  proportion of total observed events, the minimum, median and maximum
+  proportion of observed events across the corresponding trials.}
+  \item{table_comparisons}{Identical structure to \code{table_interventions}
+  but for each observed comparison in the network.}
 }
 \description{
 Calculates the necessary elements to describe the evidence base
   for an outcome across the network, the interventions, and observed
-  comparisons. See also 'Value' in \code{\link{netplot}}.
+  comparisons.
 }
 \details{
 \code{describe_network} calls \code{\link{data_preparation}} to
-facilitate the calculations.
+  facilitate the calculations.
+
+  Furthermore, \code{describe_network} exports the data-frames to separate
+  'xlsx' files (via the \code{\link[writexl:write_xlsx]{write_xlsx}} function
+  of the R-package
+  \href{https://CRAN.R-project.org/package=writexl}{writexl}) at the working
+  directory of the user.
 }
 \seealso{
-\code{\link{data_preparation}}, \code{\link{netplot}},
-  \code{\link{run_model}}
+\code{\link{data_preparation}}, \code{\link{run_model}}
+  \code{\link[writexl:write_xlsx]{write_xlsx}}
 }
 \author{
 {Loukia M. Spineli}
