@@ -57,12 +57,12 @@
 heatmap_missing_dataset <- function(data, trial_names, drug_names) {
 
 
-  if (dim(data %>% select(starts_with("m")))[2] == 0) {
+  if (dim(data[, startsWith(colnames(data), "m")])[2] == 0) {
     aa <- "Missing participant outcome data have *not* been collected."
     stop(paste(aa, "This function cannot be used."), call. = FALSE)
   }
 
-  if (dim(data %>% dplyr::select(starts_with("r")))[2] > 0) {
+  if (dim(data[, startsWith(colnames(data), "r")])[2] > 0) {
     measure <- "OR"
   } else {
     measure <- "MD"
@@ -75,9 +75,9 @@ heatmap_missing_dataset <- function(data, trial_names, drug_names) {
   t <- dat$t
   nt <- dat$nt
   ns <- dat$ns
-  na..  <- dat$na
+  na  <- dat$na
   for (i in seq_len(length(m[, 1]))) {
-    na..[i] <- table(!is.na(t[i, ]))["TRUE"]
+    na[i] <- table(!is.na(t[i, ]))["TRUE"]
   }
 
   trial_names <- if (missing(trial_names)) {
@@ -93,16 +93,20 @@ heatmap_missing_dataset <- function(data, trial_names, drug_names) {
   }
 
   # Rename properly to use gemtc
-  names(m) <- paste0("m..", seq_len(max(na..)), ".")
-  names(n) <- paste0("n..", seq_len(max(na..)), ".")
-  names(t) <- paste0("t..", seq_len(max(na..)), ".")
+  #names(m) <- paste0("m..", seq_len(max(na..)), ".")
+  #names(n) <- paste0("n..", seq_len(max(na..)), ".")
+  #names(t) <- paste0("t..", seq_len(max(na..)), ".")
 
   # Turn one row per trial to one row per trial-arm
-  transform <- mtc.data.studyrow(cbind(t, m, n, na..),
-                                 armVars = c("treatment" = "t",
-                                             "response" = "m",
-                                             "sampleSize" = "n"),
-                                 nArmsVar = "na")
+  #transform <- mtc.data.studyrow(cbind(t, m, n, na..),
+  #                               armVars = c("treatment" = "t",
+  #                                           "response" = "m",
+  #                                           "sampleSize" = "n"),
+  #                               nArmsVar = "na")
+  transform <- data.frame(study = rep(1:ns, na),
+                          treatment = na.omit(c(t(t))),
+                          response = na.omit(c(t(m))),
+                          sampleSize = na.omit(c(t(n))))
 
   # Turn all columns into numeric
   for (i in 1:dim(transform)[2]) {
