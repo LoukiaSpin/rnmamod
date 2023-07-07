@@ -11,6 +11,10 @@ Official Git repository of `rnmamod` R package
   
 In **R Views** [November 2021: "Top 40" New CRAN Packages](https://rviews.rstudio.com/2021/12/21/november-2021-top-40-new-cran-packages/)
 
+In **Medium** [Peek-a-boo: Evidence synthesis using the rnmamod R package](https://medium.com/@spineliloukia26/peek-a-boo-evidence-synthesis-using-the-rnmamod-r-package-fc40f5c100fa)
+
+In the **YouTube channel** of [ESMARConf2023](https://www.youtube.com/watch?v=ZfrU3OpEE5A)
+
 ## Contributors
 
 [Loukia Spineli](https://orcid.org/0000-0001-9515-582X), [Chrysostomos Kalyvas](https://orcid.org/0000-0003-0606-4518), [Katerina Papadimitropoulou](https://orcid.org/0000-0002-5732-4044)
@@ -74,7 +78,7 @@ netplot(data = nma.baker2009, drug_names = interv_names, show_multi = TRUE, edge
 ```
 
 <div style="text-align: center"> 
-<img src="man/figures/Network_Baker.png" width="800" height="560" align="center">
+<img src="man/figures/Network_Baker.png" width="800" height="580" align="center">
 </div>
 
 ### Perform Bayesian random-effects network meta-analysis
