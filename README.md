@@ -74,7 +74,7 @@ netplot(data = nma.baker2009, drug_names = interv_names, show_multi = TRUE, edge
 ```
 
 <div style="text-align: center"> 
-<img src="man/figures/Network_Baker.png" width="800" height="551" align="center">
+<img src="man/figures/Network_Baker.png" width="900" height="651" align="center">
 </div>
 
 ### Perform Bayesian random-effects network meta-analysis
