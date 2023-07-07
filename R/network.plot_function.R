@@ -226,16 +226,19 @@ netplot <- function(data,
   igraph::V(g1)$weight <- (0.40 + ((node.size - min(node.size)) /
                                      (max(node.size) - min(node.size)) )) * 20
 
+  # Name the nodes
+  igraph::V(g1)$names <- V(g1)
+
   # Calculate the number of trials per edge (pairwise comparison)
   comp0 <-
-    data.frame(table(apply(pairwise, 1, function(x) paste(x[1], "vs", x[2]))))
+    data.frame(table(apply(pairwise, 1, function(x) paste(x[2], "vs", x[1]))))
   colnames(comp0) <- c("comparison", "frequency")
 
   # Sort comparisons by the order of 'start_to_end'
   comp <- comp0[match(apply(matrix(start_to_end,
                                    ncol = 2,
                                    byrow = TRUE),
-                            1, function(x) paste(x[1], "vs", x[2])),
+                            1, function(x) paste(x[2], "vs", x[1])),
                       comp0$comparison), ]
 
   # Multi-arm trials: Count the number of arms per trial
@@ -264,6 +267,19 @@ netplot <- function(data,
     edge_label
   }
 
+  # Color edges (sorting the order of 'start_to_end')
+  edge_color_new <- if (missing(edge_color)) {
+    "grey50"
+  } else if (length(edge_color) > 1) {
+    edge_color[match(apply(matrix(start_to_end,
+                                  ncol = 2,
+                                  byrow = TRUE),
+                           1, function(x) paste(x[2], "vs", x[1])),
+                     edge_color$comparison), 3]
+  } else if (length(edge_color) == 1) {
+    edge_color
+  }
+
   # Get the network plot
   plot(g1,
        layout = layout,
@@ -276,7 +292,7 @@ netplot <- function(data,
        vertex.label.font = node_label_font,
        vertex.label.cex	= node_label_cex,
        vertex.label.dist = node_label_dist,
-       edge.color = edge_color,
+       edge.color = edge_color_new,
        edge.width = igraph::E(g1)$weight,
        edge.arrow.size = edge_arrow_size,
        edge.lty = edge_lty,

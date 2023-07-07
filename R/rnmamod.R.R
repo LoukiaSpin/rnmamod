@@ -46,8 +46,9 @@
 #'   submission:
 #'   \itemize{
 #'    \item network plot and description of the evidence base
-#'    (\code{\link{netplot}}) following the  PRISMA statement for systematic
-#'    reviews with network meta-analysis (Hutton et al., 2015);
+#'    (\code{\link{netplot}} and \code{\link{describe_network}}, respectively)
+#'    following the  PRISMA statement for systematic reviews with network
+#'    meta-analysis (Hutton et al., 2015);
 #'    \item illustration of the R-hat (Gelman and Rubin, 1992) and MCMC error
 #'    for all monitored nodes and creation of an HTML file with a panel of
 #'    diagnostic plots for each monitored parameter

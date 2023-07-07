@@ -12,6 +12,12 @@
    - The argument _inits_ has been added to allow the user define the initial
    values for the parameters, following the documentation of the _jags_ function
    in the R package _R2jags_. 
+ * Function __describe_network__:
+   - It reports only the tables with the evidence base information on one outcome.
+   The network plot is not reported (see and use __netplot__, instead).
+ * Function __netplot__:
+   - Self-created function using the R package _igraph_. This function creates
+   the network plot.
 
 # rnmamod, version 0.3.0 (2022-11-01)
 
