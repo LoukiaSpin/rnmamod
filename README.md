@@ -120,7 +120,7 @@ rankosucra_plot(full1 = res, drug_names1 = interv_names)
 ```
 
 <div style="text-align: center"> 
- <img src="man/figures/Sucra_Baker.png" width="700" height="500" align="center"> 
+ <img src="man/figures/Sucra_Baker.png" width="750" height="550" align="center"> 
 <!--- <img src="man/figures/Sucra_Baker.png" width="70%" height="70%" align="center"> --->
 <!--- <img src="man/figures/Sucra_Baker.png" width="70%" height="90%" align="center"> --->
 </div>
