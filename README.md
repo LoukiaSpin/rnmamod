@@ -101,7 +101,7 @@ res <- run_model(data = nma.baker2009,
 Illustrate all possible pairwise comparisons of the interventions using a league heatmap. Interventions are sorted in decreasing order by their posterior mean SUCRA (surface under the cumulative ranking) value in the main diagonal:
 
 ``` r
-league_heatmap(full = res, drug_names = interv_names)
+league_heatmap(full1 = res, drug_names1 = interv_names)
 ```
 
 <div style="text-align: center"> 
@@ -116,7 +116,7 @@ league_heatmap(full = res, drug_names = interv_names)
 The following code presents the hierarchy of the interventions in the network using integrated rankograms and SUCRA curves:
 
 ``` r
-rankosucra_plot(full = res, drug_names = interv_names)
+rankosucra_plot(full1 = res, drug_names1 = interv_names)
 ```
 
 <div style="text-align: center"> 
