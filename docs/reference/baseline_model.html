@@ -122,33 +122,30 @@ The default argument is 1.</p></dd>
     
 
 <p>When <code>base_risk</code> is scalar (fixed baseline), the function
-  returns the user-defined baseline for the selected reference intervention.
-  When <code>base_risk</code> is a vector (random baseline), the function returns
-  a vector with the calculated logit of an event for the selected reference
-  intervention and its precision. Finally, when <code>base_risk</code> is a matrix
-  (predicted baseline), the function returns the following elements:</p>
+  returns the user-defined baseline for the selected reference intervention
+  in the logit scale. When <code>base_risk</code> is a vector (random baseline),
+  the function returns a vector with the calculated logit of an event for the
+  selected reference intervention and its precision. Finally, when</p>
+<p></p>
+<p><code>base_risk</code> is a matrix (predicted baseline), the function returns the
+  following elements:</p>
 <dl><dt>ref_base</dt>
 <dd><p>A vector with the posterior mean and precision of the
-  predicted logit of an event for the selected reference intervention.
+  <b>predicted</b> logit of an event for the selected reference intervention.
   This vector is be passed to <code><a href="run_model.html">run_model</a></code> and
   <code><a href="run_metareg.html">run_metareg</a></code>.</p></dd>
 
-  <dt>mean_base_logit</dt>
-<dd><p>The posterior distribution of the summary mean of
-  the random effects in the logit scale.</p></dd>
+  <dt>figure</dt>
+<dd><p>A forest plot on the trial-specific observed and estimated
+  baseline risk. See 'Details'.</p></dd>
 
-  <dt>tau_base_logit</dt>
-<dd><p>The posterior distribution of the between-trial
-  standard deviation in the logit scale.</p></dd>
+  <dt>table_baseline</dt>
+<dd><p>A table with the posterior and predictive
+  distribution of the summary baseline mean and the posterior distribution of
+  the between-trial standard deviation in baseline. All results are in the
+  logit scale.</p></dd>
 
-
-</dl><p>When <code>base_risk</code> is a matrix, the function also returns a forest plot
-  with the estimated trial-specific probability of an event and 95% credible
-  intervals (the random effects) alongside the corresponding observed
-  probability of an event for the selected reference intervention. A grey
-  rectangular illustrates the summary mean and 95% credible interval of the
-  random effects.</p>
-    </div>
+</dl></div>
     <div id="details">
     <h2>Details</h2>
     <p>If <code>base_risk</code> is a matrix, <code>baseline_model</code> creates the
@@ -160,6 +157,12 @@ The default argument is 1.</p></dd>
   <code><a href="prepare_model.html">prepare_model</a></code> function. Following (Dias et al., 2013a), a
   uniform prior distribution is assigned on the between-trial standard
   deviation with upper and lower limit equal to 0 and 5, respectively.</p>
+<p>When <code>base_risk</code> is a matrix, the function also returns a forest plot
+  with the estimated trial-specific probability of an event and 95% credible
+  intervals (the random effects) alongside the corresponding observed
+  probability of an event for the selected reference intervention. A grey
+  rectangular illustrates the summary mean and 95% credible interval of the
+  random effects.</p>
 <p>When <code>base_risk</code> is a matrix (predicted baseline), the model is
   updated until convergence using the <code><a href="https://rdrr.io/pkg/R2jags/man/autojags.html" class="external-link">autojags</a></code>
   function of the R-package
@@ -202,7 +205,7 @@ making 5: the baseline natural history model. <em>Med Decis Making</em>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

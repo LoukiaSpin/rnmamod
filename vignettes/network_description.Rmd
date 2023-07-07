@@ -80,11 +80,11 @@ only two arguments: the `data` for the dataset (in one-trial-per-row format) and
 `drug_names` for the names of each intervention in the dataset. 
 
 ```{r, results = "hide", fig.show = "hide"}
-netplot(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"), edge_label_cex = 0.6)
+netplot(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"), show_multi = TRUE, edge_label_cex = 1)
 ```
 
 ```{r, echo = FALSE, results = "hide", fig.width = 5, fig.height = 5, fig.align = "center"}
-netplot(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"), edge_label_cex = 0.6)
+netplot(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"), show_multi = TRUE, edge_label_cex = 1)
 ```
 
 The intervention names in `drug_names` must be sorted in the ascending order of 
@@ -189,7 +189,3 @@ severe scalp psoriasis: a systematic review of direct and indirect evidence.
 *Curr Med Res Opin* 2011;**27**(1):251--268. 
 [doi: 10.1185/03007995.2010.541022](https://pubmed.ncbi.nlm.nih.gov/21142838/)
 
-Lifeng Lin, Jing Zhang, James S. Hodges, Haitao Chu. Performing Arm-Based 
-Network Meta-Analysis in R with the pcnetmeta Package. *J Stat Softw* 2017;
-**80**(5):1--25. 
-[doi: 10.18637/jss.v080.i05](https://www.jstatsoft.org/article/view/v080i05)

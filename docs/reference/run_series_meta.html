@@ -149,7 +149,12 @@ The default argument is <code>NULL</code>, and JAGS generates the initial values
   in <code>JAGS</code>. The progress of the simulation appears on the R console.
   The number of times the function is used is also printed on the console
   (in red) and is equal to the number of  observed pairwise comparisons
-  in the network (see 'Examples').</p>
+  in the network (see 'Examples').
+  The model is updated until convergence using the
+  <code><a href="https://rdrr.io/pkg/R2jags/man/autojags.html" class="external-link">autojags</a></code> function of the R-package
+  <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a> with 2 updates and
+  number of iterations and thinning equal to <code>n_iter</code> and <code>n_thin</code>,
+  respectively.</p>
 <p>The output of <code>run_series_meta</code> is not end-user-ready. The
   <code><a href="series_meta_plot.html">series_meta_plot</a></code> function inherits the output of
   <code>run_series_meta</code> as an S3 object and processes it further to provide
@@ -207,7 +212,7 @@ doi: 10.1214/ss/1177011136</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

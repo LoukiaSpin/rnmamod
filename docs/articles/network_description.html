@@ -79,7 +79,7 @@
 Spineli</h4>
             
             <h4 data-toc-skip class="date">Latest version:
-2022-12-05</h4>
+2023-07-07</h4>
       
       
       <div class="hidden name"><code>network_description.Rmd</code></div>
@@ -149,11 +149,9 @@ arm; therefore, the element <code>m</code> appears in the dataset.</p>
 <p>The function <code>netplot</code> (see ?netplot for help) creates the
 network plot using only two arguments: the <code>data</code> for the
 dataset (in one-trial-per-row format) and <code>drug_names</code> for
-the names of each intervention in the dataset. To obtain the network
-plot, <code>netplot</code> calls the <code>nma.networkplot</code>
-function from the <strong>pcnetmeta</strong> package.</p>
+the names of each intervention in the dataset.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/netplot.html">netplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.bottomley2011</span>, drug_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BDP"</span>, <span class="st">"BMV"</span>, <span class="st">"CPL"</span>, <span class="st">"CPL+polytar"</span>, <span class="st">"capasal"</span>, <span class="st">"TCF gel"</span>, <span class="st">"placebo"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/netplot.html">netplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.bottomley2011</span>, drug_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BDP"</span>, <span class="st">"BMV"</span>, <span class="st">"CPL"</span>, <span class="st">"CPL+polytar"</span>, <span class="st">"capasal"</span>, <span class="st">"TCF gel"</span>, <span class="st">"placebo"</span><span class="op">)</span>, show_multi <span class="op">=</span> <span class="cn">TRUE</span>, edge_label_cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="network_description_files/figure-html/unnamed-chunk-3-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>The intervention names in <code>drug_names</code> must be sorted in
 the ascending order of their identifier. Hence, <code>1</code> in the
@@ -455,7 +453,7 @@ comparisons</strong> in the network:</p>
 </table>
 <p>The users can export all tables in xlsx file at the working directory
 of their project by adding the argument <code>save_xls = TRUE</code> in
-the <code>netplot</code> function.</p>
+the <code>describe_network</code> function.</p>
 </div>
 <div class="section level3">
 <h3 id="distribution-of-missing-participants-across-the-network">Distribution of missing participants across the network<a class="anchor" aria-label="anchor" href="#distribution-of-missing-participants-across-the-network"></a>
@@ -498,10 +496,6 @@ treatment of moderately severe scalp psoriasis: a systematic review of
 direct and indirect evidence. <em>Curr Med Res Opin</em>
 2011;<strong>27</strong>(1):251–268. <a href="https://pubmed.ncbi.nlm.nih.gov/21142838/" class="external-link">doi:
 10.1185/03007995.2010.541022</a></p>
-<p>Lifeng Lin, Jing Zhang, James S. Hodges, Haitao Chu. Performing
-Arm-Based Network Meta-Analysis in R with the pcnetmeta Package. <em>J
-Stat Softw</em> 2017; <strong>80</strong>(5):1–25. <a href="https://www.jstatsoft.org/article/view/v080i05" class="external-link">doi:
-10.18637/jss.v080.i05</a></p>
 </div>
   </div>
 
@@ -522,7 +516,7 @@ Stat Softw</em> 2017; <strong>80</strong>(5):1–25. <a href="https://www.jstats
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -44,7 +44,7 @@ binary outcome (see `?nma.baker2009`).
 
 ```{r, echo = FALSE, results = "hide", fig.width = 5, fig.height = 5, fig.align = "center"}
 netplot(data = nma.baker2009, drug_names = c("placebo", "budesonide", "budesonide plus \n formoterol", "fluticasone", "fluticasone plus \n salmeterol", "formoterol", "salmeterol", "tiotropium"),
-        edge_label_cex = 0.6)
+        show_multi = TRUE, edge_label_cex = 1)
 ```
 
 ## Perform Bayesian random-effects network meta-analysis
