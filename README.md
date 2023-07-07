@@ -64,13 +64,13 @@ head(nma.baker2009)
 
 ### Network plot
 
-Create the network plot using the *nma.networkplot* function of the [pcnetmeta](https://CRAN.R-project.org/package=netmeta) R package:
+Create the network plot using the *netplot* function:
 
 ``` r
 # The names of the interventions in the order they appear in the dataset
 interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
 
-netplot(data = nma.baker2009, drug_names = interv_names, text.cex = 1.5)
+netplot(data = nma.baker2009, drug_names = interv_names, show_multi = TRUE, edge_label_cex = 1)
 ```
 
 <div style="text-align: center"> 
