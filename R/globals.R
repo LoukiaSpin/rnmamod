@@ -10,12 +10,13 @@
 #' @importFrom ggpubr ggarrange
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom grDevices rainbow
+#' @importFrom heatmaply heatmaply
 #' @importFrom igraph E layout_in_circle make_graph plot.igraph V
 #' @importFrom knitr kable
 #' @importFrom netmeta netconnection
 #' @importFrom reshape2 melt
 #' @importFrom R2jags jags autojags
-#' @importFrom scales rescale percent
+#' @importFrom scales hue_pal rescale percent
 #' @importFrom writexl write_xlsx
 #' @importFrom utils combn packageDescription
 
@@ -29,37 +30,59 @@
 
 utils::globalVariables(c("active",
                          "analysis",
+                         "capture.output",
+                         "char",
                          "char1",
                          "char2",
                          "char3",
+                         "characteristic",
+                         "cluster",
+                         "clusters",
                          "comp",
+                         "compar",
                          "comparison",
+                         "Comparison",
+                         "connectivity",
                          "DIC",
+                         "diss",
+                         "dunn",
                          "EM",
                          "em_ref00",
                          "evidence",
                          "frail",
+                         "input0",
                          "interval",
                          "intervention",
                          "label",
                          "leverage",
                          "lower",
                          "m_prop",
+                         "num_trials",
                          "Order",
                          "outcome",
+                         "perc",
+                         "perc2",
                          "point",
                          "poor",
+                         "results",
                          "risk",
                          "sd_value",
                          "signed_dev",
                          "signed_dev_o",
+                         "silhouette",
+                         "silhouette_new",
+                         "size",
                          "stat_sign",
+                         "str_wrap",
                          "study",
                          "studlab",
+                         "total",
+                         "total_dissimilarity",
                          "treatment",
                          "treatment1",
                          "treat1",
                          "treat2",
+                         "trial",
                          "type",
                          "upper",
                          "value",
