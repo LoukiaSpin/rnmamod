@@ -22,58 +22,58 @@ miss_characteristics(
 \arguments{
 \item{input}{A data-frame in the long arm-based format. Two-arm trials occupy
 one row in the data-frame. Multi-arm trials occupy as many rows as the
-number of possible comparisons among the interventions. The first two 
-columns refer to the trial name, and the pairwise comparison, 
-respectively. The remaining columns refer to summary characteristics. See 
+number of possible comparisons among the interventions. The first two
+columns refer to the trial name, and the pairwise comparison,
+respectively. The remaining columns refer to summary characteristics. See
 'Details' for the specification of the columns.}
 
 \item{drug_names}{A vector of labels with the name of the interventions
 in the order they appear in the argument \code{input}.}
 
-\item{rename_char}{A list of two elements: (i) a numeric vector with the 
-position of the characteristics in \code{input}, and (ii) a character 
-vector with the names of the characteristics, as they are wished to 
+\item{rename_char}{A list of two elements: (i) a numeric vector with the
+position of the characteristics in \code{input}, and (ii) a character
+vector with the names of the characteristics, as they are wished to
 appear in the title of the plots. This argument is optional, in case the
 user wants to control the appearance of the titles.}
 
-\item{label_size}{A positive integer for the font size of labels in the 
-plots. \code{label_size} determines the size argument found in the geom's 
-aesthetic properties in the R-package 
+\item{label_size}{A positive integer for the font size of labels in the
+plots. \code{label_size} determines the size argument found in the geom's
+aesthetic properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
-\item{axis_title_size}{A positive integer for the font size of axis titles in 
-the plots. \code{axis_title_size} determines the axis.title argument found 
-in the theme's properties in the R-package 
+\item{axis_title_size}{A positive integer for the font size of axis titles in
+the plots. \code{axis_title_size} determines the axis.title argument found
+in the theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
-\item{axis_text_size}{A positive integer for the font size of axis text in 
-the plots. \code{axis_text_size} determines the axis.text argument found in 
-the theme's properties in the R-package 
+\item{axis_text_size}{A positive integer for the font size of axis text in
+the plots. \code{axis_text_size} determines the axis.text argument found in
+the theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
-\item{axis_x_text_angle}{A positive integer for the angle of axis text in 
-plots related to missing data. \code{axis_text_angle} determines the 
-axis.text.x argument found in the theme's properties in the R-package 
+\item{axis_x_text_angle}{A positive integer for the angle of axis text in
+plots related to missing data. \code{axis_text_angle} determines the
+axis.text.x argument found in the theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
-\item{legend_text_size}{A positive integer for the font size of legend text 
-in the plots. \code{legend_text_size} determines the legend.text argument 
-found in the theme's properties in the R-package 
+\item{legend_text_size}{A positive integer for the font size of legend text
+in the plots. \code{legend_text_size} determines the legend.text argument
+found in the theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
-\item{legend_title_size}{A positive integer for the font size of legend title 
-in the plots. \code{legend_title_size} determines the legend.title argument 
-found in the theme's properties in the R-package 
+\item{legend_title_size}{A positive integer for the font size of legend title
+in the plots. \code{legend_title_size} determines the legend.title argument
+found in the theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
-\item{strip_text_size}{A positive integer for the font size of strip text 
-in the plots. \code{strip_text_size} determines the strip.text argument 
-found in the theme's properties in the R-package 
+\item{strip_text_size}{A positive integer for the font size of strip text
+in the plots. \code{strip_text_size} determines the strip.text argument
+found in the theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
-\item{strip_text_angle}{A positive integer for the angle of strip text 
-in the plots. \code{strip_text_angle} determines the strip.text argument 
-found in the theme's properties in the R-package 
+\item{strip_text_angle}{A positive integer for the angle of strip text
+in the plots. \code{strip_text_angle} determines the strip.text argument
+found in the theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 }
 \value{
@@ -86,8 +86,25 @@ found in the theme's properties in the R-package
   cases for each trial, comparison and characteristic.}
 }
 \description{
-\code{miss_characteristics} hosts a set of visualisation tools to assess 
+\code{miss_characteristics} hosts a set of visualisation tools to assess
   the size and pattern of missing characteristics values in the dataset.
+}
+\details{
+The correct type mode of columns in \code{input} must be ensured to use
+  the function \code{miss_characteristics}. The first two columns referring
+  to the trial name, and pairwise comparison, respectively, must be
+  \strong{character}. The remaining columns referring to the characteristics
+  must be \strong{double} or \strong{integer} depending on whether the
+  corresponding characteristic refers to a quantitative or qualitative
+  variable. The type mode of each column is assessed by
+  \code{miss_characteristics} using the base function \code{typeof}.
+
+  The interventions should be sorted in an ascending order of their
+  identifier number within the trials so that the first treatment column
+  (second column in \code{input}) is the control arm for every pairwise
+  comparison. This is important to ensure consistency in the order of
+  interventions within the comparisons obtained from the other related
+  functions.
 }
 \author{
 {Loukia M. Spineli}
