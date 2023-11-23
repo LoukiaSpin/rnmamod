@@ -355,12 +355,12 @@ comp_clustering <- function (input,
 
   ## Ensure that the characteristics have the correct type
   for (i in 1:length(split_dataset)) {
-    for (j in 1:dim(input_new0)[2]) {
-      if (is.character(input_new0[, j])) {
+    for (j in 1:dim(input_new)[2]) { # input_new0
+      if (is.character(input_new[, j])) { # input_new0
         split_dataset[[i]][, j] <- as.character(split_dataset[[i]][, j])
-      } else if (is.double(input_new0[, j])) {
+      } else if (is.double(input_new[, j])) { # input_new0
         split_dataset[[i]][, j] <- as.double(split_dataset[[i]][, j])
-      } else if (is.integer(input_new0[, j])) {
+      } else if (is.integer(input_new[, j])) { # input_new0
         split_dataset[[i]][, j] <- as.integer(split_dataset[[i]][, j])
       }
     }
