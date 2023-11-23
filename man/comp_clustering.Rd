@@ -38,7 +38,7 @@ vector with the names of the characteristics, as they are wished to
 appear in the title of the plots. This argument is optional, in case the
 user wants to control the appearance of the titles.}
 
-\item{height}{Logical with \code{TRUE} for performing heuristic clustering
+\item{height}{Logical with \code{TRUE} for performing informative clustering
 and \code{FALSE} for performing heuristic clustering, thus, allowing the
 user to define the number of clusters via the argument \code{optimal_clusters}.
 The default argument is \code{FALSE}.}
