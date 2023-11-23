@@ -94,7 +94,7 @@ miss_characteristics <- function (input,
 
 
   ## Check if the dataset is correct
-  input <- if (any(sapply(input, typeof)[1:3] != "character")) {
+  input0 <- if (any(sapply(input, typeof)[1:3] != "character")) {
     stop("The first three columns (trial and arms) must be 'characters'.",
          call. = FALSE)
   } else if (any(sapply(input, typeof)[-c(1:3)] == "character")) {
@@ -102,7 +102,7 @@ miss_characteristics <- function (input,
   } else {
     input
   }
-  colnames(input)[1:3] <- c("Trial_name", "Arm1", "Arm2")
+  colnames(input0)[1:3] <- c("Trial_name", "Arm1", "Arm2")
 
   # Intervention names
   drug_names <- if (missing(drug_names)) {
@@ -113,6 +113,7 @@ miss_characteristics <- function (input,
 
 
   ## Assign the intervention names (if applicable)
+  input <- input0
   input[, 2:3] <- matrix(drug_names[as.numeric(unlist(input[, 2:3]))],
                          nrow = dim(input)[1],
                          ncol = 2)
