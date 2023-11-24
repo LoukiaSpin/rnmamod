@@ -617,7 +617,7 @@ comp_clustering <- function (input,
 
     ## Distance methods of the 'dist' function
     # Canberra is not defined when the denominator is zero
-    distance_methods <- if (sum(total_diss[, 3] == 0) < 2)) {
+    distance_methods <- if (sum(total_diss[, 3] == 0) < 2) {
       c("euclidean", "canberra")
     } else {
       "euclidean"
