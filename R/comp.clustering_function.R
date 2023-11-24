@@ -472,18 +472,18 @@ comp_clustering <- function (input,
 
   ## Prepare dataset on comparison dissimilarities and total dissimilarities
   diss_dataset <-
-    data.frame(diss = unlist(sapply(comparison_gower,
+    data.frame(diss = unlist(lapply(comparison_gower,
                                     function(x) na.omit(unlist(x[[1]])))),
-               comp = rep(names(sapply(comparison_gower,
+               comp = rep(names(lapply(comparison_gower,
                                        function(x) na.omit(unlist(x[[1]])))),
-                          sapply(comparison_gower,
+                          lapply(comparison_gower,
                                  function(x) length(na.omit(unlist(x[[1]]))))),
                total = rep(total_diss0$total_dissimilarity,
-                           sapply(comparison_gower,
+                           lapply(comparison_gower,
                                   function(x) length(na.omit(unlist(x[[1]]))))),
                comp_size =
                  rep(comp_size$num_trials,
-                     sapply(comparison_gower,
+                     lapply(comparison_gower,
                             function(x) length(na.omit(unlist(x[[1]])))))
                )
   diss_dataset$col <- ifelse(diss_dataset$comp_size > 1, "No", "Yes")
