@@ -300,9 +300,11 @@ comp_clustering <- function (input,
 
 
   ## Message on the dropped characteristics
-  dropped_chars <- ifelse(length(col_all_miss_names) == 0,
-                          "none",
-                          col_all_miss_names)
+  dropped_chars <- if (length(col_all_miss_names) == 0) {
+    "none"
+  } else {
+    col_all_miss_names
+  }
   message(paste("- Dropped characteristics:", paste(dropped_chars,
                                                     collapse = ", ")))
 
