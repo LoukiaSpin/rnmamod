@@ -35,60 +35,53 @@ in the order they have been defined in the argument \code{input}.}
 low dissimilarity of two comparisons. The value much be low. The default
 value is 0.13.}
 
-\item{informative}{Logical with \code{TRUE} for performing informative
-decision and \code{FALSE} for performing hierarchical agglomerative
-clustering, thus, allowing the user to define the number of clusters via
+\item{informative}{Logical with \code{TRUE} for performing informative 
+decision and \code{FALSE} for performing hierarchical agglomerative 
+clustering, thus, allowing the user to define the number of clusters via 
 the argument \code{optimal_clusters}. The default argument is \code{TRUE}.}
 
 \item{optimal_clusters}{A positive integer for the optimal number of clusters
-based on the silhouette width, an internal validation measure. The user
-\bold{must} define the value, after inspecting the profile plot on the
-average silhouette width. It takes values from two to the number of
+based on the silhouette width, an internal validation measure. The user 
+\bold{must} define the value, after inspecting the profile plot on the 
+average silhouette width. It takes values from two to the number of 
 comparisons minus one.}
 
 \item{get_plots}{Logical with values \code{TRUE} for returning all plots and
 \code{FALSE} for concealing the plots. The default argument is
 \code{FALSE}.}
 
-\item{label_size}{A positive integer for the font size of labels in the
-bubble plot for the characteristics contribution, the violin plot for the
-study dissimilarities per comparison, the bar plot for total dissimilarity
-and the silhouette widths plot. \code{label_size} determines the size
-argument found in the geom's aesthetic properties in the R-package
+\item{label_size}{A positive integer for the font size of labels in the 
+violin plot for the study dissimilarities per comparison, and the 
+silhouette widths plot. \code{label_size} determines the size argument 
+found in the geom's aesthetic properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
 \item{title_size}{A positive integer for the font size of legend title in
-the bubble plot for the characteristics contribution, the violin plot for
-the study dissimilarities per comparison, the bar plot for total
-dissimilarity and the silhouette widths plot. \code{title_size} determines
-the title argument found in the theme's properties in the R-package
+the violin plot for the study dissimilarities per comparison, and the 
+silhouette widths plot. \code{title_size} determines the title argument 
+found in the theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
 \item{axis_title_size}{A positive integer for the font size of axis title in
-the bubble plot for the characteristics contribution, the violin plot for
-the study dissimilarities per comparison, the bar plot for total
-dissimilarity and the silhouette widths plot. \code{axis_title_size}
-determines the axis.title argument found in the theme's properties in the
+the violin plot for the study dissimilarities per comparison, and the 
+silhouette widths plot. \code{axis_title_size} determines the axis.title 
+argument found in the theme's properties in the
 R-package \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
 \item{axis_text_size}{A positive integer for the font size of axis text in
-the bubble plot for the characteristics contribution, the violin plot for
-the study dissimilarities per comparison, the bar plot for total
-dissimilarity and the silhouette widths plot. \code{axis_text_size}
-determines the axis.text argument found in the theme's properties in the
+the violin plot for the study dissimilarities per comparison, and the 
+silhouette widths plot. \code{axis_text_size} determines the axis.text 
+argument found in the theme's properties in the
 R-package \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
 \item{axis_x_text_angle}{A positive integer for the angle of axis text in
-the bubble plot for the characteristics contribution, the violin plot for
-the study dissimilarities per comparison, and the bar plot for total
-dissimilarity. \code{axis_x_text_angle} determines the axis.text.x argument
+the violin plot for the study dissimilarities per comparison. 
+\code{axis_x_text_angle} determines the axis.text.x argument
 found in the theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
 \item{legend_text_size}{A positive integer for the font size of legend text
-in the bubble plot for the characteristics contribution, the violin plot
-for the study dissimilarities per comparison, the bar plot for total
-dissimilarity and the silhouette widths plot. \code{legend_text_size}
+in the silhouette widths plot. \code{legend_text_size}
 determines the legend.text argument found in the theme's properties in the
 R-package \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 }
@@ -97,26 +90,26 @@ Initially, \code{comp_clustering} prints on the console the following
   messages: the number of observed comparisons (and number of single-study
   comparisons, if any); the number of dropped characteristics due to many
   missing data; the maximum value of the cophenetic correlation coefficient;
-  and the optimal linkage method selected based on the cophenetic correlation
+  and the optimal linkage method selected based on the cophenetic correlation 
   coefficient. Then, the function returns the following list of elements:
   \item{Trials_diss_table}{A lower off-diagonal matrix of 'dist' class
   with the Gower dissimilarities of all pairs of studies in the network.}
   \item{Comparisons_diss_table}{A lower off-diagonal matrix of 'dist' class
-  with the total across-comparison dissimilarities of all pairs of observed
+  with the total across-comparison dissimilarities of all pairs of observed 
   intervention comparisons in the network.}
   \item{Informative_heatmap}{A heatmap on total within-comparison and total
-  across-comparison dissimilarities when the 'informative decision' is
+  across-comparison dissimilarities when the 'informative decision' is 
   applied (\code{informative = TRUE}). Diagonal elements refer to total
-  within-comparison dissimilarity, and off-diagonal elements refer to
-  across-comparisons dissimilarity. Using a threshold of high similarity
-  (default at 0.13), cells exceeding this threshold are highlighted in red;
-  otherwise, in green. This heatmap aids in finding 'hot spots' of
-  comparisons that may violate the plausibility of transitivity in the
+  within-comparison dissimilarity, and off-diagonal elements refer to 
+  across-comparisons dissimilarity. Using a threshold of high similarity 
+  (default at 0.13), cells exceeding this threshold are highlighted in red; 
+  otherwise, in green. This heatmap aids in finding 'hot spots' of 
+  comparisons that may violate the plausibility of transitivity in the 
   network.}
-  \item{Total_dissimilarity}{A data-frame on the observed comparisons and
+  \item{Total_dissimilarity}{A data-frame on the observed comparisons and 
   comparisons between comparisons, alongside the corresponding total
-  within-comparison and total across-comparisons dissimilarity.
-  The data-frame has been sorted in decreasing order of the total (within- or
+  within-comparison and total across-comparisons dissimilarity. 
+  The data-frame has been sorted in decreasing order of the total (within- or 
   across-comparison) dissimilarity.}
   \item{Types_used}{A data-frame with type mode (i.e., double or integer) of
   each characteristic.}
@@ -126,7 +119,7 @@ Initially, \code{comp_clustering} prints on the console the following
   \item{Cluster_color}{A data-frame on the number and color of the cluster
   assigned to each comparison.}
   \item{Table_average_silhouette_width}{A data-frame with the average
-  silhouette width for a range of 2 to P-1 clusters, with P being the number
+  silhouette width for a range of 2 to P-1 clusters, with P being the number 
   of comparisons.}
   \item{Table_cophenetic_coefficient}{A data-frame on the cophenetic
   correlation coefficient for eight linkage methods (Ward's two
@@ -140,14 +133,17 @@ Initially, \code{comp_clustering} prints on the console the following
   If \code{get_plots = FALSE} only the list of elements mentioned above is
   returned. If \code{get_plots = TRUE}, \code{comp_clustering} returns a
   series of plots in addition to the list of elements mentioned above:
-  \item{Dissimilarity_comparison}{A violin plot with integrated box plots and
-  dots on the study dissimilarities per comparison and comparison between
-  comparisons (x-axis). Violins are sorted in descending order of the total
-  dissimilarity (red point) and are split into those for within-comparison
-  dissimilarities and across-comparison dissimilarities.}
-  \item{Profile_plot}{A profile plot on the average silhouette width for a
-  range of 2 to P-1 clusters, with P being the number of comparisons.
-  The candidate optimal number of  clusters is indicated with a red point
+  \item{Within_comparison_dissimilarity}{A violin plot with integrated box 
+  plots and dots on the study dissimilarities per observed comparison 
+  (x-axis). Violins are sorted in descending order of the total 
+  dissimilarity (red point).}
+  \item{Across_comparison_dissimilarity}{A violin plot with integrated box 
+  plots and dots on the study dissimilarities per comparison between 
+  comparisons (x-axis). Violins are sorted in descending order of the total 
+  dissimilarity (red point).}
+  \item{Profile_plot}{A profile plot on the average silhouette width for a 
+  range of 2 to P-1 clusters, with P being the number of comparisons. 
+  The candidate optimal number of  clusters is indicated with a red point 
   directly on the line.}
   \item{Silhouette_width_plot}{A silhouette plot illustrating the silhouette
   width for each comparison. The comparisons are sorted in descending order
@@ -158,7 +154,7 @@ Initially, \code{comp_clustering} prints on the console the following
 }
 \description{
 \code{comp_clustering} hosts a toolkit of functions that facilitates
-  conducting, visualising and evaluating informative decision and
+  conducting, visualising and evaluating informative decision and 
   hierarchical agglomerative of observed comparisons of interventions for a
   specific network and set of characteristics that act as effect modifiers.
 }
@@ -188,7 +184,7 @@ The correct type mode of columns in \code{input} must be ensured to use
   process.
 
   The cophenetic correlation coefficient is calculated using the
-  \code{\link[stats:cophenetic]{cophenetic}} function alongside the
+  \code{\link[stats:cophenetic]{cophenetic}} function alongside the 
   \code{\link[stats:hclust]{hclust}} function for selected linkage methods.
 
  \code{comp_clustering} can be used only for a network with at least three
