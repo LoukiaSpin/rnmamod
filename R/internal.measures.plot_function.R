@@ -13,6 +13,21 @@
 #'   \code{"mcquitty"}, \code{"median"}, or \code{"centroid"} for the optimal
 #'   linkage method, corresponding to the highest cophenetic correlation
 #'   coefficient value.
+#' @param label_size A positive integer for the font size of labels in the 
+#'   profile plot with the average silhouette width per candidate cluster. 
+#'   \code{label_size} determines the size argument found in the geom's 
+#'   aesthetic properties in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#' @param axis_title_size A positive integer for the font size of axis title in
+#'   the profile plot with the average silhouette width per candidate cluster. 
+#'   \code{axis_title_size} determines the axis.title argument found in the 
+#'   theme's properties in the
+#'   R-package \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#' @param axis_text_size A positive integer for the font size of axis text in
+#'   the profile plot with the average silhouette width per candidate cluster. 
+#'   \code{axis_text_size} determines the axis.text argument found in the 
+#'   theme's properties in the R-package 
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #'
 #' @return
 #'   \code{internal_measures_plot} currently returns the following list of 
@@ -53,7 +68,10 @@
 #'
 #' @export
 internal_measures_plot <- function (input,
-                                    optimal_link) {
+                                    optimal_link,
+                                    label_size,
+                                    axis_title_size,
+                                    axis_text_size) {
 
 
   ## Check the defaults
@@ -123,7 +141,7 @@ internal_measures_plot <- function (input,
       geom_text(aes(label = sprintf("%0.2f", round(silhouette, 2))),
                 hjust = 0.5,
                 vjust = -0.7,
-                size = 3,
+                size = label_size,
                 colour = "blue",
                 fontface = "bold") +
       geom_text(x = max_silh,
@@ -131,14 +149,14 @@ internal_measures_plot <- function (input,
                 label = max_silh,
                 hjust = 0.5,
                 vjust = -0.7,
-                size = 3,
+                size = label_size,
                 colour = "black",
                 fontface = "bold") +
       labs(x = "Number of clusters",
            y = "Silhouette width") +
       theme_classic() +
-      theme(axis.title = element_text(size = 13, face = "bold"),
-            axis.text = element_text(size = 13))
+      theme(axis.title = element_text(size = axis_title_size, face = "bold"),
+            axis.text = element_text(size = axis_text_size ))
   }
 
 

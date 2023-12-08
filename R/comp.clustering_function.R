@@ -34,35 +34,40 @@
 #'   violin plot for the study dissimilarities per comparison and comparison 
 #'   between comparisons. \code{label_size} determines the size argument found 
 #'   in the geom's aesthetic properties in the R-package
-#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #' @param title_size A positive integer for the font size of legend title in
 #'   the violin plot for the study dissimilarities per comparison and comparison 
 #'   between comparisons. \code{title_size} determines the title argument 
 #'   found in the theme's properties in the R-package
-#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #' @param axis_title_size A positive integer for the font size of axis title in
 #'   the violin plot for the study dissimilarities per comparison and comparison 
 #'   between comparisons, and the barplot of percentage trials per comparison 
 #'   and cluster. \code{axis_title_size} determines the axis.title 
 #'   argument found in the theme's properties in the
-#'   R-package \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
+#'   R-package \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #' @param axis_text_size A positive integer for the font size of axis text in
 #'   the violin plot for the study dissimilarities per comparison and comparison 
 #'   between comparisons, the heatmap of informative decision, and the barplot 
 #'   of percentage trials per comparison and cluster. \code{axis_text_size} 
 #'   determines the axis.text argument found in the theme's properties in the 
 #'   R-package 
-#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #' @param axis_x_text_angle A positive integer for the angle of axis text in
 #'   the violin plot for the study dissimilarities per comparison and comparison 
 #'   between comparisons. \code{axis_x_text_angle} determines the axis.text.x 
 #'   argument found in the theme's properties in the R-package
-#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #' @param legend_text_size A positive integer for the font size of legend text
 #'   in the barplot of percentage trials per comparison and cluster. 
 #'   \code{legend_text_size} determines the legend.text argument found in the 
 #'   theme's properties in the R-package 
-#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#' @param str_wrap_width A positive integer for wrapping the axis labels in the
+#'   the violin plot for the study dissimilarities per comparison between 
+#'   comparisons. \code{str_wrap_width} determines the 
+#'   \code{\link[stringr:str_wrap]{str_wrap}} function of the R-package 
+#'   \href{https://CRAN.R-project.org/package=stringr}{stringr}.
 #'
 #' @return
 #'   Initially, \code{comp_clustering} prints on the console the following
@@ -171,7 +176,8 @@
 #' @seealso
 #'  \code{\link[stats:cophenetic]{cophenetic}},
 #'  \code{\link[stats:hclust]{hclust}}, \code{\link{internal_measures_plot}},
-#'  \code{\link[cluster:silhouette]{silhouette}}
+#'  \code{\link[cluster:silhouette]{silhouette}},
+#'  \code{\link[stringr:str_wrap]{str_wrap}}
 #'
 #' @references
 #' Gower J. General Coefficient of Similarity and Some of Its Properties.
@@ -202,7 +208,8 @@ comp_clustering <- function (input,
                              axis_title_size = 14,
                              axis_text_size = 14,
                              axis_x_text_angle = 0,
-                             legend_text_size = 13) {
+                             legend_text_size = 13,
+                             str_wrap_width = 10) {
   
   
   ## Check defaults
@@ -335,6 +342,14 @@ comp_clustering <- function (input,
   colnames(gower_diss_mat) <- input_new[1:(dim(input_new)[1]), 2]
   rownames(gower_diss_mat) <- input_new[1:(dim(input_new)[1]), 2]
   diag(gower_diss_mat) <- NA
+  
+  
+  ## For the dendrogram only!
+  gower_diss_mat_dendr <- as.matrix(gower_res$Dissimilarity_table)
+  colnames(gower_diss_mat_dendr) <- paste(input_new[1:(dim(input_new)[1]), 1], 
+                                          input_new[1:(dim(input_new)[1]), 2])
+  rownames(gower_diss_mat_dendr) <- paste(input_new[1:(dim(input_new)[1]), 1], 
+                                          input_new[1:(dim(input_new)[1]), 2])
   
   
   ## Data-frame on compared comparisons, and corresponding Gower value 
@@ -484,7 +499,9 @@ comp_clustering <- function (input,
                 colour = "blue",
                 inherit.aes = FALSE) +
       #facet_wrap(.~ index, scales = "free_x") +
-      labs(x = "Comparisons of comparisons",
+      scale_x_discrete(labels = function(x) str_wrap(x, 
+                                                     width = str_wrap_width)) +
+      labs(x = "Comparisons between comparisons",
            y = "Gower's dissimilarity") +
       coord_cartesian(ylim = c(0, 1)) +
       theme_classic() +
@@ -507,7 +524,7 @@ comp_clustering <- function (input,
   
   
   ## Sort to bring all 'within-comparison' at the beginning
-  total_diss <- total_diss0[order(total_diss0$index_type, decreasing = TRUE), ]
+  total_diss <- total_diss0[order(total_diss0$index_type, total_diss0$total_dissimilarity), ]
 
 
   ## Different route depending on whether we choose informative decision or hierarchical clustering
@@ -665,10 +682,11 @@ comp_clustering <- function (input,
            fill = "Cluster") + 
       scale_y_continuous(labels = scales::label_percent(suffix = " ")) +
       theme_classic() +
-      theme(axis.title = element_text(size = axis_title_size),
+      theme(axis.title = element_text(size = axis_title_size, face = "bold"),
             axis.text = element_text(size = axis_text_size),
             legend.position = "bottom",
-            legend.text = element_text(size = legend_text_size))
+            legend.text = element_text(size = legend_text_size),
+            legend.title = element_text(size = legend_text_size, face = "bold"))
     
     
     ## Data-frame with the cluster per comparison
@@ -686,7 +704,7 @@ comp_clustering <- function (input,
   ## Collect the results
   # First without the table with the internal measure results
   collect0 <- 
-    list(Trials_diss_table = round(gower_res$Dissimilarity_table, 3),
+    list(Trials_diss_table = round(gower_diss_mat_dendr, 3),
          Comparisons_diss_table = as.dist(dist_mat),
          Total_dissimilarity = total_diss,
          Types_used = char_type,

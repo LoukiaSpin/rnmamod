@@ -3,8 +3,8 @@
 #'
 #' @description
 #'   \code{dendro_heatmap} creates a dendrogram alongside the heatmap of
-#'   dissimilarities among the comparisons for a specific linkage method and 
-#'   number of clusters.
+#'   Gower dissimilarities among the trials in the network for a specific 
+#'   linkage method and number of clusters.
 #'
 #' @param input An object of S3 class \code{\link{comp_clustering}}. See 'Value'
 #'   in \code{\link{comp_clustering}}.
@@ -15,8 +15,7 @@
 #'   \href{https://CRAN.R-project.org/package=heatmaply}{heatmaply} to create a
 #'   cluster heatmap for a selected linkage method and number of clusters. The
 #'   function uses different colours to indicate the clusters directly on the
-#'   dendrogram. The comparisons in the have been sorted in decreasing order of
-#'   their total dissimilarity.
+#'   dendrogram. 
 #'
 #'  @details
 #'    The function inherits the linkage method and number of optimal clusters by 
@@ -44,7 +43,7 @@ dendro_heatmap <- function (input) {
 
 
   ## The dissimilarity matrix (based on the across-comparison dissimilarities)
-  diss <- input$Comparisons_diss_table
+  diss <- as.dist(input$Trials_diss_table)
 
 
   ## 'Optimal' linkage method (based on the cophenetic coefficient)
@@ -67,18 +66,6 @@ dendro_heatmap <- function (input) {
               xlab = " ",
               ylab = " ",
               scale = "none",
-              Colv = 
-                reorder(as.dendrogram(hclust(diss, method = optimal_link)),
-                        subset(input$Total_dissimilarity[, 2], 
-                               input$Total_dissimilarity[, 3] == 
-                                 "Across-comparison"), 
-                        max),
-              Rowv = 
-                reorder(as.dendrogram(hclust(diss, method = optimal_link)),
-                        subset(input$Total_dissimilarity[, 2], 
-                               input$Total_dissimilarity[, 3] == 
-                                 "Across-comparison"), 
-                        max),
               k_col = optimal_clusters,
               k_row = optimal_clusters,
               scale_fill_gradient_fun =

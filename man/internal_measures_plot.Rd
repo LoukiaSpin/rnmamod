@@ -5,7 +5,13 @@
 \title{Internal measures for cluster validation
 (Comparisons' comparability for transitivity evaluation)}
 \usage{
-internal_measures_plot(input, optimal_link)
+internal_measures_plot(
+  input,
+  optimal_link,
+  label_size,
+  axis_title_size,
+  axis_text_size
+)
 }
 \arguments{
 \item{input}{An object of 'dist' class. It is a lower off-diagonal matrix
@@ -16,15 +22,33 @@ with the dissimilarities of all pairs of comparisons.}
 \code{"mcquitty"}, \code{"median"}, or \code{"centroid"} for the optimal
 linkage method, corresponding to the highest cophenetic correlation
 coefficient value.}
+
+\item{label_size}{A positive integer for the font size of labels in the 
+profile plot with the average silhouette width per candidate cluster. 
+\code{label_size} determines the size argument found in the geom's 
+aesthetic properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
+
+\item{axis_title_size}{A positive integer for the font size of axis title in
+the profile plot with the average silhouette width per candidate cluster. 
+\code{axis_title_size} determines the axis.title argument found in the 
+theme's properties in the
+R-package \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
+
+\item{axis_text_size}{A positive integer for the font size of axis text in
+the profile plot with the average silhouette width per candidate cluster. 
+\code{axis_text_size} determines the axis.text argument found in the 
+theme's properties in the R-package 
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
 }
 \value{
 \code{internal_measures_plot} currently returns the following list of 
   elements:
   \item{Table_internal_measures}{A data-frame of the average silhouette width 
-  for a range of 2 to P-1 clusters, with P being the number of comparisons.}
+  for a range of 2 to P-1 clusters, with P being the number of trials}
   \item{Internal_measures_panel}{A profile plot on the average silhouette 
   width for a range of 2 to P-1 clusters, with P being the number of 
-  comparisons. The candidate optimal number of clusters is indicated with a 
+  trials The candidate optimal number of clusters is indicated with a 
   red point directly on the line.}
 }
 \description{
@@ -37,12 +61,12 @@ coefficient value.}
   \code{\link{comp_clustering}} to define the argument \code{optimal_link} to
   create the silhouette plot for the selected number of clusters.
 
-  If the network has three observed comparisons,
-  \code{internal_measures_plot} will return only the
-  \code{Table_internal_measures}. This is because with only three observed
-  comparisons, only two clusters can be considered by the internal measures.
-
-  \code{internal_measures_plot} is integrated in the function
+  \code{internal_measures_plot} calls the  
+  \code{\link[cluster:silhouette]{silhouette}} function in the R-package 
+  \href{https://CRAN.R-project.org/package=cluster}{cluster} to obtain the
+  results on average silhouette for each candidate cluster.
+  
+  \code{internal_measures_plot} is integrated in the function 
   \code{\link{comp_clustering}}.
 }
 \references{
@@ -55,7 +79,7 @@ validation of cluster analysis.
 \emph{J Comput Appl Math} 1987;\bold{20}:53--65.
 }
 \seealso{
-\code{\link{comp_clustering}}, \code{\link{silhouette_index}}
+\code{\link{comp_clustering}}, \code{\link[cluster:silhouette]{silhouette}}
 }
 \author{
 {Loukia M. Spineli}

@@ -17,8 +17,7 @@ in \code{\link{comp_clustering}}.}
   \href{https://CRAN.R-project.org/package=heatmaply}{heatmaply} to create a
   cluster heatmap for a selected linkage method and number of clusters. The
   function uses different colours to indicate the clusters directly on the
-  dendrogram. The comparisons in the have been sorted in decreasing order of
-  their total dissimilarity.
+  dendrogram. 
 
  @details
    The function inherits the linkage method and number of optimal clusters by 
@@ -30,8 +29,8 @@ in \code{\link{comp_clustering}}.}
 }
 \description{
 \code{dendro_heatmap} creates a dendrogram alongside the heatmap of
-  dissimilarities among the comparisons for a specific linkage method and 
-  number of clusters.
+  Gower dissimilarities among the trials in the network for a specific 
+  linkage method and number of clusters.
 }
 \seealso{
 \code{\link{comp_clustering}}, \code{\link[heatmaply:heatmaply]{heatmaply}}

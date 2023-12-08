@@ -48,7 +48,6 @@ Imports:
     mcmcplots,
     netmeta,
     R2jags,
-    rdist,
     reshape2,
     scales,
     writexl
