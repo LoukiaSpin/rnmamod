@@ -59,9 +59,7 @@ in the theme's properties in the R-package
   (violin or bar plot) for each characteristic. The size of the dots in the 
   violin plot (with amalgamated box plots and dots) are proportional to the 
   total sample size of the study: the large the sample size of the study, the 
-  larger the size of the corresponding point. Furthermore, different colours 
-  have been used in the dot plots to distinguish the pseudostudies (if any) 
-  from the studies of the systematic review.
+  larger the size of the corresponding point.
 }
 \description{
 \code{distr_characteristics} uses violin and bar plots to visualise the 

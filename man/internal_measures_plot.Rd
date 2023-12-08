@@ -5,15 +5,11 @@
 \title{Internal measures for cluster validation
 (Comparisons' comparability for transitivity evaluation)}
 \usage{
-internal_measures_plot(input, num_neighb, optimal_link)
+internal_measures_plot(input, optimal_link)
 }
 \arguments{
 \item{input}{An object of 'dist' class. It is a lower off-diagonal matrix
 with the dissimilarities of all pairs of comparisons.}
-
-\item{num_neighb}{A positive integer for the number of neighbouring
-comparisons. It takes values from two to the number of comparisons minus
-one. The default argument equals half the number of comparisons.}
 
 \item{optimal_link}{A character string with values \code{"ward.D"},
 \code{"ward.D2"}, \code{"single"}, \code{"complete"}, \code{"average"},
@@ -22,26 +18,22 @@ linkage method, corresponding to the highest cophenetic correlation
 coefficient value.}
 }
 \value{
-\code{internal_measures_plot} returns the following list of elements:
-  \item{Table_internal_measures}{A data-frame of the connectivity index,
-  silhouette width, and Dunn index for a range of 2 to P-1 clusters, with P
-  being the number of comparisons.}
-  \item{Internal_measures_panel}{A panel of profile plots on the connectivity
-  index, silhouette width, and Dunn index for a range of 2 to P-1 clusters,
-  with P being the number of comparisons. The candidate optimal number of
-  clusters is indicated with a red point directly on the line.}
+\code{internal_measures_plot} currently returns the following list of 
+  elements:
+  \item{Table_internal_measures}{A data-frame of the average silhouette width 
+  for a range of 2 to P-1 clusters, with P being the number of comparisons.}
+  \item{Internal_measures_panel}{A profile plot on the average silhouette 
+  width for a range of 2 to P-1 clusters, with P being the number of 
+  comparisons. The candidate optimal number of clusters is indicated with a 
+  red point directly on the line.}
 }
 \description{
-\code{internal_measures_plot} prepares the table with the results of three
-  internal measures (connectivity index, silhouette width, and Dunn index)
-  for a range of clusters, and visualises the results using a profile plot
-  for each internal measure.
+\code{internal_measures_plot} currently prepares the table with the results 
+  of the average silhouette width for a range of clusters, and visualises the 
+  results using a profile plot.
 }
 \details{
-\code{internal_measures_plot} call the functions
-  \code{\link{connectivity_index}}, \code{\link{silhouette_index}} and
-  \code{\link{dunn_index}} to calculate the corresponding internal measures.
-  \code{internal_measures_plot} also call the function
+\code{internal_measures_plot} also calls the function
   \code{\link{comp_clustering}} to define the argument \code{optimal_link} to
   create the silhouette plot for the selected number of clusters.
 
@@ -61,13 +53,9 @@ doi: 10.1093/bioinformatics/bti517
 Rousseeuw PJ. Silhouettes: A graphical aid to the interpretation and
 validation of cluster analysis.
 \emph{J Comput Appl Math} 1987;\bold{20}:53--65.
-
-Dunn J. Well-separated clusters and optimal fuzzy partitions.
-\emph{J Cybern} 1974;\bold{4}(1):95--104.
 }
 \seealso{
-\code{\link{comp_clustering}}, \code{\link{connectivity_index}},
- \code{\link{dunn_index}}, \code{\link{silhouette_index}}
+\code{\link{comp_clustering}}, \code{\link{silhouette_index}}
 }
 \author{
 {Loukia M. Spineli}

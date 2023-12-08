@@ -93,6 +93,8 @@
 #' @examples
 #' data("nma.liu2013")
 #'
+#' \donttest{
+#
 #' # Read results from 'run_model' (using the default arguments)
 #' res <- readRDS(system.file('extdata/res_liu.rds', package = 'rnmamod'))
 #'
@@ -108,6 +110,7 @@
 #' ume_plot(full = res,
 #'          ume = ume,
 #'          drug_names = interv_names)
+#' }
 #'
 #' @export
 ume_plot <- function(full, ume, drug_names, save_xls) {

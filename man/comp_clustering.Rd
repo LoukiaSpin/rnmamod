@@ -8,9 +8,8 @@
 comp_clustering(
   input,
   drug_names,
-  rename_char = NULL,
-  height = FALSE,
-  num_neighb,
+  threshold = 0.13,
+  informative = TRUE,
   optimal_clusters,
   get_plots = "none",
   label_size = 4,
@@ -32,28 +31,20 @@ respectively. The remaining columns refer to summary characteristics. See
 \item{drug_names}{A vector of labels with the name of the interventions
 in the order they have been defined in the argument \code{input}.}
 
-\item{rename_char}{A list of two elements: (i) a numeric vector with the
-position of the characteristics in \code{input}, and (ii) a character
-vector with the names of the characteristics, as they are wished to
-appear in the title of the plots. This argument is optional, in case the
-user wants to control the appearance of the titles.}
+\item{threshold}{A scalar in the interval [0, 1) to indicate the cut-off of
+low dissimilarity of two comparisons. The value much be low. The default
+value is 0.13.}
 
-\item{height}{Logical with \code{TRUE} for performing informative clustering
-and \code{FALSE} for performing heuristic clustering, thus, allowing the
-user to define the number of clusters via the argument \code{optimal_clusters}.
-The default argument is \code{FALSE}.}
-
-\item{num_neighb}{A positive integer for the number of neighbouring
-comparisons that is found in the \code{\link{connectivity_index}} and
-\code{\link{internal_measures_plot}} functions. It takes values from two to
-the number of comparisons minus one. The default argument equals half the
-number of observed comparisons.}
+\item{informative}{Logical with \code{TRUE} for performing informative
+decision and \code{FALSE} for performing hierarchical agglomerative
+clustering, thus, allowing the user to define the number of clusters via
+the argument \code{optimal_clusters}. The default argument is \code{TRUE}.}
 
 \item{optimal_clusters}{A positive integer for the optimal number of clusters
-based on three internal validation measures. The default argument is 2,
-but the user \bold{must} adjust the value, if needed, after inspecting the
-results of the internal validation measures. It takes values from two to
-the number of comparisons minus one.}
+based on the silhouette width, an internal validation measure. The user
+\bold{must} define the value, after inspecting the profile plot on the
+average silhouette width. It takes values from two to the number of
+comparisons minus one.}
 
 \item{get_plots}{Logical with values \code{TRUE} for returning all plots and
 \code{FALSE} for concealing the plots. The default argument is
@@ -106,36 +97,42 @@ Initially, \code{comp_clustering} prints on the console the following
   messages: the number of observed comparisons (and number of single-study
   comparisons, if any); the number of dropped characteristics due to many
   missing data; the maximum value of the cophenetic correlation coefficient;
-  the optimal dissimilarity measure and optimal linkage method selected
-  based on the cophenetic correlation coefficient. Then, the function
-  returns the following list of elements:
-  \item{Total_dissimilarity}{A data-frame on the total dissimilarity for each
-  observed comparison. The data-frame has been sorted in decreasing order of
-  the total dissimilarity.}
+  and the optimal linkage method selected based on the cophenetic correlation
+  coefficient. Then, the function returns the following list of elements:
+  \item{Trials_diss_table}{A lower off-diagonal matrix of 'dist' class
+  with the Gower dissimilarities of all pairs of studies in the network.}
+  \item{Comparisons_diss_table}{A lower off-diagonal matrix of 'dist' class
+  with the total across-comparison dissimilarities of all pairs of observed
+  intervention comparisons in the network.}
+  \item{Informative_heatmap}{A heatmap on total within-comparison and total
+  across-comparison dissimilarities when the 'informative decision' is
+  applied (\code{informative = TRUE}). Diagonal elements refer to total
+  within-comparison dissimilarity, and off-diagonal elements refer to
+  across-comparisons dissimilarity. Using a threshold of high similarity
+  (default at 0.13), cells exceeding this threshold are highlighted in red;
+  otherwise, in green. This heatmap aids in finding 'hot spots' of
+  comparisons that may violate the plausibility of transitivity in the
+  network.}
+  \item{Total_dissimilarity}{A data-frame on the observed comparisons and
+  comparisons between comparisons, alongside the corresponding total
+  within-comparison and total across-comparisons dissimilarity.
+  The data-frame has been sorted in decreasing order of the total (within- or
+  across-comparison) dissimilarity.}
   \item{Types_used}{A data-frame with type mode (i.e., double or integer) of
   each characteristic.}
   \item{Total_missing}{The percentage of missing cases in the dataset,
   calculated as the ratio of total missing cases to the product of the number
   of studies with the number of characteristics.}
   \item{Cluster_color}{A data-frame on the number and color of the cluster
-  assigned to each comparison. This can be used in the
-  \code{\link{network_comparisons}} function to colour the edges according to
-  the cluster assigned. The data-frame has been sorted in decreasing order of
-  the total dissimilarity.}
-  \item{Dissimilarity_table}{A lower off-diagonal matrix of 'dist' class
-  with the dissimilarities of all pairs of comparisons. The row and column
-  names has been sorted in decreasing order of the total dissimilarity.}
-  \item{Table_internal_measures}{A data-frame with the connectivity index,
-  silhouette width, and Dunn index for a range of 2 to P-1 clusters, with P
-  being the number of comparisons.}
+  assigned to each comparison.}
+  \item{Table_average_silhouette_width}{A data-frame with the average
+  silhouette width for a range of 2 to P-1 clusters, with P being the number
+  of comparisons.}
   \item{Table_cophenetic_coefficient}{A data-frame on the cophenetic
-  correlation coefficient for all pairwise combinations of two dissimilarity
-  measures (Euclidean, and Canberra) with eight linkage methods (Ward's two
+  correlation coefficient for eight linkage methods (Ward's two
   versions, single, complete, average, Mcquitty, median and centroid). The
   data-frame has been sorted in decreasing order of the cophenetic correlation
   coefficient.}
-  \item{Optimal_dist}{The optimal dissimilarity measure (Euclidean or Canberra)
-  based on the cophenetic correlation coefficient.}
   \item{Optimal_link}{The optimal linkage method (ward.D, ward.D2, single,
   complete, average, mcquitty, median, or centroid) based on the cophenetic
   correlation coefficient.}
@@ -144,22 +141,15 @@ Initially, \code{comp_clustering} prints on the console the following
   returned. If \code{get_plots = TRUE}, \code{comp_clustering} returns a
   series of plots in addition to the list of elements mentioned above:
   \item{Dissimilarity_comparison}{A violin plot with integrated box plots and
-  dots on the study dissimilarities per comparison (x-axis). Violins are
-  sorted in descending order of the total dissimilarity (red point).}
-  \item{Characteristics_contribution}{A bubble plot on the percentage of
-  average contribution of each characteristic (x-axis) to dissimilarities of
-  pairs of studies in the corresponding comparison (y-axis).}
-  \item{Total_dissimilarity_plot}{A barplot on the total dissimilarity of
-  comparisons. Bars are sorted in descending order of the total dissimilarity
-  and have been coloured based on the cluster they belong, with the clusters
-  referring to the optimal partitioning determined by the argument
-  \code{optimal_clusters}, when heuristic clustering is performed, or based
-  on the informative clustering.}
-  \item{Internal_measures_panel}{A panel of profile plots on the connectivity
-  index, silhouette width, and Dunn index for a range of 2 to P-1 clusters,
-  with P being the number of comparisons. The candidate optimal number of
-  clusters is indicated with a red point directly on the line.}
-  \item{Silhouette_comparisons}{A silhouette plot illustrating the silhouette
+  dots on the study dissimilarities per comparison and comparison between
+  comparisons (x-axis). Violins are sorted in descending order of the total
+  dissimilarity (red point) and are split into those for within-comparison
+  dissimilarities and across-comparison dissimilarities.}
+  \item{Profile_plot}{A profile plot on the average silhouette width for a
+  range of 2 to P-1 clusters, with P being the number of comparisons.
+  The candidate optimal number of  clusters is indicated with a red point
+  directly on the line.}
+  \item{Silhouette_width_plot}{A silhouette plot illustrating the silhouette
   width for each comparison. The comparisons are sorted in descending order
   of the silhouette width and have been coloured based on the cluster they
   belong, with the clusters referring to the optimal partitioning. For
@@ -168,9 +158,9 @@ Initially, \code{comp_clustering} prints on the console the following
 }
 \description{
 \code{comp_clustering} hosts a toolkit of functions that facilitates
-  conducting, visualising and evaluating informative and heuristic (hierarchical
-  agglomerative) clustering of observed comparisons of interventions for a
-  specific network and set of characteristics.
+  conducting, visualising and evaluating informative decision and
+  hierarchical agglomerative of observed comparisons of interventions for a
+  specific network and set of characteristics that act as effect modifiers.
 }
 \details{
 The correct type mode of columns in \code{input} must be ensured to use
@@ -199,9 +189,7 @@ The correct type mode of columns in \code{input} must be ensured to use
 
   The cophenetic correlation coefficient is calculated using the
   \code{\link[stats:cophenetic]{cophenetic}} function alongside the
-  \code{\link[stats:dist]{dist}} function for selected dissimilarity measures
-  found in the latter and the \code{\link[stats:hclust]{hclust}} function for
-  selected linkage methods.
+  \code{\link[stats:hclust]{hclust}} function for selected linkage methods.
 
  \code{comp_clustering} can be used only for a network with at least three
   comparisons. Otherwise, the execution of the function will be stopped and
@@ -223,15 +211,10 @@ doi: 10.1093/bioinformatics/bti517
 Rousseeuw PJ. Silhouettes: A graphical aid to the interpretation and
 validation of cluster analysis.
 \emph{J Comput Appl Math} 1987;\bold{20}:53--65.
-
-Dunn J. Well-separated clusters and optimal fuzzy partitions.
-\emph{J Cybern} 1974;\bold{4}(1):95--104.
 }
 \seealso{
-\code{\link{connectivity_index}},
- \code{\link[stats:cophenetic]{cophenetic}}, \code{\link[stats:dist]{dist}},
- \code{\link[stats:hclust]{hclust}}, \code{\link{internal_measures_plot}},
- \code{\link{network_comparisons}}
+\code{\link[stats:cophenetic]{cophenetic}},
+ \code{\link[stats:hclust]{hclust}}, \code{\link{internal_measures_plot}}
 }
 \author{
 {Loukia M. Spineli}

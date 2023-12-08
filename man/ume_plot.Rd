@@ -88,6 +88,7 @@ The deviance information criterion (DIC) of the consistency model is
 \examples{
 data("nma.liu2013")
 
+\donttest{
 # Read results from 'run_model' (using the default arguments)
 res <- readRDS(system.file('extdata/res_liu.rds', package = 'rnmamod'))
 
@@ -103,6 +104,7 @@ interv_names <- c("placebo", "pramipexole", "serotonin-norepinephrine
 ume_plot(full = res,
          ume = ume,
          drug_names = interv_names)
+}
 
 }
 \references{

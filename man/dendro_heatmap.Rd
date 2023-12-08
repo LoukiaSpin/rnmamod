@@ -21,19 +21,17 @@ in \code{\link{comp_clustering}}.}
   their total dissimilarity.
 
  @details
-   The function inherits the dissimilarity measure (Euclidean or Canberra),
-   linkage method and number of optimal clusters by the
-   \code{\link{comp_clustering}} function.
+   The function inherits the linkage method and number of optimal clusters by 
+   the \code{\link{comp_clustering}} function.
 
    Remember: when using the \code{\link{comp_clustering}} function, inspect
-   the results of  three internal measures (connectivity index, silhouette
-   width, and Dunn index) for a wide range of clusters to decide on the optimal
-   number of clusters.
+   the average silhouette width for a wide range of clusters to decide on the 
+   optimal number of clusters.
 }
 \description{
 \code{dendro_heatmap} creates a dendrogram alongside the heatmap of
-  dissimilarities among the comparisons for a specific dissimilarity measure,
-  linkage method and number of clusters.
+  dissimilarities among the comparisons for a specific linkage method and 
+  number of clusters.
 }
 \seealso{
 \code{\link{comp_clustering}}, \code{\link[heatmaply:heatmaply]{heatmaply}}

@@ -3,52 +3,49 @@
 \name{gower_distance}
 \alias{gower_distance}
 \title{Gower's dissimilarity measure
-(Comparisons' comparability for transitivity evaluation)}
+(Trials' comparability for transitivity evaluation)}
 \usage{
 gower_distance(input)
 }
 \arguments{
 \item{input}{A data-frame in the long arm-based format. Two-arm trials occupy
 one row in the data-frame. Multi-arm trials occupy as many rows as the
-number of possible comparisons among the interventions. The first two 
-columns refer to the trial name, and the pairwise comparison, 
-respectively. The remaining columns refer to summary characteristics. See 
+number of possible comparisons among the interventions. The first two
+columns refer to the trial name, and the pairwise comparison,
+respectively. The remaining columns refer to summary characteristics. See
 'Details' for the specification of the columns.}
 }
 \value{
 \code{gower_distance} returns the following list of elements:
-  \item{Dissimilarity_table}{A lower off-diagonal matrix of 'dist' class 
+  \item{Dissimilarity_table}{A lower off-diagonal matrix of 'dist' class
   with the dissimilarities of all pairs of trials.}
-  \item{Types_used}{A data-frame with type mode (i.e., double or integer) of 
+  \item{Types_used}{A data-frame with type mode (i.e., double or integer) of
   each characteristic.}
   \item{Total_missing}{The percentage of missing cases in the comparison,
-  calculated as the ratio of total missing cases to the product of the number 
+  calculated as the ratio of total missing cases to the product of the number
   of studies with the number of characteristics.}
-  \item{Charact_contribution}{A numeric vector with the percentage of average 
-  contribution of each characteristic to dissimilarities of pairs of studies 
-  in each observed comparison.}
 }
 \description{
-\code{gower_distance} calculate the Gower's dissimilarity coefficient for a 
-  set of two or more trials investigating the same pairwise comparison of 
-  interventions, considering several characteristics measured at trial level. 
-  It takes values from 0 to 1, with 0 implying complete similarity and 1 
+\code{gower_distance} calculate the Gower's dissimilarity coefficient for 
+  all pairs of trials included in a network of interventions, considering 
+  several characteristics measured at trial level. 
+  It takes values from 0 to 1, with 0 implying complete similarity and 1
   complete dissimilarity.
 }
 \details{
 The correct type mode of columns in \code{input} must be ensured to use
-  the function \code{gower_distance}. The first two columns referring to 
+  the function \code{gower_distance}. The first two columns referring to
   the trial name, and pairwise comparison, respectively, must
-  be \strong{character}. The remaining columns referring to the 
+  be \strong{character}. The remaining columns referring to the
   characteristics must be \strong{double} or \strong{integer} depending on
-  whether the corresponding characteristic refers to a quantitative or 
+  whether the corresponding characteristic refers to a quantitative or
   qualitative variable. The type mode of each column is assessed by
-  \code{gower_distance} using the base function \code{typeof}. Note that 
-  \code{gower_distance} invites unordered and ordered variables; for the 
-  latter, add the argument \code{ordered = TRUE} in the base function 
+  \code{gower_distance} using the base function \code{typeof}. Note that
+  \code{gower_distance} invites unordered and ordered variables; for the
+  latter, add the argument \code{ordered = TRUE} in the base function
   \bold{factor()}.
 
- \code{gower_distance} is integrated in the function 
+ \code{gower_distance} is integrated in the function
   \code{\link{comp_clustering}}.
 }
 \references{
