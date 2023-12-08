@@ -33,6 +33,7 @@ URL: https://CRAN.R-project.org/package=rnmamod
 Depends: 
     R (>= 4.0.0)
 Imports: 
+    cluster,
     dplyr,
     fdrtool,
     gemtc,

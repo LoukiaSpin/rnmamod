@@ -18,10 +18,10 @@
 #'   \code{internal_measures_plot} currently returns the following list of 
 #'   elements:
 #'   \item{Table_internal_measures}{A data-frame of the average silhouette width 
-#'   for a range of 2 to P-1 clusters, with P being the number of comparisons.}
+#'   for a range of 2 to P-1 clusters, with P being the number of trials}
 #'   \item{Internal_measures_panel}{A profile plot on the average silhouette 
 #'   width for a range of 2 to P-1 clusters, with P being the number of 
-#'   comparisons. The candidate optimal number of clusters is indicated with a 
+#'   trials The candidate optimal number of clusters is indicated with a 
 #'   red point directly on the line.}
 #'
 #' @details
@@ -29,18 +29,18 @@
 #'   \code{\link{comp_clustering}} to define the argument \code{optimal_link} to
 #'   create the silhouette plot for the selected number of clusters.
 #'
-#'   If the network has three observed comparisons,
-#'   \code{internal_measures_plot} will return only the
-#'   \code{Table_internal_measures}. This is because with only three observed
-#'   comparisons, only two clusters can be considered by the internal measures.
-#'
-#'   \code{internal_measures_plot} is integrated in the function
+#'   \code{internal_measures_plot} calls the  
+#'   \code{\link[cluster:silhouette]{silhouette}} function in the R-package 
+#'   \href{https://CRAN.R-project.org/package=cluster}{cluster} to obtain the
+#'   results on average silhouette for each candidate cluster.
+#'   
+#'   \code{internal_measures_plot} is integrated in the function 
 #'   \code{\link{comp_clustering}}.
 #'
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso
-#'  \code{\link{comp_clustering}}, \code{\link{silhouette_index}}
+#'  \code{\link{comp_clustering}}, \code{\link[cluster:silhouette]{silhouette}}
 #'
 #' @references
 #' Handl J, Knowles J, Kell DB. Computational cluster validation in post-genomic
@@ -83,12 +83,19 @@ internal_measures_plot <- function (input,
   internal_meas_res <- data.frame(clusters = 2:(dim(as.matrix(input))[1] - 1))
 
   
-  ## Obtain the average silhouette width for all combinations
-  internal_meas_res$silhouette <-
-    mapply(function(x) silhouette_index(input = input,
-                                        method = optimal_link,
-                                        num_clusters = x)$silhoutte_width,
-           2:(dim(as.matrix(input))[1] - 1))
+  ## Obtain silhouette widths for 2 to 'dim(input_new)[1] - 1' clusters
+  silhouette_res <- 
+    lapply(2:(dim(as.matrix(input))[1] - 1), function(x) 
+      cluster::silhouette(cutree(hclust(input, method = optimal_link), k = x), 
+                          input))
+  
+  
+  ## Obtain the average silhouette width for each cluster
+  internal_meas_res$silhouette <- unlist(sapply(silhouette_res, 
+                                                function(x) mean(x[, 3])))
+  
+  ## Obtain maximum silhouette results
+  max_silh <- subset(internal_meas_res, silhouette == max(silhouette))[1, 1]
 
 
   ## Plots results for Silhouette
@@ -116,16 +123,22 @@ internal_measures_plot <- function (input,
       geom_text(aes(label = sprintf("%0.2f", round(silhouette, 2))),
                 hjust = 0.5,
                 vjust = -0.7,
-                size = 4,
+                size = 3,
                 colour = "blue",
+                fontface = "bold") +
+      geom_text(x = max_silh,
+                y = 0,
+                label = max_silh,
+                hjust = 0.5,
+                vjust = -0.7,
+                size = 3,
+                colour = "black",
                 fontface = "bold") +
       labs(x = "Number of clusters",
            y = "Silhouette width") +
-      scale_x_continuous(breaks = seq(1, dim(as.matrix(input))[1], 1),
-                         labels = seq(1, dim(as.matrix(input))[1], 1)) +
       theme_classic() +
-      theme(axis.title = element_text(size = 14, face = "bold"),
-            axis.text = element_text(size = 14))
+      theme(axis.title = element_text(size = 13, face = "bold"),
+            axis.text = element_text(size = 13))
   }
 
 

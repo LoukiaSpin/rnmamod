@@ -1,4 +1,4 @@
-#' End-user-ready results for informative and heuristic clustering of comparisons
+#' End-user-ready results for informative decision and hierarchical clustering 
 #' (Comparisons' comparability for transitivity evaluation)
 #'
 #' @description
@@ -15,50 +15,54 @@
 #'   'Details' for the specification of the columns.
 #' @param drug_names A vector of labels with the name of the interventions
 #'   in the order they have been defined in the argument \code{input}.
-#' @param threshold A scalar in the interval [0, 1) to indicate the cut-off of
-#'   low dissimilarity of two comparisons. The value much be low. The default
+#' @param threshold A scalar from 0 to 1 to indicate the cut-off of low 
+#'   dissimilarity of two comparisons. The value much be low. The default
 #'   value is 0.13.
 #' @param informative Logical with \code{TRUE} for performing informative 
 #'   decision and \code{FALSE} for performing hierarchical agglomerative 
 #'   clustering, thus, allowing the user to define the number of clusters via 
 #'   the argument \code{optimal_clusters}. The default argument is \code{TRUE}.
-#' @param optimal_clusters A positive integer for the optimal number of clusters
-#'   based on the silhouette width, an internal validation measure. The user 
-#'   \bold{must} define the value, after inspecting the profile plot on the 
-#'   average silhouette width. It takes values from two to the number of 
-#'   comparisons minus one.
+#' @param optimal_clusters A positive integer for the optimal number of 
+#'   clusters, ideally, decided after inspecting the profile plot with average 
+#'   silhouette widths for a range of clusters, and the dendrogram. The user 
+#'   \bold{must} define the value. It takes values from two to the number of 
+#'   trials minus one.
 #' @param get_plots Logical with values \code{TRUE} for returning all plots and
 #'   \code{FALSE} for concealing the plots. The default argument is
 #'   \code{FALSE}.
 #' @param label_size A positive integer for the font size of labels in the 
-#'   violin plot for the study dissimilarities per comparison, and the 
-#'   silhouette widths plot. \code{label_size} determines the size argument 
-#'   found in the geom's aesthetic properties in the R-package
+#'   violin plot for the study dissimilarities per comparison and comparison 
+#'   between comparisons. \code{label_size} determines the size argument found 
+#'   in the geom's aesthetic properties in the R-package
 #'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
 #' @param title_size A positive integer for the font size of legend title in
-#'   the violin plot for the study dissimilarities per comparison, and the 
-#'   silhouette widths plot. \code{title_size} determines the title argument 
+#'   the violin plot for the study dissimilarities per comparison and comparison 
+#'   between comparisons. \code{title_size} determines the title argument 
 #'   found in the theme's properties in the R-package
 #'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
 #' @param axis_title_size A positive integer for the font size of axis title in
-#'   the violin plot for the study dissimilarities per comparison, and the 
-#'   silhouette widths plot. \code{axis_title_size} determines the axis.title 
+#'   the violin plot for the study dissimilarities per comparison and comparison 
+#'   between comparisons, and the barplot of percentage trials per comparison 
+#'   and cluster. \code{axis_title_size} determines the axis.title 
 #'   argument found in the theme's properties in the
 #'   R-package \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
 #' @param axis_text_size A positive integer for the font size of axis text in
-#'   the violin plot for the study dissimilarities per comparison, and the 
-#'   silhouette widths plot. \code{axis_text_size} determines the axis.text 
-#'   argument found in the theme's properties in the
-#'   R-package \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
+#'   the violin plot for the study dissimilarities per comparison and comparison 
+#'   between comparisons, the heatmap of informative decision, and the barplot 
+#'   of percentage trials per comparison and cluster. \code{axis_text_size} 
+#'   determines the axis.text argument found in the theme's properties in the 
+#'   R-package 
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
 #' @param axis_x_text_angle A positive integer for the angle of axis text in
-#'   the violin plot for the study dissimilarities per comparison. 
-#'   \code{axis_x_text_angle} determines the axis.text.x argument
-#'   found in the theme's properties in the R-package
+#'   the violin plot for the study dissimilarities per comparison and comparison 
+#'   between comparisons. \code{axis_x_text_angle} determines the axis.text.x 
+#'   argument found in the theme's properties in the R-package
 #'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
 #' @param legend_text_size A positive integer for the font size of legend text
-#'   in the silhouette widths plot. \code{legend_text_size}
-#'   determines the legend.text argument found in the theme's properties in the
-#'   R-package \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
+#'   in the barplot of percentage trials per comparison and cluster. 
+#'   \code{legend_text_size} determines the legend.text argument found in the 
+#'   theme's properties in the R-package 
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
 #'
 #' @return
 #'   Initially, \code{comp_clustering} prints on the console the following
@@ -72,15 +76,6 @@
 #'   \item{Comparisons_diss_table}{A lower off-diagonal matrix of 'dist' class
 #'   with the total across-comparison dissimilarities of all pairs of observed 
 #'   intervention comparisons in the network.}
-#'   \item{Informative_heatmap}{A heatmap on total within-comparison and total
-#'   across-comparison dissimilarities when the 'informative decision' is 
-#'   applied (\code{informative = TRUE}). Diagonal elements refer to total
-#'   within-comparison dissimilarity, and off-diagonal elements refer to 
-#'   across-comparisons dissimilarity. Using a threshold of high similarity 
-#'   (default at 0.13), cells exceeding this threshold are highlighted in red; 
-#'   otherwise, in green. This heatmap aids in finding 'hot spots' of 
-#'   comparisons that may violate the plausibility of transitivity in the 
-#'   network.}
 #'   \item{Total_dissimilarity}{A data-frame on the observed comparisons and 
 #'   comparisons between comparisons, alongside the corresponding total
 #'   within-comparison and total across-comparisons dissimilarity. 
@@ -91,11 +86,11 @@
 #'   \item{Total_missing}{The percentage of missing cases in the dataset,
 #'   calculated as the ratio of total missing cases to the product of the number
 #'   of studies with the number of characteristics.}
-#'   \item{Cluster_color}{A data-frame on the number and color of the cluster
-#'   assigned to each comparison.}
+#'   \item{Cluster_comp}{A data-frame on the comparisons and the cluster they
+#'   belong (based on the argument \code{optimal_clusters}.}
 #'   \item{Table_average_silhouette_width}{A data-frame with the average
-#'   silhouette width for a range of 2 to P-1 clusters, with P being the number 
-#'   of comparisons.}
+#'   silhouette width for a range of 2 to P-1 trials, with P being the number 
+#'   trials.}
 #'   \item{Table_cophenetic_coefficient}{A data-frame on the cophenetic
 #'   correlation coefficient for eight linkage methods (Ward's two
 #'   versions, single, complete, average, Mcquitty, median and centroid). The
@@ -116,16 +111,27 @@
 #'   plots and dots on the study dissimilarities per comparison between 
 #'   comparisons (x-axis). Violins are sorted in descending order of the total 
 #'   dissimilarity (red point).}
+#'   \item{Informative_heatmap}{A heatmap on total within-comparison and total
+#'   across-comparison dissimilarities when the 'informative decision' is 
+#'   applied (\code{informative = TRUE}). Diagonal elements refer to total
+#'   within-comparison dissimilarity, and off-diagonal elements refer to 
+#'   across-comparisons dissimilarity. Using a threshold of high similarity 
+#'   (default at 0.13), cells exceeding this threshold are highlighted in red; 
+#'   otherwise, in green. This heatmap aids in finding 'hot spots' of 
+#'   comparisons that may violate the plausibility of transitivity in the 
+#'   network. Single-study comparisons are indicated with white numbers}
 #'   \item{Profile_plot}{A profile plot on the average silhouette width for a 
-#'   range of 2 to P-1 clusters, with P being the number of comparisons. 
-#'   The candidate optimal number of  clusters is indicated with a red point 
+#'   range of 2 to P-1 clusters, with P being the number of trials. The 
+#'   candidate optimal number of  clusters is indicated with a red point 
 #'   directly on the line.}
 #'   \item{Silhouette_width_plot}{A silhouette plot illustrating the silhouette
-#'   width for each comparison. The comparisons are sorted in descending order
-#'   of the silhouette width and have been coloured based on the cluster they
-#'   belong, with the clusters referring to the optimal partitioning. For
-#'   comparisons with zero silhouette width, 0.01 is added (an arbitrary very
-#'   small number) to make visible the colour of the corresponding bars.}
+#'   width for each trial, with the trials sorted in decreasing order within the 
+#'   cluster they belong. This output is obtained by calling the 
+#'   \code{\link[cluster:silhouette]{silhouette}} function in the R-package 
+#'   \href{https://CRAN.R-project.org/package=cluster}{cluster}.}
+#'   \item{Barplot_comparisons_cluster}{As tacked barplot on the percentage 
+#'   trials of each comparison found in the clusters (based on the argument 
+#'   \code{optimal_clusters}.}
 #'
 #' @details
 #'   The correct type mode of columns in \code{input} must be ensured to use
@@ -164,7 +170,8 @@
 #'
 #' @seealso
 #'  \code{\link[stats:cophenetic]{cophenetic}},
-#'  \code{\link[stats:hclust]{hclust}}, \code{\link{internal_measures_plot}}
+#'  \code{\link[stats:hclust]{hclust}}, \code{\link{internal_measures_plot}},
+#'  \code{\link[cluster:silhouette]{silhouette}}
 #'
 #' @references
 #' Gower J. General Coefficient of Similarity and Some of Its Properties.
@@ -325,18 +332,30 @@ comp_clustering <- function (input,
   
   ## Re-name the columns/rows with the corresponding comparisons
   gower_diss_mat <- as.matrix(gower_res$Dissimilarity_table)
-  colnames(gower_diss_mat) <- input_new[1:(dim(input_new)[1] - 1), 2]
-  rownames(gower_diss_mat) <- input_new[2:(dim(input_new)[1]), 2]
+  colnames(gower_diss_mat) <- input_new[1:(dim(input_new)[1]), 2]
+  rownames(gower_diss_mat) <- input_new[1:(dim(input_new)[1]), 2]
+  diag(gower_diss_mat) <- NA
   
-
+  
   ## Data-frame on compared comparisons, and corresponding Gower value 
   # First turn 'gower_diss_mat' into data.frame with 'melt'
-  dataset_diss <- na.omit(melt(gower_diss_mat))
+  dataset_diss <- as.data.frame(melt(gower_diss_mat))
   
+  
+  ## Append the single-study comparisons (0 value)
+  if (num_single_study_comp > 0) {
+    for (i in 1:length(single_study_comp)) {
+      dataset_diss$value[
+        which(dataset_diss$Var1 == single_study_comp[i] & 
+                dataset_diss$Var2 == single_study_comp[i])] <- 0
+    }
+  }
+
+
   # Re-order the comparisons within based on the order in unique_comp
   dataset_diss[, 1:2] <-
     t(apply(dataset_diss[, 1:2], 1, 
-            function(x) x[order(match(x, unique_comp))]))
+            function(x) x[order(match(x, sort(unique_comp)))]))
   
   # Create the comparison of comparisons using 'paste'
   dataset_diss$comp <- apply(dataset_diss[, 1:2], 1, paste, collapse = " vs ")
@@ -344,33 +363,18 @@ comp_clustering <- function (input,
   
   ## Split 'dataset' by 'Comparison of comparisons'
   split_dataset <- split(dataset_diss, f = dataset_diss$comp)
-  
+
   
   ## Calculate within & across comparison total dissimilarity (Dp)
   d_p <- round(sapply(split_dataset, 
-                      function(x) sqrt(mean(na.omit(unlist(x[[3]]))^2))), 2)
+                      function(x) sqrt(mean(unlist(na.omit(x[[3]]))^2))), 2)
   
-  
-  ## Append the single-study comparisons (NA value)
-  if (num_single_study_comp > 0) {
-    
-    # Comparisons of single-study comparison with itself
-    name_single_study_comp <- 
-      c(apply(t(single_study_comp), 1, function(x) paste(x, " vs ", x)))
-    
-    # Append the single-study comparison
-    d_p <- append(d_p, rep(0, length(name_single_study_comp)))
-    names(d_p)[c((length(split_dataset) + 1):(length(split_dataset) + 
-                                                num_single_study_comp))] <- 
-      name_single_study_comp
-  }
-  
-  
+ 
   ## Lower triangular matrix of within & between comparisons total dissimilarity
   dist_mat <- matrix(NA, nrow = num_unique_comp, ncol = num_unique_comp)
   dist_mat[lower.tri(dist_mat, diag = TRUE)] <- d_p
-  colnames(dist_mat) <- unique_comp
-  rownames(dist_mat) <- unique_comp
+  colnames(dist_mat) <- sort(unique_comp)
+  rownames(dist_mat) <- sort(unique_comp)
   
 
   ## Prepare dataset on comparison dissimilarities and total dissimilarities
@@ -390,12 +394,14 @@ comp_clustering <- function (input,
     data.frame(diss = unlist(lapply(split_dataset,
                                     function(x) na.omit(unlist(x[[3]])))),
                comp = rep(name_type, 
-                          lapply(split_dataset, function(x) dim(x)[1])),
+                          lapply(split_dataset, 
+                                 function(x) length(na.omit(x[[3]])))),
                index = rep(index_type, 
-                           lapply(split_dataset, function(x) dim(x)[1])),
-               total = rep(na.omit(d_p),
-                           lapply(split_dataset,
-                                  function(x) length(na.omit(unlist(x[[1]]))))))
+                           lapply(split_dataset, 
+                                  function(x) length(na.omit(x[[3]])))),
+               total = rep(d_p,
+                           lapply(split_dataset, 
+                                  function(x) length(na.omit(x[[3]])))))
   rownames(diss_dataset) <- NULL
   
   
@@ -441,8 +447,7 @@ comp_clustering <- function (input,
           axis.text = element_text(size = axis_text_size),
           axis.text.x = element_text(angle = axis_x_text_angle,
                                      hjust =
-                                       ifelse(axis_x_text_angle == 0, 0.5, 1)),
-          strip.text = element_text(size = axis_text_size, face = "bold"))
+                                       ifelse(axis_x_text_angle == 0, 0.5, 1)))
   })
   
   
@@ -488,8 +493,7 @@ comp_clustering <- function (input,
             axis.text = element_text(size = axis_text_size),
             axis.text.x = element_text(angle = axis_x_text_angle,
                                        hjust =
-                                         ifelse(axis_x_text_angle == 0, 0.5, 1)),
-            strip.text = element_text(size = axis_text_size, face = "bold"))
+                                         ifelse(axis_x_text_angle == 0, 0.5, 1)))
   })
   
   
@@ -510,8 +514,21 @@ comp_clustering <- function (input,
   if (informative == TRUE) { # Informative decision
     
     ## Prepare dataset for dissimilarity heatmap 
-    # Keep single-study comparisons (NA values)
     mat_new <- melt(dist_mat, na.rm = FALSE) 
+    
+    
+    ## Indicate the single-study comparisons (0 value)
+    # Add a new column 
+    mat_new$single <- rep("yes", dim(mat_new)[1])
+    
+    # Indicate the single-study comparisons
+    if (num_single_study_comp > 0) {
+      for (i in 1:length(single_study_comp)) {
+        mat_new$single[
+          which(mat_new$Var1 == single_study_comp[i] & 
+                  mat_new$Var2 == single_study_comp[i])] <- "no"
+      }
+    }
     
     
     ## To create the orders of the lower diagonal
@@ -524,16 +541,17 @@ comp_clustering <- function (input,
     ## Create the heatmap for one network of interventions
     informative_heatmap <-
       ggplot(mat_new,
-             aes(factor(Var2, levels = unique_comp[1:num_unique_comp]),
-                 factor(Var1, levels = unique_comp[num_unique_comp:1]),
+             aes(factor(Var2, levels = sort(unique_comp)[1:num_unique_comp]),
+                 factor(Var1, levels = sort(unique_comp)[num_unique_comp:1]),
                  fill = ifelse(value < threshold, "high", "poor"))) +
       geom_tile(colour = "white",
                 alpha = 0.5) +
       geom_text(aes(factor(Var2,
-                           levels = unique_comp[1:num_unique_comp]),
-                    factor(Var1, levels = unique_comp[num_unique_comp:1]),
-                    label = ifelse(is.na(value), "", value),
-                    fontface = "bold"),
+                           levels = sort(unique_comp)[1:num_unique_comp]),
+                    factor(Var1, levels = sort(unique_comp)[num_unique_comp:1]),
+                    label = ifelse(is.na(value), "", sprintf("%.2f", value)),
+                    fontface = "bold",
+                    color = single),
                 size = rel(label_size)) +
       geom_rect(aes(xmin = xmin1, xmax = xmax1, ymin = ymin1, ymax = ymax1),
                 color = "black", linewidth = 1) +
@@ -541,6 +559,9 @@ comp_clustering <- function (input,
                 color = "black", linewidth = 1) +
       scale_fill_manual(breaks = c("high", "poor"),
                         values = c("#009E73", "#D55E00"),
+                        na.value = "white") +
+      scale_color_manual(breaks = c("yes", "no"),
+                        values = c("black", "white"),
                         na.value = "white") +
       scale_x_discrete(position = "top") +
       labs(x = "", y = "") +
@@ -551,22 +572,13 @@ comp_clustering <- function (input,
   } else { # Hierarchical agglomerative clustering
     
     
-    ## Stop if triangle inequality is violated
-    if (rdist::triangle_inequality(as.dist(dist_mat)) == FALSE) {
-      stop(paste0("Triangle inequality is violated!"), call. = FALSE)
-    }
-    
-
     ## Number of 'optimal' clusters (based on the internal measures)
     optimal_clusters <- if (missing(optimal_clusters)) {
       stop("The argument 'optimal_clusters' must be defined", call. = FALSE)
-    } else if ((optimal_clusters > num_unique_comp - 1 ||
-                optimal_clusters < 2) & num_unique_comp > 3) {
+    } else if (optimal_clusters > dim(input_new)[1] - 1 ||
+                optimal_clusters < 2) {
       stop(paste0("'optimal_clusters' must range from 2 to", " ",
-                  num_unique_comp - 1, "."), call. = FALSE)
-    } else if ((optimal_clusters > num_unique_comp - 1 ||
-                optimal_clusters < 2) & num_unique_comp == 3) {
-      stop(paste0("Maximum two clusters are possible."), call. = FALSE)
+                  dim(input_new)[1] - 1, "."), call. = FALSE)
     } else {
       optimal_clusters
     }
@@ -582,8 +594,8 @@ comp_clustering <- function (input,
       data.frame(linkage_methods,
                  results = 
                    sapply(linkage_methods, function(x) 
-                     round(cor(as.dist(dist_mat), 
-                               cophenetic(hclust(as.dist(dist_mat), 
+                     round(cor(as.dist(gower_diss_mat), 
+                               cophenetic(hclust(as.dist(gower_diss_mat), 
                                                  method = x))), 3)))
 
 
@@ -607,13 +619,13 @@ comp_clustering <- function (input,
 
     ## Table on average silhouette width results for all combinations
     table_internal_measures <-
-      internal_measures_plot(input = as.dist(dist_mat),
-                             optimal_link = optimal_link)$Table_internal_measures
+      internal_measures_plot(input = as.dist(gower_diss_mat),
+                             optimal_link = optimal_link)$Table_internal_meas
 
 
     ## Panel of internal measures
     internal_measures_panel <- if (dim(table_internal_measures)[1] > 1) {
-    internal_measures_plot(input = as.dist(dist_mat),
+    internal_measures_plot(input = as.dist(gower_diss_mat),
                            optimal_link = optimal_link)$Internal_measures_panel
     } else {
       a <- "At least four comparisons are needed to create the profile plot"
@@ -621,76 +633,46 @@ comp_clustering <- function (input,
       message(paste(a, b))
     }
 
-
-    ## Silhouette width per comparison for selected cluster and linkage method
-    silhouette_comp <-
-      silhouette_index(input = as.dist(dist_mat),
-                       method = optimal_link,
-                       num_clusters = optimal_clusters)$silhoutte_comp
-
-    ## Add 0.02 to comparison with 0 silhouette so that the bar is coloured
-    silhouette_comp$silhouette_new <-
-      ifelse(silhouette_comp$silhouette == 0, 0.01, silhouette_comp$silhouette)
-
-
-    ## Average silhouette width
-    average_silhouette <-
-      silhouette_index(input = as.dist(dist_mat),
-                       method = optimal_link,
-                       num_clusters = optimal_clusters)$silhoutte_width
-
     
-    ## Plot silhouette by comparison and cluster
-    # SOS: Because the bars are order by silhouette value, the colour order is
-    # not the same with that in 'Total diss bar plot', but both plots share the
-    # same colours for the same interventions (which is the desired)!
+    ## Plot silhouette for selected 'optimal_clusters'
     plot_comp_silhouette <-
-      ggplot(silhouette_comp,
-             aes(x = silhouette_new,
-                 y = reorder(comp, silhouette_new),
-                 group = reorder(factor(cluster), silhouette_new),
-                 fill = factor(cluster))) +
-      geom_bar(stat = "identity") +
-      geom_vline(xintercept = average_silhouette,
-                 colour = "black",
-                 linewidth = 0.6,
-                 linetype = 3) +
-      geom_text(aes(label = sprintf("%0.2f", round(silhouette, 2))),
-                hjust = 1.1,
-                vjust = 0.2,
-                size = label_size,
-                colour = "black") +
-      geom_text(aes(x = average_silhouette,
-                    y = 0.44,
-                    label = sprintf("%0.2f", round(average_silhouette, 2))),
-                hjust = 0.5,
-                vjust = 0.0,
-                colour = "blue",
-                size = label_size) +
-      scale_x_continuous(limits = c(-1, 1)) +
-      labs(x = "Silhouette width",
-           y = " ",
-           fill = "Cluster") +
+      plot(silhouette(cutree(hclust(as.dist(gower_diss_mat)), 
+                             k = optimal_clusters), as.dist(gower_diss_mat)))
+    
+    
+    ## Data-frame of comparisons and corresponding cluster
+    comp_cluster <- 
+      data.frame(comparison = input_new[, 2], 
+                 cluster = silhouette(cutree(hclust(as.dist(gower_diss_mat)), 
+                                             k = optimal_clusters), 
+                                      as.dist(gower_diss_mat))[, 1])
+    
+    
+    ## Prepare data for stacked barplot
+    data_barplot <- melt(prop.table(table(comp_cluster) * 100, margin = 1))
+    
+    
+    ## Get barplot
+    cluster_comp_barplot <-
+      ggplot(data_barplot, 
+             aes(x = comparison,
+                 y = value , 
+                 fill = as.factor(cluster))) + 
+      geom_bar(position = "fill", 
+               stat = "identity") +
+      labs(x = "Comparisons",
+           y = "Percentage studies included",
+           fill = "Cluster") + 
+      scale_y_continuous(labels = scales::label_percent(suffix = " ")) +
       theme_classic() +
-      guides(fill = guide_legend(nrow = 1)) +
-      scale_fill_discrete(limits = levels(factor(silhouette_comp$cluster)),
-                          labels = factor(1:max(silhouette_comp$cluster))) +
-      theme(title = element_text(size = title_size, face = "bold"),
-            axis.title = element_text(size = axis_title_size),
+      theme(axis.title = element_text(size = axis_title_size),
             axis.text = element_text(size = axis_text_size),
             legend.position = "bottom",
-            legend.text = element_text(size = legend_text_size),
-            plot.caption = element_text(size = 10, hjust = 0.0))
+            legend.text = element_text(size = legend_text_size))
     
     
     ## Data-frame with the cluster per comparison
-    cluster_comp0 <- data.frame(silhouette_comp[, 1:3])
-    colnames(cluster_comp0)[1] <- c("comparison")
-    
-    
-    ## Sort 'cluster' in decreasing order of cluster
-    cluster_comp <- cluster_comp0[order(cluster_comp0$cluster, 
-                                        decreasing = FALSE), ]
+    cluster_comp <- data_barplot[, 1:2]
   }
 
 
@@ -729,7 +711,8 @@ comp_clustering <- function (input,
     append(collect, list(Within_comparison_dissimilarity = w_comp_diss_plot,
                          Across_comparison_dissimilarity = a_comp_diss_plot,
                          Profile_plot = internal_measures_panel,
-                         Silhouette_width_plot = plot_comp_silhouette))
+                         Silhouette_width_plot = plot_comp_silhouette,
+                         Barplot_comparisons_cluster = cluster_comp_barplot))
   } else if (informative == TRUE & get_plots == TRUE) {
     append(collect, list(Within_comparison_dissimilarity = w_comp_diss_plot,
                          Across_comparison_dissimilarity = a_comp_diss_plot,

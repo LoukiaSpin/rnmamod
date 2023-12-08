@@ -2,6 +2,7 @@
 #'   ggplot2
 #'   stats
 #'
+#' @importFrom cluster silhouette
 #' @importFrom dplyr select starts_with ends_with %>%
 #' @importFrom fdrtool rhalfnorm
 #' @importFrom MASS fractions

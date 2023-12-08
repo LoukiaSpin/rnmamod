@@ -126,14 +126,15 @@ gower_distance <- function (input) {
 
 
   ## Turn Gower dissimilarity into a lower triangle
-  dist_mat0 <- matrix(NA, nrow = dim(data)[1], ncol = dim(data)[1])
-  dist_mat0[lower.tri(dist_mat0, diag = FALSE)] <- data_dist
+  dist_mat <- matrix(NA, nrow = dim(data)[1], ncol = dim(data)[1])
+  dist_mat[lower.tri(dist_mat, diag = FALSE)] <- data_dist
+  diag(dist_mat) <- 0
 
 
   ## Remove redundant row and column
-  dist_mat <- as.data.frame(dist_mat0[-1, -dim(data)[1]])
-  rownames(dist_mat) <- input[-1, 1]
-  colnames(dist_mat) <- input[-dim(input)[1], 1]
+  #dist_mat <- as.data.frame(dist_mat0[-1, -dim(data)[1]])
+  #rownames(dist_mat) <- input[-1, 1]
+  #colnames(dist_mat) <- input[-dim(input)[1], 1]
 
 
   ## Percentage total missing data
