@@ -43,9 +43,7 @@
 #'   (violin or bar plot) for each characteristic. The size of the dots in the 
 #'   violin plot (with amalgamated box plots and dots) are proportional to the 
 #'   total sample size of the study: the large the sample size of the study, the 
-#'   larger the size of the corresponding point. Furthermore, different colours 
-#'   have been used in the dot plots to distinguish the pseudostudies (if any) 
-#'   from the studies of the systematic review.
+#'   larger the size of the corresponding point. 
 #'   
 #' @details
 #'   The correct type mode of columns in \code{input} must be ensured to use
@@ -222,12 +220,6 @@ distr_characteristics <- function (input,
                                         c("sample", "Sample")))] <- "Sample size"
   
   
-  ## Indicate the pseudostudies (if applicable)
-  dataset_new$Pseudostudies <- 
-    factor(with(dataset_new, 
-                ifelse(startsWith(Trial_name, "new_"), "Yes", "No")))
-  
-  
   ## Function for first letter capital (Source: https://stackoverflow.com/questions/18509527/first-letter-to-upper-case)
   firstup <- function(x) {
     substr(x, 1, 1) <- toupper(substr(x, 1, 1))
@@ -267,17 +259,12 @@ distr_characteristics <- function (input,
                      fill = "white",
                      colour = "black",
                      varwidth = TRUE) +
-        geom_point(aes_(colour = ~Pseudostudies,
-                        size = ~`Sample size`)) + 
+        geom_point(aes_(size = ~`Sample size`)) + 
         stat_boxplot(geom = 'errorbar',
                      width = 0.2,
                      linetype = "dashed") +
-        scale_color_manual(breaks = c("Yes", "No"),
-                           values = c("red", "black"),
-                           limits = c("Yes", "No")) +
         labs(x = "Clusters",
-             y = " ",
-             colour = "Pseudostudies") +
+             y = " ") +
         guides(size = FALSE,
                colour = guide_legend(override.aes = list(size = 3.5))) + 
         theme_classic() +
@@ -376,17 +363,12 @@ distr_characteristics <- function (input,
                      fill = "white",
                      colour = "black",
                      varwidth = TRUE) +
-        geom_point(aes_(colour = ~Pseudostudies,
-                        size = ~`Sample size`)) +  
+        geom_point(aes_(size = ~`Sample size`)) +  
         stat_boxplot(geom = 'errorbar',
                      width = 0.2,
                      linetype = "dashed") +
-        scale_color_manual(breaks = c("Yes", "No"),
-                           values = c("red", "black"),
-                           limits = c("Yes", "No")) +
         labs(x = " ",
-             y = " ",
-             colour = "Pseudostudies") +
+             y = " ") +
         guides(size = FALSE,
                colour = guide_legend(override.aes = list(size = 3.5))) + 
         theme_classic() +
@@ -462,12 +444,6 @@ distr_characteristics <- function (input,
           if(typeof(dataset_new[, x]) == "double") double_type(x) else 
             factor_type(x)))
     names(plots) <- colnames(dataset_new)[-c(1, 2)]
-    
-    plots <- if (!is.null(cluster)) {
-      plots[names(plots) %in% c("Pseudostudies", "Comparison cluster") == FALSE] 
-    } else {
-      plots
-    }
 
     return(plots)
  })

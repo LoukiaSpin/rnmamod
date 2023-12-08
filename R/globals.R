@@ -16,6 +16,7 @@
 #' @importFrom netmeta netconnection
 #' @importFrom reshape2 melt
 #' @importFrom R2jags jags autojags
+#' @importFrom rdist triangle_inequality
 #' @importFrom scales hue_pal rescale percent
 #' @importFrom writexl write_xlsx
 #' @importFrom utils combn packageDescription

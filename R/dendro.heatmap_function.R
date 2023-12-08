@@ -3,8 +3,8 @@
 #'
 #' @description
 #'   \code{dendro_heatmap} creates a dendrogram alongside the heatmap of
-#'   dissimilarities among the comparisons for a specific dissimilarity measure,
-#'   linkage method and number of clusters.
+#'   dissimilarities among the comparisons for a specific linkage method and 
+#'   number of clusters.
 #'
 #' @param input An object of S3 class \code{\link{comp_clustering}}. See 'Value'
 #'   in \code{\link{comp_clustering}}.
@@ -19,14 +19,12 @@
 #'   their total dissimilarity.
 #'
 #'  @details
-#'    The function inherits the dissimilarity measure (Euclidean or Canberra),
-#'    linkage method and number of optimal clusters by the
-#'    \code{\link{comp_clustering}} function.
+#'    The function inherits the linkage method and number of optimal clusters by 
+#'    the \code{\link{comp_clustering}} function.
 #'
 #'    Remember: when using the \code{\link{comp_clustering}} function, inspect
-#'    the results of  three internal measures (connectivity index, silhouette
-#'    width, and Dunn index) for a wide range of clusters to decide on the optimal
-#'    number of clusters.
+#'    the average silhouette width for a wide range of clusters to decide on the 
+#'    optimal number of clusters.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -45,40 +43,21 @@ dendro_heatmap <- function (input) {
   }
 
 
-  ## The dissimilarity matrix (based on the dissimilartity measure used in the
-  ## comp_clustering function)
-  diss <- input$Dissimilarity_table
-
-
-  ## 'Optimal' dissimilarity method (based on the cophenetic coefficient)
-  optimal_dist <- if (is.null(input$Optimal_dist)) {
-    stop("The function can be used *only* for heuristic clustering.", call. = FALSE)
-  } else {
-    input$Optimal_dist
-  }
+  ## The dissimilarity matrix (based on the across-comparison dissimilarities)
+  diss <- input$Comparisons_diss_table
 
 
   ## 'Optimal' linkage method (based on the cophenetic coefficient)
   optimal_link <- if (is.null(input$Optimal_link)) {
-    stop("The function can be used *only* for heuristic clustering.", call. = FALSE)
+    stop("The function can be used *only* for hierarchical clustering.", 
+         call. = FALSE)
   } else {
     input$Optimal_link
   }
 
 
   ## Number of 'optimal' clusters
-  optimal_clusters <- length(unique(input$Cluster_color[, 2]))
-
-
-  ## Function for first letter capital (Source: https://stackoverflow.com/questions/18509527/first-letter-to-upper-case)
-  firstup <- function(x) {
-    substr(x, 1, 1) <- toupper(substr(x, 1, 1))
-    x
-  }
-
-
-  ## Turn first letter capital
-  optimal_dist_new <- firstup(optimal_dist)
+  optimal_clusters <- length(unique(input$Cluster_comp[, 2]))
 
 
   ## Create heatmap with dendrogram and coloured clusters
@@ -88,21 +67,27 @@ dendro_heatmap <- function (input) {
               xlab = " ",
               ylab = " ",
               scale = "none",
-              Colv = reorder(as.dendrogram(hclust(diss)),
-                             input$Total_dissimilarity[, 3], max),
-              Rowv = reorder(as.dendrogram(hclust(diss)),
-                             input$Total_dissimilarity[, 3], max),
+              Colv = 
+                reorder(as.dendrogram(hclust(diss, method = optimal_link)),
+                        subset(input$Total_dissimilarity[, 2], 
+                               input$Total_dissimilarity[, 3] == 
+                                 "Across-comparison"), 
+                        max),
+              Rowv = 
+                reorder(as.dendrogram(hclust(diss, method = optimal_link)),
+                        subset(input$Total_dissimilarity[, 2], 
+                               input$Total_dissimilarity[, 3] == 
+                                 "Across-comparison"), 
+                        max),
               k_col = optimal_clusters,
               k_row = optimal_clusters,
               scale_fill_gradient_fun =
-                scale_fill_gradient2(name = paste(optimal_dist_new,
-                                                  "dissimilarity"),
+                scale_fill_gradient2(name = " ",
                                      low = "white",
                                      high = "red",
-                                     na.value = "grey90"#,
-                                     #limit = c(limits_scale[1],
-                                     #          limits_scale[2]))
-              ))
+                                     na.value = "grey90",
+                                     midpoint = 0.0, 
+                                     limits = c(0, 1)))
 
   return(dendro_heatmap)
 }

@@ -70,13 +70,17 @@ silhouette_index <- function (input,
   }
 
   num_clusters <-
-    if (num_clusters > dim(as.matrix(input))[1] - 1 || num_clusters < 2) {
+    if ((num_clusters > dim(as.matrix(input))[1] - 1 || num_clusters < 2) 
+        & dim(as.matrix(input))[1] > 3) {
       stop(paste0("'num_clusters' must range from 2 to", " ",
                   dim(as.matrix(input))[1] - 1, "."), call. = FALSE)
-  } else {
-    num_clusters
-  }
-
+    } else if ((num_clusters > dim(as.matrix(input))[1] - 1 || num_clusters < 2) 
+               & dim(as.matrix(input))[1] == 3) {
+      stop(paste0("Maximum two clusters are possible."), call. = FALSE)
+    } else {
+      num_clusters
+    }
+  
 
   ## Cut dendrogram for a defined number of clusters (num_clusters)
   cut_dend <- cutree(hclust(input, method = method), k = num_clusters)

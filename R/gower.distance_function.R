@@ -1,10 +1,10 @@
 #' Gower's dissimilarity measure
-#' (Comparisons' comparability for transitivity evaluation)
+#' (Trials' comparability for transitivity evaluation)
 #'
 #' @description
-#'   \code{gower_distance} calculate the Gower's dissimilarity coefficient for a
-#'   set of two or more trials investigating the same pairwise comparison of
-#'   interventions, considering several characteristics measured at trial level.
+#'   \code{gower_distance} calculate the Gower's dissimilarity coefficient for 
+#'   all pairs of trials included in a network of interventions, considering 
+#'   several characteristics measured at trial level. 
 #'   It takes values from 0 to 1, with 0 implying complete similarity and 1
 #'   complete dissimilarity.
 #'
@@ -24,9 +24,6 @@
 #'   \item{Total_missing}{The percentage of missing cases in the comparison,
 #'   calculated as the ratio of total missing cases to the product of the number
 #'   of studies with the number of characteristics.}
-#'   \item{Charact_contribution}{A numeric vector with the percentage of average
-#'   contribution of each characteristic to dissimilarities of pairs of studies
-#'   in each observed comparison.}
 #'
 #' @details
 #'   The correct type mode of columns in \code{input} must be ensured to use
@@ -145,18 +142,10 @@ gower_distance <- function (input) {
              (dim(input[, -c(1, 2)])[1] * dim(input[, -c(1, 2)])[2])) * 100, 2)
 
 
-  ## Contribution of each characteristic to each data_dist
-  char_contr <-
-    apply((data_dist0 * delta_dummy) /
-            apply(data_dist0 * delta_dummy, 1, sum, na.rm = TRUE),
-          2, mean, na.rm = TRUE)
-
-
   ## Collect the results
   results <- list(Dissimilarity_table = dist_mat,
                   Types_used = char_type,
-                  Total_missing = paste0(total_mod, "%"),
-                  Charact_contribution = char_contr)
+                  Total_missing = paste0(total_mod, "%"))
 
   return(results)
 }

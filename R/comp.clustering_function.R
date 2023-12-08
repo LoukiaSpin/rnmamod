@@ -3,9 +3,9 @@
 #'
 #' @description
 #'   \code{comp_clustering} hosts a toolkit of functions that facilitates
-#'   conducting, visualising and evaluating informative and heuristic (hierarchical
-#'   agglomerative) clustering of observed comparisons of interventions for a
-#'   specific network and set of characteristics.
+#'   conducting, visualising and evaluating informative decision and 
+#'   hierarchical agglomerative of observed comparisons of interventions for a
+#'   specific network and set of characteristics that act as effect modifiers.
 #'
 #' @param input A data-frame in the long arm-based format. Two-arm trials occupy
 #'   one row in the data-frame. Multi-arm trials occupy as many rows as the
@@ -15,25 +15,15 @@
 #'   'Details' for the specification of the columns.
 #' @param drug_names A vector of labels with the name of the interventions
 #'   in the order they have been defined in the argument \code{input}.
-#' @param rename_char A list of two elements: (i) a numeric vector with the
-#'   position of the characteristics in \code{input}, and (ii) a character
-#'   vector with the names of the characteristics, as they are wished to
-#'   appear in the title of the plots. This argument is optional, in case the
-#'   user wants to control the appearance of the titles.
-#' @param height Logical with \code{TRUE} for performing informative clustering
-#'   and \code{FALSE} for performing heuristic clustering, thus, allowing the
-#'   user to define the number of clusters via the argument \code{optimal_clusters}.
-#'   The default argument is \code{FALSE}.
-#' @param num_neighb A positive integer for the number of neighbouring
-#'   comparisons that is found in the \code{\link{connectivity_index}} and
-#'   \code{\link{internal_measures_plot}} functions. It takes values from two to
-#'   the number of comparisons minus one. The default argument equals half the
-#'   number of observed comparisons.
+#' @param informative Logical with \code{TRUE} for performing informative 
+#'   decision and \code{FALSE} for performing hierarchical agglomerative 
+#'   clustering, thus, allowing the user to define the number of clusters via 
+#'   the argument \code{optimal_clusters}. The default argument is \code{TRUE}.
 #' @param optimal_clusters A positive integer for the optimal number of clusters
-#'   based on three internal validation measures. The default argument is 2,
-#'   but the user \bold{must} adjust the value, if needed, after inspecting the
-#'   results of the internal validation measures. It takes values from two to
-#'   the number of comparisons minus one.
+#'   based on the silhouette width, an internal validation measure. The user 
+#'   \bold{must} define the value, after inspecting the profile plot on the 
+#'   average silhouette width. It takes values from two to the number of 
+#'   comparisons minus one.
 #' @param get_plots Logical with values \code{TRUE} for returning all plots and
 #'   \code{FALSE} for concealing the plots. The default argument is
 #'   \code{FALSE}.
@@ -79,36 +69,42 @@
 #'   messages: the number of observed comparisons (and number of single-study
 #'   comparisons, if any); the number of dropped characteristics due to many
 #'   missing data; the maximum value of the cophenetic correlation coefficient;
-#'   the optimal dissimilarity measure and optimal linkage method selected
-#'   based on the cophenetic correlation coefficient. Then, the function
-#'   returns the following list of elements:
-#'   \item{Total_dissimilarity}{A data-frame on the total dissimilarity for each
-#'   observed comparison. The data-frame has been sorted in decreasing order of
-#'   the total dissimilarity.}
+#'   and the optimal linkage method selected based on the cophenetic correlation 
+#'   coefficient. Then, the function returns the following list of elements:
+#'   \item{Trials_diss_table}{A lower off-diagonal matrix of 'dist' class
+#'   with the Gower dissimilarities of all pairs of studies in the network.}
+#'   \item{Comparisons_diss_table}{A lower off-diagonal matrix of 'dist' class
+#'   with the total across-comparison dissimilarities of all pairs of observed 
+#'   intervention comparisons in the network.}
+#'   \item{Informative_heatmap}{A heatmap on total within-comparison and total
+#'   across-comparison dissimilarities when the 'informative decision' is 
+#'   applied (\code{informative = TRUE}). Diagonal elements refer to total
+#'   within-comparison dissimilarity, and off-diagonal elements refer to 
+#'   across-comparisons dissimilarity. Using a threshold of high similarity 
+#'   (default at 0.13), cells exceeding this threshold are highlighted in red; 
+#'   otherwise, in green. This heatmap aids in finding 'hot spots' of 
+#'   comparisons that may violate the plausibility of transitivity in the 
+#'   network.}
+#'   \item{Total_dissimilarity}{A data-frame on the observed comparisons and 
+#'   comparisons between comparisons, alongside the corresponding total
+#'   within-comparison and total across-comparisons dissimilarity. 
+#'   The data-frame has been sorted in decreasing order of the total (within- or 
+#'   across-comparison) dissimilarity.}
 #'   \item{Types_used}{A data-frame with type mode (i.e., double or integer) of
 #'   each characteristic.}
 #'   \item{Total_missing}{The percentage of missing cases in the dataset,
 #'   calculated as the ratio of total missing cases to the product of the number
 #'   of studies with the number of characteristics.}
 #'   \item{Cluster_color}{A data-frame on the number and color of the cluster
-#'   assigned to each comparison. This can be used in the
-#'   \code{\link{network_comparisons}} function to colour the edges according to
-#'   the cluster assigned. The data-frame has been sorted in decreasing order of
-#'   the total dissimilarity.}
-#'   \item{Dissimilarity_table}{A lower off-diagonal matrix of 'dist' class
-#'   with the dissimilarities of all pairs of comparisons. The row and column
-#'   names has been sorted in decreasing order of the total dissimilarity.}
-#'   \item{Table_internal_measures}{A data-frame with the connectivity index,
-#'   silhouette width, and Dunn index for a range of 2 to P-1 clusters, with P
-#'   being the number of comparisons.}
+#'   assigned to each comparison.}
+#'   \item{Table_average_silhouette_width}{A data-frame with the average
+#'   silhouette width for a range of 2 to P-1 clusters, with P being the number 
+#'   of comparisons.}
 #'   \item{Table_cophenetic_coefficient}{A data-frame on the cophenetic
-#'   correlation coefficient for all pairwise combinations of two dissimilarity
-#'   measures (Euclidean, and Canberra) with eight linkage methods (Ward's two
+#'   correlation coefficient for eight linkage methods (Ward's two
 #'   versions, single, complete, average, Mcquitty, median and centroid). The
 #'   data-frame has been sorted in decreasing order of the cophenetic correlation
 #'   coefficient.}
-#'   \item{Optimal_dist}{The optimal dissimilarity measure (Euclidean or Canberra)
-#'   based on the cophenetic correlation coefficient.}
 #'   \item{Optimal_link}{The optimal linkage method (ward.D, ward.D2, single,
 #'   complete, average, mcquitty, median, or centroid) based on the cophenetic
 #'   correlation coefficient.}
@@ -117,22 +113,15 @@
 #'   returned. If \code{get_plots = TRUE}, \code{comp_clustering} returns a
 #'   series of plots in addition to the list of elements mentioned above:
 #'   \item{Dissimilarity_comparison}{A violin plot with integrated box plots and
-#'   dots on the study dissimilarities per comparison (x-axis). Violins are
-#'   sorted in descending order of the total dissimilarity (red point).}
-#'   \item{Characteristics_contribution}{A bubble plot on the percentage of
-#'   average contribution of each characteristic (x-axis) to dissimilarities of
-#'   pairs of studies in the corresponding comparison (y-axis).}
-#'   \item{Total_dissimilarity_plot}{A barplot on the total dissimilarity of
-#'   comparisons. Bars are sorted in descending order of the total dissimilarity
-#'   and have been coloured based on the cluster they belong, with the clusters
-#'   referring to the optimal partitioning determined by the argument
-#'   \code{optimal_clusters}, when heuristic clustering is performed, or based
-#'   on the informative clustering.}
-#'   \item{Internal_measures_panel}{A panel of profile plots on the connectivity
-#'   index, silhouette width, and Dunn index for a range of 2 to P-1 clusters,
-#'   with P being the number of comparisons. The candidate optimal number of
-#'   clusters is indicated with a red point directly on the line.}
-#'   \item{Silhouette_comparisons}{A silhouette plot illustrating the silhouette
+#'   dots on the study dissimilarities per comparison and comparison between 
+#'   comparisons (x-axis). Violins are sorted in descending order of the total 
+#'   dissimilarity (red point) and are split into those for within-comparison 
+#'   dissimilarities and across-comparison dissimilarities.}
+#'   \item{Profile_plot}{A profile plot on the average silhouette width for a 
+#'   range of 2 to P-1 clusters, with P being the number of comparisons. 
+#'   The candidate optimal number of  clusters is indicated with a red point 
+#'   directly on the line.}
+#'   \item{Silhouette_width_plot}{A silhouette plot illustrating the silhouette
 #'   width for each comparison. The comparisons are sorted in descending order
 #'   of the silhouette width and have been coloured based on the cluster they
 #'   belong, with the clusters referring to the optimal partitioning. For
@@ -165,10 +154,8 @@
 #'   process.
 #'
 #'   The cophenetic correlation coefficient is calculated using the
-#'   \code{\link[stats:cophenetic]{cophenetic}} function alongside the
-#'   \code{\link[stats:dist]{dist}} function for selected dissimilarity measures
-#'   found in the latter and the \code{\link[stats:hclust]{hclust}} function for
-#'   selected linkage methods.
+#'   \code{\link[stats:cophenetic]{cophenetic}} function alongside the 
+#'   \code{\link[stats:hclust]{hclust}} function for selected linkage methods.
 #'
 #'  \code{comp_clustering} can be used only for a network with at least three
 #'   comparisons. Otherwise, the execution of the function will be stopped and
@@ -177,10 +164,8 @@
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso
-#'  \code{\link{connectivity_index}},
-#'  \code{\link[stats:cophenetic]{cophenetic}}, \code{\link[stats:dist]{dist}},
-#'  \code{\link[stats:hclust]{hclust}}, \code{\link{internal_measures_plot}},
-#'  \code{\link{network_comparisons}}
+#'  \code{\link[stats:cophenetic]{cophenetic}},
+#'  \code{\link[stats:hclust]{hclust}}, \code{\link{internal_measures_plot}}
 #'
 #' @references
 #' Gower J. General Coefficient of Similarity and Some of Its Properties.
@@ -199,15 +184,11 @@
 #' validation of cluster analysis.
 #' \emph{J Comput Appl Math} 1987;\bold{20}:53--65.
 #'
-#' Dunn J. Well-separated clusters and optimal fuzzy partitions.
-#' \emph{J Cybern} 1974;\bold{4}(1):95--104.
-#'
 #' @export
 comp_clustering <- function (input,
                              drug_names,
-                             rename_char = NULL,
-                             height = FALSE,
-                             num_neighb,
+                             threshold = 0.13,
+                             informative = TRUE,
                              optimal_clusters,
                              get_plots = "none",
                              label_size = 4,
@@ -216,7 +197,8 @@ comp_clustering <- function (input,
                              axis_text_size = 14,
                              axis_x_text_angle = 0,
                              legend_text_size = 13) {
-
+  
+  
   ## Check defaults
   # Dataset
   input0 <- if (any(sapply(input, typeof)[1:3] != "character")) {
@@ -235,16 +217,8 @@ comp_clustering <- function (input,
   } else {
     drug_names
   }
-
-
-  ## Create new input and name the treatments
-  input <- input0
-  input[, 2:3] <- matrix(drug_names[as.numeric(unlist(input[, 2:3]))],
-                         nrow = dim(input)[1],
-                         ncol = 2)
-
-
-  ## Defaults with 'get_plots'
+  
+  # To print or not plots
   get_plots <- if (missing(get_plots)) {
     FALSE
   } else if (!is.element(get_plots, c(TRUE, FALSE))) {
@@ -254,6 +228,13 @@ comp_clustering <- function (input,
   }
 
 
+  ## Create new input and name the treatments
+  input <- input0
+  input[, 2:3] <- matrix(drug_names[as.numeric(unlist(input[, 2:3]))],
+                         nrow = dim(input)[1],
+                         ncol = 2)
+
+
   ## Table with the variable type
   char_type <- data.frame(characteristic = colnames(input[, -c(1:3)]),
                           type = sapply(input[, -c(1:3)], typeof))
@@ -261,20 +242,28 @@ comp_clustering <- function (input,
 
 
   ## Insert 'Comparison' in the dataset (control appears second in the compar.)
-  input$Comparison <- as.character(paste(input$Arm2, "vs", input$Arm1))
+  input$Comparison <- as.character(paste0(input$Arm2, "-", input$Arm1))
 
-
+  
+  ## Unique comparisons
+  unique_comp <- unique(input$Comparison)
+  
+  
   ## Number of unique observed comparisons
-  unique_comp <- length(unique(input$Comparison))
-
-
+  num_unique_comp <- length(unique_comp)
+  
+  
+  ## Single-study comparisons
+  single_study_comp <- names(which(table(input$Comparison) == 1))
+  
+  
   ## Number of single-study comparisons
-  single_study_comp <- length(which(table(input$Comparison) == 1))
-
-
+  num_single_study_comp <- length(single_study_comp)
+  
+  
   ## Message on the number of comparisons and single-study comparisons
-  message(paste0("-", " ", unique_comp, " ", "observed comparisons (",
-                 single_study_comp, " ", "single-study comparisons)"))
+  message(paste0("-", " ", num_unique_comp, " ", "observed comparisons (",
+                 num_single_study_comp, " ", "single-study comparisons)"))
 
 
   ## Reduce dataset to trial, comparison & characteristics
@@ -283,6 +272,13 @@ comp_clustering <- function (input,
 
   ## Split 'dataset' by 'Comparison'
   split_dataset0 <- split(input_new0, f = input$Comparison)
+  
+  
+  ## Stop for networks with two comparisons only (clustering is redundant)
+  if (length(split_dataset0) < 3) {
+    stop(paste0("Clustering is redundant for two comparisons only!"),
+         call. = FALSE)
+  }
 
 
   ## Find the completely missing columns in all non-single-study comparisons
@@ -290,8 +286,8 @@ comp_clustering <- function (input,
     unique(unlist(
       lapply(split_dataset0, function(x) if (dim(x)[1] > 1)
         as.vector(which(colSums(is.na(x)) == nrow(x) |
-                          colSums(is.na(x)) == nrow(x) - 1))))) #as.vector(which(colSums(is.na(x)) == nrow(x))))))
-
+                          colSums(is.na(x)) == nrow(x) - 1))))) 
+  
 
   ## Keep the names of the completely missing columns in all comparisons
   col_all_miss_names <-
@@ -309,11 +305,6 @@ comp_clustering <- function (input,
                                                     collapse = ", ")))
 
 
-  ## Now remove these columns for *all* comparisons!
-  split_dataset <- min_split <- max_split <-
-    lapply(split_dataset0, function(x) x[!names(x) %in% col_all_miss_names])
-
-
   ## Remove these columns also from the dataset for the moment
   input_new <-
     if (length(col_all_miss) > 0) {
@@ -321,385 +312,279 @@ comp_clustering <- function (input,
     } else {
       input_new0
     }
+  
+  
+  ## 'Re-name' the multi-arm trials as their name is repeated!
+  input_new$Trial_name <- 
+    ave(input_new$Trial_name, input_new$Trial_name, 
+        FUN = function(x) if (length(x) > 1) paste0(x[1], "(", seq_along(x), ")") else x[1])
 
+  
+  ## All unique pairwise comparisons of the trials 
+  #' (in the order they appear in the dataset)  
+  #comp_trials <- 
+   # apply(t(combn(1:dim(input_new)[1], 2)), 1, paste0, collapse = "vs")
 
-  ## Address single-trial comparisons
-  for (i in 1:length(split_dataset)) {
-    if (dim(split_dataset[[i]])[1] < 2) {
-      min_split[[i]] <-
-        sapply(subset(input_new,
-                      Comparison != unique(split_dataset[[i]][, "Comparison"]))
-               [-c(1, 2)], function(x) if (typeof(x) == "double") {
-                 min(x, na.rm = TRUE)
-                 } else if (typeof(x) == "integer") {
-                   names(which.min(table(x))) # as.integer(names(which.min(table(x))))
-                   })
-      max_split[[i]] <-
-        sapply(subset(input_new,
-                      Comparison != unique(split_dataset[[i]][, "Comparison"]))
-               [-c(1, 2)], function(x) if (typeof(x) == "double") {
-                 max(x, na.rm = TRUE)
-                 } else if (typeof(x) == "integer") {
-                   names(which.max(table(x))) # as.integer(names(which.max(table(x))))
-                   })
-      split_dataset[[i]] <- rbind(split_dataset[[i]],
-                                  data.frame(Trial_name =
-                                               c(paste0("new_", i, "_min"),
-                                                 paste0("new_", i, "_max")),
-                                             Comparison =
-                                               rep(unique(split_dataset[[i]]
-                                                          [, "Comparison"]), 2),
-                                             rbind(min_split[[i]],
-                                                   max_split[[i]])))
-    }
+  
+  ## Calculate the Gower dissimilarity of all study pairs in the network
+  gower_res <- gower_distance(input = input_new)
+
+  
+  ## Re-name the columns/rows with the corresponding comparisons
+  gower_diss_mat <- as.matrix(gower_res$Dissimilarity_table)
+  colnames(gower_diss_mat) <- input_new[1:(dim(input_new)[1] - 1), 2]
+  rownames(gower_diss_mat) <- input_new[2:(dim(input_new)[1]), 2]
+  
+
+  ## Data-frame on compared comparisons, and corresponding Gower value 
+  # First turn 'gower_diss_mat' into data.frame with 'melt'
+  dataset_diss <- na.omit(melt(gower_diss_mat))
+  
+  #' Re-order the comparisons within based on the order in unique_comp
+  dataset_diss[, 1:2] <-
+    t(apply(dataset_diss[, 1:2], 1, 
+            function(x) x[order(match(x, unique_comp))]))
+  
+  # Create the comparison of comparisons using 'paste'
+  dataset_diss$comp <- apply(dataset_diss[, 1:2], 1, paste, collapse = " vs ")
+  
+  
+  ## Split 'dataset' by 'Comparison of comparisons'
+  split_dataset <- split(dataset_diss, f = dataset_diss$comp)
+  
+  
+  ## Calculate within & across comparison total dissimilarity (Dp)
+  d_p <- round(sapply(split_dataset, 
+                      function(x) sqrt(mean(na.omit(unlist(x[[3]]))^2))), 2)
+  
+  
+  ## Append the single-study comparisons (NA value)
+  if (num_single_study_comp > 0) {
+    
+    # Comparisons of single-study comparison with itself
+    name_single_study_comp <- 
+      apply(t(single_study_comp), 1, function(x) paste(x, " vs ", x))
+    
+    # Append the single-study comparison
+    d_p <- append(d_p, rep(0, length(name_single_study_comp)))
+    names(d_p)[length(split_dataset) + 1] <- name_single_study_comp
   }
-
-
-  ## Ensure that the characteristics have the correct type
-  for (i in 1:length(split_dataset)) {
-    for (j in 1:dim(input_new)[2]) { # input_new0
-      if (is.character(input_new[, j])) { # input_new0
-        split_dataset[[i]][, j] <- as.character(split_dataset[[i]][, j])
-      } else if (is.double(input_new[, j])) { # input_new0
-        split_dataset[[i]][, j] <- as.double(split_dataset[[i]][, j])
-      } else if (is.integer(input_new[, j])) { # input_new0
-        split_dataset[[i]][, j] <- as.integer(split_dataset[[i]][, j])
-      }
-    }
-  }
-
-
-  ## Stop for networks with two comparisons only (clustering is redundant)
-  if (length(split_dataset) < 3) {
-    stop(paste0("Clustering is redundant for two comparisons only!"),
-         call. = FALSE)
-  }
-
-
-  ## Calculate the Gower dissimilarity among trials by comparison
-  comparison_gower <- lapply(split_dataset,
-                             function(x) {gower_distance(input = x)})
-
-
-  ## Rename columns if indicated
-  if (!is.null(rename_char)) {
-    colnames(input_new)[rename_char[[1]] - 1] <- rename_char[[2]]
-  }
-
-
-  ## Variable on sample size
-  colnames(input_new)[with(input_new,
-                           startsWith(names(input_new),
-                                      c("sample", "Sample")))] <- "Sample size"
-
-
-  ## Prepare dataset for characteristic average contribution
-  # Get the character by comparison data-frame
-  # zero contribution means that all studies had the same value for the corresponding characteristic
-  contr_dataset0 <- as.data.frame(sapply(comparison_gower, function(x) x[[4]]))
-  rownames(contr_dataset0) <- names(input_new[, -c(1:2)])
-
-
-  # Turn into long format for ggplot2
-  suppressMessages({
-  contr_dataset <-
-    data.frame(melt(contr_dataset0),
-               char = rep(names(input_new[, -c(1:2)]), dim(contr_dataset0)[2]))
-  contr_dataset$size <-
-    ifelse(contr_dataset$value < 0.25, "low",
-           ifelse(contr_dataset$value >= 0.25 &
-                    contr_dataset$value < 0.50, "moderate",
-                  ifelse(contr_dataset$value >= 0.50 &
-                           contr_dataset$value < 0.74, "high", "very high")))
-  colnames(contr_dataset)[c(1, 3)] <- c("comparison", "characteristic")
-  })
-
-  # Get the bubble-plot
-  char_contr <-
-    ggplot(contr_dataset,
-           aes(x = characteristic,
-               y = comparison)) +
-    geom_point(aes(size = ((value - min(value)) / (max(value) - min(value)))*15,
-                   fill = size),
-               shape = 21,
-               color = "black",
-               stroke = 1.2,
-               alpha = 0.5) +
-    geom_text(aes(label = ifelse(value > 0, round(value * 100, 1), " ")),
-              size = label_size,
-              color="black",
-              fontface = "bold") +
-    labs(x = " ",
-         y = " ") +
-    scale_size_identity() +
-    scale_x_discrete(position = "top",
-                     labels = function(x) str_wrap(x, width = 2)) +
-    scale_fill_manual(name = "Contribution",
-                      breaks = c("low", "moderate", "high", "very high"),
-                      limits = c("low", "moderate", "high", "very high"),
-                      values = c("#A6D854", "#E6AB02", "#D95F02", "#E31A1C"),
-                      labels = c("Low", "Moderate", "High", "Very high")) +
-    theme_bw() +
-    guides(fill = guide_legend(override.aes = list(size = 6))) +
-    theme(panel.grid.major = element_line(linetype = 2, color = "grey"),
-          title = element_text(size = title_size, face = "bold"),
-          axis.title = element_text(size = axis_title_size, face = "bold"),
-          axis.text = element_text(size = axis_text_size),
-          axis.text.x = element_text(angle = axis_x_text_angle,
-                                     hjust =
-                                       ifelse(axis_x_text_angle == 0, 0.5, 1)),
-          legend.position = "bottom",
-          legend.text = element_text(size = legend_text_size))
-
-
-  ## Data-frame of total dissimilarity
-  total_diss0 <- data.frame(as.character(names(comparison_gower)),
-                            as.character(1:length(comparison_gower)),
-                            round(
-                              sapply(comparison_gower,
-                                     function(x)
-                                       sqrt(mean(na.omit(unlist(x[[1]]))^2))),
-                              3),
-                            stringsAsFactors = FALSE)
-  colnames(total_diss0) <- c("comparison", "id", "total_dissimilarity")
-  rownames(total_diss0) <- as.character(names(comparison_gower))
-
-
-  ## Data-frame on number of trials per comparison
-  comp_size <-
-    data.frame(total_diss0[, c(1, 3)],
-               unlist(lapply(split_dataset0, function(x) dim(x)[1])))
-  colnames(comp_size)[3] <- "num_trials"
-
+  
+  
+  ## Lower triangular matrix of within & between comparisons total dissimilarity
+  #' CHECK IF TRIANGLE INEQUALITY IS SATISFIED TO BE CONSIDERED A DISTANCE MATRIX
+  dist_mat <- matrix(NA, nrow = num_unique_comp, ncol = num_unique_comp)
+  dist_mat[lower.tri(dist_mat, diag = TRUE)] <- d_p
+  colnames(dist_mat) <- unique_comp
+  rownames(dist_mat) <- unique_comp
+  
 
   ## Prepare dataset on comparison dissimilarities and total dissimilarities
+  # Set index for 'comparison' and 'comparison of comparisons'
+  index_type <- 
+    apply(dataset_diss[!duplicated(dataset_diss[, 1:2]), ], 1, 
+          function(x) ifelse(setequal(x[1], x[2]), 
+                             "Within-comparison", "Across-comparison"))
+  
+  # Select name based on the 'index_type'
+  name_type <- ifelse(index_type == "Within-comparison", 
+                      dataset_diss[!duplicated(dataset_diss[, 1:2]), 1],
+                      dataset_diss[!duplicated(dataset_diss[, 1:2]), 4])
+  
+  # Create the data.frame
   diss_dataset <-
-    data.frame(diss = unlist(lapply(comparison_gower,
-                                    function(x) na.omit(unlist(x[[1]])))),
-               comp = rep(names(lapply(comparison_gower,
-                                       function(x) na.omit(unlist(x[[1]])))),
-                          lapply(comparison_gower,
-                                 function(x) length(na.omit(unlist(x[[1]]))))),
-               total = rep(total_diss0$total_dissimilarity,
-                           lapply(comparison_gower,
-                                  function(x) length(na.omit(unlist(x[[1]]))))),
-               comp_size =
-                 rep(comp_size$num_trials,
-                     lapply(comparison_gower,
-                            function(x) length(na.omit(unlist(x[[1]])))))
-               )
-  diss_dataset$col <- ifelse(diss_dataset$comp_size > 1, "No", "Yes")
-
-
-  ## Violin plot on dissimilarity distribution per comparison
+    data.frame(diss = unlist(lapply(split_dataset,
+                                    function(x) na.omit(unlist(x[[3]])))),
+               comp = rep(name_type, 
+                          lapply(split_dataset, function(x) dim(x)[1])),
+               index = rep(index_type, 
+                           lapply(split_dataset, function(x) dim(x)[1])),
+               total = rep(na.omit(d_p),
+                           lapply(split_dataset,
+                                  function(x) length(na.omit(unlist(x[[1]]))))))
+  rownames(diss_dataset) <- NULL
+  
+  
+  ## Violin plot on dissimilarity distribution per dissimilarity type
+  #' within-comparison & across-comparison dissimilarity
+  suppressWarnings({
   comp_diss_plot <-
     ggplot(diss_dataset,
            aes(x = reorder(comp, total, decreasing = TRUE),
                y = diss)) +
-    geom_violin(aes(fill = col),
+    geom_violin(fill = "#99CCFF",
                 trim = TRUE, #FALSE
-                alpha = 0.3) +
+                alpha = 0.2) +
     geom_boxplot(outlier.alpha = 0.3,
                  fill = "white",
                  colour = "black",
                  varwidth = TRUE) +
+    stat_boxplot(geom = 'errorbar',
+                 width = 0.2,
+                 linetype = "dashed") +
     geom_point() +
-    geom_point(data = total_diss0,
-               aes(x = comparison,
-                   y = total_dissimilarity),
+    geom_point(aes(x = reorder(comp, total, decreasing = TRUE),
+                   y = total),
                color = "red",
                size = 2.5,
                shape = 21,
                stroke = 1.5) +
-    geom_text(data = total_diss0,
-              aes(x = comparison,
-                  y = total_dissimilarity,
-                  label = sprintf("%0.2f", round(total_dissimilarity, 2))),
+    geom_text(aes(x = reorder(comp, total, decreasing = TRUE),
+                  y = total,
+                  label = sprintf("%0.2f", total)),
               hjust = 1.3, #1.2
               vjust = 0.2,
               size = label_size,
               fontface = "bold",
-              colour = "blue") +
-    geom_text(data = comp_size,
-              aes(x = comparison,
-                  y = 0,
-                  label = paste("n =", num_trials)),
-              hjust = 0.5,
-              vjust = 2.8,
-              size = label_size,
-              fontface = "plain",
-              colour = "black") +
-    stat_boxplot(geom = 'errorbar',
-                 width = 0.2,
-                 linetype = "dashed") +
-    scale_fill_manual(name = "Includes pseudostudies",
-                      breaks = c("Yes", "No"),
-                      limits = c("Yes", "No"),
-                      values = c("red", "#99CCFF"),
-                      labels = c("Yes", "No")) +
+              colour = "blue",
+              inherit.aes = FALSE) +
+    facet_wrap(.~ index, scales = "free_x") +
     labs(x = "Comparisons",
          y = "Gower's dissimilarity") +
     coord_cartesian(ylim = c(0, 1)) +
     theme_classic() +
     theme(title = element_text(size = title_size, face = "bold"),
-          axis.title = element_text(size = axis_title_size , face = "bold"),
+          axis.title = element_text(size = axis_title_size, face = "bold"),
           axis.text = element_text(size = axis_text_size),
           axis.text.x = element_text(angle = axis_x_text_angle,
                                      hjust =
                                        ifelse(axis_x_text_angle == 0, 0.5, 1)),
-          legend.position = "bottom",
-          legend.text = element_text(size = legend_text_size))
-
-  ## Sort 'total_diss' in decreasing order of total dissimilarity
-  total_diss <- total_diss0[order(total_diss0$total_dissimilarity, decreasing = TRUE),]
-
-
-  ## Linkage methods of the 'hclust' function
-  linkage_methods <- c("ward.D", "ward.D2", "single", "complete", "average",
-                       "mcquitty", "median", "centroid")
-
-
-  ## Different route depending on whether we choose informative or heuristic clustering
-  if (height == TRUE) { # Informative clustering
-
-    ## Get the clusters per comparison
-    clusters0 <-
-      do.call(rbind,
-              lapply(total_diss[, 3],
-                     function(x)
-                       ifelse(x <= 0.25, 1,
-                              ifelse(x > 0.25 & x <= 0.50, 2,
-                                     ifelse(x > 0.50 & x <= 0.75, 3, 4)))))
+          strip.text = element_text(size = axis_text_size, face = "bold"))
+  })
+  
+  
+  ## Data-frame of total dissimilarity
+  total_diss0 <- data.frame(name_type,
+                            na.omit(d_p),
+                            index_type,
+                            stringsAsFactors = FALSE)
+  colnames(total_diss0)[1:2] <- c("comparison", "total_dissimilarity")
+  rownames(total_diss0) <- NULL
+  
+  
+  ## Sort to bring all 'within-comparison' at the beginning
+  total_diss <- total_diss0[order(total_diss0$index_type, decreasing = TRUE), ]
 
 
-    ## Data-frame of comparisons and corresponding cluster
-    clusters <- data.frame(comparison = total_diss[, 1],
-                           cluster = match(clusters0, unique(clusters0)))
+  ## Different route depending on whether we choose informative decision or hierarchical clustering
+  if (informative == TRUE) { # Informative decision
+    
+    ## Prepare dataset for dissimilarity heatmap 
+    #' Keep single-study comparisons (NA values)
+    mat_new <- melt(dist_mat, na.rm = FALSE) 
+    
+    
+    ## To create the orders of the lower diagonal
+    xmin1 <- rep(seq(0.5, num_unique_comp - 0.5, 1), each = num_unique_comp)
+    xmax1 <- rep(seq(1.5, num_unique_comp + 0.5, 1), each = num_unique_comp)
+    ymin1 <- rep(seq(num_unique_comp - 0.5, 0.5, -1), each = num_unique_comp)
+    ymax1 <- ymin1
+    
+    
+    ## Create the heatmap for one network of interventions
+    informative_heatmap <-
+      ggplot(mat_new,
+             aes(factor(Var2, levels = unique_comp[1:num_unique_comp]),
+                 factor(Var1, levels = unique_comp[num_unique_comp:1]),
+                 fill = ifelse(value < threshold, "high", "poor"))) +
+      geom_tile(colour = "white",
+                alpha = 0.5) +
+      geom_text(aes(factor(Var2,
+                           levels = unique_comp[1:num_unique_comp]),
+                    factor(Var1, levels = unique_comp[num_unique_comp:1]),
+                    label = ifelse(is.na(value), "", value),
+                    fontface = "bold"),
+                size = rel(label_size)) +
+      geom_rect(aes(xmin = xmin1, xmax = xmax1, ymin = ymin1, ymax = ymax1),
+                color = "black", linewidth = 1) +
+      geom_rect(aes(xmin = ymin1, xmax = ymax1, ymin = xmin1, ymax = xmax1),
+                color = "black", linewidth = 1) +
+      scale_fill_manual(breaks = c("high", "poor"),
+                        values = c("#009E73", "#D55E00"),
+                        na.value = "white") +
+      scale_x_discrete(position = "top") +
+      labs(x = "", y = "") +
+      theme_bw() +
+      theme(legend.position = "none",
+            axis.text = element_text(size = axis_text_size))
 
+  } else { # Hierarchical agglomerative clustering
+    
+    
+    ## Stop if triangle inequality is violated
+    if (rdist::triangle_inequality(as.dist(dist_mat)) == FALSE) {
+      stop(paste0("Triangle inequality is violated!"), call. = FALSE)
+    }
+    
 
-    ## Clusters obtained
-    optimal_clusters <- length(unique(clusters0))
-
-
-    ## Barplot on total dissimilarity (Prepare the dataset with the clusters)
-    total_diss_new <- data.frame(total_diss[, c(1, 3)],
-                                 cluster = clusters[, 2])
-
-  } else { # Heuristic clustering
-
-    ## Checking further defaults
-    # Number of 'optimal' clusters (based on the internal measures)
+    ## Number of 'optimal' clusters (based on the internal measures)
     optimal_clusters <- if (missing(optimal_clusters)) {
-      2
-      #stop("The argument 'optimal_clusters' must be defined", call. = FALSE)
-    } else if ((optimal_clusters > length(unique(input$Comparison)) - 1 ||
-                optimal_clusters < 2) & length(unique(input$Comparison)) > 3) {
+      stop("The argument 'optimal_clusters' must be defined", call. = FALSE)
+    } else if ((optimal_clusters > num_unique_comp - 1 ||
+                optimal_clusters < 2) & num_unique_comp > 3) {
       stop(paste0("'optimal_clusters' must range from 2 to", " ",
-                  length(unique(input$Comparison)) - 1, "."), call. = FALSE)
-    } else if ((optimal_clusters > length(unique(input$Comparison)) - 1 ||
-                optimal_clusters < 2) & length(unique(input$Comparison)) == 3) {
-      stop(paste0("'optimal_clusters' must equal exactly 2."), call. = FALSE)
+                  num_unique_comp - 1, "."), call. = FALSE)
+    } else if ((optimal_clusters > num_unique_comp - 1 ||
+                optimal_clusters < 2) & num_unique_comp == 3) {
+      stop(paste0("Maximum two clusters are possible."), call. = FALSE)
     } else {
       optimal_clusters
     }
 
 
-    ## Default (to be used in 'connectivity_index')
-    num_neighb <- if (missing(num_neighb)) {
-      round(length(split_dataset) / 2, 0)
-    } else if (num_neighb > length(split_dataset) || num_neighb < 2) {
-      stop(paste0("'num_neighb' must range from 2 to", " ",
-                  length(split_dataset) - 1, "."), call. = FALSE)
-    } else {
-      num_neighb
-    }
+    ## Linkage methods of the 'hclust' function
+    linkage_methods <- c("ward.D", "ward.D2", "single", "complete", "average",
+                         "mcquitty", "median", "centroid")
+
+    
+    ## Obtain results on cophenetic correlation coefficient
+    table_coph <- 
+      data.frame(linkage_methods,
+                 results = 
+                   sapply(linkage_methods, function(x) 
+                     round(cor(as.dist(dist_mat), 
+                               cophenetic(hclust(as.dist(dist_mat), 
+                                                 method = x))), 3)))
 
 
-    ## Distance methods of the 'dist' function
-    # Canberra is not defined when the denominator is zero
-    distance_methods <- if (sum(total_diss[, 3] == 0) < 2) {
-      c("euclidean", "canberra")
-    } else {
-      "euclidean"
-    }
-
-
-    ## Possible combinations of 'distance_methods' with 'linkage_methods'
-    # Data-frame of possible combinations
-    poss_comb <- expand.grid(distance = distance_methods,
-                             linkage = linkage_methods,
-                             stringsAsFactors = FALSE)
-
-    # Obtain results on cophenetic correlation coefficient
-    table_coph <-
-      data.frame(poss_comb,
-                 results =
-                   mapply(function(x, y)
-                     round(cor(dist(total_diss[, 3], method = x, p = 3),
-                               cophenetic(hclust(dist(total_diss[, 3],
-                                                      method = x, p = 3),
-                                                 method = y))), 3),
-                     x = as.character(poss_comb$distance),
-                     y = as.character(poss_comb$linkage)))
-
-
-    # Bring both tables together
+    ## Sort in decreasing order
     table_cophenetic <-
       table_coph[order(table_coph$results, decreasing = TRUE), ]
 
-
-    ## Select the distance and linkage methods for the max cophenetic coefficient
-    optimal_dist_link <- subset(table_cophenetic, results == max(results))
-
-
-    ## When more distances or linkages are proper for the same cophenetic coeff.
-    if (length(unique(optimal_dist_link[, 1])) > 1) {
-      optimal_dist <- optimal_dist_link[1, 1]
-      optimal_link <-
-        optimal_dist_link[optimal_dist_link$distance == optimal_dist, 2][1]
-    } else if (length(unique(optimal_dist_link[, 1])) == 1) {
-      optimal_dist <- unique(optimal_dist_link[, 1])
-      optimal_link <- optimal_dist_link[1, 2]
-    } else if (dim(optimal_dist_link[, 1])[1] == 1) {
-      optimal_dist <- optimal_dist_link[1]
-      optimal_link <- optimal_dist_link[2]
+    
+    ## Select the linkage method for the maximum cophenetic coefficient
+    optimal_link <- if (length(table_cophenetic[, 1]) > 1) {
+      subset(table_cophenetic, results == max(results))[1, 1]
+    } else {
+      subset(table_cophenetic, results == max(results))
     }
 
 
     ## Report the optimal dissimilarity measure and linkage method
-    message(paste("- Cophenetic coefficient:", max(table_cophenetic[, 3])))
-    message(paste("- Optimal dissimilarity measure:", optimal_dist))
+    message(paste("- Cophenetic coefficient:", max(table_cophenetic[, 2])))
     message(paste("- Optimal linkage method:", optimal_link))
 
 
-    ## Dissimilarity matrix of comparisons for the optimal dissimilarity measure
-    data_cluster <-
-      dist(matrix(total_diss[, 3], dimnames = list(rownames(total_diss))),
-           method = optimal_dist)
-
-
-    ## Table on internal measures results for all combinations
+    ## Table on average silhouette width results for all combinations
     table_internal_measures <-
-      internal_measures_plot(input = data_cluster,
-                             num_neighb = num_neighb,
+      internal_measures_plot(input = as.dist(dist_mat),
                              optimal_link = optimal_link)$Table_internal_measures
 
 
     ## Panel of internal measures
     internal_measures_panel <- if (dim(table_internal_measures)[1] > 1) {
-      internal_measures_plot(input = data_cluster,
-                             num_neighb = num_neighb,
-                             optimal_link = optimal_link)$Internal_measures_panel
+    internal_measures_plot(input = as.dist(dist_mat),
+                           optimal_link = optimal_link)$Internal_measures_panel
     } else {
-      a <- "At least four comparisons are needed to create a panel with plots"
-      b <- "on internal measures for a range of clusters!"
+      a <- "At least four comparisons are needed to create the profile plot"
+      b <- "for a range of clusters!"
       message(paste(a, b))
     }
 
 
     ## Silhouette width per comparison for selected cluster and linkage method
     silhouette_comp <-
-      silhouette_index(input = data_cluster,
+      silhouette_index(input = as.dist(dist_mat),
                        method = optimal_link,
                        num_clusters = optimal_clusters)$silhoutte_comp
 
@@ -710,17 +595,11 @@ comp_clustering <- function (input,
 
     ## Average silhouette width
     average_silhouette <-
-      silhouette_index(input = data_cluster,
+      silhouette_index(input = as.dist(dist_mat),
                        method = optimal_link,
                        num_clusters = optimal_clusters)$silhoutte_width
 
-
-    ## Barplot on total dissimilarity
-    # Prepare the dataset with the clusters
-    total_diss_new <- data.frame(total_diss[, c(1, 3)],
-                                 cluster = silhouette_comp[, 2])
-
-
+    
     ## Plot silhouette by comparison and cluster
     # SOS: Because the bars are order by silhouette value, the colour order is
     # not the same with that in 'Total diss bar plot', but both plots share the
@@ -736,14 +615,14 @@ comp_clustering <- function (input,
                  colour = "black",
                  linewidth = 0.6,
                  linetype = 3) +
-      geom_text(aes(label = sprintf("%0.2f",round(silhouette, 2))),
+      geom_text(aes(label = sprintf("%0.2f", round(silhouette, 2))),
                 hjust = 1.1,
                 vjust = 0.2,
                 size = label_size,
                 colour = "black") +
       geom_text(aes(x = average_silhouette,
                     y = 0.44,
-                    label = sprintf("%0.2f",round(average_silhouette, 2))),
+                    label = sprintf("%0.2f", round(average_silhouette, 2))),
                 hjust = 0.5,
                 vjust = 0.0,
                 colour = "blue",
@@ -754,48 +633,25 @@ comp_clustering <- function (input,
            fill = "Cluster") +
       theme_classic() +
       guides(fill = guide_legend(nrow = 1)) +
-      scale_fill_discrete(limits = levels(factor(total_diss_new$cluster)),
-                          labels = factor(1:max(total_diss_new$cluster))) +
+      scale_fill_discrete(limits = levels(factor(silhouette_comp$cluster)),
+                          labels = factor(1:max(silhouette_comp$cluster))) +
       theme(title = element_text(size = title_size, face = "bold"),
             axis.title = element_text(size = axis_title_size),
             axis.text = element_text(size = axis_text_size),
             legend.position = "bottom",
             legend.text = element_text(size = legend_text_size),
             plot.caption = element_text(size = 10, hjust = 0.0))
+    
+    
+    ## Data-frame with the cluster per comparison
+    cluster_comp0 <- data.frame(silhouette_comp[, 1:3])
+    colnames(cluster_comp0)[1] <- c("comparison")
+    
+    
+    ## Sort 'cluster' in decreasing order of cluster
+    cluster_comp <- cluster_comp0[order(cluster_comp0$cluster, 
+                                        decreasing = FALSE), ]
   }
-
-
-  ## Barplot on total dissimilarity
-  # Create the plot
-  total_diss_plot <-
-    ggplot(total_diss_new,
-           aes(x = reorder(factor(comparison),
-                           total_dissimilarity,
-                           decreasing = TRUE),
-               y = round(total_dissimilarity, 2),
-               fill = factor(cluster))) +
-    geom_bar(stat = "identity") +
-    geom_text(aes(label = sprintf("%0.2f", round(total_dissimilarity, 2))),
-              hjust = 0.5,
-              vjust = -0.5,
-              size = label_size,
-              colour = "black") +
-    labs(x = "Comparisons",
-         y = "Total dissimilarity",
-         fill = "Cluster") +
-    theme_classic() +
-    coord_cartesian(ylim = c(0, 1)) +
-    guides(fill = guide_legend(nrow = 1)) +
-    scale_fill_discrete(limits = levels(factor(total_diss_new$cluster)),
-                        labels = factor(1:max(total_diss_new$cluster))) +
-    theme(title = element_text(size = title_size, face = "bold"),
-          axis.title = element_text(size = axis_title_size),
-          axis.text = element_text(size = axis_text_size),
-          axis.text.x = element_text(angle = axis_x_text_angle,
-                                     hjust =
-                                       ifelse(axis_x_text_angle == 0, 0.5, 1)),
-          legend.position = "bottom",
-          legend.text = element_text(size = legend_text_size))
 
 
   ## Percentage total missing data
@@ -805,45 +661,37 @@ comp_clustering <- function (input,
                 dim(input_new0[, -c(1, 2)])[2])) * 100, 2)
 
 
-  ## Data-frame with the colour and cluster per comparison
-  cluster_color <- data.frame(comparison = total_diss_new[, 1],
-                              cluster = total_diss_new[, 3],
-                              colour = scales::hue_pal()(optimal_clusters)[
-                                total_diss_new[, 3]])
-
-
   ## Collect the results
   # First without the table with the internal measure results
-  collect0 <- list(Total_dissimilarity = total_diss,
-                   Types_used = char_type,
-                   Total_missing = paste0(total_mod, "%"),
-                   Cluster_color = cluster_color)
+  collect0 <- 
+    list(Trials_diss_table = round(gower_res$Dissimilarity_table, 3),
+         Comparisons_diss_table = as.dist(dist_mat),
+         Total_dissimilarity = total_diss,
+         Types_used = char_type,
+         Total_missing = paste0(total_mod, "%"))
 
-  # Define the results based on the argument 'height'
-  collect <- if (height == TRUE) {
+  # Define the results based on the argument 'informative'
+  collect <- if (informative == TRUE) {
     collect0
   } else {
-    append(collect0, list(Dissimilarity_table = round(data_cluster, 3),
-                          Table_internal_measures = table_internal_measures,
-                          Table_cophenetic_coefficient = table_cophenetic,
-                          Optimal_dist = optimal_dist,
-                          Optimal_link = optimal_link))
+    append(collect0, 
+           list(Table_average_silhouette_width = table_internal_measures,
+                Table_cophenetic_coefficient = table_cophenetic,
+                Optimal_link = optimal_link,
+                Cluster_comp = cluster_comp))
   }
 
 
   ## Report results based on 'get_plots'
   results <- if (get_plots == FALSE) {
     collect
-  } else if (height == FALSE & get_plots == TRUE) { #& !is.null(internal_measures_panel)) {
+  } else if (informative == FALSE & get_plots == TRUE) { 
     append(collect, list(Dissimilarity_comparison = comp_diss_plot,
-                         Characteristics_contribution = char_contr,
-                         Total_dissimilarity_plot = total_diss_plot,
-                         Internal_measures_panel = internal_measures_panel,
-                         Silhouette_comparisons = plot_comp_silhouette))
-  } else if (height == TRUE & get_plots == TRUE) {
+                         Profile_plot = internal_measures_panel,
+                         Silhouette_width_plot = plot_comp_silhouette))
+  } else if (informative == TRUE & get_plots == TRUE) {
     append(collect, list(Dissimilarity_comparison = comp_diss_plot,
-                         Characteristics_contribution = char_contr,
-                         Total_dissimilarity_plot = total_diss_plot))
+                         Informative_heatmap = informative_heatmap))
   }
 
   class(results) <- "comp_clustering"
