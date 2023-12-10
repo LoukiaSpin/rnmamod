@@ -4,7 +4,7 @@
 #' @description
 #'   \code{dendro_heatmap} creates a dendrogram alongside the heatmap of
 #'   Gower dissimilarities among the trials in the network for a specific 
-#'   linkage method and number of clusters.
+#'   linkage method and number of clusters. T
 #'
 #' @param input An object of S3 class \code{\link{comp_clustering}}. See 'Value'
 #'   in \code{\link{comp_clustering}}.
@@ -15,7 +15,8 @@
 #'   \href{https://CRAN.R-project.org/package=heatmaply}{heatmaply} to create a
 #'   cluster heatmap for a selected linkage method and number of clusters. The
 #'   function uses different colours to indicate the clusters directly on the
-#'   dendrogram. 
+#'   dendrogram. The names of the leaves refer to the trials and corresponding 
+#'   pairwise comparison.
 #'
 #'  @details
 #'    The function inherits the linkage method and number of optimal clusters by 
