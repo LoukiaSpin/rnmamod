@@ -8,9 +8,9 @@
 internal_measures_plot(
   input,
   optimal_link,
-  label_size,
-  axis_title_size,
-  axis_text_size
+  label_size = 4,
+  axis_title_size = 14,
+  axis_text_size = 14
 )
 }
 \arguments{
