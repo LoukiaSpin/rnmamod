@@ -28,7 +28,7 @@
 #'   trials minus one.
 #' @param get_plots Logical with values \code{TRUE} for returning all plots and
 #'   \code{FALSE} for concealing the plots. The default argument is
-#'   \code{FALSE}.
+#'   \code{TRUE}.
 #' @param label_size A positive integer for the font size of labels in the
 #'   violin plot for the study dissimilarities per comparison and comparison
 #'   between comparisons. \code{label_size} determines the size argument found
@@ -90,7 +90,7 @@
 #'   \item{Total_missing}{The percentage of missing cases in the dataset,
 #'   calculated as the ratio of total missing cases to the product of the number
 #'   of studies with the number of characteristics.}
-#'   \item{Cluster_comp}{A data-frame on the comparisons and the cluster they
+#'   \item{Cluster_comp}{A data-frame on the studies and the cluster they
 #'   belong (based on the argument \code{optimal_clusters}.}
 #'   \item{Table_average_silhouette_width}{A data-frame with the average
 #'   silhouette width for a range of 2 to P-1 trials, with P being the number
@@ -167,7 +167,7 @@
 #'   \code{\link[stats:cophenetic]{cophenetic}} function alongside the
 #'   \code{\link[stats:hclust]{hclust}} function for selected linkage methods.
 #'
-#'  \code{comp_clustering} can be used only for a network with at least three
+#'   \code{comp_clustering} can be used only for a network with at least three
 #'   comparisons. Otherwise, the execution of the function will be stopped and
 #'   an error message will be printed on the R console.
 #'
@@ -202,7 +202,7 @@ comp_clustering <- function (input,
                              threshold,
                              informative = TRUE,
                              optimal_clusters,
-                             get_plots = "none",
+                             get_plots = TRUE,
                              label_size = 4,
                              title_size = 14,
                              axis_title_size = 14,
@@ -233,7 +233,7 @@ comp_clustering <- function (input,
 
   # To print or not plots
   get_plots <- if (missing(get_plots)) {
-    FALSE
+    TRUE
   } else if (!is.element(get_plots, c(TRUE, FALSE))) {
     stop("'get_plots is logical.", call. = FALSE)
   } else {
@@ -621,6 +621,7 @@ comp_clustering <- function (input,
                      round(cor(as.dist(gower_diss_mat),
                                cophenetic(hclust(as.dist(gower_diss_mat),
                                                  method = x))), 3)))
+    rownames(table_coph) <- NULL
 
 
     ## Sort in decreasing order
@@ -671,11 +672,6 @@ comp_clustering <- function (input,
       factor(silhouette_res$cluster,
              levels = sort(unique(silhouette_res$cluster)))
 
-    # Create a small dataset on the cluster-specific average silhouette width
-    #cluster_ave_sil_width <-
-    #  aggregate(silhouette_res$sil_width, list(silhouette_res$cluster), mean)
-    #rep(cluster_ave_sil_width$x, table(silhouette_res$cluster))
-
     # Overall average silhouette width
     average_silhouette <- mean(silhouette_res$sil_width)
 
@@ -683,9 +679,10 @@ comp_clustering <- function (input,
     plot_comp_silhouette <-
       ggplot(silhouette_res,
              aes(x = sil_width,
-                 y = reorder(study, sil_width),
-                 group = reorder(factor(cluster), sil_width),
-                 fill = factor(cluster))) +
+                 y = reorder(reorder(study, sil_width), as.numeric(cluster)),
+                 #group = reorder(factor(cluster), sil_width),
+                 #group = cluster,
+                 fill = cluster)) +
       geom_bar(stat = "identity") +
       geom_vline(xintercept = average_silhouette,
                  colour = "black",
@@ -709,8 +706,8 @@ comp_clustering <- function (input,
            fill = "Cluster") +
       theme_classic() +
       guides(fill = guide_legend(nrow = 1)) +
-      #scale_fill_discrete(limits = levels(factor(total_diss_new$cluster)),
-      #                    labels = factor(1:max(total_diss_new$cluster))) +
+      #scale_fill_discrete(limits = levels(silhouette_res$cluster),
+      #                    labels = levels(silhouette_res$cluster)) +
       theme(title = element_text(size = title_size, face = "bold"),
             axis.title = element_text(size = axis_title_size),
             axis.text = element_text(size = axis_text_size),
@@ -750,8 +747,7 @@ comp_clustering <- function (input,
 
 
     ## Data-frame with the cluster per comparison
-    cluster_comp <- data_barplot[, 1:2]
-   colnames(cluster_comp)[1] <- "trial-comparison"
+    cluster_comp <- silhouette_res[, c(4, 1)]
   }
 
 

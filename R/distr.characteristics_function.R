@@ -111,7 +111,7 @@ distr_characteristics <- function (input,
   
   
   ## Insert 'Comparison' in the dataset (control appears second in the compar.)
-  input$Comparison <- as.character(paste(input$Arm2, "vs", input$Arm1))
+  input$Comparison <- as.character(paste0(input$Arm2, "-", input$Arm1))
   
   
   ## Reduce dataset to trial, comparison & characteristics
@@ -158,52 +158,6 @@ distr_characteristics <- function (input,
     }
   
   
-  ## Address single-trial comparisons 
-  for (i in 1:length(split_dataset)) {
-    if (dim(split_dataset[[i]])[1] < 2) { 
-      min_split[[i]] <- 
-        sapply(subset(input_new, 
-                      Comparison != unique(split_dataset[[i]][, "Comparison"]))
-               [-c(1, 2)], function(x) if (typeof(x) == "double") {   
-                 min(x, na.rm = TRUE)
-               } else if (typeof(x) == "integer") {
-                 names(which.min(table(x))) # as.integer(names(which.min(table(x))))
-               })
-      max_split[[i]] <- 
-        sapply(subset(input_new, 
-                      Comparison != unique(split_dataset[[i]][, "Comparison"]))
-               [-c(1, 2)], function(x) if (typeof(x) == "double") {  
-                 max(x, na.rm = TRUE)
-               } else if (typeof(x) == "integer") {
-                 names(which.max(table(x))) # as.integer(names(which.max(table(x))))
-               })
-      split_dataset[[i]] <- rbind(split_dataset[[i]], 
-                                  data.frame(Trial_name = 
-                                               c(paste0("new_", i, "_min"), 
-                                                 paste0("new_", i, "_max")), 
-                                             Comparison = 
-                                               rep(unique(split_dataset[[i]]
-                                                          [, "Comparison"]), 2),
-                                             rbind(min_split[[i]], 
-                                                   max_split[[i]])))
-    } 
-  }
-  
-  
-  ## Ensure that the characteristics have the correct type
-  for (i in 1:length(split_dataset)) {
-    for (j in 1:dim(input_new0)[2]) {
-      if (is.character(input_new0[, j])) {
-        split_dataset[[i]][, j] <- as.character(split_dataset[[i]][, j])
-      } else if (is.double(input_new0[, j])) {
-        split_dataset[[i]][, j] <- as.double(split_dataset[[i]][, j])
-      } else if (is.integer(input_new0[, j])) {
-        split_dataset[[i]][, j] <- as.integer(split_dataset[[i]][, j])
-      } 
-    }
-  }
-  
-  
   ## Bind all lists into a data-frame
   dataset_new <- do.call(rbind, split_dataset)
   
@@ -231,17 +185,17 @@ distr_characteristics <- function (input,
   if (!is.null(cluster)) {
     
     ## Comparisons with their cluster
-    clustered_comp <- cluster$Cluster_color[, -3]
+    clustered_comp <- cluster$Cluster_comp
     
     
     ## Include a column with the cluster of the comparisons
-    # Copy-paste the comparisons to a new column
-    dataset_new$`Comparison cluster` <- dataset_new$Comparison
+    # Copy-paste the trials to a new column
+    dataset_new$`Studies cluster` <- dataset_new$Trial_name
     
-    # Match the comparisons with the cluster
+    # Match the study with the cluster
     for (i in 1:dim(dataset_new)[1]) {
-      dataset_new$`Comparison cluster`[
-        dataset_new$`Comparison cluster` == clustered_comp[i, 1]] <- 
+      dataset_new$`Studies cluster`[
+        dataset_new$`Studies cluster` == clustered_comp[i, 1]] <- 
         clustered_comp[i, 2]
     }
 
@@ -250,7 +204,7 @@ distr_characteristics <- function (input,
     # Double type
     double_type <- function (yvar) {
       ggplot(subset(dataset_new, !is.na(dataset_new[, yvar])),
-             aes_(x = ~`Comparison cluster`,
+             aes_(x = ~`Studies cluster`,
                   y = as.name(yvar))) +
         geom_violin(fill = "#99CCFF",
                     trim = FALSE,
@@ -291,13 +245,13 @@ distr_characteristics <- function (input,
       
       # Get the bar plot
       ggplot(subset(dataset_new, !is.na(dataset_new[, yvar])),
-             aes_(x = ~`Comparison cluster`)) +
+             aes_(x = ~`Studies cluster`)) +
         geom_bar(stat = "count",
                  aes_(fill = as.name(yvar))) +
-        geom_text(data = data.frame(prop.table(table(dataset_new[, "Comparison cluster"], 
+        geom_text(data = data.frame(prop.table(table(dataset_new[, "Studies cluster"], 
                                                      dataset_new[, yvar]), 
                                                margin = 1),
-                                    count = table(dataset_new[, "Comparison cluster"], 
+                                    count = table(dataset_new[, "Studies cluster"], 
                                                   dataset_new[, yvar])),
                   inherit.aes = FALSE,
                   aes_(x = ~Var1, 
@@ -345,7 +299,7 @@ distr_characteristics <- function (input,
                      paste0("Cluster", " ", x, ": ", 
                             round(
                               prop.table(
-                                table(dataset_new$`Comparison cluster`))[x] * 
+                                table(dataset_new$`Studies cluster`))[x] * 
                                 100, 1), "%", " "))))
     
   } else {

@@ -11,7 +11,7 @@ comp_clustering(
   threshold,
   informative = TRUE,
   optimal_clusters,
-  get_plots = "none",
+  get_plots = TRUE,
   label_size = 4,
   title_size = 14,
   axis_title_size = 14,
@@ -48,7 +48,7 @@ trials minus one.}
 
 \item{get_plots}{Logical with values \code{TRUE} for returning all plots and
 \code{FALSE} for concealing the plots. The default argument is
-\code{FALSE}.}
+\code{TRUE}.}
 
 \item{label_size}{A positive integer for the font size of labels in the
 violin plot for the study dissimilarities per comparison and comparison
@@ -117,7 +117,7 @@ Initially, \code{comp_clustering} prints on the console the following
   \item{Total_missing}{The percentage of missing cases in the dataset,
   calculated as the ratio of total missing cases to the product of the number
   of studies with the number of characteristics.}
-  \item{Cluster_comp}{A data-frame on the comparisons and the cluster they
+  \item{Cluster_comp}{A data-frame on the studies and the cluster they
   belong (based on the argument \code{optimal_clusters}.}
   \item{Table_average_silhouette_width}{A data-frame with the average
   silhouette width for a range of 2 to P-1 trials, with P being the number
@@ -200,7 +200,7 @@ The correct type mode of columns in \code{input} must be ensured to use
   \code{\link[stats:cophenetic]{cophenetic}} function alongside the
   \code{\link[stats:hclust]{hclust}} function for selected linkage methods.
 
- \code{comp_clustering} can be used only for a network with at least three
+  \code{comp_clustering} can be used only for a network with at least three
   comparisons. Otherwise, the execution of the function will be stopped and
   an error message will be printed on the R console.
 }
