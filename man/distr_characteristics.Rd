@@ -10,78 +10,97 @@ distr_characteristics(
   drug_names,
   rename_char = NULL,
   cluster = NULL,
-  label_size = 3,
+  label_size = 4,
+  title_size = 14,
+  axis_title_size = 14,
   axis_text_size = 14,
-  axis_x_text_angle = 0
+  axis_x_text_angle = 0,
+  legend_text_size = 13
 )
 }
 \arguments{
 \item{input}{A data-frame in the long arm-based format. Two-arm trials occupy
 one row in the data-frame. Multi-arm trials occupy as many rows as the
-number of possible comparisons among the interventions. The first three 
-columns refer to the trial name, first and second arm of the comparison 
-(their identifier number), respectively. The remaining columns refer to 
+number of possible comparisons among the interventions. The first three
+columns refer to the trial name, first and second arm of the comparison
+(their identifier number), respectively. The remaining columns refer to
 summary characteristics. See 'Details' for specifying the columns.}
 
 \item{drug_names}{A vector of labels with the name of the interventions
 in the order they appear in the argument \code{input}.}
 
-\item{rename_char}{A list of two elements: (i) a numeric vector with the 
-position of the characteristics in \code{input}, and (ii) a character 
-vector with the names of the characteristics, as they are wished to 
+\item{rename_char}{A list of two elements: (i) a numeric vector with the
+position of the characteristics in \code{input}, and (ii) a character
+vector with the names of the characteristics, as they are wished to
 appear in the title of the plots. This argument is optional, in case the
 user wants to control the appearance of the titles.}
 
 \item{cluster}{An object of S3 class \code{\link{comp_clustering}} that has
-information on the cluster of each comparison. See 'Value' in 
-\code{\link{comp_clustering}}. If \code{cluster} is not provided, the 
-function presents the distribution of characteristics per comparison; 
+information on the cluster of each comparison. See 'Value' in
+\code{\link{comp_clustering}}. If \code{cluster} is not provided, the
+function presents the distribution of characteristics per comparison;
 otherwise per cluster. In the latter, the function prints a table with the
 comparisons and the corresponding cluster.}
 
-\item{label_size}{A positive integer for the font size of labels in the bar 
-plots. \code{label_size} determines the size argument found in the geom's 
-aesthetic properties in the R-package 
+\item{label_size}{A positive integer for the font size of labels in the
+plots. \code{label_size} determines the size argument found in the geom's
+aesthetic properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
-\item{axis_text_size}{A positive integer for the font size of axis text in 
-the plots. \code{axis_text_size} determines the axis.text argument found in 
-the theme's properties in the R-package 
+\item{title_size}{A positive integer for the font size of legend title in
+the stacked barplot on the percentage studies of each comparison found in
+the clusters. \code{title_size} determines the title argument
+found in the theme's properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
+
+\item{axis_title_size}{A positive integer for the font size of axis title in
+the plots. \code{axis_title_size} determines the axis.title argument found
+in the theme's properties in the
+R-package \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
+
+\item{axis_text_size}{A positive integer for the font size of axis text in
+the plots. \code{axis_text_size} determines the axis.text argument found in
+the theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
-\item{axis_x_text_angle}{A positive integer for the angle of axis text in 
-the plots. \code{axis_text_angle} determines the axis.text.x argument found 
-in the theme's properties in the R-package 
+\item{axis_x_text_angle}{A positive integer for the angle of axis text in
+the plots. \code{axis_text_angle} determines the axis.text.x argument found
+in the theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
+
+\item{legend_text_size}{A positive integer for the font size of legend text
+in the plots. \code{legend_text_size} determines the legend.text argument
+found in the theme's properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
 }
 \value{
-\code{distr_characteristics} returns a list of plots using the proper plot 
-  (violin or bar plot) for each characteristic. The size of the dots in the 
-  violin plot (with amalgamated box plots and dots) are proportional to the 
-  total sample size of the study: the large the sample size of the study, the 
+\code{distr_characteristics} returns a list of plots using the proper plot
+  (violin or bar plot) for each characteristic. The size of the dots in the
+  violin plot (with amalgamated box plots and dots) are proportional to the
+  total sample size of the study: the large the sample size of the study, the
   larger the size of the corresponding point.
 }
 \description{
-\code{distr_characteristics} uses violin and bar plots to visualise the 
+\code{distr_characteristics} uses violin and bar plots to visualise the
   distribution of each characteristic in the dataset either per comparison
   or cluster of comparisons.
 }
 \details{
 The correct type mode of columns in \code{input} must be ensured to use
-  the function \code{distr_characteristics}. The first three columns 
-  referring to the trial name, first and second arm of the comparison, 
-  respectively, must be \strong{character}. The remaining columns referring 
-  to the characteristics must be \strong{double} or \strong{integer} 
-  depending on whether the corresponding characteristic refers to a 
-  quantitative or qualitative variable. The type mode of each column is 
-  assessed by \code{distr_characteristics} using the base function 
+  the function \code{distr_characteristics}. The first three columns
+  referring to the trial name, first and second arm of the comparison,
+  respectively, must be \strong{character}. The remaining columns referring
+  to the characteristics must be \strong{double} or \strong{integer}
+  depending on whether the corresponding characteristic refers to a
+  quantitative or qualitative variable. The type mode of each column is
+  assessed by \code{distr_characteristics} using the base function
   \code{typeof}.
-  
-  The interventions should be sorted in an ascending order of their 
-  identifier number within the trials so that the first treatment column 
-  (second column in \code{input}) is the control arm for every pairwise 
-  comparison. This is important to ensure consistency in the order of 
-  interventions within the comparisons obtained from the other related 
+
+  The interventions should be sorted in an ascending order of their
+  identifier number within the trials so that the first treatment column
+  (second column in \code{input}) is the control arm for every pairwise
+  comparison. This is important to ensure consistency in the order of
+  interventions within the comparisons obtained from the other related
   functions.
 }
 \seealso{
