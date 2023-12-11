@@ -153,7 +153,7 @@ internal_measures_plot <- function (input,
                 colour = "black",
                 fontface = "bold") +
       labs(x = "Number of clusters",
-           y = "Silhouette width") +
+           y = "Overall average silhouette width") +
       theme_classic() +
       theme(axis.title = element_text(size = axis_title_size, face = "bold"),
             axis.text = element_text(size = axis_text_size ))
