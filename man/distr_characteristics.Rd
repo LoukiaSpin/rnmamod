@@ -48,8 +48,7 @@ aesthetic properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).}
 
 \item{title_size}{A positive integer for the font size of legend title in
-the stacked barplot on the percentage studies of each comparison found in
-the clusters. \code{title_size} determines the title argument
+the plots. \code{title_size} determines the title argument
 found in the theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
 

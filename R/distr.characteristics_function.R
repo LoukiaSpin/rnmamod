@@ -30,8 +30,7 @@
 #'   aesthetic properties in the R-package
 #'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}).
 #' @param title_size A positive integer for the font size of legend title in
-#'   the stacked barplot on the percentage studies of each comparison found in
-#'   the clusters. \code{title_size} determines the title argument
+#'   the plots. \code{title_size} determines the title argument
 #'   found in the theme's properties in the R-package
 #'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #' @param axis_title_size A positive integer for the font size of axis title in
@@ -124,6 +123,12 @@ distr_characteristics <- function (input,
   input[, 2:3] <- matrix(drug_names[as.numeric(unlist(input[, 2:3]))],
                          nrow = dim(input)[1],
                          ncol = 2)
+
+
+  ## 'Re-name' the multi-arm trials as their name is repeated!
+  input$Trial_name <-
+    ave(input$Trial_name, input$Trial_name,
+        FUN = function(x) if (length(x) > 1) paste0(x[1], "(", seq_along(x), ")") else x[1])
 
 
   ## Insert 'Comparison' in the dataset (control appears second in the compar.)
@@ -295,7 +300,7 @@ distr_characteristics <- function (input,
               ),
               legend.position = "bottom",
               legend.direction = "horizontal",
-              legend.text = element_text(legend_text_size),
+              legend.text = element_text(size = legend_text_size),
               legend.title = element_text(size = title_size, face = "bold"))
     }
 
@@ -390,7 +395,7 @@ distr_characteristics <- function (input,
              fill = "Categories") +
         theme_classic() +
         ggtitle(as.name(yvar)) +
-        theme(plot.title = element_text(face = "bold"),
+        theme(plot.title = element_text(size = title_size, face = "bold"),
               axis.title = element_text(size = axis_title_size, face = "bold"),
               axis.text = element_text(size = axis_text_size),
               axis.text.x = element_text(angle = axis_x_text_angle,
