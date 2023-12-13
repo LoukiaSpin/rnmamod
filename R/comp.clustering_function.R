@@ -660,7 +660,8 @@ comp_clustering <- function (input,
     ## Plot silhouette for selected 'optimal_clusters'
     # Prepare dataset with silhouette width results
     silhouette_res <- 
-      data.frame(silhouette(cutree(hclust(as.dist(gower_diss_mat)), 
+      data.frame(silhouette(cutree(hclust(as.dist(gower_diss_mat), 
+                                          method = optimal_link), 
                                    k = optimal_clusters), 
                             as.dist(gower_diss_mat)),
                  study = input_new[, 1])
