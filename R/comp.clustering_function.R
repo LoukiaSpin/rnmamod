@@ -757,7 +757,7 @@ comp_clustering <- function (input,
 
 
     ## Data-frame with the cluster per comparison
-    cluster_comp <- silhouette_res[, c(4, 1)]
+    cluster_comp <- silhouette_res[, c(4, 1, 3)]
   }
 
 
