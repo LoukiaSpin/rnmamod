@@ -5,11 +5,21 @@
 \title{Dendrogram with amalgamated heatmap
 (Comparisons' comparability for transitivity evaluation)}
 \usage{
-dendro_heatmap(input)
+dendro_heatmap(input, label_size = 12, axis_text_size = 10)
 }
 \arguments{
 \item{input}{An object of S3 class \code{\link{comp_clustering}}. See 'Value'
 in \code{\link{comp_clustering}}.}
+
+\item{label_size}{A positive integer for the font size of the heatmap 
+elements. \code{label_size} determines the size argument found in the 
+geom's aesthetic properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
+
+\item{axis_text_size}{A positive integer for the font size of row and column 
+names of the heatmap. \code{axis_text_size} determines the axis.text
+argument found in the theme's properties in the R-package 
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
 }
 \value{
 \code{dendro_heatmap} uses the \code{\link[heatmaply:heatmaply]{heatmaply}}
