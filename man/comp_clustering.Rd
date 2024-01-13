@@ -167,9 +167,9 @@ Initially, \code{comp_clustering} prints on the console the following
 }
 \description{
 \code{comp_clustering} hosts a toolkit of functions that facilitates
-  conducting, visualising and evaluating informative decision and
-  hierarchical agglomerative of observed comparisons of interventions for a
-  specific network and set of characteristics that act as effect modifiers.
+  conducting, visualising and evaluating hierarchical agglomerative of
+  observed comparisons of interventions for a specific network and set of
+  characteristics that act as effect modifiers.
 }
 \details{
 The correct type mode of columns in \code{input} must be ensured to use

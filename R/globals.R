@@ -3,6 +3,7 @@
 #'   stats
 #'
 #' @importFrom cluster silhouette
+#' @importFrom dendextend set
 #' @importFrom dplyr select starts_with ends_with %>%
 #' @importFrom fdrtool rhalfnorm
 #' @importFrom MASS fractions
@@ -17,7 +18,7 @@
 #' @importFrom netmeta netconnection
 #' @importFrom reshape2 melt
 #' @importFrom R2jags jags autojags
-#' @importFrom scales rescale percent
+#' @importFrom scales hue_pal rescale percent
 #' @importFrom writexl write_xlsx
 #' @importFrom utils combn packageDescription
 
@@ -95,6 +96,6 @@ utils::globalVariables(c("active",
                          "y"))
 
 #Sys.setenv(`_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_` = "false")
-Sys.setenv(JAGS_HOME = "C:/Program Files/JAGS/JAGS-4.2.0")
-Sys.setenv(JAGS_ROOT = "C:/Program Files/JAGS/JAGS-4.2.0")
+Sys.setenv(JAGS_HOME = "C:/Program Files/JAGS/JAGS-4.3.1")
+Sys.setenv(JAGS_ROOT = "C:/Program Files/JAGS/JAGS-4.3.1")
 

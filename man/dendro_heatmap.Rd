@@ -11,37 +11,38 @@ dendro_heatmap(input, label_size = 12, axis_text_size = 10)
 \item{input}{An object of S3 class \code{\link{comp_clustering}}. See 'Value'
 in \code{\link{comp_clustering}}.}
 
-\item{label_size}{A positive integer for the font size of the heatmap 
-elements. \code{label_size} determines the size argument found in the 
+\item{label_size}{A positive integer for the font size of the heatmap
+elements. \code{label_size} determines the size argument found in the
 geom's aesthetic properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
 
-\item{axis_text_size}{A positive integer for the font size of row and column 
+\item{axis_text_size}{A positive integer for the font size of row and column
 names of the heatmap. \code{axis_text_size} determines the axis.text
-argument found in the theme's properties in the R-package 
+argument found in the theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
 }
 \value{
 \code{dendro_heatmap} uses the \code{\link[heatmaply:heatmaply]{heatmaply}}
-  function of the R-package
+   function of the R-package
   \href{https://CRAN.R-project.org/package=heatmaply}{heatmaply} to create a
   cluster heatmap for a selected linkage method and number of clusters. The
   function uses different colours to indicate the clusters directly on the
-  dendrogram. The names of the leaves refer to the trials and corresponding 
-  pairwise comparison.
+  dendrogram, specified using the R-package
+  \href{https://CRAN.R-project.org/package=dendextend}{dendextend}. The names
+  of the leaves refer to the trials and corresponding pairwise comparison.
 
  @details
-   The function inherits the linkage method and number of optimal clusters by 
+   The function inherits the linkage method and number of optimal clusters by
    the \code{\link{comp_clustering}} function.
 
    Remember: when using the \code{\link{comp_clustering}} function, inspect
-   the average silhouette width for a wide range of clusters to decide on the 
+   the average silhouette width for a wide range of clusters to decide on the
    optimal number of clusters.
 }
 \description{
 \code{dendro_heatmap} creates a dendrogram alongside the heatmap of
-  Gower dissimilarities among the trials in the network for a specific 
-  linkage method and number of clusters. T
+  Gower dissimilarities among the trials in the network for a specific
+  linkage method and number of clusters.
 }
 \seealso{
 \code{\link{comp_clustering}}, \code{\link[heatmaply:heatmaply]{heatmaply}}
