@@ -29,7 +29,8 @@ Description: A comprehensive suite of functions to perform and visualise
     allows the user to export the results to an Excel file at the working 
     directory.
 License: GPL (>= 3) 
-URL: https://CRAN.R-project.org/package=rnmamod
+URL: https://CRAN.R-project.org/package=rnmamod, https://loukiaspin.github.io/rnmamod/
+BugReports: https://github.com/LoukiaSpin/rnmamod/issues
 Depends: 
     R (>= 4.0.0)
 Imports: 
