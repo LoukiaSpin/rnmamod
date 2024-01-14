@@ -1,4 +1,4 @@
-# rnmamod: Bayesian network meta-analysis R package   <img src="man/figures/hexsticker_rnmamod.png" align="right" width="200" />     
+# rnmamod: Bayesian network meta-analysis R package   <img src="man/figures/logo.png" align="right" width="200" />     
 
 Official Git repository of `rnmamod` R package
 
