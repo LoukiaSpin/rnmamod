@@ -1,4 +1,4 @@
-#' End-user-ready results for informative decision and hierarchical clustering
+#' End-user-ready results for comparison dissimilarity and hierarchical clustering
 #' (Comparisons' comparability for transitivity evaluation)
 #'
 #' @description
@@ -19,10 +19,11 @@
 #'   in the order they have been defined in the argument \code{input}.
 #' @param threshold A positive scalar to indicate the cut-off of low
 #'   dissimilarity of two comparisons. The value much be low.
-#' @param informative Logical with \code{TRUE} for performing informative
-#'   decision and \code{FALSE} for performing hierarchical agglomerative
-#'   clustering, thus, allowing the user to define the number of clusters via
-#'   the argument \code{optimal_clusters}. The default argument is \code{TRUE}.
+#' @param informative Logical with \code{TRUE} for evaluating only the
+#'   comparison dissimilarity and \code{FALSE} for performing hierarchical
+#'   agglomerative clustering, thus, allowing the user to define the number of
+#'   clusters via the argument \code{optimal_clusters}.
+#'   The default argument is \code{TRUE}.
 #' @param optimal_clusters A positive integer for the optimal number of
 #'   clusters, ideally, decided after inspecting the profile plot with average
 #'   silhouette widths for a range of clusters, and the dendrogram. The user
@@ -49,10 +50,10 @@
 #'   R-package \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #' @param axis_text_size A positive integer for the font size of axis text in
 #'   the violin plot for the study dissimilarities per comparison and comparison
-#'   between comparisons, the heatmap of informative decision, and the barplot
-#'   of percentage trials per comparison and cluster. \code{axis_text_size}
-#'   determines the axis.text argument found in the theme's properties in the
-#'   R-package
+#'   between comparisons, the heatmap of comparison dissimilarity, and the
+#'   barplot of percentage trials per comparison and cluster.
+#'   \code{axis_text_size} determines the axis.text argument found in the
+#'   theme's properties in the R-package
 #'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #' @param axis_x_text_angle A positive integer for the angle of axis text in
 #'   the violin plot for the study dissimilarities per comparison and comparison
@@ -118,15 +119,14 @@
 #'   comparisons (x-axis). Violins are sorted in descending order of the
 #'   across-comparison dissimilarities (red point).}
 #'   \item{Informative_heatmap}{A heatmap on within-comparison and
-#'   across-comparison dissimilarities when the 'informative decision' is
-#'   applied (\code{informative = TRUE}). Diagonal elements refer to
-#'   within-comparison dissimilarity, and off-diagonal elements refer to
-#'   across-comparisons dissimilarity. Using a threshold of high similarity
-#'   (specified using the argument \code{threshold}), cells exceeding this
-#'   threshold are highlighted in red; otherwise, in green. This heatmap aids in
-#'   finding 'hot spots' of comparisons that may violate the plausibility of
-#'   transitivity in the network. Single-study comparisons are indicated with
-#'   white numbers.}
+#'   across-comparison dissimilarities when(\code{informative = TRUE}). Diagonal
+#'   elements refer to within-comparison dissimilarity, and off-diagonal
+#'   elements refer toacross-comparisons dissimilarity. Using a threshold of
+#'   high similarity (specified using the argument \code{threshold}), cells
+#'   exceeding this threshold are highlighted in red; otherwise, in green. This
+#'   heatmap aids in finding 'hot spots' of comparisons that may violate the
+#'   plausibility of transitivity in the network. Single-study comparisons are
+#'   indicated with white numbers.}
 #'   \item{Profile_plot}{A profile plot on the average silhouette width for a
 #'   range of 2 to P-1 clusters, with P being the number of trials. The
 #'   candidate optimal number of  clusters is indicated with a red point
