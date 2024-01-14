@@ -5,7 +5,9 @@
 #'   \code{comp_clustering} hosts a toolkit of functions that facilitates
 #'   conducting, visualising and evaluating hierarchical agglomerative of
 #'   observed comparisons of interventions for a specific network and set of
-#'   characteristics that act as effect modifiers.
+#'   characteristics that act as effect modifiers. It also calculates the
+#'   non-statistical heterogeneity within-comparisons and between-comparisons
+#'   using the dissimilarities among all trials of the network.
 #'
 #' @param input A data-frame in the long arm-based format. Two-arm trials occupy
 #'   one row in the data-frame. Multi-arm trials occupy as many rows as the
