@@ -3,7 +3,7 @@
 Official Git repository of `rnmamod` R package
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/LoukiaSpin/rnmamod/.github/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
+[![R-CMD-check](https://github.com/LoukiaSpin/rnmamod/.github/workflows/R-CMD-check.yml/badge.svg)](https://github.com/LoukiaSpin/rnmamod/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/rnmamod)](https://CRAN.R-project.org/package=rnmamod)
 [![CRAN release data](https://www.r-pkg.org/badges/last-release/rnmamod)](https://www.r-pkg.org/badges/last-release/rnmamod)
 [![CRAN total downloads](https://cranlogs.r-pkg.org/badges/grand-total/rnmamod)](https://cranlogs.r-pkg.org/badges/grand-total/rnmamod)
