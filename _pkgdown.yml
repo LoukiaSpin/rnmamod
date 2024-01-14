@@ -1,3 +1,6 @@
+template:
+  bootstrap: 5
+
 reference:
 - title: Models
   #desc: Build a complete site or its individual section components.
@@ -52,6 +55,3 @@ reference:
   - taylor_continuous
   - taylor_imor
   - trans_quality
-
-
-
