@@ -113,7 +113,10 @@ dendro_heatmap <- function (input,
                                      limits = c(0, 1)),
               cellnote_size = label_size ,
               fontsize_row = axis_text_size,
-              fontsize_col = axis_text_size)
+              fontsize_col = axis_text_size,
+              colorbar_xanchor = "middle",
+              colorbar_yanchor = "bottom",
+              key.title = "Gower's dissimilarities")
 
   return(dendro_heatmap)
 }

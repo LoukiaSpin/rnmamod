@@ -82,11 +82,11 @@
 #'   with the Gower dissimilarities of all pairs of studies in the network.}
 #'   \item{Comparisons_diss_table}{A lower off-diagonal matrix of 'dist' class
 #'   with the within-comparison dissimilarities at the main diagonal and the
-#'   across-comparison dissimilarities of all pairs of observed
+#'   between-comparison dissimilarities of all pairs of observed
 #'   intervention comparisons at the off-diagonal elements.}
 #'   \item{Total_dissimilarity}{A data-frame on the observed comparisons and
 #'   comparisons between comparisons, alongside the corresponding
-#'   within-comparison and across-comparisons dissimilarity. The data-frame has
+#'   within-comparison and between-comparisons dissimilarity. The data-frame has
 #'   been sorted in decreasing within each dissimilarity 'type'.}
 #'   \item{Types_used}{A data-frame with type mode (i.e., double or integer) of
 #'   each characteristic.}
@@ -113,20 +113,20 @@
 #'   \item{Within_comparison_dissimilarity}{A violin plot with integrated box
 #'   plots and dots on the study dissimilarities per observed comparison
 #'   (x-axis). Violins are sorted in descending order of the within-comparison
-#'   dissimilarities (red point).}
-#'   \item{Across_comparison_dissimilarity}{A violin plot with integrated box
+#'   dissimilarities (blue point).}
+#'   \item{Between_comparison_dissimilarity}{A violin plot with integrated box
 #'   plots and dots on the study dissimilarities per comparison between
 #'   comparisons (x-axis). Violins are sorted in descending order of the
-#'   across-comparison dissimilarities (red point).}
+#'   between-comparison dissimilarities (blue point).}
 #'   \item{Informative_heatmap}{A heatmap on within-comparison and
-#'   across-comparison dissimilarities when(\code{informative = TRUE}). Diagonal
+#'   between-comparison dissimilarities when(\code{informative = TRUE}). Diagonal
 #'   elements refer to within-comparison dissimilarity, and off-diagonal
-#'   elements refer toacross-comparisons dissimilarity. Using a threshold of
+#'   elements refer to between-comparisons dissimilarity. Using a threshold of
 #'   high similarity (specified using the argument \code{threshold}), cells
-#'   exceeding this threshold are highlighted in red; otherwise, in green. This
-#'   heatmap aids in finding 'hot spots' of comparisons that may violate the
-#'   plausibility of transitivity in the network. Single-study comparisons are
-#'   indicated with white numbers.}
+#'   exceeding this threshold are highlighted in orange; otherwise, in green.
+#'   This heatmap aids in finding 'hot spots' of comparisons that may violate
+#'   the plausibility of transitivity in the network. Single-study comparisons
+#'   are indicated with white numbers.}
 #'   \item{Profile_plot}{A profile plot on the average silhouette width for a
 #'   range of 2 to P-1 clusters, with P being the number of trials. The
 #'   candidate optimal number of  clusters is indicated with a red point
@@ -382,7 +382,7 @@ comp_clustering <- function (input,
   split_dataset <- split(dataset_diss, f = dataset_diss$comp)
 
 
-  ## Calculate within & across comparison total dissimilarity (Dp)
+  ## Calculate within & between comparison total dissimilarity (Dp)
   d_p <- round(sapply(split_dataset,
                       function(x) sqrt(mean(unlist(na.omit(x[[3]]))^2))), 2)
 
@@ -399,7 +399,7 @@ comp_clustering <- function (input,
   index_type <-
     apply(dataset_diss[!duplicated(dataset_diss[, 1:2]), ], 1,
           function(x) ifelse(setequal(x[1], x[2]),
-                             "Within-comparison", "Across-comparison"))
+                             "Within-comparison", "Between-comparison"))
 
   # Select name based on the 'index_type'
   name_type <- ifelse(index_type == "Within-comparison",
@@ -441,7 +441,7 @@ comp_clustering <- function (input,
     geom_point() +
     geom_point(aes(x = reorder(comp, total, decreasing = TRUE),
                    y = total),
-               color = "red",
+               color = "blue",
                size = 2.5,
                shape = 21,
                stroke = 1.5) +
@@ -467,10 +467,10 @@ comp_clustering <- function (input,
   })
 
 
-  ## Violin plot on across-comparison dissimilarity distribution
+  ## Violin plot on between-comparison dissimilarity distribution
   suppressWarnings({
     a_comp_diss_plot <-
-      ggplot(subset(diss_dataset, index == "Across-comparison"),
+      ggplot(subset(diss_dataset, index == "Between-comparison"),
              aes(x = reorder(comp, total, decreasing = TRUE),
                  y = diss)) +
       geom_violin(fill = "#99CCFF",
@@ -486,7 +486,7 @@ comp_clustering <- function (input,
       geom_point() +
       geom_point(aes(x = reorder(comp, total, decreasing = TRUE),
                      y = total),
-                 color = "red",
+                 color = "blue",
                  size = 2.5,
                  shape = 21,
                  stroke = 1.5) +
@@ -530,7 +530,7 @@ comp_clustering <- function (input,
   ## Different route depending on whether we choose informative decision or hierarchical clustering
   if (informative == TRUE) { # Informative decision
 
-    # Threshold of low across-comparison dissimilarity
+    # Threshold of low between-comparison dissimilarity
     threshold <- if (missing(threshold)) {
       stop("The argument 'threshold' must be defined", call. = FALSE)
     } else {
@@ -801,13 +801,13 @@ comp_clustering <- function (input,
     collect
   } else if (informative == FALSE & get_plots == TRUE) {
     append(collect, list(Within_comparison_dissimilarity = w_comp_diss_plot,
-                         Across_comparison_dissimilarity = a_comp_diss_plot,
+                         Between_comparison_dissimilarity = a_comp_diss_plot,
                          Profile_plot = internal_measures_panel,
                          Silhouette_width_plot = plot_comp_silhouette,
                          Barplot_comparisons_cluster = cluster_comp_barplot))
   } else if (informative == TRUE & get_plots == TRUE) {
     append(collect, list(Within_comparison_dissimilarity = w_comp_diss_plot,
-                         Across_comparison_dissimilarity = a_comp_diss_plot,
+                         Between_comparison_dissimilarity = a_comp_diss_plot,
                          Informative_heatmap = informative_heatmap))
   }
 
