@@ -581,9 +581,15 @@ comp_clustering <- function (input,
                 color = "black", linewidth = 1) +
       geom_rect(aes(xmin = ymin1, xmax = ymax1, ymin = xmin1, ymax = xmax1),
                 color = "black", linewidth = 1) +
-      scale_fill_manual(breaks = c("high", "poor"),
-                        values = c("#009E73", "#D55E00"),
-                        na.value = "white") +
+      #scale_fill_manual(breaks = c("high", "poor"),
+      #                  values = c("#009E73", "#D55E00"),
+      #                  na.value = "white") +
+      scale_fill_gradient2(low = "#009E73",
+                           mid = "white",
+                           high = "#D55E00",
+                           midpoint = threshold,
+                           guide = "colorbar",
+                           na.value = "white") +
       scale_color_manual(breaks = c("yes", "no"),
                         values = c("black", "white"),
                         na.value = "white") +
