@@ -2,7 +2,7 @@
 % Please edit documentation in R/comp.clustering_function.R
 \name{comp_clustering}
 \alias{comp_clustering}
-\title{End-user-ready results for informative decision and hierarchical clustering
+\title{End-user-ready results for comparison dissimilarity and hierarchical clustering
 (Comparisons' comparability for transitivity evaluation)}
 \usage{
 comp_clustering(
@@ -10,6 +10,7 @@ comp_clustering(
   drug_names,
   threshold,
   informative = TRUE,
+  ranged_values = FALSE,
   optimal_clusters,
   get_plots = "none",
   label_size = 4,
@@ -35,10 +36,17 @@ in the order they have been defined in the argument \code{input}.}
 \item{threshold}{A positive scalar to indicate the cut-off of low
 dissimilarity of two comparisons. The value much be low.}
 
-\item{informative}{Logical with \code{TRUE} for performing informative
-decision and \code{FALSE} for performing hierarchical agglomerative
-clustering, thus, allowing the user to define the number of clusters via
-the argument \code{optimal_clusters}. The default argument is \code{TRUE}.}
+\item{informative}{Logical with \code{TRUE} for evaluating only the
+comparison dissimilarity and \code{FALSE} for performing hierarchical
+agglomerative clustering, thus, allowing the user to define the number of
+clusters via the argument \code{optimal_clusters}.
+The default argument is \code{TRUE}.}
+
+\item{ranged_values}{Whether to use a colour scale when creating the
+heatmap of within-comparison and between-comparison dissimilarities
+(\code{TRUE}) or colour the cells with green and orange, when below or
+exceeding the specified \code{threshold}. Relevant only when
+\code{informative = TRUE}. The default argument is \code{FALSE}.}
 
 \item{optimal_clusters}{A positive integer for the optimal number of
 clusters, ideally, decided after inspecting the profile plot with average
@@ -71,10 +79,10 @@ R-package \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
 
 \item{axis_text_size}{A positive integer for the font size of axis text in
 the violin plot for the study dissimilarities per comparison and comparison
-between comparisons, the heatmap of informative decision, and the barplot
-of percentage trials per comparison and cluster. \code{axis_text_size}
-determines the axis.text argument found in the theme's properties in the
-R-package
+between comparisons, the heatmap of comparison dissimilarity, and the
+barplot of percentage trials per comparison and cluster.
+\code{axis_text_size} determines the axis.text argument found in the
+theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
 
 \item{axis_x_text_angle}{A positive integer for the angle of axis text in
@@ -106,11 +114,11 @@ Initially, \code{comp_clustering} prints on the console the following
   with the Gower dissimilarities of all pairs of studies in the network.}
   \item{Comparisons_diss_table}{A lower off-diagonal matrix of 'dist' class
   with the within-comparison dissimilarities at the main diagonal and the
-  across-comparison dissimilarities of all pairs of observed
+  between-comparison dissimilarities of all pairs of observed
   intervention comparisons at the off-diagonal elements.}
   \item{Total_dissimilarity}{A data-frame on the observed comparisons and
   comparisons between comparisons, alongside the corresponding
-  within-comparison and across-comparisons dissimilarity. The data-frame has
+  within-comparison and between-comparisons dissimilarity. The data-frame has
   been sorted in decreasing within each dissimilarity 'type'.}
   \item{Types_used}{A data-frame with type mode (i.e., double or integer) of
   each characteristic.}
@@ -137,21 +145,20 @@ Initially, \code{comp_clustering} prints on the console the following
   \item{Within_comparison_dissimilarity}{A violin plot with integrated box
   plots and dots on the study dissimilarities per observed comparison
   (x-axis). Violins are sorted in descending order of the within-comparison
-  dissimilarities (red point).}
-  \item{Across_comparison_dissimilarity}{A violin plot with integrated box
+  dissimilarities (blue point).}
+  \item{Between_comparison_dissimilarity}{A violin plot with integrated box
   plots and dots on the study dissimilarities per comparison between
   comparisons (x-axis). Violins are sorted in descending order of the
-  across-comparison dissimilarities (red point).}
-  \item{Informative_heatmap}{A heatmap on within-comparison and
-  across-comparison dissimilarities when the 'informative decision' is
-  applied (\code{informative = TRUE}). Diagonal elements refer to
-  within-comparison dissimilarity, and off-diagonal elements refer to
-  across-comparisons dissimilarity. Using a threshold of high similarity
-  (specified using the argument \code{threshold}), cells exceeding this
-  threshold are highlighted in red; otherwise, in green. This heatmap aids in
-  finding 'hot spots' of comparisons that may violate the plausibility of
-  transitivity in the network. Single-study comparisons are indicated with
-  white numbers.}
+  between-comparison dissimilarities (blue point).}
+  \item{Dissimilarity_heatmap}{A heatmap on within-comparison and
+  between-comparison dissimilarities when (\code{informative = TRUE}).
+  Diagonal elements refer to within-comparison dissimilarity, and
+  off-diagonal elements refer to between-comparisons dissimilarity. Using a
+  threshold of high similarity (specified using the argument
+  \code{threshold}), cells equal or above this threshold are highlighted in
+  orange; otherwise, in green. This heatmap aids in finding 'hot spots' of
+  comparisons that may violate the plausibility of transitivity in the
+  network. Single-study comparisons are indicated with white numbers.}
   \item{Profile_plot}{A profile plot on the average silhouette width for a
   range of 2 to P-1 clusters, with P being the number of trials. The
   candidate optimal number of  clusters is indicated with a red point
@@ -169,7 +176,9 @@ Initially, \code{comp_clustering} prints on the console the following
 \code{comp_clustering} hosts a toolkit of functions that facilitates
   conducting, visualising and evaluating hierarchical agglomerative of
   observed comparisons of interventions for a specific network and set of
-  characteristics that act as effect modifiers.
+  characteristics that act as effect modifiers. It also calculates the
+  non-statistical heterogeneity within-comparisons and between-comparisons
+  using the dissimilarities among all trials of the network.
 }
 \details{
 The correct type mode of columns in \code{input} must be ensured to use
