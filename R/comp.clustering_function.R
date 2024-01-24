@@ -24,6 +24,11 @@
 #'   agglomerative clustering, thus, allowing the user to define the number of
 #'   clusters via the argument \code{optimal_clusters}.
 #'   The default argument is \code{TRUE}.
+#' @param ranged_values Whether to use a colour scale when creating the
+#'   heatmap of within-comparison and between-comparison dissimilarities
+#'   (\code{TRUE}) or colour the cells with green and orange, when below or
+#'   exceeding the specified \code{threshold}. Relevant only when
+#'   \code{informative = TRUE}. The default argument is \code{FALSE}.
 #' @param optimal_clusters A positive integer for the optimal number of
 #'   clusters, ideally, decided after inspecting the profile plot with average
 #'   silhouette widths for a range of clusters, and the dendrogram. The user
@@ -118,15 +123,15 @@
 #'   plots and dots on the study dissimilarities per comparison between
 #'   comparisons (x-axis). Violins are sorted in descending order of the
 #'   between-comparison dissimilarities (blue point).}
-#'   \item{Informative_heatmap}{A heatmap on within-comparison and
-#'   between-comparison dissimilarities when(\code{informative = TRUE}). Diagonal
-#'   elements refer to within-comparison dissimilarity, and off-diagonal
-#'   elements refer to between-comparisons dissimilarity. Using a threshold of
-#'   high similarity (specified using the argument \code{threshold}), cells
-#'   exceeding this threshold are highlighted in orange; otherwise, in green.
-#'   This heatmap aids in finding 'hot spots' of comparisons that may violate
-#'   the plausibility of transitivity in the network. Single-study comparisons
-#'   are indicated with white numbers.}
+#'   \item{Dissimilarity_heatmap}{A heatmap on within-comparison and
+#'   between-comparison dissimilarities when (\code{informative = TRUE}).
+#'   Diagonal elements refer to within-comparison dissimilarity, and
+#'   off-diagonal elements refer to between-comparisons dissimilarity. Using a
+#'   threshold of high similarity (specified using the argument
+#'   \code{threshold}), cells equal or above this threshold are highlighted in
+#'   orange; otherwise, in green. This heatmap aids in finding 'hot spots' of
+#'   comparisons that may violate the plausibility of transitivity in the
+#'   network. Single-study comparisons are indicated with white numbers.}
 #'   \item{Profile_plot}{A profile plot on the average silhouette width for a
 #'   range of 2 to P-1 clusters, with P being the number of trials. The
 #'   candidate optimal number of  clusters is indicated with a red point
@@ -203,6 +208,7 @@ comp_clustering <- function (input,
                              drug_names,
                              threshold,
                              informative = TRUE,
+                             ranged_values FALSE,
                              optimal_clusters,
                              get_plots = "none",
                              label_size = 4,
@@ -567,9 +573,10 @@ comp_clustering <- function (input,
       ggplot(mat_new,
              aes(factor(Var2, levels = sort(unique_comp)[1:num_unique_comp]),
                  factor(Var1, levels = sort(unique_comp)[num_unique_comp:1]),
-                 fill = ifelse(value < threshold, "high", "poor"))) +
-      geom_tile(colour = "white",
-                alpha = 0.5) +
+                 fill = if (ranged_values == TRUE) {value} else
+                   {ifelse(value < threshold, "high", "poor")})) +
+      geom_tile(colour = ifelse(mat_new$value < threshold, "#009E73", "#D55E00"),
+                alpha = 1) +
       geom_text(aes(factor(Var2,
                            levels = sort(unique_comp)[1:num_unique_comp]),
                     factor(Var1, levels = sort(unique_comp)[num_unique_comp:1]),
@@ -581,18 +588,20 @@ comp_clustering <- function (input,
                 color = "black", linewidth = 1) +
       geom_rect(aes(xmin = ymin1, xmax = ymax1, ymin = xmin1, ymax = xmax1),
                 color = "black", linewidth = 1) +
-      #scale_fill_manual(breaks = c("high", "poor"),
-      #                  values = c("#009E73", "#D55E00"),
-      #                  na.value = "white") +
-      scale_fill_gradient2(low = "#009E73",
-                           mid = "white",
-                           high = "#D55E00",
-                           midpoint = threshold,
-                           guide = "colorbar",
-                           na.value = "white") +
+      {if (ranged_values == TRUE)
+        scale_fill_gradient2(low = "#009E73",
+                             mid = "white",
+                             high = "#D55E00",
+                             midpoint = threshold,
+                             guide = "colorbar",
+                             na.value = "white")
+        else
+          scale_fill_manual(breaks = c("high", "poor"),
+                             values = c("#009E73", "#D55E00"),
+                             na.value = "white")} +
       scale_color_manual(breaks = c("yes", "no"),
-                        values = c("black", "white"),
-                        na.value = "white") +
+                         values = c("black", "white"),
+                         na.value = "white") +
       scale_x_discrete(position = "top") +
       labs(x = "", y = "") +
       theme_bw() +
@@ -814,7 +823,7 @@ comp_clustering <- function (input,
   } else if (informative == TRUE & get_plots == TRUE) {
     append(collect, list(Within_comparison_dissimilarity = w_comp_diss_plot,
                          Between_comparison_dissimilarity = a_comp_diss_plot,
-                         Informative_heatmap = informative_heatmap))
+                         Dissimilarity_heatmap = informative_heatmap))
   }
 
   class(results) <- "comp_clustering"
