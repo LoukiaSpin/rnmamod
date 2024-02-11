@@ -29,14 +29,13 @@ Description: A comprehensive suite of functions to perform and visualise
     allows the user to export the results to an Excel file at the working 
     directory.
 License: GPL (>= 3) 
-URL: https://CRAN.R-project.org/package=rnmamod, https://loukiaspin.github.io/rnmamod/
+URL: https://CRAN.R-project.org/package=rnmamod, https://github.com/LoukiaSpin/rnmamod
 BugReports: https://github.com/LoukiaSpin/rnmamod/issues
 Depends: 
     R (>= 4.0.0)
 Imports: 
     cluster,
     dendextend,
-    dplyr,
     fdrtool,
     gemtc,
     ggfittext,
@@ -62,4 +61,4 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1

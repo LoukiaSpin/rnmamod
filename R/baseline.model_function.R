@@ -209,14 +209,17 @@ baseline_model <- function(base_risk,
     get_results_base <- as.data.frame(t(jagsfit_base$BUGSoutput$summary))
 
     # Obtain posterior distribution from parameters of interest
-    pred_base_logit <- t(get_results_base %>%
-                           dplyr::select(starts_with("base.risk.logit")))
-    mean_base_logit <- t(get_results_base %>%
-                           dplyr::select(starts_with("m.base")))
-    tau_base_logit <- t(get_results_base %>%
-                           dplyr::select(starts_with("tau.base")))
-    trial_base_logit <- t(get_results_base %>%
-                            dplyr::select(starts_with("u.base[")))
+    pred_base_logit <-
+      t(get_results_base)[startsWith(rownames(t(get_results_base)),
+                                     "base.risk.logit"), ]
+    mean_base_logit <-
+      t(get_results_base)[startsWith(rownames(t(get_results_base)), "m.base"), ]
+    tau_base_logit <-
+      t(get_results_base)[startsWith(rownames(t(get_results_base)),
+                                     "tau.base"), ]
+    trial_base_logit <-
+      t(get_results_base)[startsWith(rownames(t(get_results_base)),
+                                     "u.base["), ]
   } else if (base_type == "fixed") {
     message("**Fixed baseline risk assigned**")
   } else if (base_type == "random") {
@@ -230,12 +233,12 @@ baseline_model <- function(base_risk,
   }
 
   tab_base <- if (base_type == "predicted") {
-    cri_mean <- paste0("(", round(mean_base_logit[, 3], 2), ",",
-                       " ", round(mean_base_logit[, 7], 2), ")")
-    cri_tau <- paste0("(", round(tau_base_logit[, 3], 2), ",",
-                      " ", round(tau_base_logit[, 7], 2), ")")
-    cri_pred <- paste0("(", round(pred_base_logit[, 3], 2), ",",
-                       " ", round(pred_base_logit[, 7], 2), ")")
+    cri_mean <- paste0("(", round(mean_base_logit[3], 2), ",",
+                       " ", round(mean_base_logit[7], 2), ")")
+    cri_tau <- paste0("(", round(tau_base_logit[3], 2), ",",
+                      " ", round(tau_base_logit[7], 2), ")")
+    cri_pred <- paste0("(", round(pred_base_logit[3], 2), ",",
+                       " ", round(pred_base_logit[7], 2), ")")
     data.frame(rbind(c(round(mean_base_logit[1:2], 2), cri_mean),
                      c(round(tau_base_logit[c(5, 2)], 2), cri_tau),
                      c(round(pred_base_logit[1:2], 2), cri_pred)))
@@ -286,7 +289,7 @@ baseline_model <- function(base_risk,
                ymax = upper)) +
       geom_hline(yintercept = summary_prob,
                  col = "grey",
-                 size = 1,
+                 linewidth = 1,
                  lty = 2) +
       geom_rect(aes(xmin = -Inf,
                     xmax = Inf,
@@ -294,7 +297,7 @@ baseline_model <- function(base_risk,
                     ymax = summary_prob[3]),
                 alpha = 0.01,
                 fill = "grey") +
-      geom_linerange(size = 1.5,
+      geom_linerange(linewidth = 1.5,
                      position = position_dodge(width = 0.5)) +
       geom_point(aes(colour = type),
                  size = ifelse(dataplot$type == "Estimated", 2.5, 4.0),

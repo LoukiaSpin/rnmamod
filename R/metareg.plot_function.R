@@ -430,8 +430,8 @@ metareg_plot <- function(full,
 
   # The 95% CrIs of the between-trial standard deviation under both models
   if (model == "RE") {
-    cri_tau_nma <- paste0("(", tau_nma[, 3], ",", " ", tau_nma[, 7], ")")
-    cri_tau_nmr <- paste0("(", tau_nmr[, 3], ",", " ", tau_nmr[, 7], ")")
+    cri_tau_nma <- paste0("(", tau_nma[3], ",", " ", tau_nma[7], ")")
+    cri_tau_nmr <- paste0("(", tau_nmr[3], ",", " ", tau_nmr[7], ")")
   }
 
   # Model assessment and between-trial standard deviation for both models
@@ -440,11 +440,11 @@ metareg_plot <- function(full,
                                        "Meta-regression"),
                                      rbind(model_assess_nma,
                                            cbind(model_assess_nmr, n_data)),
-                                     rbind(cbind(tau_nma[, 5],
-                                                 tau_nma[, 2],
+                                     rbind(cbind(tau_nma[5],
+                                                 tau_nma[2],
                                                  cri_tau_nma),
-                                           cbind(tau_nmr[, 5],
-                                                 tau_nmr[, 2],
+                                           cbind(tau_nmr[5],
+                                                 tau_nmr[2],
                                                  cri_tau_nmr)))
     colnames(table_model_assess) <- c("Analysis",
                                       "DIC", "pD", "Mean deviance",

@@ -1,6 +1,5 @@
 #' @name rnmamod-package
 #' @aliases rnmamod rnmamod-package
-#' @docType package
 #'
 #' @title rnmamod: Bayesian Network Meta-analysis with Missing Participants
 #'

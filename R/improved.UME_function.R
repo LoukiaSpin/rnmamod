@@ -142,6 +142,7 @@ improved_ume <- function(t, N, ns, na) {
   rownames(tab_comp_arms) <- NULL
 
   # Keep only those comparisons not studied in two-arm trials
+  select <- NA
   if (dim(unique(
     as.data.frame(tab_comp_arms0)["arms"]))[1] == 1 &
     levels(unlist(as.data.frame(tab_comp_arms0)["arms"]))[1] == "multi-arm" ||

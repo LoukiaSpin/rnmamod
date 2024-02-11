@@ -156,9 +156,9 @@ league_heatmap_pred <- function(full1,
          call. = FALSE)
   }
 
-  if (!is.element(class(full1), c("run_model", "run_model")) ||
+  if (!is.element(class(full1), c("run_model", "run_metareg")) ||
       is.null(full1)) {
-    stop("'full1' must be an object of S3 class 'run_model', or 'c'.",
+    stop("'full1' must be an object of S3 class 'run_model', or 'run_metareg'.",
          call. = FALSE)
   }
 

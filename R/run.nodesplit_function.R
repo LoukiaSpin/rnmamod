@@ -496,12 +496,17 @@ run_nodesplit <- function(full,
     get_results[[i]] <- as.data.frame(t(jagsfit[[i]]$BUGSoutput$summary))
 
     # Total residual deviance
-    dev[i] <- t(get_results[[i]] %>% dplyr::select(
-      starts_with("totresdev.o")))[, 1]
+    #dev[i] <- t(get_results[[i]] %>% dplyr::select(
+    #  starts_with("totresdev.o")))[, 1]
+    dev[i] <- t(get_results[[i]])[startsWith(rownames(t(get_results[[i]])),
+                                             "totresdev.o"), 1]
 
     # Fitted/predicted number of observed data (hat.par")
-    hat_par[[i]] <- t(get_results[[i]] %>% dplyr::select(
-      starts_with("hat.par[")))
+    #hat_par[[i]] <- t(get_results[[i]] %>% dplyr::select(
+    #  starts_with("hat.par[")))
+    hat_par[[i]] <-
+      t(get_results[[i]])[startsWith(rownames(t(get_results[[i]])),
+                                     "hat.par["), ]
 
     # Calculate the deviance contribution at posterior mean of fitted values
     # Turn 'N' and 'm' into a vector (first column, followed by second, etc)

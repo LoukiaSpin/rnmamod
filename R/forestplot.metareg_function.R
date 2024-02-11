@@ -329,10 +329,10 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
       geom_hline(yintercept = ifelse(!is.element(
         measure, c("OR", "RR", "ROM")), 0, 1),
         lty = 1,
-        size = 1,
+        linewidth = 1,
         col = "grey60") +
       geom_linerange(aes(color = analysis),
-                     size = 2,
+                     linewidth = 2,
                      position = position_dodge(width = 0.5)) +
       geom_errorbar(data = prepare_em[prepare_em$interval == "Estimation", ],
                     aes(x = order,
@@ -429,9 +429,9 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
       geom_hline(yintercept = ifelse(!is.element(
         measure, c("OR", "RR", "ROM")), 0, 1),
         lty = 1,
-        size = 1,
+        linewidth = 1,
         col = "grey60") +
-      geom_linerange(size = 2,
+      geom_linerange(linewidth = 2,
                      position = position_dodge(width = 0.5)) +
       geom_point(size = 1.5,
                  colour = "white",
@@ -544,8 +544,8 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   get_results <- as.data.frame(t(jagsfit$BUGSoutput$summary))
 
   # Obtain posterior distribution from parameters of interest
-  sucra_res <- t(get_results %>%
-                   dplyr::select(starts_with("SUCRA[")))[, c(1, 3, 7)]
+  sucra_res <-
+    t(get_results)[startsWith(rownames(t(get_results)), "SUCRA["), c(1, 3, 7)]
 
   # Order by SUCRA of NMA model
   sucra_nmr <- sucra_res[order(sucra_full[, 1], decreasing = TRUE), ]
@@ -583,7 +583,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                   fill = "highest"),
               alpha = 0.01) +
     geom_linerange(aes(colour = analysis),
-                   size = 2,
+                   linewidth = 2,
                    position = position_dodge(width = 0.5)) +
     geom_point(size = 1.5,
                colour = "white",

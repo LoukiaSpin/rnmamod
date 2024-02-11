@@ -3,8 +3,7 @@
 #'   stats
 #'
 #' @importFrom cluster silhouette
-#' @importFrom dendextend set
-#' @importFrom dplyr select starts_with ends_with %>%
+#' @importFrom dendextend set %>%
 #' @importFrom fdrtool rhalfnorm
 #' @importFrom MASS fractions
 #' @importFrom gemtc mtc.network mtc.data.studyrow mtc.nodesplit.comparisons

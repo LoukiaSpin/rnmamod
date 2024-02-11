@@ -368,56 +368,78 @@ run_metareg <- function(full,
   get_results <- as.data.frame(t(jagsfit$BUGSoutput$summary))
 
   # Effect size of all unique pairwise comparisons
-  EM <- t(get_results %>% dplyr::select(starts_with("EM[")))
+  #EM <- t(get_results %>% dplyr::select(starts_with("EM[")))
+  EM <- t(get_results)[startsWith(rownames(t(get_results)), "EM["), ]
 
   # Predictive effects of all unique pairwise comparisons
-  EM_pred <- t(get_results %>% dplyr::select(starts_with("EM.pred[")))
+  #EM_pred <- t(get_results %>% dplyr::select(starts_with("EM.pred[")))
+  EM_pred <- t(get_results)[startsWith(rownames(t(get_results)), "EM.pred["), ]
 
   # Unique absolute risks for all interventions (only binary data)
-  abs_risk <- t(get_results %>% dplyr::select(starts_with("abs_risk[")))
+  #abs_risk <- t(get_results %>% dplyr::select(starts_with("abs_risk[")))
+  abs_risk <-
+    t(get_results)[startsWith(rownames(t(get_results)), "abs_risk["), ]
 
   # Between-trial standard deviation
-  tau <- t(get_results %>% dplyr::select(starts_with("tau")))
+  #tau <- t(get_results %>% dplyr::select(starts_with("tau")))
+  tau <- t(get_results)[startsWith(rownames(t(get_results)), "tau"), ]
 
   # Regression coefficient for all comparisons with the reference intervention
-  beta <- t(get_results %>% dplyr::select(starts_with("beta[") |
-                                           starts_with("beta")))
+  #beta <- t(get_results %>% dplyr::select(starts_with("beta[") |
+  #                                         starts_with("beta")))
+  beta <-
+    t(get_results)[startsWith(rownames(t(get_results)), "beta[") |
+                     startsWith(rownames(t(get_results)), "beta"), ]
 
   # Regression coefficient for all unique pairwise comparisons
   # (not applicable for 'common' covar_assumption)
-  beta_all <- t(get_results %>% dplyr::select(starts_with("beta.all[")))
+  #beta_all <- t(get_results %>% dplyr::select(starts_with("beta.all[")))
+  beta_all <-
+    t(get_results)[startsWith(rownames(t(get_results)), "beta.all["), ]
 
   # SUrface under the Cumulative RAnking curve values
-  SUCRA <- t(get_results %>% dplyr::select(starts_with("SUCRA")))
+  #SUCRA <- t(get_results %>% dplyr::select(starts_with("SUCRA")))
+  SUCRA <- t(get_results)[startsWith(rownames(t(get_results)), "SUCRA"), ]
 
   # Within-trial effects size
-  delta <- t(get_results %>% dplyr::select(starts_with("delta") &
-                                             !ends_with(",1]")))
+  #delta <- t(get_results %>% dplyr::select(starts_with("delta") &
+  #                                           !ends_with(",1]")))
+  delta <- t(get_results)[startsWith(rownames(t(get_results)), "delta") &
+                            !endsWith(rownames(t(get_results)), ",1]"), ]
 
   # Ranking probability of each intervention for every rank
-  effectiveness <- t(get_results %>% dplyr::select(
-    starts_with("effectiveness")))
+  #effectiveness <- t(get_results %>% dplyr::select(
+  #  starts_with("effectiveness")))
+  effectiveness <-
+    t(get_results)[startsWith(rownames(t(get_results)), "effectiveness"), ]
 
   # Estimated missingness parameter
   phi <- if (min(na.omit(unlist(item$I))) == 1 &
              max(na.omit(unlist(item$I))) == 1) {
-    t(get_results %>% dplyr::select(starts_with("phi") |
-                                      starts_with("mean.phi") |
-                                      starts_with("mean.phi[") |
-                                      starts_with("phi[")))
+    #t(get_results %>% dplyr::select(starts_with("phi") |
+    #                                  starts_with("mean.phi") |
+    #                                  starts_with("mean.phi[") |
+    #                                  starts_with("phi[")))
+    t(get_results)[startsWith(rownames(t(get_results)), "phi") |
+                     startsWith(rownames(t(get_results)), "mean.phi") |
+                     startsWith(rownames(t(get_results)), "mean.phi[") |
+                     startsWith(rownames(t(get_results)), "phi["), ]
   } else if (min(na.omit(unlist(item$I))) == 0 &
              max(na.omit(unlist(item$I))) == 1) {
-    t(get_results %>% dplyr::select(starts_with("phi[")))
+    #t(get_results %>% dplyr::select(starts_with("phi[")))
+    t(get_results)[startsWith(rownames(t(get_results)), "phi["), ]
   } else if (min(na.omit(unlist(item$I))) == 0 &
              max(na.omit(unlist(item$I))) == 0) {
     NULL
   }
 
   # Trial-arm deviance contribution for observed outcome
-  dev_o <- t(get_results %>% dplyr::select(starts_with("dev.o")))
+  #dev_o <- t(get_results %>% dplyr::select(starts_with("dev.o")))
+  dev_o <- t(get_results)[startsWith(rownames(t(get_results)), "dev.o"), ]
 
   # Fitted/predicted outcome
-  hat_par <- t(get_results %>% dplyr::select(starts_with("hat.par")))
+  #hat_par <- t(get_results %>% dplyr::select(starts_with("hat.par")))
+  hat_par <- t(get_results)[startsWith(rownames(t(get_results)), "hat.par"), ]
 
   # Total residual deviance
   dev <- jagsfit$BUGSoutput$summary["totresdev.o", "mean"]

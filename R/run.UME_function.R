@@ -489,18 +489,23 @@ run_ume <- function(full,
   get_results <- as.data.frame(t(jagsfit$BUGSoutput$summary))
 
   # Effect size of all unique pairwise comparisons
-  EM <- t(get_results %>% dplyr::select(starts_with("EM[")))
+  #EM <- t(get_results %>% dplyr::select(starts_with("EM[")))
+  EM <- t(get_results)[startsWith(rownames(t(get_results)), "EM["), ]
 
   # Between-trial standard deviation
-  tau <- t(get_results %>% dplyr::select(starts_with("tau")))
+  #tau <- t(get_results %>% dplyr::select(starts_with("tau")))
+  tau <- t(get_results)[startsWith(rownames(t(get_results)), "tau"), ]
   # For the subnetwork of multi-arm trials
-  m_tau <- t(get_results %>% dplyr::select(starts_with("m.tau")))
+  #m_tau <- t(get_results %>% dplyr::select(starts_with("m.tau")))
+  m_tau <- t(get_results)[startsWith(rownames(t(get_results)), "m.tau"), ]
 
   # Trial-arm deviance contribution for observed outcome
-  dev_o <- t(get_results %>% dplyr::select(starts_with("dev.o[")))
+  #dev_o <- t(get_results %>% dplyr::select(starts_with("dev.o[")))
+  dev_o <- t(get_results)[startsWith(rownames(t(get_results)), "dev.o["), ]
 
   # Fitted/predicted outcome
-  hat_par <- t(get_results %>% dplyr::select(starts_with("hat.par")))
+  #hat_par <- t(get_results %>% dplyr::select(starts_with("hat.par")))
+  hat_par <- t(get_results)[startsWith(rownames(t(get_results)), "hat.par"), ]
 
   # Total residual deviance
   dev <- jagsfit$BUGSoutput$summary["totresdev.o", "mean"]

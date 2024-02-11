@@ -122,7 +122,8 @@ mcmc_diagnostics <- function(net, par = NULL) {
   EM_plot_ratio <- if (is.element(class(net),
                                   c("run_model", "run_metareg", "run_ume"))) {
     get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
-    EM <- t(get_results %>% select(starts_with("EM[")))
+    #EM <- t(get_results %>% select(starts_with("EM[")))
+    EM <- t(get_results)[startsWith(rownames(t(get_results)), "EM["), ]
     EM_mcmc_rule <- 1 / sqrt(EM[, 9])
     ggplot(data.frame(name = names(EM_mcmc_rule),
                       ratio = EM_mcmc_rule),
@@ -193,7 +194,8 @@ mcmc_diagnostics <- function(net, par = NULL) {
   EM_plot_rhat <- if (is.element(class(net),
                                  c("run_model", "run_metareg", "run_ume"))) {
     get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
-    EM <- t(get_results %>% select(starts_with("EM[")))
+    #EM <- t(get_results %>% select(starts_with("EM[")))
+    EM <- t(get_results)[startsWith(rownames(t(get_results)), "EM["), ]
     ggplot(data.frame(name = names(EM[, 8]), rhat = EM[, 8]),
            aes(x = name,
                y = rhat,
@@ -267,7 +269,9 @@ mcmc_diagnostics <- function(net, par = NULL) {
                                            c("run_model", "run_metareg")) &
                                 net$model == "RE")) {
     get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
-    EM_pred <- t(get_results %>% select(starts_with("EM.pred[")))
+    #EM_pred <- t(get_results %>% select(starts_with("EM.pred[")))
+    EM_pred <-
+      t(get_results)[startsWith(rownames(t(get_results)), "EM.pred["), ]
     EM_pred_mcmc_rule <- 1 / sqrt(EM_pred[, 9])
     ggplot(data.frame(name = names(EM_pred_mcmc_rule),
                       ratio = EM_pred_mcmc_rule),
@@ -297,7 +301,9 @@ mcmc_diagnostics <- function(net, par = NULL) {
                                           c("run_model", "run_metareg")) &
                                net$model == "RE")) {
     get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
-    EM_pred <- t(get_results %>% select(starts_with("EM.pred[")))
+    #EM_pred <- t(get_results %>% select(starts_with("EM.pred[")))
+    EM_pred <-
+      t(get_results)[startsWith(rownames(t(get_results)), "EM.pred["), ]
     ggplot(data.frame(name = names(EM_pred[, 8]), rhat = EM_pred[, 8]),
            aes(x = name,
                y = rhat,
@@ -334,7 +340,10 @@ mcmc_diagnostics <- function(net, par = NULL) {
                                          c("run_model", "run_metareg")) &
                           net$model == "RE")) {
     get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
-    delta <- t(get_results %>% select(starts_with("delta") & !ends_with(",1]")))
+    #delta <- t(get_results %>% select(starts_with("delta") & !ends_with(",1]")))
+    delta <-
+      t(get_results)[startsWith(rownames(t(get_results)), "delta") &
+                       !endsWith(rownames(t(get_results)), ",1]"), ]
     delta_mcmc_rule <- 1 / sqrt(delta[, 9])
     ggplot(data.frame(name = names(delta_mcmc_rule), ratio = delta_mcmc_rule),
            aes(x = name,
@@ -363,8 +372,11 @@ mcmc_diagnostics <- function(net, par = NULL) {
     if (any(is.element(class(net), c("run_model", "run_metareg")) &
             net$model == "RE")) {
       get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
-      delta <- t(get_results %>% select(starts_with("delta") &
-                                          !ends_with(",1]")))
+      #delta <- t(get_results %>% select(starts_with("delta") &
+      #                                    !ends_with(",1]")))
+      delta <-
+        t(get_results)[startsWith(rownames(t(get_results)), "delta") &
+                         !endsWith(rownames(t(get_results)), ",1]"), ]
       ggplot(data.frame(name = names(delta[, 8]), rhat = delta[, 8]),
              aes(x = name,
                  y = rhat,
@@ -579,8 +591,10 @@ mcmc_diagnostics <- function(net, par = NULL) {
                            !is.element(net$assumption,
                                        c("IDE-COMMON", "HIE-COMMON")))) {
     get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
-    phi <- t(get_results %>% select(starts_with("mean.phi[") |
-                                      starts_with("phi[")))
+    #phi <- t(get_results %>% select(starts_with("mean.phi[") |
+    #                                  starts_with("phi[")))
+    phi <- t(get_results)[startsWith(rownames(t(get_results)), "mean.phi[") |
+                            startsWith(rownames(t(get_results)), "phi["), ]
     phi_mcmc_rule <- 1 / sqrt(phi[, 9])
     ggplot(data.frame(name = names(phi_mcmc_rule), ratio = phi_mcmc_rule),
            aes(x = name,
@@ -609,8 +623,10 @@ mcmc_diagnostics <- function(net, par = NULL) {
                           !is.element(net$assumption,
                                       c("IDE-COMMON", "HIE-COMMON")))) {
     get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
-    phi <- t(get_results %>% select(starts_with("mean.phi[") |
-                                      starts_with("phi[")))
+    #phi <- t(get_results %>% select(starts_with("mean.phi[") |
+    #                                  starts_with("phi[")))
+    phi <- t(get_results)[startsWith(rownames(t(get_results)), "mean.phi[") |
+                            startsWith(rownames(t(get_results)), "phi["), ]
     ggplot(data.frame(name = names(phi[, 8]), rhat = phi[, 8]),
            aes(x = name,
                y = rhat,
@@ -647,8 +663,11 @@ mcmc_diagnostics <- function(net, par = NULL) {
     if(any(!is.null(net$phi) & is.element(net$assumption,
                                           c("IDE-COMMON", "HIE-COMMON")))) {
       get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
-      phi <- t(get_results %>% select(starts_with("phi") |
-                                        starts_with("mean.phi")))
+      #phi <- t(get_results %>% select(starts_with("phi") |
+      #                                  starts_with("mean.phi")))
+      phi <-
+        t(get_results)[startsWith(rownames(t(get_results)), "phi") |
+                         startsWith(rownames(t(get_results)), "mean.phi"), ]
       data.frame(R.hat = phi[8], MCMC.rule = 1 / sqrt(phi[9]))
   } else {
     data.frame(R.hat = "Not applicable", MCMC.rule = "Not applicable")
@@ -658,7 +677,8 @@ mcmc_diagnostics <- function(net, par = NULL) {
   beta_plot_ratio <- if (any(inherits(net, "run_metareg") &
                              net$covar_assumption != "common")) {
     get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
-    beta <- t(get_results %>% select(starts_with("beta.all[")))
+    #beta <- t(get_results %>% select(starts_with("beta.all[")))
+    beta <- t(get_results)[startsWith(rownames(t(get_results)), "beta.all["), ]
     beta_mcmc_rule <- 1 / sqrt(beta[, 9])
     ggplot(data.frame(name = names(beta_mcmc_rule),
                       ratio = beta_mcmc_rule),
@@ -687,7 +707,8 @@ mcmc_diagnostics <- function(net, par = NULL) {
   beta_plot_rhat <- if (any(inherits(net, "run_metareg") &
                             net$covar_assumption != "common")) {
     get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
-    beta <- t(get_results %>% select(starts_with("beta.all[")))
+    #beta <- t(get_results %>% select(starts_with("beta.all[")))
+    beta <- t(get_results)[startsWith(rownames(t(get_results)), "beta.all["), ]
     ggplot(data.frame(name = names(beta[, 8]), rhat = beta[, 8]),
            aes(x = name,
                y = rhat,
@@ -721,7 +742,11 @@ mcmc_diagnostics <- function(net, par = NULL) {
   tabulate_beta <-
     if (any(inherits(net, "run_metareg") & net$covar_assumption == "common")) {
       get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
-      beta <- t(get_results %>% select(starts_with("beta") & !starts_with("beta.all[")))
+      #beta <-
+      #  t(get_results %>% select(starts_with("beta") & !starts_with("beta.all[")))
+      beta <-
+        t(get_results)[startsWith(rownames(t(get_results)), "beta") &
+                         !startsWith(rownames(t(get_results)), "beta.all["), ]
       data.frame(R.hat = beta[8], MCMC.rule = 1 / sqrt(beta[9]))
     } else {
       data.frame(R.hat = "Not applicable", MCMC.rule = "Not applicable")
@@ -732,7 +757,8 @@ mcmc_diagnostics <- function(net, par = NULL) {
     if(any(is.element(class(net), c("run_model", "run_metareg", "run_ume")) &
            net$model == "RE")) {
       get_results <- as.data.frame(t(net$jagsfit$BUGSoutput$summary))
-      tau <- t(get_results %>% select(starts_with("tau")))
+      #tau <- t(get_results %>% select(starts_with("tau")))
+      tau <- t(get_results)[startsWith(rownames(t(get_results)), "tau"), ]
       data.frame(R.hat = tau[8], MCMC.rule = 1 / sqrt(tau[9]))
   } else if (all(!is.element(class(net),
                              c("run_model", "run_metareg", "run_ume")) |

@@ -387,26 +387,42 @@ run_sensitivity <- function(full,
     get_results[[i]] <- as.data.frame(t(jagsfit[[i]]$BUGSoutput$summary))
   }
 
+  #EM <- do.call(rbind,
+  #              lapply(
+  #                seq_len(length(mean_misspar[, 1])),
+  #                function(i) t(get_results[[i]] %>%
+  #                                dplyr::select(starts_with("EM[")))))
   EM <- do.call(rbind,
                 lapply(
                   seq_len(length(mean_misspar[, 1])),
-                  function(i) t(get_results[[i]] %>%
-                                  dplyr::select(starts_with("EM[")))))
+                  function(i) t(get_results[[i]])[
+                    startsWith(rownames(t(get_results[[i]])), "EM["), ]))
 
   if (is.element(measure, c("RR", "RD"))) {
+    #EM_LOR <- do.call(rbind,
+    #                  lapply(
+    #                    seq_len(length(mean_misspar[, 1])),
+    #                    function(i) t(get_results[[i]] %>%
+    #                                    dplyr::select(starts_with("EM.LOR[")))))
     EM_LOR <- do.call(rbind,
                       lapply(
                         seq_len(length(mean_misspar[, 1])),
-                        function(i) t(get_results[[i]] %>%
-                                        dplyr::select(starts_with("EM.LOR[")))))
+                        function(i) t(get_results[[i]])[
+                          startsWith(rownames(t(get_results[[i]])),
+                                     "EM.LOR["), ]))
   }
 
   if (model == "RE") {
+    #tau <- do.call(rbind,
+    #              lapply(
+    #                seq_len(length(mean_misspar[, 1])),
+    #                function(i) t(get_results[[i]] %>%
+    #                                dplyr::select(starts_with("tau")))))
     tau <- do.call(rbind,
-                  lapply(
-                    seq_len(length(mean_misspar[, 1])),
-                    function(i) t(get_results[[i]] %>%
-                                    dplyr::select(starts_with("tau")))))
+                   lapply(
+                     seq_len(length(mean_misspar[, 1])),
+                     function(i) t(get_results[[i]])[
+                       startsWith(rownames(t(get_results[[i]])), "tau"), ]))
   }
 
   # Return results
