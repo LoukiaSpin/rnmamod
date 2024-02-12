@@ -49,7 +49,6 @@ Imports:
     knitr,
     MASS,
     mcmcplots,
-    netmeta,
     R2jags,
     reshape2,
     scales,

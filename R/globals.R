@@ -12,9 +12,8 @@
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom grDevices rainbow
 #' @importFrom heatmaply heatmaply
-#' @importFrom igraph E layout_in_circle make_graph plot.igraph V
+#' @importFrom igraph count_components distances E layout_in_circle make_graph plot.igraph V
 #' @importFrom knitr kable
-#' @importFrom netmeta netconnection
 #' @importFrom reshape2 melt
 #' @importFrom R2jags jags autojags
 #' @importFrom scales hue_pal rescale percent

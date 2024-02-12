@@ -92,12 +92,12 @@ Thresholds of robustness have been proposed only for the odds ratio
   \code{"frail"} appears.
 }
 \examples{
+
+\dontrun{
 library(netmeta)
 
-# Load data from 'netmeta'
 data(Baker2009)
 
-\donttest{
 # Transform from arm-based to contrast-based format
 p1 <- pairwise(treatment, exac, total, studlab = paste(study, year),
 data = Baker2009, sm = "OR")

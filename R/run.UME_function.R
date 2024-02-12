@@ -324,15 +324,17 @@ run_ume <- function(full,
     #                                      N[(ns - ns_multi + 1):ns, ]),
     #                          studlab = 1:ns_multi)
 
-    connected <-
-      netconnection(treat1 = unlist(multi_network[, 2]),
-                    treat2 = unlist(multi_network[, 3]),
-                    studlab = unlist(multi_network[, 1]))$n.subnets
+    #connected <-
+    #  netconnection(treat1 = unlist(multi_network[, 2]),
+    #                treat2 = unlist(multi_network[, 3]),
+    #                studlab = unlist(multi_network[, 1]))$n.subnets
+    connected <- find_subnetworks(multi_network)$num_subnetworks
 
     ## For the case of a disconnected network of multi-arm trials
     if (connected > 1) {
       dist_mat <-
-        netconnection(treat1, treat2, studlab, data = multi_network)$D.matrix
+        #netconnection(treat1, treat2, studlab, data = multi_network)$D.matrix
+        find_subnetworks(multi_network)$distance_mat
       group0 <- apply(dist_mat, 2, function(x) length(which(!is.infinite(x))))
       group <- data.frame("treat" = attributes(group0)$names, "freq" = group0)
 

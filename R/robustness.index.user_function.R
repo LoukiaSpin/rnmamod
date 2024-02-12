@@ -100,12 +100,12 @@
 #' \emph{Res Synth Methods} 2021;\bold{12}(4):475--90. doi: 10.1002/jrsm.1478
 #'
 #' @examples
+#'
+#' \dontrun{
 #' library(netmeta)
 #'
-#' # Load data from 'netmeta'
 #' data(Baker2009)
 #'
-#' \donttest{
 #' # Transform from arm-based to contrast-based format
 #' p1 <- pairwise(treatment, exac, total, studlab = paste(study, year),
 #' data = Baker2009, sm = "OR")
