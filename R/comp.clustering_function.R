@@ -597,7 +597,7 @@ comp_clustering <- function (input,
                              na.value = "white")
         else
           scale_fill_manual(breaks = c("high", "poor"),
-                             values = c("#009E73", "#D55E00"),
+                             values = alpha(c("#009E73", "#D55E00"), 0.5),
                              na.value = "white")} +
       scale_color_manual(breaks = c("yes", "no"),
                          values = c("black", "white"),
