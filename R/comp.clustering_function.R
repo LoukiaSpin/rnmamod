@@ -576,7 +576,7 @@ comp_clustering <- function (input,
                  fill = if (ranged_values == TRUE) {value} else
                    {ifelse(value < threshold, "high", "poor")})) +
       geom_tile(colour = ifelse(mat_new$value < threshold, "#009E73", "#D55E00"),
-                alpha = 1) +
+                alpha = 0.5) +
       geom_text(aes(factor(Var2,
                            levels = sort(unique_comp)[1:num_unique_comp]),
                     factor(Var1, levels = sort(unique_comp)[num_unique_comp:1]),
@@ -597,7 +597,7 @@ comp_clustering <- function (input,
                              na.value = "white")
         else
           scale_fill_manual(breaks = c("high", "poor"),
-                             values = alpha(c("#009E73", "#D55E00"), 0.5),
+                             values = c("#009E73", "#D55E00"),
                              na.value = "white")} +
       scale_color_manual(breaks = c("yes", "no"),
                          values = c("black", "white"),
