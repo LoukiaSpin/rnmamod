@@ -45,9 +45,9 @@
 #'   submission:
 #'   \itemize{
 #'    \item network plot and description of the evidence base
-#'    (\code{\link{netplot}} and \code{\link{describe_network}}, respectively)
-#'    following the  PRISMA statement for systematic reviews with network
-#'    meta-analysis (Hutton et al., 2015);
+#'    (\code{\link{netplot}} and \code{\link{describe_network}},
+#'    respectively) following the  PRISMA statement for systematic reviews with
+#'    network meta-analysis (Hutton et al., 2015);
 #'    \item illustration of the R-hat (Gelman and Rubin, 1992) and MCMC error
 #'    for all monitored nodes and creation of an HTML file with a panel of
 #'    diagnostic plots for each monitored parameter
@@ -115,10 +115,19 @@
 #'    (\code{\link{kld_barplot}}) (Spineli et al., 2021a).
 #'   }
 #'
-#'   \bold{rnmamod} assists the researcher in gauging the quality of a
-#'   systematic review (ongoing or published) as low, unclear, or high
-#'   regarding the quality of transitivity evaluation
-#'   (\code{\link{trans_quality}}).
+#'   \bold{rnmamod} also assists the researcher in assessing the transitivity
+#'   assumption quantitatively based on study dissimilarities for various
+#'   study-level aggregate participant and methodological characteristics
+#'   calculated using the Gower's dissimilarity coefficient
+#'   (\code{\link{gower_distance}} and \code{\link{comp_clustering}}) (Gower,
+#'   1971). Results on the clustered comparisons based on hierarchical
+#'   agglomerative clustering are illustrated using a dendrogram with integrated
+#'   heatmap (\code{\link{dendro_heatmap}}). The distribution of the
+#'   characteristics is presented using violin plots with integrated box
+#'   plots and dots, and stacked bar plots across the observed treatment
+#'   comparisons (\code{\link{distr_characteristics}}). Missing data in the
+#'   characteristics across the studies and observed comparisons are visualised
+#'   using bar plots and tile plot (\code{\link{miss_characteristics}}).
 #'
 #'   Missing participant outcome data are addressed in all models of the package
 #'   after extending the code to incorporate the pattern-mixture model
@@ -174,6 +183,10 @@
 #' Gelman, A, Rubin, DB. Inference from iterative simulation using multiple
 #' sequences. \emph{Stat Sci} 1992;\bold{7}(4):457--72.
 #' doi: 10.1214/ss/1177011136
+#'
+#' Gower JC. A General Coefficient of Similarity and Some of Its Properties.
+#' \emph{Biometrics} 1971;\bold{27}(4):857--71.
+#' http://dx.doi.org/10.2307/2528823
 #'
 #' Hutton B, Salanti G, Caldwell DM, Chaimani A, Schmid CH, Cameron C, et al.
 #' The PRISMA extension statement for reporting of systematic reviews
