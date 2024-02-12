@@ -92,9 +92,9 @@
 </ul><p><b>rnmamod</b> also includes a rich suite of visualisation tools to aid in
   the interpretation of the results and preparation of the manuscript for
   submission:</p><ul><li><p>network plot and description of the evidence base
-   (<code><a href="netplot.html">netplot</a></code> and <code><a href="describe_network.html">describe_network</a></code>, respectively)
-   following the  PRISMA statement for systematic reviews with network
-   meta-analysis (Hutton et al., 2015);</p></li>
+   (<code><a href="netplot.html">netplot</a></code> and <code><a href="describe_network.html">describe_network</a></code>,
+   respectively) following the  PRISMA statement for systematic reviews with
+   network meta-analysis (Hutton et al., 2015);</p></li>
 <li><p>illustration of the R-hat (Gelman and Rubin, 1992) and MCMC error
    for all monitored nodes and creation of an HTML file with a panel of
    diagnostic plots for each monitored parameter
@@ -160,10 +160,19 @@
    informative scenario to the missing-at-random assumption about the
    missingness parameter for a selected pairwise comparison
    (<code><a href="kld_barplot.html">kld_barplot</a></code>) (Spineli et al., 2021a).</p></li>
-</ul><p><b>rnmamod</b> assists the researcher in gauging the quality of a
-  systematic review (ongoing or published) as low, unclear, or high
-  regarding the quality of transitivity evaluation
-  (<code><a href="trans_quality.html">trans_quality</a></code>).</p>
+</ul><p><b>rnmamod</b> also assists the researcher in assessing the transitivity
+  assumption quantitatively based on study dissimilarities for various
+  study-level aggregate participant and methodological characteristics
+  calculated using the Gower's dissimilarity coefficient
+  (<code><a href="gower_distance.html">gower_distance</a></code> and <code><a href="comp_clustering.html">comp_clustering</a></code>) (Gower,
+  1971). Results on the clustered comparisons based on hierarchical
+  agglomerative clustering are illustrated using a dendrogram with integrated
+  heatmap (<code><a href="dendro_heatmap.html">dendro_heatmap</a></code>). The distribution of the
+  characteristics is presented using violin plots with integrated box
+  plots and dots, and stacked bar plots across the observed treatment
+  comparisons (<code><a href="distr_characteristics.html">distr_characteristics</a></code>). Missing data in the
+  characteristics across the studies and observed comparisons are visualised
+  using bar plots and tile plot (<code><a href="miss_characteristics.html">miss_characteristics</a></code>).</p>
 <p>Missing participant outcome data are addressed in all models of the package
   after extending the code to incorporate the pattern-mixture model
   (Spineli et al., 2021b; Spineli, 2019).</p>
@@ -207,6 +216,9 @@ doi: 10.1002/sim.3767</p>
 <p>Gelman, A, Rubin, DB. Inference from iterative simulation using multiple
 sequences. <em>Stat Sci</em> 1992;<b>7</b>(4):457--72.
 doi: 10.1214/ss/1177011136</p>
+<p>Gower JC. A General Coefficient of Similarity and Some of Its Properties.
+<em>Biometrics</em> 1971;<b>27</b>(4):857--71.
+http://dx.doi.org/10.2307/2528823</p>
 <p>Hutton B, Salanti G, Caldwell DM, Chaimani A, Schmid CH, Cameron C, et al.
 The PRISMA extension statement for reporting of systematic reviews
 incorporating network meta-analyses of health care interventions: checklist

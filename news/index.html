@@ -52,8 +52,23 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.4.0" id="rnmamod-version-040-2023-0x-xx">rnmamod, version 0.4.0 (2023-0X-XX)<a class="anchor" aria-label="anchor" href="#rnmamod-version-040-2023-0x-xx"></a></h2>
-<ul><li>Function <strong>mcmc_diagnostics</strong>:
+<h2 class="pkg-version" data-toc-text="0.4.0" id="rnmamod-version-040-2024-0x-xx">rnmamod, version 0.4.0 (2024-0X-XX)<a class="anchor" aria-label="anchor" href="#rnmamod-version-040-2024-0x-xx"></a></h2>
+<ul><li>Function <strong>comp_clustering</strong>:
+<ul><li>Performs quantitative evaluation of the transitivity assumption using inter-study dissimilarities for various study-level aggregate participant and methodological characteristics that may act as effect modifiers.</li>
+</ul></li>
+<li>Function <strong>dendro_heatmap</strong>:
+<ul><li>Returns dendrogram with integrated heatmap of the clustered comparisons and studies based on hierarchical agglomerative clustering (performed using the function <strong>comp_clustering</strong>). The R packages <em>heatmaply</em> and <em>dendextend</em> have been used.</li>
+</ul></li>
+<li>Function <strong>distr_characteristics</strong>:
+<ul><li>It returns violin plots with box plots and dots for quantitative characteristics, and stacked barplots for qualitative characteristics across the observed treatment comparisons. The function can be also used to illustrate the distribution of the characteristics across the clusters defined from <strong>comp_clustering</strong>.</li>
+</ul></li>
+<li>Function <strong>miss_characteristics</strong>:
+<ul><li>It returns various plots to visualise the missing cases in the characteristics across studies and treatment comparisons.</li>
+</ul></li>
+<li>Function <strong>gower_distance</strong>:
+<ul><li>It returns the N-by-N matrix on Gower’s dissimilarity coefficient for all pairs of N studies in a network.</li>
+</ul></li>
+<li>Function <strong>mcmc_diagnostics</strong>:
 <ul><li>returns a barplot on the ratio of MCMC error to the posterior standard deviation and a barplot on the Gelman-Rubin R diagnostic. Green bars indicate ratio less than 0.05 and R less than 1.10; otherwise, the bars are red.</li>
 </ul></li>
 <li>Functions <strong>baseline_model</strong>, <strong>run_metareg</strong>, <strong>run_model</strong>, <strong>run_nodesplit</strong>, <strong>run_sensitivity</strong>, <strong>run_series_meta</strong>, and <strong>run_ume</strong>:
