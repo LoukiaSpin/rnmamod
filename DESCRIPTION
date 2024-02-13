@@ -52,6 +52,7 @@ Imports:
     R2jags,
     reshape2,
     scales,
+    stringr,
     writexl
 Suggests: 
     rmarkdown,

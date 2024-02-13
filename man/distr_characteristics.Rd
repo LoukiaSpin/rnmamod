@@ -102,6 +102,21 @@ The correct type mode of columns in \code{input} must be ensured to use
   interventions within the comparisons obtained from the other related
   functions.
 }
+\examples{
+
+# Fictional dataset
+set.seed(13022024)
+data_set <- data.frame(Trial_name = as.character(1:(5 + 7 +2)),
+                       arm1 = rep(c("1", "2"), c(5 + 7, 2)),
+                       arm2 = rep(c("2", "3"), c(5, 7 + 2)),
+                       sample = as.numeric(sample(50:300, 5 + 7 + 2)),
+                       age = as.numeric(sample(18:50, 5 + 7 + 2)),
+                       blinding = factor(rep(c("yes", "no", "yes"), c(5, 7, 2))))
+
+distr_characteristics(input = data_set,
+                      drug_names = c("A", "B", "C"))
+
+}
 \seealso{
 \code{\link{comp_clustering}}
 }

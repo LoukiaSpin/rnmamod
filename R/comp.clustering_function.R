@@ -203,6 +203,23 @@
 #' validation of cluster analysis.
 #' \emph{J Comput Appl Math} 1987;\bold{20}:53--65.
 #'
+#' @examples
+#'
+#' # Fictional dataset
+#' data_set <- data.frame(Trial_name = as.character(1:7),
+#'                       arm1 = c("1", "1", "1", "1", "1", "2", "2"),
+#'                       arm2 = c("2", "2", "2", "3", "3", "3", "3"),
+#'                       sample = c(140, 145, 150, 40, 45, 75, 80),
+#'                       age = c(18, 18, 18, 48, 48, 35, 35),
+#'                       blinding = factor(c("yes", "yes", "yes", "no", "no", "no", "no")))
+#'
+#' # Obtain comparison dissimilarities (informative = TRUE)
+#' comp_clustering(input = data_set,
+#'                 drug_names = c("A", "B", "C"),
+#'                 threshold = 0.13,  # General research setting
+#'                 informative = TRUE,
+#'                 get_plots = TRUE)
+#'
 #' @export
 comp_clustering <- function (input,
                              drug_names,

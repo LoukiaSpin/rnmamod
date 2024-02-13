@@ -17,6 +17,7 @@
 #' @importFrom reshape2 melt
 #' @importFrom R2jags jags autojags
 #' @importFrom scales hue_pal rescale percent
+#' @importFrom stringr str_wrap
 #' @importFrom writexl write_xlsx
 #' @importFrom utils combn packageDescription
 
@@ -71,7 +72,6 @@ utils::globalVariables(c("active",
                          "sil_width",
                          "size",
                          "stat_sign",
-                         "str_wrap",
                          "study",
                          "studlab",
                          "total",

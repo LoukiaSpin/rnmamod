@@ -44,6 +44,28 @@ argument found in the theme's properties in the R-package
   Gower dissimilarities among the trials in the network for a specific
   linkage method and number of clusters.
 }
+\examples{
+
+# Fictional dataset
+data_set <- data.frame(Trial_name = as.character(1:7),
+                      arm1 = c("1", "1", "1", "1", "1", "2", "2"),
+                      arm2 = c("2", "2", "2", "3", "3", "3", "3"),
+                      sample = c(140, 145, 150, 40, 45, 75, 80),
+                      age = c(18, 18, 18, 48, 48, 35, 35),
+                      blinding = factor(c("yes", "yes", "yes", "no", "no", "no", "no")))
+
+# Apply hierarchical clustering (informative = FALSE)
+hier <- comp_clustering(input = data_set,
+                        drug_names = c("A", "B", "C"),
+                        threshold = 0.13,  # General research setting
+                        informative = FALSE,
+                        optimal_clusters = 3,
+                        get_plots = TRUE)
+
+# Create the dendrogram with integrated heatmap
+dendro_heatmap(hier)
+
+}
 \seealso{
 \code{\link{comp_clustering}}, \code{\link[heatmaply:heatmaply]{heatmaply}}
 }

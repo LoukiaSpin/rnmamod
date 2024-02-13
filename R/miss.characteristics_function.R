@@ -79,6 +79,21 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
+#' @examples
+#'
+#' # Fictional dataset
+#' set.seed(13022024)
+#' data_set <- data.frame(Trial_name = as.character(1:(5 + 7 +2)),
+#'                        arm1 = rep(c("1", "2"), c(5 + 7, 2)),
+#'                        arm2 = rep(c("2", "3"), c(5, 7 + 2)),
+#'                        sample = as.numeric(sample(c(50:300), 5 + 7 + 2)),
+#'                        age = as.numeric(sample(c(18:50), 5 + 7 + 2)),
+#'                        blinding = factor(rep(c("yes", "no", "yes"), c(5, 7, 2))))
+#' data_set$age[data_set$age < 30] <- NA
+#'
+#' miss_characteristics(input = data_set,
+#'                       drug_names = c("A", "B", "C"))
+#'
 #' @export
 miss_characteristics <- function (input,
                                   drug_names,
