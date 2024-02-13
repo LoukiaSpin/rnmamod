@@ -204,7 +204,7 @@
 #' \emph{J Comput Appl Math} 1987;\bold{20}:53--65.
 #'
 #' @examples
-#'
+#' \donttest{
 #' # Fictional dataset
 #' data_set <- data.frame(Trial_name = as.character(1:7),
 #'                       arm1 = c("1", "1", "1", "1", "1", "2", "2"),
@@ -219,6 +219,7 @@
 #'                 threshold = 0.13,  # General research setting
 #'                 informative = TRUE,
 #'                 get_plots = TRUE)
+#' }
 #'
 #' @export
 comp_clustering <- function (input,

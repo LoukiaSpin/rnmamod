@@ -80,7 +80,7 @@
 #' @seealso \code{\link{comp_clustering}}
 #'
 #' @examples
-#'
+#' \donttest{
 #' # Fictional dataset
 #' set.seed(13022024)
 #' data_set <- data.frame(Trial_name = as.character(1:(5 + 7 +2)),
@@ -92,6 +92,7 @@
 #'
 #' distr_characteristics(input = data_set,
 #'                       drug_names = c("A", "B", "C"))
+#' }
 #'
 #' @export
 distr_characteristics <- function (input,

@@ -214,7 +214,7 @@ The correct type mode of columns in \code{input} must be ensured to use
   an error message will be printed on the R console.
 }
 \examples{
-
+\donttest{
 # Fictional dataset
 data_set <- data.frame(Trial_name = as.character(1:7),
                       arm1 = c("1", "1", "1", "1", "1", "2", "2"),
@@ -229,6 +229,7 @@ comp_clustering(input = data_set,
                 threshold = 0.13,  # General research setting
                 informative = TRUE,
                 get_plots = TRUE)
+}
 
 }
 \references{
