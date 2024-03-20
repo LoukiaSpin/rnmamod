@@ -18,7 +18,7 @@
 #' @param drug_names A vector of labels with the name of the interventions
 #'   in the order they have been defined in the argument \code{input}.
 #' @param threshold A positive scalar to indicate the cut-off of low
-#'   dissimilarity of two comparisons. The value much be low.
+#'   dissimilarity of two comparisons. The value must be low.
 #' @param informative Logical with \code{TRUE} for evaluating only the
 #'   comparison dissimilarity and \code{FALSE} for performing hierarchical
 #'   agglomerative clustering, thus, allowing the user to define the number of

@@ -2,9 +2,9 @@
 #' (Trials' comparability for transitivity evaluation)
 #'
 #' @description
-#'   \code{gower_distance} calculate the Gower's dissimilarity coefficient for 
-#'   all pairs of trials included in a network of interventions, considering 
-#'   several characteristics measured at trial level. 
+#'   \code{gower_distance} calculate the Gower's dissimilarity coefficient for
+#'   all pairs of trials included in a network of interventions, considering
+#'   several characteristics measured at trial level.
 #'   It takes values from 0 to 1, with 0 implying complete similarity and 1
 #'   complete dissimilarity.
 #'
@@ -67,7 +67,7 @@ gower_distance <- function (input) {
 
 
   ## Remove the first two columns
-  data <- input[, -c(1:2)]
+  data <- as.data.frame(input[, -c(1:2)])
 
 
   ## Table with the variable type
