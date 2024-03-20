@@ -41,7 +41,7 @@
 #'  \code{\link{comp_clustering}}, \code{\link[heatmaply:heatmaply]{heatmaply}}
 #'
 #' @examples
-#'
+#' \donttest{
 #' # Fictional dataset
 #' data_set <- data.frame(Trial_name = as.character(1:7),
 #'                       arm1 = c("1", "1", "1", "1", "1", "2", "2"),
@@ -60,6 +60,7 @@
 #'
 #' # Create the dendrogram with integrated heatmap
 #' dendro_heatmap(hier)
+#' }
 #'
 #' @export
 dendro_heatmap <- function (input,

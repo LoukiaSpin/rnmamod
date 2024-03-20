@@ -45,7 +45,7 @@ argument found in the theme's properties in the R-package
   linkage method and number of clusters.
 }
 \examples{
-
+\donttest{
 # Fictional dataset
 data_set <- data.frame(Trial_name = as.character(1:7),
                       arm1 = c("1", "1", "1", "1", "1", "2", "2"),
@@ -64,6 +64,7 @@ hier <- comp_clustering(input = data_set,
 
 # Create the dendrogram with integrated heatmap
 dendro_heatmap(hier)
+}
 
 }
 \seealso{

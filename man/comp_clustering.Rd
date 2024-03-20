@@ -34,7 +34,7 @@ respectively. The remaining columns refer to summary characteristics. See
 in the order they have been defined in the argument \code{input}.}
 
 \item{threshold}{A positive scalar to indicate the cut-off of low
-dissimilarity of two comparisons. The value much be low.}
+dissimilarity of two comparisons. The value must be low.}
 
 \item{informative}{Logical with \code{TRUE} for evaluating only the
 comparison dissimilarity and \code{FALSE} for performing hierarchical

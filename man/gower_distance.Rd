@@ -26,9 +26,9 @@ respectively. The remaining columns refer to summary characteristics. See
   of studies with the number of characteristics.}
 }
 \description{
-\code{gower_distance} calculate the Gower's dissimilarity coefficient for 
-  all pairs of trials included in a network of interventions, considering 
-  several characteristics measured at trial level. 
+\code{gower_distance} calculate the Gower's dissimilarity coefficient for
+  all pairs of trials included in a network of interventions, considering
+  several characteristics measured at trial level.
   It takes values from 0 to 1, with 0 implying complete similarity and 1
   complete dissimilarity.
 }
