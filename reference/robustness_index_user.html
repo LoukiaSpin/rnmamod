@@ -77,8 +77,8 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>sens</dt>
 <dd><p>A list of R objects of class
-<code><a href="https://rdrr.io/pkg/netmeta/man/netmeta.html" class="external-link">netmeta</a></code>,
-<code><a href="https://rdrr.io/pkg/netmeta/man/netmetabin.html" class="external-link">netmetabin</a></code> (see
+<code>netmeta</code>,
+<code>netmetabin</code> (see
 <a href="https://CRAN.R-project.org/package=netmeta" class="external-link">netmeta</a>) or
 <code><a href="https://wviechtb.github.io/metafor/reference/rma.uni.html" class="external-link">rma</a></code>, <code><a href="https://wviechtb.github.io/metafor/reference/rma.glmm.html" class="external-link">rma.glmm</a></code>,
 <code><a href="https://wviechtb.github.io/metafor/reference/rma.mh.html" class="external-link">rma.mh</a></code>, <code><a href="https://wviechtb.github.io/metafor/reference/rma.mv.html" class="external-link">rma.mv</a></code>,
@@ -100,8 +100,8 @@ analysis. Hence, the list should include at least two elements
 <dd><p>This is relevant only for (see
 <a href="https://CRAN.R-project.org/package=netmeta" class="external-link">netmeta</a>). A vector of
 at least two characters with values <code>"TE.common"</code> or
-<code>"TE.random"</code>. See 'Values' in <code><a href="https://rdrr.io/pkg/netmeta/man/netmeta.html" class="external-link">netmeta</a></code>
-or <code><a href="https://rdrr.io/pkg/netmeta/man/netmetabin.html" class="external-link">netmetabin</a></code>.</p></dd>
+<code>"TE.random"</code>. See 'Values' in <code>netmeta</code>
+or <code>netmetabin</code>.</p></dd>
 
 
 <dt>threshold</dt>
@@ -188,8 +188,8 @@ and network meta-analysis.
   <code><a href="https://wviechtb.github.io/metafor/reference/rma.mh.html" class="external-link">rma.mh</a></code>, <code><a href="https://wviechtb.github.io/metafor/reference/rma.mv.html" class="external-link">rma.mv</a></code>,
   <code><a href="https://wviechtb.github.io/metafor/reference/rma.peto.html" class="external-link">rma.peto</a></code>,
   <code><a href="https://wviechtb.github.io/metafor/reference/rma.uni.html" class="external-link">rma.uni</a></code>,
-  <code><a href="https://rdrr.io/pkg/netmeta/man/netmeta.html" class="external-link">netmeta</a></code>,
-  <code><a href="https://rdrr.io/pkg/netmeta/man/netmetabin.html" class="external-link">netmetabin</a></code>,
+  <code>netmeta</code>,
+  <code>netmetabin</code>,
   <code><a href="heatmap_robustness.html">heatmap_robustness</a></code></p></div>
     </div>
     <div class="section level2">
@@ -206,11 +206,11 @@ and network meta-analysis.
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Baker2009</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Transform from arm-based to contrast-based format</span></span></span>
-<span class="r-in"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/netmeta/man/pairwise.html" class="external-link">pairwise</a></span><span class="op">(</span><span class="va">treatment</span>, <span class="va">exac</span>, <span class="va">total</span>, studlab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">study</span>, <span class="va">year</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">pairwise</span><span class="op">(</span><span class="va">treatment</span>, <span class="va">exac</span>, <span class="va">total</span>, studlab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">study</span>, <span class="va">year</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>data <span class="op">=</span> <span class="va">Baker2009</span>, sm <span class="op">=</span> <span class="st">"OR"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Conduct standard network meta-analysis</span></span></span>
-<span class="r-in"><span><span class="va">net1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/netmeta/man/netmeta.html" class="external-link">netmeta</a></span><span class="op">(</span><span class="va">p1</span>, ref <span class="op">=</span> <span class="st">"Placebo"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">net1</span> <span class="op">&lt;-</span> <span class="fu">netmeta</span><span class="op">(</span><span class="va">p1</span>, ref <span class="op">=</span> <span class="st">"Placebo"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Calculate the robustness index (random-effects versus fixed-effect)</span></span></span>
 <span class="r-in"><span><span class="fu">robustness_index_user</span><span class="op">(</span>sens <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">net1</span>, <span class="va">net1</span><span class="op">)</span>,</span></span>
