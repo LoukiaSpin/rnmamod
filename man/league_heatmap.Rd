@@ -174,6 +174,5 @@ doi: 10.1016/j.jclinepi.2010.03.016
   \code{\link{run_series_meta}}
 }
 \author{
-{Loukia M. Spineli}, {Chrysostomos Kalyvas},
-  {Katerina Papadimitropoulou}
+Loukia M. Spineli, Chrysostomos Kalyvas, Katerina Papadimitropoulou
 }

@@ -3,11 +3,14 @@
 
 Status: 1 NOTE
 Possibly misspelled words in DESCRIPTION:
-  Spineli (22:57)
-  al (22:68)
-  dendrogram (32:25)
-  et (22:65)
-* The spelling is correct in all indicated words!
+  dendrogram (31:25)
+* The spelling is correct in the indicated word!
+
+### R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
+R CMD check succeeded
 
 # Submission, version 0.3.0 (01/11/2022)
 * **R Under development (unstable) (2022-10-11 r83083 ucrt)**

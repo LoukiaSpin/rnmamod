@@ -117,8 +117,7 @@
 #'   In the case of two interventions, the execution of the function will be
 #'   stopped and an error message will be printed on the R console.
 #'
-#' @author {Loukia M. Spineli}, {Chrysostomos Kalyvas},
-#'   {Katerina Papadimitropoulou}
+#' @author Loukia M. Spineli, Chrysostomos Kalyvas, Katerina Papadimitropoulou
 #'
 #' @seealso \code{\link{run_metareg}}, \code{\link{run_model}},
 #'   \code{\link{run_series_meta}}

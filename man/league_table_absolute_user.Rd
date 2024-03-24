@@ -134,7 +134,7 @@ Abstracts of the Global Evidence Summit, Cape Town, South Africa.
 \emph{Cochrane Database of Systematic Reviews} 2017;\bold{9}(Suppl 1):1891.
 }
 \seealso{
-code{\link{league_table_absolute}},
+\code{\link{league_table_absolute}},
   \code{\link[writexl:write_xlsx]{write_xlsx}}
 }
 \author{

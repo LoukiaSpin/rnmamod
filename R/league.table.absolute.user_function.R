@@ -98,7 +98,7 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso code{\link{league_table_absolute}},
+#' @seealso \code{\link{league_table_absolute}},
 #'   \code{\link[writexl:write_xlsx]{write_xlsx}}
 #'
 #' @references

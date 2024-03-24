@@ -110,8 +110,7 @@
 #'   when the function is executed for a fixed-effect network meta-analysis or
 #'   network meta-regression.
 #'
-#' @author {Loukia M. Spineli}, {Chrysostomos Kalyvas},
-#'   {Katerina Papadimitropoulou}
+#' @author Loukia M. Spineli, Chrysostomos Kalyvas, Katerina Papadimitropoulou
 #'
 #' @seealso \code{\link{run_metareg}}, \code{\link{run_model}}
 #'

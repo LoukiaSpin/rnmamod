@@ -39,8 +39,7 @@
 #'   Otherwise, the execution of the function will be stopped and an error
 #'   message will be printed on the R console.
 #'
-#' @author {Loukia M. Spineli}, {Chrysostomos Kalyvas},
-#'   {Katerina Papadimitropoulou}
+#' @author Loukia M. Spineli, Chrysostomos Kalyvas, Katerina Papadimitropoulou
 #'
 #' @seealso \code{\link{run_model}}
 #'

@@ -18,18 +18,18 @@
 #'   and \code{\link{run_series_meta}}.
 #'
 #' @return \code{mcmc_diagnostics} considers the following monitored parameters:
-#'   \code{EM} {The estimated summary effect measure.}
-#'   \code{EM_pred} {The predicted summary effect measure.}
-#'   \code{delta} {The estimated trial-specific effect measure.}
-#'   \code{tau} {The between-trial standard deviation.}
-#'   \code{direct} {The direct estimate of the split node (see 'Value' in
+#'   \item{EM}{The estimated summary effect measure.}
+#'   \item{EM_pred}{The predicted summary effect measure.}
+#'   \item{delta}{The estimated trial-specific effect measure.}
+#'   \item{tau}{The between-trial standard deviation.}
+#'   \item{direct}{The direct estimate of the split node (see 'Value' in
 #'   \code{\link{run_nodesplit}}).}
-#'   \code{indirect} {The indirect estimate of the split node
+#'   \item{indirect}{The indirect estimate of the split node
 #'   (see 'Value' in \code{\link{run_nodesplit}}).}
-#'   \code{diff} {The inconsistency factor of the split node (see 'Value' in
+#'   \item{diff}{The inconsistency factor of the split node (see 'Value' in
 #'   \code{\link{run_nodesplit}}).}
-#'   \code{phi} {The informative missingness parameter.}
-#'   \code{beta} {The regression coefficient.}
+#'   \item{phi}{The informative missingness parameter.}
+#'   \item{beta}{The regression coefficient.}
 #'
 #'   For each monitored parameter mentioned above, \code{mcmc_diagnostics} also
 #'   returns a barplot on the ratio of MCMC error to the posterior standard
