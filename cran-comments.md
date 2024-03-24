@@ -1,3 +1,14 @@
+# Submission, version 0.4.0 (24/03/2024)
+* **R version 4.2.3 (2023-03-15 ucrt)**
+
+Status: 1 NOTE
+Possibly misspelled words in DESCRIPTION:
+  Spineli (22:57)
+  al (22:68)
+  dendrogram (32:25)
+  et (22:65)
+* The spelling is correct in all indicated words!
+
 # Submission, version 0.3.0 (01/11/2022)
 * **R Under development (unstable) (2022-10-11 r83083 ucrt)**
 
