@@ -2,7 +2,8 @@
 #'
 #' @description
 #'   Calculates the robustness index for a sensitivity analysis
-#'   (Spineli et al., 2021) performed using the R-package
+#'   (Spineli et al., 2021) performed using the results of the analysis
+#'   performed via the R-package
 #'   \href{https://CRAN.R-project.org/package=netmeta}{netmeta} or
 #'   \href{https://CRAN.R-project.org/package=metafor}{metafor}.
 #'   The user defines the input and the function returns the robustness index.
@@ -22,8 +23,8 @@
 #'   (see 'Details').
 #' @param pkg Character string indicating the R-package with values
 #'   \code{"netmeta"}, or \code{"metafor"}.
-#' @param attribute This is relevant only for (see
-#'   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}). A vector of
+#' @param attribute This is relevant only for
+#'   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}. A vector of
 #'   at least two characters with values \code{"TE.common"} or
 #'   \code{"TE.random"}. See 'Values' in \code{\link[netmeta:netmeta]{netmeta}}
 #'   or \code{\link[netmeta:netmetabin]{netmetabin}}.
@@ -32,14 +33,14 @@
 #'   element in \code{sens}) and re-analysis results. See 'Details' below.
 #'
 #' @return \code{robustness_index_user} prints on the R console a message in
-#'   green text on the threshold of robustness determined by the user.
+#'   red text on the threshold of robustness determined by the user.
 #'   Then, the function returns the following list of elements:
 #'   \item{robust_index}{A numeric scalar or vector on the robustness
 #'   index values. In the case of a pairwise meta-analysis,
 #'   \code{robust_index} is scalar as only one summary effect size is obtained.
 #'   In the case of network meta-analysis, \code{robust_index} is a vector with
 #'   length equal to the number of possible pairwise comparisons;
-#'   one robustness index per possible comparison.}
+#'   one robustness index per pairwise comparison.}
 #'   \item{robust}{A character or character vector (of same length with
 #'   \code{robust_index}) on whether the primary analysis results are
 #'   \emph{robust} or \emph{frail} to the different re-analyses.}
@@ -48,7 +49,7 @@
 #'   the primary analysis. In the case of a pairwise meta-analysis, \code{kld}
 #'   is a vector with length equal to the number of total analyses (one KLD
 #'   value is obtained per analysis). The number of total analyses equals the
-#'   length of  \code{sens}.
+#'   length of \code{sens}.
 #'   In the case of network meta-analysis, \code{robust_index} is a matrix with
 #'   number of rows equal to the number of total analyses and number of columns
 #'   equal to the number of  possible pairwise comparisons; one KLD

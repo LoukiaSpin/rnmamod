@@ -1,29 +1,29 @@
-# rnmamod, version 0.4.0 (2024-0X-XX)
+# rnmamod, version 0.4.0 (2024-03-24)
 
  * Function __comp_clustering__: 
    - Performs quantitative evaluation of the transitivity assumption using
-     inter-study dissimilarities for various study-level aggregate participant 
-     and methodological characteristics that may act as effect modifiers. 
+   inter-trial dissimilarities for various trial-level aggregate participant 
+   and methodological characteristics that may act as effect modifiers. 
  * Function __dendro_heatmap__:  
-   - Returns dendrogram with integrated heatmap of the clustered comparisons and
-     studies based on hierarchical agglomerative clustering (performed using the
-     function __comp_clustering__). The R packages _heatmaply_ and _dendextend_ 
-     have been used.
+   - Returns the dendrogram with integrated heatmap of the clustered comparisons 
+   and trials based on hierarchical agglomerative clustering (performed using 
+   the function __comp_clustering__). The R packages _heatmaply_ and 
+   _dendextend_ have been used.
  * Function __distr_characteristics__:  
-   - It returns violin plots with box plots and dots for quantitative 
+   - It returns violin plots with integrated box plots and dots for quantitative 
    characteristics, and stacked barplots for qualitative characteristics across
-   the observed treatment comparisons. The function can  be also used to 
+   the observed treatment comparisons. The function can also be used to 
    illustrate the distribution of the characteristics across the clusters 
    defined from __comp_clustering__.
  * Function __miss_characteristics__:  
    - It returns various plots to visualise the missing cases in the 
-   characteristics across studies and treatment comparisons.
+   characteristics across trials and treatment comparisons.
  * Function __gower_distance__: 
    - It returns the N-by-N matrix on Gower's dissimilarity coefficient for all
-   pairs of N studies in a network.
+   pairs of N trials in a network.
  * Function __mcmc_diagnostics__: 
-   - returns a barplot on the ratio of MCMC error to the posterior standard
-   deviation and a barplot on the Gelman-Rubin R diagnostic. Green bars
+   - returns a bar plot on the ratio of MCMC error to the posterior standard
+   deviation and a bar plot on the Gelman-Rubin R diagnostic. Green bars
    indicate ratio less than 0.05 and R less than 1.10; otherwise, the bars are
    red.
  * Functions __baseline_model__, __run_metareg__, __run_model__, 
@@ -34,8 +34,8 @@
    values for the parameters, following the documentation of the _jags_ function
    in the R package _R2jags_. 
  * Function __describe_network__:
-   - It reports only the tables with the evidence base information on one outcome.
-   The network plot is not reported (see and use __netplot__, instead).
+   - It reports only the tables with the evidence base information on one 
+   outcome. The network plot is not reported (see and use __netplot__, instead).
  * Function __netplot__:
    - Self-created function using the R package _igraph_. This function creates
    the network plot.

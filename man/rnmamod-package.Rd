@@ -6,7 +6,8 @@
 \title{rnmamod: Bayesian Network Meta-analysis with Missing Participants}
 \description{
 An R package for performing Bayesian network meta-analysis while handling
-  missing participant outcome data properly.
+  missing participant outcome data properly, assessing the robustness of the
+  primary analysis results, and exploring the transitivity assumption.
 }
 \details{
 R-package \bold{rnmamod} is built upon the WinBUGS program code found in
@@ -57,11 +58,11 @@ R-package \bold{rnmamod} is built upon the WinBUGS program code found in
    (\code{\link{heatmap_missing_network}}) and across the intervention arms
    of each trial in the dataset (\code{\link{heatmap_missing_dataset}});
    \item league heatmap with the estimated and predicted summary effects of
-   all possible pairwise comparisons in the network and integrated SUCRA or
-   P-scores (\code{\link{league_heatmap}} and
+   all possible pairwise comparisons in the network and integrated SUCRA
+   (Salanti et al., 2011) or P-scores (Ruecker and Schwarzer, 2015)
+   (\code{\link{league_heatmap}} and
    \code{\link{league_heatmap_pred}}, respectively) after performing network
-   meta-analysis or network meta-regression (Salanti et al., 2011; Ruecker
-   and Schwarzer, 2015);
+   meta-analysis or network meta-regression;
    \item league table for relative and absolute effects for all pairwise
    comparisons and interventions when conducting network meta-analysis anew
    via the package (\code{\link{league_table_absolute}}) or using the results
@@ -76,7 +77,8 @@ R-package \bold{rnmamod} is built upon the WinBUGS program code found in
    meta-analysis (Salanti et al., 2011);
    \item forest plot with the estimated and predicted summary effects of all
    comparisons with a selected intervention (\code{\link{forestplot}}) as
-   obtained from the network meta-analysis model (Salanti et al., 2011);
+   obtained from the network meta-analysis model, and a forest plot with the
+   corresponding SUCRA values (Salanti et al., 2011);
    \item tabulation of the estimated regression coefficient(s), the estimated
    and predicted summary effects, measures of model fit and estimated
    between-trial standard deviation before and after adjusting for a
@@ -117,8 +119,8 @@ R-package \bold{rnmamod} is built upon the WinBUGS program code found in
   }
 
   \bold{rnmamod} also assists the researcher in assessing the transitivity
-  assumption quantitatively based on study dissimilarities for various
-  study-level aggregate participant and methodological characteristics
+  assumption quantitatively based on trial dissimilarities for various
+  trial-level aggregate participant and methodological characteristics
   calculated using the Gower's dissimilarity coefficient
   (\code{\link{gower_distance}} and \code{\link{comp_clustering}}) (Gower,
   1971). Results on the clustered comparisons based on hierarchical
@@ -127,7 +129,7 @@ R-package \bold{rnmamod} is built upon the WinBUGS program code found in
   characteristics is presented using violin plots with integrated box
   plots and dots, and stacked bar plots across the observed treatment
   comparisons (\code{\link{distr_characteristics}}). Missing data in the
-  characteristics across the studies and observed comparisons are visualised
+  characteristics across the trials and observed comparisons are visualised
   using bar plots and tile plot (\code{\link{miss_characteristics}}).
 
   Missing participant outcome data are addressed in all models of the package
