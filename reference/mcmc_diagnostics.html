@@ -94,49 +94,38 @@ and <code><a href="run_series_meta.html">run_series_meta</a></code>.</p></dd>
     
 
 <p><code>mcmc_diagnostics</code> considers the following monitored parameters:</p>
-<p></p>
-<p><code>EM</code></p>
-<p></p>
-<p>The estimated summary effect measure.</p>
-<p></p>
-<p><code>EM_pred</code></p>
-<p></p>
-<p>The predicted summary effect measure.</p>
-<p></p>
-<p><code>delta</code></p>
-<p></p>
-<p>The estimated trial-specific effect measure.</p>
-<p></p>
-<p><code>tau</code></p>
-<p></p>
-<p>The between-trial standard deviation.</p>
-<p></p>
-<p><code>direct</code></p>
-<p></p>
-<p>The direct estimate of the split node (see 'Value' in
-  <code><a href="run_nodesplit.html">run_nodesplit</a></code>).</p>
-<p></p>
-<p><code>indirect</code></p>
-<p></p>
-<p>The indirect estimate of the split node
-  (see 'Value' in <code><a href="run_nodesplit.html">run_nodesplit</a></code>).</p>
-<p></p>
-<p><code>diff</code></p>
-<p></p>
-<p>The inconsistency factor of the split node (see 'Value' in
-  <code><a href="run_nodesplit.html">run_nodesplit</a></code>).</p>
-<p></p>
-<p><code>phi</code></p>
-<p></p>
-<p>The informative missingness parameter.</p>
-<p></p>
-<p><code>beta</code></p>
-<p></p>
-<p>The regression coefficient.</p>
+<dl><dt>EM</dt>
+<dd><p>The estimated summary effect measure.</p></dd>
+
+  <dt>EM_pred</dt>
+<dd><p>The predicted summary effect measure.</p></dd>
+
+  <dt>delta</dt>
+<dd><p>The estimated trial-specific effect measure.</p></dd>
+
+  <dt>tau</dt>
+<dd><p>The between-trial standard deviation.</p></dd>
+
+  <dt>direct</dt>
+<dd><p>The direct estimate of the split node (see 'Value' in
+  <code><a href="run_nodesplit.html">run_nodesplit</a></code>).</p></dd>
+
+  <dt>indirect</dt>
+<dd><p>The indirect estimate of the split node
+  (see 'Value' in <code><a href="run_nodesplit.html">run_nodesplit</a></code>).</p></dd>
+
+  <dt>diff</dt>
+<dd><p>The inconsistency factor of the split node (see 'Value' in
+  <code><a href="run_nodesplit.html">run_nodesplit</a></code>).</p></dd>
+
+  <dt>phi</dt>
+<dd><p>The informative missingness parameter.</p></dd>
+
+  <dt>beta</dt>
+<dd><p>The regression coefficient.</p></dd>
 
 
-
-<p>For each monitored parameter mentioned above, <code>mcmc_diagnostics</code> also
+</dl><p>For each monitored parameter mentioned above, <code>mcmc_diagnostics</code> also
   returns a barplot on the ratio of MCMC error to the posterior standard
   deviation and a barplot on the Gelman-Rubin R diagnostic. Bars that
   correspond to a ratio less than 5% are indicated in green (the
