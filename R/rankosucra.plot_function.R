@@ -128,9 +128,9 @@ rankosucra_plot <- function(full1,
   }
 
   # Prepare first outcome
-  sucra <- full1$SUCRA
+  sucra         <- full1$SUCRA
   effectiveness <- full1$effectiveness
-  nt <- length(drug_names)
+  nt            <- length(drug_names)
 
   # Order techniques according to their SUCRA value (from best to worst)
   drug_names_order <- drug_names[order(-sucra[, 1])]
