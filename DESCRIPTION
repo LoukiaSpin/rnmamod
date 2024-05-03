@@ -16,21 +16,26 @@ Description: A comprehensive suite of functions to perform and visualise
     models implemented in a systematic review with multiple interventions, 
     including fixed-effect and random-effects network meta-analysis, 
     meta-regression, evaluation of the consistency assumption via the 
-    node-splitting approach and the unrelated mean effects model, and 
-    sensitivity analysis. Missing participant outcome data are addressed in all 
-    models of the package. The robustness to primary analysis results can 
-    also be investigated using a novel intuitive index 
-    (Spineli et al., 2021) <doi:10.1002/jrsm.1478>. Methods to evaluate the transitivity assumption quantitatively are provided. The package also offers 
-    a rich, user-friendly visualisation toolkit that aids in appraising and 
-    interpreting the results thoroughly and preparing the manuscript for journal 
-    submission. The visualisation tools comprise the network plot, forest plots, 
-    panel of diagnostic plots, heatmaps on the extent of missing participant 
-    outcome data in the network, league heatmaps on estimation and prediction, 
-    rankograms, Bland-Altman plot, leverage plot, deviance scatterplot, heatmap 
-    of robustness, barplot of Kullback-Leibler divergence, heatmap of comparison
-    dissimilarities and dendrogram of comparison clustering. The package also 
-    allows the user to export the results to an Excel file at the working 
-    directory.
+    node-splitting approach and the unrelated mean effects model (original and
+    revised model proposed by Spineli, (2022) <doi:10.1177/0272989X211068005>), and 
+    sensitivity analysis (see Spineli et al., (2021) <doi:10.1186/s12916-021-02195-y>). 
+    Missing participant outcome data are addressed in all models of the package 
+    (see Spineli, (2019) <doi:10.1186/s12874-019-0731-y>, Spineli et al., (2019) 
+    <doi:10.1002/sim.8207>, Spineli, (2019) <doi:10.1016/j.jclinepi.2018.09.002>,
+    and Spineli et al., (2021) <doi:10.1002/jrsm.1478>). 
+    The robustness to primary analysis results can also be investigated using a 
+    novel intuitive index (see Spineli et al., (2021) <doi:10.1177/0962280220983544>). 
+    Methods to evaluate the transitivity assumption quantitatively are provided. 
+    The package also offers a rich, user-friendly visualisation toolkit that aids 
+    in appraising and interpreting the results thoroughly and preparing the 
+    manuscript for journal submission. The visualisation tools comprise the 
+    network plot, forest plots, panel of diagnostic plots, heatmaps on the extent 
+    of missing participant outcome data in the network, league heatmaps on 
+    estimation and prediction, rankograms, Bland-Altman plot, leverage plot, 
+    deviance scatterplot, heatmap of robustness, barplot of Kullback-Leibler 
+    divergence, heatmap of comparison dissimilarities and dendrogram of comparison 
+    clustering. The package also allows the user to export the results to an Excel 
+    file at the working directory.
 License: GPL (>= 3) 
 URL: https://CRAN.R-project.org/package=rnmamod, https://github.com/LoukiaSpin/rnmamod, https://loukiaspin.github.io/rnmamod/
 BugReports: https://github.com/LoukiaSpin/rnmamod/issues
