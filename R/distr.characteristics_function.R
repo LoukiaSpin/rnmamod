@@ -181,17 +181,17 @@ distr_characteristics <- function (input,
 
 
   ## Now remove these columns for *all* comparisons!
-  split_dataset <- min_split <- max_split <-
+  split_dataset <-
     lapply(split_dataset0, function(x) x[!names(x) %in% col_all_miss_names])
 
 
   ## Remove these columns also from the dataset for the moment
-  input_new <-
-    if (length(col_all_miss) > 0) {
-      subset(input_new0, select = -col_all_miss)
-    } else {
-      input_new0
-    }
+  #input_new <-
+  #  if (length(col_all_miss) > 0) {
+  #    subset(input_new0, select = -col_all_miss)
+  #  } else {
+  #    input_new0
+  #  }
 
 
   ## Bind all lists into a data-frame

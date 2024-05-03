@@ -19,8 +19,8 @@ Description: A comprehensive suite of functions to perform and visualise
     node-splitting approach and the unrelated mean effects model, and 
     sensitivity analysis. Missing participant outcome data are addressed in all 
     models of the package. The robustness to primary analysis results can 
-    also be investigated using a novel intuitive index. Methods to evaluate the 
-    transitivity assumption quantitatively are provided. The package also offers 
+    also be investigated using a novel intuitive index 
+    (Spineli et al., 2021) <doi:10.1002/jrsm.1478>. Methods to evaluate the transitivity assumption quantitatively are provided. The package also offers 
     a rich, user-friendly visualisation toolkit that aids in appraising and 
     interpreting the results thoroughly and preparing the manuscript for journal 
     submission. The visualisation tools comprise the network plot, forest plots, 
@@ -32,7 +32,7 @@ Description: A comprehensive suite of functions to perform and visualise
     allows the user to export the results to an Excel file at the working 
     directory.
 License: GPL (>= 3) 
-URL: https://CRAN.R-project.org/package=rnmamod, https://github.com/LoukiaSpin/rnmamod
+URL: https://CRAN.R-project.org/package=rnmamod, https://github.com/LoukiaSpin/rnmamod, https://loukiaspin.github.io/rnmamod/
 BugReports: https://github.com/LoukiaSpin/rnmamod/issues
 Depends: 
     R (>= 4.0.0)
