@@ -257,14 +257,7 @@ run_sensitivity <- function(full,
   } else {
     var_misspar
   }
-  ref_base <- if (is.element(measure, c("OR", "RR", "RD")) &
-                  missing(base_risk)) {
-    base_risk <-
-      describe_network(data = data,
-                       drug_names = 1:item$nt,
-                       measure = measure)$table_interventions[ref, 7]/100
-    rep(log(base_risk / (1 - base_risk)), 2)
-  } else if (is.element(measure, c("OR", "RR", "RD"))) {
+  ref_base <- if (is.element(measure, c("OR", "RR", "RD"))) {
     baseline_model(base_risk,
                    n_chains,
                    n_iter,
