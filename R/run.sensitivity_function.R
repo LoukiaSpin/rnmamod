@@ -360,6 +360,7 @@ run_sensitivity <- function(full,
     }
 
     message(paste(i, "out of", length(mean_misspar[, 1]), "total scenarios"))
+    suppressWarnings({
     jagsfit0[[i]] <- jags(data = data_jag[[i]],
                           inits = inits,
                           parameters.to.save = param_jags,
@@ -379,6 +380,7 @@ run_sensitivity <- function(full,
                              n.iter = n_iter,
                              n.thin = n_thin,
                              n.update = 2)
+    })
   }
 
   # Obtain the posterior distribution of the necessary model paramters

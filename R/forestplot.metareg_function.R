@@ -511,6 +511,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
   param_jags <- c("d.new", "SUCRA")
 
   # Run the BUGS code for SUCRA
+  suppressWarnings({
   jagsfit <- jags(data = data_jag,
                   parameters.to.save = param_jags,
                   DIC = FALSE,
@@ -539,6 +540,7 @@ forestplot_metareg <- function(full, reg, compar, cov_value, drug_names) {
                   n.iter = full$n_iter,
                   n.burnin = full$n_burnin,
                   n.thin = full$n_thin)
+  })
 
   # Turn R2jags object into a data-frame
   get_results <- as.data.frame(t(jagsfit$BUGSoutput$summary))

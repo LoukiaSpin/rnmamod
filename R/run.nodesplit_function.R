@@ -387,6 +387,7 @@ run_nodesplit <- function(full,
 
       # Run the Bayesian analysis
       message(paste(i, "out of", length(pair[, 1]), "split nodes"))
+      suppressWarnings({
       jagsfit0[[i]] <- jags(data = data_jag[[i]],
                             inits = inits,
                             parameters.to.save = param_jags,
@@ -405,6 +406,7 @@ run_nodesplit <- function(full,
                                n.iter = n_iter,
                                n.thin = n_thin,
                                n.update = 2)
+      })
     } # Stop loop for 'pair'
   }
 

@@ -271,6 +271,7 @@ run_series_meta <- function(full,
     message(paste(i, "out of", n_obs_comp, "observed comparisons", a))
 
     # 'D' and 'base_risk' do not matter in pairwise meta-analysis
+    suppressWarnings({
     meta[[i]] <-
       suppressMessages({
         run_model(data = pairwise_data[pairwise_data$arm1 == obs_comp[i, 1] &
@@ -290,6 +291,7 @@ run_series_meta <- function(full,
                   n_thin,
                   inits = inits)
         })
+    })
   }
 
   EM <- data.frame(obs_comp,

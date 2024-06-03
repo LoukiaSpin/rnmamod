@@ -468,6 +468,7 @@ run_ume <- function(full,
 
   # Run the Bayesian analysis
   message("Running the model ...")
+  suppressWarnings({
   jagsfit0 <- suppressWarnings({jags(data = data_jag,
                    parameters.to.save = param_jags,
                    model.file = textConnection(prepare_ume(measure,
@@ -485,6 +486,7 @@ run_ume <- function(full,
   # Update until convergence is necessary
   message("... Updating the model until convergence")
   jagsfit <- autojags(jagsfit0, n.iter = n_iter, n.thin = n_thin, n.update = 2)
+  })
 
   # Turn summary of posterior results (R2jags object) into a data-frame
   # to select model parameters (using 'dplyr')

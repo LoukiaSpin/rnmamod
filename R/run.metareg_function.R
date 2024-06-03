@@ -348,6 +348,7 @@ run_metareg <- function(full,
 
   # Run the Bayesian analysis
   message("Running the model ...")
+  suppressWarnings({
   jagsfit0 <- jags(data = data_jag,
                    inits = inits,
                    parameters.to.save = param_jags,
@@ -363,6 +364,7 @@ run_metareg <- function(full,
   # Update until convergence is necessary
   message("... Updating the model until convergence")
   jagsfit <- autojags(jagsfit0, n.iter = n_iter, n.thin = n_thin, n.update = 2)
+  })
 
   # Turn R2jags object into a data-frame
   get_results <- as.data.frame(t(jagsfit$BUGSoutput$summary))
