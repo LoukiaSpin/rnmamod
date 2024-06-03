@@ -285,7 +285,7 @@ nodesplit_plot <- function(full, node, drug_names, save_xls) {
                  y = ifelse(
                    is.element(measure, c("OR", "ROM")),
                    paste(measure2, "(in logarithmic scale)"), measure2),
-                 colour = "") +
+                 colour = "Evidence on inconsistency") +
             coord_flip() +
             scale_color_manual(breaks = c("strong evidence",
                                           "weak evidence"),
