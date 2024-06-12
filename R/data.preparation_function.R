@@ -126,6 +126,15 @@ data_preparation <- function(data, measure) {
     data[, startsWith(colnames(data), "m")]
   }
 
+  # Temporal variable when no missing data are extracted for continuous outcome
+  mod2 <- if (dim(data[, startsWith(colnames(data), "m")])[2] == 0) {
+    message("Missing participant outcome data have *not* been collected.")
+    as.data.frame(matrix(0, nrow = nrow(treat), ncol = ncol(treat)))
+  } else {
+    # Number of missing participants in each arm of every trial
+    data[, startsWith(colnames(data), "m")]
+  }
+
   # For a continuous outcome
   if (is.element(measure, c("MD", "SMD", "ROM"))) {
     # Observed mean value in each arm of every trial
@@ -135,7 +144,7 @@ data_preparation <- function(data, measure) {
     # Number of randomised participants in each arm of every trial
     rand <- data[, startsWith(colnames(data), "n")]
     # Observed standard error in each arm of every trial
-    se_obs <- sd_obs / sqrt(rand - mod)
+    se_obs <- sd_obs / sqrt(rand - mod2)
 
     if ((dim(y_obs)[2] != max(na)) |
         (dim(sd_obs)[2] != max(na)) |
