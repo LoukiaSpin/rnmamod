@@ -210,16 +210,21 @@ kld_inconsistency <- function(node,
     split_nodes0 <- node$direct[, 1:2]
 
     # Interventions' name: Replace code with original names
-    # (used only when the argument 'drug_names' has been specified)
-    if (max(split_nodes0) == length(drug_names)) {
-      first_arm <- lapply(1:dim(split_nodes0)[1],
-                          function(x) drug_names[split_nodes0[x, 1]])
-      second_arm <- lapply(1:dim(split_nodes0)[1],
-                           function(x) drug_names[split_nodes0[x, 2]])
-      split_nodes <- cbind(first_arm, second_arm)
-    } else {
-      split_nodes <- split_nodes0
-    }
+    # (only when the argument 'drug_names' has been defined)
+    first_arm <- lapply(1:dim(split_nodes0)[1],
+                        function(x) drug_names[split_nodes0[x, 1]])
+    second_arm <- lapply(1:dim(split_nodes0)[1],
+                         function(x) drug_names[split_nodes0[x, 2]])
+    split_nodes <- cbind(first_arm, second_arm)
+    #if (max(split_nodes0) == length(drug_names)) {
+    #  first_arm <- lapply(1:dim(split_nodes0)[1],
+    #                      function(x) drug_names[split_nodes0[x, 1]])
+    #  second_arm <- lapply(1:dim(split_nodes0)[1],
+    #                        function(x) drug_names[split_nodes0[x, 2]])
+    #  split_nodes <- cbind(first_arm, second_arm)
+    #} else {
+    #  split_nodes <- split_nodes0
+    #}
 
     # Vector of comparison names
     comparison <- paste(split_nodes[, 1], "vs", split_nodes[, 2])
