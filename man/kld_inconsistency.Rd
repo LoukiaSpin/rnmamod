@@ -5,7 +5,7 @@
 \title{Density plots of local inconsistency results and Kullback-Leibler divergence
  when 'rnmamod', 'netmeta' or 'gemtc' R packages are used}
 \usage{
-kld_inconsistency(node, threshold, drug_names, outcome = NULL)
+kld_inconsistency(node, threshold = 1e-05, drug_names, outcome = NULL)
 }
 \arguments{
 \item{node}{An object of S3 class \code{\link{run_nodesplit}} or class
@@ -14,9 +14,10 @@ kld_inconsistency(node, threshold, drug_names, outcome = NULL)
 class \code{\link[netmeta:netsplit]{netsplit}} (see
 \href{https://CRAN.R-project.org/package=netmeta}{netmeta}).}
 
-\item{threshold}{A number indicating the threshold of consistency, that is,
-the minimally allowed deviation between the direct and indirect estimates
-for a split node.}
+\item{threshold}{A positive number indicating the threshold of not concerning
+inconsistency, that is, the minimally allowed deviation between the direct
+and indirect estimates for a split node that does raise concerns for
+material inconsistency. The argument is optional.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data}. It is not relevant for
@@ -29,17 +30,20 @@ x-axis of the plots).}
 \value{
 A panel of density plots for each split node sorted in ascending
 order of the Kullback-Leibler divergence value. Blue and black lines refer to
-the direct and inndirect estimates, respectively. The grey segment refers to
+the direct and indirect estimates, respectively. The grey segment refers to
 the 95\% credible (confidence) interval of the inconsistency parameter, when
 \code{\link{run_nodesplit}} (\code{\link[netmeta:netsplit]{netsplit}}) has
 been applied, with a darker grey line referring to the point estimate.
 When \code{\link[gemtc:mtc.nodesplit]{mtc.nodesplit}} has been employed, the
 95\% confidence interval has been approximated using the Bucher's approach
 based on the corresponding direct and indirect results.
-The names of the selected comparisons appear at the top of each
-plot. The Kullback-Leibler divergence value appears at the top left of each
-plot: green and red colours refer to consistency and inconsistency inferred
-based on the selected \code{threshold}.
+
+The Kullback-Leibler divergence value appears at the top left of each plot
+in three colours: black, if no threshold has been defined (the default),
+green, if the Kullback-Leibler divergence is below the specified
+\code{threshold} (not concerning inconsistency) and red, if the
+Kullback-Leibler divergence is at least the specified \code{threshold}
+(substantial inconsistency).
 }
 \description{
 A panel of density plots on the direct and indirect estimates of the

@@ -16,9 +16,10 @@
 #'   (see \href{https://CRAN.R-project.org/package=gemtc}{gemtc}) or
 #'   class \code{\link[netmeta:netsplit]{netsplit}} (see
 #'   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}).
-#' @param threshold A number indicating the threshold of consistency, that is,
-#'   the minimally allowed deviation between the direct and indirect estimates
-#'   for a split node.
+#' @param threshold A positive number indicating the threshold of not concerning
+#'   inconsistency, that is, the minimally allowed deviation between the direct
+#'   and indirect estimates for a split node that does raise concerns for
+#'   material inconsistency. The argument is optional.
 #' @param drug_names A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data}. It is not relevant for
 #'   \href{https://CRAN.R-project.org/package=gemtc}{gemtc} and
@@ -28,17 +29,20 @@
 #'
 #' @return A panel of density plots for each split node sorted in ascending
 #' order of the Kullback-Leibler divergence value. Blue and black lines refer to
-#' the direct and inndirect estimates, respectively. The grey segment refers to
+#' the direct and indirect estimates, respectively. The grey segment refers to
 #' the 95\% credible (confidence) interval of the inconsistency parameter, when
 #' \code{\link{run_nodesplit}} (\code{\link[netmeta:netsplit]{netsplit}}) has
 #' been applied, with a darker grey line referring to the point estimate.
 #' When \code{\link[gemtc:mtc.nodesplit]{mtc.nodesplit}} has been employed, the
 #' 95\% confidence interval has been approximated using the Bucher's approach
 #' based on the corresponding direct and indirect results.
-#' The names of the selected comparisons appear at the top of each
-#' plot. The Kullback-Leibler divergence value appears at the top left of each
-#' plot: green and red colours refer to consistency and inconsistency inferred
-#' based on the selected \code{threshold}.
+#'
+#' The Kullback-Leibler divergence value appears at the top left of each plot
+#' in three colours: black, if no threshold has been defined (the default),
+#' green, if the Kullback-Leibler divergence is below the specified
+#' \code{threshold} (not concerning inconsistency) and red, if the
+#' Kullback-Leibler divergence is at least the specified \code{threshold}
+#' (substantial inconsistency).
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -84,7 +88,7 @@
 #'
 #' @export
 kld_inconsistency <- function(node,
-                              threshold,
+                              threshold = 0.00001,
                               drug_names,
                               outcome = NULL) {
 
@@ -96,9 +100,17 @@ kld_inconsistency <- function(node,
   }
 
   # Default arguments
-  threshold <- if (missing(threshold)) {
-    stop("The argument 'threshold' has not been defined.", call. = FALSE)
-  } else {
+  #threshold <- if (missing(threshold)) {
+  #  stop("The argument 'threshold' has not been defined.", call. = FALSE)
+  #} else {
+  #  message(paste0("Threshold specified at ", threshold, "."))
+  #  threshold
+  #}
+  threshold <- if (threshold <= 0) {
+    stop("The argument 'threshold' must be a positive number.", call. = FALSE)
+  } else if (0 < threshold & threshold <= 0.00001) {
+    threshold
+  } else if (threshold > 0.00001) {
     message(paste0("Threshold specified at ", threshold, "."))
     threshold
   }
@@ -106,7 +118,7 @@ kld_inconsistency <- function(node,
     aa <- "The argument 'drug_names' has not been defined."
     bb <- "The intervention ID, as specified in 'data' is used, instead."
     message(paste(aa, bb))
-    as.character(sort(unique(unlist(node$direct[, 1:2]))))
+    as.character(1:max(unlist(node$direct[, 1:2])))
   } else if (inherits(node, "run_nodesplit")) {
     drug_names
   } else if (any(c(inherits(node, "mtc.nodesplit"),
@@ -160,7 +172,7 @@ kld_inconsistency <- function(node,
     # Vector of comparison names
     comparison <- paste(indirect0$t2, "vs", indirect0$t1)
 
-  } else if (inherits(node, "netsplit") ) { # R package: netmeta
+  } else if (inherits(node, "netsplit")) { # R package: netmeta
 
     # Direct results
     direct_res <- node$direct.random
@@ -211,10 +223,10 @@ kld_inconsistency <- function(node,
 
     # Interventions' name: Replace code with original names
     # (only when the argument 'drug_names' has been defined)
-    first_arm <- lapply(1:dim(split_nodes0)[1],
-                        function(x) drug_names[split_nodes0[x, 1]])
-    second_arm <- lapply(1:dim(split_nodes0)[1],
-                         function(x) drug_names[split_nodes0[x, 2]])
+    first_arm <- unlist(lapply(1:dim(split_nodes0)[1],
+                               function(x) drug_names[split_nodes0[x, 1]]))
+    second_arm <- unlist(lapply(1:dim(split_nodes0)[1],
+                                function(x) drug_names[split_nodes0[x, 2]]))
     split_nodes <- cbind(first_arm, second_arm)
     #if (max(split_nodes0) == length(drug_names)) {
     #  first_arm <- lapply(1:dim(split_nodes0)[1],
@@ -297,7 +309,9 @@ kld_inconsistency <- function(node,
   decision <-
     lapply(1:dim(direct)[1],
            function(x)
-             ifelse(KLD[[x]] < threshold, "Consistency", "Inconsistency"))
+             ifelse(threshold == 0.00001, "No threshold defined",
+                    ifelse(KLD[[x]] < threshold & threshold > 0.00001,
+                           "Consistency","Inconsistency")))
 
   # Bring all together per selected comparison
   output0 <-
@@ -381,7 +395,8 @@ kld_inconsistency <- function(node,
                        levels =
                          comparison[order(kld_value, decreasing = FALSE)]),
                scales = "free") +
-    scale_colour_manual(values = c("Consistency" = "#009E73",
+    scale_colour_manual(values = c("No threshold defined" = "black",
+                                   "Consistency" = "#009E73",
                                    "Inconsistency" = "#D55E00")) +
     scale_fill_manual(values = c("Direct estimate" = "#0072B2",
                                  "Indirect estimate" = "black")) +

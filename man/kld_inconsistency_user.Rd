@@ -3,9 +3,14 @@
 \name{kld_inconsistency_user}
 \alias{kld_inconsistency_user}
 \title{Density plots of local inconsistency results and Kullback-Leibler divergence
- (User defined dataset)}
+ (When dataset is created by the user)}
 \usage{
-kld_inconsistency_user(dataset, threshold, level = 0.05, outcome = NULL)
+kld_inconsistency_user(
+  dataset,
+  threshold = 1e-05,
+  level = 0.05,
+  outcome = NULL
+)
 }
 \arguments{
 \item{dataset}{A data-frame of seven columns and as many rows as the split
@@ -13,9 +18,10 @@ nodes. The first column contains the names of the split nodes, and the
 remaining columns have the point estimate and standard error of the direct,
 indirect and inconsistency parameter in that order.}
 
-\item{threshold}{A number indicating the threshold of consistency, that is,
-the minimally allowed deviation between the direct and indirect estimates
-for a split node.}
+\item{threshold}{A positive number indicating the threshold of not concerning
+inconsistency, that is, the minimally allowed deviation between the direct
+and indirect estimates for a split node that does raise concerns for
+material inconsistency. The argument is optional.}
 
 \item{level}{A number indicating the significance level. Suggested values
 are 0.05 and 0.10. The default value is 0.05.}
@@ -26,13 +32,18 @@ x-axis of the plots).}
 \value{
 A panel of density plots for each split node sorted in ascending
 order of the Kullback-Leibler divergence value. Blue and black lines refer to
-the direct and inndirect estimates, respectively. The grey segment refers to
+the direct and indirect estimates, respectively. The grey segment refers to
 the (1 - \code{level})\% 'pseudo' confidence interval of the inconsistency
 parameter based on the corresponding normal z-scores, with a darker grey line
 referring to the point estimate. The names of the selected comparisons appear
-at the top of each plot. The Kullback-Leibler divergence value appears at the
-top left of each plot: green and red colours refer to consistency and
-inconsistency inferred based on the selected \code{threshold}.
+at the top of each plot.
+
+The Kullback-Leibler divergence value appears at the top left of each plot
+in three colours: black, if no threshold has been defined (the default),
+green, if the Kullback-Leibler divergence is below the specified
+\code{threshold} (not concerning inconsistency) and red, if the
+Kullback-Leibler divergence is at least the specified \code{threshold}
+(substantial inconsistency).
 }
 \description{
 When the user has extracted results obtained from a method of local

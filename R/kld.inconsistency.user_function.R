@@ -1,5 +1,5 @@
 #'  Density plots of local inconsistency results and Kullback-Leibler divergence
-#'  (User defined dataset)
+#'  (When dataset is created by the user)
 #'
 #' @description
 #' When the user has extracted results obtained from a method of local
@@ -17,9 +17,10 @@
 #'   nodes. The first column contains the names of the split nodes, and the
 #'   remaining columns have the point estimate and standard error of the direct,
 #'   indirect and inconsistency parameter in that order.
-#' @param threshold A number indicating the threshold of consistency, that is,
-#'   the minimally allowed deviation between the direct and indirect estimates
-#'   for a split node.
+#' @param threshold A positive number indicating the threshold of not concerning
+#'   inconsistency, that is, the minimally allowed deviation between the direct
+#'   and indirect estimates for a split node that does raise concerns for
+#'   material inconsistency. The argument is optional.
 #' @param level A number indicating the significance level. Suggested values
 #'   are 0.05 and 0.10. The default value is 0.05.
 #' @param outcome Optional argument to describe the effect measure used (the
@@ -27,13 +28,18 @@
 #'
 #' @return A panel of density plots for each split node sorted in ascending
 #' order of the Kullback-Leibler divergence value. Blue and black lines refer to
-#' the direct and inndirect estimates, respectively. The grey segment refers to
+#' the direct and indirect estimates, respectively. The grey segment refers to
 #' the (1 - \code{level})\% 'pseudo' confidence interval of the inconsistency
 #' parameter based on the corresponding normal z-scores, with a darker grey line
 #' referring to the point estimate. The names of the selected comparisons appear
-#' at the top of each plot. The Kullback-Leibler divergence value appears at the
-#' top left of each plot: green and red colours refer to consistency and
-#' inconsistency inferred based on the selected \code{threshold}.
+#' at the top of each plot.
+#'
+#' The Kullback-Leibler divergence value appears at the top left of each plot
+#' in three colours: black, if no threshold has been defined (the default),
+#' green, if the Kullback-Leibler divergence is below the specified
+#' \code{threshold} (not concerning inconsistency) and red, if the
+#' Kullback-Leibler divergence is at least the specified \code{threshold}
+#' (substantial inconsistency).
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -103,15 +109,35 @@
 #'
 #' @export
 kld_inconsistency_user <- function(dataset,
-                                   threshold,
+                                   threshold = 0.00001,
                                    level = 0.05,
                                    outcome = NULL) {
 
 
+  # General message
+  a1 <- "Note: Make sure that you have created the dataset"
+  b1 <- "according to the description of the argument 'dataset'."
+  message(paste(a1, b1))
+
   # Default arguments
-  threshold <- if (missing(threshold)) {
-    stop("The argument 'threshold' has not been defined.", call. = FALSE)
+  dataset <- if (dim(dataset)[2] != 7) {
+    aa <- "The argument 'dataset' must have 7 columns; the first column must"
+    bb <- "be a character vector. See parameter description and example."
+    stop(paste(aa, bb), call. = FALSE)
   } else {
+    dataset
+  }
+  #threshold <- if (missing(threshold)) {
+  #  stop("The argument 'threshold' has not been defined.", call. = FALSE)
+  #} else {
+  #  message(paste0("Threshold specified at ", threshold, "."))
+  #  threshold
+  #}
+  threshold <- if (threshold <= 0) {
+    stop("The argument 'threshold' must be a positive number.", call. = FALSE)
+  } else if (0 < threshold & threshold <= 0.00001) {
+    threshold
+  } else if (threshold > 0.00001) {
     message(paste0("Threshold specified at ", threshold, "."))
     threshold
   }
@@ -191,7 +217,9 @@ kld_inconsistency_user <- function(dataset,
   decision <-
     lapply(1:dim(dataset)[1],
            function(x)
-             ifelse(KLD[[x]] < threshold, "Consistency", "Inconsistency"))
+             ifelse(threshold == 0.00001, "No threshold defined",
+                    ifelse(KLD[[x]] < threshold & threshold > 0.00001,
+                           "Consistency","Inconsistency")))
 
   # Bring all together per selected comparison
   output0 <-
@@ -285,7 +313,8 @@ kld_inconsistency_user <- function(dataset,
                        levels = dataset[, 1][order(kld_value,
                                                    decreasing = FALSE)]),
                scales = "free") +
-    scale_colour_manual(values = c("Consistency" = "#009E73",
+    scale_colour_manual(values = c("No threshold defined" = "black",
+                                   "Consistency" = "#009E73",
                                    "Inconsistency" = "#D55E00")) +
     scale_fill_manual(values = c("Direct estimate" = "#0072B2",
                                  "Indirect estimate" = "black")) +
