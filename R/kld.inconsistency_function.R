@@ -70,6 +70,7 @@
 #'
 #' @examples
 #'
+#' \dontrun{
 #' data("nma.baker2009")
 #'
 #' # Read results from 'run_nodesplit' (using the default arguments)
@@ -85,6 +86,7 @@
 #'                   threshold = 0.23,
 #'                   drug_names = interv_names,
 #'                   outcome = "Odds ratio (logarithmic scale)")
+#' }
 #'
 #' @export
 kld_inconsistency <- function(node,

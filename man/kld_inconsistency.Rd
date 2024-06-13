@@ -57,6 +57,7 @@ estimate. The function handles results also from the R-packages
 }
 \examples{
 
+\dontrun{
 data("nma.baker2009")
 
 # Read results from 'run_nodesplit' (using the default arguments)
@@ -72,6 +73,7 @@ kld_inconsistency(node = node,
                   threshold = 0.23,
                   drug_names = interv_names,
                   outcome = "Odds ratio (logarithmic scale)")
+}
 
 }
 \references{

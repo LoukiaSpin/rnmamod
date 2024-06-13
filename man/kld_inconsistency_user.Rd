@@ -59,6 +59,7 @@ estimate.
 }
 \examples{
 
+\dontrun{
 ## Data are taken from Table II in Dias et al. (2010)
 # Treatments compared
 treat <-
@@ -100,6 +101,7 @@ dias_results <- data.frame(treat_comp, direct_mean, direct_sd, indirect_mean,
 kld_inconsistency_user(dataset = dias_results,
                        threshold = 0.13,
                        outcome = "Odds ratio (logarithmic scale)")
+}
 
 }
 \references{

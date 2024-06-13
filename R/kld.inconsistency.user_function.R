@@ -65,6 +65,7 @@
 #'
 #' @examples
 #'
+#' \dontrun{
 #' ## Data are taken from Table II in Dias et al. (2010)
 #' # Treatments compared
 #' treat <-
@@ -106,6 +107,7 @@
 #' kld_inconsistency_user(dataset = dias_results,
 #'                        threshold = 0.13,
 #'                        outcome = "Odds ratio (logarithmic scale)")
+#' }
 #'
 #' @export
 kld_inconsistency_user <- function(dataset,
