@@ -117,7 +117,7 @@ table_tau2_prior <- function (measure, area) {
 
 
     ## Median value (in *standard deviation* scale) based on its prior (log-normal) distribution
-    median_value <- sqrt(qlnorm(0.5, mean_value, sqrt(1 / sd_value)))
+    median_value <- sqrt(qlnorm(0.5, mean_value, sd_value))
 
 
     ## Bring hyperparameters wtith distribution type into a cross-sectional table
@@ -192,7 +192,7 @@ table_tau2_prior <- function (measure, area) {
 
 
     ## Median value (in *standard deviation* scale) based on its prior (t) distribution
-    median_value <- sqrt(exp(qt(0.5, df = 5) * sqrt(1 / sd_value) + mean_value))
+    median_value <- sqrt(exp((qt(0.5, df = 5) * sd_value) + mean_value))
 
 
     ## Bring hyperparameters wtith distribution type into a cross-sectional table
@@ -267,7 +267,7 @@ table_tau2_prior <- function (measure, area) {
 
 
     ## Median value (in *standard deviation* scale) based on its prior (t) distribution
-    median_value <- sqrt(exp(qt(0.5, df = 5) * sqrt(1 / sd_value) + mean_value))
+    median_value <- sqrt(exp((qt(0.5, df = 5) * sd_value) + mean_value))
 
 
     ## Bring hyperparameters wtith distribution type into a cross-sectional table
@@ -342,7 +342,7 @@ table_tau2_prior <- function (measure, area) {
 
 
     ## Median value (in *standard deviation* scale) based on its prior (t) distribution
-    median_value <- sqrt(exp(qt(0.5, df = 5) * sqrt(1 / sd_value) + mean_value))
+    median_value <- sqrt(exp((qt(0.5, df = 5) * sd_value) + mean_value))
 
 
     ## Bring hyperparameters wtith distribution type into a cross-sectional table
