@@ -60,6 +60,17 @@ heter_density_plot(distr = "lognormal",
                    heter_prior1 = c(-3.50, 1.26),
                    heter_prior2 = c(-4.79, 1.67))
 
+## Two empirical priors for between-study variance of standardised mean
+## difference.
+heter_density_plot(distr = "logt",
+                   heter_prior1 = c(-2.76, 2.58),
+                   heter_prior2 = c(-2.43, 2.50))
+
+## Two half-normal prior distributions for between-study standard deviation
+heter_density_plot(distr = "halfnormal",
+                   heter_prior1 = c(0, 1),
+                   heter_prior2 = c(0, 0.5))
+
 }
 \references{
 Rhodes KM, Turner RM, Higgins JP. Predictive distributions were developed

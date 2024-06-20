@@ -69,6 +69,17 @@
 #'                    heter_prior1 = c(-3.50, 1.26),
 #'                    heter_prior2 = c(-4.79, 1.67))
 #'
+#' ## Two empirical priors for between-study variance of standardised mean
+#' ## difference.
+#' heter_density_plot(distr = "logt",
+#'                    heter_prior1 = c(-2.76, 2.58),
+#'                    heter_prior2 = c(-2.43, 2.50))
+#'
+#' ## Two half-normal prior distributions for between-study standard deviation
+#' heter_density_plot(distr = "halfnormal",
+#'                    heter_prior1 = c(0, 1),
+#'                    heter_prior2 = c(0, 0.5))
+#'
 #' @export
 heter_density_plot <- function (distr,
                                 heter_prior1,
@@ -156,7 +167,7 @@ heter_density_plot <- function (distr,
 
     ## Bring together in a data-frame
     dataset_pdf <-
-      data.frame(value_x = values_tau2_log,
+      data.frame(value_x = rep(values_tau2_log, 2),
                  prob_dens_y = unlist(prob_dens),
                  distr = rep(dataset_dist$distr, length(values)))
     dataset_pdf$distr <- factor(dataset_pdf$distr, levels = c(name1, name2))
@@ -263,14 +274,15 @@ heter_density_plot <- function (distr,
     ## Obtain the pdf
     prob_dens <-
       lapply(1:dim(dataset_dist)[1],
-             function(x) (1/dataset_dist[x, 3]) *
-               dt((values_tau2_log - dataset_dist[x, 3]) / dataset_dist[x, 2],
+             function(x)
+               (1 / dataset_dist[x, 3]) *
+               dt((values_tau2_log - dataset_dist[x, 2]) / dataset_dist[x, 3],
                   5))
 
 
     ## Bring together in a data-frame
     dataset_pdf <-
-      data.frame(value_x = values_tau2_log,
+      data.frame(value_x = rep(values_tau2_log, 2),
                  prob_dens_y = unlist(prob_dens),
                  distr = rep(dataset_dist$distr, length(values)))
     dataset_pdf$distr <- factor(dataset_pdf$distr, levels = c(name1, name2))
@@ -278,17 +290,18 @@ heter_density_plot <- function (distr,
 
     ## Define breaks (for ggplot2)
     breaks_tau2 <-
-      unique(sort(unlist(lapply(1:dim(dataset_dist)[1],
-                                function(x)
-                                  exp((qt(c(0.001, 0.50,  0.99), 5) *
-                                         dataset_dist[x, 3]) + dataset_dist[x, 2])))))
+      unique(sort(unlist(
+        lapply(1:dim(dataset_dist)[1],
+               function(x)
+                 exp((qt(c(0.001, 0.50,  0.99), 5) * dataset_dist[x, 3]) +
+                       dataset_dist[x, 2])))))
 
 
     ## Get table with quartiles
     tab0 <- lapply(1:dim(dataset_dist)[1],
                    function(x)
                      exp((qt(c(0.025, 0.25, 0.50, 0.75, 0.975), 5) *
-                              dataset_dist[x, 3]) + dataset_dist[x, 2]))
+                            dataset_dist[x, 3]) + dataset_dist[x, 2]))
     tab <- matrix(label_value(unlist(tab0)),
                   nrow = 5, ncol = 2, byrow = FALSE)
     colnames(tab) <- c(name1, name2)
@@ -300,30 +313,26 @@ heter_density_plot <- function (distr,
       ggplot(dataset_pdf,
              aes(x = value_x,
                  y = prob_dens_y)) +
-      stat_function(fun = function(z) {
-        (1 / dataset_dist[1, 3]) *
-          dt((z - dataset_dist[1, 2]) / dataset_dist[1, 3], df = 5)},
+      stat_function(fun = function(z) {(1 / dataset_dist[1, 3]) *
+          dt((z - dataset_dist[1, 2]) / dataset_dist[1, 3], 5)},
         xlim = c(min(log(breaks_tau2)),
                  (qt(0.5, 5) * dataset_dist[1, 3]) + dataset_dist[1, 2]),
         geom = "area",
         fill = "#0072B2",
         alpha = 0.2) +
-      stat_function(fun = function(z) {
-        (1 / dataset_dist[1, 3]) *
-          dt((z - dataset_dist[1, 2]) / dataset_dist[1, 3], df = 5)},
+      stat_function(fun = function(z) {(1 / dataset_dist[1, 3]) *
+          dt((z - dataset_dist[1, 2]) / dataset_dist[1, 3], 5)},
         col = "#0072B2",
         linewidth = 1.3) +
-      stat_function(fun = function(z) {
-        (1 / dataset_dist[2, 3]) *
-          dt((z - dataset_dist[2, 2]) / dataset_dist[2, 3], df = 5)},
+      stat_function(fun = function(z) {(1 / dataset_dist[2, 3]) *
+          dt((z - dataset_dist[2, 2]) / dataset_dist[2, 3], 5)},
         xlim = c(min(log(breaks_tau2)),
                  (qt(0.5, 5) * dataset_dist[2, 3]) + dataset_dist[2, 2]),
         geom = "area",
         fill = "grey20",
         alpha = 0.2) +
-      stat_function(fun = function(z) {
-        (1 / dataset_dist[2, 3]) *
-          dt((z - dataset_dist[2, 2]) / dataset_dist[2, 3], df = 5)},
+      stat_function(fun = function(z) {(1 / dataset_dist[2, 3]) *
+          dt((z - dataset_dist[2, 2]) / dataset_dist[2, 3], 5)},
         col = "grey40",
         linewidth = 1.3) +
       geom_point(data = dataset_pdf,
@@ -388,12 +397,12 @@ heter_density_plot <- function (distr,
     ## Obtain the pdf
     prob_dens <-
       lapply(1:dim(dataset_dist)[1],
-             function(x) dhalfnorm(values, theta = dataset_dist[x, 4]))
+             function(x) dhalfnorm(values, dataset_dist[x, 4]))
 
 
     ## Bring together in a data-frame
     dataset_pdf <-
-      data.frame(value_x = values,
+      data.frame(value_x = rep(values, 2),
                  prob_dens_y = unlist(prob_dens),
                  distr = rep(dataset_dist$distr, length(values)))
     dataset_pdf$distr <- factor(dataset_pdf$distr, levels = c(name1, name2))
@@ -402,15 +411,14 @@ heter_density_plot <- function (distr,
     ## Define breaks (for ggplot2)
     breaks_tau <-
       unique(sort(unlist(lapply(1:dim(dataset_dist)[1],
-                                function(x)
-                                  qhalfnorm(c(0, 0.50,  0.99),
-                                            theta = dataset_dist[x, 4])))))
+                                function(x) qhalfnorm(c(0, 0.50,  0.99),
+                                                      dataset_dist[x, 4])))))
 
 
     ## Get table with quartiles
     tab0 <- lapply(1:dim(dataset_dist)[1],
                    function(x) qhalfnorm(c(0.025, 0.25, 0.50, 0.75, 0.975),
-                                      theta = dataset_dist[x, 4]))
+                                         dataset_dist[x, 4]))
     tab <- matrix(label_value(unlist(tab0)),
                   nrow = 5, ncol = 2, byrow = FALSE)
     colnames(tab) <- c(name1, name2)
@@ -432,7 +440,7 @@ heter_density_plot <- function (distr,
                     col = "#0072B2",
                     linewidth = 1.3) +
       stat_function(fun = function(z) {dhalfnorm(z, dataset_dist[2, 4])},
-                    xlim = c(min(breaks_tau2),
+                    xlim = c(min(breaks_tau),
                              qhalfnorm(0.5, dataset_dist[2, 4])),
                     geom = "area",
                     fill = "grey20",
@@ -474,4 +482,3 @@ heter_density_plot <- function (distr,
                              col.names = c("Percentiles", colnames(tab)),
                              caption = "Percentiles of each distribution")))
 }
-
