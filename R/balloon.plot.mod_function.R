@@ -344,7 +344,7 @@ balloon_plot <- function(sens, compar, drug_names) {
 
     # Dummy variable to indicate the extent of tau
     median_extent <- if (sens$heter[3] == 1) {
-      fdrtool::qhalfnorm(0.5, theta = sqrt(sens$heter[2]) * sqrt(pi / 2))
+      qhalfnorm(0.5, theta = sqrt(1 / sens$heter[2]))
     } else if (sens$heter[3] == 2) {
       qunif(10000, 0, sens$heter[2])
     } else if (sens$heter[3] == 3) {

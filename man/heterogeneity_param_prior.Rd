@@ -26,7 +26,7 @@ the parameters of the selected distribution.  For \code{"lognormal"}, and
 \code{"logt"} these numbers refer to the mean and precision, respectively.
 For \code{"halfnormal"}, these numbers refer to zero and the scale
 parameter (equal to 4 or 1 being the corresponding precision of the scale
-parameter 0.5 or 1). For \code{"uniform"}, these numbers refer to the
+parameter 4 or 1). For \code{"uniform"}, these numbers refer to the
 minimum and maximum value of the distribution.}
 }
 \value{

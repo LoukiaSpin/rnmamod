@@ -4,7 +4,7 @@
 #'
 #' @importFrom cluster silhouette
 #' @importFrom dendextend set %>%
-#' @importFrom fdrtool rhalfnorm
+#' @importFrom fdrtool dhalfnorm qhalfnorm rhalfnorm
 #' @importFrom MASS fractions
 #' @importFrom gemtc mtc.network mtc.data.studyrow mtc.nodesplit.comparisons
 #' @importFrom ggfittext geom_fit_text
