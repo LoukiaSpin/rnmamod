@@ -126,11 +126,22 @@ heter_density_plot <- function (distr,
     ""
   }
 
+
   ## Function for log-transformed values (relevant for 'lognormal' and 'logt')
   label_value <- function (x) {
     unlist(lapply(x, function(x) if (x < 0.0001)
       format(x, scientific = TRUE, digits = 2) else round(x, 2)))
   }
+
+
+  ## Self-written function for density probability of half-normal distribution
+  dhnorm2 <- function (x, sigma) {
+
+    theta <- sqrt(pi / 2) * (1 / sigma)
+    res <- ((2 * theta) / pi) * exp(-(x * x * theta * theta)/pi)
+    return(res)
+  }
+
 
   value_x <- prob_dens_y <- NULL
   if (distr == "lognormal") {
@@ -380,14 +391,14 @@ heter_density_plot <- function (distr,
 
 
     ## Define scale parameter
-    scale1 <- ifelse (heter_prior1[2] == 1, sqrt(pi / 2),
-                      sqrt(pi / 2) * (1 / heter_prior1[2]))
-    scale2 <- ifelse (heter_prior2[2] == 1, sqrt(pi / 2),
-                      sqrt(pi / 2) * (1 / heter_prior2[2]))
+    #scale1 <- ifelse (heter_prior1[2] == 1, sqrt(pi / 2),
+    #                  sqrt(pi / 2) * (1 / heter_prior1[2]))
+    #scale2 <- ifelse (heter_prior2[2] == 1, sqrt(pi / 2),
+    #                  sqrt(pi / 2) * (1 / heter_prior2[2]))
 
 
     ## Add to 'dataset_dist'
-    dataset_dist$scale <- c(scale1, scale2)
+    #dataset_dist$scale <- c(scale1, scale2)
 
 
     ## Define tau range
@@ -397,7 +408,7 @@ heter_density_plot <- function (distr,
     ## Obtain the pdf
     prob_dens <-
       lapply(1:dim(dataset_dist)[1],
-             function(x) dhalfnorm(values, dataset_dist[x, 4]))
+             function(x) dhnorm2(values, dataset_dist[x, 3]))
 
 
     ## Bring together in a data-frame
@@ -411,14 +422,14 @@ heter_density_plot <- function (distr,
     ## Define breaks (for ggplot2)
     breaks_tau <-
       unique(sort(unlist(lapply(1:dim(dataset_dist)[1],
-                                function(x) qhalfnorm(c(0, 0.50,  0.99),
-                                                      dataset_dist[x, 4])))))
+                                function(x) qnorm(c(0.50, 0.75,  0.995),
+                                                  0, dataset_dist[x, 3])))))
 
 
     ## Get table with quartiles
     tab0 <- lapply(1:dim(dataset_dist)[1],
-                   function(x) qhalfnorm(c(0.025, 0.25, 0.50, 0.75, 0.975),
-                                         dataset_dist[x, 4]))
+                   function(x) qnorm(c(0.5125, 0.625, 0.75, 0.875, 0.9875),
+                                     0, dataset_dist[x, 3]))
     tab <- matrix(label_value(unlist(tab0)),
                   nrow = 5, ncol = 2, byrow = FALSE)
     colnames(tab) <- c(name1, name2)
@@ -430,22 +441,22 @@ heter_density_plot <- function (distr,
       ggplot(dataset_pdf,
              aes(x = value_x,
                  y = prob_dens_y)) +
-      stat_function(fun = function(z) {dhalfnorm(z, dataset_dist[1, 4])},
+      stat_function(fun = function(z) {dhnorm2(z, dataset_dist[1, 3])},
                     xlim = c(min(breaks_tau),
-                             qhalfnorm(0.5, dataset_dist[1, 4])),
+                             qnorm(0.75, 0, dataset_dist[1, 3])),
                     geom = "area",
                     fill = "#0072B2",
                     alpha = 0.2) +
-      stat_function(fun = function(z) {dhalfnorm(z, dataset_dist[1, 4])},
+      stat_function(fun = function(z) {dhnorm2(z, dataset_dist[1, 3])},
                     col = "#0072B2",
                     linewidth = 1.3) +
-      stat_function(fun = function(z) {dhalfnorm(z, dataset_dist[2, 4])},
+      stat_function(fun = function(z) {dhnorm2(z, dataset_dist[2, 3])},
                     xlim = c(min(breaks_tau),
-                             qhalfnorm(0.5, dataset_dist[2, 4])),
+                             qnorm(0.75, 0, dataset_dist[2, 3])),
                     geom = "area",
                     fill = "grey20",
                     alpha = 0.2) +
-      stat_function(fun = function(z) {dhalfnorm(z, dataset_dist[2, 4])},
+      stat_function(fun = function(z) {dhnorm2(z, dataset_dist[2, 3])},
                     col = "grey40",
                     linewidth = 1.3) +
       geom_point(data = dataset_pdf,
