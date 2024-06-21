@@ -25,6 +25,13 @@
 #'   are 0.05 and 0.10. The default value is 0.05.
 #' @param outcome Optional argument to describe the effect measure used (the
 #'   x-axis of the plots).
+#' @param scales A character on whether both axes should be fixed
+#'   (\code{"fixed"}) or free (\code{"free"}) or only one of them be free
+#'   (\code{"free_x"} or \code{"free_y"}). \code{scales} determines the scales
+#'   argument found in function (\code{\link[ggplot2:facet_wrap]{facet_wrap}})
+#'   in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}. The default is
+#'   (\code{"free"}).
 #'
 #' @return A panel of density plots for each split node sorted in ascending
 #' order of the Kullback-Leibler divergence value. Blue and black lines refer to
@@ -43,7 +50,8 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{kld_inconsistency}}
+#' @seealso \code{\link[ggplot2:facet_wrap]{facet_wrap}},
+#'   \code{\link{kld_inconsistency}}
 #'
 #' @references
 #' Bucher HC, Guyatt GH, Griffith LE, Walter SD. The results of direct and
@@ -113,7 +121,8 @@
 kld_inconsistency_user <- function(dataset,
                                    threshold = 0.00001,
                                    level = 0.05,
-                                   outcome = NULL) {
+                                   outcome = NULL,
+                                   scales = "free") {
 
 
   # General message
@@ -148,6 +157,14 @@ kld_inconsistency_user <- function(dataset,
   } else {
     level <- level
     message("Significance level specified at ", level)
+  }
+  scales <- if (missing(scales)) {
+    "free"
+  } else if (!is.element(scales, c("fixed", "free", "free_x", "free_y"))) {
+    stop("Insert one of the following: 'fixed', 'free', 'free_x', or 'free_y'.",
+         call. = FALSE)
+  } else if (is.element(scales, c("fixed", "free", "free_x", "free_y"))) {
+    scales
   }
 
   # Function for the Kullback-Leibler Divergence (two normal distributions)
@@ -314,7 +331,7 @@ kld_inconsistency_user <- function(dataset,
     facet_wrap(~factor(compar,
                        levels = dataset[, 1][order(kld_value,
                                                    decreasing = FALSE)]),
-               scales = "free") +
+               scales = scales) +
     scale_colour_manual(values = c("No threshold defined" = "black",
                                    "Consistency" = "#009E73",
                                    "Inconsistency" = "#D55E00")) +

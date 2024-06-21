@@ -43,6 +43,7 @@ Depends:
     R (>= 4.0.0)
 Imports: 
     cluster,
+    coda,
     dendextend,
     gemtc,
     ggfittext,

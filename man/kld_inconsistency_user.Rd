@@ -9,7 +9,8 @@ kld_inconsistency_user(
   dataset,
   threshold = 1e-05,
   level = 0.05,
-  outcome = NULL
+  outcome = NULL,
+  scales = "free"
 )
 }
 \arguments{
@@ -28,6 +29,14 @@ are 0.05 and 0.10. The default value is 0.05.}
 
 \item{outcome}{Optional argument to describe the effect measure used (the
 x-axis of the plots).}
+
+\item{scales}{A character on whether both axes should be fixed
+(\code{"fixed"}) or free (\code{"free"}) or only one of them be free
+(\code{"free_x"} or \code{"free_y"}). \code{scales} determines the scales
+argument found in function (\code{\link[ggplot2:facet_wrap]{facet_wrap}})
+in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}. The default is
+(\code{"free"}).}
 }
 \value{
 A panel of density plots for each split node sorted in ascending
@@ -123,7 +132,8 @@ meta-analysis. \emph{Res Synth Methods} 2016;\bold{7}(1):80--93.
 doi: 10.1002/jrsm.1167
 }
 \seealso{
-\code{\link{kld_inconsistency}}
+\code{\link[ggplot2:facet_wrap]{facet_wrap}},
+  \code{\link{kld_inconsistency}}
 }
 \author{
 {Loukia M. Spineli}

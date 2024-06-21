@@ -5,7 +5,13 @@
 \title{Density plots of local inconsistency results and Kullback-Leibler divergence
  when 'rnmamod', 'netmeta' or 'gemtc' R packages are used}
 \usage{
-kld_inconsistency(node, threshold = 1e-05, drug_names, outcome = NULL)
+kld_inconsistency(
+  node,
+  threshold = 1e-05,
+  drug_names,
+  outcome = NULL,
+  scales = "free"
+)
 }
 \arguments{
 \item{node}{An object of S3 class \code{\link{run_nodesplit}} or class
@@ -26,6 +32,14 @@ the order they appear in the argument \code{data}. It is not relevant for
 
 \item{outcome}{Optional argument to describe the effect measure used (the
 x-axis of the plots).}
+
+\item{scales}{A character on whether both axes should be fixed
+(\code{"fixed"}) or free (\code{"free"}) or only one of them be free
+(\code{"free_x"} or \code{"free_y"}). \code{scales} determines the scales
+argument found in function (\code{\link[ggplot2:facet_wrap]{facet_wrap}})
+in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}. The default is
+(\code{"free"}).}
 }
 \value{
 A panel of density plots for each split node sorted in ascending
@@ -36,7 +50,10 @@ the 95\% credible (confidence) interval of the inconsistency parameter, when
 been applied, with a darker grey line referring to the point estimate.
 When \code{\link[gemtc:mtc.nodesplit]{mtc.nodesplit}} has been employed, the
 95\% confidence interval has been approximated using the Bucher's approach
-based on the corresponding direct and indirect results.
+based on the corresponding direct and indirect results. This was necessary
+because \code{\link[gemtc:mtc.nodesplit]{mtc.nodesplit}} (version 1.0-2)
+returns only the inconsistency p-values rather than the posterior results on
+the inconsistency parameters.
 
 The Kullback-Leibler divergence value appears at the top left of each plot
 in three colours: black, if no threshold has been defined (the default),
@@ -95,7 +112,8 @@ meta-analysis. \emph{Res Synth Methods} 2016;\bold{7}(1):80--93.
 doi: 10.1002/jrsm.1167
 }
 \seealso{
-\code{\link[gemtc:mtc.nodesplit]{mtc.nodesplit}},
+\code{\link[ggplot2:facet_wrap]{facet_wrap}},
+  \code{\link[gemtc:mtc.nodesplit]{mtc.nodesplit}},
   \code{\link[netmeta:netsplit]{netsplit}},
   \code{\link{run_nodesplit}}
 }

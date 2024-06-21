@@ -26,6 +26,13 @@
 #'   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}.
 #' @param outcome Optional argument to describe the effect measure used (the
 #'   x-axis of the plots).
+#' @param scales A character on whether both axes should be fixed
+#'   (\code{"fixed"}) or free (\code{"free"}) or only one of them be free
+#'   (\code{"free_x"} or \code{"free_y"}). \code{scales} determines the scales
+#'   argument found in function (\code{\link[ggplot2:facet_wrap]{facet_wrap}})
+#'   in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}. The default is
+#'   (\code{"free"}).
 #'
 #' @return A panel of density plots for each split node sorted in ascending
 #' order of the Kullback-Leibler divergence value. Blue and black lines refer to
@@ -35,7 +42,10 @@
 #' been applied, with a darker grey line referring to the point estimate.
 #' When \code{\link[gemtc:mtc.nodesplit]{mtc.nodesplit}} has been employed, the
 #' 95\% confidence interval has been approximated using the Bucher's approach
-#' based on the corresponding direct and indirect results.
+#' based on the corresponding direct and indirect results. This was necessary
+#' because \code{\link[gemtc:mtc.nodesplit]{mtc.nodesplit}} (version 1.0-2)
+#' returns only the inconsistency p-values rather than the posterior results on
+#' the inconsistency parameters.
 #'
 #' The Kullback-Leibler divergence value appears at the top left of each plot
 #' in three colours: black, if no threshold has been defined (the default),
@@ -46,7 +56,8 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link[gemtc:mtc.nodesplit]{mtc.nodesplit}},
+#' @seealso \code{\link[ggplot2:facet_wrap]{facet_wrap}},
+#'   \code{\link[gemtc:mtc.nodesplit]{mtc.nodesplit}},
 #'   \code{\link[netmeta:netsplit]{netsplit}},
 #'   \code{\link{run_nodesplit}}
 #'
@@ -92,7 +103,8 @@
 kld_inconsistency <- function(node,
                               threshold = 0.00001,
                               drug_names,
-                              outcome = NULL) {
+                              outcome = NULL,
+                              scales = "free") {
 
   if (all(c(inherits(node, "run_nodesplit"), inherits(node, "mtc.nodesplit"),
             inherits(node, "netsplit")) == FALSE)) {
@@ -127,6 +139,14 @@ kld_inconsistency <- function(node,
                    inherits(node, "netsplit")) == TRUE)) {
     NULL
   }
+  scales <- if (missing(scales)) {
+    "free"
+  } else if (!is.element(scales, c("fixed", "free", "free_x", "free_y"))) {
+    stop("Insert one of the following: 'fixed', 'free', 'free_x', or 'free_y'.",
+         call. = FALSE)
+  } else if (is.element(scales, c("fixed", "free", "free_x", "free_y"))) {
+    scales
+  }
 
   # Extract results based on the class (and hence, the R package)
   if (inherits(node, "mtc.nodesplit")) { # R package: gemtc
@@ -137,23 +157,43 @@ kld_inconsistency <- function(node,
     # Restrict to direct mean
     direct_mean <- direct0[, 3]
 
-    # Calculate (approximately) the direct standard error
-    direct_se <- (direct0[, 5] - direct0[, 4]) / (2 * 1.96)
-
-    # Bring direct mean and standard error in a data-frame
-    direct <- data.frame(direct_mean, direct_se)
-
     # Get indirect estimates
     indirect0 <- summary(node)[[2]]
 
     # Restrict to indirect mean
     indirect_mean <- indirect0[, 3]
 
-    # Calculate (approximately) the indirect standard error
-    indirect_se <- (indirect0[, 5] - indirect0[, 4]) / (2 * 1.96)
+    # Calculate (approximately) the direct standard error
+    #direct_se <- (direct0[, 5] - direct0[, 4]) / (2 * 1.96)
+    # Number of split nodes
+    num_nodes <- length(names(node))
+
+    # Remove 'consistency' node
+    node_new <- node[-(num_nodes)]
+
+    # Get mcmc summaries per split node
+    summary_res <- lapply(node_new, function(x) summary(coda::as.mcmc.list(x)))
+
+    # Extract the posterior SD for direct estimate
+    direct_se <-
+      unlist(lapply(summary_res,
+                    function(x)
+                      as.data.frame(x$statistics)[dim(x$statistics)[1] - 3, 2]))
+
+    # Extract the posterior SD for indirect estimate
+    indirect_se <-
+      unlist(lapply(summary_res,
+                    function(x)
+                      as.data.frame(x$statistics)[dim(x$statistics)[1] - 2, 2]))
+
+    # Bring direct mean and standard error in a data-frame
+    direct <- data.frame(direct_mean, direct_se)
 
     # Bring indirect mean and standard error in a data-frame
     indirect <- data.frame(indirect_mean, indirect_se)
+
+    # Calculate (approximately) the indirect standard error
+    #indirect_se <- (indirect0[, 5] - indirect0[, 4]) / (2 * 1.96)
 
     # Calculate (approximately) the inconsistency using Bucher's approach
     # 'gemtc' returns only the inconsistency p-value
@@ -173,6 +213,8 @@ kld_inconsistency <- function(node,
 
     # Vector of comparison names
     comparison <- paste(indirect0$t2, "vs", indirect0$t1)
+
+    message("Results on inconsistency parameters are calculated approximately.")
 
   } else if (inherits(node, "netsplit")) { # R package: netmeta
 
@@ -396,7 +438,7 @@ kld_inconsistency <- function(node,
     facet_wrap(~factor(compar,
                        levels =
                          comparison[order(kld_value, decreasing = FALSE)]),
-               scales = "free") +
+               scales = scales) +
     scale_colour_manual(values = c("No threshold defined" = "black",
                                    "Consistency" = "#009E73",
                                    "Inconsistency" = "#D55E00")) +
