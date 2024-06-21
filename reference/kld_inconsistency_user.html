@@ -89,7 +89,8 @@ estimate.</p>
 <span>  <span class="va">dataset</span>,</span>
 <span>  threshold <span class="op">=</span> <span class="fl">1e-05</span>,</span>
 <span>  level <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span>  outcome <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  outcome <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  scales <span class="op">=</span> <span class="st">"free"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -117,6 +118,16 @@ are 0.05 and 0.10. The default value is 0.05.</p></dd>
 <dt>outcome</dt>
 <dd><p>Optional argument to describe the effect measure used (the
 x-axis of the plots).</p></dd>
+
+
+<dt>scales</dt>
+<dd><p>A character on whether both axes should be fixed
+(<code>"fixed"</code>) or free (<code>"free"</code>) or only one of them be free
+(<code>"free_x"</code> or <code>"free_y"</code>). <code>scales</code> determines the scales
+argument found in function (<code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></code>)
+in the R-package
+<a href="https://CRAN.R-project.org/package=ggplot2" class="external-link">ggplot2</a>. The default is
+(<code>"free"</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -159,7 +170,8 @@ doi: 10.1002/jrsm.1167</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="kld_inconsistency.html">kld_inconsistency</a></code></p></div>
+    <div class="dont-index"><p><code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></code>,
+  <code><a href="kld_inconsistency.html">kld_inconsistency</a></code></p></div>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
