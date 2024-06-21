@@ -120,7 +120,7 @@ table_tau2_prior <- function (measure, area) {
     median_value <- sqrt(qlnorm(0.5, mean_value, sd_value))
 
 
-    ## Bring hyperparameters wtith distribution type into a cross-sectional table
+    ## Bring hyperparameters with distribution type into a cross-sectional table
     table_priors_text <-
       matrix(paste0("LN(", sprintf("%.2f", mean_value), ", ", sprintf("%.2f", sd_value), "\u00b2)"),
              nrow = length(outcome_type),
@@ -195,7 +195,7 @@ table_tau2_prior <- function (measure, area) {
     median_value <- sqrt(exp((qt(0.5, df = 5) * sd_value) + mean_value))
 
 
-    ## Bring hyperparameters wtith distribution type into a cross-sectional table
+    ## Bring hyperparameters with distribution type into a cross-sectional table
     table_priors_text <-
       matrix(paste0("t(", sprintf("%.2f", mean_value), ", ", sprintf("%.2f", sd_value), "\u00b2, 5)"),
              nrow = length(outcome_type),
@@ -215,7 +215,7 @@ table_tau2_prior <- function (measure, area) {
     colnames(table_median) <- interv_compat_type
 
 
-    ## The empirical priors refer to a specif medical area (cancer)
+    ## The empirical priors refer to a specific medical area (cancer)
     caption <- "Medical areas of cancer (doi: 10.1016/j.jclinepi.2014.08.012)"
 
 
@@ -270,7 +270,7 @@ table_tau2_prior <- function (measure, area) {
     median_value <- sqrt(exp((qt(0.5, df = 5) * sd_value) + mean_value))
 
 
-    ## Bring hyperparameters wtith distribution type into a cross-sectional table
+    ## Bring hyperparameters with distribution type into a cross-sectional table
     table_priors_text <-
       matrix(paste0("t(", sprintf("%.2f", mean_value), ", ", sprintf("%.2f", sd_value), "\u00b2, 5)"),
              nrow = length(outcome_type),
@@ -290,7 +290,7 @@ table_tau2_prior <- function (measure, area) {
     colnames(table_median) <- interv_compat_type
 
 
-    ## The empirical priors refer to a specif medical area (respiratory)
+    ## The empirical priors refer to a specific medical area (respiratory)
     caption <- "Medical areas of respiratory diseases (doi: 10.1016/j.jclinepi.2014.08.012)"
 
 
@@ -345,7 +345,7 @@ table_tau2_prior <- function (measure, area) {
     median_value <- sqrt(exp((qt(0.5, df = 5) * sd_value) + mean_value))
 
 
-    ## Bring hyperparameters wtith distribution type into a cross-sectional table
+    ## Bring hyperparameters with distribution type into a cross-sectional table
     table_priors_text <-
       matrix(paste0("t(", sprintf("%.2f", mean_value), ", ", sprintf("%.2f", sd_value), "\u00b2, 5)"),
              nrow = length(outcome_type),
@@ -365,7 +365,7 @@ table_tau2_prior <- function (measure, area) {
     colnames(table_median) <- interv_compat_type
 
 
-    ## The empirical priors refer to a specif medical area (other)
+    ## The empirical priors refer to a specific medical area (other)
     caption <- "Medical areas other than cancer and respiratory diseases (doi: 10.1016/j.jclinepi.2014.08.012)"
 
 
