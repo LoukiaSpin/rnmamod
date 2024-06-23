@@ -26,7 +26,10 @@ jobs:
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      JAGS_HOME: 'C:\Program Files\JAGS\JAGS-4.3.1\JAGS-4.3.1.exe'
+      NOT_CRAN: true
       R_KEEP_PKG_SOURCE: yes
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: false
 
     steps:
       - uses: actions/checkout@v3
@@ -41,20 +44,14 @@ jobs:
 
       - name: Install jags (windows-latest)
         if: runner.os == 'Windows'
-        run: |
-          curl.exe -o wjags.exe --url https://deac-fra.dl.sourceforge.net/project/mcmc-jags/JAGS/4.x/Windows/JAGS-4.3.1.exe
+        run: curl.exe -o wjags.exe --url https://deac-fra.dl.sourceforge.net/project/mcmc-jags/JAGS/4.x/Windows/JAGS-4.3.1.exe
           wjags.exe /S
           del wjags.exe
         shell: cmd
 
      - name: Install jags (macos-latest)
         if: runner.os == 'macOS'
-        run: |
-          brew install jags
-
-    - name: Install system dependencies
-       run: |
-         brew install jags
+        run: brew install jags
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
