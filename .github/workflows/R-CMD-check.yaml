@@ -17,6 +17,7 @@ jobs:
     # to install private repo as dependency
     env:
       GITHUB_PAT: ${{ secrets.GH_PAT }}
+      R_KEEP_PKG_SOURCE: yes
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
@@ -26,7 +27,9 @@ jobs:
         config:
           - {os: windows-latest, r: 'release'}
           - {os: macOS-latest, r: 'release'}
-          - {os: ubuntu-20.04, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
+          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,   r: 'release'}
+          - {os: ubuntu-latest,   r: 'oldrel-1'}
 
     steps:
       - uses: actions/checkout@v2
@@ -70,8 +73,7 @@ jobs:
 
       - name: Install jags (macOS-latest)
         if: runner.os == 'macOS'
-        run : |
-          brew install automake jags
+        run : brew install jags
 
       - name: Install dependencies
         run: |
@@ -82,8 +84,6 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
-          JAGS_ROOT: "/c/Program Files/JAGS/JAGS-4.3.1"
-          JAGS_MAJOR_VERSION: 4
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
 
