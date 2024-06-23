@@ -47,6 +47,15 @@ jobs:
           del wjags.exe
         shell: cmd
 
+     - name: Install jags (macos-latest)
+        if: runner.os == 'macOS'
+        run: |
+          brew install jags
+
+    - name: Install system dependencies
+       run: |
+         brew install jags
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
