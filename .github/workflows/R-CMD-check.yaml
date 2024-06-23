@@ -48,9 +48,9 @@ jobs:
         shell: cmd
 
      - name: Install jags (macos-latest)
-        if: runner.os == 'macOS'
-        run: |
-          brew install jags
+       if: runner.os == 'macOS'
+       run: |
+            brew install jags
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
