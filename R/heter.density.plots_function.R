@@ -20,6 +20,16 @@
 #' @param caption Logical to indicate whether to report a caption at the bottom
 #'   right of the plot. It is relevant only when \code{distr = "lognormal"} and
 #'   \code{distr = "logt"}. The default is \code{FALSE} (do not report).
+#' @param x_axis_name Text for the title of the x-axis in the density plot.
+#'   \code{x_axis_name} determines the x argument found in the
+#'   labels' properties in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}). The default
+#'   text is 'Between-study standard deviation'.
+#' @param y_axis_name Text for the title of the y-axis in the density plot.
+#'   \code{y_axis_name} determines the y argument found in the labels'
+#'   properties in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}). The default
+#'   text is 'Density'.
 #'
 #' @return A plot with the density of two selected prior distributions for the
 #' heterogeneity parameter. Two different colours are used to discern the
@@ -84,7 +94,9 @@
 heter_density_plot <- function (distr,
                                 heter_prior1,
                                 heter_prior2,
-                                caption = TRUE) {
+                                caption = TRUE,
+                                x_axis_name,
+                                y_axis_name) {
 
 
   ## Default arguments
@@ -125,12 +137,22 @@ heter_density_plot <- function (distr,
   } else {
     ""
   }
+  x_axis_name <- if (missing(x_axis_name)) {
+    "Between-study standard deviation"
+  } else {
+    x_axis_name
+  }
+  y_axis_name <- if (missing(y_axis_name)) {
+    "Density"
+  } else {
+    y_axis_name
+  }
 
 
-  ## Function for log-transformed values (relevant for 'lognormal' and 'logt')
+  ## Function to power values close to zero
   label_value <- function (x) {
-    unlist(lapply(x, function(x) if (x < 0.0001)
-      format(x, scientific = TRUE, digits = 2) else round(x, 2)))
+    unlist(lapply(x, function(x) if (x < 0.01)
+      format(x, scientific = TRUE, digits = 2) else sprintf("%.2f", x)))
   }
 
 
@@ -195,9 +217,9 @@ heter_density_plot <- function (distr,
 
     ## Get table with quartiles
     tab0 <- lapply(1:dim(dataset_dist)[1],
-                   function(x) qlnorm(c(0.025, 0.25, 0.50, 0.75, 0.975),
-                                      dataset_dist[x, 2],
-                                      dataset_dist[x, 3]))
+                   function(x) sqrt(qlnorm(c(0.025, 0.25, 0.50, 0.75, 0.975),
+                                           dataset_dist[x, 2],
+                                           dataset_dist[x, 3])))
     tab <- matrix(label_value(unlist(tab0)),
                   nrow = 5, ncol = 2, byrow = FALSE)
     colnames(tab) <- c(name1, name2)
@@ -218,6 +240,8 @@ heter_density_plot <- function (distr,
         alpha = 0.2) +
       stat_function(fun = function(z) {
         dnorm(z, dataset_dist[1, 2], dataset_dist[1, 3])},
+        xlim = c(min(log(breaks_tau2)),
+                 log(qlnorm(0.999, dataset_dist[1, 2], dataset_dist[1, 3]))),
         col = "#0072B2",
         linewidth = 1.3) +
       stat_function(fun = function(z) {
@@ -229,6 +253,8 @@ heter_density_plot <- function (distr,
         alpha = 0.2) +
       stat_function(fun = function(z) {
         dnorm(z, dataset_dist[2, 2], dataset_dist[2, 3])},
+        xlim = c(min(log(breaks_tau2)),
+                 log(qlnorm(0.999, dataset_dist[2, 2], dataset_dist[2, 3]))),
         col = "grey40",
         linewidth = 1.3) +
       geom_point(data = dataset_pdf,
@@ -237,12 +263,12 @@ heter_density_plot <- function (distr,
                      fill = distr),
                  alpha = 0) +
       scale_x_continuous(breaks = log(breaks_tau2),
-                         labels = label_value(breaks_tau2),
+                         labels = label_value(sqrt(breaks_tau2)),
                          #limits = c(min(log(breaks_tau2)),
                          #           max(log(breaks_tau2))),
                          guide = guide_axis(check.overlap = TRUE)) +
-      labs(x = "Between-study variance",
-           y = "Density",
+      labs(x = x_axis_name,
+           y = y_axis_name,
            fill = "Distribution",
            caption = caption) +
       guides(colour = "none",
@@ -311,8 +337,8 @@ heter_density_plot <- function (distr,
     ## Get table with quartiles
     tab0 <- lapply(1:dim(dataset_dist)[1],
                    function(x)
-                     exp((qt(c(0.025, 0.25, 0.50, 0.75, 0.975), 5) *
-                            dataset_dist[x, 3]) + dataset_dist[x, 2]))
+                     sqrt(exp((qt(c(0.025, 0.25, 0.50, 0.75, 0.975), 5) *
+                                 dataset_dist[x, 3]) + dataset_dist[x, 2])))
     tab <- matrix(label_value(unlist(tab0)),
                   nrow = 5, ncol = 2, byrow = FALSE)
     colnames(tab) <- c(name1, name2)
@@ -333,6 +359,8 @@ heter_density_plot <- function (distr,
         alpha = 0.2) +
       stat_function(fun = function(z) {(1 / dataset_dist[1, 3]) *
           dt((z - dataset_dist[1, 2]) / dataset_dist[1, 3], 5)},
+          xlim = c(min(log(breaks_tau2)),
+                   (qt(0.999, 5) * dataset_dist[1, 3]) + dataset_dist[1, 2]),
         col = "#0072B2",
         linewidth = 1.3) +
       stat_function(fun = function(z) {(1 / dataset_dist[2, 3]) *
@@ -344,6 +372,8 @@ heter_density_plot <- function (distr,
         alpha = 0.2) +
       stat_function(fun = function(z) {(1 / dataset_dist[2, 3]) *
           dt((z - dataset_dist[2, 2]) / dataset_dist[2, 3], 5)},
+          xlim = c(min(log(breaks_tau2)),
+                   (qt(0.999, 5) * dataset_dist[2, 3]) + dataset_dist[2, 2]),
         col = "grey40",
         linewidth = 1.3) +
       geom_point(data = dataset_pdf,
@@ -352,12 +382,12 @@ heter_density_plot <- function (distr,
                      fill = distr),
                  alpha = 0) +
       scale_x_continuous(breaks = log(breaks_tau2),
-                         labels = label_value(breaks_tau2),
+                         labels = label_value(sqrt(breaks_tau2)),
                          #limits = c(min(log(breaks_tau2)),
                          #           max(log(breaks_tau2))),
                          guide = guide_axis(check.overlap = TRUE)) +
-      labs(x = "Between-study variance",
-           y = "Density",
+      labs(x = x_axis_name,
+           y = y_axis_name,
            fill = "Distribution",
            caption = caption) +
       guides(colour = "none",
@@ -468,8 +498,8 @@ heter_density_plot <- function (distr,
                          labels = sprintf("%.2f", breaks_tau),
                          #limits = c(min(breaks_tau), max(breaks_tau)),
                          guide = guide_axis(check.overlap = TRUE)) +
-      labs(x = "Between-study standard deviation",
-           y = "Density",
+      labs(x = x_axis_name,
+           y = y_axis_name,
            fill = "Distribution",
            captiotn = "") +
       guides(colour = "none",
@@ -491,5 +521,5 @@ heter_density_plot <- function (distr,
                 knitr::kable(tab,
                              align = "cc",
                              col.names = c("Percentiles", colnames(tab)),
-                             caption = "Percentiles of each distribution")))
+                             caption = "Percentiles in standard deviation")))
 }
