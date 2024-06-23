@@ -63,7 +63,7 @@ jobs:
       - name: Install jags (windows-latest)
         if: runner.os == 'Windows'
         run: |
-          curl.exe -o wjags.exe --url https://sourceforge.net/projects/mcmc-jags/files/
+          curl.exe -o wjags.exe --url https://deac-fra.dl.sourceforge.net/project/mcmc-jags/JAGS/4.x/Windows/JAGS-4.3.1.exe
           wjags.exe /S
           del wjags.exe
         shell: cmd
@@ -71,8 +71,7 @@ jobs:
       - name: Install jags (macOS-latest)
         if: runner.os == 'macOS'
         run : |
-          rm '/usr/local/bin/gfortran'
-          brew install jags
+          brew install automake jags
 
       - name: Install dependencies
         run: |
@@ -83,6 +82,8 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
+          JAGS_ROOT: "/c/Program Files/JAGS/JAGS-4.3.1"
+          JAGS_MAJOR_VERSION: 4
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
 
