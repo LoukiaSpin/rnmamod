@@ -41,6 +41,7 @@ URL: https://CRAN.R-project.org/package=rnmamod, https://github.com/LoukiaSpin/r
 BugReports: https://github.com/LoukiaSpin/rnmamod/issues
 Depends: 
     R (>= 4.0.0),
+    rjags
 Imports: 
     cluster,
     coda (>= 0.13),

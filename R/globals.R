@@ -1,5 +1,6 @@
 #' @import
 #'   ggplot2
+#'   rjags
 #'   stats
 #'
 #' @importFrom cluster silhouette
