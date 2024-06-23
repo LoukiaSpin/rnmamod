@@ -40,10 +40,10 @@ License: GPL (>= 3)
 URL: https://CRAN.R-project.org/package=rnmamod, https://github.com/LoukiaSpin/rnmamod, https://loukiaspin.github.io/rnmamod/
 BugReports: https://github.com/LoukiaSpin/rnmamod/issues
 Depends: 
-    R (>= 4.0.0)
+    R (>= 4.0.0),
 Imports: 
     cluster,
-    coda,
+    coda (>= 0.13),
     dendextend,
     gemtc,
     ggfittext,

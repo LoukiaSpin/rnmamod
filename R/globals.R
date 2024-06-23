@@ -3,6 +3,7 @@
 #'   stats
 #'
 #' @importFrom cluster silhouette
+#' @importFrom coda as.mcmc.list
 #' @importFrom dendextend set %>%
 #' @importFrom MASS fractions
 #' @importFrom gemtc mtc.network mtc.data.studyrow mtc.nodesplit.comparisons
@@ -13,6 +14,7 @@
 #' @importFrom heatmaply heatmaply
 #' @importFrom igraph count_components distances E layout_in_circle make_graph plot.igraph V
 #' @importFrom knitr kable
+#' @importFrom mcmcplots as.mcmc.rjags mcmcplot
 #' @importFrom reshape2 melt
 #' @importFrom R2jags jags autojags
 #' @importFrom scales hue_pal rescale percent
