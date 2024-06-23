@@ -33,6 +33,8 @@
 #'   in the R-package
 #'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}. The default is
 #'   (\code{"free"}).
+#' @param y_axis_name Logical to indicate whether to present the title of y-axis
+#'   ('Density'). The default is \code{TRUE} (report).
 #'
 #' @return A panel of density plots for each split node sorted in ascending
 #' order of the Kullback-Leibler divergence value. Blue and black lines refer to
@@ -104,7 +106,8 @@ kld_inconsistency <- function(node,
                               threshold = 0.00001,
                               drug_names,
                               outcome = NULL,
-                              scales = "free") {
+                              scales = "free",
+                              y_axis_name = TRUE) {
 
   if (all(c(inherits(node, "run_nodesplit"), inherits(node, "mtc.nodesplit"),
             inherits(node, "netsplit")) == FALSE)) {
@@ -146,6 +149,11 @@ kld_inconsistency <- function(node,
          call. = FALSE)
   } else if (is.element(scales, c("fixed", "free", "free_x", "free_y"))) {
     scales
+  }
+  y_axis_name <- if (y_axis_name == TRUE) {
+    "Density"
+  } else {
+    ""
   }
 
   # Extract results based on the class (and hence, the R package)
@@ -445,7 +453,7 @@ kld_inconsistency <- function(node,
     scale_fill_manual(values = c("Direct estimate" = "#0072B2",
                                  "Indirect estimate" = "black")) +
     labs(x = outcome,
-         y = " ",
+         y = y_axis_name,
          fill = " ") +
     guides(colour = "none",
            fill = guide_legend(override.aes = list(size = 3,

@@ -17,19 +17,27 @@
 #'   distribution: 1) the mean value and 2) the standard deviation. When
 #'   \code{distr = "halfnormal"}, the first value should zero and the second a
 #'   non-negative value referring to the scale parameter of the distribution.
+#' @param heter1 Character string indicating the heterogeneity parameter
+#'   for \code{heter_prior1}. Set \code{heter1} equal to one of the following:
+#'   \code{"tau"}, or \code{"tau_omega"}, which refers to a between-study
+#'   heterogeneity or between-design heterogeneity (inconsistency),
+#'   respectively. This argument is relevant only when
+#'   \code{distr = "lognormal"} or \code{distr = "logt"}. The default is
+#'   \code{"tau"}.
+#' @param heter2 Character string indicating the heterogeneity parameter
+#'   for \code{heter_prior2}. Set \code{heter2} equal to one of the following:
+#'   \code{"tau"}, or \code{"tau_omega"}, which refers to a between-study
+#'   heterogeneity or between-design heterogeneity (inconsistency),
+#'   respectively. This argument is relevant only when
+#'   \code{distr = "lognormal"} or \code{distr = "logt"}. The default is
+#'   \code{"tau"}.
 #' @param caption Logical to indicate whether to report a caption at the bottom
 #'   right of the plot. It is relevant only when \code{distr = "lognormal"} and
 #'   \code{distr = "logt"}. The default is \code{FALSE} (do not report).
-#' @param x_axis_name Text for the title of the x-axis in the density plot.
-#'   \code{x_axis_name} determines the x argument found in the
-#'   labels' properties in the R-package
-#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}). The default
-#'   text is 'Between-study standard deviation'.
-#' @param y_axis_name Text for the title of the y-axis in the density plot.
-#'   \code{y_axis_name} determines the y argument found in the labels'
-#'   properties in the R-package
-#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}). The default
-#'   text is 'Density'.
+#' @param x_axis_name Logical to indicate whether to present the title of x-axis
+#'   ('Between-study standard deviation'). The default is \code{TRUE} (report).
+#' @param y_axis_name Logical to indicate whether to present the title of y-axis
+#'   ('Density'). The default is \code{TRUE} (report).
 #'
 #' @return A plot with the density of two selected prior distributions for the
 #' heterogeneity parameter. Two different colours are used to discern the
@@ -94,9 +102,11 @@
 heter_density_plot <- function (distr,
                                 heter_prior1,
                                 heter_prior2,
-                                caption = TRUE,
-                                x_axis_name,
-                                y_axis_name) {
+                                heter1 = "tau",
+                                heter2 = "tau",
+                                caption = FALSE,
+                                x_axis_name = TRUE,
+                                y_axis_name = TRUE) {
 
 
   ## Default arguments
@@ -132,20 +142,44 @@ heter_density_plot <- function (distr,
   } else {
     heter_prior2
   }
+  het10 <- if (missing(heter1)) {
+    "tau"
+  } else if (!is.element(heter1, c("tau", "tau_omega"))) {
+    stop("Insert 'tau', or 'tau_omega'", call. = FALSE)
+  } else if (is.element(heter1, c("tau", "tau_omega"))) {
+    heter1
+  }
+  het1 <- if (het10 == "tau") {
+    "\u03C4\u00b2"
+  } else if (het10 == "tau_omega") {
+    "\u03C9\u00b2"
+  }
+  het20 <- if (missing(heter2)) {
+    "tau"
+  } else if (!is.element(heter2, c("tau", "tau_omega"))) {
+    stop("Insert 'tau', or 'tau_omega'", call. = FALSE)
+  } else if (is.element(heter2, c("tau", "tau_omega"))) {
+    heter2
+  }
+  het2 <- if (het20 == "tau") {
+    "\u03C4\u00b2"
+  } else if (het20 == "tau_omega") {
+    "\u03C9\u00b2"
+  }
   caption <- if (caption == TRUE) {
     "*Note: Distributions are plotted on the logarithmic scale."
   } else {
     ""
   }
-  x_axis_name <- if (missing(x_axis_name)) {
+  x_axis_name <- if (x_axis_name == TRUE) {
     "Between-study standard deviation"
   } else {
-    x_axis_name
+    ""
   }
-  y_axis_name <- if (missing(y_axis_name)) {
+  y_axis_name <- if (y_axis_name == TRUE) {
     "Density"
   } else {
-    y_axis_name
+    ""
   }
 
 
@@ -170,10 +204,12 @@ heter_density_plot <- function (distr,
 
     ## Give a distinct name to each function
     # For heter_prior1
-    name1 <- paste0("LN(", heter_prior1[1], ", ", heter_prior1[2], "\u00b2)")
+    name1 <-
+      paste0(het1, "~LN(", heter_prior1[1], ", ", heter_prior1[2], "\u00b2)")
 
     # For heter_prior2
-    name2 <- paste0("LN(", heter_prior2[1], ", ", heter_prior2[2], "\u00b2)")
+    name2 <-
+      paste0(het2, "~LN(", heter_prior2[1], ", ", heter_prior2[2], "\u00b2)")
 
 
     ## Bring into a data-frame
@@ -236,26 +272,26 @@ heter_density_plot <- function (distr,
         xlim = c(min(log(breaks_tau2)),
                  log(qlnorm(0.5, dataset_dist[1, 2], dataset_dist[1, 3]))),
         geom = "area",
-        fill = "#0072B2",
+        fill = "#B4AF46",
         alpha = 0.2) +
       stat_function(fun = function(z) {
         dnorm(z, dataset_dist[1, 2], dataset_dist[1, 3])},
         xlim = c(min(log(breaks_tau2)),
                  log(qlnorm(0.999, dataset_dist[1, 2], dataset_dist[1, 3]))),
-        col = "#0072B2",
+        col = "#B4AF46",
         linewidth = 1.3) +
       stat_function(fun = function(z) {
         dnorm(z, dataset_dist[2, 2], dataset_dist[2, 3])},
         xlim = c(min(log(breaks_tau2)),
                  log(qlnorm(0.5, dataset_dist[2, 2], dataset_dist[2, 3]))),
         geom = "area",
-        fill = "grey20",
+        fill = "#B4464B",
         alpha = 0.2) +
       stat_function(fun = function(z) {
         dnorm(z, dataset_dist[2, 2], dataset_dist[2, 3])},
         xlim = c(min(log(breaks_tau2)),
                  log(qlnorm(0.999, dataset_dist[2, 2], dataset_dist[2, 3]))),
-        col = "grey40",
+        col = "#B4464B",
         linewidth = 1.3) +
       geom_point(data = dataset_pdf,
                  aes(x = value_x,
@@ -274,8 +310,8 @@ heter_density_plot <- function (distr,
       guides(colour = "none",
              fill = guide_legend(override.aes = list(size = 3,
                                                      alpha = 1,
-                                                     colour = c("#0072B2",
-                                                                "grey40")))) +
+                                                     colour = c("#B4AF46",
+                                                                "#B4464B")))) +
       theme_classic() +
       theme(axis.text = element_text(size = 13),
             axis.title = element_text(size = 13, face = "bold"),
@@ -287,10 +323,12 @@ heter_density_plot <- function (distr,
 
     ## Give a distinct name to each function
     # For heter_prior1
-    name1 <- paste0("t(", heter_prior1[1], ", ", heter_prior1[2], "\u00b2, 5)")
+    name1 <-
+      paste0(het1, "~t(", heter_prior1[1], ", ", heter_prior1[2], "\u00b2, 5)")
 
     # For heter_prior2
-    name2 <- paste0("t(", heter_prior2[1], ", ", heter_prior2[2], "\u00b2, 5)")
+    name2 <-
+      paste0(het2, "~t(", heter_prior2[1], ", ", heter_prior2[2], "\u00b2, 5)")
 
 
     ## Bring into a data-frame
@@ -355,26 +393,26 @@ heter_density_plot <- function (distr,
         xlim = c(min(log(breaks_tau2)),
                  (qt(0.5, 5) * dataset_dist[1, 3]) + dataset_dist[1, 2]),
         geom = "area",
-        fill = "#0072B2",
+        fill = "#B4AF46",
         alpha = 0.2) +
       stat_function(fun = function(z) {(1 / dataset_dist[1, 3]) *
           dt((z - dataset_dist[1, 2]) / dataset_dist[1, 3], 5)},
           xlim = c(min(log(breaks_tau2)),
                    (qt(0.999, 5) * dataset_dist[1, 3]) + dataset_dist[1, 2]),
-        col = "#0072B2",
+        col = "#B4AF46",
         linewidth = 1.3) +
       stat_function(fun = function(z) {(1 / dataset_dist[2, 3]) *
           dt((z - dataset_dist[2, 2]) / dataset_dist[2, 3], 5)},
         xlim = c(min(log(breaks_tau2)),
                  (qt(0.5, 5) * dataset_dist[2, 3]) + dataset_dist[2, 2]),
         geom = "area",
-        fill = "grey20",
+        fill = "#B4464B",
         alpha = 0.2) +
       stat_function(fun = function(z) {(1 / dataset_dist[2, 3]) *
           dt((z - dataset_dist[2, 2]) / dataset_dist[2, 3], 5)},
           xlim = c(min(log(breaks_tau2)),
                    (qt(0.999, 5) * dataset_dist[2, 3]) + dataset_dist[2, 2]),
-        col = "grey40",
+        col = "#B4464B",
         linewidth = 1.3) +
       geom_point(data = dataset_pdf,
                  aes(x = value_x,
@@ -393,8 +431,8 @@ heter_density_plot <- function (distr,
       guides(colour = "none",
              fill = guide_legend(override.aes = list(size = 3,
                                                      alpha = 1,
-                                                     colour = c("#0072B2",
-                                                                "grey40")))) +
+                                                     colour = c("#B4AF46",
+                                                                "#B4464B")))) +
       theme_classic() +
       theme(axis.text = element_text(size = 13),
             axis.title = element_text(size = 13, face = "bold"),
@@ -407,10 +445,10 @@ heter_density_plot <- function (distr,
 
     ## Give a distinct name to each function
     # For heter_prior1
-    name1 <- paste0("HN(", heter_prior1[1], ", ", heter_prior1[2], ")")
+    name1 <- paste0("\u03C4~HN(", heter_prior1[1], ", ", heter_prior1[2], ")")
 
     # For heter_prior2
-    name2 <- paste0("HN(", heter_prior2[1], ", ", heter_prior2[2], ")")
+    name2 <- paste0("\u03C4~HN(", heter_prior2[1], ", ", heter_prior2[2], ")")
 
 
     ## Bring into a data-frame
@@ -475,19 +513,19 @@ heter_density_plot <- function (distr,
                     xlim = c(min(breaks_tau),
                              qnorm(0.75, 0, dataset_dist[1, 3])),
                     geom = "area",
-                    fill = "#0072B2",
+                    fill = "#B4AF46",
                     alpha = 0.2) +
       stat_function(fun = function(z) {dhnorm2(z, dataset_dist[1, 3])},
-                    col = "#0072B2",
+                    col = "#B4AF46",
                     linewidth = 1.3) +
       stat_function(fun = function(z) {dhnorm2(z, dataset_dist[2, 3])},
                     xlim = c(min(breaks_tau),
                              qnorm(0.75, 0, dataset_dist[2, 3])),
                     geom = "area",
-                    fill = "grey20",
+                    fill = "#B4464B",
                     alpha = 0.2) +
       stat_function(fun = function(z) {dhnorm2(z, dataset_dist[2, 3])},
-                    col = "grey40",
+                    col = "#B4464B",
                     linewidth = 1.3) +
       geom_point(data = dataset_pdf,
                  aes(x = value_x,
@@ -505,8 +543,8 @@ heter_density_plot <- function (distr,
       guides(colour = "none",
              fill = guide_legend(override.aes = list(size = 3,
                                                      alpha = 1,
-                                                     colour = c("#0072B2",
-                                                                "grey40")))) +
+                                                     colour = c("#B4AF46",
+                                                                "#B4464B")))) +
       theme_classic() +
       theme(axis.text = element_text(size = 13),
             axis.title = element_text(size = 13, face = "bold"),
