@@ -38,7 +38,7 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
-    
+
       - name: Install jags (windows-latest)
         if: runner.os == 'Windows'
         run: |
@@ -50,8 +50,9 @@ jobs:
       - name: Install jags (macos-latest)
         if: runner.os == 'macOS'
         run : |
+              rm '/usr/local/bin/gfortran'
               brew install jags
-    
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
