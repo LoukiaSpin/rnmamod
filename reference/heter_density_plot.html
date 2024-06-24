@@ -225,69 +225,23 @@ Database of Systematic Reviews.
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="co">## Two empirical priors for between-study variance of log odds ratio.</span></span></span>
 <span class="r-in"><span><span class="fu">heter_density_plot</span><span class="op">(</span>distr <span class="op">=</span> <span class="st">"lognormal"</span>,</span></span>
 <span class="r-in"><span>                   heter_prior1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3.50</span>, <span class="fl">1.26</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                   heter_prior2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4.79</span>, <span class="fl">1.67</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Density_plots</span>
-<span class="r-plt img"><img src="heter_density_plot-1.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $tabulated_percentiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Table: Percentiles in standard deviation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |Percentiles | τ²~LN(-3.5, 1.26²) | τ²~LN(-4.79, 1.67²) |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |:-----------|:------------------:|:-------------------:|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |2.5%        |        0.05        |        0.02         |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |25%         |        0.11        |        0.05         |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |50%         |        0.17        |        0.09         |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |75%         |        0.27        |        0.16         |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |97.5%       |        0.60        |        0.47         |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Two empirical priors for between-study variance of standardised mean</span></span></span>
 <span class="r-in"><span><span class="co">## difference.</span></span></span>
 <span class="r-in"><span><span class="fu">heter_density_plot</span><span class="op">(</span>distr <span class="op">=</span> <span class="st">"logt"</span>,</span></span>
 <span class="r-in"><span>                   heter_prior1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2.76</span>, <span class="fl">2.58</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                   heter_prior2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2.43</span>, <span class="fl">2.50</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Density_plots</span>
-<span class="r-plt img"><img src="heter_density_plot-2.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $tabulated_percentiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Table: Percentiles in standard deviation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |Percentiles | τ²~t(-2.76, 2.58², 5) | τ²~t(-2.43, 2.5², 5) |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |:-----------|:---------------------:|:--------------------:|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |2.5%        |        9.1e-03        |         0.01         |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |25%         |         0.10          |         0.12         |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |50%         |         0.25          |         0.30         |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |75%         |         0.64          |         0.74         |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |97.5%       |         6.93          |         7.38         |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Two half-normal prior distributions for between-study standard deviation</span></span></span>
 <span class="r-in"><span><span class="fu">heter_density_plot</span><span class="op">(</span>distr <span class="op">=</span> <span class="st">"halfnormal"</span>,</span></span>
 <span class="r-in"><span>                   heter_prior1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                   heter_prior2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Density_plots</span>
-<span class="r-plt img"><img src="heter_density_plot-3.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $tabulated_percentiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Table: Percentiles in standard deviation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |Percentiles | τ~HN(0, 1) | τ~HN(0, 0.5) |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |:-----------|:----------:|:------------:|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |2.5%        |    0.03    |     0.02     |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |25%         |    0.32    |     0.16     |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |50%         |    0.67    |     0.34     |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |75%         |    1.15    |     0.58     |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |97.5%       |    2.24    |     1.12     |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

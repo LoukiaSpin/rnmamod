@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   network_description: network_description.html
   perform_network_metaanalysis: perform_network_metaanalysis.html
-last_built: 2024-06-24T09:45Z
+last_built: 2024-06-24T10:14Z
 urls:
   reference: https://loukiaspin.github.io/rnmamod/reference
   article: https://loukiaspin.github.io/rnmamod/articles
