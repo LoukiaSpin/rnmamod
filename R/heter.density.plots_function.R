@@ -496,7 +496,7 @@ heter_density_plot <- function (distr,
 
 
     ## Define tau range
-    values <- seq(0, 2.5, 0.01)
+    values <- seq(0, 2.0, 0.01)
 
 
     ## Obtain the pdf
