@@ -10,7 +10,13 @@ kld_inconsistency(
   threshold = 1e-05,
   drug_names,
   outcome = NULL,
-  scales = "free"
+  scales = "free",
+  y_axis_name = TRUE,
+  axis_title_size = 13,
+  axis_text_size = 13,
+  strip_text_size = 13,
+  legend_title_size = 13,
+  legend_text_size = 13
 )
 }
 \arguments{
@@ -40,6 +46,39 @@ argument found in function (\code{\link[ggplot2:facet_wrap]{facet_wrap}})
 in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}. The default is
 (\code{"free"}).}
+
+\item{y_axis_name}{Logical to indicate whether to present the title of y-axis
+('Density'). The default is \code{TRUE} (report).}
+
+\item{axis_title_size}{A positive integer for the font size of axis title.
+\code{axis_title_size} determines the axis.title argument found in the
+theme's properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+The default option is 13.}
+
+\item{axis_text_size}{A positive integer for the font size of axis text.
+\code{axis_text_size} determines the axis.text argument found in the
+theme's properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+The default option is 13.}
+
+\item{strip_text_size}{A positive integer for the font size of facet labels.
+\code{legend_text_size} determines the legend.text argument found in
+the theme's properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+The default option is 13.}
+
+\item{legend_title_size}{A positive integer for the font size of legend
+title. \code{legend_text_size} determines the legend.text argument found in
+the theme's properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+The default option is 13.}
+
+\item{legend_text_size}{A positive integer for the font size of legend text.
+\code{legend_text_size} determines the legend.text argument found in the
+theme's properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+The default option is 13.}
 }
 \value{
 A panel of density plots for each split node sorted in ascending

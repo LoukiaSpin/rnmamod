@@ -4,7 +4,20 @@
 \alias{heter_density_plot}
 \title{Visualising the density of two prior distributions for the heterogeneity parameter}
 \usage{
-heter_density_plot(distr, heter_prior1, heter_prior2, caption = TRUE)
+heter_density_plot(
+  distr,
+  heter_prior1,
+  heter_prior2,
+  heter1 = "tau",
+  heter2 = "tau",
+  caption = FALSE,
+  x_axis_name = TRUE,
+  y_axis_name = TRUE,
+  axis_title_size = 13,
+  axis_text_size = 13,
+  legend_title_size = 13,
+  legend_text_size = 13
+)
 }
 \arguments{
 \item{distr}{Character string indicating the prior distribution.
@@ -22,9 +35,55 @@ distribution: 1) the mean value and 2) the standard deviation. When
 \code{distr = "halfnormal"}, the first value should zero and the second a
 non-negative value referring to the scale parameter of the distribution.}
 
+\item{heter1}{Character string indicating the heterogeneity parameter
+for \code{heter_prior1}. Set \code{heter1} equal to one of the following:
+\code{"tau"}, or \code{"tau_omega"}, which refers to a between-study
+heterogeneity or between-design heterogeneity (inconsistency),
+respectively. This argument is relevant only when
+\code{distr = "lognormal"} or \code{distr = "logt"}. The default is
+\code{"tau"}.}
+
+\item{heter2}{Character string indicating the heterogeneity parameter
+for \code{heter_prior2}. Set \code{heter2} equal to one of the following:
+\code{"tau"}, or \code{"tau_omega"}, which refers to a between-study
+heterogeneity or between-design heterogeneity (inconsistency),
+respectively. This argument is relevant only when
+\code{distr = "lognormal"} or \code{distr = "logt"}. The default is
+\code{"tau"}.}
+
 \item{caption}{Logical to indicate whether to report a caption at the bottom
 right of the plot. It is relevant only when \code{distr = "lognormal"} and
 \code{distr = "logt"}. The default is \code{FALSE} (do not report).}
+
+\item{x_axis_name}{Logical to indicate whether to present the title of x-axis
+('Between-study standard deviation'). The default is \code{TRUE} (report).}
+
+\item{y_axis_name}{Logical to indicate whether to present the title of y-axis
+('Density'). The default is \code{TRUE} (report).}
+
+\item{axis_title_size}{A positive integer for the font size of axis title.
+\code{axis_title_size} determines the axis.title argument found in the
+theme's properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+The default option is 13.}
+
+\item{axis_text_size}{A positive integer for the font size of axis text.
+\code{axis_text_size} determines the axis.text argument found in the
+theme's properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+The default option is 13.}
+
+\item{legend_title_size}{A positive integer for the font size of legend
+title. \code{legend_text_size} determines the legend.text argument found in
+the theme's properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+The default option is 13.}
+
+\item{legend_text_size}{A positive integer for the font size of legend text.
+\code{legend_text_size} determines the legend.text argument found in the
+theme's properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+The default option is 13.}
 }
 \value{
 A plot with the density of two selected prior distributions for the

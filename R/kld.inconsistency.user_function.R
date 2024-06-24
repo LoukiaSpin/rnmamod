@@ -34,6 +34,31 @@
 #'   (\code{"free"}).
 #' @param y_axis_name Logical to indicate whether to present the title of y-axis
 #'   ('Density'). The default is \code{TRUE} (report).
+#' @param axis_title_size A positive integer for the font size of axis title.
+#'   \code{axis_title_size} determines the axis.title argument found in the
+#'   theme's properties in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#'   The default option is 13.
+#' @param axis_text_size A positive integer for the font size of axis text.
+#'   \code{axis_text_size} determines the axis.text argument found in the
+#'   theme's properties in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#'   The default option is 13.
+#' @param strip_text_size A positive integer for the font size of facet labels.
+#'   \code{legend_text_size} determines the legend.text argument found in
+#'   the theme's properties in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#'   The default option is 13.
+#' @param legend_title_size A positive integer for the font size of legend
+#'   title. \code{legend_text_size} determines the legend.text argument found in
+#'   the theme's properties in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#'   The default option is 13.
+#' @param legend_text_size A positive integer for the font size of legend text.
+#'   \code{legend_text_size} determines the legend.text argument found in the
+#'   theme's properties in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#'   The default option is 13.
 #'
 #' @return A panel of density plots for each split node sorted in ascending
 #' order of the Kullback-Leibler divergence value. Blue and black lines refer to
@@ -125,7 +150,12 @@ kld_inconsistency_user <- function(dataset,
                                    level = 0.05,
                                    outcome = NULL,
                                    scales = "free",
-                                   y_axis_name = TRUE) {
+                                   y_axis_name = TRUE,
+                                   axis_title_size = 13,
+                                   axis_text_size = 13,
+                                   strip_text_size = 13,
+                                   legend_title_size = 13,
+                                   legend_text_size = 13) {
 
 
   # General message
@@ -354,12 +384,12 @@ kld_inconsistency_user <- function(dataset,
                                                    colour = c("#0072B2",
                                                               "black")))) +
     theme_classic() +
-    theme(axis.text = element_text(size = 13),
-          axis.title = element_text(size = 13, face = "bold"),
-          strip.text = element_text(size = 13, face = "bold"),
+    theme(axis.text = element_text(size = axis_text_size),
+          axis.title = element_text(size = axis_title_size, face = "bold"),
+          strip.text = element_text(size = strip_text_size, face = "bold"),
           legend.position = "bottom",
-          legend.text = element_text(size = 13),
-          legend.title = element_text(size = 13, face = "bold"))
+          legend.text = element_text(size = legend_text_size),
+          legend.title = element_text(size = legend_title_size, face = "bold"))
 
   return(plot)
 }

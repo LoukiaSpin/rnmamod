@@ -38,6 +38,26 @@
 #'   ('Between-study standard deviation'). The default is \code{TRUE} (report).
 #' @param y_axis_name Logical to indicate whether to present the title of y-axis
 #'   ('Density'). The default is \code{TRUE} (report).
+#' @param axis_title_size A positive integer for the font size of axis title.
+#'   \code{axis_title_size} determines the axis.title argument found in the
+#'   theme's properties in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#'   The default option is 13.
+#' @param axis_text_size A positive integer for the font size of axis text.
+#'   \code{axis_text_size} determines the axis.text argument found in the
+#'   theme's properties in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#'   The default option is 13.
+#' @param legend_title_size A positive integer for the font size of legend
+#'   title. \code{legend_text_size} determines the legend.text argument found in
+#'   the theme's properties in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#'   The default option is 13.
+#' @param legend_text_size A positive integer for the font size of legend text.
+#'   \code{legend_text_size} determines the legend.text argument found in the
+#'   theme's properties in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#'   The default option is 13.
 #'
 #' @return A plot with the density of two selected prior distributions for the
 #' heterogeneity parameter. Two different colours are used to discern the
@@ -106,7 +126,11 @@ heter_density_plot <- function (distr,
                                 heter2 = "tau",
                                 caption = FALSE,
                                 x_axis_name = TRUE,
-                                y_axis_name = TRUE) {
+                                y_axis_name = TRUE,
+                                axis_title_size = 13,
+                                axis_text_size = 13,
+                                legend_title_size = 13,
+                                legend_text_size = 13) {
 
 
   ## Default arguments
@@ -313,11 +337,12 @@ heter_density_plot <- function (distr,
                                                      colour = c("#B4AF46",
                                                                 "#B4464B")))) +
       theme_classic() +
-      theme(axis.text = element_text(size = 13),
-            axis.title = element_text(size = 13, face = "bold"),
+      theme(axis.text = element_text(size = axis_text_size),
+            axis.title = element_text(size = axis_title_size, face = "bold"),
             legend.position = "bottom",
-            legend.text = element_text(size = 13),
-            legend.title = element_text(size = 13, face = "bold"))
+            legend.text = element_text(size = legend_text_size),
+            legend.title = element_text(size = legend_title_size,
+                                        face = "bold"))
 
   } else if (distr == "logt") {
 
@@ -434,11 +459,12 @@ heter_density_plot <- function (distr,
                                                      colour = c("#B4AF46",
                                                                 "#B4464B")))) +
       theme_classic() +
-      theme(axis.text = element_text(size = 13),
-            axis.title = element_text(size = 13, face = "bold"),
+      theme(axis.text = element_text(size = axis_text_size),
+            axis.title = element_text(size = axis_title_size, face = "bold"),
             legend.position = "bottom",
-            legend.text = element_text(size = 13),
-            legend.title = element_text(size = 13, face = "bold"))
+            legend.text = element_text(size = legend_text_size),
+            legend.title = element_text(size = legend_title_size,
+                                        face = "bold"))
 
   } else if (distr == "halfnormal") {
 
@@ -470,7 +496,7 @@ heter_density_plot <- function (distr,
 
 
     ## Define tau range
-    values <- seq(0, 3, 0.01)
+    values <- seq(0, 2.5, 0.01)
 
 
     ## Obtain the pdf
@@ -546,11 +572,12 @@ heter_density_plot <- function (distr,
                                                      colour = c("#B4AF46",
                                                                 "#B4464B")))) +
       theme_classic() +
-      theme(axis.text = element_text(size = 13),
-            axis.title = element_text(size = 13, face = "bold"),
+      theme(axis.text = element_text(size = axis_text_size),
+            axis.title = element_text(size = axis_title_size, face = "bold"),
             legend.position = "bottom",
-            legend.text = element_text(size = 13),
-            legend.title = element_text(size = 13, face = "bold"))
+            legend.text = element_text(size = legend_text_size),
+            legend.title = element_text(size = legend_title_size,
+                                        face = "bold"))
 
   }
 
