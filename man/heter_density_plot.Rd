@@ -114,6 +114,7 @@ measured in the standardised mean difference scale, respectively.
 }
 \examples{
 
+\dontrun{
 ## Two empirical priors for between-study variance of log odds ratio.
 heter_density_plot(distr = "lognormal",
                    heter_prior1 = c(-3.50, 1.26),
@@ -129,6 +130,7 @@ heter_density_plot(distr = "logt",
 heter_density_plot(distr = "halfnormal",
                    heter_prior1 = c(0, 1),
                    heter_prior2 = c(0, 0.5))
+}
 
 }
 \references{
