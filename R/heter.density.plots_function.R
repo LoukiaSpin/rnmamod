@@ -581,7 +581,7 @@ heter_density_plot <- function (distr,
 
   }
 
-  return(list(Density_plots = plot,
+  return(list(Density_plots = suppressWarnings({plot}),
               tabulated_percentiles =
                 knitr::kable(tab,
                              align = "cc",
