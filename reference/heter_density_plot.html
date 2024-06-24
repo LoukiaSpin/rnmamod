@@ -64,7 +64,20 @@ standard deviation (half-normal distribution).</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">heter_density_plot</span><span class="op">(</span><span class="va">distr</span>, <span class="va">heter_prior1</span>, <span class="va">heter_prior2</span>, caption <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">heter_density_plot</span><span class="op">(</span></span>
+<span>  <span class="va">distr</span>,</span>
+<span>  <span class="va">heter_prior1</span>,</span>
+<span>  <span class="va">heter_prior2</span>,</span>
+<span>  heter1 <span class="op">=</span> <span class="st">"tau"</span>,</span>
+<span>  heter2 <span class="op">=</span> <span class="st">"tau"</span>,</span>
+<span>  caption <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  x_axis_name <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  y_axis_name <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  axis_title_size <span class="op">=</span> <span class="fl">13</span>,</span>
+<span>  axis_text_size <span class="op">=</span> <span class="fl">13</span>,</span>
+<span>  legend_title_size <span class="op">=</span> <span class="fl">13</span>,</span>
+<span>  legend_text_size <span class="op">=</span> <span class="fl">13</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -90,10 +103,72 @@ distribution: 1) the mean value and 2) the standard deviation. When
 non-negative value referring to the scale parameter of the distribution.</p></dd>
 
 
+<dt>heter1</dt>
+<dd><p>Character string indicating the heterogeneity parameter
+for <code>heter_prior1</code>. Set <code>heter1</code> equal to one of the following:
+<code>"tau"</code>, or <code>"tau_omega"</code>, which refers to a between-study
+heterogeneity or between-design heterogeneity (inconsistency),
+respectively. This argument is relevant only when
+<code>distr = "lognormal"</code> or <code>distr = "logt"</code>. The default is
+<code>"tau"</code>.</p></dd>
+
+
+<dt>heter2</dt>
+<dd><p>Character string indicating the heterogeneity parameter
+for <code>heter_prior2</code>. Set <code>heter2</code> equal to one of the following:
+<code>"tau"</code>, or <code>"tau_omega"</code>, which refers to a between-study
+heterogeneity or between-design heterogeneity (inconsistency),
+respectively. This argument is relevant only when
+<code>distr = "lognormal"</code> or <code>distr = "logt"</code>. The default is
+<code>"tau"</code>.</p></dd>
+
+
 <dt>caption</dt>
 <dd><p>Logical to indicate whether to report a caption at the bottom
 right of the plot. It is relevant only when <code>distr = "lognormal"</code> and
 <code>distr = "logt"</code>. The default is <code>FALSE</code> (do not report).</p></dd>
+
+
+<dt>x_axis_name</dt>
+<dd><p>Logical to indicate whether to present the title of x-axis
+('Between-study standard deviation'). The default is <code>TRUE</code> (report).</p></dd>
+
+
+<dt>y_axis_name</dt>
+<dd><p>Logical to indicate whether to present the title of y-axis
+('Density'). The default is <code>TRUE</code> (report).</p></dd>
+
+
+<dt>axis_title_size</dt>
+<dd><p>A positive integer for the font size of axis title.
+<code>axis_title_size</code> determines the axis.title argument found in the
+theme's properties in the R-package
+<a href="https://CRAN.R-project.org/package=ggplot2" class="external-link">ggplot2</a>.
+The default option is 13.</p></dd>
+
+
+<dt>axis_text_size</dt>
+<dd><p>A positive integer for the font size of axis text.
+<code>axis_text_size</code> determines the axis.text argument found in the
+theme's properties in the R-package
+<a href="https://CRAN.R-project.org/package=ggplot2" class="external-link">ggplot2</a>.
+The default option is 13.</p></dd>
+
+
+<dt>legend_title_size</dt>
+<dd><p>A positive integer for the font size of legend
+title. <code>legend_text_size</code> determines the legend.text argument found in
+the theme's properties in the R-package
+<a href="https://CRAN.R-project.org/package=ggplot2" class="external-link">ggplot2</a>.
+The default option is 13.</p></dd>
+
+
+<dt>legend_text_size</dt>
+<dd><p>A positive integer for the font size of legend text.
+<code>legend_text_size</code> determines the legend.text argument found in the
+theme's properties in the R-package
+<a href="https://CRAN.R-project.org/package=ggplot2" class="external-link">ggplot2</a>.
+The default option is 13.</p></dd>
 
 </dl></div>
     <div class="section level2">
