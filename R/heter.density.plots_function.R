@@ -38,6 +38,9 @@
 #'   ('Between-study standard deviation'). The default is \code{TRUE} (report).
 #' @param y_axis_name Logical to indicate whether to present the title of y-axis
 #'   ('Density'). The default is \code{TRUE} (report).
+#' @param title_name Text for the title of the plot. \code{title_name}
+#'   determines the labs argument of the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #' @param axis_title_size A positive integer for the font size of axis title.
 #'   \code{axis_title_size} determines the axis.title argument found in the
 #'   theme's properties in the R-package
@@ -127,6 +130,7 @@ heter_density_plot <- function (distr,
                                 heter1 = "tau",
                                 heter2 = "tau",
                                 caption = FALSE,
+                                title_name = NULL,
                                 x_axis_name = TRUE,
                                 y_axis_name = TRUE,
                                 axis_title_size = 13,
@@ -332,6 +336,7 @@ heter_density_plot <- function (distr,
       labs(x = x_axis_name,
            y = y_axis_name,
            fill = "Distribution",
+           title_name = title_name,
            caption = caption) +
       guides(colour = "none",
              fill = guide_legend(override.aes = list(size = 3,
@@ -339,7 +344,8 @@ heter_density_plot <- function (distr,
                                                      colour = c("#B4AF46",
                                                                 "#B4464B")))) +
       theme_classic() +
-      theme(axis.text = element_text(size = axis_text_size),
+      theme(plot.title = element_text(size = axis_title_size, face = "bold"),
+            axis.text = element_text(size = axis_text_size),
             axis.title = element_text(size = axis_title_size, face = "bold"),
             legend.position = "bottom",
             legend.text = element_text(size = legend_text_size),
@@ -454,6 +460,7 @@ heter_density_plot <- function (distr,
       labs(x = x_axis_name,
            y = y_axis_name,
            fill = "Distribution",
+           title_name = title_name,
            caption = caption) +
       guides(colour = "none",
              fill = guide_legend(override.aes = list(size = 3,
@@ -461,7 +468,8 @@ heter_density_plot <- function (distr,
                                                      colour = c("#B4AF46",
                                                                 "#B4464B")))) +
       theme_classic() +
-      theme(axis.text = element_text(size = axis_text_size),
+      theme(plot.title = element_text(size = axis_title_size, face = "bold"),
+            axis.text = element_text(size = axis_text_size),
             axis.title = element_text(size = axis_title_size, face = "bold"),
             legend.position = "bottom",
             legend.text = element_text(size = legend_text_size),
@@ -567,6 +575,7 @@ heter_density_plot <- function (distr,
       labs(x = x_axis_name,
            y = y_axis_name,
            fill = "Distribution",
+           title_name = title_name,
            captiotn = "") +
       guides(colour = "none",
              fill = guide_legend(override.aes = list(size = 3,
@@ -574,7 +583,8 @@ heter_density_plot <- function (distr,
                                                      colour = c("#B4AF46",
                                                                 "#B4464B")))) +
       theme_classic() +
-      theme(axis.text = element_text(size = axis_text_size),
+      theme(plot.title = element_text(size = axis_title_size, face = "bold"),
+            axis.text = element_text(size = axis_text_size),
             axis.title = element_text(size = axis_title_size, face = "bold"),
             legend.position = "bottom",
             legend.text = element_text(size = legend_text_size),
