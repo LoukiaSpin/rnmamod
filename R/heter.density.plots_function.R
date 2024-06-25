@@ -197,7 +197,7 @@ heter_density_plot <- function (distr,
     "\u03C9\u00b2"
   }
   caption <- if (caption == TRUE) {
-    "*Note: Distributions are plotted on the logarithmic scale."
+    "*Note: Variance values are plotted on the logarithmic scale."
   } else {
     ""
   }
@@ -235,11 +235,13 @@ heter_density_plot <- function (distr,
     ## Give a distinct name to each function
     # For heter_prior1
     name1 <-
-      paste0(het1, "~LN(", heter_prior1[1], ", ", heter_prior1[2], "\u00b2)")
+      paste0(het1, "~LN(", sprintf("%.2f", heter_prior1[1]), ", ",
+             sprintf("%.2f", heter_prior1[2]), "\u00b2)")
 
     # For heter_prior2
     name2 <-
-      paste0(het2, "~LN(", heter_prior2[1], ", ", heter_prior2[2], "\u00b2)")
+      paste0(het2, "~LN(", sprintf("%.2f", heter_prior2[1]), ", ",
+             sprintf("%.2f", heter_prior2[2]), "\u00b2)")
 
 
     ## Bring into a data-frame
@@ -357,11 +359,13 @@ heter_density_plot <- function (distr,
     ## Give a distinct name to each function
     # For heter_prior1
     name1 <-
-      paste0(het1, "~t(", heter_prior1[1], ", ", heter_prior1[2], "\u00b2, 5)")
+      paste0(het1, "~t(", sprintf("%.2f", heter_prior1[1]), ", ",
+             sprintf("%.2f", heter_prior1[2]), "\u00b2, 5)")
 
     # For heter_prior2
     name2 <-
-      paste0(het2, "~t(", heter_prior2[1], ", ", heter_prior2[2], "\u00b2, 5)")
+      paste0(het2, "~t(", sprintf("%.2f", heter_prior2[1]), ", ",
+             sprintf("%.2f", heter_prior2[2]), "\u00b2, 5)")
 
 
     ## Bring into a data-frame
@@ -481,10 +485,12 @@ heter_density_plot <- function (distr,
 
     ## Give a distinct name to each function
     # For heter_prior1
-    name1 <- paste0("\u03C4~HN(", heter_prior1[1], ", ", heter_prior1[2], ")")
+    name1 <- paste0("\u03C4~HN(", sprintf("%.2f", heter_prior1[1]), ", ",
+                    sprintf("%.2f", heter_prior1[2]), ")")
 
     # For heter_prior2
-    name2 <- paste0("\u03C4~HN(", heter_prior2[1], ", ", heter_prior2[2], ")")
+    name2 <- paste0("\u03C4~HN(", sprintf("%.2f", heter_prior2[1]), ", ",
+                    sprintf("%.2f", heter_prior2[2]), ")")
 
 
     ## Bring into a data-frame
