@@ -587,6 +587,6 @@ heter_density_plot <- function (distr,
               tabulated_percentiles =
                 knitr::kable(tab,
                              align = "cc",
-                             col.names = c("Percentiles", colnames(tab)),
+                             #col.names = c("Percentiles", colnames(tab)),
                              caption = "Percentiles in standard deviation")))
 }
