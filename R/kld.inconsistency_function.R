@@ -135,7 +135,7 @@
 #' @export
 kld_inconsistency <- function(node,
                               threshold = 0.00001,
-                              drug_names,
+                              drug_names = NULL,
                               outcome = NULL,
                               scales = "free",
                               show_incons = TRUE,
@@ -169,16 +169,13 @@ kld_inconsistency <- function(node,
     message(paste0("Threshold specified at ", threshold, "."))
     threshold
   }
-  drug_names <- if (missing(drug_names) & inherits(node, "run_nodesplit")) {
+  drug_names <- if (is.null(drug_names) & inherits(node, "run_nodesplit")) {
     aa <- "The argument 'drug_names' has not been defined."
     bb <- "The intervention ID, as specified in 'data' is used, instead."
     message(paste(aa, bb))
     as.character(1:max(unlist(node$direct[, 1:2])))
   } else if (inherits(node, "run_nodesplit")) {
     drug_names
-  } else if (any(c(inherits(node, "mtc.nodesplit"),
-                   inherits(node, "netsplit")) == TRUE)) {
-    NULL
   }
   scales <- if (missing(scales)) {
     "free"
@@ -469,7 +466,7 @@ kld_inconsistency <- function(node,
                    y = prob_dir,
                    fill = estimate),
                alpha = 0) +
-    {if (dim(dataset)[1] > 1)
+    {if (length(kld_value) > 1)
     facet_wrap(~factor(compar,
                        levels =
                          comparison[order(kld_value, decreasing = FALSE)]),
