@@ -32,8 +32,14 @@
 #'   in the R-package
 #'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}. The default is
 #'   (\code{"free"}).
+#' @param show_incons Logical to indicate whether to present the point estimate
+#'   and 95% interval of the inconsistency parameter. The default is \code{TRUE}
+#'   (report).
 #' @param y_axis_name Logical to indicate whether to present the title of y-axis
 #'   ('Density'). The default is \code{TRUE} (report).
+#' @param title_name Text for the title of the plot. \code{title_name}
+#'   determines the labs argument of the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #' @param axis_title_size A positive integer for the font size of axis title.
 #'   \code{axis_title_size} determines the axis.title argument found in the
 #'   theme's properties in the R-package
@@ -150,7 +156,9 @@ kld_inconsistency_user <- function(dataset,
                                    level = 0.05,
                                    outcome = NULL,
                                    scales = "free",
+                                   show_incons = TRUE,
                                    y_axis_name = TRUE,
+                                   title_name = NULL,
                                    axis_title_size = 13,
                                    axis_text_size = 13,
                                    strip_text_size = 13,
@@ -316,24 +324,20 @@ kld_inconsistency_user <- function(dataset,
   # Get the panel of density plots
   plot <-
     ggplot() +
+    {if (show_incons)
     geom_rect(data = dataset_new,
               aes(xmin = lower,
                   xmax = upper,
                   ymin = 0,
                   ymax = Inf),
-              fill = "grey90") +
+              fill = "grey90")} +
+    {if (show_incons)
     geom_rect(data = dataset_new,
               aes(xmin = mean,
                   xmax = mean,
                   ymin = 0,
                   ymax = Inf),
-              col = "grey75") +
-    #geom_area(data = output_fin,
-    #          aes(x = time,
-    #              y = diff),
-    #         linewidth = 1.0,
-    #          fill = "lightblue",
-    #          alpha = 0.75) +
+              col = "grey75")} +
     geom_area(data = output,
               aes(x = time,
                   y = prob_ind),
@@ -366,10 +370,11 @@ kld_inconsistency_user <- function(dataset,
                    y = prob_dir,
                    fill = estimate),
                alpha = 0) +
+    {if (dim(dataset)[1] > 1)
     facet_wrap(~factor(compar,
                        levels = dataset[, 1][order(kld_value,
                                                    decreasing = FALSE)]),
-               scales = scales) +
+               scales = scales)} +
     scale_colour_manual(values = c("No threshold defined" = "black",
                                    "Consistency" = "#009E73",
                                    "Inconsistency" = "#D55E00")) +
@@ -377,6 +382,7 @@ kld_inconsistency_user <- function(dataset,
                                  "Indirect estimate" = "black")) +
     labs(x = outcome,
          y = y_axis_name,
+         title_name = title_name,
          fill = " ") +
     guides(colour = "none",
            fill = guide_legend(override.aes = list(size = 3,
@@ -384,7 +390,8 @@ kld_inconsistency_user <- function(dataset,
                                                    colour = c("#0072B2",
                                                               "black")))) +
     theme_classic() +
-    theme(axis.text = element_text(size = axis_text_size),
+    theme(plot.title = element_text(size = axis_title_size, face = "bold"),
+          axis.text = element_text(size = axis_text_size),
           axis.title = element_text(size = axis_title_size, face = "bold"),
           strip.text = element_text(size = strip_text_size, face = "bold"),
           legend.position = "bottom",
