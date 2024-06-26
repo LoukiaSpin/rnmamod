@@ -295,7 +295,8 @@ kld_inconsistency <- function(node,
     inconsistency <- incons0[-row_na, ]
 
     # Vector of comparison names (after removing non-split treatments)
-    comparison <- node$comparison[-row_na]
+    comparison0 <- node$comparison[-row_na]
+    comparison <- gsub(":"," vs ", comparison0)
 
   } else if (inherits(node, "run_nodesplit")) { # R package: rnmamod
 
