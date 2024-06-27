@@ -179,10 +179,14 @@ heter_density_plot <- function (distr,
   } else if (is.element(heter1, c("tau", "tau_omega"))) {
     heter1
   }
-  het1 <- if (het10 == "tau") {
+  het1 <- if (distr == "lognormal" & het10 == "tau") {
     "\u03C4\u00b2"
-  } else if (het10 == "tau_omega") {
+  } else if (distr == "lognormal" & het10 == "tau_omega") {
     "\u03C9\u00b2"
+  } else if (distr == "logt" & het10 == "tau") {
+    "ln(\u03C4\u00b2)"
+  } else if (distr == "logt" & het10 == "tau_omega") {
+    "ln(\u03C9\u00b2)"
   }
   het20 <- if (missing(heter2)) {
     "tau"
@@ -191,10 +195,14 @@ heter_density_plot <- function (distr,
   } else if (is.element(heter2, c("tau", "tau_omega"))) {
     heter2
   }
-  het2 <- if (het20 == "tau") {
+  het2 <- if (distr == "lognormal" & het20 == "tau") {
     "\u03C4\u00b2"
-  } else if (het20 == "tau_omega") {
+  } else if (distr == "lognormal" & het20 == "tau_omega") {
     "\u03C9\u00b2"
+  } else if (distr == "logt" & het20 == "tau") {
+    "ln(\u03C4\u00b2)"
+  } else if (distr == "logt" & het20 == "tau_omega") {
+    "ln(\u03C9\u00b2)"
   }
   caption <- if (caption == TRUE) {
     "*Note: Variance values are plotted on the logarithmic scale."
