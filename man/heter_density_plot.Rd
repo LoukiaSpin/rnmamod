@@ -122,14 +122,14 @@ measured in the standardised mean difference scale, respectively.
 \dontrun{
 ## Two empirical priors for between-study variance of log odds ratio.
 heter_density_plot(distr = "lognormal",
-                   heter_prior1 = c(-3.50, 1.26),
-                   heter_prior2 = c(-4.79, 1.67))
+                   heter_prior1 = c(-2.56, 1.74),  # General healthcare setting
+                   heter_prior2 = c(-1.83, 1.52))  # Pain and pharma vs. placebo/ctrl
 
 ## Two empirical priors for between-study variance of standardised mean
 ## difference.
 heter_density_plot(distr = "logt",
-                   heter_prior1 = c(-2.76, 2.58),
-                   heter_prior2 = c(-2.43, 2.50))
+                   heter_prior1 = c(-3.44, 2.59),  # General healthcare setting
+                   heter_prior2 = c(-0.60, 2.61))  # Pain and pharma vs. placebo/ctrl for cancer
 
 ## Two half-normal prior distributions for between-study standard deviation
 heter_density_plot(distr = "halfnormal",
