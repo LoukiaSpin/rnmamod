@@ -73,6 +73,7 @@ jobs:
       - name: Install jags (macOS-latest)
         if: runner.os == 'macOS'
         run : |
+          brew install pkg-config
           brew install jags
 
       - name: Install dependencies
