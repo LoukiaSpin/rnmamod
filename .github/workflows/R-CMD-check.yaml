@@ -72,8 +72,9 @@ jobs:
 
       - name: Install jags (macOS-latest)
         if: runner.os == 'macOS'
-        run: brew install pkg-config
-             brew install jags
+        run: |
+          curl -L -o jags.pkg https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Mac%20OS%20X/JAGS-4.3.2.pkg/download
+          sudo installer -pkg jags.pkg -target /
 
       - name: Install dependencies
         run: |
