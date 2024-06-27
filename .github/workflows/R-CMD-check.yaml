@@ -63,12 +63,10 @@ jobs:
           done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "20.04"), sep = "\n")')
 
       - name: Install jags (windows-latest)
-        if: runner.os == 'Windows'
-        run: |
-          curl.exe -o wjags.exe --url https://deac-fra.dl.sourceforge.net/project/mcmc-jags/JAGS/4.x/Windows/JAGS-4.3.1.exe
-          wjags.exe /S
-          del wjags.exe
-        shell: cmd
+         if: runner.os == 'Windows'
+         run: |
+          curl -L -o jags-installer.exe https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Windows/JAGS-4.3.1.exe/download
+          Start-Process -Wait -FilePath jags-installer.exe -ArgumentList '/S'
 
       - name: Install jags (macOS-latest)
         if: runner.os == 'macOS'
