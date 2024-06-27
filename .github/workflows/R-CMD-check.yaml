@@ -74,7 +74,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           curl -L -o /tmp/jags.pkg https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Mac%20OS%20X/JAGS-4.3.2.pkg/download
-          sudo installer -pkg jags.pkg -target /
+          sudo installer -pkg /tmp/jags.pkg -target /
 
       - name: Install dependencies
         run: |
