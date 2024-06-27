@@ -76,7 +76,7 @@ jobs:
           curl -L -o /tmp/jags.pkg https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Mac%20OS%20X/JAGS-4.3.2.pkg/download
           sudo installer -pkg /tmp/jags.pkg -target /
 
-      - name: Install XQuartz on macOS
+      - name: Install XQuartz on (macOS-latest)
               if: runner.os == 'macOS'
               run: brew install xquartz --cask
 
