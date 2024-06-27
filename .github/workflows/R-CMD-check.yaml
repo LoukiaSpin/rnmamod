@@ -77,8 +77,8 @@ jobs:
           sudo installer -pkg /tmp/jags.pkg -target /
 
       - name: Install XQuartz on (macOS-latest)
-              if: runner.os == 'macOS'
-              run: brew install xquartz --cask
+        if: runner.os == 'macOS'
+        run: brew install xquartz --cask
 
       - name: Install dependencies
         run: |
