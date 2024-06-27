@@ -13,6 +13,7 @@ heter_density_plot(
   caption = FALSE,
   x_axis_name = TRUE,
   y_axis_name = TRUE,
+  title_name = NULL,
   axis_title_size = 13,
   axis_text_size = 13,
   legend_title_size = 13,
@@ -60,6 +61,10 @@ right of the plot. It is relevant only when \code{distr = "lognormal"} and
 
 \item{y_axis_name}{Logical to indicate whether to present the title of y-axis
 ('Density'). The default is \code{TRUE} (report).}
+
+\item{title_name}{Text for the title of the plot. \code{title_name}
+determines the labs argument of the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
 
 \item{axis_title_size}{A positive integer for the font size of axis title.
 \code{axis_title_size} determines the axis.title argument found in the

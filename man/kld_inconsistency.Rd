@@ -8,10 +8,12 @@
 kld_inconsistency(
   node,
   threshold = 1e-05,
-  drug_names,
+  drug_names = NULL,
   outcome = NULL,
   scales = "free",
+  show_incons = TRUE,
   y_axis_name = TRUE,
+  title_name = NULL,
   axis_title_size = 13,
   axis_text_size = 13,
   strip_text_size = 13,
@@ -47,8 +49,16 @@ in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}. The default is
 (\code{"free"}).}
 
+\item{show_incons}{Logical to indicate whether to present the point estimate
+and 95% interval of the inconsistency parameter. The default is \code{TRUE}
+(report).}
+
 \item{y_axis_name}{Logical to indicate whether to present the title of y-axis
 ('Density'). The default is \code{TRUE} (report).}
+
+\item{title_name}{Text for the title of the plot. \code{title_name}
+determines the labs argument of the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
 
 \item{axis_title_size}{A positive integer for the font size of axis title.
 \code{axis_title_size} determines the axis.title argument found in the
