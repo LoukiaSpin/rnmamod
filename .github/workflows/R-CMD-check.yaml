@@ -1,5 +1,6 @@
 # For help debugging build failures open an issue on the RStudio community with the 'github-actions' tag.
 # https://community.rstudio.com/new-topic?category=Package%20development&tags=github-actions
+# comm
 on:
   push:
     branches:
@@ -64,15 +65,19 @@ jobs:
       - name: Install jags (windows-latest)
         if: runner.os == 'Windows'
         run: |
-          curl.exe -o wjags.exe --url https://deac-fra.dl.sourceforge.net/project/mcmc-jags/JAGS/4.x/Windows/JAGS-4.3.1.exe
-          wjags.exe /S
-          del wjags.exe
-        shell: cmd
+          curl -L -o C:\Temp\jags-installer.exe https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Windows/JAGS-4.3.1.exe/download
+          Start-Process -Wait -FilePath C:\Temp\jags-installer.exe -ArgumentList '/S'
 
       - name: Install jags (macOS-latest)
         if: runner.os == 'macOS'
-        run : |
-          brew install jags
+        run: |
+          curl -L -o /tmp/jags.pkg https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Mac%20OS%20X/JAGS-4.3.2.pkg/download
+          sudo installer -pkg /tmp/jags.pkg -target /
+
+      - name: Install XQuartz on (macOS-latest)
+        if: runner.os == 'macOS'
+        run: |
+          brew install xquartz --cask
 
       - name: Install dependencies
         run: |
