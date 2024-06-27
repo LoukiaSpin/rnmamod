@@ -65,9 +65,11 @@ jobs:
       - name: Install jags (windows-latest)
         if: runner.os == 'Windows'
         run: |
-         if not exist C:\Temp mkdir C:\Temp
-         curl -L -o C:\Temp\jags-installer.exe https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Windows/JAGS-4.3.1.exe/download
-         Start-Process -Wait -FilePath C:\Temp\jags-installer.exe -ArgumentList '/S'
+          if not exist C:\Temp (
+          mkdir C:\Temp
+          )
+          curl -L -o C:\Temp\jags-installer.exe https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Windows/JAGS-4.3.1.exe/download
+          Start-Process -Wait -FilePath C:\Temp\jags-installer.exe -ArgumentList '/S'
 
       - name: Install jags (macOS-latest)
         if: runner.os == 'macOS'
