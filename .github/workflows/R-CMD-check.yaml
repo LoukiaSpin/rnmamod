@@ -78,7 +78,8 @@ jobs:
 
       - name: Install XQuartz on (macOS-latest)
         if: runner.os == 'macOS'
-        run: brew install xquartz --cask
+        run: |
+          brew install xquartz --cask
 
       - name: Install dependencies
         run: |
