@@ -73,6 +73,7 @@ standard deviation (half-normal distribution).</p>
 <span>  caption <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  x_axis_name <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  y_axis_name <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  title_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  axis_title_size <span class="op">=</span> <span class="fl">13</span>,</span>
 <span>  axis_text_size <span class="op">=</span> <span class="fl">13</span>,</span>
 <span>  legend_title_size <span class="op">=</span> <span class="fl">13</span>,</span>
@@ -137,6 +138,12 @@ right of the plot. It is relevant only when <code>distr = "lognormal"</code> and
 <dt>y_axis_name</dt>
 <dd><p>Logical to indicate whether to present the title of y-axis
 ('Density'). The default is <code>TRUE</code> (report).</p></dd>
+
+
+<dt>title_name</dt>
+<dd><p>Text for the title of the plot. <code>title_name</code>
+determines the labs argument of the R-package
+<a href="https://CRAN.R-project.org/package=ggplot2" class="external-link">ggplot2</a>.</p></dd>
 
 
 <dt>axis_title_size</dt>

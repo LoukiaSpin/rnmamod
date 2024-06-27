@@ -91,7 +91,9 @@ estimate.</p>
 <span>  level <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  outcome <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  scales <span class="op">=</span> <span class="st">"free"</span>,</span>
+<span>  show_incons <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  y_axis_name <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  title_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  axis_title_size <span class="op">=</span> <span class="fl">13</span>,</span>
 <span>  axis_text_size <span class="op">=</span> <span class="fl">13</span>,</span>
 <span>  strip_text_size <span class="op">=</span> <span class="fl">13</span>,</span>
@@ -136,9 +138,21 @@ in the R-package
 (<code>"free"</code>).</p></dd>
 
 
+<dt>show_incons</dt>
+<dd><p>Logical to indicate whether to present the point estimate
+and 95<!-- % interval of the inconsistency parameter. The default is \code{TRUE} -->
+(report).</p></dd>
+
+
 <dt>y_axis_name</dt>
 <dd><p>Logical to indicate whether to present the title of y-axis
 ('Density'). The default is <code>TRUE</code> (report).</p></dd>
+
+
+<dt>title_name</dt>
+<dd><p>Text for the title of the plot. <code>title_name</code>
+determines the labs argument of the R-package
+<a href="https://CRAN.R-project.org/package=ggplot2" class="external-link">ggplot2</a>.</p></dd>
 
 
 <dt>axis_title_size</dt>
