@@ -155,12 +155,6 @@ kld_inconsistency <- function(node,
   }
 
   # Default arguments
-  #threshold <- if (missing(threshold)) {
-  #  stop("The argument 'threshold' has not been defined.", call. = FALSE)
-  #} else {
-  #  message(paste0("Threshold specified at ", threshold, "."))
-  #  threshold
-  #}
   threshold <- if (threshold <= 0) {
     stop("The argument 'threshold' must be a positive number.", call. = FALSE)
   } else if (0 < threshold & threshold <= 0.00001) {
@@ -417,6 +411,17 @@ kld_inconsistency <- function(node,
                             lower = inconsistency[, 2],
                             upper = inconsistency[, 3])
 
+  # Maximum density probability of direct and indirect estimates
+  max_prob_dir <- unlist(lapply(1:dim(direct)[1], function(x) max(prob_dir[[x]])))
+  max_prob_ind <- unlist(lapply(1:dim(direct)[1], function(x) max(prob_ind[[x]])))
+
+  # Data-frame with the mean direct and indirect estimates per comparison
+  data_mean <- data.frame(mean = c(direct[, 1], indirect[, 1]),
+                          prob = c(max_prob_dir, max_prob_ind),
+                          compar = unique(unlist(compar)),
+                          source = rep(c("direct", "indirect"),
+                                       each = length(direct[, 1])))
+
   # Get the panel of density plots
   plot <-
     ggplot() +
@@ -461,6 +466,24 @@ kld_inconsistency <- function(node,
               hjust = -0.2,
               vjust = 1.4,
               show.legend = FALSE) +
+    geom_text(data = subset(data_mean, source == "direct"),
+              aes(x = mean,
+                  y = prob,
+                  label = sprintf("%.2f", mean),
+                  vjust = -0.5),
+              fontface = "bold",
+              size = 3.5,
+              show.legend = FALSE,
+              inherit.aes = FALSE) +
+    geom_text(data = subset(data_mean, source == "indirect"),
+              aes(x = mean,
+                  y = prob,
+                  label = sprintf("%.2f", mean),
+                  vjust = -0.5),
+              fontface = "bold",
+              size = 3.5,
+              show.legend = FALSE,
+              inherit.aes = FALSE) +
     geom_point(data = output,
                aes(x = time,
                    y = prob_dir,
@@ -485,6 +508,7 @@ kld_inconsistency <- function(node,
                                                    alpha = 1,
                                                    colour = c("#0072B2",
                                                               "black")))) +
+    scale_y_continuous(expand = c(0.20, 0)) +
     theme_classic() +
     theme(plot.title = element_text(size = axis_title_size, face = "bold"),
           axis.text = element_text(size = axis_text_size),
