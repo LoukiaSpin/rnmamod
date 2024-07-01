@@ -16,9 +16,11 @@ kld_inconsistency_user(
   title_name = NULL,
   axis_title_size = 13,
   axis_text_size = 13,
+  text_size = 3.5,
   strip_text_size = 13,
   legend_title_size = 13,
-  legend_text_size = 13
+  legend_text_size = 13,
+  str_wrap_width = 10
 )
 }
 \arguments{
@@ -69,6 +71,12 @@ theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 The default option is 13.}
 
+\item{text_size}{A positive integer for the font size of labels.
+\code{text_size} determines the size argument found in the geom_text
+function in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+The default option is 3.5.}
+
 \item{strip_text_size}{A positive integer for the font size of facet labels.
 \code{legend_text_size} determines the legend.text argument found in
 the theme's properties in the R-package
@@ -86,15 +94,22 @@ The default option is 13.}
 theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 The default option is 13.}
+
+\item{str_wrap_width}{A positive integer for wrapping the axis labels in the
+percent stacked bar-plot. \code{str_wrap_width} determines the
+\code{\link[stringr:str_wrap]{str_wrap}} function of the R-package
+\href{https://CRAN.R-project.org/package=stringr}{stringr}.}
 }
 \value{
-A panel of density plots for each split node sorted in ascending
-order of the Kullback-Leibler divergence value. Blue and black lines refer to
-the direct and indirect estimates, respectively. The grey segment refers to
-the (1 - \code{level})\% 'pseudo' confidence interval of the inconsistency
-parameter based on the corresponding normal z-scores, with a darker grey line
-referring to the point estimate. The names of the selected comparisons appear
-at the top of each plot.
+The first plot is a panel of density plots for each split node sorted
+in ascending order of the Kullback-Leibler divergence value. Blue and black
+lines refer to the direct and indirect estimates, respectively. The grey
+segment refers to the (1 - \code{level})\% 'pseudo' confidence interval of
+the inconsistency parameter based on the corresponding normal z-scores,
+with a darker grey line  referring to the point estimate. The names of the
+selected comparisons appear at the top of each plot. The mean estimate on
+the scale of the selected effect measure appears at the top of each density
+curve.
 
 The Kullback-Leibler divergence value appears at the top left of each plot
 in three colours: black, if no threshold has been defined (the default),
@@ -102,6 +117,16 @@ green, if the Kullback-Leibler divergence is below the specified
 \code{threshold} (not concerning inconsistency) and red, if the
 Kullback-Leibler divergence is at least the specified \code{threshold}
 (substantial inconsistency).
+
+The second plot is a percent stacked bar plot on the percentage contribution
+of approximating direct with indirect estimate (and vice-versa) to the total
+information loss for each target comparison. Total information loss is
+defined as the sum of the Kullback-Leibler divergence value
+when approximating the direct with indirect estimate (blue bars), and the
+Kullback-Leibler divergence value when approximating the indirect
+with direct estimate (black bars). Values parentheses refer to the
+corresponding Kullback-Leibler divergence value. Bars are sorted in ascending
+order of the average Kullback-Leibler divergence value.
 }
 \description{
 When the user has extracted results obtained from a method of local
@@ -112,8 +137,10 @@ A panel of density plots on the direct and indirect estimates of the
 selected comparisons based on approach for local inconsistency evaluation,
 such as back-calculation and node-splitting approaches (Dias et al., 2010;
 van Valkenhoef et al., 2016) and loop-specific approach (Bucher et al., 1997)
-accompanied by the Kullback-Leibler divergence from the indirect to direct
-estimate.
+accompanied by the average Kullback-Leibler divergence. Additionally, stacked
+bar plots on the percentage contribution of either Kullback-Leibler
+divergence (from direct to indirect, and vice-versa) to the total information
+loss for each selected comparison are presented.
 }
 \examples{
 
@@ -171,6 +198,9 @@ Dias S, Welton NJ, Caldwell DM, Ades AE. Checking consistency in mixed
 treatment comparison meta-analysis.
 \emph{Stat Med} 2010;\bold{29}(7-8):932--44.
 doi: 10.1002/sim.3767
+
+Jeffreys H. An invariant form for the prior probability in estimation
+problems. \emph{Proc R Soc Lond Ser A} 1946;\bold{186}(1007):453--461.
 
 Kullback S, Leibler RA. On information and sufficiency.
 \emph{Ann Math Stat} 1951;\bold{22}(1):79--86. doi: 10.1214/aoms/1177729694

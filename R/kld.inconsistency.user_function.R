@@ -10,8 +10,10 @@
 #' selected comparisons based on approach for local inconsistency evaluation,
 #' such as back-calculation and node-splitting approaches (Dias et al., 2010;
 #' van Valkenhoef et al., 2016) and loop-specific approach (Bucher et al., 1997)
-#' accompanied by the Kullback-Leibler divergence from the indirect to direct
-#' estimate.
+#' accompanied by the average Kullback-Leibler divergence. Additionally, stacked
+#' bar plots on the percentage contribution of either Kullback-Leibler
+#' divergence (from direct to indirect, and vice-versa) to the total information
+#' loss for each selected comparison are presented.
 #'
 #' @param dataset A data-frame of seven columns and as many rows as the split
 #'   nodes. The first column contains the names of the split nodes, and the
@@ -50,6 +52,11 @@
 #'   theme's properties in the R-package
 #'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #'   The default option is 13.
+#' @param text_size A positive integer for the font size of labels.
+#'   \code{text_size} determines the size argument found in the geom_text
+#'   function in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#'   The default option is 3.5.
 #' @param strip_text_size A positive integer for the font size of facet labels.
 #'   \code{legend_text_size} determines the legend.text argument found in
 #'   the theme's properties in the R-package
@@ -65,14 +72,20 @@
 #'   theme's properties in the R-package
 #'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #'   The default option is 13.
+#' @param str_wrap_width A positive integer for wrapping the axis labels in the
+#'   percent stacked bar-plot. \code{str_wrap_width} determines the
+#'   \code{\link[stringr:str_wrap]{str_wrap}} function of the R-package
+#'   \href{https://CRAN.R-project.org/package=stringr}{stringr}.
 #'
-#' @return A panel of density plots for each split node sorted in ascending
-#' order of the Kullback-Leibler divergence value. Blue and black lines refer to
-#' the direct and indirect estimates, respectively. The grey segment refers to
-#' the (1 - \code{level})\% 'pseudo' confidence interval of the inconsistency
-#' parameter based on the corresponding normal z-scores, with a darker grey line
-#' referring to the point estimate. The names of the selected comparisons appear
-#' at the top of each plot.
+#' @return The first plot is a panel of density plots for each split node sorted
+#' in ascending order of the Kullback-Leibler divergence value. Blue and black
+#' lines refer to the direct and indirect estimates, respectively. The grey
+#' segment refers to the (1 - \code{level})\% 'pseudo' confidence interval of
+#' the inconsistency parameter based on the corresponding normal z-scores,
+#' with a darker grey line  referring to the point estimate. The names of the
+#' selected comparisons appear at the top of each plot. The mean estimate on
+#' the scale of the selected effect measure appears at the top of each density
+#' curve.
 #'
 #' The Kullback-Leibler divergence value appears at the top left of each plot
 #' in three colours: black, if no threshold has been defined (the default),
@@ -80,6 +93,16 @@
 #' \code{threshold} (not concerning inconsistency) and red, if the
 #' Kullback-Leibler divergence is at least the specified \code{threshold}
 #' (substantial inconsistency).
+#'
+#' The second plot is a percent stacked bar plot on the percentage contribution
+#' of approximating direct with indirect estimate (and vice-versa) to the total
+#' information loss for each target comparison. Total information loss is
+#' defined as the sum of the Kullback-Leibler divergence value
+#' when approximating the direct with indirect estimate (blue bars), and the
+#' Kullback-Leibler divergence value when approximating the indirect
+#' with direct estimate (black bars). Values parentheses refer to the
+#' corresponding Kullback-Leibler divergence value. Bars are sorted in ascending
+#' order of the average Kullback-Leibler divergence value.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -95,6 +118,9 @@
 #' treatment comparison meta-analysis.
 #' \emph{Stat Med} 2010;\bold{29}(7-8):932--44.
 #' doi: 10.1002/sim.3767
+#'
+#' Jeffreys H. An invariant form for the prior probability in estimation
+#' problems. \emph{Proc R Soc Lond Ser A} 1946;\bold{186}(1007):453--461.
 #'
 #' Kullback S, Leibler RA. On information and sufficiency.
 #' \emph{Ann Math Stat} 1951;\bold{22}(1):79--86. doi: 10.1214/aoms/1177729694
@@ -161,9 +187,11 @@ kld_inconsistency_user <- function(dataset,
                                    title_name = NULL,
                                    axis_title_size = 13,
                                    axis_text_size = 13,
+                                   text_size = 3.5,
                                    strip_text_size = 13,
                                    legend_title_size = 13,
-                                   legend_text_size = 13) {
+                                   legend_text_size = 13,
+                                   str_wrap_width = 10) {
 
 
   # General message
@@ -213,16 +241,49 @@ kld_inconsistency_user <- function(dataset,
     kld_xy <- 0.5 * (((sd_x / sd_y)^2) + ((mean_y - mean_x)^2)
                      / (sd_y^2) - 1 + 2 * log(sd_y / sd_x))
 
-    return(kld_xy)
+    # y is the 'truth' (e.g. the indirect estimate)
+    kld_yx <- 0.5 * (((sd_y / sd_x)^2) + ((mean_x - mean_y)^2)
+                     / (sd_x^2) - 1 + 2 * log(sd_x / sd_y))
+
+    # Symmetric KLD, also known as J-divergence
+    sym_kld <- (kld_xy + kld_yx) / 2
+
+    return(list(kld_sym = sym_kld,
+                kld_dir = kld_xy,
+                kld_ind = kld_yx))
   }
 
   # Obtain the Kullback-Leibler Divergence values for each selected comparison
   kld_value <-
     unlist(lapply(1:dim(dataset)[1],
-                  function(x) kld_measure_univ(mean_y =  dataset[x, 4],
-                                               sd_y =  dataset[x, 5],
+                  function(x) kld_measure_univ(mean_y = dataset[x, 4],
+                                               sd_y = dataset[x, 5],
                                                mean_x = dataset[x, 2],
-                                               sd_x = dataset[x, 3])))
+                                               sd_x = dataset[x, 3])$kld_sym))
+
+  # Kullback-Leibler Divergence by approximating direct with indirect
+  kld_dir <-
+    unlist(lapply(1:dim(dataset)[1],
+                  function(x) kld_measure_univ(mean_y = dataset[x, 4],
+                                               sd_y = dataset[x, 5],
+                                               mean_x = dataset[x, 2],
+                                               sd_x = dataset[x, 3])$kld_dir))
+
+  # Kullback-Leibler Divergence by approximating indirect with direct
+  kld_ind <-
+    unlist(lapply(1:dim(dataset)[1],
+                  function(x) kld_measure_univ(mean_y = dataset[x, 4],
+                                               sd_y = dataset[x, 5],
+                                               mean_x = dataset[x, 2],
+                                               sd_x = dataset[x, 3])$kld_ind))
+
+  # Bring both divergences together per target comparison
+  kld_dataset <-
+    data.frame(value = c(kld_dir, kld_ind),
+               perc = (c(kld_dir, kld_ind) / (kld_dir + kld_ind)) * 100,
+               approx = rep(c("Direct estimate", "Indirect estimate"),
+                            each = length(kld_dir)),
+               compar = rep(dataset[, 1], 2))
 
   # Obtain the 0.1th and 99.9th percentile of direct estimates per comparison
   range_dir <-
@@ -320,6 +381,7 @@ kld_inconsistency_user <- function(dataset,
   max_prob_ind <- unlist(lapply(1:dim(dataset)[1], function(x) max(prob_ind[[x]])))
 
   # Data-frame with the mean direct and indirect estimates per comparison
+  prob <- NULL
   data_mean <- data.frame(mean = c(dataset[, 2], dataset[, 4]),
                           prob = c(max_prob_dir, max_prob_ind),
                           compar = dataset[, 1],
@@ -366,7 +428,7 @@ kld_inconsistency_user <- function(dataset,
               aes(label = paste0("KLD=", sprintf("%.2f", KLD)),
                   col = decision),
               fontface = "bold",
-              size = 3.5,
+              size = text_size,
               hjust = -0.2,
               vjust = 1.4,
               show.legend = FALSE) +
@@ -376,7 +438,7 @@ kld_inconsistency_user <- function(dataset,
                   label = sprintf("%.2f", mean),
                   vjust = -0.5),
               fontface = "bold",
-              size = 3.5,
+              size = text_size,
               show.legend = FALSE,
               inherit.aes = FALSE) +
     geom_text(data = subset(data_mean, source == "indirect"),
@@ -385,7 +447,7 @@ kld_inconsistency_user <- function(dataset,
                   label = sprintf("%.2f", mean),
                   vjust = -0.5),
               fontface = "bold",
-              size = 3.5,
+              size = text_size,
               show.legend = FALSE,
               inherit.aes = FALSE) +
     geom_point(data = output,
@@ -422,5 +484,44 @@ kld_inconsistency_user <- function(dataset,
           legend.text = element_text(size = legend_text_size),
           legend.title = element_text(size = legend_title_size, face = "bold"))
 
-  return(plot)
+  # Percent stacked barplot of comparison divergence when approximating direct
+  # with indirect estimate and vice-versa
+  barplot <-
+    ggplot(kld_dataset,
+           aes(x = compar,
+               y = perc / 100,
+               fill = approx)) +
+    geom_bar(position = "fill",
+             stat = "identity") +
+    geom_hline(yintercept = 0.5,
+               linetype = "dashed",
+               linewidth = 0.8,
+               colour = "white") +
+    geom_text(aes(label = paste0(sprintf("%.0f", perc),"%", " ",
+                                 "(", round(value, 2), ")")),
+              hjust = 0.5,
+              vjust = 1.0,
+              size = text_size,
+              position = "stack",
+              colour = "white") +
+    labs(x = "Target comparisons",
+         y = "% contribution to total information loss",
+         fill = "Approximating") +
+    scale_y_continuous(labels = scales::label_percent(suffix = " ")) +
+    scale_x_discrete(labels = function(x) str_wrap(x,
+                                                   width = str_wrap_width),
+                     limits = dataset[, 1][order(kld_value,
+                                                 decreasing = FALSE)]) +
+    scale_fill_manual(values = c("Direct estimate" = "#0072B2",
+                                 "Indirect estimate" = "black")) +
+    theme_classic() +
+    theme(plot.title = element_text(size = axis_title_size, face = "bold"),
+          axis.text = element_text(size = axis_text_size),
+          axis.title = element_text(size = axis_title_size, face = "bold"),
+          legend.position = "bottom",
+          legend.text = element_text(size = legend_text_size),
+          legend.title = element_text(size = legend_title_size, face = "bold"))
+
+  return(list(Density_plot = plot,
+              Barplot = barplot))
 }
