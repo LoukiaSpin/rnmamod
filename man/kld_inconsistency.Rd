@@ -180,9 +180,6 @@ treatment comparison meta-analysis.
 \emph{Stat Med} 2010;\bold{29}(7-8):932--44.
 doi: 10.1002/sim.3767
 
-Jeffreys H. An invariant form for the prior probability in estimation
-problems. \emph{Proc R Soc Lond Ser A} 1946;\bold{186}(1007):453--461.
-
 Kullback S, Leibler RA. On information and sufficiency.
 \emph{Ann Math Stat} 1951;\bold{22}(1):79--86. doi: 10.1214/aoms/1177729694
 
@@ -194,6 +191,7 @@ doi: 10.1002/jrsm.1167
 \seealso{
 \code{\link[ggplot2:facet_wrap]{facet_wrap}},
   \code{\link[gemtc:mtc.nodesplit]{mtc.nodesplit}},
+  \code{\link{kld_measure}},
   \code{\link[netmeta:netsplit]{netsplit}},
   \code{\link{run_nodesplit}},
   \code{\link[stringr:str_wrap]{str_wrap}}

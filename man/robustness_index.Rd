@@ -115,7 +115,8 @@ and network meta-analysis.
 }
 \seealso{
 \code{\link{heatmap_robustness}}, \code{\link{kld_barplot}},
-  \code{\link{run_model}}, \code{\link{run_sensitivity}}
+  \code{\link{kld_measure}}, \code{\link{run_model}},
+  \code{\link{run_sensitivity}}
 }
 \author{
 {Loukia M. Spineli}

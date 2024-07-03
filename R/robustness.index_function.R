@@ -85,7 +85,8 @@
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link{heatmap_robustness}}, \code{\link{kld_barplot}},
-#'   \code{\link{run_model}}, \code{\link{run_sensitivity}}
+#'   \code{\link{kld_measure}}, \code{\link{run_model}},
+#'   \code{\link{run_sensitivity}}
 #'
 #' @references
 #' Kullback S, Leibler RA. On information and sufficiency.
@@ -179,13 +180,13 @@ robustness_index <- function(sens, threshold) {
   }
 
   # Function for the Kullback-Leibler Divergence (two normal distributions)
-  kld_measure_univ <- function(mean_y, sd_y, mean_x, sd_x) {
-    # x is the 'truth' (e.g. the MAR assumption)
-    kld_xy <- 0.5 * (((sd_x / sd_y)^2) + ((mean_y - mean_x)^2)
-                     / (sd_y^2) - 1 + 2 * log(sd_y / sd_x))
-
-    return(kld_xy)
-  }
+  #kld_measure_univ <- function(mean_y, sd_y, mean_x, sd_x) {
+  #  # x is the 'truth' (e.g. the MAR assumption)
+  #  kld_xy <- 0.5 * (((sd_x / sd_y)^2) + ((mean_y - mean_x)^2)
+  #                   / (sd_y^2) - 1 + 2 * log(sd_y / sd_x))
+  #
+  #  return(kld_xy)
+  #}
 
   # A matrix of estimates for all possible comparisons under each scenario
   mean_mat <- matrix(rep(NA, length(es_mat[, 1])), nrow = n_scenar)
@@ -204,10 +205,10 @@ robustness_index <- function(sens, threshold) {
     for (j in 1:n_scenar) {
       # Returns the KLD of informative scenario j compared with primary analysis
       # for comparison i
-      kldxy[[i]][j] <- kld_measure_univ(mean_mat[j, i],
-                                        sd_mat[j, i],
-                                        mean_mat[primary_scenar, i],
-                                        sd_mat[primary_scenar, i])
+      kldxy[[i]][j] <- kld_measure(mean_mat[j, i],
+                                   sd_mat[j, i],
+                                   mean_mat[primary_scenar, i],
+                                   sd_mat[primary_scenar, i])$kld_x_true
     }
     # This refers to the primary analysis
     kldxy[[i]][primary_scenar] <- 0

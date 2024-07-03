@@ -1,4 +1,4 @@
-#' Barplot for the Kullback-Leibler divergence measure
+#' Barplot for the Kullback-Leibler divergence measure (missingness scenarios)
 #'
 #' @description Produces a barplot with the Kullback-Leibler divergence measure
 #'   from each re-analysis to the primary analysis for a pairwise

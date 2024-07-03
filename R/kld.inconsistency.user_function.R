@@ -107,7 +107,8 @@
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link[ggplot2:facet_wrap]{facet_wrap}},
-#'   \code{\link{kld_inconsistency}}
+#'   \code{\link{kld_inconsistency}},
+#'   \code{\link{kld_measure}}
 #'
 #' @references
 #' Bucher HC, Guyatt GH, Griffith LE, Walter SD. The results of direct and
@@ -118,9 +119,6 @@
 #' treatment comparison meta-analysis.
 #' \emph{Stat Med} 2010;\bold{29}(7-8):932--44.
 #' doi: 10.1002/sim.3767
-#'
-#' Jeffreys H. An invariant form for the prior probability in estimation
-#' problems. \emph{Proc R Soc Lond Ser A} 1946;\bold{186}(1007):453--461.
 #'
 #' Kullback S, Leibler RA. On information and sufficiency.
 #' \emph{Ann Math Stat} 1951;\bold{22}(1):79--86. doi: 10.1214/aoms/1177729694
@@ -236,51 +234,51 @@ kld_inconsistency_user <- function(dataset,
   }
 
   # Function for the Kullback-Leibler Divergence (two normal distributions)
-  kld_measure_univ <- function(mean_y, sd_y, mean_x, sd_x) {
-    # x is the 'truth' (e.g. the direct estimate)
-    kld_xy <- 0.5 * (((sd_x / sd_y)^2) + ((mean_y - mean_x)^2)
-                     / (sd_y^2) - 1 + 2 * log(sd_y / sd_x))
-
-    # y is the 'truth' (e.g. the indirect estimate)
-    kld_yx <- 0.5 * (((sd_y / sd_x)^2) + ((mean_x - mean_y)^2)
-                     / (sd_x^2) - 1 + 2 * log(sd_x / sd_y))
-
-    # Symmetric KLD, also known as J-divergence
-    sym_kld <- (kld_xy + kld_yx) / 2
-
-    return(list(kld_sym = sym_kld,
-                kld_dir = kld_xy,
-                kld_ind = kld_yx))
-  }
+  #kld_measure <- function(mean_y, sd_y, mean_x, sd_x) {
+  #  # x is the 'truth' (e.g. the direct estimate)
+  #  kld_xy <- 0.5 * (((sd_x / sd_y)^2) + ((mean_y - mean_x)^2)
+  #                   / (sd_y^2) - 1 + 2 * log(sd_y / sd_x))
+  #
+  #  # y is the 'truth' (e.g. the indirect estimate)
+  #  kld_yx <- 0.5 * (((sd_y / sd_x)^2) + ((mean_x - mean_y)^2)
+  #                   / (sd_x^2) - 1 + 2 * log(sd_x / sd_y))
+  #
+  #  # Symmetric KLD, also known as J-divergence
+  #  sym_kld <- (kld_xy + kld_yx) / 2
+  #
+  #  return(list(kld_sym = sym_kld,
+  #              kld_dir = kld_xy,
+  #              kld_ind = kld_yx))
+  #}
 
   # Obtain the Kullback-Leibler Divergence values for each selected comparison
   kld_value <-
     unlist(lapply(1:dim(dataset)[1],
-                  function(x) kld_measure_univ(mean_y = dataset[x, 4],
-                                               sd_y = dataset[x, 5],
-                                               mean_x = dataset[x, 2],
-                                               sd_x = dataset[x, 3])$kld_sym))
+                  function(x) kld_measure(mean_y = dataset[x, 4],
+                                          sd_y = dataset[x, 5],
+                                          mean_x = dataset[x, 2],
+                                          sd_x = dataset[x, 3])$kld_sym))
 
   # Kullback-Leibler Divergence by approximating direct with indirect
   kld_dir <-
     unlist(lapply(1:dim(dataset)[1],
-                  function(x) kld_measure_univ(mean_y = dataset[x, 4],
-                                               sd_y = dataset[x, 5],
-                                               mean_x = dataset[x, 2],
-                                               sd_x = dataset[x, 3])$kld_dir))
+                  function(x) kld_measure(mean_y = dataset[x, 4],
+                                          sd_y = dataset[x, 5],
+                                          mean_x = dataset[x, 2],
+                                          sd_x = dataset[x, 3])$kld_x_true))
 
   # Kullback-Leibler Divergence by approximating indirect with direct
   kld_ind <-
     unlist(lapply(1:dim(dataset)[1],
-                  function(x) kld_measure_univ(mean_y = dataset[x, 4],
-                                               sd_y = dataset[x, 5],
-                                               mean_x = dataset[x, 2],
-                                               sd_x = dataset[x, 3])$kld_ind))
+                  function(x) kld_measure(mean_y = dataset[x, 4],
+                                          sd_y = dataset[x, 5],
+                                          mean_x = dataset[x, 2],
+                                          sd_x = dataset[x, 3])$kld_y_true))
 
   # Bring both divergences together per target comparison
   kld_dataset <-
     data.frame(value = c(kld_dir, kld_ind),
-               perc = (c(kld_dir, kld_ind) / (kld_dir + kld_ind)) * 100,
+               perc = c(kld_dir, kld_ind) / (kld_dir + kld_ind),
                approx = rep(c("Direct estimate", "Indirect estimate"),
                             each = length(kld_dir)),
                compar = rep(dataset[, 1], 2))
@@ -489,7 +487,7 @@ kld_inconsistency_user <- function(dataset,
   barplot <-
     ggplot(kld_dataset,
            aes(x = compar,
-               y = perc / 100,
+               y = perc,
                fill = approx)) +
     geom_bar(position = "fill",
              stat = "identity") +
@@ -497,7 +495,7 @@ kld_inconsistency_user <- function(dataset,
                linetype = "dashed",
                linewidth = 0.8,
                colour = "white") +
-    geom_text(aes(label = paste0(sprintf("%.0f", perc),"%", " ",
+    geom_text(aes(label = paste0(sprintf("%.0f", perc * 100),"%", " ",
                                  "(", round(value, 2), ")")),
               hjust = 0.5,
               vjust = 1.0,

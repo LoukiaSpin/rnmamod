@@ -2,7 +2,7 @@
 % Please edit documentation in R/KLD.barplot_function.R
 \name{kld_barplot}
 \alias{kld_barplot}
-\title{Barplot for the Kullback-Leibler divergence measure}
+\title{Barplot for the Kullback-Leibler divergence measure (missingness scenarios)}
 \usage{
 kld_barplot(robust, compar, drug_names)
 }

@@ -124,7 +124,7 @@ and network meta-analysis.
 \emph{Res Synth Methods} 2021;\bold{12}(4):475--90. doi: 10.1002/jrsm.1478
 }
 \seealso{
-\code{\link[metafor:rma]{rma}},
+\code{\link{kld_measure}}, \code{\link[metafor:rma]{rma}},
   \code{\link[metafor:rma.glmm]{rma.glmm}},
   \code{\link[metafor:rma.mh]{rma.mh}}, \code{\link[metafor:rma.mv]{rma.mv}},
   \code{\link[metafor:rma.peto]{rma.peto}},

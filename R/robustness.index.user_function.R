@@ -82,7 +82,7 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link[metafor:rma]{rma}},
+#' @seealso \code{\link{kld_measure}}, \code{\link[metafor:rma]{rma}},
 #'   \code{\link[metafor:rma.glmm]{rma.glmm}},
 #'   \code{\link[metafor:rma.mh]{rma.mh}}, \code{\link[metafor:rma.mv]{rma.mv}},
 #'   \code{\link[metafor:rma.peto]{rma.peto}},
@@ -266,13 +266,13 @@ robustness_index_user <- function(sens, pkg, attribute, threshold) {
   }
 
   # Function for the Kullback-Leibler Divergence (two normal distributions)
-  kld_measure_univ <- function(mean_y, sd_y, mean_x, sd_x) {
-    # x is the 'truth' (e.g. the MAR assumption)
-    kld_xy <- 0.5 * (((sd_x / sd_y)^2) + ((mean_y - mean_x)^2)
-                     / (sd_y^2) - 1 + 2 * log(sd_y / sd_x))
-
-    return(kld_xy)
-  }
+  #kld_measure_univ <- function(mean_y, sd_y, mean_x, sd_x) {
+  #  # x is the 'truth' (e.g. the MAR assumption)
+  #  kld_xy <- 0.5 * (((sd_x / sd_y)^2) + ((mean_y - mean_x)^2)
+  #                   / (sd_y^2) - 1 + 2 * log(sd_y / sd_x))
+  #
+  #  return(kld_xy)
+  #}
 
   # Calculate the Kullback-Leibler Divergence and robustness index
   kldxy <- list()
@@ -282,10 +282,10 @@ robustness_index_user <- function(sens, pkg, attribute, threshold) {
     for (j in 1:n_scenar) {
       # Returns the KLD of scenario j compared with primary analysis
       # for comparison i
-      kldxy[[i]][j] <- kld_measure_univ(mean_mat[j, i],
-                                        se_mat[j, i],
-                                        mean_mat[primary_scenar, i],
-                                        se_mat[primary_scenar, i])
+      kldxy[[i]][j] <- kld_measure(mean_mat[j, i],
+                                   se_mat[j, i],
+                                   mean_mat[primary_scenar, i],
+                                   se_mat[primary_scenar, i])$kld_x_true
     }
     # This refers to the primary analysis
     kldxy[[i]][primary_scenar] <- 0
