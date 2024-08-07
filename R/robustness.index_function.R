@@ -136,6 +136,7 @@ robustness_index <- function(sens, threshold) {
   }
 
   if (is.null(sens$EM)) {
+    measure <- c(unique(do.call("rbind", lapply(sens, "[[", "measure"))))
     get_results <-
       lapply(1:length(sens),
              function(x) as.data.frame(t(sens[[x]]$jagsfit$BUGSoutput$summary)))
@@ -148,7 +149,6 @@ robustness_index <- function(sens, threshold) {
               lapply(get_results,
                      function(x) t(x)[startsWith(rownames(t(x)), "EM["), ]))
     }
-    measure <- c(unique(do.call("rbind", lapply(sens, "[[", "measure"))))
     primary_scenar <- 1
   } else {
     measure <- sens$measure
