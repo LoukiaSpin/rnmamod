@@ -153,9 +153,9 @@ robustness_index <- function(sens, threshold) {
   } else {
     measure <- sens$measure
     es_mat <- if (is.element(measure, c("RR", "RD"))) {
-      sens$EM_LOR
+      as.matrix(sens$EM_LOR)
     } else {
-      sens$EM
+      as.matrix(sens$EM)
     }
     scenarios <- sens$scenarios
     #n_scenar <- length(scenarios)^2
@@ -201,9 +201,15 @@ robustness_index <- function(sens, threshold) {
 
   # A matrix of estimates for all possible comparisons under each scenario
   mean_mat <-
-    matrix(es_mat[, 1], nrow = n_scenar, ncol = length(es_mat[, 1])/2, byrow = TRUE)
+    matrix(es_mat[, 1],
+           nrow = n_scenar,
+           ncol = length(es_mat[, 1])/n_scenar,
+           byrow = TRUE)
   sd_mat <-
-    matrix(es_mat[, 2], nrow = n_scenar, ncol = length(es_mat[, 1])/2, byrow = TRUE)
+    matrix(es_mat[, 2],
+           nrow = n_scenar,
+           ncol = length(es_mat[, 1])/n_scenar,
+           byrow = TRUE)
   #mean_mat <- matrix(rep(NA, length(es_mat[, 1])), nrow = n_scenar)
   #sd_mat <- mean_mat
   #for (i in 1:n_scenar) {
