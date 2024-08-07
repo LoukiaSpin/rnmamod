@@ -1,219 +1,75 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/404.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/articles/network_description.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/articles/perform_network_metaanalysis.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/index.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/balloon_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/baseline_model.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/bland_altman_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/comp_clustering.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/data_preparation.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/dendro_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/describe_network.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/distr_characteristics.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/forestplot.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/forestplot_metareg.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/gower_distance.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/heatmap_missing_dataset.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/heatmap_missing_network.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/heatmap_robustness.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/heter_density_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/heterogeneity_param_prior.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/improved_ume.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/inconsistency_variance_prior.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/internal_measures_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/intervalplot_panel_ume.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/kld_barplot.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/kld_inconsistency.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/kld_inconsistency_user.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/kld_measure.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/league_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/league_heatmap_pred.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/league_table_absolute.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/league_table_absolute_user.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/leverage_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/mcmc_diagnostics.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/metareg_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/miss_characteristics.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/missingness_param_prior.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/netplot.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/nma.baker2009.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/nma.bottomley2011.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/nma.dogliotti2014.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/nma.liu2013.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/nma.schwingshackl2014.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/nma.stowe2011.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/nodesplit_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/pma.hetrick2012.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/pma.taylor2004.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/prepare_model.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/prepare_nodesplit.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/prepare_ume.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/rankosucra_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/rnmamod-package.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/robustness_index.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/robustness_index_user.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/run_metareg.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/run_model.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/run_nodesplit.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/run_sensitivity.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/run_series_meta.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/run_ume.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/scatterplot_sucra.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/scatterplots_dev.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/series_meta_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/table_tau2_prior.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/taylor_continuous.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/taylor_imor.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/ume_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://loukiaspin.github.io/rnmamod/reference/unrelated_effects_plot.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://loukiaspin.github.io/rnmamod/404.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/articles/index.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/articles/network_description.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/articles/perform_network_metaanalysis.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/authors.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/index.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/news/index.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/balloon_plot.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/baseline_model.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/bland_altman_plot.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/comp_clustering.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/data_preparation.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/dendro_heatmap.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/describe_network.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/distr_characteristics.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/forestplot.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/forestplot_metareg.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/gower_distance.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/heatmap_missing_dataset.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/heatmap_missing_network.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/heatmap_robustness.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/heter_density_plot.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/heterogeneity_param_prior.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/improved_ume.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/inconsistency_variance_prior.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/index.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/internal_measures_plot.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/intervalplot_panel_ume.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/kld_barplot.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/kld_inconsistency.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/kld_inconsistency_user.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/kld_measure.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/league_heatmap.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/league_heatmap_pred.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/league_table_absolute.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/league_table_absolute_user.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/leverage_plot.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/mcmc_diagnostics.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/metareg_plot.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/miss_characteristics.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/missingness_param_prior.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/netplot.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/nma.baker2009.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/nma.bottomley2011.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/nma.dogliotti2014.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/nma.liu2013.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/nma.schwingshackl2014.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/nma.stowe2011.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/nodesplit_plot.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/pma.hetrick2012.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/pma.taylor2004.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/prepare_model.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/prepare_nodesplit.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/prepare_ume.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/rankosucra_plot.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/rnmamod-package.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/robustness_index.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/robustness_index_user.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/run_metareg.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/run_model.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/run_nodesplit.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/run_sensitivity.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/run_series_meta.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/run_ume.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/scatterplot_sucra.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/scatterplots_dev.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/series_meta_plot.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/table_tau2_prior.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/taylor_continuous.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/taylor_imor.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/ume_plot.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/unrelated_effects_plot.html</loc></url>
 </urlset>
+
