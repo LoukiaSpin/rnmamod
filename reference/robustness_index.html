@@ -55,7 +55,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">robustness_index</span><span class="op">(</span><span class="va">sens</span>, <span class="va">threshold</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">robustness_index</span><span class="op">(</span><span class="va">sens</span>, prediction <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">threshold</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -70,6 +70,13 @@ missingness parameter. See 'Value' in <code><a href="run_sensitivity.html">run_s
 of S3 class <code><a href="run_model.html">run_model</a></code> indicating different re-analyses: the
 first object (of class <code><a href="run_model.html">run_model</a></code>) in the list should refer to
 the primary analysis.</p></dd>
+
+
+<dt id="arg-prediction">prediction<a class="anchor" aria-label="anchor" href="#arg-prediction"></a></dt>
+<dd><p>Logical character on whether to consider the prediction
+(<code>TRUE</code>) or estimation of the summary treatment effects
+(<code>FALSE</code>). This is only relevant for a random-effects model and the
+default argument is <code>FALSE</code> (estimation).</p></dd>
 
 
 <dt id="arg-threshold">threshold<a class="anchor" aria-label="anchor" href="#arg-threshold"></a></dt>
@@ -143,14 +150,17 @@ re-analysis results. See 'Details' below.</p></dd>
 <p>In the case of missing participant outcome data, the primary analysis is
   considered to be the middle of the numbers in the argument
   <code>mean_scenarios</code> of <code><a href="run_sensitivity.html">run_sensitivity</a></code> (see 'Arguments'
-  and 'Details' in <code><a href="run_sensitivity.html">run_sensitivity</a></code>).</p>
+  and 'Details' in <code><a href="run_sensitivity.html">run_sensitivity</a></code>). Furhermore,
+  <code>robustness_index</code> can be used in that context only when missing
+  participant outcome data have been extracted for at least one trial.
+  Otherwise, the execution of the function will be stopped and an error
+  message will be printed in the R console.</p>
+<p>In the case of a general sensitivity analysis, the compared models should
+  refer to the same effect measure and the same meta-analysis model (i.e.,
+  fixed-effect or random-effects).</p>
 <p>In <code>robust</code>, the value <code>"robust"</code> appears when
   <code>robust_index</code> is less than <code>threshold</code>; otherwise, the value
   <code>"frail"</code> appears.</p>
-<p>In the case of missing participant outcome data, <code>robustness_index</code>
-  can be used only when missing participant outcome data have been
-  extracted for at least one trial. Otherwise, the execution of the function
-  will be stopped and an error message will be printed in the R console.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
