@@ -146,27 +146,14 @@ robustness_index <- function(sens,
 
   if (is.null(sens$EM)) {
     measure <- c(unique(do.call("rbind", lapply(sens, "[[", "measure"))))
-    get_results <-
-      lapply(1:length(sens),
-             function(x) as.data.frame(t(sens[[x]]$jagsfit$BUGSoutput$summary)))
     es_mat <- if (is.element(measure, c("RR", "RD")) & prediction == FALSE) {
-      do.call("rbind",
-              lapply(get_results,
-                     function(x) t(x)[startsWith(rownames(t(x)), "EM_LOR["), ]))
+      do.call("rbind", lapply(sens, function(x) x$EM_LOR))
     } else if (!is.element(measure, c("RR", "RD")) & prediction == FALSE) {
-      do.call("rbind",
-              lapply(get_results,
-                     function(x) t(x)[startsWith(rownames(t(x)), "EM["), ]))
+      do.call("rbind", lapply(sens, function(x) x$EM))
     } else if (is.element(measure, c("RR", "RD")) & prediction == TRUE) {
-      do.call("rbind",
-              lapply(get_results,
-                     function(x) t(x)[startsWith(rownames(t(x)),
-                                                 "EM_pred_LOR["), ]))
+      do.call("rbind", lapply(sens, function(x) x$EM_pred_LOR))
     } else if (!is.element(measure, c("RR", "RD")) & prediction == TRUE) {
-      do.call("rbind",
-              lapply(get_results,
-                     function(x) t(x)[startsWith(rownames(t(x)),
-                                                 "EM_pred["), ]))
+      do.call("rbind", lapply(sens, function(x) x$EM_pred))
     }
     primary_scenar <- 1
   } else {
@@ -222,15 +209,8 @@ robustness_index <- function(sens,
                    nrow = n_scenar,
                    ncol = length(es_mat[, 1])/n_scenar,
                    byrow = TRUE)
-  #mean_mat <- matrix(rep(NA, length(es_mat[, 1])), nrow = n_scenar)
-  #sd_mat <- mean_mat
-  #for (i in 1:n_scenar) {
-  #  for (j in 1:poss_comp) {
-  #    mean_mat[i, j] <- es_mat[j + (poss_comp * (i - 1)), 1]
-  #    sd_mat[i, j] <- es_mat[j + poss_comp * (i - 1), 2]
-  #  }
-  #}
 
+  ## Calculate the KLD measure for all comparisons
   kldxy <- list()
   robust_index <- rep(NA, poss_comp)
   for (i in 1:poss_comp) {
