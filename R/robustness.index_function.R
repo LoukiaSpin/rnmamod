@@ -11,8 +11,8 @@
 #'   sensitivity analysis refers to different scenarios about the average
 #'   missingness parameter. See 'Value' in \code{\link{run_sensitivity}}. For a
 #'   \bold{general} sensitivity analysis, insert a list of at least two objects
-#'   of S3 class \code{\link{run_model}} indicating different re-analyses: the
-#'   first object (of class \code{\link{run_model}}) in the list should refer to
+#'   of S3 class \code{\link{run_model}} or \code{\link{run_metareg}} indicating
+#'   different re-analyses: the first object in the list should refer to
 #'   the primary analysis.
 #' @param prediction Logical character on whether to consider the prediction
 #'   (\code{TRUE}) or estimation of the summary treatment effects
@@ -92,8 +92,8 @@
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link{heatmap_robustness}}, \code{\link{kld_barplot}},
-#'   \code{\link{kld_measure}}, \code{\link{run_model}},
-#'   \code{\link{run_sensitivity}}
+#'   \code{\link{kld_measure}}, \code{\link{run_metareg}},
+#'   \code{\link{run_model}}, \code{\link{run_sensitivity}}
 #'
 #' @references
 #' Kullback S, Leibler RA. On information and sufficiency.
@@ -136,11 +136,11 @@ robustness_index <- function(sens,
     NULL
   }
 
-  if (!is.element(type, c("run_model", "run_sensitivity")) ||
+  if (!is.element(type, c("run_model", "run_metareg", "run_sensitivity")) ||
       n_scenar < 2) {
-    aa <- "or a list of at least two objects of S3 class 'run_model'"
+    aa <- "list of at least 2 objects of S3 class 'run_model' or 'run_metareg'"
     bb <- "(type ?robustness_index)."
-    stop(paste("'sens' must be an object of S3 class 'run_sensitivity'",
+    stop(paste("'sens' must be an object of S3 class 'run_sensitivity' or a",
                aa, bb), call. = FALSE)
   }
 

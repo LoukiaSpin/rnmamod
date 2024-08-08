@@ -11,8 +11,8 @@ robustness_index(sens, prediction = FALSE, threshold)
 sensitivity analysis refers to different scenarios about the average
 missingness parameter. See 'Value' in \code{\link{run_sensitivity}}. For a
 \bold{general} sensitivity analysis, insert a list of at least two objects
-of S3 class \code{\link{run_model}} indicating different re-analyses: the
-first object (of class \code{\link{run_model}}) in the list should refer to
+of S3 class \code{\link{run_model}} or \code{\link{run_metareg}} indicating
+different re-analyses: the first object in the list should refer to
 the primary analysis.}
 
 \item{prediction}{Logical character on whether to consider the prediction
@@ -123,8 +123,8 @@ and network meta-analysis.
 }
 \seealso{
 \code{\link{heatmap_robustness}}, \code{\link{kld_barplot}},
-  \code{\link{kld_measure}}, \code{\link{run_model}},
-  \code{\link{run_sensitivity}}
+  \code{\link{kld_measure}}, \code{\link{run_metareg}},
+  \code{\link{run_model}}, \code{\link{run_sensitivity}}
 }
 \author{
 {Loukia M. Spineli}
