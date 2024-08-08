@@ -14,6 +14,10 @@
 #'   of S3 class \code{\link{run_model}} indicating different re-analyses: the
 #'   first object (of class \code{\link{run_model}}) in the list should refer to
 #'   the primary analysis.
+#' @param prediction Logical character on whether to consider the prediction
+#'   (\code{TRUE}) or estimation of the summary treatment effects
+#'   (\code{FALSE}). This is only relevant for a random-effects model and the
+#'   default argument is \code{FALSE} (estimation).
 #' @param threshold A number indicating the threshold of robustness, that is,
 #'   the minimally allowed deviation between the primary analysis and
 #'   re-analysis results. See 'Details' below.
@@ -71,16 +75,19 @@
 #'   In the case of missing participant outcome data, the primary analysis is
 #'   considered to be the middle of the numbers in the argument
 #'   \code{mean_scenarios} of \code{\link{run_sensitivity}} (see 'Arguments'
-#'   and 'Details' in \code{\link{run_sensitivity}}).
+#'   and 'Details' in \code{\link{run_sensitivity}}). Furhermore,
+#'   \code{robustness_index} can be used in that context only when missing
+#'   participant outcome data have been extracted for at least one trial.
+#'   Otherwise, the execution of the function will be stopped and an error
+#'   message will be printed in the R console.
+#'
+#'   In the case of a general sensitivity analysis, the compared models should
+#'   refer to the same effect measure and the same meta-analysis model (i.e.,
+#'   fixed-effect or random-effects).
 #'
 #'   In \code{robust}, the value \code{"robust"} appears when
 #'   \code{robust_index} is less than \code{threshold}; otherwise, the value
 #'   \code{"frail"} appears.
-#'
-#'   In the case of missing participant outcome data, \code{robustness_index}
-#'   can be used only when missing participant outcome data have been
-#'   extracted for at least one trial. Otherwise, the execution of the function
-#'   will be stopped and an error message will be printed in the R console.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -109,7 +116,9 @@
 #'                  threshold = 0.28)
 #'
 #' @export
-robustness_index <- function(sens, threshold) {
+robustness_index <- function(sens,
+                             prediction = FALSE,
+                             threshold) {
 
   type <- if (is.null(sens$EM) & !inherits(sens, "run_sensitivity")) {
     c(unique(do.call("rbind", lapply(sens, class))))
@@ -140,22 +149,36 @@ robustness_index <- function(sens, threshold) {
     get_results <-
       lapply(1:length(sens),
              function(x) as.data.frame(t(sens[[x]]$jagsfit$BUGSoutput$summary)))
-    es_mat <- if (is.element(measure, c("RR", "RD"))) {
+    es_mat <- if (is.element(measure, c("RR", "RD")) & prediction == FALSE) {
       do.call("rbind",
               lapply(get_results,
                      function(x) t(x)[startsWith(rownames(t(x)), "EM_LOR["), ]))
-    } else {
+    } else if (!is.element(measure, c("RR", "RD")) & prediction == FALSE) {
       do.call("rbind",
               lapply(get_results,
                      function(x) t(x)[startsWith(rownames(t(x)), "EM["), ]))
+    } else if (is.element(measure, c("RR", "RD")) & prediction == TRUE) {
+      do.call("rbind",
+              lapply(get_results,
+                     function(x) t(x)[startsWith(rownames(t(x)),
+                                                 "EM_pred_LOR["), ]))
+    } else if (!is.element(measure, c("RR", "RD")) & prediction == TRUE) {
+      do.call("rbind",
+              lapply(get_results,
+                     function(x) t(x)[startsWith(rownames(t(x)),
+                                                 "EM_pred["), ]))
     }
     primary_scenar <- 1
   } else {
     measure <- sens$measure
-    es_mat <- if (is.element(measure, c("RR", "RD"))) {
+    es_mat <- if (is.element(measure, c("RR", "RD")) & prediction == FALSE) {
       as.matrix(sens$EM_LOR)
-    } else {
+    } else if (!is.element(measure, c("RR", "RD")) & prediction == FALSE) {
       as.matrix(sens$EM)
+    } else if (is.element(measure, c("RR", "RD")) & prediction == TRUE) {
+      as.matrix(sens$EM_LOR_pred)
+    } else if (!is.element(measure, c("RR", "RD")) & prediction == TRUE) {
+      as.matrix(sens$EM_pred)
     }
     scenarios <- sens$scenarios
     #n_scenar <- length(scenarios)^2
@@ -190,26 +213,15 @@ robustness_index <- function(sens, threshold) {
     message(paste("The value", threshold, aa, paste0(effect_measure, ".")))
   }
 
-  # Function for the Kullback-Leibler Divergence (two normal distributions)
-  #kld_measure_univ <- function(mean_y, sd_y, mean_x, sd_x) {
-  #  # x is the 'truth' (e.g. the MAR assumption)
-  #  kld_xy <- 0.5 * (((sd_x / sd_y)^2) + ((mean_y - mean_x)^2)
-  #                   / (sd_y^2) - 1 + 2 * log(sd_y / sd_x))
-  #
-  #  return(kld_xy)
-  #}
-
   # A matrix of estimates for all possible comparisons under each scenario
-  mean_mat <-
-    matrix(es_mat[, 1],
-           nrow = n_scenar,
-           ncol = length(es_mat[, 1])/n_scenar,
-           byrow = TRUE)
-  sd_mat <-
-    matrix(es_mat[, 2],
-           nrow = n_scenar,
-           ncol = length(es_mat[, 1])/n_scenar,
-           byrow = TRUE)
+  mean_mat <- matrix(es_mat[, 1],
+                     nrow = n_scenar,
+                     ncol = length(es_mat[, 1])/n_scenar,
+                     byrow = TRUE)
+  sd_mat <- matrix(es_mat[, 2],
+                   nrow = n_scenar,
+                   ncol = length(es_mat[, 1])/n_scenar,
+                   byrow = TRUE)
   #mean_mat <- matrix(rep(NA, length(es_mat[, 1])), nrow = n_scenar)
   #sd_mat <- mean_mat
   #for (i in 1:n_scenar) {
@@ -218,7 +230,6 @@ robustness_index <- function(sens, threshold) {
   #    sd_mat[i, j] <- es_mat[j + poss_comp * (i - 1), 2]
   #  }
   #}
-
 
   kldxy <- list()
   robust_index <- rep(NA, poss_comp)

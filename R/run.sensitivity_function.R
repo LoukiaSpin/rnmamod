@@ -52,10 +52,16 @@
 #'   random-effects pairwise meta-analysis:
 #'   \item{EM}{The estimated summary effect measure (according to the
 #'    argument \code{measure} defined in \code{\link{run_model}}).}
+#'   \item{EM_pred}{The predicted summary effect measure (according to the
+#'    argument \code{measure} defined in \code{\link{run_model}}). This element
+#'    does not appear in the case of a fixed-effect meta-analysis.}
 #'   \item{EM_LOR}{The estimated summary odd ratio in the logarithmic scale when
 #'   \code{measure = "RR"} or \code{measure = "RD"}.}
+#'   \item{EM_LOR_pred}{The predicted summary odd ratio in the logarithmic scale
+#'    when \code{measure = "RR"} or \code{measure = "RD"}. This element does
+#'    not appear in the case of a fixed-effect meta-analysis.}
 #'   \item{tau}{The between-trial standard deviation. This element does
-#'    not appear in the case of a fixed-effect pairwise meta-analysis.}
+#'    not appear in the case of a fixed-effect meta-analysis.}
 #'
 #'   In a random-effects network meta-analysis, \code{EM} refer to all possible
 #'   pairwise comparisons of interventions in the network. Furthermore,
@@ -311,13 +317,13 @@ run_sensitivity <- function(full,
 
   ## Parameters to save
   param_jags <- if (model == "RE") {
-    c("EM", "tau")
+    c("EM", "EM.pred", "tau")
   } else {
     c("EM")
   }
 
   param_jags <- if (is.element(measure, c("RR", "RD"))) {
-    append(param_jags, "EM.LOR")
+    append(param_jags, "EM.LOR", "EM.LOR.pred")
   } else {
     param_jags
   }
@@ -382,37 +388,33 @@ run_sensitivity <- function(full,
     get_results[[i]] <- as.data.frame(t(jagsfit[[i]]$BUGSoutput$summary))
   }
 
-  #EM <- do.call(rbind,
-  #              lapply(
-  #                seq_len(length(mean_misspar[, 1])),
-  #                function(i) t(get_results[[i]] %>%
-  #                                dplyr::select(starts_with("EM[")))))
+
   EM <- do.call(rbind,
                 lapply(
                   seq_len(length(mean_misspar[, 1])),
                   function(i) t(get_results[[i]])[
                     startsWith(rownames(t(get_results[[i]])), "EM["), ]))
+  EM_pred <- do.call(rbind,
+                     lapply(seq_len(length(mean_misspar[, 1])),
+                            function(i) t(get_results[[i]])[
+                              startsWith(rownames(t(get_results[[i]])),
+                                         "EM.pred["), ]))
 
   if (is.element(measure, c("RR", "RD"))) {
-    #EM_LOR <- do.call(rbind,
-    #                  lapply(
-    #                    seq_len(length(mean_misspar[, 1])),
-    #                    function(i) t(get_results[[i]] %>%
-    #                                    dplyr::select(starts_with("EM.LOR[")))))
     EM_LOR <- do.call(rbind,
                       lapply(
                         seq_len(length(mean_misspar[, 1])),
                         function(i) t(get_results[[i]])[
                           startsWith(rownames(t(get_results[[i]])),
                                      "EM.LOR["), ]))
+    EM_LOR_pred <- do.call(rbind,
+                           lapply(seq_len(length(mean_misspar[, 1])),
+                                  function(i) t(get_results[[i]])[
+                                    startsWith(rownames(t(get_results[[i]])),
+                                               "EM.LOR.pred["), ]))
   }
 
   if (model == "RE") {
-    #tau <- do.call(rbind,
-    #              lapply(
-    #                seq_len(length(mean_misspar[, 1])),
-    #                function(i) t(get_results[[i]] %>%
-    #                                dplyr::select(starts_with("tau")))))
     tau <- do.call(rbind,
                    lapply(
                      seq_len(length(mean_misspar[, 1])),
@@ -423,6 +425,7 @@ run_sensitivity <- function(full,
   # Return results
   results <- if (model == "RE" & !is.element(measure, c("RR", "RD"))) {
     list(EM = EM,
+         EM_pred = EM_pred,
          tau = tau,
          measure = measure,
          model = model,
@@ -446,6 +449,8 @@ run_sensitivity <- function(full,
   } else if (model == "RE" & is.element(measure, c("RR", "RD"))) {
     list(EM = EM,
          EM_LOR = EM_LOR,
+         EM_pred = EM_pred,
+         EM_LOR_pred = EM_LOR_pred,
          tau = tau,
          measure = measure,
          model = model,

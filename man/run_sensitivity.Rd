@@ -74,10 +74,16 @@ A list of R2jags outputs on the summaries of the posterior
   random-effects pairwise meta-analysis:
   \item{EM}{The estimated summary effect measure (according to the
    argument \code{measure} defined in \code{\link{run_model}}).}
+  \item{EM_pred}{The predicted summary effect measure (according to the
+   argument \code{measure} defined in \code{\link{run_model}}). This element
+   does not appear in the case of a fixed-effect meta-analysis.}
   \item{EM_LOR}{The estimated summary odd ratio in the logarithmic scale when
   \code{measure = "RR"} or \code{measure = "RD"}.}
+  \item{EM_LOR_pred}{The predicted summary odd ratio in the logarithmic scale
+   when \code{measure = "RR"} or \code{measure = "RD"}. This element does
+   not appear in the case of a fixed-effect meta-analysis.}
   \item{tau}{The between-trial standard deviation. This element does
-   not appear in the case of a fixed-effect pairwise meta-analysis.}
+   not appear in the case of a fixed-effect meta-analysis.}
 
   In a random-effects network meta-analysis, \code{EM} refer to all possible
   pairwise comparisons of interventions in the network. Furthermore,

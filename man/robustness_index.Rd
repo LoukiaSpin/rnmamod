@@ -4,7 +4,7 @@
 \alias{robustness_index}
 \title{Robustness index}
 \usage{
-robustness_index(sens, threshold)
+robustness_index(sens, prediction = FALSE, threshold)
 }
 \arguments{
 \item{sens}{An object of S3 class \code{\link{run_sensitivity}} when
@@ -14,6 +14,11 @@ missingness parameter. See 'Value' in \code{\link{run_sensitivity}}. For a
 of S3 class \code{\link{run_model}} indicating different re-analyses: the
 first object (of class \code{\link{run_model}}) in the list should refer to
 the primary analysis.}
+
+\item{prediction}{Logical character on whether to consider the prediction
+(\code{TRUE}) or estimation of the summary treatment effects
+(\code{FALSE}). This is only relevant for a random-effects model and the
+default argument is \code{FALSE} (estimation).}
 
 \item{threshold}{A number indicating the threshold of robustness, that is,
 the minimally allowed deviation between the primary analysis and
@@ -81,16 +86,19 @@ Thresholds of robustness have been proposed only for the odds ratio
   In the case of missing participant outcome data, the primary analysis is
   considered to be the middle of the numbers in the argument
   \code{mean_scenarios} of \code{\link{run_sensitivity}} (see 'Arguments'
-  and 'Details' in \code{\link{run_sensitivity}}).
+  and 'Details' in \code{\link{run_sensitivity}}). Furhermore,
+  \code{robustness_index} can be used in that context only when missing
+  participant outcome data have been extracted for at least one trial.
+  Otherwise, the execution of the function will be stopped and an error
+  message will be printed in the R console.
+
+  In the case of a general sensitivity analysis, the compared models should
+  refer to the same effect measure and the same meta-analysis model (i.e.,
+  fixed-effect or random-effects).
 
   In \code{robust}, the value \code{"robust"} appears when
   \code{robust_index} is less than \code{threshold}; otherwise, the value
   \code{"frail"} appears.
-
-  In the case of missing participant outcome data, \code{robustness_index}
-  can be used only when missing participant outcome data have been
-  extracted for at least one trial. Otherwise, the execution of the function
-  will be stopped and an error message will be printed in the R console.
 }
 \examples{
 data("nma.baker2009")

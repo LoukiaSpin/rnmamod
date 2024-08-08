@@ -2,7 +2,8 @@
 % Please edit documentation in R/kld.measure_function.R
 \name{kld_measure}
 \alias{kld_measure}
-\title{Function for the Kullback-Leibler Divergence of two normal distributions}
+\title{Function for the Kullback-Leibler Divergence of two normally distributed
+treatment effects for the same pairwise comparison}
 \usage{
 kld_measure(mean_y, sd_y, mean_x, sd_x)
 }
