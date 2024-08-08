@@ -136,7 +136,8 @@ robustness_index <- function(sens,
     NULL
   }
 
-  if (!is.element(type, c("run_model", "run_metareg", "run_sensitivity")) ||
+  if (unique(!is.element(type,
+                         c("run_model", "run_metareg", "run_sensitivity")))||
       n_scenar < 2) {
     aa <- "list of at least 2 objects of S3 class 'run_model' or 'run_metareg'"
     bb <- "(type ?robustness_index)."
