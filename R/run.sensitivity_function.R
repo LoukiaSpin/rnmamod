@@ -341,7 +341,10 @@ run_sensitivity <- function(full,
                           "I" = item$I,
                           "meand.phi" = mean_misspar[i, ],
                           "precd.phi" = 1 / var_misspar,
-                          "D" = D)
+                          "D" = D,
+                          "cov_value" = 0,
+                          "beta.n" = rep(0, item$nt),
+                          "beta" = rep(0, item$nt))
 
     if (is.element(measure, c("MD", "SMD", "ROM"))) {
       data_jag[[i]] <- append(data_jag[[i]],

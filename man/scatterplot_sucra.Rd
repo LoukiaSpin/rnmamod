@@ -4,7 +4,7 @@
 \alias{scatterplot_sucra}
 \title{Scatterplot of SUCRA values}
 \usage{
-scatterplot_sucra(full, reg, cov_value, drug_names)
+scatterplot_sucra(full, reg, cov_name = "covariate value", drug_names)
 }
 \arguments{
 \item{full}{An object of S3 class \code{\link{run_model}}.
@@ -13,10 +13,7 @@ See 'Value' in \code{\link{run_model}}.}
 \item{reg}{An object of S3 class \code{\link{run_metareg}}. See 'Value' in
 \code{\link{run_metareg}}.}
 
-\item{cov_value}{A list of two elements in the following order: 1) a number
-for the covariate value of interest (see 'Arguments' in
-\code{\link{run_metareg}}), and 2) a character to indicate the name of
-the covariate. See also 'Details'.}
+\item{cov_name}{A character or text to indicate the name of the covariate.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
@@ -42,10 +39,6 @@ The names of the interventions appear above each point in the plot.
   Interventions falling at the green area are considered as the highest
   ranked interventions, whilst interventions falling at the red area are
   considered as the lowest ranked interventions.
-
-  When the covariate is binary, specify in the second element of
-  \code{cov_value} the name of the level for which the scatterplot will be
-  created.
 
   \code{scatterplot_sucra} is integrated in \code{\link{metareg_plot}}.
 

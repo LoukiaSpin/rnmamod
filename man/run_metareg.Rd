@@ -8,6 +8,7 @@ run_metareg(
   full,
   covariate,
   covar_assumption,
+  cov_value,
   n_chains,
   n_iter,
   n_burnin,
@@ -26,6 +27,8 @@ that is a potential effect modifier. See 'Details'.}
 intervention-by-covariate interaction, as described in
 Cooper et al. (2009). Set \code{covar_assumption} equal to
 \code{"exchangeable"}, \code{"independent"}, or \code{"common"}.}
+
+\item{cov_value}{Numeric for the covariate value of interest.}
 
 \item{n_chains}{Positive integer specifying the number of chains for the
 MCMC sampling; an argument of the \code{\link[R2jags:jags]{jags}} function
@@ -160,6 +163,7 @@ pub_year <- c(1996, 1998, 1999, 2000, 2000, 2001, rep(2002, 5), 2003, 2003,
 run_metareg(full = res,
             covariate = pub_year,
             covar_assumption = "exchangeable",
+            cov_value = 2007,
             n_chains = 3,
             n_iter = 1000,
             n_burnin = 100,

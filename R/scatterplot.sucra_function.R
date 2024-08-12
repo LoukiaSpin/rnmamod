@@ -8,10 +8,7 @@
 #'   See 'Value' in \code{\link{run_model}}.
 #' @param reg An object of S3 class \code{\link{run_metareg}}. See 'Value' in
 #'   \code{\link{run_metareg}}.
-#' @param cov_value A list of two elements in the following order: 1) a number
-#'   for the covariate value of interest (see 'Arguments' in
-#'   \code{\link{run_metareg}}), and 2) a character to indicate the name of
-#'   the covariate. See also 'Details'.
+#' @param cov_name A character or text to indicate the name of the covariate.
 #' @param drug_names A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data} of
 #'   \code{\link{run_model}}. If \code{drug_names} is not defined,
@@ -29,10 +26,6 @@
 #'   Interventions falling at the green area are considered as the highest
 #'   ranked interventions, whilst interventions falling at the red area are
 #'   considered as the lowest ranked interventions.
-#'
-#'   When the covariate is binary, specify in the second element of
-#'   \code{cov_value} the name of the level for which the scatterplot will be
-#'   created.
 #'
 #'   \code{scatterplot_sucra} is integrated in \code{\link{metareg_plot}}.
 #'
@@ -52,7 +45,10 @@
 #' doi: 10.1016/j.jclinepi.2010.03.016
 #'
 #' @export
-scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
+scatterplot_sucra <- function(full,
+                              reg,
+                              cov_name = "covariate value",
+                              drug_names) {
 
   if (!inherits(full, "run_model") || is.null(full)) {
     stop("'full' must be an object of S3 class 'run_model'.",
@@ -64,16 +60,16 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
          call. = FALSE)
   }
 
-  if (length(unique(reg$covariate)) < 3 &
-      !is.element(cov_value[[1]], reg$covariate)) {
-    stop("The first element of the argument 'cov_value' is out of the value
-         range of the analysed covariate", call. = FALSE)
-  } else if (length(unique(reg$covariate)) > 2 &
-             (cov_value[[1]] < min(reg$covariate) |
-              cov_value[[1]] > max(reg$covariate))) {
-    stop("The first element of the argument 'cov_value' is out of the value
-         range of the analysed covariate", call. = FALSE)
-  }
+  #if (length(unique(reg$covariate)) < 3 &
+  #    !is.element(cov_value[[1]], reg$covariate)) {
+  #  stop("The first element of the argument 'cov_value' is out of the value
+  #       range of the analysed covariate", call. = FALSE)
+  #} else if (length(unique(reg$covariate)) > 2 &
+  #           (cov_value[[1]] < min(reg$covariate) |
+  #            cov_value[[1]] > max(reg$covariate))) {
+  #  stop("The first element of the argument 'cov_value' is out of the value
+  #       range of the analysed covariate", call. = FALSE)
+  #}
 
   drug_names <- if (missing(drug_names)) {
     message(cat(paste0("\033[0;",
@@ -93,47 +89,49 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
          call. = FALSE)
   }
 
-  cov_value <- if (!is.null(reg$beta_all) & missing(cov_value)) {
-    stop("The argument 'cov_value' has not been defined", call. = FALSE)
-  } else if (!is.null(reg$beta_all) & length(cov_value) < 2) {
-    stop("The argument 'cov_value' must be a list with elements a number and a
-         character", call. = FALSE)
-  } else if (!is.null(reg$beta_all) & length(cov_value) == 2) {
-    cov_value
-  }
+  #cov_value <- if (!is.null(reg$beta_all) & missing(cov_value)) {
+  #  stop("The argument 'cov_value' has not been defined", call. = FALSE)
+  #} else if (!is.null(reg$beta_all) & length(cov_value) < 2) {
+  #  stop("The argument 'cov_value' must be a list with elements a number and a
+  #       character", call. = FALSE)
+  #} else if (!is.null(reg$beta_all) & length(cov_value) == 2) {
+  #  cov_value
+  #}
 
-  covar <- if (length(unique(reg$covariate)) < 3) {
-    cov_value[[1]]
-  } else {
-    cov_value[[1]] - mean(reg$covariate)
-  }
+  #covar <- if (length(unique(reg$covariate)) < 3) {
+  #  cov_value[[1]]
+  #} else {
+  #  cov_value[[1]] - mean(reg$covariate)
+  #}
 
   sucra_full <- full$SUCRA
+  sucra_reg <- reg$SUCRA
 
   #Source: https://rdrr.io/github/nfultz/stackoverflow/man/reflect_triangle.html
-  reflect_triangle <- function(m, from = c("lower", "upper")) {
-    ix <- switch(match.arg(from),
-                 lower = upper.tri,
-                 upper = lower.tri)(m, diag = FALSE)
-    m[ix] <- t(-m)[ix]
-    m
-  }
+  #reflect_triangle <- function(m, from = c("lower", "upper")) {
+  #  ix <- switch(match.arg(from),
+  #               lower = upper.tri,
+  #               upper = lower.tri)(m, diag = FALSE)
+  #  m[ix] <- t(-m)[ix]
+  #  m
+  #}
 
   sucra_nma <- round(sucra_full[, 1] * 100, 0)
-  par_mean <- reg$EM[, 1] + reg$beta_all[, 1] * covar
-  par_sd <- sqrt(((reg$EM[, 2])^2) + ((reg$beta_all[, 2] * covar)^2))
-  z_test <- par_mean / par_sd
-  z_test_mat <- matrix(NA, nrow = length(drug_names), ncol = length(drug_names))
-  z_test_mat[lower.tri(z_test_mat, diag = FALSE)] <- z_test * (-1)
-  z_test_mat <- reflect_triangle(z_test_mat, from = "lower")
-  prob_diff <- if (full$D == 0) {
-    pnorm(z_test_mat)
-  } else {
-    1 - pnorm(z_test_mat)
-  }
+  sucra_nmr <- round(sucra_reg[, 1] * 100, 0)
+  #par_mean <- reg$EM[, 1] + reg$beta_all[, 1] * covar
+  #par_sd <- sqrt(((reg$EM[, 2])^2) + ((reg$beta_all[, 2] * covar)^2))
+  #z_test <- par_mean / par_sd
+  #z_test_mat <- matrix(NA, nrow = length(drug_names), ncol = length(drug_names))
+  #z_test_mat[lower.tri(z_test_mat, diag = FALSE)] <- z_test * (-1)
+  #z_test_mat <- reflect_triangle(z_test_mat, from = "lower")
+  #prob_diff <- if (full$D == 0) {
+  #  pnorm(z_test_mat)
+  #} else {
+  #  1 - pnorm(z_test_mat)
+  #}
   # The p-scores per intervention
-  sucra_nmr <- round(apply(prob_diff, 1, sum, na.rm = TRUE) /
-                       (length(drug_names) - 1) * 100, 0)
+  #sucra_nmr <- round(apply(prob_diff, 1, sum, na.rm = TRUE) /
+  #                     (length(drug_names) - 1) * 100, 0)
   dataset <- data.frame(sucra_nma, sucra_nmr, drug_names)
 
   ggplot(dataset, aes(x = sucra_nmr, y = sucra_nma)) +
@@ -159,9 +157,9 @@ scatterplot_sucra <- function(full, reg, cov_value, drug_names) {
     labs(x = "Network meta-regression SUCRA values (%)",
          y = "Network meta-analysis SUCRA values (%)",
          caption = paste("Results for",
-                         cov_value[[2]],
+                         cov_name,
                          ifelse(length(unique(reg$covariate)) < 3, " ",
-                                cov_value[[1]]))) +
+                                round(reg$cov_value, 2)))) +
     theme_classic() +
     theme(axis.title = element_text(color = "black", face = "bold", size = 12),
           axis.text = element_text(color = "black", size = 12),

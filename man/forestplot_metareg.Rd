@@ -4,7 +4,7 @@
 \alias{forestplot_metareg}
 \title{Comparator-specific forest plot for network meta-regression}
 \usage{
-forestplot_metareg(full, reg, compar, cov_value, drug_names)
+forestplot_metareg(full, reg, compar, cov_name = "covariate value", drug_names)
 }
 \arguments{
 \item{full}{An object of S3 class \code{\link{run_model}}. See 'Value' in
@@ -16,10 +16,7 @@ forestplot_metareg(full, reg, compar, cov_value, drug_names)
 \item{compar}{A character to indicate the comparator intervention. It must
 be any name found in \code{drug_names}.}
 
-\item{cov_value}{A list of two elements in the following order: a number
-for the covariate value of interest (see 'Arguments' in
-\code{\link{run_metareg}}), and a character to indicate the name of
-the covariate. See also 'Details'.}
+\item{cov_name}{A character or text to indicate the name of the covariate.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
@@ -69,16 +66,6 @@ The y-axis of the forest plot on \bold{effect sizes} displays the
 
   In both plots, the interventions are sorted in the descending order of
   their SUCRA values based on the network meta-analysis.
-
-  To obtain the posterior distribution of SUCRAs under the network
-  meta-regression for a specified level or value of the investigated
-  covariate, a two-step procedured is followed. First, the posterior median and
-  standard deviation of the basic parameters and corresponding beta
-  coefficients are considered to calculate the meadin and standard deviation of
-  the basic parameters at the selected level or value of the investigated
-  covariate: d + beta * cov_value. Then, these calculated values are fed into
-  the BUGS code to get the posterior distribution of SUCRA. The progress of
-  the simulation appears on the R console.
 
   \code{forestplot_metareg} is integrated in \code{\link{metareg_plot}}.
 

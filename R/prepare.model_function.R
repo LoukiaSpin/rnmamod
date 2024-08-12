@@ -212,7 +212,7 @@ prepare_model <- function(measure,
                        base_risk_logit <- logit_base_risk*(1 - equals(ref_base[1], ref_base[2])) + ref_base[1]*equals(ref_base[1], ref_base[2])
                        base_risk <- exp(base_risk_logit)/(1 + exp(base_risk_logit))
                        for (t in 1:nt) {
-                         logit(abs_risk[t]) <- base_risk_logit + d[t] + beta.n[t] * cov_value
+                         logit(abs_risk[t]) <- base_risk_logit + d[t] + beta[t] * cov_value
                        }\n")
   } else {
     paste(stringcode, " ")

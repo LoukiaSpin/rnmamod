@@ -4,7 +4,14 @@
 \alias{metareg_plot}
 \title{End-user-ready results for network meta-regression}
 \usage{
-metareg_plot(full, reg, compar, cov_value, drug_names, save_xls)
+metareg_plot(
+  full,
+  reg,
+  compar,
+  cov_name = "covariate value",
+  drug_names,
+  save_xls
+)
 }
 \arguments{
 \item{full}{An object of S3 class \code{\link{run_model}}. See 'Value' in
@@ -16,10 +23,7 @@ metareg_plot(full, reg, compar, cov_value, drug_names, save_xls)
 \item{compar}{A character to indicate the comparator intervention. It must be
 any name found in \code{drug_names}.}
 
-\item{cov_value}{A list of two elements in the following order: a number
-for the covariate value of interest (see 'Arguments' in
-\code{\link{run_metareg}}), and a character to indicate the name of
-the covariate. See also 'Details'.}
+\item{cov_name}{A character or text to indicate the name of the covariate.}
 
 \item{drug_names}{A vector of labels with the name of the interventions in
 the order they appear in the argument \code{data} of
@@ -46,7 +50,8 @@ directory of the user. The default is \code{FALSE} (do not export).}
   interval of the summary effect measure (according to the argument
   \code{measure} defined in \code{\link{run_model}}) for each comparison
   with the selected intervention under network meta-analysis and network
-  meta-regression based on the specified \code{cov_value}.}
+  meta-regression based on the covariate value specified in
+  \code{\link{run_metareg}}.}
   \item{table_model_assessment}{The DIC, total residual deviance,
   number of effective parameters, and the posterior median and 95\% credible
   interval of between-trial standard deviation (\emph{tau}) under each model
@@ -59,13 +64,15 @@ directory of the user. The default is \code{FALSE} (do not export).}
   For a binary outcome, the results refer to the odds ratio scale.}
   \item{interval_plot}{A forest plot on the estimated and predicted effect
   sizes of comparisons with the selected comparator intervention under
-  network meta-analysis and network meta-regression based on the specified
-  \code{cov_value} alongside a forest plot with the corresponding SUCRA
-  values. See 'Details' and 'Value' in \code{\link{forestplot_metareg}}.}
+  network meta-analysis and network meta-regression based on the covariate
+  value specified in \code{\link{run_metareg}} alongside a forest plot with
+  the corresponding SUCRA values. See 'Details' and 'Value' in
+  \code{\link{forestplot_metareg}}.}
   \item{sucra_scatterplot}{A scatterplot of the SUCRA values from the
   network meta-analysis against the SUCRA values from the network
-  meta-regression based on the specified \code{cov_value}. See 'Details'
-  and 'Value' in \code{\link{scatterplot_sucra}}.}
+  meta-regression based on the covariate value specified in
+  \code{\link{run_metareg}}. See 'Details' and 'Value' in
+  \code{\link{scatterplot_sucra}}.}
 }
 \description{
 Illustrates the effect estimates, predictions and regression
@@ -79,10 +86,6 @@ The deviance information criterion (DIC) of the network
   model is preferred; if the difference in DIC is less than -5, the network
   meta-analysis model is preferred; otherwise, there is little to choose
   between the compared models.
-
-  When the covariate is binary, specify in the second element of
-  \code{cov_value} the name of the level for which the output will be
-  created.
 
   Furthermore, \code{metareg_plot} exports all tabulated results to separate
   'xlsx' files (via the \code{\link[writexl:write_xlsx]{write_xlsx}} function
@@ -114,11 +117,11 @@ interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
                   "formoterol", "salmeterol", "tiotropium")
 
 # Plot the results from both models for all comparisons with salmeterol and
-# publication year 2000
+# average publication year
 metareg_plot(full = res,
              reg = reg,
              compar = "salmeterol",
-             cov_value = list(2000, "publication year"),
+             cov_name = "mean publication year",
              drug_names = interv_names)
 }
 

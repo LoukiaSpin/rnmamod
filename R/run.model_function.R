@@ -570,7 +570,8 @@ run_model <- function(data,
                    "indic" = indic,
                    "D" = D,
                    "cov_value" = 0,
-                   "beta.n" = rep(0, item$nt))
+                   "beta.n" = rep(0, item$nt),
+                   "beta" = rep(0, item$nt))
 
   data_jag <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
     append(data_jag, list("y.o" = item$y0,

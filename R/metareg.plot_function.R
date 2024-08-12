@@ -10,10 +10,7 @@
 #'   \code{\link{run_metareg}}.
 #' @param compar A character to indicate the comparator intervention. It must be
 #'   any name found in \code{drug_names}.
-#' @param cov_value A list of two elements in the following order: a number
-#'   for the covariate value of interest (see 'Arguments' in
-#'   \code{\link{run_metareg}}), and a character to indicate the name of
-#'   the covariate. See also 'Details'.
+#' @param cov_name A character or text to indicate the name of the covariate.
 #' @param drug_names A vector of labels with the name of the interventions in
 #'   the order they appear in the argument \code{data} of
 #'   \code{\link{run_model}}. If \code{drug_names} is not defined,
@@ -37,7 +34,8 @@
 #'   interval of the summary effect measure (according to the argument
 #'   \code{measure} defined in \code{\link{run_model}}) for each comparison
 #'   with the selected intervention under network meta-analysis and network
-#'   meta-regression based on the specified \code{cov_value}.}
+#'   meta-regression based on the covariate value specified in
+#'   \code{\link{run_metareg}}.}
 #'   \item{table_model_assessment}{The DIC, total residual deviance,
 #'   number of effective parameters, and the posterior median and 95\% credible
 #'   interval of between-trial standard deviation (\emph{tau}) under each model
@@ -50,13 +48,15 @@
 #'   For a binary outcome, the results refer to the odds ratio scale.}
 #'   \item{interval_plot}{A forest plot on the estimated and predicted effect
 #'   sizes of comparisons with the selected comparator intervention under
-#'   network meta-analysis and network meta-regression based on the specified
-#'   \code{cov_value} alongside a forest plot with the corresponding SUCRA
-#'   values. See 'Details' and 'Value' in \code{\link{forestplot_metareg}}.}
+#'   network meta-analysis and network meta-regression based on the covariate
+#'   value specified in \code{\link{run_metareg}} alongside a forest plot with
+#'   the corresponding SUCRA values. See 'Details' and 'Value' in
+#'   \code{\link{forestplot_metareg}}.}
 #'   \item{sucra_scatterplot}{A scatterplot of the SUCRA values from the
 #'   network meta-analysis against the SUCRA values from the network
-#'   meta-regression based on the specified \code{cov_value}. See 'Details'
-#'   and 'Value' in \code{\link{scatterplot_sucra}}.}
+#'   meta-regression based on the covariate value specified in
+#'   \code{\link{run_metareg}}. See 'Details' and 'Value' in
+#'   \code{\link{scatterplot_sucra}}.}
 #'
 #' @details The deviance information criterion (DIC) of the network
 #'   meta-analysis model is compared with the DIC of the network meta-regression
@@ -64,10 +64,6 @@
 #'   model is preferred; if the difference in DIC is less than -5, the network
 #'   meta-analysis model is preferred; otherwise, there is little to choose
 #'   between the compared models.
-#'
-#'   When the covariate is binary, specify in the second element of
-#'   \code{cov_value} the name of the level for which the output will be
-#'   created.
 #'
 #'   Furthermore, \code{metareg_plot} exports all tabulated results to separate
 #'   'xlsx' files (via the \code{\link[writexl:write_xlsx]{write_xlsx}} function
@@ -115,11 +111,11 @@
 #'                   "formoterol", "salmeterol", "tiotropium")
 #'
 #' # Plot the results from both models for all comparisons with salmeterol and
-#' # publication year 2000
+#' # average publication year
 #' metareg_plot(full = res,
 #'              reg = reg,
 #'              compar = "salmeterol",
-#'              cov_value = list(2000, "publication year"),
+#'              cov_name = "mean publication year",
 #'              drug_names = interv_names)
 #' }
 #'
@@ -127,7 +123,7 @@
 metareg_plot <- function(full,
                          reg,
                          compar,
-                         cov_value,
+                         cov_name = "covariate value",
                          drug_names,
                          save_xls) {
 
@@ -141,36 +137,49 @@ metareg_plot <- function(full,
          call. = FALSE)
   }
 
-  if (length(unique(reg$covariate)) < 3 &
-      !is.element(cov_value[[1]], reg$covariate)) {
-    aa <- "The first element of the argument 'cov_value' is out of the value"
-    stop(paste(aa, "range of the analysed covariate."), call. = FALSE)
-  } else if (length(unique(reg$covariate)) > 2 &
-             (cov_value[[1]] < min(reg$covariate) |
-              cov_value[[1]] > max(reg$covariate))) {
-    aa <- "The first element of the argument 'cov_value' is out of the value"
-    stop(paste(aa, "range of the analysed covariate."), call. = FALSE)
-  }
+  #if (length(unique(reg$covariate)) < 3 &
+  #    !is.element(cov_value[[1]], reg$covariate)) {
+  #  aa <- "The first element of the argument 'cov_value' is out of the value"
+  #  stop(paste(aa, "range of the analysed covariate."), call. = FALSE)
+  #} else if (length(unique(reg$covariate)) > 2 &
+  #           (cov_value[[1]] < min(reg$covariate) |
+  #            cov_value[[1]] > max(reg$covariate))) {
+  #  aa <- "The first element of the argument 'cov_value' is out of the value"
+  #  stop(paste(aa, "range of the analysed covariate."), call. = FALSE)
+  #}
 
-
-  if (length(drug_names) < 3) {
-    stop("This function is *not* relevant for a pairwise meta-analysis.",
-         call. = FALSE)
-  }
-
-  cov_value <- if (missing(cov_value)) {
-    stop("The argument 'cov_value' has not been defined", call. = FALSE)
-  } else if (length(cov_value) < 2) {
-    aa <- "The argument 'cov_value' must be a list with elements a number and"
-    stop(paste(aa, "a character."), call. = FALSE)
-  } else if (length(cov_value) == 2) {
-    cov_value
-  }
+  #cov_value <- if (missing(cov_value)) {
+  #  stop("The argument 'cov_value' has not been defined", call. = FALSE)
+  #} else if (length(cov_value) < 2) {
+  #  aa <- "The argument 'cov_value' must be a list with elements a number and"
+  #  stop(paste(aa, "a character."), call. = FALSE)
+  #} else if (length(cov_value) == 2) {
+  #  cov_value
+  #}
 
   save_xls <- if (missing(save_xls)) {
     FALSE
   } else {
     save_xls
+  }
+
+  #covariate <- if (length(unique(reg$covariate)) < 3) {
+  #  unique(reg$covariate)
+  #} else {
+  #  reg$covariate
+  #}
+
+  # Get treatment effect estimates at covariate value, cov_value[[1]]
+  #cov_val <- ifelse(length(unique(covariate)) < 3, cov_value[[1]],
+  #                  cov_value[[1]] - mean(covariate))
+
+  drug_names <- if (missing(drug_names)) {
+    aa <- "The argument 'drug_names' has not been defined."
+    bb <- "The intervention ID, as specified in 'data' is used, instead."
+    message(paste(aa, bb))
+    as.character(seq_len(length(full$SUCRA[, 1])))
+  } else {
+    drug_names
   }
 
   compar <- if (missing(compar)) {
@@ -182,23 +191,9 @@ metareg_plot <- function(full,
     compar
   }
 
-  covariate <- if (length(unique(reg$covariate)) < 3) {
-    unique(reg$covariate)
-  } else {
-    reg$covariate
-  }
-
-  # Get treatment effect estimates at covariate value, cov_value[[1]]
-  cov_val <- ifelse(length(unique(covariate)) < 3, cov_value[[1]],
-                    cov_value[[1]] - mean(covariate))
-
-  drug_names <- if (missing(drug_names)) {
-    aa <- "The argument 'drug_names' has not been defined."
-    bb <- "The intervention ID, as specified in 'data' is used, instead."
-    message(paste(aa, bb))
-    as.character(seq_len(length(full$SUCRA[, 1])))
-  } else {
-    drug_names
+  if (length(drug_names) < 3) {
+    stop("This function is *not* relevant for a pairwise meta-analysis.",
+         call. = FALSE)
   }
 
   model <- full$model
@@ -255,16 +250,26 @@ metareg_plot <- function(full,
   }
 
   # Effect size of all possible pairwise comparisons (NMR)
-  par_median <- as.vector(c(reg$EM[, 5] + reg$beta_all[, 5] * cov_val,
-                            (reg$EM[, 5] * (-1)) +
-                              (reg$beta_all[, 5] * (-1) * cov_val)))
-  par_sd <- as.vector(c(sqrt(((reg$EM[, 2])^2) +
-                               ((reg$beta_all[, 2] * cov_val)^2)),
-                        sqrt(((reg$EM[, 2])^2) +
-                               ((reg$beta_all[, 2] * cov_val)^2))))
-  em_ref00_nmr <- cbind(median = par_median,
-                        lower = par_median - 1.96 * par_sd,
-                        upper = par_median + 1.96 * par_sd,
+  #par_median <- as.vector(c(reg$EM[, 5] + reg$beta_all[, 5] * cov_val,
+  #                          (reg$EM[, 5] * (-1)) +
+  #                            (reg$beta_all[, 5] * (-1) * cov_val)))
+  #par_sd <- as.vector(c(sqrt(((reg$EM[, 2])^2) +
+  #                             ((reg$beta_all[, 2] * cov_val)^2)),
+  #                      sqrt(((reg$EM[, 2])^2) +
+  #                             ((reg$beta_all[, 2] * cov_val)^2))))
+  #em_ref00_nmr <- cbind(median = par_median,
+  #                      lower = par_median - 1.96 * par_sd,
+  #                      upper = par_median + 1.96 * par_sd,
+  #                      poss_pair_comp)
+  #em_subset_nmr <- subset(em_ref00_nmr, em_ref00_nmr[5] == compar)
+  #em_ref0_nmr <- rbind(em_subset_nmr[, 1:3], c(rep(NA, 3)))
+  #em_ref_nmr <- em_ref0_nmr[order(sucra_full_new, decreasing = TRUE), ]
+  em_ref00_nmr <- cbind(rbind(data.frame(median = reg$EM[, 5],
+                                         lower = reg$EM[, 3],
+                                         upper = reg$EM[, 7]),
+                              data.frame(median = reg$EM[, 5] * (-1),
+                                         lower = reg$EM[, 7] * (-1),
+                                         upper = reg$EM[, 3] * (-1))),
                         poss_pair_comp)
   em_subset_nmr <- subset(em_ref00_nmr, em_ref00_nmr[5] == compar)
   em_ref0_nmr <- rbind(em_subset_nmr[, 1:3], c(rep(NA, 3)))
@@ -274,6 +279,7 @@ metareg_plot <- function(full,
   # Posterior results on the predicted estimates of comparisons with the
   # selected comparator as reference
   if (model == "RE") {
+    # Network meta-analysis
     pred_ref00_nma <- cbind(rbind(data.frame(median = pred_full[, 5],
                                              lower = pred_full[, 3],
                                              upper = pred_full[, 7]),
@@ -283,17 +289,29 @@ metareg_plot <- function(full,
                             poss_pair_comp)
     pred_subset_nma <- subset(pred_ref00_nma, pred_ref00_nma[5] == compar)
     pred_ref0_nma <- rbind(pred_subset_nma[, 1:3], c(rep(NA, 3)))
-    par_median <- as.vector(c(reg$EM_pred[, 5] + reg$beta_all[, 5] * cov_val,
-                              (reg$EM_pred[, 5] * (-1)) +
-                                (reg$beta_all[, 5] * (-1) * cov_val)))
-    par_sd <- as.vector(c(sqrt(((reg$EM_pred[, 2])^2) +
-                                 ((reg$beta_all[, 2] * cov_val)^2)),
-                          sqrt(((reg$EM_pred[, 2])^2) +
-                                 ((reg$beta_all[, 2] * cov_val)^2))))
-    pred_ref00_nmr <-  cbind(data.frame(median = par_median,
-                                        lower = par_median - 1.96 * par_sd,
-                                        upper = par_median + 1.96 * par_sd),
-                             poss_pair_comp)
+
+    # Network meta-regression
+    #par_median <- as.vector(c(reg$EM_pred[, 5] + reg$beta_all[, 5] * cov_val,
+    #                          (reg$EM_pred[, 5] * (-1)) +
+    #                            (reg$beta_all[, 5] * (-1) * cov_val)))
+    #par_sd <- as.vector(c(sqrt(((reg$EM_pred[, 2])^2) +
+    #                             ((reg$beta_all[, 2] * cov_val)^2)),
+    #                      sqrt(((reg$EM_pred[, 2])^2) +
+    #                             ((reg$beta_all[, 2] * cov_val)^2))))
+    #pred_ref00_nmr <-  cbind(data.frame(median = par_median,
+    #                                    lower = par_median - 1.96 * par_sd,
+    #                                    upper = par_median + 1.96 * par_sd),
+    #                         poss_pair_comp)
+    #pred_subset_nmr <- subset(pred_ref00_nmr, pred_ref00_nmr[5] == compar)
+    #pred_ref0_nmr <- rbind(pred_subset_nmr[, 1:3], c(rep(NA, 3)))
+
+    pred_ref00_nmr <- cbind(rbind(data.frame(median = reg$EM_pred[, 5],
+                                             lower = reg$EM_pred[, 3],
+                                             upper = reg$EM_pred[, 7]),
+                                  data.frame(median = reg$EM_pred[, 5] * (-1),
+                                             lower = reg$EM_pred[, 7] * (-1),
+                                             upper = reg$EM_pred[, 3] * (-1))),
+                            poss_pair_comp)
     pred_subset_nmr <- subset(pred_ref00_nmr, pred_ref00_nmr[5] == compar)
     pred_ref0_nmr <- rbind(pred_subset_nmr[, 1:3], c(rep(NA, 3)))
 
@@ -508,8 +526,15 @@ metareg_plot <- function(full,
   rownames(reg_coeff) <- NULL
 
   # Forest plots of reference-comparisons on effect estimate
-  forest_plots <- forestplot_metareg(full, reg, compar, cov_value, drug_names)
-  sucra_scatterplot <- scatterplot_sucra(full, reg, cov_value, drug_names)
+  forest_plots <- forestplot_metareg(full,
+                                     reg,
+                                     compar,
+                                     cov_name,
+                                     drug_names)
+  sucra_scatterplot <- scatterplot_sucra(full,
+                                         reg,
+                                         cov_name,
+                                         drug_names)
 
   # Write all tables as .xlsx
   if (save_xls == TRUE & model == "RE") {
@@ -535,13 +560,13 @@ metareg_plot <- function(full,
                         align = "lcccc",
                         caption =
                           paste("Estimation for comparisons with", compar,
-                                "for", cov_value[[1]])),
+                                "for", reg$cov_value, cov_name)),
          table_predictions =
            knitr::kable(pred_both_models,
                         align = "lcccc",
                         caption =
                           paste("Prediction for comparisons with", compar,
-                                "for", cov_value[[1]])),
+                                "for", reg$cov_value, cov_name)),
          table_model_assessment =
            knitr::kable(table_model_assess,
                         align = "lcccccc",
@@ -559,7 +584,7 @@ metareg_plot <- function(full,
                         align = "lcccc",
                         caption =
                           paste("Estimation for comparisons with", compar,
-                                "for", cov_value[[1]])),
+                                "for", reg$cov_value, cov_name)),
          table_model_assessment =
            knitr::kable(table_model_assess,
                         align = "lccc",
