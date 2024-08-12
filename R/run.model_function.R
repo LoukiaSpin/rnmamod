@@ -568,7 +568,9 @@ run_model <- function(data,
                    "ref" = ref,
                    "I" = item$I,
                    "indic" = indic,
-                   "D" = D)
+                   "D" = D,
+                   "cov_value" = 0,
+                   "beta.n" = rep(0, item$nt))
 
   data_jag <- if (is.element(measure, c("MD", "SMD", "ROM"))) {
     append(data_jag, list("y.o" = item$y0,

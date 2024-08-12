@@ -161,6 +161,7 @@
 #' run_metareg(full = res,
 #'             covariate = pub_year,
 #'             covar_assumption = "exchangeable",
+#'             cov_value = 2007,
 #'             n_chains = 3,
 #'             n_iter = 1000,
 #'             n_burnin = 100,
@@ -171,6 +172,7 @@
 run_metareg <- function(full,
                         covariate,
                         covar_assumption,
+                        cov_value,
                         n_chains,
                         n_iter,
                         n_burnin,
@@ -212,6 +214,23 @@ run_metareg <- function(full,
          call. = FALSE)
   } else {
     covar_assumption
+  }
+  cov_val <- if (missing(covariate)) {
+    stop("The argument 'cov_value' needs to be defined.", call. = FALSE)
+  } else if (length(unique(covariate)) < 3) {
+    cov_value
+  } else if (length(unique(covariate)) > 2) {
+    cov_value - mean(covariate)
+  }
+  if (length(unique(covariate)) < 3 &
+      !is.element(cov_value, covariate)) {
+    aa <- "The argument 'cov_value' is out of the value"
+    stop(paste(aa, "range of the analysed covariate."), call. = FALSE)
+  } else if (length(unique(covariate)) > 2 &
+             (cov_value < min(covariate) |
+              cov_value > max(covariate))) {
+    aa <- "The argument 'cov_value' is out of the value"
+    stop(paste(aa, "range of the analysed covariate."), call. = FALSE)
   }
   ref_base <- if (is.element(measure, c("OR", "RR", "RD"))) {
     baseline_model(base_risk,
@@ -267,7 +286,8 @@ run_metareg <- function(full,
                    "ref" = ref,
                    "I" = item$I,
                    "indic" = indic,
-                   "D" = D)
+                   "D" = D,
+                   "cov_value" = cov_val)
 
   data_jag <- if (!is.element(measure, c("OR", "RR", "RD"))) {
     append(data_jag, list("y.o" = item$y0,
