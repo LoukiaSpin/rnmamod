@@ -188,8 +188,9 @@ metareg_plot <- function(full,
     reg$covariate
   }
 
+  # Uncentering to produce treatment effect estimates at covariate value cov_value[[1]]
   cov_val <- ifelse(length(unique(covariate)) < 3, cov_value[[1]],
-                    cov_value[[1]] - mean(covariate))
+                    mean(covariate) - cov_value[[1]])
 
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
