@@ -55,7 +55,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">forestplot_metareg</span><span class="op">(</span><span class="va">full</span>, <span class="va">reg</span>, <span class="va">compar</span>, <span class="va">cov_value</span>, <span class="va">drug_names</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">forestplot_metareg</span><span class="op">(</span><span class="va">full</span>, <span class="va">reg</span>, <span class="va">compar</span>, cov_name <span class="op">=</span> <span class="st">"covariate value"</span>, <span class="va">drug_names</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -77,11 +77,8 @@
 be any name found in <code>drug_names</code>.</p></dd>
 
 
-<dt id="arg-cov-value">cov_value<a class="anchor" aria-label="anchor" href="#arg-cov-value"></a></dt>
-<dd><p>A list of two elements in the following order: a number
-for the covariate value of interest (see 'Arguments' in
-<code><a href="run_metareg.html">run_metareg</a></code>), and a character to indicate the name of
-the covariate. See also 'Details'.</p></dd>
+<dt id="arg-cov-name">cov_name<a class="anchor" aria-label="anchor" href="#arg-cov-name"></a></dt>
+<dd><p>A character or text to indicate the name of the covariate.</p></dd>
 
 
 <dt id="arg-drug-names">drug_names<a class="anchor" aria-label="anchor" href="#arg-drug-names"></a></dt>
@@ -127,15 +124,6 @@ instead.</p></dd>
   considered as the lowest ranked interventions.</p>
 <p>In both plots, the interventions are sorted in the descending order of
   their SUCRA values based on the network meta-analysis.</p>
-<p>To obtain the posterior distribution of SUCRAs under the network
-  meta-regression for a specified level or value of the investigated
-  covariate, a two-step procedured is followed. First, the posterior median and
-  standard deviation of the basic parameters and corresponding beta
-  coefficients are considered to calculate the meadin and standard deviation of
-  the basic parameters at the selected level or value of the investigated
-  covariate: d + beta * cov_value. Then, these calculated values are fed into
-  the BUGS code to get the posterior distribution of SUCRA. The progress of
-  the simulation appears on the R console.</p>
 <p><code>forestplot_metareg</code> is integrated in <code><a href="metareg_plot.html">metareg_plot</a></code>.</p>
 <p><code>forestplot_metareg</code> can be used only for a network of interventions.
   In the case of two interventions, the execution of the function will be

@@ -49,7 +49,14 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">metareg_plot</span><span class="op">(</span><span class="va">full</span>, <span class="va">reg</span>, <span class="va">compar</span>, <span class="va">cov_value</span>, <span class="va">drug_names</span>, <span class="va">save_xls</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">metareg_plot</span><span class="op">(</span></span>
+<span>  <span class="va">full</span>,</span>
+<span>  <span class="va">reg</span>,</span>
+<span>  <span class="va">compar</span>,</span>
+<span>  cov_name <span class="op">=</span> <span class="st">"covariate value"</span>,</span>
+<span>  <span class="va">drug_names</span>,</span>
+<span>  <span class="va">save_xls</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -71,11 +78,8 @@
 any name found in <code>drug_names</code>.</p></dd>
 
 
-<dt id="arg-cov-value">cov_value<a class="anchor" aria-label="anchor" href="#arg-cov-value"></a></dt>
-<dd><p>A list of two elements in the following order: a number
-for the covariate value of interest (see 'Arguments' in
-<code><a href="run_metareg.html">run_metareg</a></code>), and a character to indicate the name of
-the covariate. See also 'Details'.</p></dd>
+<dt id="arg-cov-name">cov_name<a class="anchor" aria-label="anchor" href="#arg-cov-name"></a></dt>
+<dd><p>A character or text to indicate the name of the covariate.</p></dd>
 
 
 <dt id="arg-drug-names">drug_names<a class="anchor" aria-label="anchor" href="#arg-drug-names"></a></dt>
@@ -111,7 +115,8 @@ directory of the user. The default is <code>FALSE</code> (do not export).</p></d
   interval of the summary effect measure (according to the argument
   <code>measure</code> defined in <code><a href="run_model.html">run_model</a></code>) for each comparison
   with the selected intervention under network meta-analysis and network
-  meta-regression based on the specified <code>cov_value</code>.</p></dd>
+  meta-regression based on the covariate value specified in
+  <code><a href="run_metareg.html">run_metareg</a></code>.</p></dd>
 
   <dt>table_model_assessment</dt>
 <dd><p>The DIC, total residual deviance,
@@ -130,15 +135,17 @@ directory of the user. The default is <code>FALSE</code> (do not export).</p></d
   <dt>interval_plot</dt>
 <dd><p>A forest plot on the estimated and predicted effect
   sizes of comparisons with the selected comparator intervention under
-  network meta-analysis and network meta-regression based on the specified
-  <code>cov_value</code> alongside a forest plot with the corresponding SUCRA
-  values. See 'Details' and 'Value' in <code><a href="forestplot_metareg.html">forestplot_metareg</a></code>.</p></dd>
+  network meta-analysis and network meta-regression based on the covariate
+  value specified in <code><a href="run_metareg.html">run_metareg</a></code> alongside a forest plot with
+  the corresponding SUCRA values. See 'Details' and 'Value' in
+  <code><a href="forestplot_metareg.html">forestplot_metareg</a></code>.</p></dd>
 
   <dt>sucra_scatterplot</dt>
 <dd><p>A scatterplot of the SUCRA values from the
   network meta-analysis against the SUCRA values from the network
-  meta-regression based on the specified <code>cov_value</code>. See 'Details'
-  and 'Value' in <code><a href="scatterplot_sucra.html">scatterplot_sucra</a></code>.</p></dd>
+  meta-regression based on the covariate value specified in
+  <code><a href="run_metareg.html">run_metareg</a></code>. See 'Details' and 'Value' in
+  <code><a href="scatterplot_sucra.html">scatterplot_sucra</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -149,9 +156,6 @@ directory of the user. The default is <code>FALSE</code> (do not export).</p></d
   model is preferred; if the difference in DIC is less than -5, the network
   meta-analysis model is preferred; otherwise, there is little to choose
   between the compared models.</p>
-<p>When the covariate is binary, specify in the second element of
-  <code>cov_value</code> the name of the level for which the output will be
-  created.</p>
 <p>Furthermore, <code>metareg_plot</code> exports all tabulated results to separate
   'xlsx' files (via the <code><a href="https://docs.ropensci.org/writexl/reference/write_xlsx.html" class="external-link">write_xlsx</a></code> function
   of the R-package
@@ -203,64 +207,52 @@ doi: 10.1111/1467-9868.00353</p>
 <span class="r-in"><span>                  <span class="st">"formoterol"</span>, <span class="st">"salmeterol"</span>, <span class="st">"tiotropium"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot the results from both models for all comparisons with salmeterol and</span></span></span>
-<span class="r-in"><span><span class="co"># publication year 2000</span></span></span>
+<span class="r-in"><span><span class="co"># average publication year</span></span></span>
 <span class="r-in"><span><span class="fu">metareg_plot</span><span class="op">(</span>full <span class="op">=</span> <span class="va">res</span>,</span></span>
 <span class="r-in"><span>             reg <span class="op">=</span> <span class="va">reg</span>,</span></span>
 <span class="r-in"><span>             compar <span class="op">=</span> <span class="st">"salmeterol"</span>,</span></span>
-<span class="r-in"><span>             cov_value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="st">"publication year"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>             cov_name <span class="op">=</span> <span class="st">"mean publication year"</span>,</span></span>
 <span class="r-in"><span>             drug_names <span class="op">=</span> <span class="va">interv_names</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> There is little to choose between the two models</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> module glm loaded</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> module dic loaded</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Compiling model graph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Resolving undeclared variables</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Allocating nodes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 287</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $table_estimates</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Table: Estimation for comparisons with salmeterol for 2000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Table: Estimation for comparisons with salmeterol for 2002.66666666667 mean publication year</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |versus salmeterol           | Median NMA |  95% CrI NMA  | Median NMR |  95% CrI NMR  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |:---------------------------|:----------:|:-------------:|:----------:|:-------------:|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |budesonide                  |    0.57    | (0.25, 1.47)  |    0.56    | (0.17, 1.85)  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |budesonide plus formoterol  |    0.73    | (0.33, 1.75)  |    0.72    | (0.22, 2.39)  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |tiotropium                  |    0.95    | (0.66, 1.34)  |    1.01    | (0.63, 1.59)  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |fluticasone plus salmeterol |    1.01    |  (0.56, 1.9)  |    1.13    |  (0.5, 2.55)  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |fluticasone                 |    1.17    | (0.67, 2.19)  |    1.31    |  (0.6, 2.86)  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |formoterol                  |    1.44    | (0.83, 2.45)  |    1.21    | (0.57, 2.58)  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |placebo                     |    1.58    | (1.13, 2.27)* |    1.72    | (1.14, 2.61)* |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |versus salmeterol           | Median NMA |  95% CrI NMA  | Median NMR | 95% CrI NMR  |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |:---------------------------|:----------:|:-------------:|:----------:|:------------:|</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |budesonide                  |    0.57    | (0.25, 1.47)  |    0.57    | (0.24, 1.42) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |budesonide plus formoterol  |    0.73    | (0.33, 1.75)  |    0.73    | (0.32, 1.8)  |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |tiotropium                  |    0.95    | (0.66, 1.34)  |    0.94    | (0.65, 1.33) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |fluticasone plus salmeterol |    1.01    |  (0.56, 1.9)  |    1.04    | (0.56, 2.04) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |fluticasone                 |    1.17    | (0.67, 2.19)  |    1.31    | (0.71, 2.75) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |formoterol                  |    1.44    | (0.83, 2.45)  |    1.31    | (0.72, 2.29) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |placebo                     |    1.58    | (1.13, 2.27)* |    1.54    | (1.1, 2.2)*  |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $table_predictions</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Table: Prediction for comparisons with salmeterol for 2000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Table: Prediction for comparisons with salmeterol for 2002.66666666667 mean publication year</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |versus salmeterol           | Median NMA | 95% CrI NMA  | Median NMR | 95% CrI NMR  |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |:---------------------------|:----------:|:------------:|:----------:|:------------:|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |budesonide                  |    0.57    | (0.24, 1.56) |    0.56    | (0.16, 1.94) |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |budesonide plus formoterol  |    0.73    | (0.31, 1.88) |    0.73    | (0.21, 2.51) |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |tiotropium                  |    0.96    | (0.56, 1.53) |    1.01    | (0.57, 1.78) |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |fluticasone plus salmeterol |    1.01    | (0.52, 2.06) |    1.13    | (0.47, 2.72) |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |fluticasone                 |    1.17    | (0.62, 2.41) |    1.31    | (0.56, 3.06) |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |formoterol                  |    1.43    | (0.75, 2.71) |    1.21    | (0.53, 2.77) |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |placebo                     |    1.57    |  (1, 2.68)   |    1.72    |  (1, 2.93)*  |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |budesonide                  |    0.57    | (0.24, 1.56) |    0.57    | (0.22, 1.51) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |budesonide plus formoterol  |    0.73    | (0.31, 1.88) |    0.73    | (0.3, 1.92)  |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |tiotropium                  |    0.96    | (0.56, 1.53) |    0.94    | (0.56, 1.52) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |fluticasone plus salmeterol |    1.01    | (0.52, 2.06) |    1.04    | (0.52, 2.23) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |fluticasone                 |    1.17    | (0.62, 2.41) |    1.31    |  (0.66, 3)   |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |formoterol                  |    1.43    | (0.75, 2.71) |    1.31    | (0.65, 2.53) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |placebo                     |    1.57    |  (1, 2.68)   |    1.53    | (0.97, 2.61) |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $table_model_assessment</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table: Model assessment and between-trial standard deviation</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |Analysis              |  DIC  |  pD   | Mean deviance | data points | Median tau | SD tau |95% CrI tau  |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |:---------------------|:-----:|:-----:|:-------------:|:-----------:|:----------:|:------:|:------------|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |Network meta-analysis | 89.16 | 34.97 |     54.19     |     50      |    0.14    |  0.09  |(0.01, 0.35) |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |Meta-regression       | 90.83 | 36.95 |     53.88     |     50      |    0.13    |  0.09  |(0.01, 0.36) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    |Analysis              |  DIC  |  pD   | Mean deviance | data points | Median tau | SD tau |95% CrI tau  |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |:---|:---------------------|:-----:|:-----:|:-------------:|:-----------:|:----------:|:------:|:------------|</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    |Network meta-analysis | 89.16 | 34.97 |     54.19     |     50      |    0.14    |  0.09  |(0.01, 0.35) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |50% |Meta-regression       | 90.51 | 36.85 |     53.66     |     50      |    0.13    |  0.09  |(0.01, 0.36) |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $table_regression_coeffients</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -269,12 +261,12 @@ doi: 10.1111/1467-9868.00353</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |versus salmeterol           | Median beta|95% CrI beta |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |:---------------------------|-----------:|:------------|</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |budesonide                  |        1.00|(0.73, 1.36) |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |budesonide plus formoterol  |        1.00|(0.73, 1.36) |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |tiotropium                  |        0.98|(0.86, 1.07) |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |fluticasone plus salmeterol |        0.97|(0.76, 1.1)  |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |budesonide                  |        1.00|(0.72, 1.39) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |budesonide plus formoterol  |        1.00|(0.72, 1.38) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |tiotropium                  |        0.97|(0.86, 1.07) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |fluticasone plus salmeterol |        0.97|(0.75, 1.1)  |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |fluticasone                 |        1.01|(0.9, 1.2)   |</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |formoterol                  |        1.03|(0.91, 1.33) |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |formoterol                  |        1.03|(0.91, 1.34) |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |placebo                     |        0.96|(0.88, 1.05) |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $interval_plot</span>
