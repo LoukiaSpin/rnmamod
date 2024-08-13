@@ -416,7 +416,8 @@ forestplot <- function(full, compar, drug_names) {
                                  ",",
                                  " ",
                                  round(upper * 100, 0), ")"),
-                        hjust = 0, vjust = -0.5),
+                  hjust = ifelse(mean < 0.80, 0, 1),
+                  vjust = -0.5),
               color = "black", size = 4.0, check_overlap = FALSE, parse = FALSE,
               position = position_dodge(width = 0.5), inherit.aes = TRUE) +
     scale_fill_manual(name = "Ranked",
