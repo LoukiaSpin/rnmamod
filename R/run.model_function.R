@@ -576,7 +576,7 @@ run_model <- function(data,
   # Type of weight adjustment: 'no', 'vector', or 'matrix'
   trans_wgt <- if (is.null(adjust_wgt)) {
     "no"
-  } else if (is.matrix(adjust_wgt)) {
+  } else if (!is.vector(adjust_wgt)) {
     "matrix"
   } else if (is.vector(adjust_wgt)) {
     "vector"
