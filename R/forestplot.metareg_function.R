@@ -88,19 +88,6 @@ forestplot_metareg <- function(full,
          call. = FALSE)
   }
 
-  #if (length(unique(reg$covariate)) < 3 &
-  #    !is.element(cov_value[[1]], reg$covariate)) {
-  #  aa <- "The first element of the argument 'cov_value' is out of the value"
-  #  bb <- "range of the analysed covariate."
-  #  stop(paste(aa, bb), call. = FALSE)
-  #} else if (length(unique(reg$covariate)) > 2 &
-  #           (cov_value[[1]] < min(reg$covariate) |
-  #            cov_value[[1]] > max(reg$covariate))) {
-  #  aa <- "The first element of the argument 'cov_value' is out of the value"
-  #  bb <- "range of the analysed covariate."
-  #  stop(paste(aa, bb), call. = FALSE)
-  #}
-
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
     bb <- "The intervention ID, as specified in 'data' is used, instead."
@@ -130,23 +117,11 @@ forestplot_metareg <- function(full,
   # intervention (number 1)
   drug_names_sorted <- drug_names[order(full$SUCRA[, 1], decreasing = TRUE)]
 
-  #cov_value <- if (!is.null(reg$beta_all) & missing(cov_value)) {
-  #  stop("The argument 'cov_value' has not been defined.", call. = FALSE)
-  #} else if (!is.null(reg$beta_all) & length(cov_value) < 2) {
-  #  aa <- "The argument 'cov_value' must be a list with elements a number and"
-  #  stop(paste(aa, "a character."), call. = FALSE)
-  #} else if (!is.null(reg$beta_all) & length(cov_value) == 2) {
-  #  cov_value
-  #}
-
   model <- full$model
   measure <- full$measure
   em_full <- full$EM
   pred_full <- full$EM_pred
   sucra_full <- full$SUCRA
-  #cov_val <- ifelse(length(unique(reg$covariate)) < 3,
-  #                  reg$cov_value,
-  #                  reg$cov_value - mean(reg$covariate))
 
   # A matrix with all possible comparisons in the network
   poss_pair_comp1 <- data.frame(exp = t(combn(drug_names, 2))[, 2],
@@ -172,22 +147,6 @@ forestplot_metareg <- function(full,
   em_ref_nma <- em_ref0_nma[order(sucra_new, decreasing = TRUE), ]
 
   # Effect size of all possible pairwise comparisons (NMR)
-  #par_median <- as.vector(c(reg$EM[, 5] + reg$beta_all[, 5] * cov_val,
-  #                        (reg$EM[, 5] * (-1)) +
-  #                          (reg$beta_all[, 5] * (-1) * cov_val)))
-  #par_sd <- as.vector(c(sqrt(((reg$EM[, 2])^2) +
-  #                             ((reg$beta_all[, 2] * cov_val)^2)),
-  #                      sqrt(((reg$EM[, 2])^2) +
-  #                             ((reg$beta_all[, 2] * cov_val)^2))))
-
-  #em_ref00_nmr <- cbind(median = par_median,
-  #                      sd = par_sd,
-  #                      lower = par_median - 1.96 * par_sd,
-  #                      upper = par_median + 1.96 * par_sd,
-  #                      poss_pair_comp)
-  #em_subset_nmr <- subset(em_ref00_nmr, em_ref00_nmr[6] == compar)
-  #em_ref0_nmr <- rbind(em_subset_nmr[, c(1, 3, 4)], c(rep(NA, 3)))
-  #em_ref_nmr <- em_ref0_nmr[order(sucra_new, decreasing = TRUE), ]
   em_ref00_nmr <- cbind(rbind(data.frame(median = reg$EM[, 5],
                                          lower = reg$EM[, 3],
                                          upper = reg$EM[, 7]),
@@ -215,20 +174,6 @@ forestplot_metareg <- function(full,
     pred_ref0_nma <- rbind(pred_subset_nma[, 1:3], c(rep(NA, 3)))
 
     # Network meta-regression
-    #par_median <- as.vector(c(reg$EM_pred[, 5] + reg$beta_all[, 5] * cov_val,
-    #                        (reg$EM_pred[, 5] * (-1)) +
-    #                          (reg$beta_all[, 5] * (-1) * cov_val)))
-    #par_sd <- as.vector(c(sqrt(((reg$EM_pred[, 2])^2) +
-    #                             ((reg$beta_all[, 2] * cov_val)^2)),
-    #                      sqrt(((reg$EM_pred[, 2])^2) +
-    #                             ((reg$beta_all[, 2] * cov_val)^2))))
-    #pred_ref00_nmr <-  cbind(data.frame(median = par_median,
-    #                                    lower = par_median - 1.96 * par_sd,
-    #                                    upper = par_median + 1.96 * par_sd),
-    #                       poss_pair_comp)
-    #pred_subset_nmr <- subset(pred_ref00_nmr, pred_ref00_nmr[5] == compar)
-    #pred_ref0_nmr <- rbind(pred_subset_nmr[, 1:3], c(rep(NA, 3)))
-
     pred_ref00_nmr <- cbind(rbind(data.frame(median = reg$EM_pred[, 5],
                                              lower = reg$EM_pred[, 3],
                                              upper = reg$EM_pred[, 7]),
@@ -311,9 +256,10 @@ forestplot_metareg <- function(full,
 
   # Forest plots on credible/prediction intervals of comparisons with the
   # selected comparator
-  subtitle <- paste("Results for", cov_name,
-                   ifelse(length(unique(reg$covariate)) < 3, " ",
-                          round(reg$cov_value, 2)))
+  #subtitle <- paste("Results for", cov_name,
+  #                 ifelse(length(unique(reg$covariate)) < 3, " ",
+  #                        round(reg$cov_value, 2)))
+  subtitle <- paste("Results for", cov_name)
 
   measure2 <- effect_measure_name(measure, lower = FALSE)
   caption <- if (full$D == 0 & is.element(measure, c("OR", "RR", "ROM"))) {
@@ -503,63 +449,6 @@ forestplot_metareg <- function(full,
                                         size = 12),
             plot.caption = element_text(hjust = 0.01))
   }
-
-  ## Get SUCRA for the selected covariate value
-  # Include the 'compar' in the dataset
-  #basic_par <- subset(em_ref00_nmr, em_ref00_nmr[6] == drug_names[full$ref])
-  #indexing <- match(c(drug_names[full$ref], basic_par[, 5]), drug_names)
-  #em_subset_nmr_new <- matrix(NA, nrow = len_drug, ncol = 2)
-  #em_subset_nmr_new[indexing, 1] <- c(NA, basic_par[, 1])
-  #em_subset_nmr_new[indexing, 2] <- c(NA, basic_par[, 2])
-
-  # Data for BUGS
-  #data_jag <- list("d_cov_mean" = em_subset_nmr_new[, 1],
-  #                 "d_cov_prec" = 1/(em_subset_nmr_new[, 2]^2),
-  #                 "nt" = len_drug,
-  #                 "D" = full$D,
-  #                 "ref" = full$ref)
-
-  # Parameters to monitor
-  #param_jags <- c("d.new", "SUCRA")
-
-  # Run the BUGS code for SUCRA
-  #suppressWarnings({
-  #jagsfit <- jags(data = data_jag,
-  #                parameters.to.save = param_jags,
-  #                DIC = FALSE,
-  #                model.file = textConnection('
-  #                  model {
-  #                     d.new[ref] <- 0
-  #                     for (t in 1:(ref - 1)) {
-  #                       d.new[t] ~ dnorm(d_cov_mean[t], d_cov_prec[t])
-  #                     }
-  #                     for (t in (ref + 1):nt) {
-  #                       d.new[t] ~ dnorm(d_cov_mean[t], d_cov_prec[t])
-  #                     }
-  #                     sorted <- rank(d.new[])
-  #                     for (t in 1:nt) {
-  #                       order[t] <- (nt + 1 - sorted[t])*equals(D, 1) + sorted[t]*(1 - equals(D, 1))
-  #                       most.effective[t] <- equals(order[t], 1)
-  #                       for (l in 1:nt) {
-  #                         effectiveness[t, l] <- equals(order[t], l)
-  #                         cumeffectiveness[t, l] <- sum(effectiveness[t, 1:l])
-  #                       }
-  #                      SUCRA[t] <- sum(cumeffectiveness[t, 1:(nt - 1)])/(nt - 1)
-  #                     }
-  #                  }
-  #                                            '),
-  #                n.chains = full$n_chains,
-  #                n.iter = full$n_iter,
-  #                n.burnin = full$n_burnin,
-  #                n.thin = full$n_thin)
-  #})
-
-  # Turn R2jags object into a data-frame
-  #get_results <- as.data.frame(t(jagsfit$BUGSoutput$summary))
-
-  # Obtain posterior distribution from parameters of interest
-  #sucra_res <-
-  #  t(get_results)[startsWith(rownames(t(get_results)), "SUCRA["), c(1, 3, 7)]
 
   # Order by SUCRA of NMA model
   sucra_nmr <- reg$SUCRA[order(sucra_full[, 1], decreasing = TRUE), c(1, 3, 7)]

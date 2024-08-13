@@ -137,41 +137,11 @@ metareg_plot <- function(full,
          call. = FALSE)
   }
 
-  #if (length(unique(reg$covariate)) < 3 &
-  #    !is.element(cov_value[[1]], reg$covariate)) {
-  #  aa <- "The first element of the argument 'cov_value' is out of the value"
-  #  stop(paste(aa, "range of the analysed covariate."), call. = FALSE)
-  #} else if (length(unique(reg$covariate)) > 2 &
-  #           (cov_value[[1]] < min(reg$covariate) |
-  #            cov_value[[1]] > max(reg$covariate))) {
-  #  aa <- "The first element of the argument 'cov_value' is out of the value"
-  #  stop(paste(aa, "range of the analysed covariate."), call. = FALSE)
-  #}
-
-  #cov_value <- if (missing(cov_value)) {
-  #  stop("The argument 'cov_value' has not been defined", call. = FALSE)
-  #} else if (length(cov_value) < 2) {
-  #  aa <- "The argument 'cov_value' must be a list with elements a number and"
-  #  stop(paste(aa, "a character."), call. = FALSE)
-  #} else if (length(cov_value) == 2) {
-  #  cov_value
-  #}
-
   save_xls <- if (missing(save_xls)) {
     FALSE
   } else {
     save_xls
   }
-
-  #covariate <- if (length(unique(reg$covariate)) < 3) {
-  #  unique(reg$covariate)
-  #} else {
-  #  reg$covariate
-  #}
-
-  # Get treatment effect estimates at covariate value, cov_value[[1]]
-  #cov_val <- ifelse(length(unique(covariate)) < 3, cov_value[[1]],
-  #                  cov_value[[1]] - mean(covariate))
 
   drug_names <- if (missing(drug_names)) {
     aa <- "The argument 'drug_names' has not been defined."
@@ -250,20 +220,6 @@ metareg_plot <- function(full,
   }
 
   # Effect size of all possible pairwise comparisons (NMR)
-  #par_median <- as.vector(c(reg$EM[, 5] + reg$beta_all[, 5] * cov_val,
-  #                          (reg$EM[, 5] * (-1)) +
-  #                            (reg$beta_all[, 5] * (-1) * cov_val)))
-  #par_sd <- as.vector(c(sqrt(((reg$EM[, 2])^2) +
-  #                             ((reg$beta_all[, 2] * cov_val)^2)),
-  #                      sqrt(((reg$EM[, 2])^2) +
-  #                             ((reg$beta_all[, 2] * cov_val)^2))))
-  #em_ref00_nmr <- cbind(median = par_median,
-  #                      lower = par_median - 1.96 * par_sd,
-  #                      upper = par_median + 1.96 * par_sd,
-  #                      poss_pair_comp)
-  #em_subset_nmr <- subset(em_ref00_nmr, em_ref00_nmr[5] == compar)
-  #em_ref0_nmr <- rbind(em_subset_nmr[, 1:3], c(rep(NA, 3)))
-  #em_ref_nmr <- em_ref0_nmr[order(sucra_full_new, decreasing = TRUE), ]
   em_ref00_nmr <- cbind(rbind(data.frame(median = reg$EM[, 5],
                                          lower = reg$EM[, 3],
                                          upper = reg$EM[, 7]),
@@ -291,20 +247,6 @@ metareg_plot <- function(full,
     pred_ref0_nma <- rbind(pred_subset_nma[, 1:3], c(rep(NA, 3)))
 
     # Network meta-regression
-    #par_median <- as.vector(c(reg$EM_pred[, 5] + reg$beta_all[, 5] * cov_val,
-    #                          (reg$EM_pred[, 5] * (-1)) +
-    #                            (reg$beta_all[, 5] * (-1) * cov_val)))
-    #par_sd <- as.vector(c(sqrt(((reg$EM_pred[, 2])^2) +
-    #                             ((reg$beta_all[, 2] * cov_val)^2)),
-    #                      sqrt(((reg$EM_pred[, 2])^2) +
-    #                             ((reg$beta_all[, 2] * cov_val)^2))))
-    #pred_ref00_nmr <-  cbind(data.frame(median = par_median,
-    #                                    lower = par_median - 1.96 * par_sd,
-    #                                    upper = par_median + 1.96 * par_sd),
-    #                         poss_pair_comp)
-    #pred_subset_nmr <- subset(pred_ref00_nmr, pred_ref00_nmr[5] == compar)
-    #pred_ref0_nmr <- rbind(pred_subset_nmr[, 1:3], c(rep(NA, 3)))
-
     pred_ref00_nmr <- cbind(rbind(data.frame(median = reg$EM_pred[, 5],
                                              lower = reg$EM_pred[, 3],
                                              upper = reg$EM_pred[, 7]),
@@ -560,13 +502,13 @@ metareg_plot <- function(full,
                         align = "lcccc",
                         caption =
                           paste("Estimation for comparisons with", compar,
-                                "for", reg$cov_value, cov_name)),
+                                "for", cov_name)), #reg$cov_value,
          table_predictions =
            knitr::kable(pred_both_models,
                         align = "lcccc",
                         caption =
                           paste("Prediction for comparisons with", compar,
-                                "for", reg$cov_value, cov_name)),
+                                "for", cov_name)), #reg$cov_value,
          table_model_assessment =
            knitr::kable(table_model_assess,
                         align = "lcccccc",
@@ -584,7 +526,7 @@ metareg_plot <- function(full,
                         align = "lcccc",
                         caption =
                           paste("Estimation for comparisons with", compar,
-                                "for", reg$cov_value, cov_name)),
+                                "for", cov_name)), #reg$cov_value,
          table_model_assessment =
            knitr::kable(table_model_assess,
                         align = "lccc",
