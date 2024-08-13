@@ -216,7 +216,7 @@ run_metareg <- function(full,
   } else {
     covar_assumption
   }
-  cov_val <- if (missing(covariate)) {
+  cov_val <- if (missing(cov_value)) {
     stop("The argument 'cov_value' needs to be defined.", call. = FALSE)
   } else if (length(unique(covariate)) < 3) {
     cov_value

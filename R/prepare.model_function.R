@@ -355,11 +355,11 @@ prepare_model <- function(measure,
   }
 
   stringcode <- if (!is.element(measure, c("RR", "RD"))) {
-    paste(stringcode, "sorted <- rank(d.n[] + beta.n[] * cov_value)\n")
+    paste(stringcode, "sorted <- rank(d.n[])\n")
   } else if (is.element(measure, c("RR", "RD"))) {
     paste(stringcode, "EM.ref[ref] <- 0
                        sorted <- rank(EM.ref[])   # RR or RD
-                       sorted.LOR <- rank(d.n[] + beta.n[] * cov_value)
+                       sorted.LOR <- rank(d.n[])
                        for (t in 1:nt) {
                          order.LOR[t] <- (nt + 1 - sorted.LOR[t])*equals(D, 1) + sorted.LOR[t]*(1 - equals(D, 1))
                          most.effective.LOR[t] <- equals(order.LOR[t], 1)
@@ -384,13 +384,13 @@ prepare_model <- function(measure,
   stringcode <- if (model == "RE" & !is.element(measure, c("RR", "RD"))) {
     paste(stringcode, "for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           EM[k, c] <- d.n[k] - d.n[c] + (beta.n[k] - beta.n[c]) * cov_value
+                           EM[k, c] <- d.n[k] - d.n[c]
                            EM.pred[k, c] ~ dnorm(EM[k, c], prec)
                        }}\n")
   } else if (model == "FE" & !is.element(measure, c("RR", "RD"))) {
     paste(stringcode, "for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           EM[k, c] <- d.n[k] - d.n[c] + (beta.n[k] - beta.n[c]) * cov_value
+                           EM[k, c] <- d.n[k] - d.n[c]
                        }}\n")
   } else if (model == "RE" & measure == "RR") {
     paste(stringcode, "for (t in 1:(ref - 1)) {
@@ -403,7 +403,7 @@ prepare_model <- function(measure,
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           EM.LOR[k, c] <- d.n[k] - d.n[c] + (beta.n[k] - beta.n[c]) * cov_value # LOR
+                           EM.LOR[k, c] <- d.n[k] - d.n[c] # LOR
                            EM[k, c] <- EM.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.LOR[k, c]))) # LRR
                            EM.pred.LOR[k, c] ~ dnorm(EM.LOR[k, c], prec) # LOR
                            EM.pred[k, c] <- EM.pred.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.pred.LOR[k, c]))) # LRR
@@ -423,7 +423,7 @@ prepare_model <- function(measure,
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           EM.LOR[k, c] <- d.n[k] - d.n[c] + (beta.n[k] - beta.n[c]) * cov_value # LOR
+                           EM.LOR[k, c] <- d.n[k] - d.n[c] # LOR
                            EM.LRR[k, c] <- EM.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.LOR[k, c]))) # LRR
                            EM[k, c] <- abs_risk[c]*(exp(EM.LRR[k, c]) - 1) # RD
                            EM.pred.LOR[k, c] ~ dnorm(EM.LOR[k, c], prec) # LOR
@@ -440,7 +440,7 @@ prepare_model <- function(measure,
                          EM.ref[t] <- EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           EM.LOR[k, c] <- d.n[k] - d.n[c] + (beta.n[k] - beta.n[c]) * cov_value
+                           EM.LOR[k, c] <- d.n[k] - d.n[c]
                            EM[k, c] <- EM.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.LOR[k, c]))) # LRR
                         }}\n")
   } else if (model == "FE" & measure == "RD") {
@@ -458,7 +458,7 @@ prepare_model <- function(measure,
                        }
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
-                           EM.LOR[k, c] <- d.n[k] - d.n[c] + (beta.n[k] - beta.n[c]) * cov_value
+                           EM.LOR[k, c] <- d.n[k] - d.n[c]
                            EM.LRR[k, c] <- EM.LOR[k, c] - log(1 - abs_risk[c]*(1 - exp(EM.LOR[k, c])))
                            EM[k, c] <- abs_risk[c]*(exp(EM.LRR[k, c]) - 1)
                         }}\n")
