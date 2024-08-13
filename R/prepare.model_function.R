@@ -35,6 +35,13 @@
 #'   \code{"IND"} stand for identical, hierarchical and independent,
 #'   respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and
 #'   uncorrelated, respectively.
+#' @param trans_wgt Character string indicating whether the model will account
+#'   for study-specific weights. Set \code{trans_wgt} equal to one of the
+#'   following: \code{"no"}, \code{"vector"}, or \code{"matrix"}. The
+#'   abbreviation \code{"no"} indicates no weights will be accounted for in the
+#'   model. The abbreviations \code{"vector"} and \code{"matrix"} refer to
+#'   defining the weights as a vector or matrix, respectively. See 'Details' in
+#'   \code{\link{run_model}}.
 #'
 #' @return An R character vector object to be passed to \code{\link{run_model}}
 #'   and \code{\link{run_metareg}} through the
@@ -83,10 +90,17 @@
 prepare_model <- function(measure,
                           model,
                           covar_assumption,
-                          assumption) {
+                          assumption,
+                          trans_wgt) {
 
   stringcode <- "model {
                     for (i in 1:ns) {\n"
+
+  stringcode <- if (trans_wgt == "matrix") {
+    paste(stringcode, "wgt[i] ~ dunif(wgt.value[i, 1], wgt.value[i, 2])\n")
+  } else if (is.element(trans_wgt, c("no", "vector"))) {
+    paste(stringcode, "wgt[i] <- wgt.value[i]\n")
+  }
 
   stringcode <- if (model == "RE") {
     paste(stringcode, "delta[i, 1] <- 0
@@ -164,9 +178,9 @@ prepare_model <- function(measure,
 
   stringcode <- if (model == "RE") {
     paste(stringcode, "delta.star[i, k] <- delta[i, k] + Beta[i, k]
-                       delta[i, k] ~ dnorm(md[i, k], precd[i, k])
+                       delta[i, k] ~ dnorm(md[i, k], precd[i, k] * wgt[i])
                        md[i, k] <- (d[t[i, k]]*indic[i, k] - d[t[i, 1]]*indic[i, 1]) + sw[i, k]
-                       precd[i, k] <- 2*prec*(k - 1)/k
+                       precd[i, k] <- (2 * prec * (k - 1)) / k
                        w[i, k] <- delta[i, k] - (d[t[i, k]]*indic[i, k] - d[t[i, 1]]*indic[i, 1])
                        sw[i, k] <- sum(w[i, 1:(k - 1)])/(k - 1)
                        }}\n")

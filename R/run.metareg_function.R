@@ -288,7 +288,8 @@ run_metareg <- function(full,
                    "I" = item$I,
                    "indic" = indic,
                    "D" = D,
-                   "cov_value" = cov_val)
+                   "cov_value" = cov_val,
+                   "wgt.value" = rep(1, item$ns))
 
   data_jag <- if (!is.element(measure, c("OR", "RR", "RD"))) {
     append(data_jag, list("y.o" = item$y0,
@@ -369,7 +370,8 @@ run_metareg <- function(full,
                    model.file = textConnection(prepare_model(measure,
                                                              model,
                                                              covar_assumption,
-                                                             assumption)),
+                                                             assumption,
+                                                             trans_wgt = "no")),
                    n.chains = n_chains,
                    n.iter = n_iter,
                    n.burnin = n_burnin,

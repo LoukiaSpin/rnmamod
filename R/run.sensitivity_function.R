@@ -344,7 +344,8 @@ run_sensitivity <- function(full,
                           "D" = D,
                           "cov_value" = 0,
                           "beta.n" = rep(0, item$nt),
-                          "beta" = rep(0, item$nt))
+                          "beta" = rep(0, item$nt),
+                          "wgt.value" = rep(1, item$ns))
 
     if (is.element(measure, c("MD", "SMD", "ROM"))) {
       data_jag[[i]] <- append(data_jag[[i]],
@@ -370,7 +371,8 @@ run_sensitivity <- function(full,
                             textConnection(prepare_model(measure,
                                                          model,
                                                          covar_assumption ="NO",
-                                                         assumption)),
+                                                         assumption,
+                                                         trans_wgt = "no")),
                           n.chains = n_chains,
                           n.iter = n_iter,
                           n.burnin = n_burnin,

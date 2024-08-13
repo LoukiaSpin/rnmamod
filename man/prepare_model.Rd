@@ -5,7 +5,7 @@
 \title{WinBUGS code for Bayesian pairwise or network meta-analysis and
 meta-regression}
 \usage{
-prepare_model(measure, model, covar_assumption, assumption)
+prepare_model(measure, model, covar_assumption, assumption, trans_wgt)
 }
 \arguments{
 \item{measure}{Character string indicating the effect measure. For a binary
@@ -35,6 +35,14 @@ the following: \code{"HIE-COMMON"}, \code{"HIE-TRIAL"}, \code{"HIE-ARM"},
 \code{"IND"} stand for identical, hierarchical and independent,
 respectively. \code{"CORR"} and \code{"UNCORR"} stand for correlated and
 uncorrelated, respectively.}
+
+\item{trans_wgt}{Character string indicating whether the model will account
+for study-specific weights. Set \code{trans_wgt} equal to one of the
+following: \code{"no"}, \code{"vector"}, or \code{"matrix"}. The
+abbreviation \code{"no"} indicates no weights will be accounted for in the
+model. The abbreviations \code{"vector"} and \code{"matrix"} refer to
+defining the weights as a vector or matrix, respectively. See 'Details' in
+\code{\link{run_model}}.}
 }
 \value{
 An R character vector object to be passed to \code{\link{run_model}}

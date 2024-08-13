@@ -81,6 +81,11 @@
 #'   of the \code{\link[R2jags:jags]{jags}} function of the R-package
 #'   \href{https://CRAN.R-project.org/package=R2jags}{R2jags}.
 #'   The default argument is \code{NULL}, and JAGS generates the initial values.
+#' @param adjust_wgt A positive numeric vector with length equal to the number
+#'   of studies in the network, or a positive numeric matrix with two columns
+#'   and number of rows equal to the number of studies in the network. The
+#'   elements comprise study-specific weights. This argument is optional.
+#'   See 'Details'.
 #'
 #' @format The columns of the data-frame in the argument \code{data} refer
 #'   to the following elements for a continuous outcome:
@@ -310,12 +315,22 @@
 #'   selected \code{measure} for a binary outcome, \code{run_model} performs
 #'   pairwise or network meta-analysis based on the odds ratio.
 #'
+#'   When \code{adjust_wgt} is defined, \code{run_model} gives less weight to
+#'   studies with smaller values, and more weight to studies with larger values.
+#'   Specifically, the model weight the (contribution of the) studies by
+#'   inflating the between-study variance of the underlying treatment effects of
+#'   the studies (Proctor et al., 2022). This approach is only relevant for a
+#'   random-effect model (\code{model = "RE"}). When \code{adjust_wgt} is
+#'   specified as a matrix, the columns pertain to the bounds of the uniform
+#'   distribution. Then, for each study, \code{\link{prepare_model}} samples the
+#'   weights from the corresponding uniform distribution. This is similar to the
+#'   enrichment-through-weighting approach implemented by Proctor et al. (2022).
+#'
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link[R2jags:autojags]{autojags}},
 #'   \code{\link{baseline_model}}, \code{\link{data_preparation}},
-#'   \code{\link{heterogeneity_param_prior}},
-#'   \code{\link[R2jags:jags]{jags}},
+#'   \code{\link{heterogeneity_param_prior}}, \code{\link[R2jags:jags]{jags}},
 #'   \code{\link{missingness_param_prior}}, \code{\link{prepare_model}}
 #'
 #' @references
@@ -349,6 +364,11 @@
 #' uncertainty due to missing continuous outcome data in pairwise and
 #' network meta-analysis. \emph{Stat Med} 2015;\bold{34}(5):721--41.
 #' doi: 10.1002/sim.6365
+#'
+#' Proctor T, Zimmermann S, Seide S, Kieser M. A comparison of methods for
+#' enriching network meta-analyses in the absence of individual patient data.
+#' \emph{Res Synth Methods} 2022;\bold{13}(6):745--759.
+#' doi: 10.1002/jrsm.1568.
 #'
 #' Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 #' data in network meta-analysis: a one-stage pattern-mixture model approach.
@@ -419,7 +439,8 @@ run_model <- function(data,
                       n_iter,
                       n_burnin,
                       n_thin,
-                      inits = NULL) {
+                      inits = NULL,
+                      adjust_wgt = NULL) {
 
 
   # Prepare the dataset for the R2jags
@@ -496,9 +517,6 @@ run_model <- function(data,
       aggregate(na.omit(unlist(item$r)) /
                   (na.omit(unlist(item$N)) - na.omit(unlist(item$m))),
                 list(na.omit(unlist(item$t))), median)[ref, 2]
-      #describe_network(data = data,
-      #                 drug_names = 1:item$nt,
-      #                 measure = measure)$table_interventions[ref, 7]/100
     rep(log(base_risk / (1 - base_risk)), 2)
   } else if (is.element(measure, c("OR", "RR", "RD"))) {
     baseline_model(base_risk,
@@ -542,6 +560,26 @@ run_model <- function(data,
    inits <- NULL
   } else {
     inits
+  }
+
+  # When study-specific weights are to be considered
+  if (is.matrix(adjust_wgt) & (dim(adjust_wgt)[2] != 2 ||
+                               dim(adjust_wgt)[1] != item$ns)) {
+    aa <- " and rows equal to the number of studies."
+    stop(paste0("If 'adjust_wgt' is matrix must have two columns", aa),
+         call. = FALSE)
+  } else if (is.vector(adjust_wgt) & length(adjust_wgt) != item$ns) {
+    stop("If 'adjust_wgt' is vector must equal the number of studies.",
+         call. = FALSE)
+  }
+
+  # Type of weight adjustment: 'no', 'vector', or 'matrix'
+  trans_wgt <- if (is.null(adjust_wgt)) {
+    "no"
+  } else if (is.matrix(adjust_wgt)) {
+    "matrix"
+  } else if (is.vector(adjust_wgt)) {
+    "vector"
   }
 
   # Sign of basic parameters in relation to 'ref'
@@ -596,6 +634,12 @@ run_model <- function(data,
     data_jag
   }
 
+  data_jag <- if (!is.null(adjust_wgt)) {
+    append(data_jag, list("wgt.value" = adjust_wgt))
+  } else {
+    append(data_jag, list("wgt.value" = rep(1, item$ns)))
+  }
+
   param_jags <- c("EM",
                   "SUCRA",
                   "effectiveness",
@@ -644,7 +688,8 @@ run_model <- function(data,
                      prepare_model(measure,
                                    model,
                                    covar_assumption = "NO",
-                                   assumption)
+                                   assumption,
+                                   trans_wgt)
                      ),
                    n.chains = n_chains,
                    n.iter = n_iter,
