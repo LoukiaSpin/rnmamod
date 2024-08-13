@@ -344,6 +344,7 @@ run_sensitivity <- function(full,
                           "D" = D,
                           "cov_value" = 0,
                           "beta.n" = rep(0, item$nt),
+                          "beta.t" = rep(0, item$nt),
                           "beta" = rep(0, item$nt),
                           "wgt.value" = rep(1, item$ns))
 

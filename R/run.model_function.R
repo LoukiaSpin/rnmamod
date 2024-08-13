@@ -609,6 +609,7 @@ run_model <- function(data,
                    "D" = D,
                    "cov_value" = 0,
                    "beta.n" = rep(0, item$nt),
+                   "beta.t" = rep(0, item$nt),
                    "beta" = rep(0, item$nt))
 
   data_jag <- if (is.element(measure, c("MD", "SMD", "ROM"))) {

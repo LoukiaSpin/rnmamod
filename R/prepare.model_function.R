@@ -226,7 +226,7 @@ prepare_model <- function(measure,
                        base_risk_logit <- logit_base_risk*(1 - equals(ref_base[1], ref_base[2])) + ref_base[1]*equals(ref_base[1], ref_base[2])
                        base_risk <- exp(base_risk_logit)/(1 + exp(base_risk_logit))
                        for (t in 1:nt) {
-                         logit(abs_risk[t]) <- base_risk_logit + d[t] + beta[t] * cov_value
+                         logit(abs_risk[t]) <- base_risk_logit + d[t] + beta.t[t] * cov_value
                        }\n")
   } else {
     paste(stringcode, " ")
@@ -234,13 +234,16 @@ prepare_model <- function(measure,
 
   stringcode <- if (covar_assumption == "exchangeable") {
     paste(stringcode, "beta[ref] <- 0
+                       beta.t[ref] <- 0
                        beta.n[ref] <- 0
                        for (t in 1:(ref - 1)) {
                          beta[t] ~ dnorm(mean.B, prec.B)
+                         beta.t[t] <- beta[t]
                          beta.n[t] <- beta[t]*equals(min(t, ref), ref) + beta[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (t in (ref + 1):nt) {
                          beta[t] ~ dnorm(mean.B, prec.B)
+                         beta.t[t] <- beta[t]
                          beta.n[t] <- beta[t]*equals(min(t, ref), ref) + beta[t]*(-1)*equals(min(t, ref), t)
                        }
                        mean.B ~ dnorm(0, .0001)
@@ -252,13 +255,16 @@ prepare_model <- function(measure,
                        }}\n")
   } else if (covar_assumption == "independent") {
     paste(stringcode, "beta[ref] <- 0
+                       beta.t[ref] <- 0
                        beta.n[ref] <- 0
                        for (t in 1:(ref - 1)) {
                          beta[t] ~ dnorm(0, 0.0001)
+                         beta.t[t] <- beta[t]
                          beta.n[t] <- beta[t]*equals(min(t, ref), ref) + beta[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (t in (ref + 1):nt) {
                          beta[t] ~ dnorm(0, 0.0001)
+                         beta.t[t] <- beta[t]
                          beta.n[t] <- beta[t]*equals(min(t, ref), ref) + beta[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (c in 1:(nt - 1)) {
@@ -267,11 +273,14 @@ prepare_model <- function(measure,
                        }}\n")
   } else if (covar_assumption == "common") {
     paste(stringcode, "beta ~ dnorm(0, 0.0001)
+                       beta.t[ref] <- 0
                        beta.n[ref] <- 0
                        for (t in 1:(ref - 1)) {
+                         beta.t[t] <- beta
                          beta.n[t] <- beta*equals(min(t, ref), ref) + beta*(-1)*equals(min(t, ref), t)
                        }
                        for (t in (ref + 1):nt) {
+                         beta.t[t] <- beta
                          beta.n[t] <- beta*equals(min(t, ref), ref) + beta*(-1)*equals(min(t, ref), t)
                        }
                        for (c in 1:(nt - 1)) {
@@ -408,11 +417,11 @@ prepare_model <- function(measure,
                        }}\n")
   } else if (model == "RE" & measure == "RR") {
     paste(stringcode, "for (t in 1:(ref - 1)) {
-                         EM.ref.n[t] <- (d[t] + beta[t] * cov_value) - log(1 - (1 - exp(d[t] + beta[t] * cov_value))*base_risk)
+                         EM.ref.n[t] <- (d[t] + beta.t[t] * cov_value) - log(1 - (1 - exp(d[t] + beta.t[t] * cov_value))*base_risk)
                          EM.ref[t] <- EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (t in (ref + 1):nt) {
-                         EM.ref.n[t] <- (d[t] + beta[t] * cov_value) - log(1 - (1 - exp(d[t] + beta[t] * cov_value))*base_risk)
+                         EM.ref.n[t] <- (d[t] + beta.t[t] * cov_value) - log(1 - (1 - exp(d[t] + beta.t[t] * cov_value))*base_risk)
                          EM.ref[t] <- EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (c in 1:(nt - 1)) {
@@ -424,13 +433,13 @@ prepare_model <- function(measure,
                        }}\n")
   } else if (model == "RE" & measure == "RD") {
     paste(stringcode, "for (t in 1:(ref - 1)) {
-                         EM.ref.RR.n[t] <- (d[t] + beta[t] * cov_value) - log(1 - (1 - exp(d[t] + beta[t] * cov_value))*base_risk)
+                         EM.ref.RR.n[t] <- (d[t] + beta.t[t] * cov_value) - log(1 - (1 - exp(d[t] + beta.t[t] * cov_value))*base_risk)
                          EM.ref.RR[t] <- EM.ref.RR.n[t]*equals(min(t, ref), ref) + EM.ref.RR.n[t]*(-1)*equals(min(t, ref), t)
                          EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1)*base_risk
                          EM.ref[t] <- EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (t in (ref + 1):nt) {
-                         EM.ref.RR.n[t] <- (d[t] + beta[t] * cov_value) - log(1 - (1 - exp(d[t] + beta[t] * cov_value))*base_risk)
+                         EM.ref.RR.n[t] <- (d[t] + beta.t[t] * cov_value) - log(1 - (1 - exp(d[t] + beta.t[t] * cov_value))*base_risk)
                          EM.ref.RR[t] <- EM.ref.RR.n[t]*equals(min(t, ref), ref) + EM.ref.RR.n[t]*(-1)*equals(min(t, ref), t)
                          EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1)*base_risk
                          EM.ref[t] <-  EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
@@ -446,11 +455,11 @@ prepare_model <- function(measure,
                        }}\n")
   } else if (model == "FE" & measure == "RR") {
     paste(stringcode, "for (t in 1:(ref - 1)) {
-                         EM.ref.n[t] <- (d[t] + beta[t] * cov_value) - log(1 - (1 - exp(d[t] + beta[t] * cov_value))*base_risk)
+                         EM.ref.n[t] <- (d[t] + beta.t[t] * cov_value) - log(1 - (1 - exp(d[t] + beta.t[t] * cov_value))*base_risk)
                          EM.ref[t] <- EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (t in (ref + 1):nt) {
-                         EM.ref.n[t] <- (d[t] + beta[t] * cov_value) - log(1 - (1 - exp(d[t] + beta[t] * cov_value))*base_risk)
+                         EM.ref.n[t] <- (d[t] + beta.t[t] * cov_value) - log(1 - (1 - exp(d[t] + beta.t[t] * cov_value))*base_risk)
                          EM.ref[t] <- EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        for (c in 1:(nt - 1)) {
                          for (k in (c + 1):nt) {
@@ -459,13 +468,13 @@ prepare_model <- function(measure,
                         }}\n")
   } else if (model == "FE" & measure == "RD") {
     paste(stringcode, "for (t in 1:(ref - 1)) {
-                         EM.ref.RR.n <- (d[t] + beta[t] * cov_value) - log(1 - (1 - exp(d[t] + beta[t] * cov_value))*base_risk)
+                         EM.ref.RR.n <- (d[t] + beta.t[t] * cov_value) - log(1 - (1 - exp(d[t] + beta.t[t] * cov_value))*base_risk)
                          EM.ref.RR[t] <- EM.ref.RR.n[t]*equals(min(t, ref), ref) + EM.ref.RR.n[t]*(-1)*equals(min(t, ref), t)
                          EM.ref.n[t] <- (exp(EM.ref.RR.n[t] - 1))*base_risk
                          EM.ref[t] <-  EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
                        }
                        for (t in (ref + 1):nt) {
-                         EM.ref.RR.n[t] <- (d[t] + beta[t] * cov_value) - log(1 - (1 - exp(d[t] + beta[t] * cov_value))*base_risk)
+                         EM.ref.RR.n[t] <- (d[t] + beta.t[t] * cov_value) - log(1 - (1 - exp(d[t] + beta.t[t] * cov_value))*base_risk)
                          EM.ref.RR[t] <- EM.ref.RR.n[t]*equals(min(t, ref), ref) + EM.ref.RR.n[t]*(-1)*(equals(min(t, ref), t)
                          EM.ref.n[t] <- (exp(EM.ref.RR.n[t]) - 1)*base_risk
                          EM.ref[t] <-  EM.ref.n[t]*equals(min(t, ref), ref) + EM.ref.n[t]*(-1)*equals(min(t, ref), t)
