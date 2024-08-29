@@ -11,6 +11,7 @@ forestplot_juxtapose(
   drug_names,
   axis_title_size = 12,
   axis_text_size = 12,
+  caption_text_size = 9,
   label_size = 3.5,
   position_width = 0.8
 )
@@ -41,6 +42,11 @@ found in the theme's properties in the R-package
 \item{axis_text_size}{A positive integer for the font size of axis text (both
 axes). \code{axis_text_size} determines the axis.text argument found in the
 theme's properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
+
+\item{caption_text_size}{A positive integer for the font size of caption
+text. \code{caption_text_size} determines the plot.caption argument found
+in the theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
 
 \item{label_size}{A positive integer for the font size of labels appearing on

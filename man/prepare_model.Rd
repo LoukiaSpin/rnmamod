@@ -41,8 +41,8 @@ for study-specific weights. Set \code{trans_wgt} equal to one of the
 following: \code{"no"}, \code{"vector"}, or \code{"matrix"}. The
 abbreviation \code{"no"} indicates no weights will be accounted for in the
 model. The abbreviations \code{"vector"} and \code{"matrix"} refer to
-defining the weights as a vector or matrix, respectively. See 'Details' in
-\code{\link{run_model}}.}
+defining the weights as a vector or a two-column matrix, respectively. See
+'Details' in \code{\link{run_model}}.}
 }
 \value{
 An R character vector object to be passed to \code{\link{run_model}}
