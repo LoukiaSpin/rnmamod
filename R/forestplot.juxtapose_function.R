@@ -296,20 +296,20 @@ forestplot_juxtapose <- function(results,
   measure2 <- effect_measure_name(results[[1]]$measure, lower = FALSE)
   caption <- if (results[[1]]$D == 0 &
                  is.element(results[[1]]$measure, c("OR", "RR", "ROM"))) {
-    paste(measure2, "< 1, favours the first arm.",
-          measure2, "> 1, favours", compar)
+    paste0(measure2, " < 1, favours the first arm. ",
+           measure2, " > 1, favours ", compar, ".")
   } else if (results[[1]]$D == 1 &
              is.element(results[[1]]$measure, c("OR", "RR", "ROM"))) {
-    paste(measure2, "< 1, favours", compar,
-          ".", measure2, "> 1, favours the first arm")
+    paste0(measure2, " < 1, favours ", compar, ". ",
+           measure2, " > 1, favours the first arm.")
   } else if (results[[1]]$D == 0 &
              !is.element(results[[1]]$measure, c("OR", "RR", "ROM"))) {
-    paste(measure2, "< 0, favours the first arm.",
-          measure2, "> 0, favours", compar)
+    paste0(measure2, " < 0, favours the first arm. ",
+           measure2, " > 0, favours ", compar, ".")
   } else if (results[[1]]$D == 1 &
              !is.element(results[[1]]$measure, c("OR","RR",  "ROM"))) {
-    paste(measure2, "< 0, favours", compar,
-          ".", measure2, "> 0, favours the first arm")
+    paste0(measure2, " < 0, favours ", compar, ". ",
+           measure2, " > 0, favours the first arm.")
   }
 
   p1 <-
