@@ -27,6 +27,10 @@
 #'   axes). \code{axis_text_size} determines the axis.text argument found in the
 #'   theme's properties in the R-package
 #'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#' @param caption_text_size A positive integer for the font size of caption
+#'   text. \code{caption_text_size} determines the plot.caption argument found
+#'   in the theme's properties in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #' @param label_size A positive integer for the font size of labels appearing on
 #'   each interval. \code{label_size} determines the size argument found in the
 #'   geom's aesthetic properties in the R-package
@@ -99,6 +103,7 @@ forestplot_juxtapose <- function(results,
                                  drug_names,
                                  axis_title_size = 12,
                                  axis_text_size = 12,
+                                 caption_text_size = 9,
                                  label_size = 3.5,
                                  position_width = 0.8) {
 
@@ -405,7 +410,8 @@ forestplot_juxtapose <- function(results,
               legend.title = element_text(color = "black",
                                           face = "bold",
                                           size = axis_title_size),
-              plot.caption = element_text(hjust = 0.01))
+              plot.caption = element_text(size = caption_text_size,
+                                          hjust = 0.01))
     } else {
       ggplot(data = prepare_em,
              aes(x = order,
@@ -468,14 +474,15 @@ forestplot_juxtapose <- function(results,
                                        size = axis_text_size),
               axis.title = element_text(color = "black",
                                         face = "bold",
-                                          size = axis_title_size),
+                                        size = axis_title_size),
               legend.position = "bottom",
               legend.text =  element_text(color = "black",
                                           size = axis_text_size),
               legend.title = element_text(color = "black",
                                           face = "bold",
                                           size = axis_title_size),
-              plot.caption = element_text(hjust = 0.01))
+              plot.caption = element_text(size = caption_text_size,
+                                          hjust = 0.01))
     }
 
 
@@ -611,13 +618,7 @@ forestplot_juxtapose <- function(results,
           axis.title = element_text(color = "black",
                                     face = "bold",
                                       size = axis_title_size),
-          legend.position = "bottom",
-          legend.text =  element_text(color = "black",
-                                      size = axis_text_size),
-          legend.title = element_text(color = "black",
-                                      face = "bold",
-                                      size = axis_title_size),
-          plot.caption = element_text(hjust = 0.01))
+          legend.position = "none")
 
 
   # Bring together both forest-plots
