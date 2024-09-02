@@ -23,8 +23,8 @@
 #' values for each study using shades of red and green to indicate low and
 #' substantial similarity, respectively: the darker the red, the lower the
 #' similarity (corresponding to values close to 0), whilst the darker the green,
-#' the higher the similarity (corresponding to values close to 1 or 100%). The
-#' study names appear on the y-axis in the order they appear in \code{results}
+#' the higher the similarity (corresponding to values close to 1). The study
+#' names appear on the y-axis in the order they appear in \code{results}
 #' and the similarity values appear on the x-axis.
 #'
 #' @details
@@ -33,12 +33,12 @@
 #' network for a set of clinical and methodological characteristics that may act
 #' as effect modifiers. Then, the Gower's dissimilarities are transformed into
 #' similarities by subtracting each value from 1: Gower's dissimilarities take
-#' values from 0 to 1 (or 0 to 100%), with 0 and 1 (or 100%) implying perfect
-#' similarity and perfect dissimilarity, respectively.
+#' values from 0 to 1, with 0 and 1 implying perfect similarity and perfect
+#' dissimilarity, respectively.
 #'
 #' The exact similarity values appear as dotted, vertical, black lines on each
-#' bar. The root mean square of the similarity values also appear on each bar as
-#' a black diamond.
+#' bar. The root mean square of the similarity values (fixed weights) also
+#' appear on each bar as a black diamond.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -176,15 +176,15 @@ rainbow_similarities <- function(results,
     geom_text(data = data_rms,
               aes(x = value,
                   y = study_id,
-                  label = sprintf("%.1f", value * 100)),
+                  label = sprintf("%.2f", value)), # sprintf("%.1f", value * 100)
               size = label_size,
               vjust = 0.5, # -0.85
               hjust = 1.25,
               inherit.aes = FALSE) +
-    labs(x = "Range of Gower's similarity values (%)",
+    labs(x = "Range of Gower's similarity values",
          y = "") +
     scale_x_continuous(limits = c(0, 1),
-                       labels = scales::percent,
+                       #labels = scales::percent,
                        expand = c(0.01,0)) +
     theme_classic() +
     theme(axis.title = element_text(size = axis_title_size,
