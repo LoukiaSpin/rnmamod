@@ -185,6 +185,7 @@ rainbow_similarities <- function(results,
          y = "") +
     scale_x_continuous(limits = c(0, 1),
                        breaks = seq(0, 1, 0.1),
+                       labels = sprintf("%.2f", seq(0, 1, 0.1)),
                        #labels = scales::percent,
                        expand = c(0.01,0)) +
     theme_classic() +
