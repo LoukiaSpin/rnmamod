@@ -2,7 +2,7 @@
 % Please edit documentation in R/weight.defined_function.R
 \name{weight_defined}
 \alias{weight_defined}
-\title{Preparing the study weights based on Gower's dissimilarities 
+\title{Preparing the study weights based on Gower's dissimilarities
 (Transitivity evaluation)}
 \usage{
 weight_defined(diss_res)
@@ -10,41 +10,41 @@ weight_defined(diss_res)
 \arguments{
 \item{diss_res}{A list of two elements with the following order:
 1) an object of S3 class 'comp_clustering' (\code{\link{comp_clustering}}),
-and 2) a character with values \code{"uniform"}, or \code{"rms"} to define 
-the usage of the similarities (see 'Details') as being sampled from a 
-uniform distribution, or being fixed to their root mean square. 
-See 'Details'.}
+and 2) a character with values \code{"uniform"}, or \code{"rms"} to define
+the usage of the similarities (see 'Details') as being sampled from a
+uniform distribution, or being a ratio of their between-comparisons
+similarity and total similarity based on root mean square. See 'Details'.}
 }
 \value{
 A list of the following two elements:
   \item{weights}{A vector of study weights if \code{"rms"} has been specified
   or a matrix with the minimum and maximum similarity values for each study
   if \code{"uniform"} has been specified.}
-  \item{type}{A character indicating the weight type considered: 
+  \item{type}{A character indicating the weight type considered:
   \code{"rms"} or \code{"uniform"}.}
 }
 \description{
-Using the Gower's dissimilarities to prepare the study weights in a network 
-of interventions to be used by the \code{\link{run_model}} function in the 
+Using the Gower's dissimilarities to prepare the study weights in a network
+of interventions to be used by the \code{\link{run_model}} function in the
 context of the transitivity evaluation as a sensitivity analysis.
 }
 \details{
-The function receives the matrix \code{Trials_diss_table} found in the 
+The function receives the matrix \code{Trials_diss_table} found in the
 results of \code{\link{comp_clustering}}. This matrix contains the Gower's
-dissimilarities of all study pairs in the network for a specific set of 
+dissimilarities of all study pairs in the network for a specific set of
 clinical and methodological characteristics that act as effect modifiers.
-Gower's dissimilarities take values from 0 to 1 (or 0 to 100%), with 0 and 
-1 (or 100%) implying perfect similarity and perfect dissimilarity, 
-respectively. Hence, subtracting each value from 1 yields the similarities of 
-all study pairs in the network. 
+Gower's dissimilarities take values from 0 to 1, with 0 and 1 implying
+perfect similarity and perfect dissimilarity, respectively. Hence,
+subtracting each value from 1 yields the similarities of all study pairs in
+the network.
 
 For each study, the Gower's similarities can be either transformed into the
-root mean square or restricted to the minimum and maximum values. This 
-depends on the second element specified in the argument \code{diss_res}. 
-When the \code{"uniform"} choice has been specified in the second element 
+root mean square or restricted to the minimum and maximum values. This
+depends on the second element specified in the argument \code{diss_res}.
+When the \code{"uniform"} choice has been specified in the second element
 of the argument \code{diss_res}, the function checks whether the bounds are
-the same value. If this is the case for at least one study, the uniform 
-distribution cannot be defined and, hence, the function returns the root mean 
+the same value. If this is the case for at least one study, the uniform
+distribution cannot be defined and, hence, the function returns the root mean
 square value (\code{"rms"}) for all studies.
 
 \code{weight_defined} can be used in \code{\link{run_model}} via the argument

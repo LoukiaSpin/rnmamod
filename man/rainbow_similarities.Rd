@@ -31,13 +31,16 @@ found in the geom's aesthetic properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
 }
 \value{
-A horizintal bar plot illustrating the range of Gower's similarity
+A horizontal bar plot illustrating the range of Gower's similarity
 values for each study using shades of red and green to indicate low and
-substantial similarity, respectively: the darker the red, the lower the
-similarity (corresponding to values close to 0), whilst the darker the green,
-the higher the similarity (corresponding to values close to 1). The study
-names appear on the y-axis in the order they appear in \code{results}
-and the similarity values appear on the x-axis.
+substantial between-comparisons similarity, respectively: the darker the red,
+the lower the between-comparisons similarity (corresponding to values close
+to 0), whilst the darker the green, the higher the between-comparisons
+similarity (corresponding to values close to 1). The study names appear on
+the y-axis in the order they appear in \code{results} and the similarity
+values appear on the x-axis. Red and blue points refer to the (average)
+within-comparison and between-comparisons similarity, respectively, for each
+study.
 }
 \description{
 Illustrating the range of Gower's similarity values for each study in the
