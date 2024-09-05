@@ -61,8 +61,8 @@ context of the transitivity evaluation as a sensitivity analysis.</p>
 1) an object of S3 class 'comp_clustering' (<code><a href="comp_clustering.html">comp_clustering</a></code>),
 and 2) a character with values <code>"uniform"</code>, or <code>"rms"</code> to define
 the usage of the similarities (see 'Details') as being sampled from a
-uniform distribution, or being fixed to their root mean square.
-See 'Details'.</p></dd>
+uniform distribution, or being a ratio of their between-comparisons
+similarity and total similarity based on root mean square. See 'Details'.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -84,10 +84,10 @@ See 'Details'.</p></dd>
 results of <code><a href="comp_clustering.html">comp_clustering</a></code>. This matrix contains the Gower's
 dissimilarities of all study pairs in the network for a specific set of
 clinical and methodological characteristics that act as effect modifiers.
-Gower's dissimilarities take values from 0 to 1 (or 0 to 100<!-- %), with 0 and  -->
-1 (or 100<!-- %) implying perfect similarity and perfect dissimilarity,  -->
-respectively. Hence, subtracting each value from 1 yields the similarities of
-all study pairs in the network.</p>
+Gower's dissimilarities take values from 0 to 1, with 0 and 1 implying
+perfect similarity and perfect dissimilarity, respectively. Hence,
+subtracting each value from 1 yields the similarities of all study pairs in
+the network.</p>
 <p>For each study, the Gower's similarities can be either transformed into the
 root mean square or restricted to the minimum and maximum values. This
 depends on the second element specified in the argument <code>diss_res</code>.
