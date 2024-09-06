@@ -8,17 +8,18 @@
 #'
 #' @param diss_res A list of two elements with the following order:
 #'   1) an object of S3 class 'comp_clustering' (\code{\link{comp_clustering}}),
-#'   and 2) a character with values \code{"uniform"}, or \code{"rms"} to define
-#'   the usage of the similarities (see 'Details') as being sampled from a
-#'   uniform distribution, or being a ratio of their between-comparisons
-#'   similarity and total similarity based on root mean square. See 'Details'.
+#'   and 2) a character with values \code{"uniform"}, \code{"fixed"}, or
+#'   \code{"index"} to define the usage of the similarities (see 'Details') as
+#'   being sampled from a uniform distribution, between-comparisons similarity
+#'   (fixed weight) or a ratio of their between-comparisons similarity and total
+#'   similarity (percentage index). See 'Details'.
 #'
 #' @return A list of the following two elements:
-#'   \item{weights}{A vector of study weights if \code{"rms"} has been specified
-#'   or a matrix with the minimum and maximum similarity values for each study
-#'   if \code{"uniform"} has been specified.}
+#'   \item{weights}{A vector of study weights if \code{"fixed"} or
+#'   \code{"index"} has been specified or a matrix with the minimum and maximum
+#'   similarity values for each study if \code{"uniform"} has been specified.}
 #'   \item{type}{A character indicating the weight type considered:
-#'   \code{"rms"} or \code{"uniform"}.}
+#'   \code{"uniform"}, \code{"fixed"}, or \code{"index"}.}
 #'
 #' @details
 #' The function receives the matrix \code{Trials_diss_table} found in the
@@ -30,14 +31,16 @@
 #' subtracting each value from 1 yields the similarities of all study pairs in
 #' the network.
 #'
-#' For each study, the Gower's similarities can be either transformed into the
-#' root mean square or restricted to the minimum and maximum values. This
-#' depends on the second element specified in the argument \code{diss_res}.
+#' For each study, the Gower's similarities can be either transformed into a
+#' fixed value (\code{"fixed"}) or percentage index (\code{"index"}) based on
+#' the root mean square of the similarities or restricted to the minimum and
+#' maximum similarity values (\code{"uniform"}). This depends on the second
+#' element specified in the argument \code{diss_res}.
 #' When the \code{"uniform"} choice has been specified in the second element
 #' of the argument \code{diss_res}, the function checks whether the bounds are
 #' the same value. If this is the case for at least one study, the uniform
-#' distribution cannot be defined and, hence, the function returns the root mean
-#' square value (\code{"rms"}) for all studies.
+#' distribution cannot be defined and, hence, the function returns the
+#' between-comparisons similarity values (\code{"fixed"}) for each study.
 #'
 #' \code{weight_defined} can be used in \code{\link{run_model}} via the argument
 #' \code{adjust_wgt}. See 'Details' in \code{\link{run_model}}.
@@ -59,8 +62,8 @@ weight_defined <- function (diss_res) {
     stop("The first argument must be an object of S3 class 'comp_clustering'",
          call. = FALSE)
   }
-  transf <- if (!is.element(diss_res[[2]], c("rms", "uniform"))) {
-    stop("Insert one of the following: 'rms', or 'uniform'.",
+  transf <- if (!is.element(diss_res[[2]], c("fixed", "index", "uniform"))) {
+    stop("Insert one of the following: 'fixed', 'index', or 'uniform'.",
          call. = FALSE)
   } else {
     diss_res[[2]]
@@ -118,41 +121,51 @@ weight_defined <- function (diss_res) {
     sqrt(unlist(lapply(between_set, function(x) {sum(x^2) / length(x)})))
 
 
-  ## Transform the weights: sampled from a selected distribution or fixed to rms
+  ## Calculate the weights
   tranform_result <-
     if (transf == "uniform") {    # Uniform distribution
     # Lower bound (Return the minimum for multi-arm studies)
-    lower <- aggregate(unlist(lapply(between_set, function(x) min(x))), by = list(index), min)[, 2]
+    lower <-
+      unlist(lapply(split(unlist(lapply(between_set, function(x) min(x))),
+                          factor(index, levels = index)), function(x) min(x)))
 
     # upper bound (Return the minimum for multi-arm studies)
-    upper <- aggregate(unlist(lapply(between_set, function(x) max(x))), by = list(index), min)[, 2]
+    upper <-
+      unlist(lapply(split(unlist(lapply(between_set, function(x) max(x))),
+                          factor(index, levels = index)), function(x) min(x)))
 
     data.frame(lower, upper)
-  } else if (transf == "rms") { # Return the minimum for multi-arm studies
-    aggregate(between_comp / (within_comp + between_comp), by = list(index), min)[, 2]
+  } else if (transf == "index") { # Return the minimum for multi-arm studies
+    unlist(lapply(split(between_comp / (within_comp + between_comp),
+                        factor(index, levels = index)), function(x) min(x)))
+  } else if (transf == "fixed") { # Return the minimum for multi-arm studies
+    unlist(lapply(split(between_comp, factor(index, levels = index)),
+                  function(x) min(x)))
   }
 
 
   ## Check whether the uniform distribution is undefined
   with_problem <- if (transf == "uniform") {
     any(apply(tranform_result, 1, diff) == 0)
-  } else if (transf == "rms") {
+  } else if (is.element(transf, c("fixed", "index"))) {
     FALSE
   }
 
 
-  ## When the uniform distribution is undefined, switch to 'rms'
-  proper_tranform <- if (all(transf == "uniform" & with_problem == TRUE) == TRUE) {
-    message("Undefined uniform distribution. Root mean square was used instead.")
-    aggregate(between_comp / (within_comp + between_comp), by = list(index), min)[, 2]
-  } else {
-    tranform_result
-  }
+  ## When the uniform distribution is undefined, switch to 'fixed'
+  proper_tranform <-
+    if (all(transf == "uniform" & with_problem == TRUE) == TRUE) {
+      message("Undefined uniform distribution. Fixed weights were used instead.")
+      unlist(lapply(split(between_comp, factor(index, levels = index)),
+                    function(x) min(x)))
+    } else {
+      tranform_result
+    }
 
 
-  ## Consider the 'proper' transformation: 'uniform', or 'rms'
+  ## Consider the 'proper' transformation: 'uniform', 'fixed', or 'index'
   transf_new <- if (with_problem == TRUE) {
-    "rms"
+    "fixed"
   } else {
     transf
   }
