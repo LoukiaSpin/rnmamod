@@ -59,23 +59,24 @@ context of the transitivity evaluation as a sensitivity analysis.</p>
 <dl><dt id="arg-diss-res">diss_res<a class="anchor" aria-label="anchor" href="#arg-diss-res"></a></dt>
 <dd><p>A list of two elements with the following order:
 1) an object of S3 class 'comp_clustering' (<code><a href="comp_clustering.html">comp_clustering</a></code>),
-and 2) a character with values <code>"uniform"</code>, or <code>"rms"</code> to define
-the usage of the similarities (see 'Details') as being sampled from a
-uniform distribution, or being a ratio of their between-comparisons
-similarity and total similarity based on root mean square. See 'Details'.</p></dd>
+and 2) a character with values <code>"uniform"</code>, <code>"fixed"</code>, or
+<code>"index"</code> to define the usage of the similarities (see 'Details') as
+being sampled from a uniform distribution, between-comparisons similarity
+(fixed weight) or a ratio of their between-comparisons similarity and total
+similarity (percentage index). See 'Details'.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list of the following two elements:</p>
 <dl><dt>weights</dt>
-<dd><p>A vector of study weights if <code>"rms"</code> has been specified
-  or a matrix with the minimum and maximum similarity values for each study
-  if <code>"uniform"</code> has been specified.</p></dd>
+<dd><p>A vector of study weights if <code>"fixed"</code> or
+  <code>"index"</code> has been specified or a matrix with the minimum and maximum
+  similarity values for each study if <code>"uniform"</code> has been specified.</p></dd>
 
   <dt>type</dt>
 <dd><p>A character indicating the weight type considered:
-  <code>"rms"</code> or <code>"uniform"</code>.</p></dd>
+  <code>"uniform"</code>, <code>"fixed"</code>, or <code>"index"</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -88,14 +89,16 @@ Gower's dissimilarities take values from 0 to 1, with 0 and 1 implying
 perfect similarity and perfect dissimilarity, respectively. Hence,
 subtracting each value from 1 yields the similarities of all study pairs in
 the network.</p>
-<p>For each study, the Gower's similarities can be either transformed into the
-root mean square or restricted to the minimum and maximum values. This
-depends on the second element specified in the argument <code>diss_res</code>.
+<p>For each study, the Gower's similarities can be either transformed into a
+fixed value (<code>"fixed"</code>) or percentage index (<code>"index"</code>) based on
+the root mean square of the similarities or restricted to the minimum and
+maximum similarity values (<code>"uniform"</code>). This depends on the second
+element specified in the argument <code>diss_res</code>.
 When the <code>"uniform"</code> choice has been specified in the second element
 of the argument <code>diss_res</code>, the function checks whether the bounds are
 the same value. If this is the case for at least one study, the uniform
-distribution cannot be defined and, hence, the function returns the root mean
-square value (<code>"rms"</code>) for all studies.</p>
+distribution cannot be defined and, hence, the function returns the
+between-comparisons similarity values (<code>"fixed"</code>) for each study.</p>
 <p><code>weight_defined</code> can be used in <code><a href="run_model.html">run_model</a></code> via the argument
 <code>adjust_wgt</code>. See 'Details' in <code><a href="run_model.html">run_model</a></code>.</p>
     </div>
