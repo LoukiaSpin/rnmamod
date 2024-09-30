@@ -20,15 +20,15 @@
 #'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #'
 #' @return A horizontal bar plot illustrating the range of Gower's similarity
-#' values for each study using shades of red and green to indicate low and
-#' substantial between-comparisons similarity, respectively: the darker the red,
-#' the lower the between-comparisons similarity (corresponding to values close
-#' to 0), whilst the darker the green, the higher the between-comparisons
-#' similarity (corresponding to values close to 1). The study names appear on
-#' the y-axis in the order they appear in \code{results} and the similarity
-#' values appear on the x-axis. Red and blue points refer to the (average)
-#' within-comparison and between-comparisons similarity, respectively, for each
-#' study.
+#' values for each study with those found in other comparisons using shades of
+#' red and green to indicate low and substantial between-comparison similarity,
+#' respectively: the darker the red, the lower the between-comparison similarity
+#' (corresponding to values close to 0), whilst the darker the green, the higher
+#' the between-comparison similarity (corresponding to values close to 1). The
+#' study names appear on the y-axis in the order they appear in \code{results}
+#' and the similarity values appear on the x-axis. Red and blue points refer to
+#' the (average) within-comparison and between-comparison similarity,
+#' respectively, for each study.
 #'
 #' @details
 #' The range of Gower's similarity values for each study result from calculating
@@ -39,9 +39,8 @@
 #' values from 0 to 1, with 0 and 1 implying perfect similarity and perfect
 #' dissimilarity, respectively.
 #'
-#' The exact similarity values appear as dotted, vertical, black lines on each
-#' bar. The root mean square of the similarity values (fixed weights) also
-#' appear on each bar as a black diamond.
+#' The unique similarity values appear as dotted, vertical, black lines on each
+#' bar.
 #'
 #' @author {Loukia M. Spineli}
 #'
@@ -112,14 +111,14 @@ rainbow_similarities <- function(results,
     sqrt(unlist(lapply(within_set, function(x) {sum(na.omit(x)^2) /
         (length(x) - sum(is.na(x)))})))
 
-  # Set of between-comparisons similarities per study
+  # Set of between-comparison similarities per study
   between_set <-
     lapply(1:length(split_study_comp),
            function(x)
              unlist(split_study_comp[[x]][!is.element(names(split_study_comp[[x]]),
                                                       comp_index[x])]))
 
-  # Between-comparisons similarity per study
+  # Between-comparison similarity per study
   between_comp <-
     sqrt(unlist(lapply(between_set, function(x) {sum(x^2) / length(x)})))
 
@@ -179,7 +178,7 @@ rainbow_similarities <- function(results,
                                 melt(within_comp),
                                 study_id = 1:length(within_comp))
 
-  # Include 'betweenn-comparison' similarities
+  # Include 'between-comparison' similarities
   data_rms_between <- data.frame(var = unique(names(split_multi_arms)),
                                  melt(between_comp),
                                  study_id = 1:length(between_comp))
@@ -219,7 +218,7 @@ rainbow_similarities <- function(results,
     geom_point(data = data_rms_between,
                aes(x = value,
                    y = study_id,
-                   fill = "Between-comparisons"),
+                   fill = "Between-comparison"),
                color = "blue",
                size = 3.0,
                shape = "diamond",
@@ -249,7 +248,7 @@ rainbow_similarities <- function(results,
                        #labels = scales::percent,
                        expand = c(0.01, 0)) +
     scale_fill_manual(values = c("Within-comparison" = "red",
-                                 "Between-comparisons" = "blue")) +
+                                 "Between-comparison" = "blue")) +
     guides(colour = "none") +
     theme_classic() +
     theme(axis.title = element_text(size = axis_title_size,
