@@ -10,6 +10,7 @@
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/baseline_model.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/bland_altman_plot.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/comp_clustering.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/covar_contribution_plot.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/data_preparation.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/dendro_heatmap.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/describe_network.html</loc></url>
@@ -45,7 +46,9 @@
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/nma.baker2009.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/nma.bottomley2011.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/nma.dogliotti2014.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/nma.fluoride.donegan2018.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/nma.liu2013.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/nma.malaria.donegan2018.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/nma.schwingshackl2014.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/nma.stowe2011.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/nodesplit_plot.html</loc></url>
@@ -68,6 +71,7 @@
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/scatterplot_sucra.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/scatterplots_dev.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/series_meta_plot.html</loc></url>
+<url><loc>https://loukiaspin.github.io/rnmamod/reference/study_perc_contrib.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/table_tau2_prior.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/taylor_continuous.html</loc></url>
 <url><loc>https://loukiaspin.github.io/rnmamod/reference/taylor_imor.html</loc></url>
