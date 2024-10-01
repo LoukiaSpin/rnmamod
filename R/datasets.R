@@ -73,6 +73,60 @@ NULL
 #' doi: 10.1136/heartjnl-2013-304347
 NULL
 
+#' Topical fluoride interventions for preventing dental caries
+#'
+#' @description A dataset of 130 trials comparing different forms of topical
+#'   fluoride interventions for preventing dental caries in children or
+#'   adolescents with at least 1 year or school year. The analysed continuous
+#'   outcome is the change from baseline in decayed, missing, and filled tooth
+#'   surfaces. The dataset contains also multi-arm trials.
+#'
+#' @format A data frame with 140 rows of arm-based data and 16 columns
+#'   referring to the trial number, the treatment identifier in the compared
+#'   arms, the standardised mean difference and its standard error for each
+#'   trial and possible comparison (in the case of multi-arm trial), the
+#'   randomisation year, the standard deviation and number randomised for each
+#'   arm and trial, the pooled standard deviation and the within-study
+#'   covariance in multi-arm trials.
+#'
+#' @details The interventions have been coded as follows: 1, no treatment; 2,
+#'   placebo; 3, dentifrice; 4, rinse; 5, gel; and 6, varnish
+#'
+#' @docType data
+#' @keywords datasets
+#' @name nma.fluoride.donegan2018
+#' @usage data(nma.fluoride.donegan2018)
+#' @source
+#' Donegan S, Dias S, Tudur-Smith C, Marinho V, Welton NJ. Graphs of study
+#' contributions and covariate distributions for network meta-regression.
+#' \emph{Res Synth Methods} 2018;\bold{9}(2):243--60. doi: 10.1002/jrsm.1292
+NULL
+
+#' Artemether, artesunate and quinine for severe malaria
+#'
+#' @description A dataset of 24 two-arm trials comparing artemether, artesunate
+#'   and quinine with each other in patients with severe malaria. The analysed
+#'   binary outcome is death.
+#'
+#' @format A data frame with 24 rows of arm-based data and 11 columns referring
+#'   to the trial number, the treatment identifier in the compared arms,
+#'   the odds ratio in the logarithmic scale and its standard error for each
+#'   trial, the average age in years and its centered version, the number of
+#'   events and number randomised for each arm and trial.
+#'
+#' @details The interventions have been coded as follows: 1, quinine;
+#'   2, artemether; and 3, artesunate
+#'
+#' @docType data
+#' @keywords datasets
+#' @name nma.malaria.donegan2018
+#' @usage data(nma.malaria.donegan2018)
+#' @source
+#' Donegan S, Dias S, Tudur-Smith C, Marinho V, Welton NJ. Graphs of study
+#' contributions and covariate distributions for network meta-regression.
+#' \emph{Res Synth Methods} 2018;\bold{9}(2):243--60. doi: 10.1002/jrsm.1292
+NULL
+
 #' Antidepressants in Parkinson's disease
 #'
 #' @description A dataset of 11 trials comparing the effectiveness of five

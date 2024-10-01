@@ -6,6 +6,7 @@
 #' @importFrom coda as.mcmc.list
 #' @importFrom dendextend set %>%
 #' @importFrom MASS fractions
+#' @importFrom Matrix bdiag
 #' @importFrom gemtc mtc.network mtc.data.studyrow mtc.nodesplit.comparisons
 #' @importFrom ggfittext geom_fit_text
 #' @importFrom ggpubr ggarrange

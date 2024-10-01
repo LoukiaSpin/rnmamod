@@ -54,6 +54,7 @@ Imports:
     igraph,
     knitr,
     MASS,
+    Matrix,
     mcmcplots,
     R2jags,
     reshape2,
