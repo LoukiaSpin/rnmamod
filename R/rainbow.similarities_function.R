@@ -126,16 +126,14 @@ rainbow_similarities <- function(results,
   ## Transform the weights
   # Get the lower bound for the uniform distribution
   lower <- aggregate(unlist(lapply(between_set, function(x) min(x))),
-                     by = list(factor(index, levels = index)), min)[, 2]
-
-
+                     by = list(factor(index, levels = unique(index))), min)[, 2]
 
   # Get the upper bound for the uniform distribution
   upper <- aggregate(unlist(lapply(between_set, function(x) max(x))),
-                     by = list(factor(index, levels = index)), min)[, 2]
+                     by = list(factor(index, levels = unique(index))), min)[, 2]
 
   # Bring together
-  tranform_result <- data.frame(lower, upper); rownames(tranform_result) <- index
+  tranform_result <- data.frame(lower, upper); rownames(tranform_result) <- unique(index)
 
 
   ## Create a sequence of values to define the colour shades

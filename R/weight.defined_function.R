@@ -127,19 +127,19 @@ weight_defined <- function (diss_res) {
     # Lower bound (Return the minimum for multi-arm studies)
     lower <-
       unlist(lapply(split(unlist(lapply(between_set, function(x) min(x))),
-                          factor(index, levels = index)), function(x) min(x)))
+                          factor(index, levels = unique(index))), function(x) min(x)))
 
     # upper bound (Return the minimum for multi-arm studies)
     upper <-
       unlist(lapply(split(unlist(lapply(between_set, function(x) max(x))),
-                          factor(index, levels = index)), function(x) min(x)))
+                          factor(index, levels = unique(index))), function(x) min(x)))
 
     data.frame(lower, upper)
   } else if (transf == "index") { # Return the minimum for multi-arm studies
     unlist(lapply(split(between_comp / (within_comp + between_comp),
-                        factor(index, levels = index)), function(x) min(x)))
+                        factor(index, levels = unique(index))), function(x) min(x)))
   } else if (transf == "fixed") { # Return the minimum for multi-arm studies
-    unlist(lapply(split(between_comp, factor(index, levels = index)),
+    unlist(lapply(split(between_comp, factor(index, levels = unique(index))),
                   function(x) min(x)))
   }
 
@@ -156,7 +156,7 @@ weight_defined <- function (diss_res) {
   proper_tranform <-
     if (all(transf == "uniform" & with_problem == TRUE) == TRUE) {
       message("Undefined uniform distribution. Fixed weights were used instead.")
-      unlist(lapply(split(between_comp, factor(index, levels = index)),
+      unlist(lapply(split(between_comp, factor(index, levels = unique(index))),
                     function(x) min(x)))
     } else {
       tranform_result
