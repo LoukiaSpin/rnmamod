@@ -107,9 +107,14 @@ rainbow_similarities <- function(results,
                                                      comp_index[x])]))
 
   # Within-comparison similarity per study
-  within_comp <-
+  within_comp0 <-
     sqrt(unlist(lapply(within_set, function(x) {sum(na.omit(x)^2) /
         (length(x) - sum(is.na(x)))})))
+
+  # Use the minimum 'within_comp' among the comparisons of each multi-arm trial
+  within_comp <-
+    unlist(lapply(split(within_comp0, factor(index, levels = unique(index))),
+                  function(x) min(na.omit(x))))
 
   # Set of between-comparison similarities per study
   between_set <-
@@ -119,8 +124,13 @@ rainbow_similarities <- function(results,
                                                       comp_index[x])]))
 
   # Between-comparison similarity per study
-  between_comp <-
+  between_comp0 <-
     sqrt(unlist(lapply(between_set, function(x) {sum(x^2) / length(x)})))
+
+  # Use the minimum 'between_comp' among the comparisons of each multi-arm trial
+  between_comp <-
+    unlist(lapply(split(between_comp0, factor(index, levels = unique(index))),
+                  function(x) min(x)))
 
 
   ## Transform the weights
