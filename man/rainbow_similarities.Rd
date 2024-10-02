@@ -32,15 +32,15 @@ found in the geom's aesthetic properties in the R-package
 }
 \value{
 A horizontal bar plot illustrating the range of Gower's similarity
-values for each study using shades of red and green to indicate low and
-substantial between-comparisons similarity, respectively: the darker the red,
-the lower the between-comparisons similarity (corresponding to values close
-to 0), whilst the darker the green, the higher the between-comparisons
-similarity (corresponding to values close to 1). The study names appear on
-the y-axis in the order they appear in \code{results} and the similarity
-values appear on the x-axis. Red and blue points refer to the (average)
-within-comparison and between-comparisons similarity, respectively, for each
-study.
+values for each study with those found in other comparisons using shades of
+red and green to indicate low and substantial between-comparison similarity,
+respectively: the darker the red, the lower the between-comparison similarity
+(corresponding to values close to 0), whilst the darker the green, the higher
+the between-comparison similarity (corresponding to values close to 1). The
+study names appear on the y-axis in the order they appear in \code{results}
+and the similarity values appear on the x-axis. Red and blue points refer to
+the (average) within-comparison and between-comparison similarity,
+respectively, for each study.
 }
 \description{
 Illustrating the range of Gower's similarity values for each study in the
@@ -55,9 +55,8 @@ similarities by subtracting each value from 1: Gower's dissimilarities take
 values from 0 to 1, with 0 and 1 implying perfect similarity and perfect
 dissimilarity, respectively.
 
-The exact similarity values appear as dotted, vertical, black lines on each
-bar. The root mean square of the similarity values (fixed weights) also
-appear on each bar as a black diamond.
+The unique similarity values appear as dotted, vertical, black lines on each
+bar.
 }
 \references{
 Gower J. General Coefficient of Similarity and Some of Its Properties.
