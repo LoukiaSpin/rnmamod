@@ -137,7 +137,7 @@ weight_defined <- function (diss_res) {
     data.frame(lower, upper)
   } else if (transf == "index") { # Return the minimum for multi-arm studies
     unlist(lapply(split(between_comp / (within_comp + between_comp),
-                        factor(index, levels = unique(index))), function(x) min(x)))
+                        factor(index, levels = unique(index))), function(x) min(na.omit(x))))
   } else if (transf == "fixed") { # Return the minimum for multi-arm studies
     unlist(lapply(split(between_comp, factor(index, levels = unique(index))),
                   function(x) min(x)))
