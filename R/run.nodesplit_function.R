@@ -45,6 +45,8 @@
 #'   \item{diff}{The inconsistency parameter for each split node defined as the
 #'   difference between the direct and indirect effect of the corresponding
 #'   split node.}
+#'   \item{p_value}{The two-sided Bayesian p-value (based on the posterior mean
+#'   on step(diff)) for each split node defined.}
 #'   \item{tau}{The between-trial standard deviation after each split node, when
 #'   the random-effects model has been specified.}
 #'
@@ -286,9 +288,9 @@ run_nodesplit <- function(full,
 
     # Parameters to save
     param_jags <- if (model == "RE") {
-      c("EM", "direct", "diff", "tau", "totresdev.o", "hat.par")
+      c("EM", "direct", "diff", "tau", "totresdev.o", "hat.par", "prob")
     } else {
-      c("EM", "direct", "diff",  "totresdev.o", "hat.par")
+      c("EM", "direct", "diff",  "totresdev.o", "hat.par", "prob")
     }
 
     # Define necessary model components
@@ -468,6 +470,27 @@ run_nodesplit <- function(full,
                       "Rhat",
                       "n.eff")
 
+  # Probability that the inconsistency factor (diff) >= 0
+  prob <- data.frame(pair[, 2],
+                     pair[, 1],
+                     do.call(rbind,
+                             lapply(seq_len(length(pair[, 1])),
+                                    function(i)
+                                      jagsfit[[i]]$BUGSoutput$summary[
+                                        "prob",
+                                        "mean"])))
+  colnames(diff) <- c("treat1",
+                      "treat2",
+                      "mean")
+
+  # Two-sided Bayesian p-value
+  p_value <- data.frame(pair[, 2],
+                        pair[, 1],
+                        2 * min(prob, 1 - prob))
+  colnames(p_value) <- c("treat1",
+                         "treat2",
+                         "p_value")
+
   # Between-trial variance after node-splitting
   if (model == "RE") {
     tau <- data.frame(pair[, 2],
@@ -578,6 +601,7 @@ run_nodesplit <- function(full,
     list(direct = direct,
          indirect = EM,
          diff = diff,
+         p_value = p_value,
          tau = tau,
          model = model,
          model_assessment = model_assessment,
@@ -589,6 +613,7 @@ run_nodesplit <- function(full,
     list(direct = direct,
          indirect = EM,
          diff = diff,
+         p_value = p_value,
          model = model,
          model_assessment = model_assessment,
          n_chains = n_chains,

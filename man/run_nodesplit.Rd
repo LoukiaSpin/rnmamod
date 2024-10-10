@@ -50,6 +50,8 @@ An R2jags output on the summaries of the posterior distribution,
   \item{diff}{The inconsistency parameter for each split node defined as the
   difference between the direct and indirect effect of the corresponding
   split node.}
+  \item{p_value}{The two-sided Bayesian p-value (based on the posterior mean
+  on step(diff)) for each split node defined.}
   \item{tau}{The between-trial standard deviation after each split node, when
   the random-effects model has been specified.}
 

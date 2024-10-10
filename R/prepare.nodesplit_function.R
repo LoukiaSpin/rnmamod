@@ -268,7 +268,8 @@ prepare_nodesplit <- function(measure, model, assumption) {
                                        EM[k, c] <- d.n[k] - d.n[c]
                                    }}
                                    direct ~ dnorm(0, .0001)
-                                   diff <- direct - EM[pair[2], pair[1]]\n")
+                                   diff <- direct - EM[pair[2], pair[1]]
+                                   prob <- step(diff)\n")
 
   stringcode <- if (model == "RE") {
     paste(stringcode, "prec <- pow(tau, -2)
