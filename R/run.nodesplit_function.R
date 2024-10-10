@@ -486,7 +486,7 @@ run_nodesplit <- function(full,
   # Two-sided Bayesian p-value
   p_value <- data.frame(pair[, 2],
                         pair[, 1],
-                        2 * min(prob, 1 - prob))
+                        2 * min(prob[, "mean"], 1 - prob[, "mean"]))
   colnames(p_value) <- c("treat1",
                          "treat2",
                          "p_value")
