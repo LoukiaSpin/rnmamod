@@ -479,14 +479,14 @@ run_nodesplit <- function(full,
                                       jagsfit[[i]]$BUGSoutput$summary[
                                         "prob",
                                         "mean"])))
-  colnames(diff) <- c("treat1",
+  colnames(prob) <- c("treat1",
                       "treat2",
                       "mean")
 
   # Two-sided Bayesian p-value
   p_value <- data.frame(pair[, 2],
                         pair[, 1],
-                        2 * min(prob[, 3], 1 - prob[, 3]))
+                        2 * unlist(lapply(prob[, 3], function(x) {min(c(x, 1 - x))})))
   colnames(p_value) <- c("treat1",
                          "treat2",
                          "p_value")
