@@ -235,6 +235,9 @@ defined as the sum of the KLD value when approximating the direct with
 indirect estimate (blue bars), and the KLD when approximating the indirect
 with direct estimate (black bars). Values parentheses refer to the
 corresponding KLD value.</p>
+<p>The function also returns the data-frame <code>average_KLD</code> that includes the
+split comparisons and the corresponding average Kullback-Leibler divergence
+value.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -282,7 +285,7 @@ doi: 10.1002/jrsm.1167</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Apply the function</span></span></span>
 <span class="r-in"><span><span class="fu">kld_inconsistency</span><span class="op">(</span>node <span class="op">=</span> <span class="va">node</span>,</span></span>
-<span class="r-in"><span>                  threshold <span class="op">=</span> <span class="fl">0.23</span>,</span></span>
+<span class="r-in"><span>                  threshold <span class="op">=</span> <span class="fl">0.64</span>,</span></span>
 <span class="r-in"><span>                  drug_names <span class="op">=</span> <span class="va">interv_names</span>,</span></span>
 <span class="r-in"><span>                  outcome <span class="op">=</span> <span class="st">"Odds ratio (logarithmic scale)"</span>,</span></span>
 <span class="r-in"><span>                  str_wrap_width <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span></span>
