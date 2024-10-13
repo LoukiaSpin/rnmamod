@@ -127,6 +127,10 @@ Kullback-Leibler divergence value when approximating the indirect
 with direct estimate (black bars). Values parentheses refer to the
 corresponding Kullback-Leibler divergence value. Bars are sorted in ascending
 order of the average Kullback-Leibler divergence value.
+
+The function also returns the data-frame \code{average_KLD} that includes the
+split comparisons and the corresponding average Kullback-Leibler divergence
+value.
 }
 \description{
 When the user has extracted results obtained from a method of local

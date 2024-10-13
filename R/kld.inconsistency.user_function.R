@@ -104,6 +104,10 @@
 #' corresponding Kullback-Leibler divergence value. Bars are sorted in ascending
 #' order of the average Kullback-Leibler divergence value.
 #'
+#' The function also returns the data-frame \code{average_KLD} that includes the
+#' split comparisons and the corresponding average Kullback-Leibler divergence
+#' value.
+#'
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link[ggplot2:facet_wrap]{facet_wrap}},
@@ -521,5 +525,6 @@ kld_inconsistency_user <- function(dataset,
           legend.title = element_text(size = legend_title_size, face = "bold"))
 
   return(list(Density_plot = plot,
-              Barplot = barplot))
+              Barplot = barplot,
+              average_KLD = data.frame(comparison, kld_value)))
 }

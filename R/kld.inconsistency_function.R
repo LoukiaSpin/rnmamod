@@ -110,6 +110,10 @@
 #' with direct estimate (black bars). Values parentheses refer to the
 #' corresponding KLD value.
 #'
+#' The function also returns the data-frame \code{average_KLD} that includes the
+#' split comparisons and the corresponding average Kullback-Leibler divergence
+#' value.
+#'
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link[ggplot2:facet_wrap]{facet_wrap}},
@@ -152,7 +156,7 @@
 #'
 #' # Apply the function
 #' kld_inconsistency(node = node,
-#'                   threshold = 0.23,
+#'                   threshold = 0.64,
 #'                   drug_names = interv_names,
 #'                   outcome = "Odds ratio (logarithmic scale)",
 #'                   str_wrap_width = 15)
@@ -614,5 +618,6 @@ kld_inconsistency <- function(node,
           legend.title = element_text(size = legend_title_size, face = "bold"))
 
   return(list(Density_plot = plot,
-              Barplot = barplot))
+              Barplot = barplot,
+              average_KLD = data.frame(comparison, kld_value)))
 }

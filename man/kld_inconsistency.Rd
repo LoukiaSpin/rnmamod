@@ -134,6 +134,10 @@ defined as the sum of the KLD value when approximating the direct with
 indirect estimate (blue bars), and the KLD when approximating the indirect
 with direct estimate (black bars). Values parentheses refer to the
 corresponding KLD value.
+
+The function also returns the data-frame \code{average_KLD} that includes the
+split comparisons and the corresponding average Kullback-Leibler divergence
+value.
 }
 \description{
 A panel of density plots on the direct and indirect estimates of the
@@ -163,7 +167,7 @@ interv_names <- c("placebo", "budesonide", "budesonide plus formoterol",
 
 # Apply the function
 kld_inconsistency(node = node,
-                  threshold = 0.23,
+                  threshold = 0.64,
                   drug_names = interv_names,
                   outcome = "Odds ratio (logarithmic scale)",
                   str_wrap_width = 15)
