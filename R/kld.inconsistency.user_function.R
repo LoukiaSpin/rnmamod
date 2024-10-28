@@ -526,5 +526,5 @@ kld_inconsistency_user <- function(dataset,
 
   return(list(Density_plot = plot,
               Barplot = barplot,
-              average_KLD = data.frame(comparison, kld_value)))
+              average_KLD = data.frame(comparison = dataset[, 1], kld_value)))
 }
