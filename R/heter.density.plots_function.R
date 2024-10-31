@@ -8,7 +8,7 @@
 #' @param distr Character string indicating the prior distribution.
 #'   Set \code{distr} equal to one of the following: \code{"lognormal"},
 #'   \code{"logt"}, or \code{"halfnormal"}, which refers to a log-normal,
-#'   location-scale, or half-normal distribution.
+#'   location-scale, or half-normal distribution, respectively.
 #' @param heter_prior1 A numeric vector with two values for the first prior
 #'   distribution: 1) the mean value and 2) the standard deviation. When
 #'   \code{distr = "halfnormal"}, the first value should zero and the second a
