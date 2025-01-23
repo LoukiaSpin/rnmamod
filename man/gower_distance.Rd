@@ -2,10 +2,10 @@
 % Please edit documentation in R/gower.distance_function.R
 \name{gower_distance}
 \alias{gower_distance}
-\title{Gower's dissimilarity measure
+\title{Weighted Gower's dissimilarity measure
 (Trials' comparability for transitivity evaluation)}
 \usage{
-gower_distance(input)
+gower_distance(input, weight)
 }
 \arguments{
 \item{input}{A data-frame in the long arm-based format. Two-arm trials occupy
@@ -14,6 +14,10 @@ number of possible comparisons among the interventions. The first two
 columns refer to the trial name, and the pairwise comparison,
 respectively. The remaining columns refer to summary characteristics. See
 'Details' for the specification of the columns.}
+
+\item{weight}{A vector of non-negative numbers to define the weight
+contribution of each characteristic. The default is a vector of 1s for all
+characteristics.}
 }
 \value{
 \code{gower_distance} returns the following list of elements:
@@ -26,9 +30,9 @@ respectively. The remaining columns refer to summary characteristics. See
   of studies with the number of characteristics.}
 }
 \description{
-\code{gower_distance} calculate the Gower's dissimilarity coefficient for
-  all pairs of trials included in a network of interventions, considering
-  several characteristics measured at trial level.
+\code{gower_distance} calculate the weighted Gower's dissimilarity
+  coefficient for all pairs of trials included in a network of interventions,
+  considering several characteristics measured at trial level.
   It takes values from 0 to 1, with 0 implying complete similarity and 1
   complete dissimilarity.
 }

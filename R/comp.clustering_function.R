@@ -15,6 +15,9 @@
 #'   columns refer to the trial name, first and second arm of the comparison,
 #'   respectively. The remaining columns refer to summary characteristics. See
 #'   'Details' for the specification of the columns.
+#' @param weight A vector of non-negative numbers to define the weight
+#'   contribution of each characteristic. The default is a vector of 1s for all
+#'   characteristics.
 #' @param drug_names A vector of labels with the name of the interventions
 #'   in the order they have been defined in the argument \code{input}.
 #' @param threshold A positive scalar to indicate the cut-off of low
@@ -223,6 +226,7 @@
 #'
 #' @export
 comp_clustering <- function (input,
+                             weight,
                              drug_names,
                              threshold,
                              informative = TRUE,
@@ -249,6 +253,13 @@ comp_clustering <- function (input,
     input
   }
   colnames(input0)[1:3] <- c("Trial_name", "Arm1", "Arm2")
+
+  # Weight contributions of the characteristics
+  weight <- if (missing(weight)) {
+    rep(1, dim(input)[2] - 3)
+  } else {
+    weight
+  }
 
   # Intervention names
   drug_names <- if (missing(drug_names)) {
@@ -359,8 +370,9 @@ comp_clustering <- function (input,
         FUN = function(x) if (length(x) > 1) paste0(x[1], "(", seq_along(x), ")") else x[1])
 
 
-  ## Calculate the Gower dissimilarity of all study pairs in the network
-  gower_res <- gower_distance(input = input_new)
+  ## Calculate the weighted Gower dissimilarity of all study pairs in the network
+  gower_res <- gower_distance(input = input_new,
+                              weight = weight)
 
 
   ## Re-name the columns/rows with the corresponding comparisons

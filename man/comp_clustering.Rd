@@ -7,6 +7,7 @@
 \usage{
 comp_clustering(
   input,
+  weight,
   drug_names,
   threshold,
   informative = TRUE,
@@ -29,6 +30,10 @@ number of possible comparisons among the interventions. The first three
 columns refer to the trial name, first and second arm of the comparison,
 respectively. The remaining columns refer to summary characteristics. See
 'Details' for the specification of the columns.}
+
+\item{weight}{A vector of non-negative numbers to define the weight
+contribution of each characteristic. The default is a vector of 1s for all
+characteristics.}
 
 \item{drug_names}{A vector of labels with the name of the interventions
 in the order they have been defined in the argument \code{input}.}

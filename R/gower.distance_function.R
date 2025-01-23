@@ -1,10 +1,10 @@
-#' Gower's dissimilarity measure
+#' Weighted Gower's dissimilarity measure
 #' (Trials' comparability for transitivity evaluation)
 #'
 #' @description
-#'   \code{gower_distance} calculate the Gower's dissimilarity coefficient for
-#'   all pairs of trials included in a network of interventions, considering
-#'   several characteristics measured at trial level.
+#'   \code{gower_distance} calculate the weighted Gower's dissimilarity
+#'   coefficient for all pairs of trials included in a network of interventions,
+#'   considering several characteristics measured at trial level.
 #'   It takes values from 0 to 1, with 0 implying complete similarity and 1
 #'   complete dissimilarity.
 #'
@@ -14,6 +14,9 @@
 #'   columns refer to the trial name, and the pairwise comparison,
 #'   respectively. The remaining columns refer to summary characteristics. See
 #'   'Details' for the specification of the columns.
+#' @param weight A vector of non-negative numbers to define the weight
+#'   contribution of each characteristic. The default is a vector of 1s for all
+#'   characteristics.
 #'
 #' @return
 #'   \code{gower_distance} returns the following list of elements:
@@ -52,10 +55,11 @@
 #' doi: 10.2307/2528823
 #'
 #' @export
-gower_distance <- function (input) {
+gower_distance <- function (input, weight) {
 
 
-  ## Check if the dataset is correct
+  ## Default arguments
+  # Check if the dataset is correct
   input <- if (any(sapply(input, typeof)[1:2] != "character")) {
     stop("The first two columns (trial and comparison) must be 'characters').",
          call. = FALSE)
@@ -64,7 +68,11 @@ gower_distance <- function (input) {
   } else {
     input
   }
-
+  weight <- if (missing(weight)) {
+    rep(1, dim(input)[2] - 2)
+  } else {
+    weight
+  }
 
   ## Remove the first two columns
   data <- as.data.frame(input[, -c(1:2)])
@@ -120,8 +128,8 @@ gower_distance <- function (input) {
     #stop("Dissimilarity matrix is zero for all comparisons.", call. = FALSE)
     0
   } else {
-    (apply(data_dist0 * delta_dummy, 1, sum, na.rm = TRUE) /
-       apply(delta_dummy, 1, sum))
+    (apply(data_dist0 * delta_dummy * weight, 1, sum, na.rm = TRUE) /
+       apply(delta_dummy * weight, 1, sum))
   }
 
 
