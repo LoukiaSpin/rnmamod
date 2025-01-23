@@ -256,7 +256,7 @@ comp_clustering <- function (input,
 
   # Weight contributions of the characteristics
   weight <- if (missing(weight)) {
-    rep(1, dim(input)[2] - 3)
+    rep(1, dim(input0)[2] - 3)
   } else {
     weight
   }

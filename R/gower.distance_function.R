@@ -123,13 +123,20 @@ gower_distance <- function (input, weight) {
   }
 
 
+  ## Turn the 'weight' into a matrix with same dimensions as delta_dummy
+  weight_new <- matrix(rep(weight, dim(delta_dummy)[1]),
+                       nrow = dim(delta_dummy)[1],
+                       ncol = dim(delta_dummy)[2],
+                       byrow = TRUE)
+
+
   ## Gower's formula (weighted average of distances)
   data_dist <- if (max(data_dist0, na.rm = TRUE) == 0) {
     #stop("Dissimilarity matrix is zero for all comparisons.", call. = FALSE)
     0
   } else {
-    (apply(data_dist0 * delta_dummy * weight, 1, sum, na.rm = TRUE) /
-       apply(delta_dummy * weight, 1, sum))
+    (apply((data_dist0 * delta_dummy) * weight_new, 1, sum, na.rm = TRUE) /
+       apply(delta_dummy * weight_new, 1, sum))
   }
 
 
