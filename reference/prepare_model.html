@@ -64,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">prepare_model</span><span class="op">(</span><span class="va">measure</span>, <span class="va">model</span>, <span class="va">covar_assumption</span>, <span class="va">assumption</span>, <span class="va">trans_wgt</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">prepare_model</span><span class="op">(</span><span class="va">measure</span>, <span class="va">model</span>, <span class="va">covar_assumption</span>, <span class="va">assumption</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -105,16 +105,6 @@ the following: <code>"HIE-COMMON"</code>, <code>"HIE-TRIAL"</code>, <code>"HIE-A
 <code>"IND"</code> stand for identical, hierarchical and independent,
 respectively. <code>"CORR"</code> and <code>"UNCORR"</code> stand for correlated and
 uncorrelated, respectively.</p></dd>
-
-
-<dt id="arg-trans-wgt">trans_wgt<a class="anchor" aria-label="anchor" href="#arg-trans-wgt"></a></dt>
-<dd><p>Character string indicating whether the model will account
-for study-specific weights. Set <code>trans_wgt</code> equal to one of the
-following: <code>"no"</code>, <code>"vector"</code>, or <code>"matrix"</code>. The
-abbreviation <code>"no"</code> indicates no weights will be accounted for in the
-model. The abbreviations <code>"vector"</code> and <code>"matrix"</code> refer to
-defining the weights as a vector or a two-column matrix, respectively. See
-'Details' in <code><a href="run_model.html">run_model</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

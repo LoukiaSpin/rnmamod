@@ -64,8 +64,7 @@
 <span>  <span class="va">n_iter</span>,</span>
 <span>  <span class="va">n_burnin</span>,</span>
 <span>  <span class="va">n_thin</span>,</span>
-<span>  inits <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  adjust_wgt <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  inits <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -211,14 +210,6 @@ The default argument is 1.</p></dd>
 of the <code><a href="https://rdrr.io/pkg/R2jags/man/jags.html" class="external-link">jags</a></code> function of the R-package
 <a href="https://CRAN.R-project.org/package=R2jags" class="external-link">R2jags</a>.
 The default argument is <code>NULL</code>, and JAGS generates the initial values.</p></dd>
-
-
-<dt id="arg-adjust-wgt">adjust_wgt<a class="anchor" aria-label="anchor" href="#arg-adjust-wgt"></a></dt>
-<dd><p>A positive numeric vector with length equal to the number
-of studies in the network, or a positive numeric matrix with two columns
-and number of rows equal to the number of studies in the network. The
-elements comprise study-specific weights. This argument is optional.
-See 'Details'.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -435,16 +426,6 @@ See 'Details'.</p></dd>
   interventions in the comparison of interest. Hence, regardless of the
   selected <code>measure</code> for a binary outcome, <code>run_model</code> performs
   pairwise or network meta-analysis based on the odds ratio.</p>
-<p>When <code>adjust_wgt</code> is defined, <code>run_model</code> gives less weight to
-  studies with smaller values, and more weight to studies with larger values.
-  Specifically, the model weight the (contribution of the) studies by
-  inflating the between-study variance of the underlying treatment effects of
-  the studies (Proctor et al., 2022). This approach is only relevant for a
-  random-effect model (<code>model = "RE"</code>). When <code>adjust_wgt</code> is
-  specified as a matrix, the columns pertain to the bounds of the uniform
-  distribution. Then, for each study, <code><a href="prepare_model.html">prepare_model</a></code> samples the
-  weights from the corresponding uniform distribution. This is similar to the
-  enrichment-through-weighting approach implemented by Proctor et al. (2022).</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -472,10 +453,6 @@ doi: 10.1198/016214505000001302</p>
 uncertainty due to missing continuous outcome data in pairwise and
 network meta-analysis. <em>Stat Med</em> 2015;<b>34</b>(5):721–41.
 doi: 10.1002/sim.6365</p>
-<p>Proctor T, Zimmermann S, Seide S, Kieser M. A comparison of methods for
-enriching network meta-analyses in the absence of individual patient data.
-<em>Res Synth Methods</em> 2022;<b>13</b>(6):745–759.
-doi: 10.1002/jrsm.1568.</p>
 <p>Spineli LM, Kalyvas C, Papadimitropoulou K. Continuous(ly) missing outcome
 data in network meta-analysis: a one-stage pattern-mixture model approach.
 <em>Stat Methods Med Res</em> 2021;<b>30</b>(4):958–75.
@@ -551,7 +528,7 @@ in meta-analysis–part 1: two-stage methods. <em>Stat Med</em>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Graph information:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Observed stochastic nodes: 100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Unobserved stochastic nodes: 148</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 2620</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Total graph size: 2596</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initializing model</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
