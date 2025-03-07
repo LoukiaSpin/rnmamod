@@ -8,6 +8,7 @@ plot_study_dissimilarities(
   results,
   axis_title_size = 12,
   axis_text_size = 12,
+  strip_text_size = 11,
   label_size = 3.5
 )
 }
@@ -22,6 +23,11 @@ found in the theme's properties in the R-package
 
 \item{axis_text_size}{A positive integer for the font size of axis text (both
 axes). \code{axis_text_size} determines the axis.text argument found in the
+theme's properties in the R-package
+\href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
+
+\item{strip_text_size}{A positive integer for the font size of facet labels.
+\code{strip_text_size} determines the strip.text argument found in the
 theme's properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
 
@@ -72,6 +78,7 @@ res <- comp_clustering(input = data_set,
 plot_study_dissimilarities(results = res,
                            axis_title_size = 12,
                            axis_text_size = 12,
+                           strip_text_size = 11,
                            label_size = 3.5)
 }
 

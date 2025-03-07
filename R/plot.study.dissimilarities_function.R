@@ -14,6 +14,10 @@
 #'   axes). \code{axis_text_size} determines the axis.text argument found in the
 #'   theme's properties in the R-package
 #'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#' @param strip_text_size A positive integer for the font size of facet labels.
+#'   \code{strip_text_size} determines the strip.text argument found in the
+#'   theme's properties in the R-package
+#'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
 #' @param label_size A positive integer for the font size of labels appearing on
 #'   each study-specific segment. \code{label_size} determines the size argument
 #'   found in the geom's aesthetic properties in the R-package
@@ -65,6 +69,7 @@
 #' plot_study_dissimilarities(results = res,
 #'                            axis_title_size = 12,
 #'                            axis_text_size = 12,
+#'                            strip_text_size = 11,
 #'                            label_size = 3.5)
 #' }
 #'
@@ -72,6 +77,7 @@
 plot_study_dissimilarities <- function(results,
                                        axis_title_size = 12,
                                        axis_text_size = 12,
+                                       strip_text_size = 11,
                                        label_size = 3.5) {
 
 
@@ -96,15 +102,17 @@ plot_study_dissimilarities <- function(results,
 
   ## Distinguish between two-arm and multi-arm studies
   # Get the unique study ID (remove the compared treatments)
-  index <- gsub("^\\s+|\\s+$", "",
-                sub("\\(.*", "", gsub('.{3}$', '', rownames(diss))))
+  #index <- gsub("^\\s+|\\s+$", "",
+  #              sub("\\(.*", "", gsub('.{0}$', '', rownames(diss))))
+  index <- gsub( " .*$", "", rownames(diss))
 
   # Split dataset by 'index'
   split_multi_arms <- split(diss, factor(index, levels = unique(index)))
 
   # Get the comparison for each study
-  comp_index <- gsub("^\\s+|\\s+$", "",
-                     substring(rownames(diss), nchar(rownames(diss)) - 3))
+  #comp_index <- gsub("^\\s+|\\s+$", "",
+  #                   substring(rownames(diss), nchar(rownames(diss)) - 3))
+  comp_index <- sub(".* ", "", rownames(diss))
 
   # Split 'diss' further by 'rownames(diss)'
   split_comp <- split(diss, factor(rownames(diss), levels = unique(rownames(diss))))
@@ -243,6 +251,7 @@ plot_study_dissimilarities <- function(results,
                                     colour = "black"),
           axis.text = element_text(size = axis_text_size),
           panel.border = element_blank(),
+          strip.text = element_text(size = strip_text_size),
           legend.position = "bottom",
           legend.title = element_text(size = axis_title_size,
                                       face = "bold",
