@@ -239,7 +239,8 @@ covar_contribution_plot <- function (contr_res,
         facet_wrap(~variable) +
         scale_colour_manual(values = c("Yes" = "blue", "No" = "red")) +
         scale_y_continuous(limits = c(0, upper_limit), expand = c(0.03, 0)) +
-        {if(percentage == TRUE)scale_x_continuous(breaks = seq(0, 1, 0.10))} +
+        {if(percentage == TRUE)scale_x_continuous(breaks = seq(0, 1, 0.20),
+                                                  labels = seq(0, 1, 0.20))} +
         {if(percentage == FALSE)
           scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
                              expand = c(0.02, 0),
@@ -269,7 +270,8 @@ covar_contribution_plot <- function (contr_res,
         geom_point(colour = "red") +
         facet_wrap(~variable) +
         scale_y_continuous(limits = c(0, upper_limit), expand = c(0.03, 0)) +
-        {if(percentage == TRUE)scale_x_continuous(breaks = seq(0, 1, 0.10))} +
+        {if(percentage == TRUE)scale_x_continuous(breaks = seq(0, 1, 0.20),
+                                                  labels = seq(0, 1, 0.20))} +
         {if(percentage == FALSE)
           scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
                              expand = c(0.02, 0),
@@ -296,7 +298,8 @@ covar_contribution_plot <- function (contr_res,
         facet_wrap(~variable) +
         scale_colour_manual(values = c("Yes" = "blue", "No" = "red")) +
         scale_y_continuous(limits = c(0, upper_limit), expand = c(0.03, 0)) +
-        {if(percentage == TRUE)scale_x_continuous(breaks = seq(0, 1, 0.10))} +
+        {if(percentage == TRUE)scale_x_continuous(breaks = seq(0, 1, 0.20),
+                                                  labels = seq(0, 1, 0.20))} +
         {if(percentage == FALSE)
           scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
                              expand = c(0.02, 0),
@@ -333,7 +336,8 @@ covar_contribution_plot <- function (contr_res,
         facet_wrap(~variable) +
         scale_colour_manual(values = c("Yes" = "blue", "No" = "red")) +
         scale_y_continuous(limits = c(0, upper_limit), expand = c(0.03, 0)) +
-        {if(percentage == TRUE)scale_x_continuous(breaks = seq(0, 1, 0.10))} +
+        {if(percentage == TRUE)scale_x_continuous(breaks = seq(0, 1, 0.20),
+                                                  labels = seq(0, 1, 0.20))} +
         {if(percentage == FALSE)
           scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
                              expand = c(0.02, 0),
@@ -364,7 +368,8 @@ covar_contribution_plot <- function (contr_res,
         geom_point(colour = "red") +
         facet_wrap(~variable) +
         scale_y_continuous(limits = c(0, upper_limit), expand = c(0.03, 0)) +
-        {if(percentage == TRUE)scale_x_continuous(breaks = seq(0, 1, 0.10))} +
+        {if(percentage == TRUE)scale_x_continuous(breaks = seq(0, 1, 0.20),
+                                                  labels = seq(0, 1, 0.20))} +
         {if(percentage == FALSE)
           scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
                              expand = c(0.02, 0),
@@ -392,7 +397,8 @@ covar_contribution_plot <- function (contr_res,
         facet_wrap(~variable) +
         scale_colour_manual(values = c("Yes" = "blue", "No" = "red")) +
         scale_y_continuous(limits = c(0, upper_limit), expand = c(0.03, 0)) +
-        {if(percentage == TRUE)scale_x_continuous(breaks = seq(0, 1, 0.10))} +
+        {if(percentage == TRUE)scale_x_continuous(breaks = seq(0, 1, 0.20),
+                                                  labels = seq(0, 1, 0.20))} +
         {if(percentage == FALSE)
           scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
                              expand = c(0.02, 0),
@@ -422,7 +428,8 @@ covar_contribution_plot <- function (contr_res,
                    colour = "grey") +
         geom_point(colour = "red") +
         scale_y_continuous(limits = c(0, upper_limit), expand = c(0.03, 0)) +
-        {if(percentage == TRUE)scale_x_continuous(breaks = seq(0, 1, 0.10))} +
+        {if(percentage == TRUE)scale_x_continuous(breaks = seq(0, 1, 0.20),
+                                                  labels = seq(0, 1, 0.20))} +
         {if(percentage == FALSE)
           scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
                              expand = c(0.02, 0),
