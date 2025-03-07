@@ -258,5 +258,7 @@ plot_study_dissimilarities <- function(results,
                                       colour = "black"),
           legend.text = element_text(size = axis_text_size))
 
-  return(p1)
+  return(list(p1,
+              within = data_rms_within[, c(3, 4, 2)],
+              between = data_rms_between[, c(3, 4, 2)]))
 }
