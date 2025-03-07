@@ -104,7 +104,7 @@ plot_study_dissimilarities <- function(results,
   # Get the unique study ID (remove the compared treatments)
   #index <- gsub("^\\s+|\\s+$", "",
   #              sub("\\(.*", "", gsub('.{0}$', '', rownames(diss))))
-  index <- gsub( " .*$", "", rownames(diss))
+  index <- sub("\\s+[^ ]+$", "", rownames(diss)) #gsub( " .*$", "", rownames(diss))
 
   # Split dataset by 'index'
   split_multi_arms <- split(diss, factor(index, levels = unique(index)))
@@ -112,7 +112,7 @@ plot_study_dissimilarities <- function(results,
   # Get the comparison for each study
   #comp_index <- gsub("^\\s+|\\s+$", "",
   #                   substring(rownames(diss), nchar(rownames(diss)) - 3))
-  comp_index <- sub(".* ", "", rownames(diss))
+  comp_index <- sub(".*\\s", "", rownames(diss)) # sub(".* ", "", rownames(diss))
 
   # Split 'diss' further by 'rownames(diss)'
   split_comp <- split(diss, factor(rownames(diss), levels = unique(rownames(diss))))
