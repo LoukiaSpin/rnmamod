@@ -49,6 +49,9 @@
 #'   \code{seq_by} appears in the arguments breaks and labels found in the
 #'   scale_x_continuous aesthetic properties in the R-package
 #'   \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.
+#' @param percentage Logical with values \code{TRUE} if the covariate is
+#'   measured in per cent  and \code{FALSE} otherwise. The default argument is
+#'   \code{FALSE}.
 #'
 #' @return If interest lies only on the study percentage contributions to the
 #' summary treatment effects of all possible pairwise comparisons, the function
@@ -119,7 +122,8 @@ covar_contribution_plot <- function (contr_res,
                                      strip_text_size = 14,
                                      subtitle_size = 14,
                                      label_size = 4,
-                                     seq_by = 0.1) {
+                                     seq_by = 0.1,
+                                     percentage = FALSE) {
 
 
   ## Default arguments
@@ -235,10 +239,12 @@ covar_contribution_plot <- function (contr_res,
         facet_wrap(~variable) +
         scale_colour_manual(values = c("Yes" = "blue", "No" = "red")) +
         scale_y_continuous(limits = c(0, upper_limit), expand = c(0.03, 0)) +
-        scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
-                           expand = c(0.02, 0),
-                           breaks = seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by),
-                           labels = sprintf("%.2f", seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by))) +
+        if(percentage == TRUE){scale_x_continuous(breaks = seq(0, 1, 0.10))} +
+        if(percentage == FALSE){
+          scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
+                             expand = c(0.02, 0),
+                             breaks = seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by),
+                             labels = sprintf("%.2f", seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by)))} +
         labs(x = name_x_axis,
              y = "Study contributions (%)",
              colour = "Provides direct evidence",
@@ -263,10 +269,12 @@ covar_contribution_plot <- function (contr_res,
         geom_point(colour = "red") +
         facet_wrap(~variable) +
         scale_y_continuous(limits = c(0, upper_limit), expand = c(0.03, 0)) +
-        scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
-                           expand = c(0.02, 0),
-                           breaks = seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by),
-                           labels = sprintf("%.2f", seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by))) +
+        if(percentage == TRUE){scale_x_continuous(breaks = seq(0, 1, 0.10))} +
+        if(percentage == FALSE){
+          scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
+                             expand = c(0.02, 0),
+                             breaks = seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by),
+                             labels = sprintf("%.2f", seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by)))} +
         labs(x = name_x_axis,
              y = "Study contributions (%)",
              subtitle = "Treatment effects (functional parameters)") +
@@ -288,10 +296,12 @@ covar_contribution_plot <- function (contr_res,
         facet_wrap(~variable) +
         scale_colour_manual(values = c("Yes" = "blue", "No" = "red")) +
         scale_y_continuous(limits = c(0, upper_limit), expand = c(0.03, 0)) +
-        scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
-                           expand = c(0.02, 0),
-                           breaks = seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by),
-                           labels = sprintf("%.2f", seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by))) +
+        if(percentage == TRUE){scale_x_continuous(breaks = seq(0, 1, 0.10))} +
+        if(percentage == FALSE){
+          scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
+                             expand = c(0.02, 0),
+                             breaks = seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by),
+                             labels = sprintf("%.2f", seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by)))} +
         labs(x = name_x_axis,
              y = "Study contributions (%)",
              colour = "Provides direct evidence",
@@ -323,10 +333,12 @@ covar_contribution_plot <- function (contr_res,
         facet_wrap(~variable) +
         scale_colour_manual(values = c("Yes" = "blue", "No" = "red")) +
         scale_y_continuous(limits = c(0, upper_limit), expand = c(0.03, 0)) +
-        scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
-                           expand = c(0.02, 0),
-                           breaks = seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by),
-                           labels = sprintf("%.2f", seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by))) +
+        if(percentage == TRUE){scale_x_continuous(breaks = seq(0, 1, 0.10))} +
+        if(percentage == FALSE){
+          scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
+                             expand = c(0.02, 0),
+                             breaks = seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by),
+                             labels = sprintf("%.2f", seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by)))} +
         labs(x = name_x_axis,
              y = "Study contributions (%)",
              colour = "Provides direct evidence",
@@ -352,10 +364,12 @@ covar_contribution_plot <- function (contr_res,
         geom_point(colour = "red") +
         facet_wrap(~variable) +
         scale_y_continuous(limits = c(0, upper_limit), expand = c(0.03, 0)) +
-        scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
-                           expand = c(0.02, 0),
-                           breaks = seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by),
-                           labels = sprintf("%.2f", seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by))) +
+        if(percentage == TRUE){scale_x_continuous(breaks = seq(0, 1, 0.10))} +
+        if(percentage == FALSE){
+          scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
+                             expand = c(0.02, 0),
+                             breaks = seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by),
+                             labels = sprintf("%.2f", seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by)))} +
         labs(x = name_x_axis,
              y = "Study contributions (%)",
              subtitle = "Regression coefficients (functional parameters)") +
@@ -378,10 +392,12 @@ covar_contribution_plot <- function (contr_res,
         facet_wrap(~variable) +
         scale_colour_manual(values = c("Yes" = "blue", "No" = "red")) +
         scale_y_continuous(limits = c(0, upper_limit), expand = c(0.03, 0)) +
-        scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
-                           expand = c(0.02, 0),
-                           breaks = seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by),
-                           labels = sprintf("%.2f", seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by))) +
+        if(percentage == TRUE){scale_x_continuous(breaks = seq(0, 1, 0.10))} +
+        if(percentage == FALSE){
+          scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
+                             expand = c(0.02, 0),
+                             breaks = seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by),
+                             labels = sprintf("%.2f", seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by)))} +
         labs(x = name_x_axis,
              y = "Study contributions (%)",
              colour = "Provides direct evidence",
@@ -406,10 +422,12 @@ covar_contribution_plot <- function (contr_res,
                    colour = "grey") +
         geom_point(colour = "red") +
         scale_y_continuous(limits = c(0, upper_limit), expand = c(0.03, 0)) +
-        scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
-                           expand = c(0.02, 0),
-                           breaks = seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by),
-                           labels = sprintf("%.2f", seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by))) +
+        if(percentage == TRUE){scale_x_continuous(breaks = seq(0, 1, 0.10))} +
+        if(percentage == FALSE){
+          scale_x_continuous(limits = c(min(dataset_treat$covar), max(dataset_treat$covar)),
+                             expand = c(0.02, 0),
+                             breaks = seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by),
+                             labels = sprintf("%.2f", seq(min(dataset_treat$covar), max(dataset_treat$covar), seq_by)))} +
         labs(x = name_x_axis,
              y = "Study contributions (%)",
              subtitle = "Regression coefficient (common interaction)") +

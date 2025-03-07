@@ -15,7 +15,8 @@ covar_contribution_plot(
   strip_text_size = 14,
   subtitle_size = 14,
   label_size = 4,
-  seq_by = 0.1
+  seq_by = 0.1,
+  percentage = FALSE
 )
 }
 \arguments{
@@ -70,6 +71,10 @@ the geom's aesthetic properties in the R-package
 \code{seq_by} appears in the arguments breaks and labels found in the
 scale_x_continuous aesthetic properties in the R-package
 \href{https://CRAN.R-project.org/package=ggplot2}{ggplot2}.}
+
+\item{percentage}{Logical with values \code{TRUE} if the covariate is
+measured in per cent  and \code{FALSE} otherwise. The default argument is
+\code{FALSE}.}
 }
 \value{
 If interest lies only on the study percentage contributions to the
