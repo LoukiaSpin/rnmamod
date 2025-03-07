@@ -289,8 +289,7 @@ run_series_meta <- function(full,
                   n_iter,
                   n_burnin,
                   n_thin,
-                  inits = inits,
-                  adjust_wgt = NULL)
+                  inits = inits)
         })
     })
   }
