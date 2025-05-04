@@ -30,6 +30,14 @@
 #' to the (average) within-comparison and between-comparison dissimilarity,
 #' respectively, for each study.
 #'
+#' A data-frame on the (average) within-comparison and between-comparison
+#' dissimilarities for each study alongside the study name and comparison.
+#' The last two columns refer to the within-comparison and between-comparison
+#' dissimilarities, respectively, after replacing with the maximum value in the
+#' multi-arm trials. These two columns should be used as a covariate in the
+#' function \code{\link{study_perc_contrib}} to obtain the
+#' percentage contribution of each study based on the covariate values.
+#'
 #' @details
 #' The range of Gower's dissimilarity values for each study versus the remaining
 #' studies in the network for a set of clinical and methodological
@@ -37,12 +45,12 @@
 #' values from 0 to 1, with 0 and 1 implying perfect similarity and perfect
 #' dissimilarity, respectively.
 #'
-#' The unique similarity values appear as dotted, vertical, black lines on each
-#' bar.
+#' The unique dissimilarity values appear as dotted, vertical, grey lines on
+#' each study
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link{comp_clustering}}
+#' @seealso \code{\link{comp_clustering}}, \code{\link{study_perc_contrib}}
 #'
 #' @references
 #' Gower J. General Coefficient of Similarity and Some of Its Properties.
@@ -52,7 +60,7 @@
 #' @examples
 #' \donttest{
 #' # Fictional dataset
-#' data_set <- data.frame(Trial_name = as.character(1:7),
+#' data_set <- data.frame(Trial_name = paste("study", as.character(1:7)),
 #'                       arm1 = c("1", "1", "1", "1", "1", "2", "2"),
 #'                       arm2 = c("2", "2", "2", "3", "3", "3", "3"),
 #'                       sample = c(140, 145, 150, 40, 45, 75, 80),
@@ -100,71 +108,57 @@ plot_study_dissimilarities <- function(results,
   diag(diss) <- NA
 
 
-  ## Distinguish between two-arm and multi-arm studies
+  ## Summarise within-comparison and between-comparison dissimilarity for each study
   # Get the unique study ID (remove the compared treatments)
-  #index <- gsub("^\\s+|\\s+$", "",
-  #              sub("\\(.*", "", gsub('.{0}$', '', rownames(diss))))
   index <- sub("\\s+[^ ]+$", "", rownames(diss)) #gsub( " .*$", "", rownames(diss))
 
-  # Split dataset by 'index'
-  split_multi_arms <- split(diss, factor(index, levels = unique(index)))
-
   # Get the comparison for each study
-  #comp_index <- gsub("^\\s+|\\s+$", "",
-  #                   substring(rownames(diss), nchar(rownames(diss)) - 3))
   comp_index <- sub(".*\\s", "", rownames(diss)) # sub(".* ", "", rownames(diss))
 
   # Split 'diss' further by 'rownames(diss)'
-  split_comp <- split(diss, factor(rownames(diss), levels = unique(rownames(diss))))
+  split_diss <- split(diss, factor(rownames(diss), levels = unique(rownames(diss))))
 
   # Split 'split_comp' further by 'comp_index'
-  split_study_comp <- lapply(split_comp, function(x) split(x, comp_index))
+  split_study_comp <- lapply(split_diss, function(x) split(x, comp_index))
 
-  # Set of within-comparison similarities per study
-  within_set <-
+  # Set of within-comparison dissimilarities per study
+  within_set0 <-
     lapply(1:length(split_study_comp),
            function(x)
              unlist(split_study_comp[[x]][is.element(names(split_study_comp[[x]]),
                                                      comp_index[x])]))
 
-  # Within-comparison similarity per study
-  within_comp0 <-
+  # Set to zero the within-comparison dissimilarities of single study comparisons
+  within_set <- ifelse(is.na(within_set0), 0, within_set0)
+
+  # Within-comparison dissimilarity per study
+  within_comp <-
     sqrt(unlist(lapply(within_set, function(x) {sum(na.omit(x)^2) /
         (length(x) - sum(is.na(x)))})))
 
-  # Use the minimum 'within_comp' among the comparisons of each multi-arm trial
-  within_comp <-
-    unlist(lapply(split(within_comp0, factor(index, levels = unique(index))),
-                  function(x) min(na.omit(x))))
-
-  # Set of between-comparison similarities per study
+  # Set of between-comparison dissimilarities per study
   between_set <-
     lapply(1:length(split_study_comp),
            function(x)
              unlist(split_study_comp[[x]][!is.element(names(split_study_comp[[x]]),
                                                       comp_index[x])]))
 
-  # Between-comparison similarity per study
-  between_comp0 <-
-    sqrt(unlist(lapply(between_set, function(x) {sum(x^2) / length(x)})))
-
-  # Use the minimum 'between_comp' among the comparisons of each multi-arm trial
+  # Between-comparison dissimilarity per study
   between_comp <-
-    unlist(lapply(split(between_comp0, factor(index, levels = unique(index))),
-                  function(x) min(x)))
+    sqrt(unlist(lapply(between_set, function(x) {sum(x^2) / length(x)})))
 
 
   ## Raw data to be plotted in 'geom_crossbar'
   # Prepare dataset
-  data_raw <- melt(split_multi_arms); colnames(data_raw)[2] <- "study"
+  data_raw <- melt(split_diss); colnames(data_raw)[2] <- "study"; data_raw$study <- sub("\\s+[^ ]+$", "", data_raw$study)
 
   # Define the following variables
   study_id <- xend <- yend <- NULL
 
   # Add the study id
   data_raw$study_id <-
-    unlist(lapply(1:length(split_multi_arms),
-                  function(x) rep(x, length(split_multi_arms[[x]]))))
+    unlist(lapply(1:length(split_diss),
+                  function(x) rep(x, length(split_diss[[x]]))))
 
   # Add the bounds
   data_raw$min <- data_raw$value; data_raw$max <- data_raw$value
@@ -174,15 +168,17 @@ plot_study_dissimilarities <- function(results,
 
 
   ## Prepare extra dataset for the 'within_comp' and 'between_comp'
-  # Include 'within-comparison' similarities
-  data_rms_within <- data.frame(var = unique(names(split_multi_arms)),
-                                melt(within_comp),
+  # Include 'within-comparison' dissimilarities
+  within_value <- NA
+  data_rms_within <- data.frame(study = index,
+                                within_value = within_comp,
                                 study_id = 1:length(within_comp),
                                 comp = comp_index)
 
-  # Include 'between-comparison' similarities
-  data_rms_between <- data.frame(var = unique(names(split_multi_arms)),
-                                 melt(between_comp),
+  # Include 'between-comparison' dissimilarities
+  between_value <- NA
+  data_rms_between <- data.frame(study = index,
+                                 between_value = between_comp,
                                  study_id = 1:length(between_comp),
                                  comp = comp_index)
 
@@ -191,46 +187,45 @@ plot_study_dissimilarities <- function(results,
   p1 <-
     ggplot(na.omit(data_raw),
            aes(x = value,
-               y = study_id,
+               y = study,
                xmin = min,
                xmax = max)) +
     facet_grid(comp ~ .,
                scales = "free",
                space = "free") +
-    geom_crossbar(colour = "black",
-                  linetype = "dotted",
+    geom_crossbar(colour = "grey",
                   width = 0.79) +
-    scale_y_reverse(breaks = 1:length(unique(index)),
-                    labels = unique(index),
-                    expand = c(0, 0)) +
+    #scale_y_reverse(breaks = 1:length(unique(index)),
+    #                labels = unique(index),
+    #                expand = c(0, 0)) +
     geom_point(data = data_rms_within,
-               aes(x = value,
-                   y = study_id,
+               aes(x = within_value,
+                   y = study, #factor(study_id)
                    fill = "Within-comparison"),
                color = "red",
                size = 3.0,
                shape = "diamond",
                inherit.aes = FALSE) +
     geom_point(data = data_rms_between,
-               aes(x = value,
-                   y = study_id,
+               aes(x = between_value,
+                   y = study, #factor(study_id)
                    fill = "Between-comparison"),
                color = "blue",
                size = 3.0,
                shape = "diamond",
                inherit.aes = FALSE) +
     geom_text(data = data_rms_within,
-              aes(x = value,
-                  y = study_id,
-                  label = sprintf("%.2f", value)),
+              aes(x = within_value,
+                  y = study, #factor(study_id)
+                  label = sprintf("%.2f", within_value)),
               size = label_size,
               vjust = 0.5, # -0.85
               hjust = 1.25,
               inherit.aes = FALSE) +
     geom_text(data = data_rms_between,
-              aes(x = value,
-                  y = study_id,
-                  label = sprintf("%.2f", value)),
+              aes(x = between_value,
+                  y = study, #factor(study_id)
+                  label = sprintf("%.2f", between_value)),
               size = label_size,
               vjust = 0.5, # -0.85
               hjust = 1.25,
@@ -258,7 +253,30 @@ plot_study_dissimilarities <- function(results,
                                       colour = "black"),
           legend.text = element_text(size = axis_text_size))
 
+
+  ## In multi-arm trials, replace within-comparison and between-comparison dissimilarity with the maximum value
+  # Remove the indicator of multi-arm trials
+  clean_name <- gsub("\\(\\d+\\)", "", data_rms_within$study)
+
+  # Find the maximum within-comparison dissimilarity
+  within_multi <- lapply(split(data_rms_within, factor(clean_name, unique(clean_name))), function(x) max(x$within_value))
+
+  # Find the maximum between-comparison dissimilarity
+  between_multi <- lapply(split(data_rms_between, factor(clean_name, unique(clean_name))), function(x) max(x$between_value))
+
+  # Repeat the maximum within-comparison value in all comparisons of the multi-arm study
+  within_multi_rep <- lapply(1:length(within_multi), function(x) rep(within_multi[[x]], dim(split(data_rms_within, factor(clean_name, unique(clean_name)))[[x]])[1]))
+
+  # Repeat the maximum between-comparison value in all comparisons of the multi-arm study
+  between_multi_rep <- lapply(1:length(between_multi), function(x) rep(between_multi[[x]], dim(split(data_rms_between, factor(clean_name, unique(clean_name)))[[x]])[1]))
+
+  # Collect results
+  collect_multi <- data.frame(within_multiarm = unlist(within_multi_rep), between_multiarm = unlist(between_multi_rep))
+
   return(list(p1,
-              within = data_rms_within[, c(3, 4, 2)],
-              between = data_rms_between[, c(3, 4, 2)]))
+              diss_values = data.frame(study_id = data_rms_within[, 3],
+                                       study = data_rms_within$study,
+                                       data_rms_within[, c(4, 2)],
+                                       between_value = data_rms_between[, 2],
+                                       collect_multi)))
 }

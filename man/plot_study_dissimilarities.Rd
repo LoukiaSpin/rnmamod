@@ -43,6 +43,14 @@ study names appear on the y-axis in the order they appear in \code{results}
 and the dissimilarity values appear on the x-axis. Red and blue points refer
 to the (average) within-comparison and between-comparison dissimilarity,
 respectively, for each study.
+
+A data-frame on the (average) within-comparison and between-comparison
+dissimilarities for each study alongside the study name and comparison.
+The last two columns refer to the within-comparison and between-comparison
+dissimilarities, respectively, after replacing with the maximum value in the
+multi-arm trials. These two columns should be used as a covariate in the
+function \code{\link{study_perc_contrib}} to obtain the
+percentage contribution of each study based on the covariate values.
 }
 \description{
 Illustrating the range of Gower's dissimilarity values for each study in the
@@ -55,13 +63,13 @@ characteristics that may act as effect modifiers. Gower's dissimilarities take
 values from 0 to 1, with 0 and 1 implying perfect similarity and perfect
 dissimilarity, respectively.
 
-The unique similarity values appear as dotted, vertical, black lines on each
-bar.
+The unique dissimilarity values appear as dotted, vertical, grey lines on
+each study
 }
 \examples{
 \donttest{
 # Fictional dataset
-data_set <- data.frame(Trial_name = as.character(1:7),
+data_set <- data.frame(Trial_name = paste("study", as.character(1:7)),
                       arm1 = c("1", "1", "1", "1", "1", "2", "2"),
                       arm2 = c("2", "2", "2", "3", "3", "3", "3"),
                       sample = c(140, 145, 150, 40, 45, 75, 80),
@@ -89,7 +97,7 @@ Gower J. General Coefficient of Similarity and Some of Its Properties.
 doi: 10.2307/2528823
 }
 \seealso{
-\code{\link{comp_clustering}}
+\code{\link{comp_clustering}}, \code{\link{study_perc_contrib}}
 }
 \author{
 {Loukia M. Spineli}
