@@ -32,6 +32,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .
 
       - uses: r-lib/actions/setup-r@v4
         with:
