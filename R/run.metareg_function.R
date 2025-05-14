@@ -529,7 +529,7 @@ run_metareg <- function(full,
                        abs_risk = abs_risk)
     nma_results <- append(ma_results, list(SUCRA = SUCRA,
                                            effectiveness = effectiveness,
-                                           D = full$D))
+                                           D = D))
   } else if (model == "FE") {
     ma_results <- list(EM = EM,
                        beta_all = beta_all,
@@ -554,7 +554,7 @@ run_metareg <- function(full,
                        abs_risk = abs_risk)
     nma_results <- append(ma_results, list(SUCRA = SUCRA,
                                            effectiveness = effectiveness,
-                                           D = full$D))
+                                           D = D))
   }
 
   class(ma_results) <- class(nma_results) <- "run_metareg"

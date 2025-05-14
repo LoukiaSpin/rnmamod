@@ -14,6 +14,7 @@ comp_clustering(
   ranged_values = FALSE,
   optimal_clusters,
   get_plots = "none",
+  override = FALSE,
   label_size = 4,
   title_size = 14,
   axis_title_size = 14,
@@ -62,6 +63,10 @@ trials minus one.}
 \item{get_plots}{Logical with values \code{TRUE} for returning all plots and
 \code{FALSE} for concealing the plots. The default argument is
 \code{FALSE}.}
+
+\item{override}{Logical with values \code{TRUE} to run the function for a
+pairwise meta-analysis and \code{FALSE} to stop the function in case of two
+treatments. The default argument is \code{FALSE}.}
 
 \item{label_size}{A positive integer for the font size of labels in the
 violin plot for the study dissimilarities per comparison and comparison

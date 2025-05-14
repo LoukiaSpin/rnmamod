@@ -231,11 +231,12 @@ balloon_plot <- function(sens, compar, drug_names) {
                                 "circle plus")) +
       scale_size(range = c(0, 30)) +
       geom_text(colour = "black", fontface = "bold", size = 4.5) +
-      geom_label(aes(median(order(scenarios)),
-                     median(order(scenarios)),
-                     label = round(exp(mat[median(1:(length(scenarios)^2)), 3]),
-                                   2)),
-                 colour = "black", fontface = "bold",  size = 4.5) +
+      geom_label(data = data.frame(x = median(order(scenarios)),
+                                   y = median(order(scenarios)),
+                                   label = exp(mat[median(1:(length(scenarios)^2)), 3])),
+                 aes(x = x, y = y, label = round(label, 2)),
+                 colour = "black", fontface = "bold",  size = 4.5,
+                 inherit.aes = FALSE) +
       scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
       scale_x_continuous(breaks = seq_len(length(scenarios)),
                          labels = labels,
@@ -295,10 +296,12 @@ balloon_plot <- function(sens, compar, drug_names) {
                                 "circle plus")) +
       scale_size(range = c(0, 30)) +
       geom_text(colour = "black", fontface = "bold", size = 4.5) +
-      geom_label(aes(median(order(scenarios)),
-                     median(order(scenarios)),
-                     label = mat[median(1:(length(scenarios)^2)), 3]),
-                 colour = "black", fontface = "bold",  size = 4.5) +
+      geom_label(data = data.frame(x = median(order(scenarios)),
+                                   y = median(order(scenarios)),
+                                   label = mat[median(1:(length(scenarios)^2)), 3]),
+                 aes(x = x, y = y, label = round(label, 2)),
+                 colour = "black", fontface = "bold",  size = 4.5,
+                 inherit.aes = FALSE) +
       scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
       scale_x_continuous(breaks = seq_len(length(scenarios)),
                          labels = labels,
@@ -402,12 +405,16 @@ balloon_plot <- function(sens, compar, drug_names) {
                  shape = ifelse(extent_tau == "low", "circle", "circle plus")) +
       scale_size(range = c(0, 30)) +
       geom_text(colour = "black", fontface = "bold", size = 4.5) +
-      geom_label(aes(median(order(scenarios)),
-                     median(order(scenarios)),
-                     label = sprintf("%.2f",
-                                     mat_tau[median(1:(length(scenarios)^2)),
-                                             3])),
-                 colour = "black", fontface = "bold",  size = 4.5) +
+      geom_label(data =
+                   data.frame(x = median(order(scenarios)),
+                              y = median(order(scenarios)),
+                              label = mat_tau[median(1:(length(scenarios)^2)),
+                                              3]),
+                 aes(x = x,
+                     y = y,
+                     label = sprintf("%.2f", label)),
+                 colour = "black", fontface = "bold",  size = 4.5,
+                 inherit.aes = FALSE) +
       scale_color_gradient(low = "deepskyblue", high = "#D55E00") +
       scale_x_continuous(breaks = seq_len(length(scenarios)),
                          labels = labels,
