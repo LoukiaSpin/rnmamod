@@ -510,49 +510,48 @@ comp_clustering <- function (input,
   ## Violin plot on between-comparison dissimilarity distribution
   suppressWarnings({
     a_comp_diss_plot <-
-      ggplot(subset(diss_dataset, index == "Between-comparison"),
-             aes(x = reorder(comp, total, decreasing = TRUE),
-                 y = diss)) +
-      geom_violin(fill = "#99CCFF",
-                  trim = TRUE, #FALSE
-                  alpha = 0.2) +
-      geom_boxplot(outlier.alpha = 0.3,
-                   fill = "white",
-                   colour = "black",
-                   varwidth = TRUE) +
-      stat_boxplot(geom = 'errorbar',
-                   width = 0.2,
-                   linetype = "dashed") +
-      geom_point() +
-      geom_point(aes(x = reorder(comp, total, decreasing = TRUE),
-                     y = total),
-                 color = "blue",
-                 size = 2.5,
-                 shape = 21,
-                 stroke = 1.5) +
-      geom_text(aes(x = reorder(comp, total, decreasing = TRUE),
-                    y = total,
-                    label = sprintf("%0.2f", total)),
-                hjust = 1.3, #1.2
-                vjust = 0.2,
-                size = label_size,
-                fontface = "bold",
-                colour = "blue",
-                inherit.aes = FALSE) +
-      scale_x_discrete(labels = function(x) str_wrap(x,
-                                                     width = str_wrap_width)) +
-      labs(x = "Comparisons between comparisons",
-           y = "Gower's dissimilarity") +
-      coord_cartesian(ylim = c(0, 1)) +
-      theme_classic() +
-      theme(title = element_text(size = title_size, face = "bold"),
-            axis.title = element_text(size = axis_title_size, face = "bold"),
-            axis.text = element_text(size = axis_text_size),
-            axis.text.x = element_text(angle = axis_x_text_angle,
-                                       hjust =
-                                         ifelse(axis_x_text_angle == 0, 0.5, 1)))
-  })
-
+        ggplot(subset(diss_dataset, index == "Between-comparison"),
+               aes(x = reorder(comp, total, decreasing = TRUE),
+                   y = diss)) +
+        geom_violin(fill = "#99CCFF",
+                    trim = TRUE, #FALSE
+                    alpha = 0.2) +
+        geom_boxplot(outlier.alpha = 0.3,
+                     fill = "white",
+                     colour = "black",
+                     varwidth = TRUE) +
+        stat_boxplot(geom = 'errorbar',
+                     width = 0.2,
+                     linetype = "dashed") +
+        geom_point() +
+        geom_point(aes(x = reorder(comp, total, decreasing = TRUE),
+                       y = total),
+                   color = "blue",
+                   size = 2.5,
+                   shape = 21,
+                   stroke = 1.5) +
+        geom_text(aes(x = reorder(comp, total, decreasing = TRUE),
+                      y = total,
+                      label = sprintf("%0.2f", total)),
+                  hjust = 1.3, #1.2
+                  vjust = 0.2,
+                  size = label_size,
+                  fontface = "bold",
+                  colour = "blue",
+                  inherit.aes = FALSE) +
+        scale_x_discrete(labels =
+                           function(x) str_wrap(x, width = str_wrap_width)) +
+        labs(x = "Comparisons between comparisons",
+             y = "Gower's dissimilarity") +
+        coord_cartesian(ylim = c(0, 1)) +
+        theme_classic() +
+        theme(title = element_text(size = title_size, face = "bold"),
+              axis.title = element_text(size = axis_title_size, face = "bold"),
+              axis.text = element_text(size = axis_text_size),
+              axis.text.x =
+                element_text(angle = axis_x_text_angle,
+                             hjust = ifelse(axis_x_text_angle == 0, 0.5, 1)))
+    })
 
   ## Data-frame of total dissimilarity
   total_diss0 <- data.frame(name_type,
@@ -834,7 +833,8 @@ comp_clustering <- function (input,
          Total_missing = paste0(total_mod, "%"))
 
   # Define the results based on the argument 'informative'
-  collect <- if (informative == TRUE) {
+  collect <- if (informative == TRUE || (length(split_dataset0) < 3 &
+                                         override == FALSE)) {
     collect0
   } else {
     append(collect0,
@@ -846,7 +846,8 @@ comp_clustering <- function (input,
 
 
   ## Report results based on 'get_plots'
-  results <- if (get_plots == FALSE) {
+  results <- if (get_plots == FALSE || (length(split_dataset0) < 3 &
+                                        override == FALSE)) {
     collect
   } else if (informative == FALSE & get_plots == TRUE) {
     append(collect, list(Within_comparison_dissimilarity = w_comp_diss_plot,
