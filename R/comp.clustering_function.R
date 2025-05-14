@@ -508,7 +508,8 @@ comp_clustering <- function (input,
 
 
   ## Violin plot on between-comparison dissimilarity distribution
-  suppressWarnings({
+  if (length(split_dataset0) > 2) {
+    suppressWarnings({
     a_comp_diss_plot <-
         ggplot(subset(diss_dataset, index == "Between-comparison"),
                aes(x = reorder(comp, total, decreasing = TRUE),
@@ -552,6 +553,7 @@ comp_clustering <- function (input,
                 element_text(angle = axis_x_text_angle,
                              hjust = ifelse(axis_x_text_angle == 0, 0.5, 1)))
     })
+  }
 
   ## Data-frame of total dissimilarity
   total_diss0 <- data.frame(name_type,
