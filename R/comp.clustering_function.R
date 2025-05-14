@@ -40,6 +40,9 @@
 #' @param get_plots Logical with values \code{TRUE} for returning all plots and
 #'   \code{FALSE} for concealing the plots. The default argument is
 #'   \code{FALSE}.
+#' @param override Logical with values \code{TRUE} to run the function for a
+#'   pairwise meta-analysis and \code{FALSE} to stop the function in case of two
+#'   treatments. The default argument is \code{FALSE}.
 #' @param label_size A positive integer for the font size of labels in the
 #'   violin plot for the study dissimilarities per comparison and comparison
 #'   between comparisons. \code{label_size} determines the size argument found
@@ -233,6 +236,7 @@ comp_clustering <- function (input,
                              ranged_values = FALSE,
                              optimal_clusters,
                              get_plots = "none",
+                             override = FALSE,
                              label_size = 4,
                              title_size = 14,
                              axis_title_size = 14,
@@ -325,8 +329,8 @@ comp_clustering <- function (input,
 
 
   ## Stop for networks with two comparisons only (clustering is redundant)
-  if (length(split_dataset0) < 3) {
-    stop(paste0("Clustering is redundant for two comparisons only!"),
+  if (length(split_dataset0) < 3 & override == FALSE) {
+    stop(paste0("Clustering is redundant for one comparison only!"),
          call. = FALSE)
   }
 
