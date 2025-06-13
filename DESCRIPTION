@@ -28,9 +28,9 @@ Description: A comprehensive suite of functions to perform and visualise
     Methods to evaluate the transitivity assumption using trial dissimilaties
     and hierarchical clustering are provided 
     (see Spineli, (2024) <doi:10.1186/s12874-024-02436-7>, and 
-    Spineli et al., (2025) <10.1002/sim.70068>). A novel index to 
+    Spineli et al., (2025) <doi:10.1002/sim.70068>). A novel index to 
     facilitate interpretation of local inconsistency is also available 
-    (see Spineli, (2024) <doi:0.1186/s13643-024-02680-4>)
+    (see Spineli, (2024) <doi:10.1186/s13643-024-02680-4>)
     The package also offers a rich, user-friendly visualisation toolkit that aids 
     in appraising and interpreting the results thoroughly and preparing the 
     manuscript for journal submission. The visualisation tools comprise the 
