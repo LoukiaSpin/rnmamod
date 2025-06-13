@@ -17,7 +17,9 @@
 #'   of S3 class \code{\link{run_nodesplit}}, \code{\link{run_sensitivity}},
 #'   and \code{\link{run_series_meta}}.
 #'
-#' @return \code{mcmc_diagnostics} considers the following monitored parameters:
+#' @return \code{mcmc_diagnostics} considers the following monitored parameters
+#'   to create the barplot on the ratio of MCMC error to the posterior standard
+#'   deviation and the barplot on the Gelman-Rubin R diagnostic:
 #'   \item{EM}{The estimated summary effect measure.}
 #'   \item{EM_pred}{The predicted summary effect measure.}
 #'   \item{delta}{The estimated trial-specific effect measure.}
@@ -44,10 +46,12 @@
 #'   \code{\link{run_sensitivity}} is considered.
 #'
 #'   \code{mcmc_diagnostics} also uses the
-#'   \code{\link[mcmcplots:mcmcplot]{mcmcplot}} function of the R-package
-#'   \href{https://CRAN.R-project.org/package=mcmcplots}{mcmcplots} to create an
-#'   HTML file with a panel of diagnostic plots (trace, density, and
-#'   autocorrelation) for each monitored parameter.
+#'   \code{\link[coda:traceplot]{traceplot}},
+#'   \code{\link[coda:densplot]{densplot}}, and
+#'   \code{\link[coda:autocorr.plot]{autocorr.plot}} functions of the R-package
+#'   \href{https://CRAN.R-project.org/package=coda}{coda} to return the trace
+#'   plots, density plots, and autocorrelation plots for all or selected
+#'   monitored parameters through the \code{par} argument.
 #'
 #' @details For each monitored parameter, \code{mcmc_diagnostics} considers the
 #'   R-hat and MCMC error and compares them with the thresholds 1.1 and 5\% of
@@ -59,7 +63,10 @@
 #'
 #' @author {Loukia M. Spineli}
 #'
-#' @seealso \code{\link[mcmcplots:mcmcplot]{mcmcplot}},
+#' @seealso \code{\link[coda:as.mcmc]{as.mcmc}},
+#'   \code{\link[coda:traceplot]{traceplot}},
+#'   \code{\link[coda:densplot]{densplot}},
+#'   \code{\link[coda:autocorr.plot]{autocorr.plot}},
 #'   \code{\link{run_metareg}}, \code{\link{run_model}},
 #'   \code{\link{run_nodesplit}}, \code{\link{run_sensitivity}},
 #'   \code{\link{run_series_meta}}, \code{\link{run_ume}}
@@ -96,7 +103,8 @@ mcmc_diagnostics <- function(net, par = NULL) {
   message(paste("R-hat < 1.10 is an indication of convergence.", a, b, c))
 
   par <- if (!is.null(net$jagsfit) & missing(par)) {
-    stop("The argument 'par' needs to be defined.", call. = FALSE)
+    #stop("The argument 'par' needs to be defined.", call. = FALSE)
+    message("All monitored parameters will be considered.")
   } else if (!is.null(net$jagsfit) & !is.null(par)) {
     par
   } else if (is.null(net$jagsfit) & !is.null(par)) {
@@ -109,10 +117,28 @@ mcmc_diagnostics <- function(net, par = NULL) {
   if (!is.null(net$jagsfit)) {
     jagsfit <- net$jagsfit
     # Turn 'R2jags' object into 'mcmc' object
-    jagsfit_mcmc <- mcmcplots::as.mcmc.rjags(jagsfit)
+    jagsfit_mcmc <- coda::as.mcmc(jagsfit)
 
-    # An HTML file with a panel of diagnostic plots per monitored parameter
-    mcmc_plot <- mcmcplots::mcmcplot(jagsfit_mcmc, parms = par)
+    # Trace plots for all or selected monitored parameter
+    trace_plot <- if (!is.null(net$jagsfit) & missing(par)) {
+      coda::traceplot(jagsfit_mcmc, smooth = TRUE)
+    } else if (!is.null(net$jagsfit) & !is.null(par)) {
+      coda::traceplot(jagsfit_mcmc[, par], smooth = TRUE)
+    }
+
+    # Density plots for all or selected monitored parameter
+    density_plot <- if (!is.null(net$jagsfit) & missing(par)) {
+      coda::densplot(jagsfit_mcmc)
+    } else if (!is.null(net$jagsfit) & !is.null(par)) {
+      coda::densplot(jagsfit_mcmc[, par])
+    }
+
+    # Autocorrelation plots for all or selected monitored parameter
+    autocorr_plot <- if (!is.null(net$jagsfit) & missing(par)) {
+      coda::autocorr.plot(jagsfit_mcmc)
+    } else if (!is.null(net$jagsfit) & !is.null(par)) {
+      coda::autocorr.plot(jagsfit_mcmc[, par])
+    }
   }
 
   name <- ratio <- rhat <- NA

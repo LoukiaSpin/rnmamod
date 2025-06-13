@@ -1,3 +1,48 @@
+# rnmamod, version 0.5.0 (2025-06-13)
+
+ * Replaced __mcmcplots__ with __coda__ R package.
+ * Function __plot_study_dissimilarities__: 
+   - Presents the range of Gower's dissimilarity values for each study in the
+   network, as well as their between- and within-comparison dissimilarities 
+   (based on the function __comp_clustering__). 
+ * Function __study_perc_contrib__:
+   - Calculates the percentage contributions of each study to every possible
+   pairwise comparison in the investigated network and returns a data-frame. 
+   Study percentage contributions are based on Donegan et al., 
+   (2018) <doi:10.1002/jrsm.1292>
+ * Function __covar_contribution_plot__: 
+   - Returns a scatter plot of the study percentage contributions against the 
+   values of a continuous study-level covariate for the treatment effects of 
+   the basic parameters, functional parameters or both (based on the function 
+   __study_perc_contrib__). 
+ * Function __forestplot_juxtapose__:
+   - Provides a forest plot juxtaposing several NMA models (via the functions 
+   __run_model__ and __run_metareg__) based on posterior treatment effects 
+   (including predictions) of all treatments versus a selected comparator and a 
+   forest plot with the corresponding SUCRA values.
+ * Function __heter_density_plot __:
+   - Creates the density plot of two prior distributions for the between-study 
+   variance (log-normal and location-scale t distributions) or between-study
+   standard deviation (half-normal distribution). This plot aids in deciding 
+   how to define the argument _heter_prior_ in __run_model__ to run random-effects
+   network meta-analysis.
+ * Function __inconsistency_variance_prior__:
+   - Calculates the hyperparameters of the log-normal distribution and 
+   location-scale t-distribution of the inconsistency variance in the log-odds 
+   ratio and standardised mean difference scales, respectively, based on 
+   selected empirical distributions for the between-study variance proposed by 
+   Turner et al. (2015) <doi:10.1002/sim.6381> and Rhodes et al. (2015) 
+   <doi:10.1016/j.jclinepi.2014.08.012>. Calculations are based on Law et al., 
+   (2016) <doi:10.1186/s12874-016-0184-5>.
+ * Function __table_tau2_prior__:
+   - Returns a table with the hyperparameters of the predictive distributions 
+   for the between-study variance developed by Turner et al. (2015) 
+   <doi:10.1002/sim.6381> and Rhodes et al. (2015) 
+   <doi:10.1016/j.jclinepi.2014.08.012>. This table aids in selecting the 
+   hyperparameters for the function __heterogeneity_param_prior__ when 
+   considering an informative prior distribution for the between-study variance 
+   parameter to conduct random-effects network meta-analysis.
+
 # rnmamod, version 0.4.0 (2024-03-24)
 
  * Function __comp_clustering__: 

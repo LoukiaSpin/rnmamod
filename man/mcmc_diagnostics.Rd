@@ -21,7 +21,9 @@ of S3 class \code{\link{run_nodesplit}}, \code{\link{run_sensitivity}},
 and \code{\link{run_series_meta}}.}
 }
 \value{
-\code{mcmc_diagnostics} considers the following monitored parameters:
+\code{mcmc_diagnostics} considers the following monitored parameters
+  to create the barplot on the ratio of MCMC error to the posterior standard
+  deviation and the barplot on the Gelman-Rubin R diagnostic:
   \item{EM}{The estimated summary effect measure.}
   \item{EM_pred}{The predicted summary effect measure.}
   \item{delta}{The estimated trial-specific effect measure.}
@@ -48,10 +50,12 @@ and \code{\link{run_series_meta}}.}
   \code{\link{run_sensitivity}} is considered.
 
   \code{mcmc_diagnostics} also uses the
-  \code{\link[mcmcplots:mcmcplot]{mcmcplot}} function of the R-package
-  \href{https://CRAN.R-project.org/package=mcmcplots}{mcmcplots} to create an
-  HTML file with a panel of diagnostic plots (trace, density, and
-  autocorrelation) for each monitored parameter.
+  \code{\link[coda:traceplot]{traceplot}},
+  \code{\link[coda:densplot]{densplot}}, and
+  \code{\link[coda:autocorr.plot]{autocorr.plot}} functions of the R-package
+  \href{https://CRAN.R-project.org/package=coda}{coda} to return the trace
+  plots, density plots, and autocorrelation plots for all or selected
+  monitored parameters through the \code{par} argument.
 }
 \description{
 Evaluates whether convergence has been achieved for the
@@ -85,7 +89,10 @@ sequences. \emph{Stat Sci} 1992;\bold{7}(4):457--72.
 doi: 10.1214/ss/1177011136
 }
 \seealso{
-\code{\link[mcmcplots:mcmcplot]{mcmcplot}},
+\code{\link[coda:as.mcmc]{as.mcmc}},
+  \code{\link[coda:traceplot]{traceplot}},
+  \code{\link[coda:densplot]{densplot}},
+  \code{\link[coda:autocorr.plot]{autocorr.plot}},
   \code{\link{run_metareg}}, \code{\link{run_model}},
   \code{\link{run_nodesplit}}, \code{\link{run_sensitivity}},
   \code{\link{run_series_meta}}, \code{\link{run_ume}}
