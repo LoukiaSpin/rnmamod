@@ -1,3 +1,36 @@
+# Submission, version 0.5.0 (13/06/2025)
+* **R version 4.4.3 (2025-02-28 ucrt)**
+
+Status: 1 NOTE
+Possibly misspelled words in DESCRIPTION:
+  Spineli (20:31, 21:31, 23:10, 23:59, 24:29, 25:9, 27:32, 30:10, 31:5, 33:10)
+  al (21:42, 23:70, 25:20, 27:43, 31:16)
+  et (21:39, 23:67, 25:17, 27:40, 31:13)
+  
+* **R version 4.5.0 (2025-04-11 ucrt)**
+
+Status: 1 NOTE
+Possibly misspelled words in DESCRIPTION:
+  Spineli (20:31, 21:31, 23:10, 23:59, 24:29, 25:9, 27:32, 30:10, 31:5, 33:10)
+  al (21:42, 23:70, 25:20, 27:43, 31:16)
+  et (21:39, 23:67, 25:17, 27:40, 31:13)
+* The spelling is correct!
+
+* **R Under development (unstable) (2025-06-12 r88305 ucrt)**
+
+Status: 1 NOTE
+Possibly misspelled words in DESCRIPTION:
+  Spineli (20:31, 21:31, 23:10, 23:59, 24:29, 25:9, 27:32, 30:10, 31:5, 33:10)
+  al (21:42, 23:70, 25:20, 27:43, 31:16)
+  et (21:39, 23:67, 25:17, 27:40, 31:13)
+* The spelling is correct!
+
+### R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
+R CMD check succeeded
+
 # Submission, version 0.4.0 (24/03/2024)
 * **R version 4.2.3 (2023-03-15 ucrt)**
 

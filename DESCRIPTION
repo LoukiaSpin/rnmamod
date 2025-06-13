@@ -25,7 +25,7 @@ Description: A comprehensive suite of functions to perform and visualise
     and Spineli et al., (2021) <doi:10.1002/jrsm.1478>). 
     The robustness to primary analysis results can also be investigated using a 
     novel intuitive index (see Spineli et al., (2021) <doi:10.1177/0962280220983544>). 
-    Methods to evaluate the transitivity assumption using trial dissimilaties
+    Methods to evaluate the transitivity assumption using trial dissimilarities
     and hierarchical clustering are provided 
     (see Spineli, (2024) <doi:10.1186/s12874-024-02436-7>, and 
     Spineli et al., (2025) <doi:10.1002/sim.70068>). A novel index to 
