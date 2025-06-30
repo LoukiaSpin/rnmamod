@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rnmamod</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,9 @@ and <code><a href="run_series_meta.html">run_series_meta</a></code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p><code>mcmc_diagnostics</code> considers the following monitored parameters:</p>
+    <p><code>mcmc_diagnostics</code> considers the following monitored parameters
+  to create the barplot on the ratio of MCMC error to the posterior standard
+  deviation and the barplot on the Gelman-Rubin R diagnostic:</p>
 <dl><dt>EM</dt>
 <dd><p>The estimated summary effect measure.</p></dd>
 
@@ -122,10 +124,12 @@ and <code><a href="run_series_meta.html">run_series_meta</a></code>.</p></dd>
   <code>mcmc_diagnostics</code> returns histograms than barplots for <code>EM</code> when
   <code><a href="run_sensitivity.html">run_sensitivity</a></code> is considered.</p>
 <p><code>mcmc_diagnostics</code> also uses the
-  <code><a href="https://rdrr.io/pkg/mcmcplots/man/mcmcplot.html" class="external-link">mcmcplot</a></code> function of the R-package
-  <a href="https://CRAN.R-project.org/package=mcmcplots" class="external-link">mcmcplots</a> to create an
-  HTML file with a panel of diagnostic plots (trace, density, and
-  autocorrelation) for each monitored parameter.</p>
+  <code><a href="https://rdrr.io/pkg/coda/man/traceplot.html" class="external-link">traceplot</a></code>,
+  <code><a href="https://rdrr.io/pkg/coda/man/densplot.html" class="external-link">densplot</a></code>, and
+  <code><a href="https://rdrr.io/pkg/coda/man/autocorr.plot.html" class="external-link">autocorr.plot</a></code> functions of the R-package
+  <a href="https://CRAN.R-project.org/package=coda" class="external-link">coda</a> to return the trace
+  plots, density plots, and autocorrelation plots for all or selected
+  monitored parameters through the <code>par</code> argument.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -145,7 +149,10 @@ doi: 10.1214/ss/1177011136</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/mcmcplots/man/mcmcplot.html" class="external-link">mcmcplot</a></code>,
+    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/coda/man/mcmc.html" class="external-link">as.mcmc</a></code>,
+  <code><a href="https://rdrr.io/pkg/coda/man/traceplot.html" class="external-link">traceplot</a></code>,
+  <code><a href="https://rdrr.io/pkg/coda/man/densplot.html" class="external-link">densplot</a></code>,
+  <code><a href="https://rdrr.io/pkg/coda/man/autocorr.plot.html" class="external-link">autocorr.plot</a></code>,
   <code><a href="run_metareg.html">run_metareg</a></code>, <code><a href="run_model.html">run_model</a></code>,
   <code><a href="run_nodesplit.html">run_nodesplit</a></code>, <code><a href="run_sensitivity.html">run_sensitivity</a></code>,
   <code><a href="run_series_meta.html">run_series_meta</a></code>, <code><a href="run_ume.html">run_ume</a></code></p></div>
@@ -218,7 +225,7 @@ doi: 10.1214/ss/1177011136</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

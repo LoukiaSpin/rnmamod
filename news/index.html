@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rnmamod</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,34 @@
       <small>Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.5.0" id="rnmamod-version-050-2025-06-13">rnmamod, version 0.5.0 (2025-06-13)<a class="anchor" aria-label="anchor" href="#rnmamod-version-050-2025-06-13"></a></h2><p class="text-muted">CRAN release: 2025-06-13</p>
+<ul><li>Replaced <strong>mcmcplots</strong> with <strong>coda</strong> R package.</li>
+<li>Function <strong>plot_study_dissimilarities</strong>:
+<ul><li>Presents the range of Gower’s dissimilarity values for each study in the network, as well as their between- and within-comparison dissimilarities (based on the function <strong>comp_clustering</strong>).</li>
+</ul></li>
+<li>Function <strong>study_perc_contrib</strong>:
+<ul><li>Calculates the percentage contributions of each study to every possible pairwise comparison in the investigated network and returns a data-frame. Study percentage contributions are based on Donegan et al.,</li>
+</ul><ol start="2018" style="list-style-type: decimal"><li><a href="doi:10.1002/jrsm.1292" class="uri">doi:10.1002/jrsm.1292</a></li>
+</ol></li>
+<li>Function <strong>covar_contribution_plot</strong>:
+<ul><li>Returns a scatter plot of the study percentage contributions against the values of a continuous study-level covariate for the treatment effects of the basic parameters, functional parameters or both (based on the function <strong>study_perc_contrib</strong>).</li>
+</ul></li>
+<li>Function <strong>forestplot_juxtapose</strong>:
+<ul><li>Provides a forest plot juxtaposing several NMA models (via the functions <strong>run_model</strong> and <strong>run_metareg</strong>) based on posterior treatment effects (including predictions) of all treatments versus a selected comparator and a forest plot with the corresponding SUCRA values.</li>
+</ul></li>
+<li>Function <strong>heter_density_plot </strong>:
+<ul><li>Creates the density plot of two prior distributions for the between-study variance (log-normal and location-scale t distributions) or between-study standard deviation (half-normal distribution). This plot aids in deciding how to define the argument <em>heter_prior</em> in <strong>run_model</strong> to run random-effects network meta-analysis.</li>
+</ul></li>
+<li>Function <strong>inconsistency_variance_prior</strong>:
+<ul><li>Calculates the hyperparameters of the log-normal distribution and location-scale t-distribution of the inconsistency variance in the log-odds ratio and standardised mean difference scales, respectively, based on selected empirical distributions for the between-study variance proposed by Turner et al. (2015) <a href="doi:10.1002/sim.6381" class="uri">doi:10.1002/sim.6381</a> and Rhodes et al. (2015) <a href="doi:10.1016/j.jclinepi.2014.08.012" class="uri">doi:10.1016/j.jclinepi.2014.08.012</a>. Calculations are based on Law et al.,</li>
+</ul><ol start="2016" style="list-style-type: decimal"><li>
+<a href="doi:10.1186/s12874-016-0184-5" class="uri">doi:10.1186/s12874-016-0184-5</a>.</li>
+</ol></li>
+<li>Function <strong>table_tau2_prior</strong>:
+<ul><li>Returns a table with the hyperparameters of the predictive distributions for the between-study variance developed by Turner et al. (2015) <a href="doi:10.1002/sim.6381" class="uri">doi:10.1002/sim.6381</a> and Rhodes et al. (2015) <a href="doi:10.1016/j.jclinepi.2014.08.012" class="uri">doi:10.1016/j.jclinepi.2014.08.012</a>. This table aids in selecting the hyperparameters for the function <strong>heterogeneity_param_prior</strong> when considering an informative prior distribution for the between-study variance parameter to conduct random-effects network meta-analysis.</li>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0" id="rnmamod-version-040-2024-03-24">rnmamod, version 0.4.0 (2024-03-24)<a class="anchor" aria-label="anchor" href="#rnmamod-version-040-2024-03-24"></a></h2><p class="text-muted">CRAN release: 2024-03-24</p>
 <ul><li>Function <strong>comp_clustering</strong>:
@@ -119,7 +147,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
