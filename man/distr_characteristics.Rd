@@ -82,7 +82,7 @@ found in the theme's properties in the R-package
 \description{
 \code{distr_characteristics} uses violin and bar plots to visualise the
   distribution of each characteristic in the dataset either per comparison
-  or cluster of comparisons.
+  or cluster of comparisons (Spineli et al., 2025).
 }
 \details{
 The correct type mode of columns in \code{input} must be ensured to use
@@ -117,6 +117,12 @@ distr_characteristics(input = data_set,
                       drug_names = c("A", "B", "C"))
 }
 
+}
+\references{
+Spineli LM, Papadimitropoulou K, Kalyvas C. Exploring the Transitivity
+Assumption in Network Meta-Analysis: A Novel Approach and Its Implications.
+\emph{Stat Med} 2025;\bold{44}(7):e70068.
+doi: 10.1002/sim.70068.
 }
 \seealso{
 \code{\link{comp_clustering}}

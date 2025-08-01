@@ -4,7 +4,8 @@
 #' @description
 #'   \code{gower_distance} calculate the weighted Gower's dissimilarity
 #'   coefficient for all pairs of trials included in a network of interventions,
-#'   considering several characteristics measured at trial level.
+#'   considering several characteristics measured at trial level
+#'   (Spineli et al., 2025).
 #'   It takes values from 0 to 1, with 0 implying complete similarity and 1
 #'   complete dissimilarity.
 #'
@@ -53,6 +54,11 @@
 #' Gower J. General Coefficient of Similarity and Some of Its Properties.
 #' \emph{Biometrics} 1971;\bold{27}(4):857--71.
 #' doi: 10.2307/2528823
+#'
+#' Spineli LM, Papadimitropoulou K, Kalyvas C. Exploring the Transitivity
+#' Assumption in Network Meta-Analysis: A Novel Approach and Its Implications.
+#' \emph{Stat Med} 2025;\bold{44}(7):e70068.
+#' doi: 10.1002/sim.70068.
 #'
 #' @export
 gower_distance <- function (input, weight) {

@@ -4,7 +4,7 @@
 #' @description
 #'   \code{dendro_heatmap} creates a dendrogram alongside the heatmap of
 #'   Gower dissimilarities among the trials in the network for a specific
-#'   linkage method and number of clusters.
+#'   linkage method and number of clusters (Spineli et al., 2025).
 #'
 #' @param input An object of S3 class \code{\link{comp_clustering}}. See 'Value'
 #'   in \code{\link{comp_clustering}}.
@@ -39,6 +39,12 @@
 #'
 #' @seealso
 #'  \code{\link{comp_clustering}}, \code{\link[heatmaply:heatmaply]{heatmaply}}
+#'
+#' @references
+#' Spineli LM, Papadimitropoulou K, Kalyvas C. Exploring the Transitivity
+#' Assumption in Network Meta-Analysis: A Novel Approach and Its Implications.
+#' \emph{Stat Med} 2025;\bold{44}(7):e70068.
+#' doi: 10.1002/sim.70068.
 #'
 #' @examples
 #' \donttest{

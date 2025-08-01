@@ -4,7 +4,7 @@
 #' @description
 #'   \code{distr_characteristics} uses violin and bar plots to visualise the
 #'   distribution of each characteristic in the dataset either per comparison
-#'   or cluster of comparisons.
+#'   or cluster of comparisons (Spineli et al., 2025).
 #'
 #' @param input A data-frame in the long arm-based format. Two-arm trials occupy
 #'   one row in the data-frame. Multi-arm trials occupy as many rows as the
@@ -78,6 +78,12 @@
 #' @author {Loukia M. Spineli}
 #'
 #' @seealso \code{\link{comp_clustering}}
+#'
+#' @references
+#' Spineli LM, Papadimitropoulou K, Kalyvas C. Exploring the Transitivity
+#' Assumption in Network Meta-Analysis: A Novel Approach and Its Implications.
+#' \emph{Stat Med} 2025;\bold{44}(7):e70068.
+#' doi: 10.1002/sim.70068.
 #'
 #' @examples
 #' \donttest{

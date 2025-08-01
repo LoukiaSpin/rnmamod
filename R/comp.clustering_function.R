@@ -5,9 +5,10 @@
 #'   \code{comp_clustering} hosts a toolkit of functions that facilitates
 #'   conducting, visualising and evaluating hierarchical agglomerative of
 #'   observed comparisons of interventions for a specific network and set of
-#'   characteristics that act as effect modifiers. It also calculates the
-#'   non-statistical heterogeneity within-comparisons and between-comparisons
-#'   using the dissimilarities among all trials of the network.
+#'   characteristics that act as effect modifiers as described in Spineli et al.
+#'   (2025). It also calculates the non-statistical heterogeneity
+#'   within-comparisons and between-comparisons using the dissimilarities among
+#'   all trials of the network (Spineli et al., 2025).
 #'
 #' @param input A data-frame in the long arm-based format. Two-arm trials occupy
 #'   one row in the data-frame. Multi-arm trials occupy as many rows as the
@@ -197,10 +198,6 @@
 #' \emph{Biometrics} 1971;\bold{27}(4):857--71.
 #' doi: 10.2307/2528823
 #'
-#' Sokal R, Rohlf F. The Comparison of Dendrograms by Objective Methods.
-#' \emph{Int Assoc Plant Taxon} 1962;\bold{11}(2):33--40.
-#' doi: 10.2307/1217208
-#'
 #' Handl J, Knowles J, Kell DB. Computational cluster validation in post-genomic
 #' data analysis. \emph{Biometrics} 2005;\bold{21}(15):3201--120.
 #' doi: 10.1093/bioinformatics/bti517
@@ -208,6 +205,15 @@
 #' Rousseeuw PJ. Silhouettes: A graphical aid to the interpretation and
 #' validation of cluster analysis.
 #' \emph{J Comput Appl Math} 1987;\bold{20}:53--65.
+#'
+#' Sokal R, Rohlf F. The Comparison of Dendrograms by Objective Methods.
+#' \emph{Int Assoc Plant Taxon} 1962;\bold{11}(2):33--40.
+#' doi: 10.2307/1217208
+#'
+#' Spineli LM, Papadimitropoulou K, Kalyvas C. Exploring the Transitivity
+#' Assumption in Network Meta-Analysis: A Novel Approach and Its Implications.
+#' \emph{Stat Med} 2025;\bold{44}(7):e70068.
+#' doi: 10.1002/sim.70068.
 #'
 #' @examples
 #' \donttest{

@@ -147,7 +147,7 @@ van Valkenhoef et al., 2016) and loop-specific approach (Bucher et al., 1997)
 accompanied by the average Kullback-Leibler divergence. Additionally, stacked
 bar plots on the percentage contribution of either Kullback-Leibler
 divergence (from direct to indirect, and vice-versa) to the total information
-loss for each selected comparison are presented.
+loss for each selected comparison are presented (Spineli, 2024).
 The function handles results also from the R-packages
   \href{https://CRAN.R-project.org/package=gemtc}{gemtc} and
   \href{https://CRAN.R-project.org/package=netmeta}{netmeta}.
@@ -186,6 +186,10 @@ doi: 10.1002/sim.3767
 
 Kullback S, Leibler RA. On information and sufficiency.
 \emph{Ann Math Stat} 1951;\bold{22}(1):79--86. doi: 10.1214/aoms/1177729694
+
+Spineli LM. Local inconsistency detection using the Kullback-Leibler
+divergence measure. \emph{Syst Rev} 2024;\bold{13}(1):261.
+doi: 10.1186/s13643-024-02680-4.
 
 van Valkenhoef G, Dias S, Ades AE, Welton NJ. Automated generation of
 node-splitting models for assessment of inconsistency in network

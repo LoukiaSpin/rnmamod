@@ -42,7 +42,7 @@ argument found in the theme's properties in the R-package
 \description{
 \code{dendro_heatmap} creates a dendrogram alongside the heatmap of
   Gower dissimilarities among the trials in the network for a specific
-  linkage method and number of clusters.
+  linkage method and number of clusters (Spineli et al., 2025).
 }
 \examples{
 \donttest{
@@ -66,6 +66,12 @@ hier <- comp_clustering(input = data_set,
 dendro_heatmap(hier)
 }
 
+}
+\references{
+Spineli LM, Papadimitropoulou K, Kalyvas C. Exploring the Transitivity
+Assumption in Network Meta-Analysis: A Novel Approach and Its Implications.
+\emph{Stat Med} 2025;\bold{44}(7):e70068.
+doi: 10.1002/sim.70068.
 }
 \seealso{
 \code{\link{comp_clustering}}, \code{\link[heatmaply:heatmaply]{heatmaply}}

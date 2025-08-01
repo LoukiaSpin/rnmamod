@@ -89,6 +89,20 @@
 #'    nodes and corresponding inconsistency factors, measures of model fit and
 #'    estimated between-trial standard deviation after each split node, and
 #'    visualisation of these results (\code{\link{nodesplit_plot}});
+#'    \item calculation of the mean and standard deviation for the prior
+#'    distribution for the inconsistency variance, and the median inconsistency
+#'    standard deviation (\code{\link{inconsistency_variance_prior}}) based on a
+#'    selected empirical prior distribution for the between-study variance
+#'    (proposed by Turner et al., 2015 and Rhodes et al., 2015);
+#'    \item a panel of density plots for each target comparison (based on the
+#'    back-calculation or the node-splitting approach) illustrating the
+#'    posterior distribution of direct and indirect estimates, the inconsistency
+#'    parameter estimate and 95% interval and the Kullback-Leibler divergence
+#'    value and a percent stacked bar plot on the percentage contribution of
+#'    approximating direct with indirect estimate (and vice-versa) to the total
+#'    information loss for each split node (\code{\link{kld_inconsistency}} and
+#'    \code{\link{kld_inconsistency_user}} when using the results of a published
+#'    systematic review with network meta-analysis) (Spineli, 2024);
 #'    \item tabulation of the estimated summary effects of all comparisons
 #'    observed in the network, measures of model fit and estimated between-trial
 #'    standard deviation under the unrelated mean effects model and network
@@ -120,16 +134,17 @@
 #'   \bold{rnmamod} also assists the researcher in assessing the transitivity
 #'   assumption quantitatively based on trial dissimilarities for various
 #'   trial-level aggregate participant and methodological characteristics
-#'   calculated using the Gower's dissimilarity coefficient
-#'   (\code{\link{gower_distance}} and \code{\link{comp_clustering}}) (Gower,
-#'   1971). Results on the clustered comparisons based on hierarchical
-#'   agglomerative clustering are illustrated using a dendrogram with integrated
-#'   heatmap (\code{\link{dendro_heatmap}}). The distribution of the
-#'   characteristics is presented using violin plots with integrated box
-#'   plots and dots, and stacked bar plots across the observed treatment
-#'   comparisons (\code{\link{distr_characteristics}}). Missing data in the
-#'   characteristics across the trials and observed comparisons are visualised
-#'   using bar plots and tile plot (\code{\link{miss_characteristics}}).
+#'   calculated using the Gower's dissimilarity coefficient (Gower, 1971)
+#'   (\code{\link{gower_distance}} and \code{\link{comp_clustering}}) (Spineli
+#'   et al., 2025; Spineli, 2024). Results on the clustered comparisons based on
+#'   hierarchical agglomerative clustering are illustrated using a dendrogram
+#'   with integrated heatmap (\code{\link{dendro_heatmap}}) (Spineli et al., 2025).
+#'   The distribution of the characteristics is presented using violin plots
+#'   with integrated box plots and dots, and stacked bar plots across the
+#'   observed treatment comparisons (\code{\link{distr_characteristics}}).
+#'   Missing data in the characteristics across the trials and observed
+#'   comparisons are visualised using bar plots and tile plot
+#'   (\code{\link{miss_characteristics}}).
 #'
 #'   Missing participant outcome data are addressed in all models of the package
 #'   after extending the code to incorporate the pattern-mixture model
@@ -196,6 +211,11 @@
 #' and explanations. \emph{Ann Intern Med} 2015;\bold{162}(11):777--84.
 #' doi: 10.7326/M14-2385
 #'
+#' Rhodes KM, Turner RM, Higgins JP. Predictive distributions were developed for
+#' the extent of heterogeneity in meta-analyses of continuous outcome data.
+#' \emph{J Clin Epidemiol} 2015;\bold{68}(1):52--60.
+#' doi: 10.1016/j.jclinepi.2014.08.012
+#'
 #' Ruecker G, Schwarzer G. Ranking treatments in frequentist network
 #' meta-analysis works without resampling methods.
 #' \emph{BMC Med Res Methodol} 2015;\bold{15}:58.
@@ -205,6 +225,20 @@
 #' for presenting results from multiple-treatment meta-analysis: an overview and
 #' tutorial. \emph{J Clin Epidemiol} 2011;\bold{64}(2):163--71.
 #' doi: 10.1016/j.jclinepi.2010.03.016
+#'
+#' Spineli LM, Papadimitropoulou K, Kalyvas C. Exploring the Transitivity
+#' Assumption in Network Meta-Analysis: A Novel Approach and Its Implications.
+#' \emph{Stat Med} 2025;\bold{44}(7):e70068.
+#' doi: 10.1002/sim.70068.
+#'
+#' Spineli LM. An empirical study on 209 networks of treatments revealed
+#' intransitivity to be common and multiple statistical tests suboptimal to
+#' assess transitivity. \emph{BMC Med Res Methodol} 2024;\bold{24}(1):301.
+#' doi: 10.1186/s12874-024-02436-7.
+#'
+#' Spineli LM. Local inconsistency detection using the Kullback-Leibler
+#' divergence measure. \emph{Syst Rev} 2024;\bold{13}(1):261.
+#' doi: 10.1186/s13643-024-02680-4.
 #'
 #' Spineli LM. A revised framework to evaluate the consistency assumption
 #' globally in a network of interventions. \emph{Med Decis Making} 2021.
@@ -224,6 +258,11 @@
 #' missing binary outcome data in network meta-analysis.
 #' \emph{BMC Med Res Methodol} 2019;\bold{19}(1):86.
 #' doi: 10.1186/s12874-019-0731-y
+#'
+#' Turner RM, Jackson D, Wei Y, Thompson SG, Higgins JP. Predictive distributions
+#' for between-study heterogeneity and simple methods for their application in
+#' Bayesian meta-analysis. \emph{Stat Med} 2015;\bold{34}(6):984--98.
+#' doi: 10.1002/sim.6381
 #'
 #' van Valkenhoef G, Dias S, Ades AE, Welton NJ. Automated generation of
 #' node-splitting models for assessment of inconsistency in network
