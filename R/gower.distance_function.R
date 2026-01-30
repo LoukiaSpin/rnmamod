@@ -158,6 +158,10 @@ gower_distance <- function (input, weight) {
   #colnames(dist_mat) <- input[-dim(input)[1], 1]
 
 
+  ## Name the rows (trial pairs) in 'data_dist0'
+  rownames(data_dist0) <- apply(combn(input[, 1], 2), 2, function(x) paste(x, collapse = "-"))
+
+
   ## Percentage total missing data
   total_mod <-
     round((sum(is.na(input[, -c(1, 2)]) == TRUE) /
@@ -167,7 +171,8 @@ gower_distance <- function (input, weight) {
   ## Collect the results
   results <- list(Dissimilarity_table = dist_mat,
                   Types_used = char_type,
-                  Total_missing = paste0(total_mod, "%"))
+                  Total_missing = paste0(total_mod, "%"),
+                  Variable_dissimilarities = data_dist0)
 
   return(results)
 }
