@@ -66,7 +66,7 @@
 Spineli</h4>
             
             <h4 data-toc-skip class="date">Latest version:
-2025-08-01</h4>
+2026-01-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/LoukiaSpin/rnmamod/blob/main/vignettes/network_description.Rmd" class="external-link"><code>vignettes/network_description.Rmd</code></a></small>
       <div class="d-none name"><code>network_description.Rmd</code></div>
@@ -138,7 +138,7 @@ dataset (in one-trial-per-row format) and <code>drug_names</code> for
 the names of each intervention in the dataset.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/netplot.html">netplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.bottomley2011</span>, drug_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BDP"</span>, <span class="st">"BMV"</span>, <span class="st">"CPL"</span>, <span class="st">"CPL+polytar"</span>, <span class="st">"capasal"</span>, <span class="st">"TCF gel"</span>, <span class="st">"placebo"</span><span class="op">)</span>, show_multi <span class="op">=</span> <span class="cn">TRUE</span>, edge_label_cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="network_description_files/figure-html/unnamed-chunk-3-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="network_description_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="480" style="display: block; margin: auto;"></p>
 <p>The intervention names in <code>drug_names</code> must be sorted in
 the ascending order of their identifier. Hence, <code>1</code> in the
 element <code>t</code> refers to <code>BDP</code>, (betamethasone
@@ -452,7 +452,7 @@ participants <strong>per intervention</strong> (main diagonal) and
 (see Details in <code><a href="../reference/heatmap_missing_network.html">?heatmap_missing_network</a></code>).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_missing_network.html">heatmap_missing_network</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.bottomley2011</span>, drug_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BDP"</span>, <span class="st">"BMV"</span>, <span class="st">"CPL"</span>, <span class="st">"CPL+polytar"</span>, <span class="st">"capasal"</span>, <span class="st">"TCF gel"</span>, <span class="st">"placebo"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="network_description_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="network_description_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <p>The <span style="color:#009E73"><strong>green</strong></span> colour
 implies a median proportion of missing participant up to 5%, and hence,
 a <span style="color:#009E73"><strong>low risk</strong></span>
@@ -470,7 +470,7 @@ the proportion of missing participants in each arm of every trial in the
 dataset :</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmap_missing_dataset.html">heatmap_missing_dataset</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nma.bottomley2011</span>, trial_names <span class="op">=</span> <span class="va">nma.bottomley2011</span><span class="op">$</span><span class="va">study</span>, drug_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BDP"</span>, <span class="st">"BMV"</span>, <span class="st">"CPL"</span>, <span class="st">"CPL+polytar"</span>, <span class="st">"capasal"</span>, <span class="st">"TCF gel"</span>, <span class="st">"placebo"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="network_description_files/figure-html/unnamed-chunk-10-1.png" width="720" style="display: block; margin: auto;"></p>
+<p><img src="network_description_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="720" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level2">
@@ -494,7 +494,7 @@ direct and indirect evidence. <em>Curr Med Res Opin</em>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
