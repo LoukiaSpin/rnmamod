@@ -211,6 +211,7 @@ Loukia M. Spineli
 ## Examples
 
 ``` r
+
 if (FALSE) { # \dontrun{
 ## Data are taken from Table II in Dias et al. (2010)
 # Treatments compared

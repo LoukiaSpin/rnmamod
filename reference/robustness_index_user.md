@@ -148,6 +148,7 @@ Loukia M. Spineli
 ## Examples
 
 ``` r
+
 if (FALSE) { # \dontrun{
 library(netmeta)
 

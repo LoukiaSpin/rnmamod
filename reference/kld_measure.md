@@ -45,12 +45,12 @@ kld_measure(mean_y, sd_y, mean_x, sd_x)
 
 The function return the following numeric results:
 
-|                |                                                             |
-|----------------|-------------------------------------------------------------|
-| **kld_sym**    | The symmetric KLD value as the average of two KLD values .  |
-|                |                                                             |
+|  |  |
+|----|----|
+| **kld_sym** | The symmetric KLD value as the average of two KLD values . |
+|  |  |
 | **kld_x_true** | The KLD value when approximating X by Y (X is the 'truth'). |
-|                |                                                             |
+|  |  |
 | **kld_y_true** | The KLD value when approximating Y by X (Y is the 'truth'). |
 
 ## References

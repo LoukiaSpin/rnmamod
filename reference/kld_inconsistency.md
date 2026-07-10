@@ -222,6 +222,7 @@ Loukia M. Spineli
 ## Examples
 
 ``` r
+
 if (FALSE) { # \dontrun{
 data("nma.baker2009")
 

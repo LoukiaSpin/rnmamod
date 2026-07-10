@@ -173,6 +173,7 @@ Loukia M. Spineli
 ## Examples
 
 ``` r
+
 if (FALSE) { # \dontrun{
 ## Two empirical priors for between-study variance of log odds ratio.
 heter_density_plot(distr = "lognormal",

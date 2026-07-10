@@ -17,17 +17,17 @@ taylor_imor(data, mean_value, var_value, rho)
 The columns of the data-frame in the argument `data` refer to the
 following ordered elements for a binary outcome:
 
-|        |                                                                            |
-|--------|----------------------------------------------------------------------------|
-| **id** | A unique identifier for each trial.                                        |
-| **r1** | The observed number of events in the first arm of the comparison.          |
-| **r2** | The observed number of events in the second arm of the comparison.         |
-| **m1** | The number of missing participants in the first arm of the comparison.     |
-| **m2** | The number of missing participants in the second arm of the comparison.    |
-| **n1** | The number of participants randomised in the first arm of the comparison.  |
+|  |  |
+|----|----|
+| **id** | A unique identifier for each trial. |
+| **r1** | The observed number of events in the first arm of the comparison. |
+| **r2** | The observed number of events in the second arm of the comparison. |
+| **m1** | The number of missing participants in the first arm of the comparison. |
+| **m2** | The number of missing participants in the second arm of the comparison. |
+| **n1** | The number of participants randomised in the first arm of the comparison. |
 | **n2** | The number of participants randomised in the second arm of the comparison. |
-| **t1** | An identifier for the intervention in the first arm of the comparison.     |
-| **t2** | An identifier for the intervention in the second arm of the comparison.    |
+| **t1** | An identifier for the intervention in the first arm of the comparison. |
+| **t2** | An identifier for the intervention in the second arm of the comparison. |
 
 ## Arguments
 

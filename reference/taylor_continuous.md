@@ -17,19 +17,19 @@ taylor_continuous(data, measure, mean_value, var_value, rho)
 The columns of the data-frame in the argument `data` refer to the
 following ordered elements for a continuous outcome:
 
-|         |                                                                                     |
-|---------|-------------------------------------------------------------------------------------|
-| **id**  | A unique identifier for each trial.                                                 |
-| **y1**  | The observed mean outcome in the first arm of the comparison.                       |
-| **y2**  | The observed mean outcome in the second arm of the comparison.                      |
-| **sd1** | The observed standard deviation of the outcome in the first arm of the comparison.  |
+|  |  |
+|----|----|
+| **id** | A unique identifier for each trial. |
+| **y1** | The observed mean outcome in the first arm of the comparison. |
+| **y2** | The observed mean outcome in the second arm of the comparison. |
+| **sd1** | The observed standard deviation of the outcome in the first arm of the comparison. |
 | **sd2** | The observed standard deviation of the outcome in the second arm of the comparison. |
-| **m1**  | The number of missing participants in the first arm of the comparison.              |
-| **m2**  | The number of missing participants in the second arm of the comparison.             |
-| **n1**  | The number randomised in the first arm of the comparison.                           |
-| **n2**  | The number randomised in the second arm of the comparison.                          |
-| **t1**  | An identifier for the intervention in the first arm of the comparison.              |
-| **t2**  | An identifier for the intervention in the second arm of the comparison.             |
+| **m1** | The number of missing participants in the first arm of the comparison. |
+| **m2** | The number of missing participants in the second arm of the comparison. |
+| **n1** | The number randomised in the first arm of the comparison. |
+| **n2** | The number randomised in the second arm of the comparison. |
+| **t1** | An identifier for the intervention in the first arm of the comparison. |
+| **t2** | An identifier for the intervention in the second arm of the comparison. |
 
 ## Arguments
 

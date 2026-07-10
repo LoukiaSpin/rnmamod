@@ -73,6 +73,7 @@ patients. The exacerbation of COPD (harmful outcome) is the analysed
 binary outcome.
 
 ``` r
+
 head(nma.baker2009)
 #>                 study t1 t2 t3 t4 r1 r2 r3 r4 m1 m2 m3 m4  n1  n2 n3 n4
 #> Llewellyn-Jones, 1996  1  4 NA NA  3  0 NA NA  1  0 NA NA   8   8 NA NA
@@ -88,6 +89,7 @@ head(nma.baker2009)
 Create the network plot using the *netplot* function:
 
 ``` r
+
 # The names of the interventions in the order they appear in the dataset
 interv_names <- c("placebo", "budesonide", "budesonide plus formoterol", "fluticasone", "fluticasone plus salmeterol", "formoterol", "salmeterol", "tiotropium")
 
@@ -104,6 +106,7 @@ intervention-specific informative missingness odds ratio
 (`assumption = "IDE-ARM"`) in the logarithmic scale:
 
 ``` r
+
 res <- run_model(data = nma.baker2009,
                  measure = "OR",
                  model = "RE",
@@ -126,6 +129,7 @@ posterior mean SUCRA (surface under the cumulative ranking) value in the
 main diagonal:
 
 ``` r
+
 league_heatmap(full1 = res, drug_names1 = interv_names)
 ```
 
@@ -139,6 +143,7 @@ The following code presents the hierarchy of the interventions in the
 network using integrated rankograms and SUCRA curves:
 
 ``` r
+
 rankosucra_plot(full1 = res, drug_names1 = interv_names)
 ```
 

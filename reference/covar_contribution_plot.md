@@ -151,6 +151,7 @@ Loukia M. Spineli
 ## Examples
 
 ``` r
+
 if (FALSE) { # \dontrun{
 data("nma.fluoride.donegan2018")
 

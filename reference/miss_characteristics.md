@@ -152,6 +152,7 @@ Loukia M. Spineli
 ## Examples
 
 ``` r
+
 # \donttest{
 # Fictional dataset
 set.seed(13022024)

@@ -30,6 +30,7 @@ perform the Bayesian analysis using the BUGS code of Dias and colleagues
 (2013).
 
 ``` r
+
 run_model(data = nma.baker2009,
           measure = "OR",
           heter_prior = list("halfnormal", 0, 1),
@@ -77,6 +78,7 @@ the default argument. In this case, `run_model` must be specified as
 follows:
 
 ``` r
+
 run_model(data = nma.baker2009,
           measure = "OR",
           model = "RE",

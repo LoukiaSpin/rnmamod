@@ -62,6 +62,7 @@ one-trial-per-row format) and `drug_names` for the names of each
 intervention in the dataset.
 
 ``` r
+
 netplot(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"), show_multi = TRUE, edge_label_cex = 1)
 ```
 
@@ -100,7 +101,7 @@ informed by at least one trial), and so on:
 | Trials with at least one zero event | 0     |
 | Trials with all zero events         | 0     |
 
-Description of the network
+Description of the network {.table}
 
 ### Distribution of the outcome
 
@@ -112,33 +113,33 @@ distribution of the outcome as proportion across the corresponding
 trials:
 
 | Interventions | Total trials | Total randomised | Completers (%) | Total events (%) | Min. events (%) | Median events (%) | Max. events (%) |
-|:--------------|:------------:|:----------------:|:--------------:|:----------------:|:---------------:|:-----------------:|:---------------:|
-| BDP           |      3       |       1229       |       99       |        54        |       52        |        55         |       62        |
-| BMV           |      1       |       234        |       99       |        75        |       75        |        75         |       75        |
-| CPL           |      7       |       1797       |       92       |        32        |       20        |        27         |       60        |
-| CPL+polytar   |      1       |       236        |       92       |        36        |       36        |        36         |       36        |
-| capasal       |      1       |       237        |       93       |        14        |       14        |        14         |       14        |
-| TCF gel       |      6       |       1978       |       99       |        58        |       48        |        56         |       74        |
-| placebo       |      2       |       178        |       96       |        19        |       16        |        22         |       29        |
+|:---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| BDP | 3 | 1229 | 99 | 54 | 52 | 55 | 62 |
+| BMV | 1 | 234 | 99 | 75 | 75 | 75 | 75 |
+| CPL | 7 | 1797 | 92 | 32 | 20 | 27 | 60 |
+| CPL+polytar | 1 | 236 | 92 | 36 | 36 | 36 | 36 |
+| capasal | 1 | 237 | 93 | 14 | 14 | 14 | 14 |
+| TCF gel | 6 | 1978 | 99 | 58 | 48 | 56 | 74 |
+| placebo | 2 | 178 | 96 | 19 | 16 | 22 | 29 |
 
-Interventions
+Interventions {.table}
 
 An identical table is returned for the **observed comparisons** in the
 network:
 
-| Comparisons        | Total trials | Total randomised | Completers (%) | Total events (%) | Min. events (%) | Median events (%) | Max. events (%) |
-|:-------------------|:------------:|:----------------:|:--------------:|:----------------:|:---------------:|:-----------------:|:---------------:|
-| capasal vs CPL     |      1       |       475        |       89       |        20        |       20        |        20         |       20        |
-| CPL vs BDP         |      2       |       1677       |       98       |        45        |       43        |        45         |       46        |
-| CPL vs BMV         |      1       |       474        |       97       |        68        |       68        |        68         |       68        |
-| CPL+polytar vs CPL |      1       |       461        |       92       |        37        |       37        |        37         |       37        |
-| placebo vs BDP     |      1       |       692        |       98       |        48        |       48        |        48         |       48        |
-| placebo vs CPL     |      1       |       408        |       93       |        22        |       22        |        22         |       22        |
-| placebo vs TCF gel |      2       |       854        |       98       |        56        |       49        |        53         |       58        |
-| TCF gel vs BDP     |      3       |       2446       |       99       |        58        |       53        |        61         |       68        |
-| TCF gel vs CPL     |      4       |       2829       |       96       |        46        |       37        |        45         |       54        |
+| Comparisons | Total trials | Total randomised | Completers (%) | Total events (%) | Min. events (%) | Median events (%) | Max. events (%) |
+|:---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| capasal vs CPL | 1 | 475 | 89 | 20 | 20 | 20 | 20 |
+| CPL vs BDP | 2 | 1677 | 98 | 45 | 43 | 45 | 46 |
+| CPL vs BMV | 1 | 474 | 97 | 68 | 68 | 68 | 68 |
+| CPL+polytar vs CPL | 1 | 461 | 92 | 37 | 37 | 37 | 37 |
+| placebo vs BDP | 1 | 692 | 98 | 48 | 48 | 48 | 48 |
+| placebo vs CPL | 1 | 408 | 93 | 22 | 22 | 22 | 22 |
+| placebo vs TCF gel | 2 | 854 | 98 | 56 | 49 | 53 | 58 |
+| TCF gel vs BDP | 3 | 2446 | 99 | 58 | 53 | 61 | 68 |
+| TCF gel vs CPL | 4 | 2829 | 96 | 46 | 37 | 45 | 54 |
 
-Observed comparisons
+Observed comparisons {.table style="width:100%;"}
 
 The users can export all tables in xlsx file at the working directory of
 their project by adding the argument `save_xls = TRUE` in the
@@ -154,6 +155,7 @@ off-diagonal) in the network (see Details in
 [`?heatmap_missing_network`](https://loukiaspin.github.io/rnmamod/reference/heatmap_missing_network.md)).
 
 ``` r
+
 heatmap_missing_network(data = nma.bottomley2011, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"))
 ```
 
@@ -175,6 +177,7 @@ Use the `heatmap_missing_dataset` function To illustrate the proportion
 of missing participants in each arm of every trial in the dataset :
 
 ``` r
+
 heatmap_missing_dataset(data = nma.bottomley2011, trial_names = nma.bottomley2011$study, drug_names = c("BDP", "BMV", "CPL", "CPL+polytar", "capasal", "TCF gel", "placebo"))
 ```
 
