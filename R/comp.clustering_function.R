@@ -223,7 +223,7 @@
 #'                       arm2 = c("2", "2", "2", "3", "3", "3", "3"),
 #'                       sample = c(140, 145, 150, 40, 45, 75, 80),
 #'                       age = c(18, 18, 18, 48, 48, 35, 35),
-#'                       blinding = as.factor(c("yes", "yes", "yes", "no", "no", "no", "no")))
+#'                       blinding = factor(c("yes", "yes", "yes", "no", "no", "no", "no")))
 #'
 #' # Obtain comparison dissimilarities (informative = TRUE)
 #' comp_clustering(input = data_set,
@@ -402,7 +402,12 @@ comp_clustering <- function (input,
 
   ## Data-frame on compared comparisons, and corresponding Gower value
   # First turn 'gower_diss_mat' into data.frame with 'melt'
-  dataset_diss <- as.data.frame(melt(gower_diss_mat))
+  #dataset_diss <- as.data.frame(melt(gower_diss_mat))
+  dataset_diss <- as.data.frame(melt(gower_diss_mat),
+                                stringsAsFactors = FALSE)
+
+  dataset_diss$Var1 <- as.character(dataset_diss$Var1)
+  dataset_diss$Var2 <- as.character(dataset_diss$Var2)
 
 
   ## Append the single-study comparisons (0 value)
@@ -417,8 +422,8 @@ comp_clustering <- function (input,
 
   # Re-order the comparisons within based on the order in unique_comp
   dataset_diss[, 1:2] <-
-    t(apply(dataset_diss[, 1:2], 1,
-            function(x) x[order(match(x, sort(unique_comp)))]))
+   t(apply(dataset_diss[, 1:2], 1,
+          function(x) x[order(match(x, sort(unique_comp)))]))
 
   # Create the comparison of comparisons using 'paste'
   dataset_diss$comp <- apply(dataset_diss[, 1:2], 1, paste, collapse = " vs ")
