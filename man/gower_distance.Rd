@@ -53,6 +53,18 @@ The correct type mode of columns in \code{input} must be ensured to use
  \code{gower_distance} is integrated in the function
   \code{\link{comp_clustering}}.
 }
+\examples{
+# Fictional dataset
+data_set <- data.frame(Trial_name = as.character(1:7),
+                      comp = c("1vs2", "1vs2", "1vs2", "1vs3", "1vs3", "2vs3", "2vs3"),
+                      sample = c(140, 145, 150, 40, 45, 75, 80),
+                      age = c(18, 18, 18, 48, 48, 35, 35),
+                      blinding = factor(c("yes", "yes", "yes", "no", "no", "no", "no")))
+
+# Calculate the weighted Gower dissimilarity of all study pairs in the network
+gower_distance(input = data_set)
+
+}
 \references{
 Gower J. General Coefficient of Similarity and Some of Its Properties.
 \emph{Biometrics} 1971;\bold{27}(4):857--71.

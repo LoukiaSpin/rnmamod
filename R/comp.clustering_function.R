@@ -406,10 +406,6 @@ comp_clustering <- function (input,
   dataset_diss <- as.data.frame(melt(gower_diss_mat),
                                 stringsAsFactors = FALSE)
 
-  dataset_diss$Var1 <- as.character(dataset_diss$Var1)
-  dataset_diss$Var2 <- as.character(dataset_diss$Var2)
-
-
   ## Append the single-study comparisons (0 value)
   if (num_single_study_comp > 0) {
     for (i in 1:length(single_study_comp)) {
