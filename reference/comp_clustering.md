@@ -338,7 +338,8 @@ data_set <- data.frame(Trial_name = as.character(1:7),
                       arm2 = c("2", "2", "2", "3", "3", "3", "3"),
                       sample = c(140, 145, 150, 40, 45, 75, 80),
                       age = c(18, 18, 18, 48, 48, 35, 35),
-                      blinding = factor(c("yes", "yes", "yes", "no", "no", "no", "no")))
+                      blinding = as.integer(c("yes", "yes", "yes", "no", "no", "no", "no")))
+#> Warning: NAs introduced by coercion
 
 # Obtain comparison dissimilarities (informative = TRUE)
 comp_clustering(input = data_set,
@@ -347,31 +348,32 @@ comp_clustering(input = data_set,
                 informative = TRUE,
                 get_plots = TRUE)
 #> - 3 observed comparisons (0 single-study comparisons)
-#> - Dropped characteristics: none
+#> - Dropped characteristics: blinding
+#> Warning: data length [63] is not a sub-multiple or multiple of the number of columns [2]
 #> $Trials_diss_table
 #>       1 B-A 2 B-A 3 B-A 4 C-A 5 C-A 6 C-B 7 C-B
 #> 1 B-A 0.000    NA    NA    NA    NA    NA    NA
-#> 2 B-A 0.015 0.000    NA    NA    NA    NA    NA
-#> 3 B-A 0.030 0.015 0.000    NA    NA    NA    NA
-#> 4 C-A 0.970 0.985 1.000 0.000    NA    NA    NA
-#> 5 C-A 0.955 0.970 0.985 0.015 0.000    NA    NA
-#> 6 C-B 0.719 0.734 0.749 0.251 0.235 0.000    NA
-#> 7 C-B 0.704 0.719 0.734 0.266 0.251 0.015     0
+#> 2 B-A 0.023 0.000    NA    NA    NA    NA    NA
+#> 3 B-A 0.045 0.023 0.000    NA    NA    NA    NA
+#> 4 C-A 0.955 0.977 1.000 0.000    NA    NA    NA
+#> 5 C-A 0.932 0.955 0.977 0.023 0.000    NA    NA
+#> 6 C-B 0.579 0.602 0.624 0.376 0.353 0.000    NA
+#> 7 C-B 0.556 0.579 0.602 0.398 0.376 0.023     0
 #> 
 #> $Comparisons_diss_table
 #>      B-A  C-A  C-B
-#> B-A 0.02   NA   NA
-#> C-A 0.98 0.02   NA
-#> C-B 0.73 0.25 0.02
+#> B-A 0.03   NA   NA
+#> C-A 0.97 0.02   NA
+#> C-B 0.59 0.38 0.02
 #> 
 #> $Total_dissimilarity
 #>   comparison total_dissimilarity         index_type
-#> 5 C-A vs C-B                0.25 Between-comparison
-#> 3 B-A vs C-B                0.73 Between-comparison
-#> 2 B-A vs C-A                0.98 Between-comparison
-#> 1        B-A                0.02  Within-comparison
+#> 5 C-A vs C-B                0.38 Between-comparison
+#> 3 B-A vs C-B                0.59 Between-comparison
+#> 2 B-A vs C-A                0.97 Between-comparison
 #> 4        C-A                0.02  Within-comparison
 #> 6        C-B                0.02  Within-comparison
+#> 1        B-A                0.03  Within-comparison
 #> 
 #> $Types_used
 #>   characteristic    type
@@ -380,7 +382,7 @@ comp_clustering(input = data_set,
 #> 3       blinding integer
 #> 
 #> $Total_missing
-#> [1] "0%"
+#> [1] "33.33%"
 #> 
 #> $Within_comparison_dissimilarity
 
