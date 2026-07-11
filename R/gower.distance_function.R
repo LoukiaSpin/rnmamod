@@ -66,7 +66,7 @@
 #'                       comp = c("1vs2", "1vs2", "1vs2", "1vs3", "1vs3", "2vs3", "2vs3"),
 #'                       sample = c(140, 145, 150, 40, 45, 75, 80),
 #'                       age = c(18, 18, 18, 48, 48, 35, 35),
-#'                       blinding = factor(c("yes", "yes", "yes", "no", "no", "no", "no")))
+#'                       blinding = as.integer(c("yes", "yes", "yes", "no", "no", "no", "no")))
 #'
 #' # Calculate the weighted Gower dissimilarity of all study pairs in the network
 #' gower_distance(input = data_set)

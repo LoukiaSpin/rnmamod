@@ -223,7 +223,7 @@
 #'                       arm2 = c("2", "2", "2", "3", "3", "3", "3"),
 #'                       sample = c(140, 145, 150, 40, 45, 75, 80),
 #'                       age = c(18, 18, 18, 48, 48, 35, 35),
-#'                       blinding = factor(c("yes", "yes", "yes", "no", "no", "no", "no")))
+#'                       blinding = as.integer(c("yes", "yes", "yes", "no", "no", "no", "no")))
 #'
 #' # Obtain comparison dissimilarities (informative = TRUE)
 #' comp_clustering(input = data_set,
@@ -402,9 +402,7 @@ comp_clustering <- function (input,
 
   ## Data-frame on compared comparisons, and corresponding Gower value
   # First turn 'gower_diss_mat' into data.frame with 'melt'
-  #dataset_diss <- as.data.frame(melt(gower_diss_mat))
-  dataset_diss <- as.data.frame(melt(gower_diss_mat),
-                                stringsAsFactors = FALSE)
+  dataset_diss <- as.data.frame(melt(gower_diss_mat))
 
   ## Append the single-study comparisons (0 value)
   if (num_single_study_comp > 0) {
