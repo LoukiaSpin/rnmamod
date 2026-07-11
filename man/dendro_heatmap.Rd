@@ -52,7 +52,7 @@ data_set <- data.frame(Trial_name = as.character(1:7),
                       arm2 = c("2", "2", "2", "3", "3", "3", "3"),
                       sample = c(140, 145, 150, 40, 45, 75, 80),
                       age = c(18, 18, 18, 48, 48, 35, 35),
-                      blinding = factor(c("yes", "yes", "yes", "no", "no", "no", "no")))
+                      blinding = as.integer(c("yes", "yes", "yes", "no", "no", "no", "no")))
 
 # Apply hierarchical clustering (informative = FALSE)
 hier <- comp_clustering(input = data_set,
