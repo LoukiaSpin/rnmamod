@@ -1,3 +1,7 @@
+# rnmamod, version 0.5.1 (2026-07-12)
+
+  * Fixed a bug in __comp_clustering__, __gower_distance__, __dendro_heatmap__, and __plot_study_dissimilarities__.
+
 # rnmamod, version 0.5.0 (2025-06-13)
 
  * Replaced __mcmcplots__ with __coda__ R package.

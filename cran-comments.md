@@ -1,3 +1,22 @@
+# Submission, version 0.5.1 (12/07/2026)
+* **R version 4.6.1 (2026-06-24 ucrt)**
+
+Status: OK
+  
+* **R version 4.5.3 (2026-03-11 ucrt)**
+
+Status: OK
+
+* **R Under development (unstable) (2026-07-10 r90234 ucrt)**
+
+Status: OK
+
+### R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
+R CMD check succeeded
+
 # Submission, version 0.5.0 (13/06/2025)
 * **R version 4.4.3 (2025-02-28 ucrt)**
 
