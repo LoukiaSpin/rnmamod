@@ -421,7 +421,7 @@ run_ume(full = res,
 #> [1] "2vs1" "3vs1" "4vs1" "5vs1" "4vs2" "6vs2" "4vs3" "5vs4"
 #> 
 #> $jagsfit
-#> Inference for Bugs model at "19", fit using jags,
+#> Inference for Bugs model at "14", fit using jags,
 #>  3 chains, each with 1000 iterations (first 0 discarded)
 #>  n.sims = 3000 iterations saved. Running time = secs
 #>               mu.vect sd.vect   2.5%    25%    50%    75%  97.5%  Rhat n.eff
