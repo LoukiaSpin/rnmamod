@@ -11,7 +11,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/LoukiaSpin/rnmamod/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/LoukiaSpin/rnmamod/blob/v.0.5.1/DESCRIPTION)
 
 Spineli L (2026). *rnmamod: Bayesian Network Meta-Analysis with Missing
 Participants*. R package version 0.5.1,

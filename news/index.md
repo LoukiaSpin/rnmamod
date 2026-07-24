@@ -2,6 +2,8 @@
 
 ## rnmamod, version 0.5.1 (2026-07-12)
 
+CRAN release: 2026-07-13
+
 - Fixed a bug in **comp_clustering**, **gower_distance**,
   **dendro_heatmap**, and **plot_study_dissimilarities**.
 
